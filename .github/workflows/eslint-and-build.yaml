@@ -1,0 +1,52 @@
+name: ESLint and build
+
+on: pull_request
+
+jobs:
+  analyse:
+    name: ESLint and build (Node ${{ matrix.node-versions }})
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-versions: ["20"]
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: npm cache
+        id: npm_cache
+        uses: actions/cache@v4
+        with:
+          path: ./src/node_modules
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-package-
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-versions }}
+
+      - name: Install packages
+        shell: bash
+        if: steps.npm_cache.outputs.cache-hit != 'true'
+        run: |
+          echo 'Install packages'
+          cd src
+          npm i
+
+      - name: Run ESLint
+        run: |
+          cd src
+          npm run eslint
+
+      - name: Run Build
+        run: |
+          cd src
+          npm run build
