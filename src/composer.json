@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "sayuprc/isekai-journey-admin-panel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Management screen for journey of Isekaijoucho.",
+    "keywords": ["isekaijoucho"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -48,7 +48,14 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
-        ]
+        ],
+        "stan": "phpstan analyse --memory-limit=-1 --no-progress",
+        "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
+        "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
+        "test-unit": "php artisan test tests/Unit",
+        "ide-gen": "php artisan ide-helper:generate",
+        "ide-model": "php artisan ide-helper:models -W",
+        "ide-meta": "php artisan ide-helper:meta"
     },
     "extra": {
         "laravel": {
