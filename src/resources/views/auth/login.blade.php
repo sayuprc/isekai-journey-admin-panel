@@ -5,7 +5,7 @@
         <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
             <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-8 lg:text-3xl">ログイン</h2>
 
-            <form action="{{ route('login') }}" class="mx-auto max-w-lg rounded-lg border" method="POST">
+            <form action="{{ route('login.handle') }}" class="mx-auto max-w-lg rounded-lg border" method="POST">
                 @csrf
                 <div class="flex flex-col gap-4 p-4 md:p-8">
                     @error('message')
