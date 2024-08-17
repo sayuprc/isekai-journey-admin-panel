@@ -1,0 +1,4 @@
+[submodule "src/proto"]
+	path = src/proto
+	url = git@github.com:sayuprc/isekai-journey-proto.git
+	branch = main
