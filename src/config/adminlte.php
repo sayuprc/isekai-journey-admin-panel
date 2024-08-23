@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'ヰ世界情緒のあゆみ',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -72,12 +72,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>ヰ世界情緒のあゆみ</b>',
+    'logo_img' => 'favicon.svg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'Isekaijoucho Journey Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -95,8 +95,8 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'Auth Logo',
+            'path' => 'favicon.svg',
+            'alt' => 'Isekaijoucho Journey Auth Logo',
             'class' => '',
             'width' => 50,
             'height' => 50,
@@ -122,8 +122,8 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'AdminLTE Preloader Image',
+            'path' => 'favicon.svg',
+            'alt' => 'Isekaijoucho Journey Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,
