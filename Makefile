@@ -7,6 +7,9 @@ USERNAME := $(shell id -u -n)
 GID := $(shell id -g)
 GROUPNAME := $(shell id -g -n)
 
+PROTOC_VERSION := "27.3"
+GRPC_VERSION := "v1.65.5"
+
 .PHONY: build
 build: ## Build docker image for develop environment
 	docker build -t isekai-journey-admin-web:1.25 ./docker/nginx
@@ -14,7 +17,9 @@ build: ## Build docker image for develop environment
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
-		--build-arg GROUPNAME=${GROUPNAME}
+		--build-arg GROUPNAME=${GROUPNAME} \
+		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
+		--build-arg GRPC_VERSION=${GRPC_VERSION}
 	docker build -t isekai-journey-admin-db:16 ./docker/postgresql
 
 .PHONY: up
@@ -88,6 +93,10 @@ eslint: ## Run npm run eslint
 .PHONY: eslint-fix
 eslint-fix: ## Run npm run lint:fix
 	docker compose exec php npm run eslint:fix
+
+.PHONY: copy-root-ca
+copy-root-ca: ## Copy local rootCA.pem
+	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
 
 .PHONY: help
 help: ## Display a list of targets
