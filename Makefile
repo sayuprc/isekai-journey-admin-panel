@@ -98,6 +98,10 @@ eslint-fix: ## Run npm run lint:fix
 copy-root-ca: ## Copy local rootCA.pem
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
 
+.PHONY: generate-grpc-stub
+generate-grpc-stub: ## Generate gRPC Stub files
+	docker compose exec php ./gen-stub.sh
+
 .PHONY: help
 help: ## Display a list of targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
