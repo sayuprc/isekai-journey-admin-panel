@@ -6,3 +6,7 @@ parameters:
     - app
   # The level 9 is the highest level
   level: 5
+  ignoreErrors:
+    - '#Instantiated class Generated\\IsekaiJourney\\JourneyLog\\.* not found\.#'
+    - '#Call to method .*\(\) on an unknown class Generated\\IsekaiJourney\\JourneyLog\\.*\.#'
+    - '#PHPDoc tag @.* for variable \$.* contains unknown class Generated\\IsekaiJourney\\JourneyLog\\.*\.#'
