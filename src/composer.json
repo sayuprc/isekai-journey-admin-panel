@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "grpc/grpc": "^1.57",
+        "jeroennoten/laravel-adminlte": "^3.13",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9"
     },
@@ -25,7 +27,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Generated\\": "app/Generated/"
         }
     },
     "autoload-dev": {

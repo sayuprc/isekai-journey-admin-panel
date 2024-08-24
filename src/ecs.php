@@ -133,6 +133,8 @@ return ECSConfig::configure()
         ],
     ])
     ->withSkip([
+        __DIR__ . '/app/Generated',
+
         __DIR__ . '/bootstrap/cache',
 
         \PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer::class => [

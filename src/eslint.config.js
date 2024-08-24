@@ -9,6 +9,8 @@ export default [
     ignores: [
       'node_modules/**',
       'vendor/**',
+      'public/build/**',
+      'public/vendor/**',
     ],
   },
   js.configs.recommended,
