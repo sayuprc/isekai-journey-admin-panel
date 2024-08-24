@@ -27,7 +27,7 @@ class LoginController extends Controller
         if ($this->authManager->guard()->attempt($request->validated())) {
             $request->session()->regenerate();
 
-            return redirect()->route('home');
+            return redirect()->route('journey-logs.index');
         }
 
         return back()->withErrors([
