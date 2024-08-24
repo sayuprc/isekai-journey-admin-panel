@@ -44,7 +44,7 @@ jobs:
       - name: Run ESLint
         run: |
           cd src
-          npm run eslint
+          npm run lint
 
       - name: Run Build
         run: |
