@@ -16,4 +16,6 @@ return [
     'important' => '重要',
     'warning' => '警告',
     'information' => 'インフォメーション',
+    'journey_log' =>'あゆみ管理',
+    'list-journey_log' =>'あゆみ一覧',
 ];
