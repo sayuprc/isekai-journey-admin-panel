@@ -1,6 +1,6 @@
 @php use App\Http\ViewModel\ViewJourneyLog; @endphp
 
-@extends('adminlte::page')
+@extends('layout.page')
 
 @section('title', 'あゆみ一覧')
 
