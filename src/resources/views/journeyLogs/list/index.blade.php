@@ -9,6 +9,11 @@
 @endsection
 
 @section('content')
+    @if(session('message'))
+        <x-adminlte-alert theme="info" title="Info">
+            {{ session('message') }}<br>
+        </x-adminlte-alert>
+    @endif
     <x-adminlte-datatable id="table" :heads="$heads">
         @php /** @var ViewJourneyLog $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)

@@ -310,9 +310,12 @@ return [
         [
             'text' => 'list-journey_log',
             'url' => 'journey-logs',
-            'icon_color' => 'cyan',
             'icon' => 'fas fa-list',
-            'label_color' => 'success',
+        ],
+        [
+            'text' => 'create-journey_log',
+            'url' => 'journey-logs/create',
+            'icon' => 'fas fa-plus',
         ],
     ],
 

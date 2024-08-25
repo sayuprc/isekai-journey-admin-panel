@@ -18,4 +18,5 @@ return [
     'information' => 'インフォメーション',
     'journey_log' =>'あゆみ管理',
     'list-journey_log' =>'あゆみ一覧',
+    'create-journey_log' =>'あゆみ登録',
 ];
