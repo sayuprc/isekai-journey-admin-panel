@@ -16,4 +16,5 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/journey-logs', [ListJourneyLogsController::class, 'index'])->name('journey-logs.index');
 
     Route::get('/journey-logs/create', [CreateJourneyLogController::class, 'index'])->name('journey-logs.create.index');
+    Route::post('/journey-logs/create', [CreateJourneyLogController::class, 'handle'])->name('journey-logs.create.handle');
 });
