@@ -38,6 +38,7 @@ class CreateJourneyLogController extends Controller
         $grpcRequest->setStory($validated['story']);
         $grpcRequest->setFromOn(DateFactory::fromString($validated['from_on']));
         $grpcRequest->setToOn(DateFactory::fromString($validated['to_on']));
+        $grpcRequest->setOrderNo($validated['order_no']);
 
         /**
          * @var CreateJourneyLogResponse $response

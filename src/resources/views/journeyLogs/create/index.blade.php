@@ -27,6 +27,10 @@
             <x-adminlte-input label="終了日" type="date" name="to_on" value="{{ old('to_on') }}" />
         </div>
 
+        <div class="row m-0">
+            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}" />
+        </div>
+
         <x-adminlte-button label="登録" type="submit" theme="primary" />
     </form>
 @endsection
