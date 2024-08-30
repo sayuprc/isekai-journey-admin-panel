@@ -40,6 +40,7 @@ class ListJourneyLogsController extends Controller
             '概要',
             '内容',
             '期間',
+            '表示順',
             '',
         ];
 
@@ -61,6 +62,7 @@ class ListJourneyLogsController extends Controller
                     $journeyLog->getToOn()->getMonth(),
                     $journeyLog->getToOn()->getDay()
                 ),
+                $journeyLog->getOrderNo()
             );
         }
 

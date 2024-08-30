@@ -35,6 +35,10 @@ class CreateRequest extends FormRequest
                 'date_format:Y-m-d',
                 'after_or_equal:from_on',
             ],
+            'order_no' => [
+                'required',
+                'numeric',
+            ],
         ];
     }
 }

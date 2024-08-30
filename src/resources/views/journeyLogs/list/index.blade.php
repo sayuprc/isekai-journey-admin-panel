@@ -21,6 +21,7 @@
                 <td>{{ $journeyLog->summary }}</td>
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->period() }}</td>
+                <td>{{ $journeyLog->order_no }}</td>
                 <td><a href="">編集</a></td>
             </tr>
         @endforeach

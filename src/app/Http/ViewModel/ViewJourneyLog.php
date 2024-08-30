@@ -12,6 +12,7 @@ class ViewJourneyLog
         public readonly string $story,
         private readonly ViewDate $fromOn,
         private readonly ViewDate $toOn,
+        public readonly int $order_no
     ) {
     }
 
