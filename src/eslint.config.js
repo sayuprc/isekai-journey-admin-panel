@@ -1,9 +1,10 @@
 import stylistic from '@stylistic/eslint-plugin'
 import js from '@eslint/js'
+import ts from 'typescript-eslint'
 
 export default [
   {
-    files: ['**/*.js'],
+    files: ['**/*.{js,ts}'],
   },
   {
     ignores: [
@@ -14,6 +15,7 @@ export default [
     ],
   },
   js.configs.recommended,
+  ...ts.configs.recommended,
   stylistic.configs.customize({
     indent: 2,
     quotes: 'single',
