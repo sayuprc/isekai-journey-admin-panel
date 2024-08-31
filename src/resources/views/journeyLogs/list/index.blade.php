@@ -14,6 +14,13 @@
             {{ session('message') }}<br>
         </x-adminlte-alert>
     @endif
+    @if($errors->any())
+        <x-adminlte-alert theme="danger" title="Error">
+            @foreach($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        </x-adminlte-alert>
+    @endif
     <x-adminlte-datatable id="table" :heads="$heads">
         @php /** @var ViewJourneyLog $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)
@@ -22,7 +29,7 @@
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->period() }}</td>
                 <td>{{ $journeyLog->order_no }}</td>
-                <td><a href="">編集</a></td>
+                <td><a href="{{ route('journey-logs.edit.index', $journeyLog->journeyLogId) }}">編集</a></td>
             </tr>
         @endforeach
     </x-adminlte-datatable>
