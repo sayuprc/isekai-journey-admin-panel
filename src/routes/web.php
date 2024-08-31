@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
+use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
 use App\Http\Controllers\JourneyLog\EditJourneyLogController;
 use App\Http\Controllers\JourneyLog\ListJourneyLogsController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,7 @@ Route::middleware('auth')->group(function (): void {
         ->name('journey-logs.edit.index');
     Route::post('/journey-logs/edit', [EditJourneyLogController::class, 'handle'])
         ->name('journey-logs.edit.handle');
+
+    Route::delete('/journey-logs', [DeleteJourneyLogController::class, 'handle'])
+        ->name('journey-logs.delete.handle');
 });
