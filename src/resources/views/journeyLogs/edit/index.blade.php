@@ -8,7 +8,16 @@
 @section('title', 'あゆみ更新')
 
 @section('content_header')
-    <h1>あゆみ更新</h1>
+    <div class="d-flex justify-content-between">
+        <h1>あゆみ更新</h1>
+
+        <form action="{{ route('journey-logs.delete.handle') }}" method="post">
+            @csrf
+            @method('DELETE')
+            <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
+            <x-adminlte-button label="削除" type="submit" theme="danger" />
+        </form>
+    </div>
 @endsection
 
 @section('content')
