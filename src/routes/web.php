@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
-use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
-use App\Http\Controllers\JourneyLog\EditJourneyLogController;
-use App\Http\Controllers\JourneyLog\ListJourneyLogsController;
+use App\Features\Auth\Adapter\Web\Controllers\LoginController;
+use App\Features\JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
+use App\Features\JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
+use App\Features\JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
+use App\Features\JourneyLog\Adapter\Web\Controllers\ListJourneyLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {
@@ -15,7 +15,7 @@ Route::middleware('guest')->group(function (): void {
 });
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('/journey-logs', [ListJourneyLogsController::class, 'index'])->name('journey-logs.index');
+    Route::get('/journey-logs', [ListJourneyLogController::class, 'index'])->name('journey-logs.index');
 
     Route::get('/journey-logs/create', [CreateJourneyLogController::class, 'index'])->name('journey-logs.create.index');
     Route::post('/journey-logs/create', [CreateJourneyLogController::class, 'handle'])->name('journey-logs.create.handle');
