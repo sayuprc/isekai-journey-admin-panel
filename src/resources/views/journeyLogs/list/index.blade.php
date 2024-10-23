@@ -1,4 +1,4 @@
-@php use App\Http\ViewModel\ViewJourneyLog; @endphp
+@php use App\Features\JourneyLog\Adapter\Web\Presenters\ListViewJourneyLog; @endphp
 
 @extends('layout.page')
 
@@ -22,13 +22,13 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var ViewJourneyLog $journeyLog */ @endphp
+        @php /** @var ListViewJourneyLog $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)
             <tr>
                 <td>{{ $journeyLog->summary }}</td>
                 <td>{{ $journeyLog->story }}</td>
-                <td>{{ $journeyLog->period() }}</td>
-                <td>{{ $journeyLog->order_no }}</td>
+                <td>{{ $journeyLog->period }}</td>
+                <td>{{ $journeyLog->orderNo }}</td>
                 <td><a href="{{ route('journey-logs.edit.index', $journeyLog->journeyLogId) }}">編集</a></td>
             </tr>
         @endforeach

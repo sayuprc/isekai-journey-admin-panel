@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\ViewModel\Edit;
+namespace App\Features\JourneyLog\Adapter\Web\Presenters;
 
-use App\Http\ViewModel\ViewDate;
-
-class JourneyLog
+class ViewJourneyLog
 {
     public function __construct(
         public readonly string $journeyLogId,
@@ -14,7 +12,7 @@ class JourneyLog
         public readonly string $story,
         public readonly ViewDate $fromOn,
         public readonly ViewDate $toOn,
-        public readonly int $order_no
+        public readonly int $orderNo,
     ) {
     }
 }

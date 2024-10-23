@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\JourneyLog;
+namespace App\Features\JourneyLog\Adapter\Web\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
