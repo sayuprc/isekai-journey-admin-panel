@@ -9,7 +9,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Story;
-use App\Features\JourneyLog\Domain\Repositories\JourneyLogServiceClientInterface;
+use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLog\Infrastructures\Repositories\Exceptions\APIException;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -24,7 +24,7 @@ use Generated\IsekaiJourney\JourneyLog\EditJourneyLogResponse;
 use Generated\IsekaiJourney\JourneyLog\GetJourneyLogRequest;
 use Generated\IsekaiJourney\JourneyLog\GetJourneyLogResponse;
 use Generated\IsekaiJourney\JourneyLog\JourneyLog as GrpcJourneyLog;
-use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient as GrpcClient;
+use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsRequest;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsResponse;
 use Generated\IsekaiJourney\JourneyLog\Status;
@@ -32,9 +32,9 @@ use stdClass;
 
 use const Grpc\STATUS_OK;
 
-class JourneyLogServiceClient implements JourneyLogServiceClientInterface
+class JourneyLogRepository implements JourneyLogRepositoryInterface
 {
-    public function __construct(private readonly GrpcClient $client)
+    public function __construct(private readonly JourneyLogServiceClient $client)
     {
     }
 

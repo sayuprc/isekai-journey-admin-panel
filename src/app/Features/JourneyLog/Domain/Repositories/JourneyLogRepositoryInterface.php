@@ -7,7 +7,7 @@ namespace App\Features\JourneyLog\Domain\Repositories;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 
-interface JourneyLogServiceClientInterface
+interface JourneyLogRepositoryInterface
 {
     /**
      * @return array<JourneyLog>
