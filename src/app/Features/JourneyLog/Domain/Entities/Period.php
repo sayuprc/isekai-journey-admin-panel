@@ -6,7 +6,7 @@ namespace App\Features\JourneyLog\Domain\Entities;
 
 use DateTimeInterface;
 
-class EventDate
+class Period
 {
     public function __construct(
         public readonly DateTimeInterface $fromOn,

@@ -8,7 +8,6 @@ class ViewJourneyLog
 {
     public function __construct(
         public readonly string $journeyLogId,
-        public readonly string $summary,
         public readonly string $story,
         public readonly ViewDate $fromOn,
         public readonly ViewDate $toOn,

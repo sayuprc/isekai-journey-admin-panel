@@ -8,7 +8,6 @@ class EditRequest
 {
     public function __construct(
         public readonly string $journeyLodId,
-        public readonly string $summary,
         public readonly string $story,
         public readonly string $fromOn,
         public readonly string $toOn,

@@ -33,7 +33,6 @@ class EditJourneyLogController extends Controller
         // TODO リファクタする
         $journeyLog = new ViewJourneyLog(
             $response->journeyLog->journeyLogId->value,
-            $response->journeyLog->summary->value,
             $response->journeyLog->story->value,
             new ViewDate($response->journeyLog->eventDate->fromOn),
             new ViewDate($response->journeyLog->eventDate->toOn),
@@ -51,7 +50,6 @@ class EditJourneyLogController extends Controller
             $handler->handle(
                 new EditRequest(
                     $validated['journey_log_id'],
-                    $validated['summary'],
                     $validated['story'],
                     $validated['from_on'],
                     $validated['to_on'],

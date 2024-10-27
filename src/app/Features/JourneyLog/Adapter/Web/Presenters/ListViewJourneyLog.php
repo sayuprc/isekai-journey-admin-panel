@@ -9,7 +9,6 @@ use Exception;
 
 /**
  * @property string $journeyLogId
- * @property string $summary
  * @property string $story
  * @property string $period
  * @property int    $orderNo
@@ -24,7 +23,7 @@ class ListViewJourneyLog
 
     public function __get(string $name): int|string
     {
-        if (in_array($name, ['journeyLogId', 'summary', 'story', 'orderNo'])) {
+        if (in_array($name, ['journeyLogId', 'story', 'orderNo'])) {
             return $this->journeyLog->{$name}->value;
         } elseif ($name === 'period') {
             return $this->period();

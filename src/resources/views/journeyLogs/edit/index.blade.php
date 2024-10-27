@@ -32,8 +32,6 @@
         @csrf
         <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
 
-        <x-adminlte-input label="概要" type="text" name="summary" value="{{ old('summary', $journeyLog->summary) }}"/>
-
         <x-adminlte-textarea label="内容" name="story">
             {{ old('story', $journeyLog->story) }}
         </x-adminlte-textarea>
