@@ -19,11 +19,6 @@ class EditRequest extends FormRequest
             'journey_log_id' => [
                 'required',
             ],
-            'summary' => [
-                'required',
-                'string',
-                'max:255',
-            ],
             'story' => [
                 'required',
                 'string',

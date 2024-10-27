@@ -6,7 +6,7 @@ namespace App\Features\JourneyLog\Adapter\Web\Presenters;
 
 use DateTimeInterface;
 
-class ViewDate
+class ViewPeriod
 {
     public function __construct(private readonly DateTimeInterface $date)
     {
@@ -15,10 +15,5 @@ class ViewDate
     public function format(): string
     {
         return $this->date->format('Y-m-d');
-    }
-
-    public function equal(ViewDate $other): bool
-    {
-        return $this->format() === $other->format();
     }
 }

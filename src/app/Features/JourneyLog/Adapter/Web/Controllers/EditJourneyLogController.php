@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 
-use App\Features\JourneyLog\Adapter\Web\Presenters\ViewDate;
+use App\Features\JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
 use App\Features\JourneyLog\Adapter\Web\Requests\EditRequest as WebEditRequest;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditInteractor;
@@ -33,10 +33,9 @@ class EditJourneyLogController extends Controller
         // TODO リファクタする
         $journeyLog = new ViewJourneyLog(
             $response->journeyLog->journeyLogId->value,
-            $response->journeyLog->summary->value,
             $response->journeyLog->story->value,
-            new ViewDate($response->journeyLog->eventDate->fromOn),
-            new ViewDate($response->journeyLog->eventDate->toOn),
+            new ViewPeriod($response->journeyLog->period->fromOn),
+            new ViewPeriod($response->journeyLog->period->toOn),
             $response->journeyLog->orderNo->value,
         );
 
@@ -51,7 +50,6 @@ class EditJourneyLogController extends Controller
             $handler->handle(
                 new EditRequest(
                     $validated['journey_log_id'],
-                    $validated['summary'],
                     $validated['story'],
                     $validated['from_on'],
                     $validated['to_on'],

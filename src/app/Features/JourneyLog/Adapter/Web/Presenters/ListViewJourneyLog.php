@@ -9,7 +9,6 @@ use Exception;
 
 /**
  * @property string $journeyLogId
- * @property string $summary
  * @property string $story
  * @property string $period
  * @property int    $orderNo
@@ -24,7 +23,7 @@ class ListViewJourneyLog
 
     public function __get(string $name): int|string
     {
-        if (in_array($name, ['journeyLogId', 'summary', 'story', 'orderNo'])) {
+        if (in_array($name, ['journeyLogId', 'story', 'orderNo'])) {
             return $this->journeyLog->{$name}->value;
         } elseif ($name === 'period') {
             return $this->period();
@@ -35,10 +34,10 @@ class ListViewJourneyLog
 
     private function period(): string
     {
-        return $this->journeyLog->eventDate->isSingleDay()
-            ? $this->journeyLog->eventDate->fromOn->format(self::DATE_FORMAT)
-            : $this->journeyLog->eventDate->fromOn->format(self::DATE_FORMAT)
+        return $this->journeyLog->period->isSingleDay()
+            ? $this->journeyLog->period->fromOn->format(self::DATE_FORMAT)
+            : $this->journeyLog->period->fromOn->format(self::DATE_FORMAT)
                 . ' ~ '
-                . $this->journeyLog->eventDate->toOn->format(self::DATE_FORMAT);
+                . $this->journeyLog->period->toOn->format(self::DATE_FORMAT);
     }
 }

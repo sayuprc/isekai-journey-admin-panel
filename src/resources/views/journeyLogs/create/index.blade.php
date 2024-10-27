@@ -16,8 +16,6 @@
     @endif
     <form action="{{ route('journey-logs.create.handle') }}" method="post">
         @csrf
-        <x-adminlte-input label="概要" type="text" name="summary" value="{{ old('summary') }}" />
-
         <x-adminlte-textarea label="内容" name="story">
             {{ old('story') }}
         </x-adminlte-textarea>

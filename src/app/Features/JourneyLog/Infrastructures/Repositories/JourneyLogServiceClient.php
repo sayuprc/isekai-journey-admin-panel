@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Infrastructures\Repositories;
 
-use App\Features\JourneyLog\Domain\Entities\EventDate;
+use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Story;
-use App\Features\JourneyLog\Domain\Entities\Summary;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogServiceClientInterface;
 use App\Features\JourneyLog\Infrastructures\Repositories\Exceptions\APIException;
 use DateTimeImmutable;
@@ -67,9 +66,8 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
         foreach ($response->getJourneyLogs() as $journeyLog) {
             $journeyLogs[] = new JourneyLog(
                 new JourneyLogId($journeyLog->getJourneyLogId()),
-                new Summary($journeyLog->getSummary()),
                 new Story($journeyLog->getStory()),
-                new EventDate(
+                new Period(
                     new DateTimeImmutable(
                         sprintf(
                             '%04s-%02s-%02s',
@@ -102,10 +100,10 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
     {
         $request = new CreateJourneyLogRequest();
 
-        $request->setSummary($journeyLog->summary->value);
+        $request->setSummary('');
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
 
         /**
@@ -150,9 +148,8 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
 
         return new JourneyLog(
             $journeyLogId,
-            new Summary($journeyLog->getSummary()),
             new Story($journeyLog->getStory()),
-            new EventDate(
+            new Period(
                 new DateTimeImmutable(
                     sprintf(
                         '%04s-%02s-%02s',
@@ -182,10 +179,10 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
     {
         $request = new EditJourneyLogRequest();
         $request->setJourneyLogId($journeyLog->journeyLogId->value);
-        $request->setSummary($journeyLog->summary->value);
+        $request->setSummary('');
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
 
         /**

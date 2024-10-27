@@ -26,7 +26,6 @@ class CreateJourneyLogController extends Controller
         try {
             $interactor->handle(
                 new CreateRequest(
-                    $validated['summary'],
                     $validated['story'],
                     $validated['from_on'],
                     $validated['to_on'],

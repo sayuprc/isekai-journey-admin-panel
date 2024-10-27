@@ -25,7 +25,6 @@
         @php /** @var ListViewJourneyLog $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)
             <tr>
-                <td>{{ $journeyLog->summary }}</td>
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->period }}</td>
                 <td>{{ $journeyLog->orderNo }}</td>
