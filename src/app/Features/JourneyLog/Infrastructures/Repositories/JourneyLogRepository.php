@@ -100,7 +100,6 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     {
         $request = new CreateJourneyLogRequest();
 
-        $request->setSummary('');
         $request->setStory($journeyLog->story->value);
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
@@ -179,7 +178,6 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     {
         $request = new EditJourneyLogRequest();
         $request->setJourneyLogId($journeyLog->journeyLogId->value);
-        $request->setSummary('');
         $request->setStory($journeyLog->story->value);
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
