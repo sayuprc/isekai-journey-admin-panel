@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Port\UseCases\List;
 
-use App\Features\JourneyLog\Domain\Repositories\JourneyLogServiceClientInterface;
+use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 
 class ListInteractor
 {
-    public function __construct(private readonly JourneyLogServiceClientInterface $client)
+    public function __construct(private readonly JourneyLogRepositoryInterface $client)
     {
     }
 

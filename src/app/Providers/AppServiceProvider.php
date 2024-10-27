@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use App\Features\JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Grpc\ChannelCredentials;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
             return new JourneyLogServiceClient(config('grpc.api_url'), [
                 'credentials' => ChannelCredentials::createSsl(file_get_contents(config('grpc.root_ca'))),
             ]);
+        });
+
+        $this->app->bind(JourneyLogRepositoryInterface::class, function (Application $app): JourneyLogRepositoryInterface {
+            return $app->make(JourneyLogRepository::class);
         });
     }
 

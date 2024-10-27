@@ -9,12 +9,12 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Story;
-use App\Features\JourneyLog\Domain\Repositories\JourneyLogServiceClientInterface;
+use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use DateTimeImmutable;
 
 class EditInteractor
 {
-    public function __construct(private readonly JourneyLogServiceClientInterface $client)
+    public function __construct(private readonly JourneyLogRepositoryInterface $client)
     {
     }
 
