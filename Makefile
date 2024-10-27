@@ -36,7 +36,7 @@ php: ## Enter php container
 
 .PHONY: composer-install
 composer-install: ## Install composer packages
-	docker compose exec php composer install
+	docker compose run --rm php composer install
 
 .PHONY: stan
 stan: ## Run PHPStan
@@ -80,7 +80,7 @@ tinker: ## Run tinker
 
 .PHONY: npm-install
 npm-install: ## Install npm packages
-	docker compose exec php npm i
+	docker compose run --rm php npm i
 
 .PHONY: npm-dev
 npm-dev: ## Run npm run dev
