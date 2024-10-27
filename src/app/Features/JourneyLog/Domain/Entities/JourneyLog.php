@@ -9,7 +9,7 @@ class JourneyLog
     public function __construct(
         public readonly JourneyLogId $journeyLogId,
         public readonly Story $story,
-        public readonly Period $eventDate,
+        public readonly Period $period,
         public readonly OrderNo $orderNo,
     ) {
     }

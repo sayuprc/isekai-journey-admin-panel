@@ -102,8 +102,8 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
 
         $request->setSummary('');
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
 
         /**
@@ -181,8 +181,8 @@ class JourneyLogServiceClient implements JourneyLogServiceClientInterface
         $request->setJourneyLogId($journeyLog->journeyLogId->value);
         $request->setSummary('');
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->eventDate->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
 
         /**
