@@ -56,6 +56,7 @@
         "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
         "test-unit": "php artisan test tests/Unit",
+        "test-feature": "php artisan test tests/Feature --env=testing",
         "ide-gen": "php artisan ide-helper:generate",
         "ide-model": "php artisan ide-helper:models -W",
         "ide-meta": "php artisan ide-helper:meta"

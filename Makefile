@@ -54,6 +54,10 @@ ecs-fix: ## Run ecs fix
 test-unit: ## Run PHPUnit
 	docker compose exec php composer test-unit
 
+.PHONY: test-feature
+test-feature: ## Run PHPUnit
+	docker compose exec php composer test-feature
+
 .PHONY: ide-gen
 ide-gen: ## Generate ide helper file
 	docker compose exec php composer ide-gen
