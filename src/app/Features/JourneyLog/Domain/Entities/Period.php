@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Domain\Entities;
 
-use App\Features\JourneyLog\Domain\Exceptions\InvalidDomainException;
+use App\Shared\Domain\Exceptions\InvalidDomainException;
 use DateTimeInterface;
 
 class Period
