@@ -31,8 +31,10 @@ class LoginController extends Controller
             return redirect()->route('journey-logs.index');
         }
 
-        return back()->withErrors([
-            'message' => $this->translator->get('auth.failed'),
-        ]);
+        return redirect()
+            ->route('login')
+            ->withErrors([
+                'message' => $this->translator->get('auth.failed'),
+            ]);
     }
 }
