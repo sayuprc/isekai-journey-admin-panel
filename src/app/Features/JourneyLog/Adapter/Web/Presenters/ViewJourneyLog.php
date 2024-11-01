@@ -12,6 +12,7 @@ class ViewJourneyLog
         public readonly ViewPeriod $fromOn,
         public readonly ViewPeriod $toOn,
         public readonly int $orderNo,
+        public readonly array $links,
     ) {
     }
 }

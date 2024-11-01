@@ -37,6 +37,26 @@ class EditRequest extends FormRequest
                 'required',
                 'numeric',
             ],
+            'links' => [
+                'nullable',
+                'array',
+            ],
+            'links.*.link_name' => [
+                'required',
+                'string',
+            ],
+            'links.*.url' => [
+                'required',
+                'string',
+            ],
+            'links.*.order_no' => [
+                'required',
+                'numeric',
+            ],
+            'links.*.link_type_id' => [
+                'required',
+                'string',
+            ],
         ];
     }
 }

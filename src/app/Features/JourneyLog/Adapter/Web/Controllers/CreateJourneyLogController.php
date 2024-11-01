@@ -24,14 +24,20 @@ class CreateJourneyLogController extends Controller
         $validated = $request->validated();
 
         try {
-            $interactor->handle(
-                new CreateRequest(
-                    $validated['story'],
-                    $validated['from_on'],
-                    $validated['to_on'],
-                    (int)$validated['order_no'],
-                )
-            );
+            $interactor->handle(new CreateRequest(
+                $validated['story'],
+                $validated['from_on'],
+                $validated['to_on'],
+                (int)$validated['order_no'],
+                array_map(function ($item) {
+                    return [
+                        'link_name' => $item['link_name'],
+                        'url' => $item['url'],
+                        'order_no' => (int)$item['order_no'],
+                        'link_type_id' => $item['link_type_id'],
+                    ];
+                }, $validated['links'] ?? []),
+            ));
         } catch (Exception $e) {
             return back()
                 ->withErrors([

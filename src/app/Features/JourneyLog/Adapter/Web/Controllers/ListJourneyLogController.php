@@ -16,7 +16,6 @@ class ListJourneyLogController extends Controller
         $response = $interactor->handle();
 
         $heads = [
-            '概要',
             '内容',
             '期間',
             '表示順',
