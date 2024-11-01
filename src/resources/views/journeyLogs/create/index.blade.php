@@ -32,8 +32,26 @@
             <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}" />
         </div>
 
+        <div class="form-group">
+            <x-adminlte-button label="リンク追加" type="button" id="add_link_btn" />
+            <div id="links">
+            </div>
+        </div>
+
         <x-adminlte-button label="登録" type="submit" theme="primary" />
     </form>
+
+    <script>
+        // TODO 正しいマスタ値にする
+        window.linkTypes = [
+            {"id": "", "name": "リンク種別"},
+            {"id": "100", "name": "hoge"},
+            {"id": "101", "name": "fuga"},
+            {"id": "102", "name": "piyo"},
+        ]
+
+        window.oldLinks = @json(old('links'))
+    </script>
 
     @vite(['resources/ts/journey-log.ts'])
 @endsection
