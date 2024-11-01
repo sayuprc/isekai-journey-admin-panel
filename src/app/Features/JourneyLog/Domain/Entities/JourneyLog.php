@@ -6,11 +6,15 @@ namespace App\Features\JourneyLog\Domain\Entities;
 
 class JourneyLog
 {
+    /**
+     * @param Link[] $links
+     */
     public function __construct(
         public readonly JourneyLogId $journeyLogId,
         public readonly Story $story,
         public readonly Period $period,
         public readonly OrderNo $orderNo,
+        public readonly array $links,
     ) {
     }
 }

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Domain\Entities;
 
-readonly class OrderNo
+use App\Shared\Domain\IntegerValueObject;
+
+class OrderNo extends IntegerValueObject
 {
-    public function __construct(public int $value)
-    {
-    }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Features\JourneyLog\Domain\Entities;
 
 use App\Features\JourneyLog\Domain\Entities\Period;
-use App\Features\JourneyLog\Domain\Exceptions\InvalidDomainException;
+use App\Shared\Domain\Exceptions\InvalidDomainException;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

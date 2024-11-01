@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Infrastructures\Repositories;
 
-use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
+use App\Features\JourneyLog\Domain\Entities\Link;
+use App\Features\JourneyLog\Domain\Entities\LinkId;
+use App\Features\JourneyLog\Domain\Entities\LinkName;
+use App\Features\JourneyLog\Domain\Entities\LinkTypeId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
+use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
+use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLog\Infrastructures\Repositories\Exceptions\APIException;
 use DateTimeImmutable;
@@ -25,6 +30,7 @@ use Generated\IsekaiJourney\JourneyLog\GetJourneyLogRequest;
 use Generated\IsekaiJourney\JourneyLog\GetJourneyLogResponse;
 use Generated\IsekaiJourney\JourneyLog\JourneyLog as GrpcJourneyLog;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
+use Generated\IsekaiJourney\JourneyLog\Link as GrpcLink;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsRequest;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsResponse;
 use Generated\IsekaiJourney\JourneyLog\Status;
@@ -64,29 +70,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         /** @var GrpcJourneyLog $journeyLog */
         foreach ($response->getJourneyLogs() as $journeyLog) {
-            $journeyLogs[] = new JourneyLog(
-                new JourneyLogId($journeyLog->getJourneyLogId()),
-                new Story($journeyLog->getStory()),
-                new Period(
-                    new DateTimeImmutable(
-                        sprintf(
-                            '%04s-%02s-%02s',
-                            $journeyLog->getFromOn()->getYear(),
-                            $journeyLog->getFromOn()->getMonth(),
-                            $journeyLog->getFromOn()->getDay(),
-                        )
-                    ),
-                    new DateTimeImmutable(
-                        sprintf(
-                            '%04s-%02s-%02s',
-                            $journeyLog->getToOn()->getYear(),
-                            $journeyLog->getToOn()->getMonth(),
-                            $journeyLog->getToOn()->getDay(),
-                        )
-                    ),
-                ),
-                new OrderNo($journeyLog->getOrderNo()),
-            );
+            $journeyLogs[] = $this->toJourneyLog($journeyLog);
         }
 
         return $journeyLogs;
@@ -104,6 +88,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
+        $request->setLinks($this->toGrpcLinks($journeyLog->links));
 
         /**
          * @var CreateJourneyLogResponse $response
@@ -133,7 +118,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
          * @var GetJourneyLogResponse $response
          * @var stdClass              $status
          */
-        [$response,$status] = $this->client->GetJourneyLog($request)->wait();
+        [$response, $status] = $this->client->GetJourneyLog($request)->wait();
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -143,31 +128,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
             throw new Exception($response->getMessage());
         }
 
-        $journeyLog = $response->getJourneyLog();
-
-        return new JourneyLog(
-            $journeyLogId,
-            new Story($journeyLog->getStory()),
-            new Period(
-                new DateTimeImmutable(
-                    sprintf(
-                        '%04s-%02s-%02s',
-                        $journeyLog->getFromOn()->getYear(),
-                        $journeyLog->getFromOn()->getMonth(),
-                        $journeyLog->getFromOn()->getDay(),
-                    )
-                ),
-                new DateTimeImmutable(
-                    sprintf(
-                        '%04s-%02s-%02s',
-                        $journeyLog->getToOn()->getYear(),
-                        $journeyLog->getToOn()->getMonth(),
-                        $journeyLog->getToOn()->getDay(),
-                    )
-                )
-            ),
-            new OrderNo($journeyLog->getOrderNo()),
-        );
+        return $this->toJourneyLog($response->getJourneyLog());
     }
 
     /**
@@ -182,12 +143,13 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
+        $request->setLinks($this->toGrpcLinks($journeyLog->links));
 
         /**
          * @var EditJourneyLogResponse $response
          * @var stdClass               $status
          */
-        [$response,$status] = $this->client->EditJourneyLog($request)->wait();
+        [$response, $status] = $this->client->EditJourneyLog($request)->wait();
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -231,5 +193,65 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         return $date->setYear((int)$value->format('Y'))
             ->setMonth((int)$value->format('m'))
             ->setDay((int)$value->format('d'));
+    }
+
+    private function toJourneyLog(GrpcJourneyLog $journeyLog): JourneyLog
+    {
+        $links = [];
+
+        /** @var GrpcLink $link */
+        foreach ($journeyLog->getLinks() as $link) {
+            $links[] = new Link(
+                new LinkId($link->getLinkId()),
+                new LinkName($link->getLinkName()),
+                new Url($link->getUrl()),
+                new OrderNo($link->getOrderNo()),
+                new LinkTypeId($link->getLinkTypeId()),
+            );
+        }
+
+        return new JourneyLog(
+            new JourneyLogId($journeyLog->getJourneyLogId()),
+            new Story($journeyLog->getStory()),
+            new Period(
+                new DateTimeImmutable(
+                    sprintf(
+                        '%04s-%02s-%02s',
+                        $journeyLog->getFromOn()->getYear(),
+                        $journeyLog->getFromOn()->getMonth(),
+                        $journeyLog->getFromOn()->getDay(),
+                    )
+                ),
+                new DateTimeImmutable(
+                    sprintf(
+                        '%04s-%02s-%02s',
+                        $journeyLog->getToOn()->getYear(),
+                        $journeyLog->getToOn()->getMonth(),
+                        $journeyLog->getToOn()->getDay(),
+                    )
+                )
+            ),
+            new OrderNo($journeyLog->getOrderNo()),
+            $links,
+        );
+    }
+
+    /**
+     * @param Link[] $links
+     *
+     * @return GrpcLink[]
+     */
+    private function toGrpcLinks(array $links): array
+    {
+        $grpcLinks = [];
+
+        foreach ($links as $link) {
+            $grpcLink = new GrpcLink();
+            $grpcLink->setLinkTypeId($link->linkTypeId->value);
+
+            $grpcLinks[] = $grpcLink;
+        }
+
+        return $grpcLinks;
     }
 }
