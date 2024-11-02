@@ -2,10 +2,10 @@
 
 @extends('layout.page')
 
-@section('title', 'あゆみ一覧')
+@section('title', '軌跡一覧')
 
 @section('content_header')
-    <h1>あゆみ一覧</h1>
+    <h1>軌跡一覧</h1>
 @endsection
 
 @section('content')
