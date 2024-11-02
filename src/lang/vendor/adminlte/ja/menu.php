@@ -16,7 +16,7 @@ return [
     'important' => '重要',
     'warning' => '警告',
     'information' => 'インフォメーション',
-    'journey_log' =>'あゆみ管理',
-    'list-journey_log' =>'あゆみ一覧',
-    'create-journey_log' =>'あゆみ登録',
+    'journey_log' =>'軌跡管理',
+    'list-journey_log' =>'軌跡一覧',
+    'create-journey_log' =>'軌跡登録',
 ];

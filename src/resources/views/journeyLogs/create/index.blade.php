@@ -1,9 +1,9 @@
 @extends('layout.page')
 
-@section('title', 'あゆみ登録')
+@section('title', '軌跡登録')
 
 @section('content_header')
-    <h1>あゆみ登録</h1>
+    <h1>軌跡登録</h1>
 @endsection
 
 @section('content')

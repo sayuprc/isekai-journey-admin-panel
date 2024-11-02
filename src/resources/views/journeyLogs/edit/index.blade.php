@@ -5,11 +5,11 @@
 
 @extends('layout.page')
 
-@section('title', 'あゆみ更新')
+@section('title', '軌跡更新')
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>あゆみ更新</h1>
+        <h1>軌跡更新</h1>
 
         <form action="{{ route('journey-logs.delete.handle') }}" method="post">
             @csrf

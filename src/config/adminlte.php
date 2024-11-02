@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'title' => 'ヰ世界情緒のあゆみ',
+    'title' => 'ヰ世界情緒の軌跡',
     'title_prefix' => '',
     'title_postfix' => '| 管理画面',
 
@@ -72,7 +72,7 @@ return [
     |
     */
 
-    'logo' => '<b>ヰ世界情緒のあゆみ</b>',
+    'logo' => '<b>ヰ世界情緒の軌跡</b>',
     'logo_img' => 'favicon.svg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
