@@ -69,7 +69,7 @@ class DeleteJourneyLogTest extends TestCase
             ])
             ->assertStatus(302)
             ->assertLocation(route('journey-logs.index'))
-            ->assertSessionHas('message');
+            ->assertSessionHas('message', '削除しました');
     }
 
     #[Test]

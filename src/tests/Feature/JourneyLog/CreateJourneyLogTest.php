@@ -88,7 +88,7 @@ class CreateJourneyLogTest extends TestCase
             ])
             ->assertStatus(302)
             ->assertLocation(route('journey-logs.index'))
-            ->assertSessionHas('message');
+            ->assertSessionHas('message', '登録完了しました');
     }
 
     #[Test]
