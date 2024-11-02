@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   test:
-    name: PHPUnit (PHP ${{ matrix.php-versions }})
+    name: PHPUnit (PHP ${{ matrix.php-versions }}/Node ${{ matrix.node-versions }})
 
     runs-on: ubuntu-latest
 
@@ -12,6 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ["8.3"]
+        node-versions: ["20"]
 
     steps:
       - name: Checkout the code
@@ -33,7 +34,21 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
 
-      - name: Install packages
+      - name: npm cache
+        id: npm_cache
+        uses: actions/cache@v4
+        with:
+          path: ./src/node_modules
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-package-
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-versions }}
+
+      - name: Install composer packages
         shell: bash
         if: steps.composer_cache.outputs.cache-hit != 'true'
         run: |
@@ -41,7 +56,42 @@ jobs:
           cd src
           composer install -n --prefer-dist
 
+      - name: Install npm packages
+        shell: bash
+        if: steps.npm_cache.outputs.cache-hit != 'true'
+        run: |
+          echo 'Install packages'
+          cd src
+          npm i
+
+      - name: Create Database
+        shell: bash
+        run: |
+          cd src
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Setup env
+        shell: bash
+        run: |
+          cd src
+          cp .env.testing.example .env.testing
+          php artisan key:generate --env=testing
+
+      - name: Build
+        shell: bash
+        run: |
+          cd src
+          npm run build
+
+      - name: Migrate
+        shell: bash
+        run: |
+          cd src
+          php artisan migrate --env=testing
+
       - name: Run PHPUnit
         run: |
           cd src
           composer test-unit
+          composer test-feature
