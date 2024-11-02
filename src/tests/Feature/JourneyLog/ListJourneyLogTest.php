@@ -17,12 +17,15 @@ use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Models\User;
 use DateTimeImmutable;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ListJourneyLogTest extends TestCase
 {
+    use DatabaseTransactions;
+
     private User $user;
 
     public function setUp(): void
