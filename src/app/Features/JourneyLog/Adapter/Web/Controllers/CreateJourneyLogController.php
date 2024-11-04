@@ -29,14 +29,14 @@ class CreateJourneyLogController extends Controller
                 $validated['from_on'],
                 $validated['to_on'],
                 (int)$validated['order_no'],
-                array_map(function ($item) {
+                array_map(function (array $item): array {
                     return [
-                        'link_name' => $item['link_name'],
+                        'journey_log_link_name' => $item['journey_log_link_name'],
                         'url' => $item['url'],
                         'order_no' => (int)$item['order_no'],
-                        'link_type_id' => $item['link_type_id'],
+                        'journey_log_link_type_id' => $item['journey_log_link_type_id'],
                     ];
-                }, $validated['links'] ?? []),
+                }, $validated['journey_log_links'] ?? []),
             ));
         } catch (Exception $e) {
             return back()

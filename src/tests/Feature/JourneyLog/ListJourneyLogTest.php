@@ -6,10 +6,10 @@ namespace Tests\Feature\JourneyLog;
 
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
-use App\Features\JourneyLog\Domain\Entities\Link;
-use App\Features\JourneyLog\Domain\Entities\LinkId;
-use App\Features\JourneyLog\Domain\Entities\LinkName;
-use App\Features\JourneyLog\Domain\Entities\LinkTypeId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
@@ -66,12 +66,12 @@ class ListJourneyLogTest extends TestCase
                             new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                             new OrderNo(0),
                             [
-                                new Link(
-                                    new LinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
-                                    new LinkName('管理画面'),
+                                new JourneyLogLink(
+                                    new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
+                                    new JourneyLogLinkName('管理画面'),
                                     new Url('https://local.admin.journey.isekaijoucho.fan'),
                                     new OrderNo(0),
-                                    new LinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
+                                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
                                 ),
                             ],
                         ),

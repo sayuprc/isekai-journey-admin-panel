@@ -16,14 +16,14 @@ const copyFromTo = (): void => {
 copyTodayBtn.addEventListener('click', copyToday)
 copyFromToBtn.addEventListener('click', copyFromTo)
 
-type LinkTypes = LinkType[]
+type JourneyLogLinkTypes = JourneyLogLinkType[]
 
-interface LinkType {
-  id: string
-  name: string
+interface JourneyLogLinkType {
+  journey_log_link_type_id: string
+  journey_log_link_type_name: string
 }
 
-const linkTypes = (window.linkTypes) as LinkTypes
+const journeyLogLinkTypes = (window.journeyLogLinkTypes) as JourneyLogLinkTypes
 
 const addLinkBtn = document.getElementById('add_link_btn') as HTMLButtonElement
 const links = document.getElementById('links') as HTMLDivElement
@@ -54,7 +54,7 @@ const createInput = (id: string, textContent: string, type: string, value: strin
   return div
 }
 
-const createSelect = (id: string, textContent: string, data: LinkTypes, selected?: string): HTMLDivElement => {
+const createSelect = (id: string, textContent: string, data: JourneyLogLinkTypes, selected?: string): HTMLDivElement => {
   const div = document.createElement('div')
   div.className = 'form-group'
 
@@ -72,9 +72,9 @@ const createSelect = (id: string, textContent: string, data: LinkTypes, selected
 
   data.forEach((item) => {
     const option = document.createElement('option')
-    option.value = item.id
-    option.textContent = item.name
-    if (selected === item.id) {
+    option.value = item.journey_log_link_type_id
+    option.textContent = item.journey_log_link_type_name
+    if (selected === item.journey_log_link_type_id) {
       option.selected = true
     }
     select.appendChild(option)
@@ -93,38 +93,38 @@ const addLink = (): void => {
   const div = document.createElement('div')
   div.className = 'link form-group'
 
-  div.appendChild(createInput(`links[${count}][link_name]`, `リンク名${count + 1}`, `text`))
-  div.appendChild(createInput(`links[${count}][url]`, `リンクURL${count + 1}`, `text`))
-  div.appendChild(createInput<number>(`links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, 0))
-  div.appendChild(createSelect(`links[${count}][link_type_id]`, `リンク種別${count + 1}`, linkTypes))
+  div.appendChild(createInput(`journey_log_links[${count}][journey_log_link_name]`, `リンク名${count + 1}`, `text`))
+  div.appendChild(createInput(`journey_log_links[${count}][url]`, `リンクURL${count + 1}`, `text`))
+  div.appendChild(createInput(`journey_log_links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `0`))
+  div.appendChild(createSelect(`journey_log_links[${count}][journey_log_link_type_id]`, `リンク種別${count + 1}`, journeyLogLinkTypes))
 
   links.appendChild(div)
 }
 
 addLinkBtn.addEventListener('click', addLink)
 
-type OldLinks = OldLink[]
+type OldJourneyLogLinks = OldJourneyLogLink[]
 
-interface OldLink {
-  link_name: string
-  link_type_id: string
+interface OldJourneyLogLink {
+  journey_log_link_name: string
+  journey_log_link_type_id: string
   order_no: number
   url: string
 }
 
-const oldLinks = (window.oldLinks) as OldLinks
+const oldJourneyLogLinks = (window.oldJourneyLogLinks) as OldJourneyLogLinks
 
 // あれば復元
-oldLinks?.forEach((oldLink) => {
+oldJourneyLogLinks?.forEach((oldJourneyLogLink) => {
   const count = links.querySelectorAll('.link').length
 
   const div = document.createElement('div')
   div.className = 'link form-group'
 
-  div.appendChild(createInput(`links[${count}][link_name]`, `リンク名${count + 1}`, `text`, oldLink.link_name))
-  div.appendChild(createInput(`links[${count}][url]`, `リンクURL${count + 1}`, `text`, oldLink.url))
-  div.appendChild(createInput(`links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `${oldLink.order_no}`))
-  div.appendChild(createSelect(`links[${count}][link_type_id]`, `リンク種別${count + 1}`, linkTypes, oldLink.link_type_id))
+  div.appendChild(createInput(`journey_log_links[${count}][journey_log_link_name]`, `リンク名${count + 1}`, `text`, oldJourneyLogLink.journey_log_link_name))
+  div.appendChild(createInput(`journey_log_links[${count}][url]`, `リンクURL${count + 1}`, `text`, oldJourneyLogLink.url))
+  div.appendChild(createInput(`journey_log_links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `${oldJourneyLogLink.order_no}`))
+  div.appendChild(createSelect(`journey_log_links[${count}][journey_log_link_type_id]`, `リンク種別${count + 1}`, journeyLogLinkTypes, oldJourneyLogLink.journey_log_link_type_id))
 
   links.appendChild(div)
 })

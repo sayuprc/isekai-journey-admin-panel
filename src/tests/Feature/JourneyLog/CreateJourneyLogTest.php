@@ -77,12 +77,12 @@ class CreateJourneyLogTest extends TestCase
                 'from_on' => '2019-12-09',
                 'to_on' => '2019-12-09',
                 'order_no' => '1',
-                'links' => [
+                'journey_log_links' => [
                     [
-                        'link_name' => '管理画面',
+                        'journey_log_link_name' => '管理画面',
                         'url' => 'https://local.admin.journey.isekaijoucho.fan',
                         'order_no' => '1',
-                        'link_type_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                        'journey_log_link_type_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
                     ],
                 ],
             ])
@@ -124,12 +124,12 @@ class CreateJourneyLogTest extends TestCase
                 'from_on' => '',
                 'to_on' => '',
                 'order_no' => '',
-                'links' => [
+                'journey_log_links' => [
                     [
-                        'link_name' => '',
+                        'journey_log_link_name' => '',
                         'url' => '',
                         'order_no' => '',
-                        'link_type_id' => '',
+                        'journey_log_link_type_id' => '',
                     ],
                 ],
             ])
@@ -139,10 +139,10 @@ class CreateJourneyLogTest extends TestCase
                 'from_on',
                 'to_on',
                 'order_no',
-                'links.0.link_name',
-                'links.0.url',
-                'links.0.order_no',
-                'links.0.link_type_id',
+                'journey_log_links.0.journey_log_link_name',
+                'journey_log_links.0.url',
+                'journey_log_links.0.order_no',
+                'journey_log_links.0.journey_log_link_type_id',
             ]);
     }
 

@@ -6,10 +6,10 @@ namespace App\Features\JourneyLog\Infrastructures\Repositories;
 
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
-use App\Features\JourneyLog\Domain\Entities\Link;
-use App\Features\JourneyLog\Domain\Entities\LinkId;
-use App\Features\JourneyLog\Domain\Entities\LinkName;
-use App\Features\JourneyLog\Domain\Entities\LinkTypeId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
@@ -30,7 +30,7 @@ use Generated\IsekaiJourney\JourneyLog\GetJourneyLogRequest;
 use Generated\IsekaiJourney\JourneyLog\GetJourneyLogResponse;
 use Generated\IsekaiJourney\JourneyLog\JourneyLog as GrpcJourneyLog;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
-use Generated\IsekaiJourney\JourneyLog\Link as GrpcLink;
+use Generated\IsekaiJourney\JourneyLog\JourneyLogLink as GrpcLink;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsRequest;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsResponse;
 use Generated\IsekaiJourney\JourneyLog\Status;
@@ -88,7 +88,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
-        $request->setLinks($this->toGrpcLinks($journeyLog->links));
+        $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         /**
          * @var CreateJourneyLogResponse $response
@@ -143,7 +143,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
         $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
         $request->setOrderNo($journeyLog->orderNo->value);
-        $request->setLinks($this->toGrpcLinks($journeyLog->links));
+        $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         /**
          * @var EditJourneyLogResponse $response
@@ -197,16 +197,16 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
     private function toJourneyLog(GrpcJourneyLog $journeyLog): JourneyLog
     {
-        $links = [];
+        $journeyLogLinks = [];
 
         /** @var GrpcLink $link */
-        foreach ($journeyLog->getLinks() as $link) {
-            $links[] = new Link(
-                new LinkId($link->getLinkId()),
-                new LinkName($link->getLinkName()),
+        foreach ($journeyLog->getJourneyLogLinks() as $link) {
+            $journeyLogLinks[] = new JourneyLogLink(
+                new JourneyLogLinkId($link->getJourneyLogLinkId()),
+                new JourneyLogLinkName($link->getJourneyLogLinkName()),
                 new Url($link->getUrl()),
                 new OrderNo($link->getOrderNo()),
-                new LinkTypeId($link->getLinkTypeId()),
+                new JourneyLogLinkTypeId($link->getJourneyLogLinkTypeId()),
             );
         }
 
@@ -232,22 +232,22 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
                 )
             ),
             new OrderNo($journeyLog->getOrderNo()),
-            $links,
+            $journeyLogLinks,
         );
     }
 
     /**
-     * @param Link[] $links
+     * @param JourneyLogLink[] $journeyLogLinks
      *
      * @return GrpcLink[]
      */
-    private function toGrpcLinks(array $links): array
+    private function toGrpcLinks(array $journeyLogLinks): array
     {
         $grpcLinks = [];
 
-        foreach ($links as $link) {
+        foreach ($journeyLogLinks as $link) {
             $grpcLink = new GrpcLink();
-            $grpcLink->setLinkTypeId($link->linkTypeId->value);
+            $grpcLink->setJourneyLogLinkTypeId($link->journeyLogLinkTypeId->value);
 
             $grpcLinks[] = $grpcLink;
         }

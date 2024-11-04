@@ -37,23 +37,23 @@ class EditRequest extends FormRequest
                 'required',
                 'numeric',
             ],
-            'links' => [
+            'journey_log_links' => [
                 'nullable',
                 'array',
             ],
-            'links.*.link_name' => [
+            'journey_log_links.*.journey_log_link_name' => [
                 'required',
                 'string',
             ],
-            'links.*.url' => [
+            'journey_log_links.*.url' => [
                 'required',
                 'string',
             ],
-            'links.*.order_no' => [
+            'journey_log_links.*.order_no' => [
                 'required',
                 'numeric',
             ],
-            'links.*.link_type_id' => [
+            'journey_log_links.*.journey_log_link_type_id' => [
                 'required',
                 'string',
             ],

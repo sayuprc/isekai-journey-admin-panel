@@ -43,14 +43,14 @@
 
     <script>
         // TODO 正しいマスタ値にする
-        window.linkTypes = [
-            {"id": "", "name": "リンク種別"},
-            {"id": "100", "name": "hoge"},
-            {"id": "101", "name": "fuga"},
-            {"id": "102", "name": "piyo"},
+        window.journeyLogLinkTypes = [
+            {"journey_log_link_type_id": "", "journey_log_link_type_name": "リンク種別"},
+            {"journey_log_link_type_id": "100", "journey_log_link_type_name": "hoge"},
+            {"journey_log_link_type_id": "101", "journey_log_link_type_name": "fuga"},
+            {"journey_log_link_type_id": "102", "journey_log_link_type_name": "piyo"},
         ]
 
-        window.oldLinks = @json(old('links'))
+        window.oldJourneyLogLinks = @json(old('journey_log_links'))
     </script>
 
     @vite(['resources/ts/journey-log.ts'])
