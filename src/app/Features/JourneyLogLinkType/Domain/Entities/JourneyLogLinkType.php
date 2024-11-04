@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Features\JourneyLog\Domain\Entities;
+namespace App\Features\JourneyLogLinkType\Domain\Entities;
 
 class JourneyLogLinkType
 {
