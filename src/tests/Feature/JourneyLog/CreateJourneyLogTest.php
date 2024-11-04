@@ -7,6 +7,7 @@ namespace Tests\Feature\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -39,9 +40,22 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function showCreateForm(): void
     {
-        $this->actingAs($this->user)
+        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
+            return new class () implements JourneyLogLinkTypeRepositoryInterface {
+                public function listJourneyLogLinkTypes(): array
+                {
+                    return [];
+                }
+            };
+        });
+
+        $response = $this->actingAs($this->user)
             ->get(route('journey-logs.create.index'))
             ->assertStatus(200);
+
+        $data = $response->getOriginalContent()->getData();
+
+        $this->assertCount(0, $data['journeyLogLinkTypes']);
     }
 
     #[Test]

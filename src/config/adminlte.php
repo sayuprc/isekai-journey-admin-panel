@@ -317,6 +317,14 @@ return [
             'url' => 'journey-logs/create',
             'icon' => 'fas fa-plus',
         ],
+        [
+            'header' => 'journey_log_link_type',
+        ],
+        [
+            'text' => 'list-journey_log_link_type',
+            'url' => 'journey-log-link-types',
+            'icon' => 'fas fa-list',
+        ],
     ],
 
     /*

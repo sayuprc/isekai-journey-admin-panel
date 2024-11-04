@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Features\JourneyLog\Infrastructures\Repositories\Exceptions;
+namespace App\Shared\Exceptions;
 
 use Exception;
 

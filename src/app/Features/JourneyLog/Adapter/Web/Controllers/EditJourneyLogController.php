@@ -12,6 +12,8 @@ use App\Features\JourneyLog\Port\UseCases\Edit\EditInteractor;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditRequest;
 use App\Features\JourneyLog\Port\UseCases\Get\GetInteractor;
 use App\Features\JourneyLog\Port\UseCases\Get\GetRequest;
+use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
+use App\Features\JourneyLogLinkType\Port\UseCases\List\ListInteractor;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -19,10 +21,11 @@ use Illuminate\Http\RedirectResponse;
 
 class EditJourneyLogController extends Controller
 {
-    public function index(string $journeyLogId, GetInteractor $interactor): RedirectResponse|View
+    public function index(string $journeyLogId, GetInteractor $getInteractor, ListInteractor $listInteractor): RedirectResponse|View
     {
         try {
-            $response = $interactor->handle(new GetRequest($journeyLogId));
+            $getResponse = $getInteractor->handle(new GetRequest($journeyLogId));
+            $listResponse = $listInteractor->handle();
         } catch (Exception $e) {
             return redirect()
                 ->route('journey-logs.index')
@@ -33,11 +36,11 @@ class EditJourneyLogController extends Controller
 
         // TODO リファクタする
         $journeyLog = new ViewJourneyLog(
-            $response->journeyLog->journeyLogId->value,
-            $response->journeyLog->story->value,
-            new ViewPeriod($response->journeyLog->period->fromOn),
-            new ViewPeriod($response->journeyLog->period->toOn),
-            $response->journeyLog->orderNo->value,
+            $getResponse->journeyLog->journeyLogId->value,
+            $getResponse->journeyLog->story->value,
+            new ViewPeriod($getResponse->journeyLog->period->fromOn),
+            new ViewPeriod($getResponse->journeyLog->period->toOn),
+            $getResponse->journeyLog->orderNo->value,
             array_map(function (JourneyLogLink $journeyLogLink): array {
                 return [
                     'journey_log_link_name' => $journeyLogLink->journeyLogLinkName->value,
@@ -45,10 +48,16 @@ class EditJourneyLogController extends Controller
                     'order_no' => $journeyLogLink->orderNo->value,
                     'journey_log_link_type_id' => $journeyLogLink->journeyLogLinkTypeId->value,
                 ];
-            }, $response->journeyLog->journeyLogLinks)
+            }, $getResponse->journeyLog->journeyLogLinks)
         );
 
-        return view('journeyLogs.edit.index', compact('journeyLog'));
+        $journeyLogLinkTypes = [];
+
+        foreach ($listResponse->journeyLogLinkTypes as $journeyLogLinkType) {
+            $journeyLogLinkTypes[] = new ListViewJourneyLogLinkType($journeyLogLinkType);
+        }
+
+        return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));
     }
 
     public function handle(WebEditRequest $request, EditInteractor $interactor): RedirectResponse

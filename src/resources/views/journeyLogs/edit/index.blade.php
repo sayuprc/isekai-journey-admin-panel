@@ -1,5 +1,6 @@
 @php
     use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
+    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
     /** @var ViewJourneyLog $journeyLog */
 @endphp
 
@@ -60,14 +61,18 @@
         <x-adminlte-button label="更新" type="submit" theme="primary"/>
     </form>
 
+    @php
+        /** @var ListViewJourneyLogLinkType[] $journeyLogLinkTypes */
+        $data = array_map(function(ListViewJourneyLogLinkType $journeyLogLinkType):array{
+            return [
+                'journey_log_link_type_id' => $journeyLogLinkType->journeyLogLinkTypeId,
+                'journey_log_link_type_name' => $journeyLogLinkType->journeyLogLinkTypeName,
+            ];
+        }, $journeyLogLinkTypes);
+    @endphp
+
     <script>
-        // TODO 正しいマスタ値にする
-        window.journeyLogLinkTypes = [
-            {"journey_log_link_type_id": "", "journey_log_link_type_name": "リンク種別"},
-            {"journey_log_link_type_id": "100", "journey_log_link_type_name": "hoge"},
-            {"journey_log_link_type_id": "101", "journey_log_link_type_name": "fuga"},
-            {"journey_log_link_type_id": "102", "journey_log_link_type_name": "piyo"},
-        ]
+        window.journeyLogLinkTypes = @json($data)
 
         window.oldJourneyLogLinks = @json(old('journey_log_links', $journeyLog->journeyLogLinks))
     </script>

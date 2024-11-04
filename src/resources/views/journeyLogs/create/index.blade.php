@@ -1,3 +1,5 @@
+@php use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType; @endphp
+
 @extends('layout.page')
 
 @section('title', '軌跡登録')
@@ -21,34 +23,38 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3" value="{{ old('from_on') }}" id="from_on" />
-            <x-adminlte-input label="終了日" type="date" name="to_on" value="{{ old('to_on') }}" id="to_on" />
+            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3" value="{{ old('from_on') }}"
+                              id="from_on"/>
+            <x-adminlte-input label="終了日" type="date" name="to_on" value="{{ old('to_on') }}" id="to_on"/>
         </div>
 
-        <x-adminlte-button label="今日" type="button" id="copy_today_btn" />
-        <x-adminlte-button label="開始日を終了日にコピー" id="copy_from_to_btn" />
+        <x-adminlte-button label="今日" type="button" id="copy_today_btn"/>
+        <x-adminlte-button label="開始日を終了日にコピー" id="copy_from_to_btn"/>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}" />
+            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}"/>
         </div>
 
         <div class="form-group">
-            <x-adminlte-button label="リンク追加" type="button" id="add_link_btn" />
+            <x-adminlte-button label="リンク追加" type="button" id="add_link_btn"/>
             <div id="links">
             </div>
         </div>
 
-        <x-adminlte-button label="登録" type="submit" theme="primary" />
+        <x-adminlte-button label="登録" type="submit" theme="primary"/>
     </form>
 
+    @php
+        /** @var ListViewJourneyLogLinkType[] $journeyLogLinkTypes */
+        $data = array_map(function(ListViewJourneyLogLinkType $journeyLogLinkType):array{
+            return [
+                'journey_log_link_type_id' => $journeyLogLinkType->journeyLogLinkTypeId,
+                'journey_log_link_type_name' => $journeyLogLinkType->journeyLogLinkTypeName,
+            ];
+        }, $journeyLogLinkTypes);
+    @endphp
     <script>
-        // TODO 正しいマスタ値にする
-        window.journeyLogLinkTypes = [
-            {"journey_log_link_type_id": "", "journey_log_link_type_name": "リンク種別"},
-            {"journey_log_link_type_id": "100", "journey_log_link_type_name": "hoge"},
-            {"journey_log_link_type_id": "101", "journey_log_link_type_name": "fuga"},
-            {"journey_log_link_type_id": "102", "journey_log_link_type_name": "piyo"},
-        ]
+        window.journeyLogLinkTypes = @json($data)
 
         window.oldJourneyLogLinks = @json(old('journey_log_links'))
     </script>

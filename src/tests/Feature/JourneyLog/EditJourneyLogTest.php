@@ -11,6 +11,7 @@ use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -51,6 +52,15 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function showEditForm(): void
     {
+        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
+            return new class () implements JourneyLogLinkTypeRepositoryInterface {
+                public function listJourneyLogLinkTypes(): array
+                {
+                    return [];
+                }
+            };
+        });
+
         $this->app->bind(JourneyLogRepositoryInterface::class, function () {
             return new class () implements JourneyLogRepositoryInterface {
                 public function listJourneyLogs(): array
@@ -89,6 +99,7 @@ class EditJourneyLogTest extends TestCase
         $data = $response->getOriginalContent()->getData();
 
         $this->assertInstanceOf(ViewJourneyLog::class, $data['journeyLog']);
+        $this->assertCount(0, $data['journeyLogLinkTypes']);
     }
 
     #[Test]
