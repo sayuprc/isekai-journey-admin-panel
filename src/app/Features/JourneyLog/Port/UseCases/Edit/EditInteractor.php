@@ -6,10 +6,10 @@ namespace App\Features\JourneyLog\Port\UseCases\Edit;
 
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
-use App\Features\JourneyLog\Domain\Entities\Link;
-use App\Features\JourneyLog\Domain\Entities\LinkId;
-use App\Features\JourneyLog\Domain\Entities\LinkName;
-use App\Features\JourneyLog\Domain\Entities\LinkTypeId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkId;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
@@ -32,31 +32,31 @@ class EditInteractor
             new Story($request->story),
             new Period(new DateTimeImmutable($request->fromOn), new DateTimeImmutable($request->toOn)),
             new OrderNo($request->orderNo),
-            $this->toLinks($request->links),
+            $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
         $this->client->editJourneyLog($journeyLog);
     }
 
     /**
-     * @param array<array{link_name: string, url: string, order_no: int, link_type_id: string}> $data
+     * @param array<array{journey_log_link_name: string, url: string, order_no: int, journey_log_link_type_id: string}> $data
      *
-     * @return Link[]
+     * @return JourneyLogLink[]
      */
-    private function toLinks(array $data): array
+    private function toJourneyLogLinks(array $data): array
     {
-        $links = [];
+        $journeyLogLinks = [];
 
         foreach ($data as $link) {
-            $links[] = new Link(
-                new LinkId(self::DUMMY_UUID), // リンクはデリートインサートなのでダミー値でよい
-                new LinkName($link['link_name']),
+            $journeyLogLinks[] = new JourneyLogLink(
+                new JourneyLogLinkId(self::DUMMY_UUID), // リンクはデリートインサートなのでダミー値でよい
+                new JourneyLogLinkName($link['journey_log_link_name']),
                 new Url($link['url']),
                 new OrderNo($link['order_no']),
-                new LinkTypeId($link['link_type_id']),
+                new JourneyLogLinkTypeId($link['journey_log_link_type_id']),
             );
         }
 
-        return $links;
+        return $journeyLogLinks;
     }
 }

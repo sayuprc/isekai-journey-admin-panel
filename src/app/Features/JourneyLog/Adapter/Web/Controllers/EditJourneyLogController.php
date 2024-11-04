@@ -7,7 +7,7 @@ namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
 use App\Features\JourneyLog\Adapter\Web\Requests\EditRequest as WebEditRequest;
-use App\Features\JourneyLog\Domain\Entities\Link;
+use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditInteractor;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditRequest;
 use App\Features\JourneyLog\Port\UseCases\Get\GetInteractor;
@@ -38,13 +38,14 @@ class EditJourneyLogController extends Controller
             new ViewPeriod($response->journeyLog->period->fromOn),
             new ViewPeriod($response->journeyLog->period->toOn),
             $response->journeyLog->orderNo->value,
-            array_map(function (Link $link) {
+            array_map(function (JourneyLogLink $journeyLogLink): array {
                 return [
-                    'link_name' => $link->linkName->value,
-                    'url' => $link->url->value,
-                    'link_type_id' => $link->linkTypeId->value,
+                    'journey_log_link_name' => $journeyLogLink->journeyLogLinkName->value,
+                    'url' => $journeyLogLink->url->value,
+                    'order_no' => $journeyLogLink->orderNo->value,
+                    'journey_log_link_type_id' => $journeyLogLink->journeyLogLinkTypeId->value,
                 ];
-            }, $response->journeyLog->links)
+            }, $response->journeyLog->journeyLogLinks)
         );
 
         return view('journeyLogs.edit.index', compact('journeyLog'));
@@ -61,14 +62,14 @@ class EditJourneyLogController extends Controller
                 $validated['from_on'],
                 $validated['to_on'],
                 (int)$validated['order_no'],
-                array_map(function ($item) {
+                array_map(function (array $item): array {
                     return [
-                        'link_name' => $item['link_name'],
+                        'journey_log_link_name' => $item['journey_log_link_name'],
                         'url' => $item['url'],
                         'order_no' => (int)$item['order_no'],
-                        'link_type_id' => $item['link_type_id'],
+                        'journey_log_link_type_id' => $item['journey_log_link_type_id'],
                     ];
-                }, $validated['links'] ?? []),
+                }, $validated['journey_log_links'] ?? []),
             ));
         } catch (Exception $e) {
             return back()

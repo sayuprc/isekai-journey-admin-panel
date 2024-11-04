@@ -6,6 +6,6 @@ namespace App\Features\JourneyLog\Domain\Entities;
 
 use App\Shared\Domain\StringValueObject;
 
-class LinkTypeId extends StringValueObject
+class JourneyLogLinkId extends StringValueObject
 {
 }
