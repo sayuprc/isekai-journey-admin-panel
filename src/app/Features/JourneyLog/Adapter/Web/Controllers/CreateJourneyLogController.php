@@ -7,6 +7,8 @@ namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 use App\Features\JourneyLog\Adapter\Web\Requests\CreateRequest as WebCreateRequest;
 use App\Features\JourneyLog\Port\UseCases\Create\CreateInteractor;
 use App\Features\JourneyLog\Port\UseCases\Create\CreateRequest;
+use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
+use App\Features\JourneyLogLinkType\Port\UseCases\List\ListInteractor;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -14,9 +16,17 @@ use Illuminate\Http\RedirectResponse;
 
 class CreateJourneyLogController extends Controller
 {
-    public function index(): View
+    public function index(ListInteractor $interactor): View
     {
-        return view('journeyLogs.create.index');
+        $response = $interactor->handle();
+
+        $journeyLogLinkTypes = [];
+
+        foreach ($response->journeyLogLinkTypes as $journeyLogLinkType) {
+            $journeyLogLinkTypes[] = new ListViewJourneyLogLinkType($journeyLogLinkType);
+        }
+
+        return view('journeyLogs.create.index', compact('journeyLogLinkTypes'));
     }
 
     public function handle(WebCreateRequest $request, CreateInteractor $interactor): RedirectResponse
