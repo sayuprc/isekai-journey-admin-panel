@@ -247,6 +247,9 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         foreach ($journeyLogLinks as $link) {
             $grpcLink = new GrpcLink();
+            $grpcLink->setJourneyLogLinkId($link->journeyLogLinkId->value);
+            $grpcLink->setJourneyLogLinkName($link->journeyLogLinkName->value);
+            $grpcLink->setUrl($link->url->value);
             $grpcLink->setJourneyLogLinkTypeId($link->journeyLogLinkTypeId->value);
 
             $grpcLinks[] = $grpcLink;
