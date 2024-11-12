@@ -41,29 +41,21 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showList(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
-            return new class () implements JourneyLogLinkTypeRepositoryInterface {
-                public function listJourneyLogLinkTypes(): array
-                {
-                    return [
-                        new JourneyLogLinkType(
-                            new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                            new JourneyLogLinkTypeName('名前1'),
-                            new OrderNo(1),
-                        ),
-                        new JourneyLogLinkType(
-                            new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
-                            new JourneyLogLinkTypeName('名前2'),
-                            new OrderNo(2),
-                        ),
-                    ];
-                }
-
-                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [
+                new JourneyLogLinkType(
+                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogLinkTypeName('名前1'),
+                    new OrderNo(1),
+                ),
+                new JourneyLogLinkType(
+                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new JourneyLogLinkTypeName('名前2'),
+                    new OrderNo(2),
+                ),
+            ])
+        );
 
         $response = $this->actingAs($this->user)
             ->get(route('journey-log-link-types.index'))
@@ -84,18 +76,10 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
-            return new class () implements JourneyLogLinkTypeRepositoryInterface {
-                public function listJourneyLogLinkTypes(): array
-                {
-                    return [];
-                }
-
-                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [])
+        );
 
         $response = $this->actingAs($this->user)
             ->get(route('journey-log-link-types.index'))

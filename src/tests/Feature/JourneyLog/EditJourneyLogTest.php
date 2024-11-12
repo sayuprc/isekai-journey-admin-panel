@@ -11,7 +11,6 @@ use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use DateTimeImmutable;
@@ -53,49 +52,21 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function showEditForm(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
-            return new class () implements JourneyLogLinkTypeRepositoryInterface {
-                public function listJourneyLogLinkTypes(): array
-                {
-                    return [];
-                }
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [])
+        );
 
-                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-                {
-                }
-            };
-        });
-
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                    return new JourneyLog(
-                        new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                        new Story('軌跡'),
-                        new Period(new DateTimeImmutable(), new DateTimeImmutable()),
-                        new OrderNo(1),
-                        []
-                    );
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(getJourneyLog: fn (): JourneyLog => new JourneyLog(
+                new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new Story('軌跡'),
+                new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                new OrderNo(1),
+                []
+            ))
+        );
 
         $response = $this->actingAs($this->user)
             ->get(route('journey-logs.edit.index', ['journeyLogId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA']))
@@ -110,30 +81,10 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function canEdit(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                    return new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA');
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(editJourneyLog: fn (): JourneyLogId => new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-logs.edit.handle'), [
@@ -159,29 +110,10 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function emptyParameters(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-logs.edit.handle'), [
@@ -216,29 +148,10 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function invalidFormatDate(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-logs.edit.handle'), [
@@ -257,29 +170,10 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function inversionDate(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-logs.edit.handle'), [
