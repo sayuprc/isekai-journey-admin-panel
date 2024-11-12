@@ -7,6 +7,7 @@ use App\Features\JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\ListJourneyLogController;
+use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
 use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,5 @@ Route::middleware('auth')->group(function (): void {
         ->name('journey-logs.delete.handle');
 
     Route::get('/journey-log-link-types', [ListJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.index');
+    Route::get('/journey-log-link-types/create', [CreateJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.create.index');
 });

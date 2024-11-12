@@ -21,4 +21,5 @@ return [
     'create-journey_log' =>'軌跡登録',
     'journey_log_link_type' =>'軌跡リンク種別管理',
     'list-journey_log_link_type' =>'軌跡リンク種別一覧',
+    'create-journey_log_link_type' =>'軌跡リンク種別登録',
 ];

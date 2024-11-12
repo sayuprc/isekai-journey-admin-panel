@@ -325,6 +325,11 @@ return [
             'url' => 'journey-log-link-types',
             'icon' => 'fas fa-list',
         ],
+        [
+            'text' => 'create-journey_log_link_type',
+            'url' => 'journey-log-link-types/create',
+            'icon' => 'fas fa-plus',
+        ],
     ],
 
     /*
