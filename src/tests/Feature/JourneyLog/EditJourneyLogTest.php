@@ -11,6 +11,7 @@ use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use DateTimeImmutable;
@@ -57,6 +58,10 @@ class EditJourneyLogTest extends TestCase
                 public function listJourneyLogLinkTypes(): array
                 {
                     return [];
+                }
+
+                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+                {
                 }
             };
         });

@@ -12,4 +12,6 @@ interface JourneyLogLinkTypeRepositoryInterface
      * @return JourneyLogLinkType[]
      */
     public function listJourneyLogLinkTypes(): array;
+
+    public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void;
 }
