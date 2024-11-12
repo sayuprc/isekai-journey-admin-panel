@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
-use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -46,18 +45,10 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
-            return new class () implements JourneyLogLinkTypeRepositoryInterface {
-                public function listJourneyLogLinkTypes(): array
-                {
-                    return [];
-                }
-
-                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository()
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-log-link-types.create.handle'), [
@@ -72,18 +63,10 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function emptyParameters(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function () {
-            return new class () implements JourneyLogLinkTypeRepositoryInterface {
-                public function listJourneyLogLinkTypes(): array
-                {
-                    return [];
-                }
-
-                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository()
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-log-link-types.create.handle'), [

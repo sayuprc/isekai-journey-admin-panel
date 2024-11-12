@@ -48,53 +48,33 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showList(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                    return [
-                        new JourneyLog(
-                            new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                            new Story('軌跡 A'),
-                            new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(listJourneyLogs: fn (): array => [
+                new JourneyLog(
+                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new Story('軌跡 A'),
+                    new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                    new OrderNo(0),
+                    [],
+                ),
+                new JourneyLog(
+                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new Story('軌跡 B'),
+                    new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                    new OrderNo(0),
+                    [
+                        new JourneyLogLink(
+                            new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
+                            new JourneyLogLinkName('管理画面'),
+                            new Url('https://local.admin.journey.isekaijoucho.fan'),
                             new OrderNo(0),
-                            [],
+                            new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
                         ),
-                        new JourneyLog(
-                            new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
-                            new Story('軌跡 B'),
-                            new Period(new DateTimeImmutable(), new DateTimeImmutable()),
-                            new OrderNo(0),
-                            [
-                                new JourneyLogLink(
-                                    new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
-                                    new JourneyLogLinkName('管理画面'),
-                                    new Url('https://local.admin.journey.isekaijoucho.fan'),
-                                    new OrderNo(0),
-                                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
-                                ),
-                            ],
-                        ),
-                    ];
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+                    ],
+                ),
+            ])
+        );
 
         $response = $this->actingAs($this->user)
             ->get(route('journey-logs.index'))
@@ -116,30 +96,10 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->app->bind(JourneyLogRepositoryInterface::class, function () {
-            return new class () implements JourneyLogRepositoryInterface {
-                public function listJourneyLogs(): array
-                {
-                    return [];
-                }
-
-                public function createJourneyLog(JourneyLog $journeyLog): void
-                {
-                }
-
-                public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
-                {
-                }
-
-                public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
-                {
-                }
-
-                public function deleteJourneyLog(JourneyLogId $journeyLogId): void
-                {
-                }
-            };
-        });
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(listJourneyLogs: fn (): array => [])
+        );
 
         $response = $this->actingAs($this->user)
             ->get(route('journey-logs.index'))
