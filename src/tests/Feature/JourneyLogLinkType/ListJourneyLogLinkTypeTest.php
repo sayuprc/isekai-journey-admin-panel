@@ -58,6 +58,10 @@ class ListJourneyLogLinkTypeTest extends TestCase
                         ),
                     ];
                 }
+
+                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+                {
+                }
             };
         });
 
@@ -85,6 +89,10 @@ class ListJourneyLogLinkTypeTest extends TestCase
                 public function listJourneyLogLinkTypes(): array
                 {
                     return [];
+                }
+
+                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+                {
                 }
             };
         });

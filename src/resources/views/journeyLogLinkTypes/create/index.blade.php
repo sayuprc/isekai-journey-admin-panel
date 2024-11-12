@@ -14,7 +14,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="" method="post">
+    <form action="{{ route('journey-log-link-types.create.handle') }}" method="post">
         @csrf
         <x-adminlte-textarea label="名前" name="journey_log_link_type_name">
             {{ old('journey_log_link_type_name') }}

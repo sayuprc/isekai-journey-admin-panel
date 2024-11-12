@@ -33,4 +33,5 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('/journey-log-link-types', [ListJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.index');
     Route::get('/journey-log-link-types/create', [CreateJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.create.index');
+    Route::post('/journey-log-link-types/create', [CreateJourneyLogLinkTypeController::class, 'handle'])->name('journey-log-link-types.create.handle');
 });

@@ -7,6 +7,7 @@ namespace Tests\Feature\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -45,6 +46,10 @@ class CreateJourneyLogTest extends TestCase
                 public function listJourneyLogLinkTypes(): array
                 {
                     return [];
+                }
+
+                public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+                {
                 }
             };
         });
