@@ -8,6 +8,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
+use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Closure;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -69,16 +70,19 @@ abstract class TestCase extends BaseTestCase
     protected function getJourneyLogLinkTypeRepository(
         ?Closure $listJourneyLogLinkTypes = null,
         ?Closure $createJourneyLogLinkType = null,
+        ?Closure $getJourneyLogLinkType = null,
     ): JourneyLogLinkTypeRepositoryInterface {
         $none = function () {};
 
         return new class (
             $listJourneyLogLinkTypes ?? $none,
             $createJourneyLogLinkType ?? $none,
+            $getJourneyLogLinkType ?? $none,
         ) implements JourneyLogLinkTypeRepositoryInterface {
             public function __construct(
                 private readonly Closure $listJourneyLogLinkTypes,
                 private readonly Closure $createJourneyLogLinkType,
+                private readonly Closure $getJourneyLogLinkType,
             ) {
             }
 
@@ -90,6 +94,11 @@ abstract class TestCase extends BaseTestCase
             public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
             {
                 ($this->createJourneyLogLinkType)($journeyLogLinkType);
+            }
+
+            public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
+            {
+                return ($this->getJourneyLogLinkType)($journeyLogLinkTypeId);
             }
         };
     }
