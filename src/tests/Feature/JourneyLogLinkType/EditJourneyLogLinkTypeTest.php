@@ -74,4 +74,39 @@ class EditJourneyLogLinkTypeTest extends TestCase
 
         $this->assertInstanceOf(ViewJourneyLogLinkType::class, $data['journeyLogLinkType']);
     }
+
+    #[Test]
+    public function canEdit(): void
+    {
+        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository());
+
+        $this->actingAs($this->user)
+            ->post(route('journey-log-link-types.edit.handle'), [
+                'journey_log_link_type_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                'journey_log_link_type_name' => '動画',
+                'order_no' => '1',
+            ])
+            ->assertStatus(302)
+            ->assertLocation(route('journey-log-link-types.index'))
+            ->assertSessionHas('message', '更新しました');
+    }
+
+    #[Test]
+    public function emptyParameters(): void
+    {
+        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository());
+
+        $this->actingAs($this->user)
+            ->post(route('journey-log-link-types.edit.handle'), [
+                'journey_log_link_type_id' => '',
+                'journey_log_link_type_name' => '',
+                'order_no' => '',
+            ])
+            ->assertStatus(302)
+            ->assertSessionHasErrors([
+                'journey_log_link_type_id',
+                'journey_log_link_type_name',
+                'order_no',
+            ]);
+    }
 }

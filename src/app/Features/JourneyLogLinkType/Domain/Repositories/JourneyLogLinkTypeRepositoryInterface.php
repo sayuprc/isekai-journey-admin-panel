@@ -17,4 +17,6 @@ interface JourneyLogLinkTypeRepositoryInterface
     public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void;
 
     public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType;
+
+    public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void;
 }

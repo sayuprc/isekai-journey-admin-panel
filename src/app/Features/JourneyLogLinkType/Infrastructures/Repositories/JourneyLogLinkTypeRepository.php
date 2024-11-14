@@ -13,6 +13,8 @@ use App\Shared\Exceptions\APIException;
 use Exception;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeResponse;
+use Generated\IsekaiJourney\JourneyLogLinkType\EditJourneyLogLinkTypeRequest;
+use Generated\IsekaiJourney\JourneyLogLinkType\EditJourneyLogLinkTypeResponse;
 use Generated\IsekaiJourney\JourneyLogLinkType\GetJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\GetJourneyLogLinkTypeResponse;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkType as GrpcJourneyLogLinkType;
@@ -99,6 +101,29 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         }
 
         return $this->toJourneyLogLinkType($response->getJourneyLogLinkType());
+    }
+
+    public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+    {
+        $request = new EditJourneyLogLinkTypeRequest();
+
+        $request->setJourneyLogLinkTypeId($journeyLogLinkType->journeyLogLinkTypeId->value);
+        $request->setJourneyLogLinkTypeName($journeyLogLinkType->journeyLogLinkTypeName->value);
+        $request->setOrderNo($journeyLogLinkType->orderNo->value);
+
+        /**
+         * @var EditJourneyLogLinkTypeResponse $response
+         * @var stdClass                       $status
+         */
+        [$response, $status] = $this->client->EditJourneyLogLinkType($request)->wait();
+
+        if ($status->code !== STATUS_OK) {
+            throw new APIException("API Execution Errors: {$status->details}", $status->code);
+        }
+
+        if ($response->getStatus() !== Status::SUCCESS) {
+            throw new Exception($response->getMessage());
+        }
     }
 
     private function toJourneyLogLinkType(GrpcJourneyLogLinkType $journeyLogLinkType): JourneyLogLinkType

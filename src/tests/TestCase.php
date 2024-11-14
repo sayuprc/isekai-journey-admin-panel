@@ -78,11 +78,13 @@ abstract class TestCase extends BaseTestCase
             $listJourneyLogLinkTypes ?? $none,
             $createJourneyLogLinkType ?? $none,
             $getJourneyLogLinkType ?? $none,
+            $editJourneyLogLinkType ?? $none,
         ) implements JourneyLogLinkTypeRepositoryInterface {
             public function __construct(
                 private readonly Closure $listJourneyLogLinkTypes,
                 private readonly Closure $createJourneyLogLinkType,
                 private readonly Closure $getJourneyLogLinkType,
+                private readonly Closure $editJourneyLogLinkType,
             ) {
             }
 
@@ -99,6 +101,11 @@ abstract class TestCase extends BaseTestCase
             public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
             {
                 return ($this->getJourneyLogLinkType)($journeyLogLinkTypeId);
+            }
+
+            public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+            {
+                ($this->editJourneyLogLinkType)($journeyLogLinkType);
             }
         };
     }

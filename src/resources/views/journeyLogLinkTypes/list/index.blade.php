@@ -26,7 +26,7 @@
             <tr>
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
                 <td>{{ $journeyLogLinkType->orderNo }}</td>
-                <td><a href="{{ $journeyLogLinkType->journeyLogLinkTypeId }}">編集</a></td>
+                <td><a href="{{ route('journey-log-link-types.edit.index', $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a></td>
             </tr>
         @endforeach
     </x-adminlte-datatable>

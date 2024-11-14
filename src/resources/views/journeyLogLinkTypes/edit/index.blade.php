@@ -28,7 +28,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="" method="post">
+    <form action="{{ route('journey-log-link-types.edit.handle') }}" method="post">
         @csrf
         <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
 
