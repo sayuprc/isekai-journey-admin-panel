@@ -13,6 +13,8 @@ use App\Shared\Exceptions\APIException;
 use Exception;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeResponse;
+use Generated\IsekaiJourney\JourneyLogLinkType\GetJourneyLogLinkTypeRequest;
+use Generated\IsekaiJourney\JourneyLogLinkType\GetJourneyLogLinkTypeResponse;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkType as GrpcJourneyLogLinkType;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Generated\IsekaiJourney\JourneyLogLinkType\ListJourneyLogLinkTypesRequest;
@@ -74,6 +76,29 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         if ($response->getStatus() !== Status::SUCCESS) {
             throw new Exception($response->getMessage());
         }
+    }
+
+    public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
+    {
+        $request = new GetJourneyLogLinkTypeRequest();
+
+        $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
+
+        /**
+         * @var GetJourneyLogLinkTypeResponse $response
+         * @var stdClass                      $status
+         */
+        [$response, $status] = $this->client->GetJourneyLogLinkType($request)->wait();
+
+        if ($status->code !== STATUS_OK) {
+            throw new APIException("API Execution Errors: {$status->details}", $status->code);
+        }
+
+        if ($response->getStatus() !== Status::SUCCESS) {
+            throw new Exception($response->getMessage());
+        }
+
+        return $this->toJourneyLogLinkType($response->getJourneyLogLinkType());
     }
 
     private function toJourneyLogLinkType(GrpcJourneyLogLinkType $journeyLogLinkType): JourneyLogLinkType
