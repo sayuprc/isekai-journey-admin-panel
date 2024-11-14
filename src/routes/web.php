@@ -39,4 +39,6 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/journey-log-link-types/{journeyLogLinkTypeId}', [EditJourneyLogLinkTypeController::class, 'index'])
         ->whereUuid('journeyLogLinkTypeId')
         ->name('journey-log-link-types.edit.index');
+    Route::post('/journey-log-link-types', [EditJourneyLogLinkTypeController::class, 'handle'])
+        ->name('journey-log-link-types.edit.handle');
 });
