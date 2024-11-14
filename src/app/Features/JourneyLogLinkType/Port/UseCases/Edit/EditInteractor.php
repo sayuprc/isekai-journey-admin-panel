@@ -24,6 +24,6 @@ class EditInteractor
             new OrderNo($request->orderNo),
         );
 
-        $this->repository->createJourneyLogLinkType($journeyLogLinkType);
+        $this->repository->editJourneyLogLinkType($journeyLogLinkType);
     }
 }
