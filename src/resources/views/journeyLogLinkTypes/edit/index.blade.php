@@ -11,10 +11,10 @@
     <div class="d-flex justify-content-between">
         <h1>軌跡リンク種別更新</h1>
 
-        <form action="" method="post">
+        <form action="{{ route('journey-log-link-types.delete.handle') }}" method="post">
             @csrf
             @method('DELETE')
-            <input name="journey_log_link_type_id" value="" type="hidden">
+            <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
             <x-adminlte-button label="削除" type="submit" theme="danger"/>
         </form>
     </div>
