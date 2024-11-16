@@ -13,6 +13,8 @@ use App\Shared\Exceptions\APIException;
 use Exception;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeResponse;
+use Generated\IsekaiJourney\JourneyLogLinkType\DeleteJourneyLogLinkTypeRequest;
+use Generated\IsekaiJourney\JourneyLogLinkType\DeleteJourneyLogLinkTypeResponse;
 use Generated\IsekaiJourney\JourneyLogLinkType\EditJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\EditJourneyLogLinkTypeResponse;
 use Generated\IsekaiJourney\JourneyLogLinkType\GetJourneyLogLinkTypeRequest;
@@ -116,6 +118,27 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
          * @var stdClass                       $status
          */
         [$response, $status] = $this->client->EditJourneyLogLinkType($request)->wait();
+
+        if ($status->code !== STATUS_OK) {
+            throw new APIException("API Execution Errors: {$status->details}", $status->code);
+        }
+
+        if ($response->getStatus() !== Status::SUCCESS) {
+            throw new Exception($response->getMessage());
+        }
+    }
+
+    public function deleteJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): void
+    {
+        $request = new DeleteJourneyLogLinkTypeRequest();
+
+        $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
+
+        /**
+         * @var DeleteJourneyLogLinkTypeResponse $response
+         * @var stdClass                         $status
+         */
+        [$response, $status] = $this->client->DeleteJourneyLogLinkType($request)->wait();
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
