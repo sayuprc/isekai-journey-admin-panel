@@ -87,16 +87,28 @@ const createSelect = (id: string, textContent: string, data: JourneyLogLinkTypes
   return div
 }
 
+const createDeleteButton = (index: number): HTMLButtonElement => {
+  const button = document.createElement('button')
+  button.className = 'btn btn-danger'
+  button.innerText = '削除'
+  button.onclick = () => {
+    links.querySelector(`.link-${index}`)?.remove()
+  }
+
+  return button
+}
+
 const addLink = (): void => {
   const count = links.querySelectorAll('.link').length
 
   const div = document.createElement('div')
-  div.className = 'link form-group'
+  div.className = `link form-group link-${count}`
 
   div.appendChild(createInput(`journey_log_links[${count}][journey_log_link_name]`, `リンク名${count + 1}`, `text`))
   div.appendChild(createInput(`journey_log_links[${count}][url]`, `リンクURL${count + 1}`, `text`))
   div.appendChild(createInput(`journey_log_links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `0`))
   div.appendChild(createSelect(`journey_log_links[${count}][journey_log_link_type_id]`, `リンク種別${count + 1}`, journeyLogLinkTypes))
+  div.appendChild(createDeleteButton(count))
 
   links.appendChild(div)
 }
