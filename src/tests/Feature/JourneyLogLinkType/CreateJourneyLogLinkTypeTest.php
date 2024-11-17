@@ -7,6 +7,7 @@ namespace Tests\Feature\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -36,16 +37,16 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-log-link-types.create.index'))
+        $this->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_LINK_TYPE_FORM))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
     public function showCreateForm(): void
     {
         $this->actingAs($this->user)
-            ->get(route('journey-log-link-types.create.index'))
+            ->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_LINK_TYPE_FORM))
             ->assertStatus(200);
     }
 
@@ -68,12 +69,12 @@ class CreateJourneyLogLinkTypeTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route('journey-log-link-types.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE), [
                 'journey_log_link_type_name' => '軌跡リンク種別A',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route('journey-log-link-types.index'))
+            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -81,7 +82,7 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route('journey-log-link-types.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE), [
                 'journey_log_link_type_name' => '',
                 'order_no' => '',
             ])

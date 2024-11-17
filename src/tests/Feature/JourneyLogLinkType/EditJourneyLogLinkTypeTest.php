@@ -11,6 +11,7 @@ use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use App\Features\JourneyLogLinkType\Domain\Entities\OrderNo;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -42,16 +43,16 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route('journey-log-link-types.edit.index', ['journeyLogLinkTypeId' => $uuid]))
+        $this->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
         $this->get(route(
-            'journey-log-link-types.edit.index',
+            RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM,
             ['journeyLogLinkTypeId' => 'not-uuid-style-id']
         ))->assertStatus(404);
     }
@@ -78,7 +79,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-log-link-types.edit.index', ['journeyLogLinkTypeId' => $uuid]))
+            ->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -105,13 +106,13 @@ class EditJourneyLogLinkTypeTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route('journey-log-link-types.edit.handle'), [
+            ->post(route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE), [
                 'journey_log_link_type_id' => $uuid,
                 'journey_log_link_type_name' => '動画',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route('journey-log-link-types.index'))
+            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -119,7 +120,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route('journey-log-link-types.edit.handle'), [
+            ->post(route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE), [
                 'journey_log_link_type_id' => '',
                 'journey_log_link_type_name' => '',
                 'order_no' => '',

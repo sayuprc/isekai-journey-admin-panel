@@ -8,6 +8,7 @@ use App\Features\Auth\Adapter\Web\Requests\LoginRequest as WebLoginRequest;
 use App\Features\Auth\UseCases\Login\LoginInteractor;
 use App\Features\Auth\UseCases\Login\LoginRequest;
 use App\Http\Controllers\Controller;
+use App\Shared\Route\RouteMap;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Translation\Translator;
@@ -28,11 +29,11 @@ class LoginController extends Controller
         if ($interactor->handle(new LoginRequest($request->validated()))->isSucceeded) {
             $request->session()->regenerate();
 
-            return redirect()->route('journey-logs.index');
+            return redirect()->route(RouteMap::LIST_JOURNEY_LOGS);
         }
 
         return redirect()
-            ->route('login')
+            ->route(RouteMap::SHOW_LOGIN_FORM)
             ->withErrors([
                 'message' => $this->translator->get('auth.failed'),
             ]);

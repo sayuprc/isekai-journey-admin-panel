@@ -16,6 +16,7 @@ use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -46,9 +47,9 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-logs.index'))
+        $this->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
@@ -89,7 +90,7 @@ class ListJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 
@@ -118,7 +119,7 @@ class ListJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 

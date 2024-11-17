@@ -1,4 +1,7 @@
-@php use App\Features\JourneyLog\Adapter\Web\Presenters\ListViewJourneyLog; @endphp
+@php
+    use App\Features\JourneyLog\Adapter\Web\Presenters\ListViewJourneyLog;
+    use App\Shared\Route\RouteMap;
+@endphp
 
 @extends('layout.page')
 
@@ -28,7 +31,7 @@
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->period }}</td>
                 <td>{{ $journeyLog->orderNo }}</td>
-                <td><a href="{{ route('journey-logs.edit.index', $journeyLog->journeyLogId) }}">編集</a></td>
+                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, $journeyLog->journeyLogId) }}">編集</a></td>
             </tr>
         @endforeach
     </x-adminlte-datatable>

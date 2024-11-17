@@ -1,5 +1,6 @@
 @php
     use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
+    use App\Shared\Route\RouteMap;
     /** @var ViewJourneyLogLinkType $journeyLogLinkType */
 @endphp
 
@@ -11,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>軌跡リンク種別更新</h1>
 
-        <form action="{{ route('journey-log-link-types.delete.handle') }}" method="post">
+        <form action="{{ route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
@@ -28,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route('journey-log-link-types.edit.handle') }}" method="post">
+    <form action="{{ route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE) }}" method="post">
         @csrf
         <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
 

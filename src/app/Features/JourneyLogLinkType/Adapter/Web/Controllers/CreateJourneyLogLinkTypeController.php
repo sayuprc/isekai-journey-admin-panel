@@ -8,6 +8,7 @@ use App\Features\JourneyLogLinkType\Adapter\Web\Requests\CreateRequest as WebReq
 use App\Features\JourneyLogLinkType\Port\UseCases\Create\CreateInteractor;
 use App\Features\JourneyLogLinkType\Port\UseCases\Create\CreateRequest;
 use App\Http\Controllers\Controller;
+use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -37,7 +38,7 @@ class CreateJourneyLogLinkTypeController extends Controller
         }
 
         return redirect()
-            ->route('journey-log-link-types.index')
+            ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
             ->with(['message' => '登録完了しました']);
     }
 }

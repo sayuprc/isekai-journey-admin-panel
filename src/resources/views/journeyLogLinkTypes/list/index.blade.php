@@ -1,4 +1,8 @@
-@php use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType; @endphp
+@php
+    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
+    use App\Shared\Route\RouteMap;
+@endphp
+
 @extends('layout.page')
 
 @section('title', '軌跡リンク種別一覧')
@@ -26,7 +30,7 @@
             <tr>
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
                 <td>{{ $journeyLogLinkType->orderNo }}</td>
-                <td><a href="{{ route('journey-log-link-types.edit.index', $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a></td>
+                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a></td>
             </tr>
         @endforeach
     </x-adminlte-datatable>

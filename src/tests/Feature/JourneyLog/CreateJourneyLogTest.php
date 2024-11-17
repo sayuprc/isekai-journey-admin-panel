@@ -8,6 +8,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -40,9 +41,9 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-logs.create.index'))
+        $this->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_FORM))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
@@ -58,7 +59,7 @@ class CreateJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.create.index'))
+            ->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_FORM))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -93,7 +94,7 @@ class CreateJourneyLogTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route('journey-logs.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG), [
                 'story' => '軌跡',
                 'from_on' => '2019-12-09',
                 'to_on' => '2019-12-09',
@@ -108,7 +109,7 @@ class CreateJourneyLogTest extends TestCase
                 ],
             ])
             ->assertStatus(302)
-            ->assertLocation(route('journey-logs.index'))
+            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -116,7 +117,7 @@ class CreateJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route('journey-logs.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG), [
                 'story' => '',
                 'from_on' => '',
                 'to_on' => '',
@@ -147,7 +148,7 @@ class CreateJourneyLogTest extends TestCase
     public function invalidFormatDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route('journey-logs.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/09',
@@ -164,7 +165,7 @@ class CreateJourneyLogTest extends TestCase
     public function inversionDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route('journey-logs.create.handle'), [
+            ->post(route(RouteMap::CREATE_JOURNEY_LOG), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/08',

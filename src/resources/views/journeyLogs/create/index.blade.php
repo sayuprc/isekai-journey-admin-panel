@@ -1,4 +1,7 @@
-@php use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType; @endphp
+@php
+    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
+    use App\Shared\Route\RouteMap;
+@endphp
 
 @extends('layout.page')
 
@@ -16,7 +19,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route('journey-logs.create.handle') }}" method="post">
+    <form action="{{ route(RouteMap::CREATE_JOURNEY_LOG) }}" method="post">
         @csrf
         <x-adminlte-textarea label="内容" name="story">
             {{ old('story') }}
@@ -54,9 +57,9 @@
         }, $journeyLogLinkTypes);
     @endphp
     <script>
-        window.journeyLogLinkTypes = @json($data)
+        window.journeyLogLinkTypes = @json($data);
 
-        window.oldJourneyLogLinks = @json(old('journey_log_links'))
+        window.oldJourneyLogLinks = @json(old('journey_log_links'));
     </script>
 
     @vite(['resources/ts/journey-log.ts'])
