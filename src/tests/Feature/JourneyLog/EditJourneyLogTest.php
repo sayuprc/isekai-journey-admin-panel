@@ -46,7 +46,9 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-logs.edit.index', ['journeyLogId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA']))
+        $uuid = $this->generateUuid();
+
+        $this->get(route('journey-logs.edit.index', ['journeyLogId' => $uuid]))
             ->assertStatus(302)
             ->assertRedirect(route('login'));
     }
@@ -61,6 +63,8 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function showEditForm(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
             ->andReturn([])
             ->once();
@@ -71,12 +75,12 @@ class EditJourneyLogTest extends TestCase
         );
 
         $this->journeyLogRepository->shouldReceive('getJourneyLog')
-            ->with(Mockery::on(function (JourneyLogId $arg): bool {
-                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
+                return $arg->value === $uuid;
             }))
             ->andReturn(
                 new JourneyLog(
-                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogId($uuid),
                     new Story('軌跡'),
                     new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                     new OrderNo(1),
@@ -91,7 +95,7 @@ class EditJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.edit.index', ['journeyLogId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA']))
+            ->get(route('journey-logs.edit.index', ['journeyLogId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -103,21 +107,23 @@ class EditJourneyLogTest extends TestCase
     #[Test]
     public function canEdit(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogRepository->shouldReceive('editJourneyLog')
-            ->with(Mockery::on(function (JourneyLog $arg): bool {
-                return $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+            ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
+                return $arg->journeyLogId->value === $uuid
                      && $arg->story->value === '軌跡'
                      && $arg->period->fromOn->format('Y-m-d') === '2019-12-09'
                      && $arg->period->toOn->format('Y-m-d') === '2019-12-09'
                      && $arg->orderNo->value === 1
                      && count($arg->journeyLogLinks) === 1
-                     && $arg->journeyLogLinks[0]->journeyLogLinkId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                     && $arg->journeyLogLinks[0]->journeyLogLinkId->value === $uuid
                      && $arg->journeyLogLinks[0]->journeyLogLinkName->value === '管理画面'
                      && $arg->journeyLogLinks[0]->url->value === 'https://local.admin.journey.isekaijoucho.fan'
                      && $arg->journeyLogLinks[0]->orderNo->value === 1
-                     && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+                     && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === $uuid;
             }))
-            ->andReturn(new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn(new JourneyLogId($uuid))
             ->once();
 
         $this->app->bind(
@@ -127,7 +133,7 @@ class EditJourneyLogTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('journey-logs.edit.handle'), [
-                'journey_log_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                'journey_log_id' => $uuid,
                 'story' => '軌跡',
                 'from_on' => '2019-12-09',
                 'to_on' => '2019-12-09',
@@ -137,7 +143,7 @@ class EditJourneyLogTest extends TestCase
                         'journey_log_link_name' => '管理画面',
                         'url' => 'https://local.admin.journey.isekaijoucho.fan',
                         'order_no' => '1',
-                        'journey_log_link_type_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                        'journey_log_link_type_id' => $uuid,
                     ],
                 ],
             ])

@@ -44,9 +44,11 @@ class DeleteJourneyLogTest extends TestCase
     #[Test]
     public function canDelete(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogRepository->shouldReceive('deleteJourneyLog')
-            ->with(Mockery::on(function (JourneyLogId $arg): bool {
-                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
+                return $arg->value === $uuid;
             }))
             ->once();
 
@@ -57,7 +59,7 @@ class DeleteJourneyLogTest extends TestCase
 
         $this->actingAs($this->user)
             ->delete(route('journey-logs.delete.handle'), [
-                'journey_log_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                'journey_log_id' => $uuid,
             ])
             ->assertStatus(302)
             ->assertLocation(route('journey-logs.index'))

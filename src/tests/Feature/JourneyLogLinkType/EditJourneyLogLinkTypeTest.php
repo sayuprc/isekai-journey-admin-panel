@@ -40,10 +40,10 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(
-            'journey-log-link-types.edit.index',
-            ['journeyLogLinkTypeId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA']
-        ))->assertStatus(302)
+        $uuid = $this->generateUuid();
+
+        $this->get(route('journey-log-link-types.edit.index', ['journeyLogLinkTypeId' => $uuid]))
+            ->assertStatus(302)
             ->assertRedirect(route('login'));
     }
 
@@ -59,12 +59,14 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEditForm(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('getJourneyLogLinkType')
-            ->with(Mockery::on(function (JourneyLogLinkTypeId $arg): bool {
-                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            ->with(Mockery::on(function (JourneyLogLinkTypeId $arg) use ($uuid): bool {
+                return $arg->value === $uuid;
             }))
             ->andReturn(new JourneyLogLinkType(
-                new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new JourneyLogLinkTypeId($uuid),
                 new JourneyLogLinkTypeName('名前'),
                 new OrderNo(1),
             ))
@@ -76,7 +78,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-log-link-types.edit.index', ['journeyLogLinkTypeId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA']))
+            ->get(route('journey-log-link-types.edit.index', ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -87,9 +89,11 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function canEdit(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('editJourneyLogLinkType')
-            ->with(Mockery::on(function (JourneyLogLinkType $arg): bool {
-                return $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+            ->with(Mockery::on(function (JourneyLogLinkType $arg) use ($uuid): bool {
+                return $arg->journeyLogLinkTypeId->value === $uuid
                     && $arg->journeyLogLinkTypeName->value === '動画'
                     && $arg->orderNo->value === 1;
             }))
@@ -102,7 +106,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
 
         $this->actingAs($this->user)
             ->post(route('journey-log-link-types.edit.handle'), [
-                'journey_log_link_type_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+                'journey_log_link_type_id' => $uuid,
                 'journey_log_link_type_name' => '動画',
                 'order_no' => '1',
             ])

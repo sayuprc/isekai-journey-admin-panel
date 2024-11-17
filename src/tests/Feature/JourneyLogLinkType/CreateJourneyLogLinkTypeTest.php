@@ -52,9 +52,11 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('createJourneyLogLinkType')
-            ->with(Mockery::on(function (JourneyLogLinkType $arg): bool {
-                return $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+            ->with(Mockery::on(function (JourneyLogLinkType $arg) use ($uuid): bool {
+                return $arg->journeyLogLinkTypeId->value === $uuid
                     && $arg->journeyLogLinkTypeName->value === '軌跡リンク種別A'
                     && $arg->orderNo->value === 1;
             }))

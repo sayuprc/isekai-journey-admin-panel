@@ -47,15 +47,17 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showList(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
             ->andReturn([
                 new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogLinkTypeId($uuid),
                     new JourneyLogLinkTypeName('名前1'),
                     new OrderNo(1),
                 ),
                 new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new JourneyLogLinkTypeId($uuid),
                     new JourneyLogLinkTypeName('名前2'),
                     new OrderNo(2),
                 ),

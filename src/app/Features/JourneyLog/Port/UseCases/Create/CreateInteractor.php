@@ -15,20 +15,21 @@ use App\Features\JourneyLog\Domain\Entities\Story;
 use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use App\Shared\Uuid\UuidGeneratorInterface;
 use DateTimeImmutable;
 
 class CreateInteractor
 {
-    private const string DUMMY_UUID = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-
-    public function __construct(private readonly JourneyLogRepositoryInterface $client)
-    {
+    public function __construct(
+        private readonly JourneyLogRepositoryInterface $client,
+        private readonly UuidGeneratorInterface $generator,
+    ) {
     }
 
     public function handle(CreateRequest $request): void
     {
         $journeyLog = new JourneyLog(
-            new JourneyLogId(self::DUMMY_UUID), // 新規登録に ID は不要なのでダミーの ID を持たせている
+            new JourneyLogId($this->generator->generate()), // 新規登録に ID は不要なのでダミーの ID を持たせている
             new Story($request->story),
             new Period(new DateTimeImmutable($request->fromOn), new DateTimeImmutable($request->toOn)),
             new OrderNo($request->orderNo),
@@ -49,7 +50,7 @@ class CreateInteractor
 
         foreach ($data as $link) {
             $journeyLogLinks[] = new JourneyLogLink(
-                new JourneyLogLinkId(self::DUMMY_UUID), // リンクはデリートインサートなのでダミー値でよい
+                new JourneyLogLinkId($this->generator->generate()), // リンクはデリートインサートなのでダミー値でよい
                 new JourneyLogLinkName($link['journey_log_link_name']),
                 new Url($link['url']),
                 new OrderNo($link['order_no']),

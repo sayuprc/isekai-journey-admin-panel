@@ -9,19 +9,20 @@ use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use App\Features\JourneyLogLinkType\Domain\Entities\OrderNo;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use App\Shared\Uuid\UuidGeneratorInterface;
 
 class CreateInteractor
 {
-    private const string DUMMY_UUID = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-
-    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $repository)
-    {
+    public function __construct(
+        private readonly JourneyLogLinkTypeRepositoryInterface $repository,
+        private readonly UuidGeneratorInterface $generator,
+    ) {
     }
 
     public function handle(CreateRequest $request): void
     {
         $journeyLogLinkType = new JourneyLogLinkType(
-            new JourneyLogLinkTypeId(self::DUMMY_UUID),
+            new JourneyLogLinkTypeId($this->generator->generate()),
             new JourneyLogLinkTypeName($request->journeyLogLinkTypeName),
             new OrderNo($request->orderNo),
         );

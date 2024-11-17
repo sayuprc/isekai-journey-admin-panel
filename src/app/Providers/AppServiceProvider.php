@@ -8,6 +8,8 @@ use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Features\JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
+use App\Shared\Application\Uuid\DummyUuidGenerator;
+use App\Shared\Uuid\UuidGeneratorInterface;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Grpc\ChannelCredentials;
@@ -41,6 +43,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, function (Application $app): JourneyLogLinkTypeRepositoryInterface {
             return $app->make(JourneyLogLinkTypeRepository::class);
         });
+
+        $this->app->bind(UuidGeneratorInterface::class, DummyUuidGenerator::class);
     }
 
     /**

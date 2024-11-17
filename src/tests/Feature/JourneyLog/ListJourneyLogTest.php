@@ -54,27 +54,29 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showList(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogRepository->shouldReceive('listJourneyLogs')
             ->andReturn([
                 new JourneyLog(
-                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogId($uuid),
                     new Story('軌跡 A'),
                     new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                     new OrderNo(0),
                     [],
                 ),
                 new JourneyLog(
-                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new JourneyLogId($uuid),
                     new Story('軌跡 B'),
                     new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                     new OrderNo(0),
                     [
                         new JourneyLogLink(
-                            new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
+                            new JourneyLogLinkId($uuid),
                             new JourneyLogLinkName('管理画面'),
                             new Url('https://local.admin.journey.isekaijoucho.fan'),
                             new OrderNo(0),
-                            new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
+                            new JourneyLogLinkTypeId($uuid),
                         ),
                     ],
                 ),
