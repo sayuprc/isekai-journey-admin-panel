@@ -11,38 +11,52 @@ use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLink
 use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
 use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
 use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
+use App\Shared\Route\RouteMap;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'handle'])->name('login.handle');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])
+        ->name(RouteMap::SHOW_LOGIN_FORM);
+    Route::post('/login', [LoginController::class, 'handle'])
+        ->name(RouteMap::LOGIN);
 });
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('/journey-logs', [ListJourneyLogController::class, 'index'])->name('journey-logs.index');
+    Route::prefix('journey-logs')->group(function (): void {
+        Route::get('/', [ListJourneyLogController::class, 'index'])
+            ->name(RouteMap::LIST_JOURNEY_LOGS);
 
-    Route::get('/journey-logs/create', [CreateJourneyLogController::class, 'index'])->name('journey-logs.create.index');
-    Route::post('/journey-logs/create', [CreateJourneyLogController::class, 'handle'])->name('journey-logs.create.handle');
+        Route::get('/create', [CreateJourneyLogController::class, 'index'])
+            ->name(RouteMap::SHOW_CREATE_JOURNEY_LOG_FORM);
+        Route::post('/create', [CreateJourneyLogController::class, 'handle'])
+            ->name(RouteMap::CREATE_JOURNEY_LOG);
 
-    Route::get('/journey-logs/{journeyLogId}', [EditJourneyLogController::class, 'index'])
-        ->whereUuid('journeyLogId')
-        ->name('journey-logs.edit.index');
-    Route::post('/journey-logs/edit', [EditJourneyLogController::class, 'handle'])
-        ->name('journey-logs.edit.handle');
+        Route::get('/{journeyLogId}', [EditJourneyLogController::class, 'index'])
+            ->whereUuid('journeyLogId')
+            ->name(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM);
+        Route::post('/edit', [EditJourneyLogController::class, 'handle'])
+            ->name(RouteMap::EDIT_JOURNEY_LOG);
 
-    Route::delete('/journey-logs', [DeleteJourneyLogController::class, 'handle'])
-        ->name('journey-logs.delete.handle');
+        Route::delete('/', [DeleteJourneyLogController::class, 'handle'])
+            ->name(RouteMap::DELETE_JOURNEY_LOG);
+    });
 
-    Route::get('/journey-log-link-types', [ListJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.index');
-    Route::get('/journey-log-link-types/create', [CreateJourneyLogLinkTypeController::class, 'index'])->name('journey-log-link-types.create.index');
-    Route::post('/journey-log-link-types/create', [CreateJourneyLogLinkTypeController::class, 'handle'])->name('journey-log-link-types.create.handle');
+    Route::prefix('journey-log-link-types')->group(function (): void {
+        Route::get('/', [ListJourneyLogLinkTypeController::class, 'index'])
+            ->name(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE);
 
-    Route::get('/journey-log-link-types/{journeyLogLinkTypeId}', [EditJourneyLogLinkTypeController::class, 'index'])
-        ->whereUuid('journeyLogLinkTypeId')
-        ->name('journey-log-link-types.edit.index');
-    Route::post('/journey-log-link-types', [EditJourneyLogLinkTypeController::class, 'handle'])
-        ->name('journey-log-link-types.edit.handle');
+        Route::get('/create', [CreateJourneyLogLinkTypeController::class, 'index'])
+            ->name(RouteMap::SHOW_CREATE_JOURNEY_LOG_LINK_TYPE_FORM);
+        Route::post('/create', [CreateJourneyLogLinkTypeController::class, 'handle'])
+            ->name(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE);
 
-    Route::delete('/journey-log-link-types', [DeleteJourneyLogLinkTypeController::class, 'handle'])
-        ->name('journey-log-link-types.delete.handle');
+        Route::get('/{journeyLogLinkTypeId}', [EditJourneyLogLinkTypeController::class, 'index'])
+            ->whereUuid('journeyLogLinkTypeId')
+            ->name(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM);
+        Route::post('/edit', [EditJourneyLogLinkTypeController::class, 'handle'])
+            ->name(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE);
+
+        Route::delete('/', [DeleteJourneyLogLinkTypeController::class, 'handle'])
+            ->name(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE);
+    });
 });

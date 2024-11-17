@@ -16,6 +16,7 @@ use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -46,35 +47,37 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-logs.index'))
+        $this->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
     public function showList(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogRepository->shouldReceive('listJourneyLogs')
             ->andReturn([
                 new JourneyLog(
-                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogId($uuid),
                     new Story('軌跡 A'),
                     new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                     new OrderNo(0),
                     [],
                 ),
                 new JourneyLog(
-                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new JourneyLogId($uuid),
                     new Story('軌跡 B'),
                     new Period(new DateTimeImmutable(), new DateTimeImmutable()),
                     new OrderNo(0),
                     [
                         new JourneyLogLink(
-                            new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC'),
+                            new JourneyLogLinkId($uuid),
                             new JourneyLogLinkName('管理画面'),
                             new Url('https://local.admin.journey.isekaijoucho.fan'),
                             new OrderNo(0),
-                            new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD')
+                            new JourneyLogLinkTypeId($uuid),
                         ),
                     ],
                 ),
@@ -87,7 +90,7 @@ class ListJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 
@@ -116,7 +119,7 @@ class ListJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-logs.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 

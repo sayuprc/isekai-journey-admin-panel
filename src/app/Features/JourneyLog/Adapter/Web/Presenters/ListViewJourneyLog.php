@@ -23,7 +23,7 @@ class ListViewJourneyLog
 
     public function __get(string $name): int|string
     {
-        if (in_array($name, ['journeyLogId', 'story', 'orderNo'])) {
+        if (in_array($name, ['journeyLogId', 'story', 'orderNo'], true)) {
             return $this->journeyLog->{$name}->value;
         } elseif ($name === 'period') {
             return $this->period();

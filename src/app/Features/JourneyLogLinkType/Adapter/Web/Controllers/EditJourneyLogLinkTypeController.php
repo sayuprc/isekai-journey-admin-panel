@@ -11,6 +11,7 @@ use App\Features\JourneyLogLinkType\Port\UseCases\Edit\EditRequest;
 use App\Features\JourneyLogLinkType\Port\UseCases\Get\GetInteractor;
 use App\Features\JourneyLogLinkType\Port\UseCases\Get\GetRequest;
 use App\Http\Controllers\Controller;
+use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,7 @@ class EditJourneyLogLinkTypeController extends Controller
             $response = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
         } catch (Exception $e) {
             return redirect()
-                ->route('journey-log-link-types.index')
+                ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
                 ->withErrors([
                     'message' => $e->getMessage(),
                 ]);
@@ -57,7 +58,7 @@ class EditJourneyLogLinkTypeController extends Controller
         }
 
         return redirect()
-            ->route('journey-log-link-types.index')
+            ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
             ->with([
                 'message' => '更新しました',
             ]);

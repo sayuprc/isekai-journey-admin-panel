@@ -8,6 +8,7 @@ use App\Features\JourneyLogLinkType\Adapter\Web\Requests\DeleteRequest as WebReq
 use App\Features\JourneyLogLinkType\Port\UseCases\Delete\DeleteInteractor;
 use App\Features\JourneyLogLinkType\Port\UseCases\Delete\DeleteRequest;
 use App\Http\Controllers\Controller;
+use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 
@@ -28,7 +29,7 @@ class DeleteJourneyLogLinkTypeController extends Controller
         }
 
         return redirect()
-            ->route('journey-log-link-types.index')
+            ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
             ->with([
                 'message' => '削除しました',
             ]);

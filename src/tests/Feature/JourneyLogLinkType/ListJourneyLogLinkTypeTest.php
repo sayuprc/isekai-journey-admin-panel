@@ -10,6 +10,7 @@ use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use App\Features\JourneyLogLinkType\Domain\Entities\OrderNo;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -39,23 +40,25 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route('journey-log-link-types.index'))
+        $this->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
     public function showList(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
             ->andReturn([
                 new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new JourneyLogLinkTypeId($uuid),
                     new JourneyLogLinkTypeName('名前1'),
                     new OrderNo(1),
                 ),
                 new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new JourneyLogLinkTypeId($uuid),
                     new JourneyLogLinkTypeName('名前2'),
                     new OrderNo(2),
                 ),
@@ -68,7 +71,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-log-link-types.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 
@@ -96,7 +99,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route('journey-log-link-types.index'))
+            ->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 

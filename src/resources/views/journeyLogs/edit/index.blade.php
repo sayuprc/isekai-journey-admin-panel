@@ -1,6 +1,7 @@
 @php
     use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
     use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
+    use App\Shared\Route\RouteMap;
     /** @var ViewJourneyLog $journeyLog */
 @endphp
 
@@ -12,7 +13,7 @@
     <div class="d-flex justify-content-between">
         <h1>軌跡更新</h1>
 
-        <form action="{{ route('journey-logs.delete.handle') }}" method="post">
+        <form action="{{ route(RouteMap::DELETE_JOURNEY_LOG) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
@@ -29,7 +30,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route('journey-logs.edit.handle') }}" method="post">
+    <form action="{{ route(RouteMap::EDIT_JOURNEY_LOG) }}" method="post">
         @csrf
         <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
 
@@ -38,18 +39,15 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3"
-                              value="{{ old('from_on', $journeyLog->fromOn->format()) }}" id="from_on"/>
-            <x-adminlte-input label="終了日" type="date" name="to_on"
-                              value="{{ old('to_on', $journeyLog->toOn->format()) }}" id="to_on"/>
+            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3" value="{{ old('from_on', $journeyLog->fromOn->format()) }}" id="from_on"/>
+            <x-adminlte-input label="終了日" type="date" name="to_on" value="{{ old('to_on', $journeyLog->toOn->format()) }}" id="to_on"/>
         </div>
 
         <x-adminlte-button label="今日" type="button" id="copy_today_btn"/>
         <x-adminlte-button label="開始日を終了日にコピー" id="copy_from_to_btn"/>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no"
-                              value="{{ old('order_no', $journeyLog->orderNo) }}"/>
+            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', $journeyLog->orderNo) }}"/>
         </div>
 
         <div class="form-group">
@@ -72,9 +70,8 @@
     @endphp
 
     <script>
-        window.journeyLogLinkTypes = @json($data)
-
-        window.oldJourneyLogLinks = @json(old('journey_log_links', $journeyLog->journeyLogLinks))
+        window.journeyLogLinkTypes = @json($data);
+        window.oldJourneyLogLinks = @json(old('journey_log_links', $journeyLog->journeyLogLinks));
     </script>
 
     @vite(['resources/ts/journey-log.ts'])

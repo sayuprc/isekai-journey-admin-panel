@@ -1,3 +1,5 @@
+@php use App\Shared\Route\RouteMap; @endphp
+
 @extends('layout.page')
 
 @section('title', '軌跡リンク種別登録')
@@ -14,7 +16,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route('journey-log-link-types.create.handle') }}" method="post">
+    <form action="{{ route(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE) }}" method="post">
         @csrf
         <x-adminlte-textarea label="名前" name="journey_log_link_type_name">
             {{ old('journey_log_link_type_name') }}

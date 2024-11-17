@@ -15,6 +15,7 @@ use App\Features\JourneyLog\Port\UseCases\Get\GetRequest;
 use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Port\UseCases\List\ListInteractor;
 use App\Http\Controllers\Controller;
+use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -28,7 +29,7 @@ class EditJourneyLogController extends Controller
             $listResponse = $listInteractor->handle();
         } catch (Exception $e) {
             return redirect()
-                ->route('journey-logs.index')
+                ->route(RouteMap::LIST_JOURNEY_LOGS)
                 ->withErrors([
                     'message' => $e->getMessage(),
                 ]);
@@ -89,7 +90,7 @@ class EditJourneyLogController extends Controller
         }
 
         return redirect()
-            ->route('journey-logs.index')
+            ->route(RouteMap::LIST_JOURNEY_LOGS)
             ->with([
                 'message' => '更新しました',
             ]);

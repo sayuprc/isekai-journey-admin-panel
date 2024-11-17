@@ -7,6 +7,7 @@ namespace Tests\Feature\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Models\User;
+use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -36,17 +37,19 @@ class DeleteJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->delete(route('journey-logs.delete.handle'))
+        $this->delete(route(RouteMap::DELETE_JOURNEY_LOG))
             ->assertStatus(302)
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
     }
 
     #[Test]
     public function canDelete(): void
     {
+        $uuid = $this->generateUuid();
+
         $this->journeyLogRepository->shouldReceive('deleteJourneyLog')
-            ->with(Mockery::on(function (JourneyLogId $arg): bool {
-                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
+                return $arg->value === $uuid;
             }))
             ->once();
 
@@ -56,11 +59,11 @@ class DeleteJourneyLogTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->delete(route('journey-logs.delete.handle'), [
-                'journey_log_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+            ->delete(route(RouteMap::DELETE_JOURNEY_LOG), [
+                'journey_log_id' => $uuid,
             ])
             ->assertStatus(302)
-            ->assertLocation(route('journey-logs.index'))
+            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOGS))
             ->assertSessionHas('message', '削除しました');
     }
 
@@ -68,7 +71,7 @@ class DeleteJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->delete(route('journey-logs.delete.handle'), [
+            ->delete(route(RouteMap::DELETE_JOURNEY_LOG), [
                 'journey_log_id' => '',
             ])
             ->assertStatus(302)

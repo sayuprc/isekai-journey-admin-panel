@@ -10,7 +10,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 interface JourneyLogRepositoryInterface
 {
     /**
-     * @return array<JourneyLog>
+     * @return JourneyLog[]
      */
     public function listJourneyLogs(): array;
 
