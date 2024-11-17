@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
+use App\Features\JourneyLog\Domain\Entities\FromOn;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
@@ -12,6 +13,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
+use App\Features\JourneyLog\Domain\Entities\ToOn;
 use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
@@ -62,14 +64,14 @@ class ListJourneyLogTest extends TestCase
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡 A'),
-                    new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
                     new OrderNo(0),
                     [],
                 ),
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡 B'),
-                    new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
                     new OrderNo(0),
                     [
                         new JourneyLogLink(

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Features\JourneyLog\Domain\Entities;
 
+use App\Features\JourneyLog\Domain\Entities\FromOn;
 use App\Features\JourneyLog\Domain\Entities\Period;
+use App\Features\JourneyLog\Domain\Entities\ToOn;
 use App\Shared\Domain\Exceptions\InvalidDomainException;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +17,10 @@ class PeriodTest extends TestCase
     #[Test]
     public function singleDay(): void
     {
-        $period = new Period(new DateTimeImmutable('2019-12-09'), new DateTimeImmutable('2019-12-09'));
+        $period = new Period(
+            new FromOn(new DateTimeImmutable('2019-12-09')),
+            new ToOn(new DateTimeImmutable('2019-12-09'))
+        );
 
         $this->assertTrue($period->isSingleDay());
     }
@@ -23,7 +28,10 @@ class PeriodTest extends TestCase
     #[Test]
     public function notSingleDay(): void
     {
-        $period = new Period(new DateTimeImmutable('2019-12-09'), new DateTimeImmutable('2019-12-10'));
+        $period = new Period(
+            new FromOn(new DateTimeImmutable('2019-12-09')),
+            new ToOn(new DateTimeImmutable('2019-12-10'))
+        );
 
         $this->assertFalse($period->isSingleDay());
     }
@@ -34,6 +42,9 @@ class PeriodTest extends TestCase
         $this->expectException(InvalidDomainException::class);
         $this->expectExceptionMessage('fromOn needs to be before toOn');
 
-        new Period(new DateTimeImmutable('2019-12-09'), new DateTimeImmutable('2019-12-08'));
+        new Period(
+            new FromOn(new DateTimeImmutable('2019-12-09')),
+            new ToOn(new DateTimeImmutable('2019-12-08'))
+        );
     }
 }

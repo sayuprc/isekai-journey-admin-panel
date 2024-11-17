@@ -39,8 +39,8 @@ class EditJourneyLogController extends Controller
         $journeyLog = new ViewJourneyLog(
             $getResponse->journeyLog->journeyLogId->value,
             $getResponse->journeyLog->story->value,
-            new ViewPeriod($getResponse->journeyLog->period->fromOn),
-            new ViewPeriod($getResponse->journeyLog->period->toOn),
+            new ViewPeriod($getResponse->journeyLog->period->fromOn->value),
+            new ViewPeriod($getResponse->journeyLog->period->toOn->value),
             $getResponse->journeyLog->orderNo->value,
             array_map(function (JourneyLogLink $journeyLogLink): array {
                 return [
