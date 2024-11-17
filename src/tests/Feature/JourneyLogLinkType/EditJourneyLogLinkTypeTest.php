@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JourneyLogLinkType;
+namespace Tests\Feature\JourneyLogLinkType;
 
 use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
