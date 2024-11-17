@@ -35,9 +35,9 @@ class ListViewJourneyLog
     private function period(): string
     {
         return $this->journeyLog->period->isSingleDay()
-            ? $this->journeyLog->period->fromOn->format(self::DATE_FORMAT)
-            : $this->journeyLog->period->fromOn->format(self::DATE_FORMAT)
+            ? $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
+            : $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
                 . ' ~ '
-                . $this->journeyLog->period->toOn->format(self::DATE_FORMAT);
+                . $this->journeyLog->period->toOn->value->format(self::DATE_FORMAT);
     }
 }

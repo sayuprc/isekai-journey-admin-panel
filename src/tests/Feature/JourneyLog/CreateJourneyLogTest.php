@@ -76,8 +76,8 @@ class CreateJourneyLogTest extends TestCase
             ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
                 return $arg->journeyLogId->value === $uuid
                     && $arg->story->value === '軌跡'
-                    && $arg->period->fromOn->format('Y-m-d') === '2019-12-09'
-                    && $arg->period->toOn->format('Y-m-d') === '2019-12-09'
+                    && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-09'
+                    && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
                     && $arg->orderNo->value === 1
                     && count($arg->journeyLogLinks) === 1
                     && $arg->journeyLogLinks[0]->journeyLogLinkId->value === $uuid

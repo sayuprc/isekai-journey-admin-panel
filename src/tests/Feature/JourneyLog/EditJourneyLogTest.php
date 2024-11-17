@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\JourneyLog;
 
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
+use App\Features\JourneyLog\Domain\Entities\FromOn;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
+use App\Features\JourneyLog\Domain\Entities\ToOn;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
@@ -83,7 +85,7 @@ class EditJourneyLogTest extends TestCase
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡'),
-                    new Period(new DateTimeImmutable(), new DateTimeImmutable()),
+                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
                     new OrderNo(1),
                     []
                 )
@@ -114,8 +116,8 @@ class EditJourneyLogTest extends TestCase
             ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
                 return $arg->journeyLogId->value === $uuid
                      && $arg->story->value === '軌跡'
-                     && $arg->period->fromOn->format('Y-m-d') === '2019-12-09'
-                     && $arg->period->toOn->format('Y-m-d') === '2019-12-09'
+                     && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-09'
+                     && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
                      && $arg->orderNo->value === 1
                      && count($arg->journeyLogLinks) === 1
                      && $arg->journeyLogLinks[0]->journeyLogLinkId->value === $uuid

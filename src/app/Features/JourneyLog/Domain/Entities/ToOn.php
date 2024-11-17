@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Domain\Entities;
 
-use App\Shared\Domain\UuidValueObject;
+use App\Shared\Domain\DateTimeValueObject;
 
-class JourneyLogLinkId extends UuidValueObject
+class ToOn extends DateTimeValueObject
 {
 }

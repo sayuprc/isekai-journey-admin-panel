@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Features\JourneyLog\Domain\Entities;
 
 use App\Shared\Domain\Exceptions\InvalidDomainException;
-use DateTimeInterface;
 
 class Period
 {
@@ -13,16 +12,16 @@ class Period
      * @throws InvalidDomainException
      */
     public function __construct(
-        public readonly DateTimeInterface $fromOn,
-        public readonly DateTimeInterface $toOn
+        public readonly FromOn $fromOn,
+        public readonly ToOn $toOn
     ) {
-        if ($this->toOn < $this->fromOn) {
+        if ($this->toOn->value < $this->fromOn->value) {
             throw new InvalidDomainException('fromOn needs to be before toOn');
         }
     }
 
     public function isSingleDay(): bool
     {
-        return $this->fromOn->format('Y-m-d') === $this->toOn->format('Y-m-d');
+        return $this->fromOn->value->format('Y-m-d') === $this->toOn->value->format('Y-m-d');
     }
 }

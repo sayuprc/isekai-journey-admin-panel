@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Infrastructures\Repositories;
 
+use App\Features\JourneyLog\Domain\Entities\FromOn;
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
@@ -12,6 +13,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
 use App\Features\JourneyLog\Domain\Entities\OrderNo;
 use App\Features\JourneyLog\Domain\Entities\Period;
 use App\Features\JourneyLog\Domain\Entities\Story;
+use App\Features\JourneyLog\Domain\Entities\ToOn;
 use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
@@ -85,8 +87,8 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request = new CreateJourneyLogRequest();
 
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn->value));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn->value));
         $request->setOrderNo($journeyLog->orderNo->value);
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
@@ -140,8 +142,8 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request = new EditJourneyLogRequest();
         $request->setJourneyLogId($journeyLog->journeyLogId->value);
         $request->setStory($journeyLog->story->value);
-        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn));
-        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn));
+        $request->setFromOn($this->createDateFromDateTimeInterface($journeyLog->period->fromOn->value));
+        $request->setToOn($this->createDateFromDateTimeInterface($journeyLog->period->toOn->value));
         $request->setOrderNo($journeyLog->orderNo->value);
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
@@ -214,20 +216,24 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
             new JourneyLogId($journeyLog->getJourneyLogId()),
             new Story($journeyLog->getStory()),
             new Period(
-                new DateTimeImmutable(
-                    sprintf(
-                        '%04s-%02s-%02s',
-                        $journeyLog->getFromOn()->getYear(),
-                        $journeyLog->getFromOn()->getMonth(),
-                        $journeyLog->getFromOn()->getDay(),
-                    )
+                new FromOn(
+                    new DateTimeImmutable(
+                        sprintf(
+                            '%04s-%02s-%02s',
+                            $journeyLog->getFromOn()->getYear(),
+                            $journeyLog->getFromOn()->getMonth(),
+                            $journeyLog->getFromOn()->getDay(),
+                        )
+                    ),
                 ),
-                new DateTimeImmutable(
-                    sprintf(
-                        '%04s-%02s-%02s',
-                        $journeyLog->getToOn()->getYear(),
-                        $journeyLog->getToOn()->getMonth(),
-                        $journeyLog->getToOn()->getDay(),
+                new ToOn(
+                    new DateTimeImmutable(
+                        sprintf(
+                            '%04s-%02s-%02s',
+                            $journeyLog->getToOn()->getYear(),
+                            $journeyLog->getToOn()->getMonth(),
+                            $journeyLog->getToOn()->getDay(),
+                        )
                     )
                 )
             ),
