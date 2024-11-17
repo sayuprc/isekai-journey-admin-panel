@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
+use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,6 +20,8 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
+    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -24,6 +29,8 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
     }
 
     #[Test]
@@ -37,9 +44,15 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function canDelete(): void
     {
+        $this->journeyLogLinkTypeRepository->shouldReceive('deleteJourneyLogLinkType')
+            ->with(Mockery::on(function (JourneyLogLinkTypeId $arg): bool {
+                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            }))
+            ->once();
+
         $this->app->bind(
             JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository()
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
         $this->actingAs($this->user)

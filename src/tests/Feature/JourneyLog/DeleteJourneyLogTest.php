@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
+use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,6 +20,8 @@ class DeleteJourneyLogTest extends TestCase
 
     private User $user;
 
+    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -24,6 +29,8 @@ class DeleteJourneyLogTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
     }
 
     #[Test]
@@ -37,9 +44,15 @@ class DeleteJourneyLogTest extends TestCase
     #[Test]
     public function canDelete(): void
     {
+        $this->journeyLogRepository->shouldReceive('deleteJourneyLog')
+            ->with(Mockery::on(function (JourneyLogId $arg): bool {
+                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            }))
+            ->once();
+
         $this->app->bind(
             JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
         );
 
         $this->actingAs($this->user)
@@ -54,11 +67,6 @@ class DeleteJourneyLogTest extends TestCase
     #[Test]
     public function emptyParameters(): void
     {
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
-        );
-
         $this->actingAs($this->user)
             ->delete(route('journey-logs.delete.handle'), [
                 'journey_log_id' => '',

@@ -13,6 +13,8 @@ use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeReposi
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -22,6 +24,8 @@ class EditJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
+    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -29,6 +33,8 @@ class EditJourneyLogLinkTypeTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
     }
 
     #[Test]
@@ -53,17 +59,20 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEditForm(): void
     {
+        $this->journeyLogLinkTypeRepository->shouldReceive('getJourneyLogLinkType')
+            ->with(Mockery::on(function (JourneyLogLinkTypeId $arg): bool {
+                return $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            }))
+            ->andReturn(new JourneyLogLinkType(
+                new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new JourneyLogLinkTypeName('名前'),
+                new OrderNo(1),
+            ))
+            ->once();
+
         $this->app->bind(
             JourneyLogLinkTypeRepositoryInterface::class,
-            function (): JourneyLogLinkTypeRepositoryInterface {
-                $func = fn (): JourneyLogLinkType => new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new JourneyLogLinkTypeName('名前'),
-                    new OrderNo(1),
-                );
-
-                return $this->getJourneyLogLinkTypeRepository(getJourneyLogLinkType: $func);
-            }
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
         $response = $this->actingAs($this->user)
@@ -78,7 +87,18 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function canEdit(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository());
+        $this->journeyLogLinkTypeRepository->shouldReceive('editJourneyLogLinkType')
+            ->with(Mockery::on(function (JourneyLogLinkType $arg): bool {
+                return $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                    && $arg->journeyLogLinkTypeName->value === '動画'
+                    && $arg->orderNo->value === 1;
+            }))
+            ->once();
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
+        );
 
         $this->actingAs($this->user)
             ->post(route('journey-log-link-types.edit.handle'), [
@@ -94,8 +114,6 @@ class EditJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function emptyParameters(): void
     {
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository());
-
         $this->actingAs($this->user)
             ->post(route('journey-log-link-types.edit.handle'), [
                 'journey_log_link_type_id' => '',

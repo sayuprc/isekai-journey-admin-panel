@@ -12,6 +12,8 @@ use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeReposi
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -21,6 +23,8 @@ class ListJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
+    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -28,6 +32,8 @@ class ListJourneyLogLinkTypeTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
     }
 
     #[Test]
@@ -41,9 +47,8 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showList(): void
     {
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [
+        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+            ->andReturn([
                 new JourneyLogLinkType(
                     new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new JourneyLogLinkTypeName('名前1'),
@@ -55,6 +60,11 @@ class ListJourneyLogLinkTypeTest extends TestCase
                     new OrderNo(2),
                 ),
             ])
+            ->once();
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
         $response = $this->actingAs($this->user)
@@ -76,9 +86,13 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
+        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+            ->andReturn([])
+            ->once();
+
         $this->app->bind(
             JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [])
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
         $response = $this->actingAs($this->user)
