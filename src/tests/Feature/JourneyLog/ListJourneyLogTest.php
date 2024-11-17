@@ -19,6 +19,8 @@ use App\Models\User;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -28,6 +30,8 @@ class ListJourneyLogTest extends TestCase
 
     private User $user;
 
+    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -35,6 +39,8 @@ class ListJourneyLogTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
     }
 
     #[Test]
@@ -48,9 +54,8 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showList(): void
     {
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(listJourneyLogs: fn (): array => [
+        $this->journeyLogRepository->shouldReceive('listJourneyLogs')
+            ->andReturn([
                 new JourneyLog(
                     new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Story('軌跡 A'),
@@ -74,6 +79,11 @@ class ListJourneyLogTest extends TestCase
                     ],
                 ),
             ])
+            ->once();
+
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
         );
 
         $response = $this->actingAs($this->user)
@@ -96,9 +106,13 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
+        $this->journeyLogRepository->shouldReceive('listJourneyLogs')
+            ->andReturn([])
+            ->once();
+
         $this->app->bind(
             JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository(listJourneyLogs: fn (): array => [])
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
         );
 
         $response = $this->actingAs($this->user)

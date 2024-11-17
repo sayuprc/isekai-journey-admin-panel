@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
+use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use Mockery;
+use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -18,6 +21,10 @@ class CreateJourneyLogTest extends TestCase
 
     private User $user;
 
+    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+
+    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -25,6 +32,9 @@ class CreateJourneyLogTest extends TestCase
         $this->user = User::factory()->create([
             'user_id' => Str::uuid()->toString(),
         ]);
+
+        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
+        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
     }
 
     #[Test]
@@ -38,9 +48,13 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function showCreateForm(): void
     {
+        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+            ->andReturn([])
+            ->once();
+
         $this->app->bind(
             JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->getJourneyLogLinkTypeRepository(listJourneyLogLinkTypes: fn (): array => [])
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
         $response = $this->actingAs($this->user)
@@ -55,9 +69,25 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
+        $this->journeyLogRepository->shouldReceive('createJourneyLog')
+            ->with(Mockery::on(function (JourneyLog $arg): bool {
+                return $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                    && $arg->story->value === '軌跡'
+                    && $arg->period->fromOn->format('Y-m-d') === '2019-12-09'
+                    && $arg->period->toOn->format('Y-m-d') === '2019-12-09'
+                    && $arg->orderNo->value === 1
+                    && count($arg->journeyLogLinks) === 1
+                    && $arg->journeyLogLinks[0]->journeyLogLinkId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                    && $arg->journeyLogLinks[0]->journeyLogLinkName->value === '管理画面'
+                    && $arg->journeyLogLinks[0]->url->value === 'https://local.admin.journey.isekaijoucho.fan'
+                    && $arg->journeyLogLinks[0]->orderNo->value === 1
+                    && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+            }))
+            ->once();
+
         $this->app->bind(
             JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
         );
 
         $this->actingAs($this->user)
@@ -83,11 +113,6 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function emptyParameters(): void
     {
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
-        );
-
         $this->actingAs($this->user)
             ->post(route('journey-logs.create.handle'), [
                 'story' => '',
@@ -119,11 +144,6 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function invalidFormatDate(): void
     {
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
-        );
-
         $this->actingAs($this->user)
             ->post(route('journey-logs.create.handle'), [
                 'story' => '軌跡',
@@ -141,11 +161,6 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function inversionDate(): void
     {
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->getJourneyLogRepository()
-        );
-
         $this->actingAs($this->user)
             ->post(route('journey-logs.create.handle'), [
                 'story' => '軌跡',
