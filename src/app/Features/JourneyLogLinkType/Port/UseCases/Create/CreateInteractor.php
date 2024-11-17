@@ -20,12 +20,12 @@ class CreateInteractor
 
     public function handle(CreateRequest $request): void
     {
-        $jouenryLogLinkType = new JourneyLogLinkType(
+        $journeyLogLinkType = new JourneyLogLinkType(
             new JourneyLogLinkTypeId(self::DUMMY_UUID),
             new JourneyLogLinkTypeName($request->journeyLogLinkTypeName),
             new OrderNo($request->orderNo),
         );
 
-        $this->repository->createJourneyLogLinkType($jouenryLogLinkType);
+        $this->repository->createJourneyLogLinkType($journeyLogLinkType);
     }
 }
