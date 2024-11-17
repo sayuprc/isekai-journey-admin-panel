@@ -9,7 +9,7 @@ use App\Features\JourneyLog\Domain\Entities\JourneyLog;
 class ListResponse
 {
     /**
-     * @param array<JourneyLog> $journeyLogs
+     * @param JourneyLog[] $journeyLogs
      */
     public function __construct(public readonly array $journeyLogs)
     {

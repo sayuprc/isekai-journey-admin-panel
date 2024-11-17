@@ -48,7 +48,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
      * @throws APIException
      * @throws Exception
      *
-     * @return array<JourneyLog>
+     * @return JourneyLog[]
      */
     public function listJourneyLogs(): array
     {
