@@ -8,10 +8,13 @@ use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Features\JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
+use App\Features\Song\Domain\Repositories\SongRepositoryInterface;
+use App\Features\Song\Infrastructures\Repositories\SongRepository;
 use App\Shared\Application\Uuid\DummyUuidGenerator;
 use App\Shared\Uuid\UuidGeneratorInterface;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
+use Generated\IsekaiJourney\Song\SongServiceClient;
 use Grpc\ChannelCredentials;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -40,9 +43,17 @@ class AppServiceProvider extends ServiceProvider
             return new JourneyLogLinkTypeServiceClient($url, ['credentials' => $credentials]);
         });
 
+        $this->app->bind(SongServiceClient::class, function () use ($config): SongServiceClient {
+            [$url, $credentials] = $config();
+
+            return new SongServiceClient($url, ['credentials' => $credentials]);
+        });
+
         $this->app->bind(JourneyLogRepositoryInterface::class, JourneyLogRepository::class);
 
         $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, JourneyLogLinkTypeRepository::class);
+
+        $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
 
         $this->app->bind(UuidGeneratorInterface::class, DummyUuidGenerator::class);
     }

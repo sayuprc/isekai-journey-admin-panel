@@ -303,7 +303,7 @@ return [
     */
 
     'menu' => [
-        // Sidebar items:
+        // 軌跡
         [
             'header' => 'journey_log',
         ],
@@ -317,6 +317,7 @@ return [
             'url' => 'journey-logs/create',
             'icon' => 'fas fa-plus',
         ],
+        // 軌跡リンク種別
         [
             'header' => 'journey_log_link_type',
         ],
@@ -329,6 +330,15 @@ return [
             'text' => 'create-journey_log_link_type',
             'url' => 'journey-log-link-types/create',
             'icon' => 'fas fa-plus',
+        ],
+        // 楽曲
+        [
+            'header' => 'song',
+        ],
+        [
+            'text' => 'list-song',
+            'url' => 'songs',
+            'icon' => 'fas fa-list',
         ],
     ],
 
