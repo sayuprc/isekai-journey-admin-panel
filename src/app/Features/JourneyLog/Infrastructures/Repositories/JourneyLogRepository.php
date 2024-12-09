@@ -54,11 +54,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
      */
     public function listJourneyLogs(): array
     {
-        /**
-         * @var ListJourneyLogsResponse $response
-         * @var stdClass                $status
-         */
         [$response, $status] = $this->client->ListJourneyLogs(new ListJourneyLogsRequest())->wait();
+
+        assert($response instanceof ListJourneyLogsResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -70,8 +69,8 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         $journeyLogs = [];
 
-        /** @var GrpcJourneyLog $journeyLog */
         foreach ($response->getJourneyLogs() as $journeyLog) {
+            assert($journeyLog instanceof GrpcJourneyLog);
             $journeyLogs[] = $this->toJourneyLog($journeyLog);
         }
 
@@ -92,11 +91,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setOrderNo($journeyLog->orderNo->value);
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
-        /**
-         * @var CreateJourneyLogResponse $response
-         * @var stdClass                 $status
-         */
         [$response, $status] = $this->client->CreateJourneyLog($request)->wait();
+
+        assert($response instanceof CreateJourneyLogResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -116,11 +114,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request = new GetJourneyLogRequest();
         $request->setJourneyLogId($journeyLogId->value);
 
-        /**
-         * @var GetJourneyLogResponse $response
-         * @var stdClass              $status
-         */
         [$response, $status] = $this->client->GetJourneyLog($request)->wait();
+
+        assert($response instanceof GetJourneyLogResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -147,11 +144,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setOrderNo($journeyLog->orderNo->value);
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
-        /**
-         * @var EditJourneyLogResponse $response
-         * @var stdClass               $status
-         */
         [$response, $status] = $this->client->EditJourneyLog($request)->wait();
+
+        assert($response instanceof EditJourneyLogResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -173,11 +169,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request = new DeleteJourneyLogRequest();
         $request->setJourneyLogId($journeyLogId->value);
 
-        /**
-         * @var DeleteJourneyLogResponse $response
-         * @var stdClass                 $status
-         */
         [$response, $status] = $this->client->DeleteJourneyLog($request)->wait();
+
+        assert($response instanceof DeleteJourneyLogResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -201,8 +196,8 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     {
         $journeyLogLinks = [];
 
-        /** @var GrpcLink $link */
         foreach ($journeyLog->getJourneyLogLinks() as $link) {
+            assert($link instanceof GrpcLink);
             $journeyLogLinks[] = new JourneyLogLink(
                 new JourneyLogLinkId($link->getJourneyLogLinkId()),
                 new JourneyLogLinkName($link->getJourneyLogLinkName()),

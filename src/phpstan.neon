@@ -9,7 +9,6 @@ parameters:
   ignoreErrors:
     - '#Instantiated class Generated\\IsekaiJourney\\.* not found\.#'
     - '#Call to method .*\(\) on an unknown class Generated\\IsekaiJourney\\.*\.#'
-    - '#PHPDoc tag @.* for variable \$.* contains unknown class Generated\\IsekaiJourney\\.*\.#'
     - '#Parameter .* of method .*::.*\(\) has invalid type Generated\\IsekaiJourney\\.*\.#'
     - '#Property .*::.* has unknown class Generated\\IsekaiJourney\\.* as its type\.#'
     - '#Access to constant .* on an unknown class Generated\\IsekaiJourney\\.*\.#'

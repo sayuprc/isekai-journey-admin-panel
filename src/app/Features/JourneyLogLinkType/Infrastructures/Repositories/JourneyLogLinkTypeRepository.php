@@ -36,11 +36,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
     public function listJourneyLogLinkTypes(): array
     {
-        /**
-         * @var ListJourneyLogLinkTypesResponse $response
-         * @var stdClass                        $status
-         */
         [$response, $status] = $this->client->ListJourneyLogLinkTypes(new ListJourneyLogLinkTypesRequest())->wait();
+
+        assert($response instanceof ListJourneyLogLinkTypesResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -52,8 +51,8 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         $journeyLogLinkTypes = [];
 
-        /** @var GrpcJourneyLogLinkType $journeyLogLinkType */
         foreach ($response->getJourneyLogLinkTypes() as $journeyLogLinkType) {
+            assert($journeyLogLinkType instanceof GrpcJourneyLogLinkType);
             $journeyLogLinkTypes[] = $this->toJourneyLogLinkType($journeyLogLinkType);
         }
 
@@ -67,11 +66,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeName($journeyLogLinkType->journeyLogLinkTypeName->value);
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
-        /**
-         * @var CreateJourneyLogLinkTypeResponse $response
-         * @var stdClass                         $status
-         */
         [$response, $status] = $this->client->CreateJourneyLogLinkType($request)->wait();
+
+        assert($response instanceof CreateJourneyLogLinkTypeResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -88,11 +86,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
-        /**
-         * @var GetJourneyLogLinkTypeResponse $response
-         * @var stdClass                      $status
-         */
         [$response, $status] = $this->client->GetJourneyLogLinkType($request)->wait();
+
+        assert($response instanceof GetJourneyLogLinkTypeResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -113,11 +110,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeName($journeyLogLinkType->journeyLogLinkTypeName->value);
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
-        /**
-         * @var EditJourneyLogLinkTypeResponse $response
-         * @var stdClass                       $status
-         */
         [$response, $status] = $this->client->EditJourneyLogLinkType($request)->wait();
+
+        assert($response instanceof EditJourneyLogLinkTypeResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -134,11 +130,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
-        /**
-         * @var DeleteJourneyLogLinkTypeResponse $response
-         * @var stdClass                         $status
-         */
         [$response, $status] = $this->client->DeleteJourneyLogLinkType($request)->wait();
+
+        assert($response instanceof DeleteJourneyLogLinkTypeResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);

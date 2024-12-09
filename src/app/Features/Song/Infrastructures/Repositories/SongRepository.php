@@ -37,11 +37,10 @@ class SongRepository implements SongRepositoryInterface
 
     public function listSongs(): array
     {
-        /**
-         * @var ListSongsResponse $response
-         * @var stdClass          $status
-         */
         [$response, $status] = $this->client->ListSongs(new ListSongsRequest())->wait();
+
+        assert($response instanceof ListSongsResponse);
+        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
@@ -53,8 +52,8 @@ class SongRepository implements SongRepositoryInterface
 
         $songs = [];
 
-        /** @var GrpcSong $song */
         foreach ($response->getSongs() as $song) {
+            assert($song instanceof GrpcSong);
             $songs[] = $this->toSong($song);
         }
 
@@ -65,8 +64,8 @@ class SongRepository implements SongRepositoryInterface
     {
         $songLinks = [];
 
-        /** @var GrpcSongLink $songLink */
         foreach ($song->getSongLinks() as $songLink) {
+            assert($songLink instanceof GrpcSongLink);
             $songLinks[] = $this->toSongLink($songLink);
         }
 
