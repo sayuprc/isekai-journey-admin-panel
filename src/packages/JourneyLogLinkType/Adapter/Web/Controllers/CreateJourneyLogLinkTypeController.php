@@ -9,8 +9,8 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\Adapter\Web\Requests\CreateRequest as WebRequest;
-use JourneyLogLinkType\Port\UseCases\Create\CreateInteractor;
-use JourneyLogLinkType\Port\UseCases\Create\CreateRequest;
+use JourneyLogLinkType\UseCases\Create\CreateInteractor;
+use JourneyLogLinkType\UseCases\Create\CreateRequest;
 use Shared\Route\RouteMap;
 
 class CreateJourneyLogLinkTypeController extends Controller

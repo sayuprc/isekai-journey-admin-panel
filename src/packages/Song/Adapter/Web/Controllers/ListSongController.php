@@ -7,7 +7,7 @@ namespace Song\Adapter\Web\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Song\Adapter\Web\Presenters\ListViewSong;
-use Song\Port\List\ListInteractor;
+use Song\UseCases\List\ListInteractor;
 
 class ListSongController extends Controller
 {

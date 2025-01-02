@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use JourneyLog\Adapter\Web\Requests\DeleteRequest as WebDeleteRequest;
-use JourneyLog\Port\UseCases\Delete\DeleteInteractor;
-use JourneyLog\Port\UseCases\Delete\DeleteRequest;
+use JourneyLog\UseCases\Delete\DeleteInteractor;
+use JourneyLog\UseCases\Delete\DeleteRequest;
 use Shared\Route\RouteMap;
 
 class DeleteJourneyLogController extends Controller

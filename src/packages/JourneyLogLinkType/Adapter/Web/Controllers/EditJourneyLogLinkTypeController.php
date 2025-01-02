@@ -10,10 +10,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
 use JourneyLogLinkType\Adapter\Web\Requests\EditRequest as WebRequest;
-use JourneyLogLinkType\Port\UseCases\Edit\EditInteractor;
-use JourneyLogLinkType\Port\UseCases\Edit\EditRequest;
-use JourneyLogLinkType\Port\UseCases\Get\GetInteractor;
-use JourneyLogLinkType\Port\UseCases\Get\GetRequest;
+use JourneyLogLinkType\UseCases\Edit\EditInteractor;
+use JourneyLogLinkType\UseCases\Edit\EditRequest;
+use JourneyLogLinkType\UseCases\Get\GetInteractor;
+use JourneyLogLinkType\UseCases\Get\GetRequest;
 use Shared\Route\RouteMap;
 
 class EditJourneyLogLinkTypeController extends Controller

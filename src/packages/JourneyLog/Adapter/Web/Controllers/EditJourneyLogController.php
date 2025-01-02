@@ -12,12 +12,12 @@ use JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
 use JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use JourneyLog\Adapter\Web\Requests\EditRequest as WebEditRequest;
 use JourneyLog\Domain\Entities\JourneyLogLink;
-use JourneyLog\Port\UseCases\Edit\EditInteractor;
-use JourneyLog\Port\UseCases\Edit\EditRequest;
-use JourneyLog\Port\UseCases\Get\GetInteractor;
-use JourneyLog\Port\UseCases\Get\GetRequest;
+use JourneyLog\UseCases\Edit\EditInteractor;
+use JourneyLog\UseCases\Edit\EditRequest;
+use JourneyLog\UseCases\Get\GetInteractor;
+use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
-use JourneyLogLinkType\Port\UseCases\List\ListInteractor;
+use JourneyLogLinkType\UseCases\List\ListInteractor;
 use Shared\Route\RouteMap;
 
 class EditJourneyLogController extends Controller

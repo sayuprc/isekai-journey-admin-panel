@@ -7,7 +7,7 @@ namespace JourneyLog\Adapter\Web\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use JourneyLog\Adapter\Web\Presenters\ListViewJourneyLog;
-use JourneyLog\Port\UseCases\List\ListInteractor;
+use JourneyLog\UseCases\List\ListInteractor;
 
 class ListJourneyLogController extends Controller
 {
