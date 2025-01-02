@@ -1,4 +1,4 @@
-FROM php:8.3-fpm as grpc-build
+FROM php:8.4-fpm as grpc-build
 
 ARG PROTOC_VERSION="27.3"
 ARG GRPC_VERSION="v1.65.5"
@@ -25,7 +25,7 @@ RUN apt-get update \
   && cd /var/local \
   && rm -rf grpc
 
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 COPY certs/rootCA.pem /usr/share/ca-certificates/
 
