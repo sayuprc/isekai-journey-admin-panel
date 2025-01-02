@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Features\JourneyLog\Domain\Entities;
 
-use App\Features\JourneyLog\Domain\Entities\FromOn;
-use App\Features\JourneyLog\Domain\Entities\Period;
-use App\Features\JourneyLog\Domain\Entities\ToOn;
-use App\Shared\Domain\Exceptions\InvalidDomainException;
 use DateTimeImmutable;
+use JourneyLog\Domain\Entities\FromOn;
+use JourneyLog\Domain\Entities\Period;
+use JourneyLog\Domain\Entities\ToOn;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Shared\Domain\Exceptions\InvalidDomainException;
 
 class PeriodTest extends TestCase
 {

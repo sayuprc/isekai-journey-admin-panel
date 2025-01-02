@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Shared\Domain;
 
-use App\Shared\Domain\Exceptions\InvalidDomainException;
-use App\Shared\Domain\UuidValueObject;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Domain\Exceptions\InvalidDomainException;
 use Tests\TestCase;
 
 class UuidValueObjectTest extends TestCase

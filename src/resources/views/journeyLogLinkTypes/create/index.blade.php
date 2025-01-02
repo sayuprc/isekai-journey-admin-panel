@@ -1,4 +1,4 @@
-@php use App\Shared\Route\RouteMap; @endphp
+@php use Shared\Route\RouteMap; @endphp
 
 @extends('layout.page')
 
@@ -23,9 +23,9 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}" />
+            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}"/>
         </div>
 
-        <x-adminlte-button label="登録" type="submit" theme="primary" />
+        <x-adminlte-button label="登録" type="submit" theme="primary"/>
     </form>
 @endsection

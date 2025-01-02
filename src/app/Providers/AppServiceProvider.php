@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use App\Features\JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
-use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use App\Features\JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
-use App\Features\Song\Domain\Repositories\SongRepositoryInterface;
-use App\Features\Song\Infrastructures\Repositories\SongRepository;
-use App\Shared\Application\Uuid\DummyUuidGenerator;
-use App\Shared\Uuid\UuidGeneratorInterface;
 use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Generated\IsekaiJourney\Song\SongServiceClient;
 use Grpc\ChannelCredentials;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
+use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
+use Shared\Application\Uuid\DummyUuidGenerator;
+use Shared\Uuid\UuidGeneratorInterface;
+use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Infrastructures\Repositories\SongRepository;
 
 class AppServiceProvider extends ServiceProvider
 {

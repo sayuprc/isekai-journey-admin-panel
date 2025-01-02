@@ -29,7 +29,13 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Generated\\": "app/Generated/"
+            "Generated\\": "app/Generated/",
+            "Shared\\": "packages/Shared/",
+            "Auth\\": "packages/Auth",
+            "JourneyLog\\": "packages/JourneyLog",
+            "JourneyLogLinkType\\": "packages/JourneyLogLinkType",
+            "Song\\": "packages/Song",
+            "SongType\\": "packages/SongType"
         }
     },
     "autoload-dev": {

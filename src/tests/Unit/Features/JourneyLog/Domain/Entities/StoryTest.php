@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Features\JourneyLog\Domain\Entities;
 
-use App\Features\JourneyLog\Domain\Entities\Story;
-use App\Shared\Domain\Exceptions\InvalidDomainException;
+use JourneyLog\Domain\Entities\Story;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Shared\Domain\Exceptions\InvalidDomainException;
 
 class StoryTest extends TestCase
 {

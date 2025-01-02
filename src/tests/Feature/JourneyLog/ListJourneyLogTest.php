@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
-use App\Features\JourneyLog\Domain\Entities\FromOn;
-use App\Features\JourneyLog\Domain\Entities\JourneyLog;
-use App\Features\JourneyLog\Domain\Entities\JourneyLogId;
-use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
-use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkId;
-use App\Features\JourneyLog\Domain\Entities\JourneyLogLinkName;
-use App\Features\JourneyLog\Domain\Entities\OrderNo;
-use App\Features\JourneyLog\Domain\Entities\Period;
-use App\Features\JourneyLog\Domain\Entities\Story;
-use App\Features\JourneyLog\Domain\Entities\ToOn;
-use App\Features\JourneyLog\Domain\Entities\Url;
-use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Models\User;
-use App\Shared\Route\RouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use JourneyLog\Domain\Entities\FromOn;
+use JourneyLog\Domain\Entities\JourneyLog;
+use JourneyLog\Domain\Entities\JourneyLogId;
+use JourneyLog\Domain\Entities\JourneyLogLink;
+use JourneyLog\Domain\Entities\JourneyLogLinkId;
+use JourneyLog\Domain\Entities\JourneyLogLinkName;
+use JourneyLog\Domain\Entities\OrderNo;
+use JourneyLog\Domain\Entities\Period;
+use JourneyLog\Domain\Entities\Story;
+use JourneyLog\Domain\Entities\ToOn;
+use JourneyLog\Domain\Entities\Url;
+use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Route\RouteMap;
 use Tests\TestCase;
 
 class ListJourneyLogTest extends TestCase
