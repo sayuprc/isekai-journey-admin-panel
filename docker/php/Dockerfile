@@ -1,28 +1,17 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm as grpc-build
 
-COPY certs/rootCA.pem /usr/share/ca-certificates/
+ARG PROTOC_VERSION="27.3"
+ARG GRPC_VERSION="v1.65.5"
 
-RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
-  && update-ca-certificates \
-  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-  && apt-get update \
+RUN apt-get update \
   && apt-get install -y \
     cmake \
     git \
     libpq-dev \
     unzip \
-    nodejs \
-    zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
-  && pecl install xdebug protobuf grpc \
-  && docker-php-ext-enable xdebug protobuf grpc \
-  && docker-php-ext-install pgsql pdo_pgsql
-
-ARG PROTOC_VERSION="27.3"
-ARG GRPC_VERSION="v1.65.5"
-
-RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -o protoc.zip \
+  && curl -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -o protoc.zip \
   && unzip -q protoc.zip bin/protoc -d /usr/local/ \
   && cd /var/local \
   && git clone -b ${GRPC_VERSION} https://github.com/grpc/grpc --depth=1 \
@@ -36,7 +25,29 @@ RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v${PRO
   && cd /var/local \
   && rm -rf grpc
 
+FROM php:8.3-fpm
+
+COPY certs/rootCA.pem /usr/share/ca-certificates/
+
+RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
+  && update-ca-certificates \
+  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+  && apt-get update \
+  && apt-get install -y \
+    git \
+    libpq-dev \
+    unzip \
+    nodejs \
+    zlib1g-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  && pecl install xdebug protobuf grpc \
+  && docker-php-ext-enable xdebug protobuf grpc \
+  && docker-php-ext-install pgsql pdo_pgsql
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=grpc-build /usr/local/bin/protoc /usr/local/bin/protoc
+COPY --from=grpc-build /usr/local/bin/grpc_php_plugin /usr/local/bin/grpc_php_plugin
 
 ARG UID=1000
 ARG GID=1000
