@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Shared\Domain;
+namespace Tests\Unit\Shared\Domain;
 
 use PHPUnit\Framework\Attributes\Test;
 use Shared\Domain\Exceptions\InvalidDomainException;
+use Shared\Domain\UuidValueObject;
 use Tests\TestCase;
 
 class UuidValueObjectTest extends TestCase
