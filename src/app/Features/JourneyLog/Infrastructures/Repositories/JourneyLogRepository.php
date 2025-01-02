@@ -251,6 +251,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
             $grpcLink->setJourneyLogLinkId($link->journeyLogLinkId->value);
             $grpcLink->setJourneyLogLinkName($link->journeyLogLinkName->value);
             $grpcLink->setUrl($link->url->value);
+            $grpcLink->setOrderNo($link->orderNo->value);
             $grpcLink->setJourneyLogLinkTypeId($link->journeyLogLinkTypeId->value);
 
             $grpcLinks[] = $grpcLink;
