@@ -53,9 +53,10 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "stan": "phpstan analyse --memory-limit=-1 --no-progress",
+        "phpstan": "phpstan analyse --memory-limit=-1 --no-progress",
         "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
+        "test-all": "php artisan test --env=testing",
         "test-unit": "php artisan test tests/Unit",
         "test-feature": "php artisan test tests/Feature --env=testing",
         "ide-gen": "php artisan ide-helper:generate",

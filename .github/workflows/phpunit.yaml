@@ -95,5 +95,4 @@ jobs:
       - name: Run PHPUnit
         run: |
           cd src
-          composer test-unit
-          composer test-feature
+          composer test-all

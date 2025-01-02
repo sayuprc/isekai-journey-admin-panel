@@ -46,4 +46,4 @@ jobs:
       - name: Run PHPStan
         run: |
           cd src
-          composer stan
+          composer phpstan

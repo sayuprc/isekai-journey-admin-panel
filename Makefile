@@ -38,9 +38,9 @@ php: ## Enter php container
 composer-install: ## Install composer packages
 	docker compose run --rm php composer install
 
-.PHONY: stan
-stan: ## Run PHPStan
-	docker compose exec php composer stan
+.PHONY: phpstan
+phpstan: ## Run PHPStan
+	docker compose exec php composer phpstan
 
 .PHONY: ecs
 ecs: ## Run ecs
@@ -49,6 +49,10 @@ ecs: ## Run ecs
 .PHONY: ecs-fix
 ecs-fix: ## Run ecs fix
 	docker compose exec php composer ecs-fix
+
+.PHONY: test-all
+test-all: ## Run all tests
+	docker compose exec php composer test-all
 
 .PHONY: test-unit
 test-unit: ## Run PHPUnit
