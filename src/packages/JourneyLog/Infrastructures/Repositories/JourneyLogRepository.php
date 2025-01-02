@@ -37,6 +37,7 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use Shared\Exceptions\APIException;
 use stdClass;
+
 use const Grpc\STATUS_OK;
 
 class JourneyLogRepository implements JourneyLogRepositoryInterface
