@@ -1,0 +1,19 @@
+name: WIP
+
+on: pull_request
+
+jobs:
+  check-title:
+    name: WIP
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if PR title contains "WIP"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            if (/\[WIP\]/.test(title)) {
+              throw new Error('[WIP] が PR のタイトルに含まれています')
+            }
