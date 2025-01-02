@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Features\JourneyLog\Domain\Entities;
+namespace Tests\Unit\JourneyLog\Domain\Entities;
 
 use JourneyLog\Domain\Entities\Story;
 use PHPUnit\Framework\Attributes\Test;

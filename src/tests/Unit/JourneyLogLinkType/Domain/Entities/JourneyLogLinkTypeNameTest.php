@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Features\JourneyLogLinkType\Domain\Entities;
+namespace Tests\Unit\JourneyLogLinkType\Domain\Entities;
 
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\Test;
