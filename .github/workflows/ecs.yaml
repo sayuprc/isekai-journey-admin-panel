@@ -19,6 +19,12 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Submodule init
+        run: |
+          cd src
+          git submodule update --init --remote
+          ls proto
+
       - name: Composer cache
         id: composer_cache
         uses: actions/cache@v4
