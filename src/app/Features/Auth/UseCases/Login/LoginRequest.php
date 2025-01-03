@@ -15,6 +15,7 @@ class LoginRequest
      */
     public function __construct(public readonly array $credentials)
     {
+        // @phpstan-ignore-next-line
         if (! array_key_exists('email', $this->credentials) || ! array_key_exists('password', $this->credentials)) {
             throw new Exception('Invalid credentials');
         }
