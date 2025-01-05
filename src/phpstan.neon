@@ -6,12 +6,4 @@ parameters:
     - app
   # The level 9 is the highest level
   level: 5
-  ignoreErrors:
-    - '#Instantiated class Generated\\IsekaiJourney\\.* not found\.#'
-    - '#Call to method .*\(\) on an unknown class Generated\\IsekaiJourney\\.*\.#'
-    - '#Parameter .* of method .*::.*\(\) has invalid type Generated\\IsekaiJourney\\.*\.#'
-    - '#Property .*::.* has unknown class Generated\\IsekaiJourney\\.* as its type\.#'
-    - '#Access to constant .* on an unknown class Generated\\IsekaiJourney\\.*\.#'
-    - '#Anonymous function has invalid return type Generated\\IsekaiJourney\\.*\.#'
-    - '#Class Generated\\IsekaiJourney\\.* not found\.#'
-    - '#Method .*::.*\(\) has invalid return type Generated\\IsekaiJourney\\.*\.#'
+
