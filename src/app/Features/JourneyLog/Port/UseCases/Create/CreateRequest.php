@@ -7,7 +7,7 @@ namespace App\Features\JourneyLog\Port\UseCases\Create;
 class CreateRequest
 {
     /**
-     * @param array<array{journey_log_link_name: string, url: string, order_no: int, journey_log_link_type_id: string}> $journeyLogLinks
+     * @param array<CreateJourneyLogLink> $journeyLogLinks
      */
     public function __construct(
         public readonly string $story,

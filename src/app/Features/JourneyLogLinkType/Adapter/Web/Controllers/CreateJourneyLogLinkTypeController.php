@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLogLinkType\Adapter\Web\Controllers;
 
-use App\Features\JourneyLogLinkType\Adapter\Web\Requests\CreateRequest as WebRequest;
 use App\Features\JourneyLogLinkType\Port\UseCases\Create\CreateInteractor;
 use App\Features\JourneyLogLinkType\Port\UseCases\Create\CreateRequest;
 use App\Http\Controllers\Controller;
@@ -20,15 +19,10 @@ class CreateJourneyLogLinkTypeController extends Controller
         return view('journeyLogLinkTypes.create.index');
     }
 
-    public function handle(WebRequest $request, CreateInteractor $interactor): RedirectResponse
+    public function handle(CreateRequest $request, CreateInteractor $interactor): RedirectResponse
     {
-        $validated = $request->validated();
-
         try {
-            $interactor->handle(new CreateRequest(
-                $validated['journey_log_link_type_name'],
-                (int)$validated['order_no']
-            ));
+            $interactor->handle($request);
         } catch (Exception $e) {
             return back()
                 ->withErrors([

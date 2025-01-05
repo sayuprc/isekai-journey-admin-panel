@@ -7,10 +7,10 @@ namespace App\Features\JourneyLog\Port\UseCases\Edit;
 class EditRequest
 {
     /**
-     * @param array<array{journey_log_link_name: string, url: string, order_no: int, journey_log_link_type_id: string}> $journeyLogLinks
+     * @param array<EditJourneyLogLink> $journeyLogLinks
      */
     public function __construct(
-        public readonly string $journeyLodId,
+        public readonly string $journeyLogId,
         public readonly string $story,
         public readonly string $fromOn,
         public readonly string $toOn,

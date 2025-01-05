@@ -31,7 +31,7 @@ class EditInteractor
     public function handle(EditRequest $request): void
     {
         $journeyLog = new JourneyLog(
-            new JourneyLogId($request->journeyLodId),
+            new JourneyLogId($request->journeyLogId),
             new Story($request->story),
             new Period(
                 new FromOn(new DateTimeImmutable($request->fromOn)),
@@ -45,9 +45,9 @@ class EditInteractor
     }
 
     /**
-     * @param array<array{journey_log_link_name: string, url: string, order_no: int, journey_log_link_type_id: string}> $data
+     * @param array<EditJourneyLogLink> $data
      *
-     * @return JourneyLogLink[]
+     * @return array<JourneyLogLink>
      */
     private function toJourneyLogLinks(array $data): array
     {
@@ -56,10 +56,10 @@ class EditInteractor
         foreach ($data as $link) {
             $journeyLogLinks[] = new JourneyLogLink(
                 new JourneyLogLinkId($this->generator->generate()), // リンクはデリートインサートなのでダミー値でよい
-                new JourneyLogLinkName($link['journey_log_link_name']),
-                new Url($link['url']),
-                new OrderNo($link['order_no']),
-                new JourneyLogLinkTypeId($link['journey_log_link_type_id']),
+                new JourneyLogLinkName($link->journeyLogLinkName),
+                new Url($link->url),
+                new OrderNo($link->orderNo),
+                new JourneyLogLinkTypeId($link->journeyLogLinkTypeId),
             );
         }
 

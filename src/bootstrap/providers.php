@@ -7,4 +7,10 @@ return [
     App\Providers\GrpcServiceProvider::class,
     App\Providers\ProdServiceProvider::class,
     App\Features\Auth\Adapter\Web\Providers\LoginServiceProvider::class,
+    App\Features\JourneyLog\Adapter\Web\Providers\CreateServiceProvider::class,
+    App\Features\JourneyLog\Adapter\Web\Providers\EditServiceProvider::class,
+    App\Features\JourneyLog\Adapter\Web\Providers\DeleteServiceProvider::class,
+    App\Features\JourneyLogLinkType\Adapter\Web\Providers\CreateServiceProvider::class,
+    App\Features\JourneyLogLinkType\Adapter\Web\Providers\EditServiceProvider::class,
+    App\Features\JourneyLogLinkType\Adapter\Web\Providers\DeleteServiceProvider::class,
 ];

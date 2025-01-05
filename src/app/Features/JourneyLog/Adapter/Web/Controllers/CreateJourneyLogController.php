@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 
-use App\Features\JourneyLog\Adapter\Web\Requests\CreateRequest as WebCreateRequest;
 use App\Features\JourneyLog\Port\UseCases\Create\CreateInteractor;
 use App\Features\JourneyLog\Port\UseCases\Create\CreateRequest;
 use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
@@ -30,25 +29,10 @@ class CreateJourneyLogController extends Controller
         return view('journeyLogs.create.index', compact('journeyLogLinkTypes'));
     }
 
-    public function handle(WebCreateRequest $request, CreateInteractor $interactor): RedirectResponse
+    public function handle(CreateRequest $request, CreateInteractor $interactor): RedirectResponse
     {
-        $validated = $request->validated();
-
         try {
-            $interactor->handle(new CreateRequest(
-                $validated['story'],
-                $validated['from_on'],
-                $validated['to_on'],
-                (int)$validated['order_no'],
-                array_map(function (array $item): array {
-                    return [
-                        'journey_log_link_name' => $item['journey_log_link_name'],
-                        'url' => $item['url'],
-                        'order_no' => (int)$item['order_no'],
-                        'journey_log_link_type_id' => $item['journey_log_link_type_id'],
-                    ];
-                }, $validated['journey_log_links'] ?? []),
-            ));
+            $interactor->handle($request);
         } catch (Exception $e) {
             return back()
                 ->withErrors([
