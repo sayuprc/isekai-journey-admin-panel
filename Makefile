@@ -42,6 +42,10 @@ composer-install: ## Install composer packages
 phpstan: ## Run PHPStan
 	docker compose exec php composer phpstan
 
+.PHONY: phpstan-clear-cache
+phpstan-clear-cache: ## Clear PHPStan cache
+	docker compose exec php composer phpstan-clear-cache
+
 .PHONY: ecs
 ecs: ## Run ecs
 	docker compose exec php composer ecs

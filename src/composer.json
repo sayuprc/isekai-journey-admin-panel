@@ -54,6 +54,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "phpstan": "phpstan analyse --memory-limit=-1 --no-progress",
+        "phpstan-clear-cache": "phpstan clear-result-cache",
         "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
         "test-all": "php artisan test --env=testing",
