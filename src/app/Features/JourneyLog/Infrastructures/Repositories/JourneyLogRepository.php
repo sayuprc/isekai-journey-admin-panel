@@ -18,6 +18,8 @@ use App\Features\JourneyLog\Domain\Entities\Url;
 use App\Features\JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use App\Shared\Exceptions\APIException;
+use App\Shared\Grpc\Status;
+use App\Shared\Mapper\MapperInterface;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
@@ -35,15 +37,16 @@ use Generated\IsekaiJourney\JourneyLog\JourneyLogServiceClient;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsRequest;
 use Generated\IsekaiJourney\JourneyLog\ListJourneyLogsResponse;
 use Generated\IsekaiJourney\Shared\Date;
-use Generated\IsekaiJourney\Shared\Status;
-use stdClass;
+use Generated\IsekaiJourney\Shared\Status as GrpcStatus;
 
 use const Grpc\STATUS_OK;
 
 class JourneyLogRepository implements JourneyLogRepositoryInterface
 {
-    public function __construct(private readonly JourneyLogServiceClient $client)
-    {
+    public function __construct(
+        private readonly JourneyLogServiceClient $client,
+        private readonly MapperInterface $mapper,
+    ) {
     }
 
     /**
@@ -55,15 +58,15 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     public function listJourneyLogs(): array
     {
         [$response, $status] = $this->client->ListJourneyLogs(new ListJourneyLogsRequest())->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof ListJourneyLogsResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception("Response Errors: [{$response->getStatus()}] {$response->getMessage()}");
         }
 
@@ -92,15 +95,15 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->CreateJourneyLog($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof CreateJourneyLogResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
     }
@@ -115,15 +118,15 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->GetJourneyLog($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof GetJourneyLogResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
 
@@ -148,15 +151,15 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->EditJourneyLog($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof EditJourneyLogResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
 
@@ -173,15 +176,15 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->DeleteJourneyLog($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof DeleteJourneyLogResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
     }

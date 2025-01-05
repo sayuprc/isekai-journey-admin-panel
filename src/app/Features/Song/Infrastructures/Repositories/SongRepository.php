@@ -17,36 +17,39 @@ use App\Features\Song\Domain\Entities\Url;
 use App\Features\Song\Domain\Repositories\SongRepositoryInterface;
 use App\Features\SongType\Domain\Entities\SongTypeId;
 use App\Shared\Exceptions\APIException;
+use App\Shared\Grpc\Status;
+use App\Shared\Mapper\MapperInterface;
 use DateTimeImmutable;
 use Exception;
-use Generated\IsekaiJourney\Shared\Status;
+use Generated\IsekaiJourney\Shared\Status as GrpcStatus;
 use Generated\IsekaiJourney\Song\ListSongsRequest;
 use Generated\IsekaiJourney\Song\ListSongsResponse;
 use Generated\IsekaiJourney\Song\Song as GrpcSong;
 use Generated\IsekaiJourney\Song\SongLink as GrpcSongLink;
 use Generated\IsekaiJourney\Song\SongServiceClient;
-use stdClass;
 
 use const Grpc\STATUS_OK;
 
 class SongRepository implements SongRepositoryInterface
 {
-    public function __construct(private readonly SongServiceClient $client)
-    {
+    public function __construct(
+        private readonly SongServiceClient $client,
+        private readonly MapperInterface $mapper,
+    ) {
     }
 
     public function listSongs(): array
     {
         [$response, $status] = $this->client->ListSongs(new ListSongsRequest())->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof ListSongsResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception("Response Errors: [{$response->getStatus()}] {$response->getMessage()}");
         }
 

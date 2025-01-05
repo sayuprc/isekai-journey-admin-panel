@@ -5,14 +5,7 @@ declare(strict_types=1);
 namespace App\Features\JourneyLog\Adapter\Web\Presenters;
 
 use App\Features\JourneyLog\Domain\Entities\JourneyLog;
-use Exception;
 
-/**
- * @property string $journeyLogId
- * @property string $story
- * @property string $period
- * @property int    $orderNo
- */
 class ListViewJourneyLog
 {
     private const string DATE_FORMAT = 'Y-m-d';
@@ -21,18 +14,22 @@ class ListViewJourneyLog
     {
     }
 
-    public function __get(string $name): int|string
+    public function journeyLogId(): string
     {
-        if (in_array($name, ['journeyLogId', 'story', 'orderNo'], true)) {
-            return $this->journeyLog->{$name}->value;
-        } elseif ($name === 'period') {
-            return $this->period();
-        }
-
-        throw new Exception('Invalid property: ' . $name);
+        return $this->journeyLog->journeyLogId->value;
     }
 
-    private function period(): string
+    public function story(): string
+    {
+        return $this->journeyLog->story->value;
+    }
+
+    public function orderNo(): int
+    {
+        return $this->journeyLog->orderNo->value;
+    }
+
+    public function period(): string
     {
         return $this->journeyLog->period->isSingleDay()
             ? $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
