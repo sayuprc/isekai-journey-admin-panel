@@ -45,9 +45,9 @@ class CreateInteractor
     }
 
     /**
-     * @param array<array{journey_log_link_name: string, url: string, order_no: int, journey_log_link_type_id: string}> $data
+     * @param array<CreateJourneyLogLink> $data
      *
-     * @return JourneyLogLink[]
+     * @return array<JourneyLogLink>
      */
     private function toJourneyLogLinks(array $data): array
     {
@@ -56,10 +56,10 @@ class CreateInteractor
         foreach ($data as $link) {
             $journeyLogLinks[] = new JourneyLogLink(
                 new JourneyLogLinkId($this->generator->generate()), // リンクはデリートインサートなのでダミー値でよい
-                new JourneyLogLinkName($link['journey_log_link_name']),
-                new Url($link['url']),
-                new OrderNo($link['order_no']),
-                new JourneyLogLinkTypeId($link['journey_log_link_type_id']),
+                new JourneyLogLinkName($link->journeyLogLinkName),
+                new Url($link->url),
+                new OrderNo($link->orderNo),
+                new JourneyLogLinkTypeId($link->journeyLogLinkTypeId),
             );
         }
 

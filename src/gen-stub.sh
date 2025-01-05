@@ -1,8 +1,8 @@
 #!/bin/sh
 
 protoc --proto_path=proto \
-  --php_out=app \
-  --grpc_out=app \
+  --php_out=. \
+  --grpc_out=. \
   --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin \
   ./proto/shared/shared.proto \
   ./proto/journey_log/journey_log.proto \

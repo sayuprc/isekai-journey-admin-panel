@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Features\Auth\Adapter\Web\Controllers;
 
-use App\Features\Auth\Adapter\Web\Requests\LoginRequest as WebLoginRequest;
 use App\Features\Auth\UseCases\Login\LoginInteractor;
 use App\Features\Auth\UseCases\Login\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Shared\Route\RouteMap;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Translation\Translator;
@@ -24,10 +24,10 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function handle(WebLoginRequest $request, LoginInteractor $interactor): RedirectResponse
+    public function handle(Session $session, LoginRequest $request, LoginInteractor $interactor): RedirectResponse
     {
-        if ($interactor->handle(new LoginRequest($request->validated()))->isSucceeded) {
-            $request->session()->regenerate();
+        if ($interactor->handle($request)->isSucceeded) {
+            $session->regenerate();
 
             return redirect()->route(RouteMap::LIST_JOURNEY_LOGS);
         }

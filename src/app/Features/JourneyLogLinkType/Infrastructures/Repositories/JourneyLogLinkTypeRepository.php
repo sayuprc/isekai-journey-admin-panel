@@ -10,6 +10,8 @@ use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use App\Features\JourneyLogLinkType\Domain\Entities\OrderNo;
 use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Shared\Exceptions\APIException;
+use App\Shared\Grpc\Status;
+use App\Shared\Mapper\MapperInterface;
 use Exception;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\CreateJourneyLogLinkTypeResponse;
@@ -23,29 +25,30 @@ use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkType as GrpcJourney
 use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Generated\IsekaiJourney\JourneyLogLinkType\ListJourneyLogLinkTypesRequest;
 use Generated\IsekaiJourney\JourneyLogLinkType\ListJourneyLogLinkTypesResponse;
-use Generated\IsekaiJourney\Shared\Status;
-use stdClass;
+use Generated\IsekaiJourney\Shared\Status as GrpcStatus;
 
 use const Grpc\STATUS_OK;
 
 class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
 {
-    public function __construct(private readonly JourneyLogLinkTypeServiceClient $client)
-    {
+    public function __construct(
+        private readonly JourneyLogLinkTypeServiceClient $client,
+        private readonly MapperInterface $mapper,
+    ) {
     }
 
     public function listJourneyLogLinkTypes(): array
     {
         [$response, $status] = $this->client->ListJourneyLogLinkTypes(new ListJourneyLogLinkTypesRequest())->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof ListJourneyLogLinkTypesResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception("Response Errors: [{$response->getStatus()}] {$response->getMessage()}");
         }
 
@@ -67,15 +70,15 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
         [$response, $status] = $this->client->CreateJourneyLogLinkType($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof CreateJourneyLogLinkTypeResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
     }
@@ -87,19 +90,22 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
         [$response, $status] = $this->client->GetJourneyLogLinkType($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof GetJourneyLogLinkTypeResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
 
-        return $this->toJourneyLogLinkType($response->getJourneyLogLinkType());
+        $grpcJourneyLogLinkType = $response->getJourneyLogLinkType();
+        assert(! is_null($grpcJourneyLogLinkType));
+
+        return $this->toJourneyLogLinkType($grpcJourneyLogLinkType);
     }
 
     public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
@@ -111,15 +117,15 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
         [$response, $status] = $this->client->EditJourneyLogLinkType($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof EditJourneyLogLinkTypeResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
     }
@@ -131,15 +137,15 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
         [$response, $status] = $this->client->DeleteJourneyLogLinkType($request)->wait();
+        $status = $this->mapper->mapFromJson(Status::class, $status);
 
         assert($response instanceof DeleteJourneyLogLinkTypeResponse);
-        assert($status instanceof stdClass);
 
         if ($status->code !== STATUS_OK) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
-        if ($response->getStatus() !== Status::SUCCESS) {
+        if ($response->getStatus() !== GrpcStatus::SUCCESS) {
             throw new Exception($response->getMessage());
         }
     }

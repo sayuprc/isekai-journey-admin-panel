@@ -28,9 +28,9 @@
         @php /** @var ListViewJourneyLogLinkType $journeyLogLinkType */ @endphp
         @foreach($journeyLogLinkTypes as $journeyLogLinkType)
             <tr>
-                <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
-                <td>{{ $journeyLogLinkType->orderNo }}</td>
-                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a></td>
+                <td>{{ $journeyLogLinkType->journeyLogLinkTypeName() }}</td>
+                <td>{{ $journeyLogLinkType->orderNo() }}</td>
+                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId()) }}">編集</a></td>
             </tr>
         @endforeach
     </x-adminlte-datatable>

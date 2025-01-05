@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "ext-grpc": "*",
+        "cuyz/valinor": "^1.14",
         "grpc/grpc": "^1.57",
         "jeroennoten/laravel-adminlte": "^3.14",
         "laravel/framework": "^11.32",
@@ -28,7 +29,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Generated\\": "app/Generated/"
+            "Generated\\": "Generated/"
         }
     },
     "autoload-dev": {
@@ -53,6 +54,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "phpstan": "phpstan analyse --memory-limit=-1 --no-progress",
+        "phpstan-clear-cache": "phpstan clear-result-cache",
         "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
         "test-all": "php artisan test --env=testing",

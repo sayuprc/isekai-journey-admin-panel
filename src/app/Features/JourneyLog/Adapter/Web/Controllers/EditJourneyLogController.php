@@ -6,7 +6,6 @@ namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
-use App\Features\JourneyLog\Adapter\Web\Requests\EditRequest as WebEditRequest;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditInteractor;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditRequest;
@@ -61,26 +60,10 @@ class EditJourneyLogController extends Controller
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));
     }
 
-    public function handle(WebEditRequest $request, EditInteractor $interactor): RedirectResponse
+    public function handle(EditRequest $request, EditInteractor $interactor): RedirectResponse
     {
-        $validated = $request->validated();
-
         try {
-            $interactor->handle(new EditRequest(
-                $validated['journey_log_id'],
-                $validated['story'],
-                $validated['from_on'],
-                $validated['to_on'],
-                (int)$validated['order_no'],
-                array_map(function (array $item): array {
-                    return [
-                        'journey_log_link_name' => $item['journey_log_link_name'],
-                        'url' => $item['url'],
-                        'order_no' => (int)$item['order_no'],
-                        'journey_log_link_type_id' => $item['journey_log_link_type_id'],
-                    ];
-                }, $validated['journey_log_links'] ?? []),
-            ));
+            $interactor->handle($request);
         } catch (Exception $e) {
             return back()
                 ->withErrors([
