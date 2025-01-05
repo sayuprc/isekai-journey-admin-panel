@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Shared\Application\Mapper\Mapper;
 use App\Shared\Application\Uuid\DummyUuidGenerator;
+use App\Shared\Mapper\MapperInterface;
 use App\Shared\Uuid\UuidGeneratorInterface;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -14,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UuidGeneratorInterface::class, DummyUuidGenerator::class);
+
+        $this->app->bind(MapperInterface::class, Mapper::class);
     }
 
     public function boot(): void

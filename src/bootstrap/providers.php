@@ -6,4 +6,5 @@ return [
     App\Providers\AppServiceProvider::class,
     App\Providers\GrpcServiceProvider::class,
     App\Providers\ProdServiceProvider::class,
+    App\Features\Auth\Adapter\Web\Providers\LoginServiceProvider::class,
 ];
