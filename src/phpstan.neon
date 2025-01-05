@@ -7,3 +7,56 @@ parameters:
 
   level: 10
 
+  ignoreErrors:
+    -
+      messages:
+        - '#Anonymous function has invalid return type Generated\\IsekaiJourney\\.*\.#'
+        - '#Class Generated\\IsekaiJourney\\.* not found\.#'
+        - '#Instantiated class Generated\\IsekaiJourney\\.* not found\.#'
+      paths:
+        - app/Providers/GrpcServiceProvider.php
+    -
+      messages:
+        - '#Instantiated class Generated\\IsekaiJourney\\.* not found\.#'
+        - '#Call to method .*\(\) on an unknown class Generated\\IsekaiJourney\\.*\.#'
+        - '#Property .*::.* has unknown class Generated\\IsekaiJourney\\.* as its type\.#'
+        - '#Access to constant .* on an unknown class Generated\\IsekaiJourney\\.*\.#'
+        - '#Class Generated\\IsekaiJourney\\.* not found\.#'
+        - '#Parameter .* of method .*::.*\(\) has invalid type Generated\\IsekaiJourney\\.*\.#'
+        - '#Cannot call method wait\(\) on mixed\.#'
+        - '#Cannot use array destructuring on mixed\.#'
+        - '#Part \$response->get(Message|Status)\(\) \(mixed\) of encapsed string cannot be cast to string\.#'
+        - '#Argument of an invalid type mixed supplied for foreach, only iterables are supported\.#'
+      paths:
+        - app/Features/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
+        - app/Features/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
+        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
+    -
+      messages:
+        - '#Parameter \#1 \$message of class Exception constructor expects string, mixed given\.#'
+        - '#Parameter \#1 \$.* of method .*::.*\(\) expects Generated\\IsekaiJourney\\.*, mixed given\.#'
+        - '#Parameter \#1 \$value of class App\\Features\\JourneyLogLinkType\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
+      paths:
+        - app/Features/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
+        - app/Features/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
+    -
+      messages:
+        - '#Cannot call method get(Year|Month|Day)\(\) on mixed\.#'
+        - '#Parameter \#\d \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.#'
+      paths:
+        - app/Features/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
+        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
+    -
+      messages:
+        - '#Method .*::.*\(\) has invalid return type Generated\\IsekaiJourney\\.*\.#'
+        - '#Method .*::.*\(\) should return Generated\\IsekaiJourney\\.* but returns mixed\.#'
+        - '#Cannot call method set(Month|Day)\(\) on mixed\.#'
+        - '#Parameter \#1 \$value of class App\\Features\\JourneyLog\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
+      paths:
+        - app/Features/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
+    -
+      messages:
+        - '#Parameter \#\d \$value of class App\\Features\\Song\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
+        - '#Parameter \#1 \$value of class App\\Features\\SongType\\Domain\\Entities\\.* constructor expects string, mixed given\.#'
+      paths:
+        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
