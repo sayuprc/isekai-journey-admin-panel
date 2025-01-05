@@ -69,6 +69,9 @@ class SongRepository implements SongRepositoryInterface
             $songLinks[] = $this->toSongLink($songLink);
         }
 
+        $grpcReleasedOn = $song->getReleasedOn();
+        assert(! is_null($grpcReleasedOn));
+
         return new Song(
             new SongId($song->getSongId()),
             new Title($song->getTitle()),
@@ -77,9 +80,9 @@ class SongRepository implements SongRepositoryInterface
                 new DateTimeImmutable(
                     sprintf(
                         '%04s-%02s-%02s',
-                        $song->getReleasedOn()->getYear(),
-                        $song->getReleasedOn()->getMonth(),
-                        $song->getReleasedOn()->getDay(),
+                        $grpcReleasedOn->getYear(),
+                        $grpcReleasedOn->getMonth(),
+                        $grpcReleasedOn->getDay(),
                     )
                 )
             ),

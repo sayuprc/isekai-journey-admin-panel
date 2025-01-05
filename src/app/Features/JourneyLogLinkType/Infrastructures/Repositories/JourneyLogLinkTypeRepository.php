@@ -99,7 +99,10 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
             throw new Exception($response->getMessage());
         }
 
-        return $this->toJourneyLogLinkType($response->getJourneyLogLinkType());
+        $grpcJourneyLogLinkType = $response->getJourneyLogLinkType();
+        assert(! is_null($grpcJourneyLogLinkType));
+
+        return $this->toJourneyLogLinkType($grpcJourneyLogLinkType);
     }
 
     public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void

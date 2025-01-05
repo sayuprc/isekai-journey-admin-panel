@@ -127,7 +127,10 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
             throw new Exception($response->getMessage());
         }
 
-        return $this->toJourneyLog($response->getJourneyLog());
+        $grpcJourneyLog = $response->getJourneyLog();
+        assert(! is_null($grpcJourneyLog));
+
+        return $this->toJourneyLog($grpcJourneyLog);
     }
 
     /**
@@ -207,6 +210,12 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
             );
         }
 
+        $grpcFromOn = $journeyLog->getFromOn();
+        assert(! is_null($grpcFromOn));
+
+        $grpcToOn = $journeyLog->getToOn();
+        assert(! is_null($grpcToOn));
+
         return new JourneyLog(
             new JourneyLogId($journeyLog->getJourneyLogId()),
             new Story($journeyLog->getStory()),
@@ -215,9 +224,9 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
                     new DateTimeImmutable(
                         sprintf(
                             '%04s-%02s-%02s',
-                            $journeyLog->getFromOn()->getYear(),
-                            $journeyLog->getFromOn()->getMonth(),
-                            $journeyLog->getFromOn()->getDay(),
+                            $grpcFromOn->getYear(),
+                            $grpcFromOn->getMonth(),
+                            $grpcFromOn->getDay(),
                         )
                     ),
                 ),
@@ -225,9 +234,9 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
                     new DateTimeImmutable(
                         sprintf(
                             '%04s-%02s-%02s',
-                            $journeyLog->getToOn()->getYear(),
-                            $journeyLog->getToOn()->getMonth(),
-                            $journeyLog->getToOn()->getDay(),
+                            $grpcToOn->getYear(),
+                            $grpcToOn->getMonth(),
+                            $grpcToOn->getDay(),
                         )
                     )
                 )
