@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
-use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
-use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
-use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Route\RouteMap;
 use Tests\TestCase;
 
 class DeleteJourneyLogLinkTypeTest extends TestCase

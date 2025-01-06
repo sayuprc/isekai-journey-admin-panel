@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Shared\Route\RouteMap;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(

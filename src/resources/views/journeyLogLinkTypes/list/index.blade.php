@@ -1,6 +1,5 @@
 @php
-    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
-    use App\Shared\Route\RouteMap;
+    use JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;use Shared\Route\RouteMap;
 @endphp
 
 @extends('layout.page')
@@ -30,7 +29,9 @@
             <tr>
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName() }}</td>
                 <td>{{ $journeyLogLinkType->orderNo() }}</td>
-                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId()) }}">編集</a></td>
+                <td>
+                    <a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId()) }}">編集</a>
+                </td>
             </tr>
         @endforeach
     </x-adminlte-datatable>

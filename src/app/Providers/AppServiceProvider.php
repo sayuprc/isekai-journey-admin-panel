@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Shared\Application\Mapper\Mapper;
-use App\Shared\Application\Uuid\DummyUuidGenerator;
-use App\Shared\Mapper\MapperInterface;
-use App\Shared\Uuid\UuidGeneratorInterface;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Shared\Application\Mapper\Mapper;
+use Shared\Application\Uuid\DummyUuidGenerator;
+use Shared\Mapper\MapperInterface;
+use Shared\Uuid\UuidGeneratorInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
