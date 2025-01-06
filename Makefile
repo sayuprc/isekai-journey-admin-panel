@@ -46,6 +46,10 @@ phpstan: ## Run PHPStan
 phpstan-clear-cache: ## Clear PHPStan cache
 	docker compose exec php composer phpstan-clear-cache
 
+.PHONY: deptrac
+deptrac: ## Run Deptrac
+	docker compose exec php composer deptrac
+
 .PHONY: ecs
 ecs: ## Run ecs
 	docker compose exec php composer ecs
