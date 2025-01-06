@@ -141,7 +141,7 @@ return ECSConfig::configure()
         ],
     ])
     ->withSkip([
-        __DIR__ . '/app/Generated',
+        __DIR__ . '/Generated',
 
         __DIR__ . '/bootstrap/cache',
 
