@@ -23,6 +23,8 @@ class ProdServiceProvider extends ServiceProvider
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
 
         $this->auth();
+
+        $this->journeyLog();
     }
 
     public function boot(): void
@@ -32,5 +34,14 @@ class ProdServiceProvider extends ServiceProvider
     private function auth(): void
     {
         $this->app->bind(\Auth\UseCases\Login\LoginUseCaseInterface::class, \Auth\Application\Login\LoginInteractor::class);
+    }
+
+    private function journeyLog(): void
+    {
+        $this->app->bind(\JourneyLog\UseCases\List\ListUseCaseInterface::class, \JourneyLog\Application\List\ListInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Get\GetUseCaseInterface::class, \JourneyLog\Application\Get\GetInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Create\CreateUseCaseInterface::class, \JourneyLog\Application\Create\CreateInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Edit\EditUseCaseInterface::class, \JourneyLog\Application\Edit\EditInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Delete\DeleteUseCaseInterface::class, \JourneyLog\Application\Delete\DeleteInteractor::class);
     }
 }

@@ -1,5 +1,5 @@
 @php
-    use JourneyLog\Adapter\Web\Presenters\ListViewJourneyLog;use Shared\Route\RouteMap;
+    use App\Http\Presenters\JourneyLog\ListViewJourneyLog;use Shared\Route\RouteMap;
 @endphp
 
 @extends('layout.page')

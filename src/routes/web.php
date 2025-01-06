@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
+use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
+use App\Http\Controllers\JourneyLog\EditJourneyLogController;
+use App\Http\Controllers\JourneyLog\ListJourneyLogController;
 use Illuminate\Support\Facades\Route;
-use JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\ListJourneyLogController;
 use JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
 use JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
 use JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
