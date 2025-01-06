@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Auth\Adapter\Web\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
 use JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;

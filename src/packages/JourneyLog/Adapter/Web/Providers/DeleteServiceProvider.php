@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Adapter\Web\Providers;
 
-use App\Providers\RequestServiceProviderBase;
+use App\Providers\Request\RequestServiceProviderBase;
 use JourneyLog\Adapter\Web\Requests\DeleteRequest as WebRequest;
 use JourneyLog\Port\UseCases\Delete\DeleteRequest;
 

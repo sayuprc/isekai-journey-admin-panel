@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth\Adapter\Web\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Auth\UseCases\Login\LoginInteractor;
 use Auth\UseCases\Login\LoginRequest;
+use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +24,7 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function handle(Session $session, LoginRequest $request, LoginInteractor $interactor): RedirectResponse
+    public function handle(Session $session, LoginRequest $request, LoginUseCaseInterface $interactor): RedirectResponse
     {
         if ($interactor->handle($request)->isSucceeded) {
             $session->regenerate();

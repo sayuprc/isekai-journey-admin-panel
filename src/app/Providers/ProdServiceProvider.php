@@ -21,9 +21,16 @@ class ProdServiceProvider extends ServiceProvider
         $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, JourneyLogLinkTypeRepository::class);
 
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
+
+        $this->auth();
     }
 
     public function boot(): void
     {
+    }
+
+    private function auth(): void
+    {
+        $this->app->bind(\Auth\UseCases\Login\LoginUseCaseInterface::class, \Auth\Application\Login\LoginInteractor::class);
     }
 }

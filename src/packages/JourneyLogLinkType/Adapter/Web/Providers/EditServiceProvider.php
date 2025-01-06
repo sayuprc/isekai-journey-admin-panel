@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Adapter\Web\Providers;
 
-use App\Providers\RequestServiceProviderBase;
+use App\Providers\Request\RequestServiceProviderBase;
 use JourneyLogLinkType\Adapter\Web\Requests\EditRequest as WebRequest;
 use JourneyLogLinkType\Port\UseCases\Edit\EditRequest;
 

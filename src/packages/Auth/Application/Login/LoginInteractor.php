@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Auth\UseCases\Login;
+namespace Auth\Application\Login;
 
+use Auth\UseCases\Login\LoginRequest;
+use Auth\UseCases\Login\LoginResponse;
+use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Auth\AuthManager;
 
-class LoginInteractor
+class LoginInteractor implements LoginUseCaseInterface
 {
     public function __construct(private readonly AuthManager $authManager)
     {
