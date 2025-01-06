@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Mapper;
+namespace Shared\Mapper;
 
 interface MapperInterface
 {

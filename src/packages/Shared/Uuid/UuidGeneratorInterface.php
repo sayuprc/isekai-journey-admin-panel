@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Uuid;
+namespace Shared\Uuid;
 
 interface UuidGeneratorInterface
 {

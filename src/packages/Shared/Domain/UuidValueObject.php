@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Domain;
+namespace Shared\Domain;
 
-use App\Shared\Domain\Exceptions\InvalidDomainException;
+use Shared\Domain\Exceptions\InvalidDomainException;
 
 abstract class UuidValueObject extends StringValueObject
 {

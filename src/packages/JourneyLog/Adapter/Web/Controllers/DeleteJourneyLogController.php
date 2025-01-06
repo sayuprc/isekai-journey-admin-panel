@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace JourneyLog\Adapter\Web\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use JourneyLog\Port\UseCases\Delete\DeleteInteractor;
 use JourneyLog\Port\UseCases\Delete\DeleteRequest;
+use Shared\Route\RouteMap;
 
 class DeleteJourneyLogController extends Controller
 {

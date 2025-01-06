@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLogLinkType\Domain\Entities;
 
-use App\Shared\Domain\Exceptions\InvalidDomainException;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Domain\Exceptions\InvalidDomainException;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeNameTest extends TestCase

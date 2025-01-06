@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace JourneyLogLinkType\Adapter\Web\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\Port\UseCases\Create\CreateInteractor;
 use JourneyLogLinkType\Port\UseCases\Create\CreateRequest;
+use Shared\Route\RouteMap;
 
 class CreateJourneyLogLinkTypeController extends Controller
 {

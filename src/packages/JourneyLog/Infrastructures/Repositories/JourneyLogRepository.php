@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace JourneyLog\Infrastructures\Repositories;
 
-use App\Shared\Exceptions\APIException;
-use App\Shared\Grpc\Status;
-use App\Shared\Mapper\MapperInterface;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
@@ -38,6 +35,9 @@ use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
 use JourneyLog\Domain\Entities\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use Shared\Exceptions\APIException;
+use Shared\Grpc\Status;
+use Shared\Mapper\MapperInterface;
 
 use const Grpc\STATUS_OK;
 

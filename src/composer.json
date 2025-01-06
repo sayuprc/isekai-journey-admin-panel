@@ -33,6 +33,7 @@
             "Auth\\": "packages/Auth/",
             "JourneyLog\\": "packages/JourneyLog/",
             "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
+            "Shared\\": "packages/Shared/",
             "Song\\": "packages/Song/"
         }
     },

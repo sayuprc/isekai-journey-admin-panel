@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace JourneyLog\Port\UseCases\Edit;
 
-use App\Shared\Uuid\UuidGeneratorInterface;
 use DateTimeImmutable;
 use JourneyLog\Domain\Entities\FromOn;
 use JourneyLog\Domain\Entities\JourneyLog;
@@ -19,6 +18,7 @@ use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
 use JourneyLog\Domain\Entities\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use Shared\Uuid\UuidGeneratorInterface;
 
 class EditInteractor
 {

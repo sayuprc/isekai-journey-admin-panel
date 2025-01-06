@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Port\UseCases\Create;
 
-use App\Shared\Uuid\UuidGeneratorInterface;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Entities\OrderNo;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use Shared\Uuid\UuidGeneratorInterface;
 
 class CreateInteractor
 {

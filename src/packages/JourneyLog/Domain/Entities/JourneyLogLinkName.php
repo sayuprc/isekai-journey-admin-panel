@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Entities;
 
-use App\Shared\Domain\StringValueObject;
+use Shared\Domain\StringValueObject;
 
 class JourneyLogLinkName extends StringValueObject
 {

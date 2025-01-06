@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Application\Uuid;
+namespace Shared\Application\Uuid;
 
-use App\Shared\Uuid\UuidGeneratorInterface;
+use Shared\Uuid\UuidGeneratorInterface;
 
 class DummyUuidGenerator implements UuidGeneratorInterface
 {

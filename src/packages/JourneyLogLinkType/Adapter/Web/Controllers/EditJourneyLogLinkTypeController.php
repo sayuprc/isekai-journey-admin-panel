@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace JourneyLogLinkType\Adapter\Web\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Shared\Route\RouteMap;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +13,7 @@ use JourneyLogLinkType\Port\UseCases\Edit\EditInteractor;
 use JourneyLogLinkType\Port\UseCases\Edit\EditRequest;
 use JourneyLogLinkType\Port\UseCases\Get\GetInteractor;
 use JourneyLogLinkType\Port\UseCases\Get\GetRequest;
+use Shared\Route\RouteMap;
 
 class EditJourneyLogLinkTypeController extends Controller
 {

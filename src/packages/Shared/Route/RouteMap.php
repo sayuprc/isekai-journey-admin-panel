@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Route;
+namespace Shared\Route;
 
 enum RouteMap: string
 {

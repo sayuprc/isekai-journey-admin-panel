@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Song;
 
 use App\Models\User;
-use App\Shared\Route\RouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Route\RouteMap;
 use Song\Domain\Entities\Description;
 use Song\Domain\Entities\OrderNo;
 use Song\Domain\Entities\ReleasedOn;

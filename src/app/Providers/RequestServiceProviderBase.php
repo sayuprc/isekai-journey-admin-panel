@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Shared\Mapper\MapperInterface;
 use Illuminate\Support\ServiceProvider;
+use Shared\Mapper\MapperInterface;
 
 abstract class RequestServiceProviderBase extends ServiceProvider
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Application\Mapper;
+namespace Shared\Application\Mapper;
 
-use App\Shared\Mapper\MapperInterface;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
+use Shared\Mapper\MapperInterface;
 
 class Mapper implements MapperInterface
 {

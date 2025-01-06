@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Entities;
 
-use App\Shared\Domain\Exceptions\InvalidDomainException;
+use Shared\Domain\Exceptions\InvalidDomainException;
 
 class Period
 {

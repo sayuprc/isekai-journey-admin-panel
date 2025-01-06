@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Auth\Adapter\Web\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Shared\Route\RouteMap;
 use Auth\UseCases\Login\LoginInteractor;
 use Auth\UseCases\Login\LoginRequest;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Translation\Translator;
+use Shared\Route\RouteMap;
 
 class LoginController extends Controller
 {
