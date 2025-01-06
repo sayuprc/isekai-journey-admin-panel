@@ -114,6 +114,14 @@ return ECSConfig::configure()
         'import_symbols' => true,
         'leading_backslash_in_global_namespace' => true,
     ])
+    ->withConfiguredRule(\PhpCsFixer\Fixer\Import\OrderedImportsFixer::class, [
+        'imports_order' => [
+            'class',
+            'function',
+            'const',
+        ],
+        'sort_algorithm' => 'alpha',
+    ])
     ->withConfiguredRule(\PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer::class, [
         'tokens' => [
             'attribute',
@@ -133,7 +141,7 @@ return ECSConfig::configure()
         ],
     ])
     ->withSkip([
-        __DIR__ . '/app/Generated',
+        __DIR__ . '/Generated',
 
         __DIR__ . '/bootstrap/cache',
 

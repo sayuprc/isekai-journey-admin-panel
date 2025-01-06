@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Adapter\Web\Controllers;
 
-use App\Features\JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
+use App\Features\JourneyLog\Adapter\Web\Presenters\ViewPeriod;
 use App\Features\JourneyLog\Domain\Entities\JourneyLogLink;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditInteractor;
 use App\Features\JourneyLog\Port\UseCases\Edit\EditRequest;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLog\Adapter\Web\Providers;
 
+use App\Features\JourneyLog\Adapter\Web\Requests\CreateRequest as WebRequest;
 use App\Features\JourneyLog\Port\UseCases\Create\CreateRequest;
 use App\Providers\RequestServiceProviderBase;
-use App\Features\JourneyLog\Adapter\Web\Requests\CreateRequest as WebRequest;
 
 class CreateServiceProvider extends RequestServiceProviderBase
 {

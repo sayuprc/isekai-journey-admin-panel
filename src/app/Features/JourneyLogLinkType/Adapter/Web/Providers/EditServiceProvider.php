@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLogLinkType\Adapter\Web\Providers;
 
+use App\Features\JourneyLogLinkType\Adapter\Web\Requests\EditRequest as WebRequest;
 use App\Features\JourneyLogLinkType\Port\UseCases\Edit\EditRequest;
 use App\Providers\RequestServiceProviderBase;
-use App\Features\JourneyLogLinkType\Adapter\Web\Requests\EditRequest as WebRequest;
 
 class EditServiceProvider extends RequestServiceProviderBase
 {
