@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Song\Adapter\Web\Controllers;
+namespace App\Http\Controllers\Song;
 
 use App\Http\Controllers\Controller;
+use App\Http\Presenters\Song\ListViewSong;
 use Illuminate\Contracts\View\View;
-use Song\Adapter\Web\Presenters\ListViewSong;
-use Song\Port\List\ListInteractor;
+use Song\UseCases\List\ListUseCaseInterface;
 
 class ListSongController extends Controller
 {
-    public function index(ListInteractor $interactor): View
+    public function index(ListUseCaseInterface $interactor): View
     {
         $response = $interactor->handle();
 

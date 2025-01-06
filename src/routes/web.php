@@ -11,9 +11,9 @@ use App\Http\Controllers\JourneyLogLinkType\CreateJourneyLogLinkTypeController;
 use App\Http\Controllers\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
 use App\Http\Controllers\JourneyLogLinkType\EditJourneyLogLinkTypeController;
 use App\Http\Controllers\JourneyLogLinkType\ListJourneyLogLinkTypeController;
+use App\Http\Controllers\Song\ListSongController;
 use Illuminate\Support\Facades\Route;
 use Shared\Route\RouteMap;
-use Song\Adapter\Web\Controllers\ListSongController;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])

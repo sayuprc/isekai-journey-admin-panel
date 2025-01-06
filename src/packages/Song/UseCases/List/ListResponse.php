@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Port\List;
+namespace Song\UseCases\List;
 
 use Song\Domain\Entities\Song;
 

@@ -27,6 +27,8 @@ class ProdServiceProvider extends ServiceProvider
         $this->journeyLog();
 
         $this->journeyLogLinkType();
+
+        $this->song();
     }
 
     public function boot(): void
@@ -54,5 +56,10 @@ class ProdServiceProvider extends ServiceProvider
         $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface::class, \JourneyLogLinkType\Application\Create\CreateInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface::class, \JourneyLogLinkType\Application\Edit\EditInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface::class, \JourneyLogLinkType\Application\Delete\DeleteInteractor::class);
+    }
+
+    private function song(): void
+    {
+        $this->app->bind(\Song\UseCases\List\ListUseCaseInterface::class, \Song\Application\List\ListInteractor::class);
     }
 }

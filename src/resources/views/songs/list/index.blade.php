@@ -1,5 +1,5 @@
 @php
-    use Song\Adapter\Web\Presenters\ListViewSong;
+    use App\Http\Presenters\Song\ListViewSong;
 @endphp
 
 @extends('layout.page')

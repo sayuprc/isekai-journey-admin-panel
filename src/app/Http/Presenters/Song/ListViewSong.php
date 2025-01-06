@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Adapter\Web\Presenters;
+namespace App\Http\Presenters\Song;
 
 use Song\Domain\Entities\Song;
 
