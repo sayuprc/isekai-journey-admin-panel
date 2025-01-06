@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Domain;
+namespace Tests\Unit\Shared\Domain;
 
 use App\Shared\Domain\Exceptions\InvalidDomainException;
 use App\Shared\Domain\UuidValueObject;
