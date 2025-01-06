@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Features\JourneyLogLinkType\Adapter\Web\Providers;
 
+use App\Features\JourneyLogLinkType\Adapter\Web\Requests\DeleteRequest as WebRequest;
 use App\Features\JourneyLogLinkType\Port\UseCases\Delete\DeleteRequest;
 use App\Providers\RequestServiceProviderBase;
-use App\Features\JourneyLogLinkType\Adapter\Web\Requests\DeleteRequest as WebRequest;
 
 class DeleteServiceProvider extends RequestServiceProviderBase
 {
