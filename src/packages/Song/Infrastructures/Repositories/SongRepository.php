@@ -2,20 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Song\Infrastructures\Repositories;
+namespace Song\Infrastructures\Repositories;
 
-use App\Features\Song\Domain\Entities\Description;
-use App\Features\Song\Domain\Entities\OrderNo;
-use App\Features\Song\Domain\Entities\ReleasedOn;
-use App\Features\Song\Domain\Entities\Song;
-use App\Features\Song\Domain\Entities\SongId;
-use App\Features\Song\Domain\Entities\SongLink;
-use App\Features\Song\Domain\Entities\SongLinkId;
-use App\Features\Song\Domain\Entities\SongLinkName;
-use App\Features\Song\Domain\Entities\SongTypeId;
-use App\Features\Song\Domain\Entities\Title;
-use App\Features\Song\Domain\Entities\Url;
-use App\Features\Song\Domain\Repositories\SongRepositoryInterface;
 use App\Shared\Exceptions\APIException;
 use App\Shared\Grpc\Status;
 use App\Shared\Mapper\MapperInterface;
@@ -27,7 +15,18 @@ use Generated\IsekaiJourney\Song\ListSongsResponse;
 use Generated\IsekaiJourney\Song\Song as GrpcSong;
 use Generated\IsekaiJourney\Song\SongLink as GrpcSongLink;
 use Generated\IsekaiJourney\Song\SongServiceClient;
-
+use Song\Domain\Entities\Description;
+use Song\Domain\Entities\OrderNo;
+use Song\Domain\Entities\ReleasedOn;
+use Song\Domain\Entities\Song;
+use Song\Domain\Entities\SongId;
+use Song\Domain\Entities\SongLink;
+use Song\Domain\Entities\SongLinkId;
+use Song\Domain\Entities\SongLinkName;
+use Song\Domain\Entities\SongTypeId;
+use Song\Domain\Entities\Title;
+use Song\Domain\Entities\Url;
+use Song\Domain\Repositories\SongRepositoryInterface;
 use const Grpc\STATUS_OK;
 
 class SongRepository implements SongRepositoryInterface

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Song\Adapter\Web\Controllers;
+namespace Song\Adapter\Web\Controllers;
 
-use App\Features\Song\Adapter\Web\Presenters\ListViewSong;
-use App\Features\Song\Port\List\ListInteractor;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
+use Song\Adapter\Web\Presenters\ListViewSong;
+use Song\Port\List\ListInteractor;
 
 class ListSongController extends Controller
 {

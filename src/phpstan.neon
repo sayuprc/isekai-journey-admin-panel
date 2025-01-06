@@ -31,7 +31,7 @@ parameters:
       paths:
         - packages/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
         - packages/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
-        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
+        - packages/Song/Infrastructures/Repositories/SongRepository.php
     -
       messages:
         - '#Parameter \#1 \$message of class Exception constructor expects string, mixed given\.#'
@@ -45,7 +45,7 @@ parameters:
         - '#Parameter \#\d \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.#'
       paths:
         - packages/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
-        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
+        - packages/Song/Infrastructures/Repositories/SongRepository.php
     -
       messages:
         - '#Method .*::.*\(\) has invalid return type Generated\\IsekaiJourney\\.*\.#'
@@ -61,6 +61,6 @@ parameters:
         - packages/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
     -
       messages:
-        - '#Parameter \#\d \$value of class App\\Features\\Song\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
+        - '#Parameter \#\d \$value of class Song\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
       paths:
-        - app/Features/Song/Infrastructures/Repositories/SongRepository.php
+        - packages/Song/Infrastructures/Repositories/SongRepository.php

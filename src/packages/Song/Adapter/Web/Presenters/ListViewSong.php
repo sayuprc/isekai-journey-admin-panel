@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Song\Adapter\Web\Presenters;
+namespace Song\Adapter\Web\Presenters;
 
-use App\Features\Song\Domain\Entities\Song;
+use Song\Domain\Entities\Song;
 
 class ListViewSong
 {

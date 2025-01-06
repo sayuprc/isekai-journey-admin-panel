@@ -32,7 +32,8 @@
             "Generated\\": "Generated/",
             "Auth\\": "packages/Auth/",
             "JourneyLog\\": "packages/JourneyLog/",
-            "JourneyLogLinkType\\": "packages/JourneyLogLinkType/"
+            "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
+            "Song\\": "packages/Song/"
         }
     },
     "autoload-dev": {

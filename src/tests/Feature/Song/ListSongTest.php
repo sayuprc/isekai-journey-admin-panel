@@ -4,18 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Song;
 
-use App\Features\Song\Domain\Entities\Description;
-use App\Features\Song\Domain\Entities\OrderNo;
-use App\Features\Song\Domain\Entities\ReleasedOn;
-use App\Features\Song\Domain\Entities\Song;
-use App\Features\Song\Domain\Entities\SongId;
-use App\Features\Song\Domain\Entities\SongLink;
-use App\Features\Song\Domain\Entities\SongLinkId;
-use App\Features\Song\Domain\Entities\SongLinkName;
-use App\Features\Song\Domain\Entities\SongTypeId;
-use App\Features\Song\Domain\Entities\Title;
-use App\Features\Song\Domain\Entities\Url;
-use App\Features\Song\Domain\Repositories\SongRepositoryInterface;
 use App\Models\User;
 use App\Shared\Route\RouteMap;
 use DateTimeImmutable;
@@ -23,6 +11,18 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Entities\Description;
+use Song\Domain\Entities\OrderNo;
+use Song\Domain\Entities\ReleasedOn;
+use Song\Domain\Entities\Song;
+use Song\Domain\Entities\SongId;
+use Song\Domain\Entities\SongLink;
+use Song\Domain\Entities\SongLinkId;
+use Song\Domain\Entities\SongLinkName;
+use Song\Domain\Entities\SongTypeId;
+use Song\Domain\Entities\Title;
+use Song\Domain\Entities\Url;
+use Song\Domain\Repositories\SongRepositoryInterface;
 use Tests\TestCase;
 
 class ListSongTest extends TestCase
