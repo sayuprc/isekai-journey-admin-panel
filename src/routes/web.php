@@ -7,11 +7,11 @@ use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
 use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
 use App\Http\Controllers\JourneyLog\EditJourneyLogController;
 use App\Http\Controllers\JourneyLog\ListJourneyLogController;
+use App\Http\Controllers\JourneyLogLinkType\CreateJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\EditJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\ListJourneyLogLinkTypeController;
 use Illuminate\Support\Facades\Route;
-use JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 use Shared\Route\RouteMap;
 use Song\Adapter\Web\Controllers\ListSongController;
 

@@ -14,6 +14,8 @@ class RequestServiceProvider extends ServiceProvider
         $this->auth();
 
         $this->journeyLog();
+
+        $this->journeyLogLinkType();
     }
 
     private function auth(): void
@@ -47,6 +49,30 @@ class RequestServiceProvider extends ServiceProvider
             assert($request instanceof \App\Http\Requests\JourneyLog\DeleteRequest);
 
             return $this->getMapper()->mapFromArray(\JourneyLog\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    private function journeyLogLinkType(): void
+    {
+        $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateRequest::class, function (): \JourneyLogLinkType\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\JourneyLogLinkType\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\JourneyLogLinkType\CreateRequest);
+
+            return $this->getMapper()->mapFromArray(\JourneyLogLinkType\UseCases\Create\CreateRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLogLinkType\UseCases\Edit\EditRequest::class, function (): \JourneyLogLinkType\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\JourneyLogLinkType\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\JourneyLogLinkType\EditRequest);
+
+            return $this->getMapper()->mapFromArray(\JourneyLogLinkType\UseCases\Edit\EditRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, function (): \JourneyLogLinkType\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\JourneyLogLinkType\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\JourneyLogLinkType\DeleteRequest);
+
+            return $this->getMapper()->mapFromArray(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, $request->validated());
         });
     }
 

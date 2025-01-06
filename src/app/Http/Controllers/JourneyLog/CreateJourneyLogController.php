@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\JourneyLog;
 
 use App\Http\Controllers\Controller;
+use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLog\UseCases\Create\CreateRequest;
 use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
-use JourneyLogLinkType\Port\UseCases\List\ListInteractor;
+use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
 use Shared\Route\RouteMap;
 
 class CreateJourneyLogController extends Controller
 {
-    public function index(ListInteractor $interactor): View
+    public function index(ListUseCaseInterface $interactor): View
     {
         $response = $interactor->handle();
 

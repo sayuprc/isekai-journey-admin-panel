@@ -25,6 +25,8 @@ class ProdServiceProvider extends ServiceProvider
         $this->auth();
 
         $this->journeyLog();
+
+        $this->journeyLogLinkType();
     }
 
     public function boot(): void
@@ -43,5 +45,14 @@ class ProdServiceProvider extends ServiceProvider
         $this->app->bind(\JourneyLog\UseCases\Create\CreateUseCaseInterface::class, \JourneyLog\Application\Create\CreateInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Edit\EditUseCaseInterface::class, \JourneyLog\Application\Edit\EditInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Delete\DeleteUseCaseInterface::class, \JourneyLog\Application\Delete\DeleteInteractor::class);
+    }
+
+    private function journeyLogLinkType(): void
+    {
+        $this->app->bind(\JourneyLogLinkType\UseCases\List\ListUseCaseInterface::class, \JourneyLogLinkType\Application\List\ListInteractor::class);
+        $this->app->bind(\JourneyLogLinkType\UseCases\Get\GetUseCaseInterface::class, \JourneyLogLinkType\Application\Get\GetInteractor::class);
+        $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface::class, \JourneyLogLinkType\Application\Create\CreateInteractor::class);
+        $this->app->bind(\JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface::class, \JourneyLogLinkType\Application\Edit\EditInteractor::class);
+        $this->app->bind(\JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface::class, \JourneyLogLinkType\Application\Delete\DeleteInteractor::class);
     }
 }

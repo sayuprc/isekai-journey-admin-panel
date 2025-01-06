@@ -7,6 +7,7 @@ namespace App\Http\Controllers\JourneyLog;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\JourneyLog\ViewJourneyLog;
 use App\Http\Presenters\JourneyLog\ViewPeriod;
+use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,13 +16,12 @@ use JourneyLog\UseCases\Edit\EditRequest;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
-use JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
-use JourneyLogLinkType\Port\UseCases\List\ListInteractor;
+use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
 use Shared\Route\RouteMap;
 
 class EditJourneyLogController extends Controller
 {
-    public function index(string $journeyLogId, GetUseCaseInterface $getInteractor, ListInteractor $listInteractor): RedirectResponse|View
+    public function index(string $journeyLogId, GetUseCaseInterface $getInteractor, ListUseCaseInterface $listInteractor): RedirectResponse|View
     {
         try {
             $getResponse = $getInteractor->handle(new GetRequest($journeyLogId));
