@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
-use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLog\Domain\Entities\JourneyLog;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;

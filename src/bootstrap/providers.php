@@ -10,7 +10,7 @@ return [
     \JourneyLog\Adapter\Web\Providers\CreateServiceProvider::class,
     \JourneyLog\Adapter\Web\Providers\EditServiceProvider::class,
     \JourneyLog\Adapter\Web\Providers\DeleteServiceProvider::class,
-    App\Features\JourneyLogLinkType\Adapter\Web\Providers\CreateServiceProvider::class,
-    App\Features\JourneyLogLinkType\Adapter\Web\Providers\EditServiceProvider::class,
-    App\Features\JourneyLogLinkType\Adapter\Web\Providers\DeleteServiceProvider::class,
+    \JourneyLogLinkType\Adapter\Web\Providers\CreateServiceProvider::class,
+    \JourneyLogLinkType\Adapter\Web\Providers\EditServiceProvider::class,
+    \JourneyLogLinkType\Adapter\Web\Providers\DeleteServiceProvider::class,
 ];

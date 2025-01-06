@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
-use App\Features\JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
-use App\Features\JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use App\Models\User;
 use App\Shared\Route\RouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
+use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
+use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;

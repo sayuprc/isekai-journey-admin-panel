@@ -1,6 +1,5 @@
 @php
-    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
-    use App\Shared\Route\RouteMap;
+    use App\Shared\Route\RouteMap;use JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
     /** @var ViewJourneyLogLinkType $journeyLogLinkType */
 @endphp
 
@@ -15,7 +14,8 @@
         <form action="{{ route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE) }}" method="post">
             @csrf
             @method('DELETE')
-            <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
+            <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}"
+                   type="hidden">
             <x-adminlte-button label="削除" type="submit" theme="danger"/>
         </form>
     </div>
@@ -38,7 +38,8 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', $journeyLogLinkType->orderNo) }}"/>
+            <x-adminlte-input label="表示順" type="number" name="order_no"
+                              value="{{ old('order_no', $journeyLogLinkType->orderNo) }}"/>
         </div>
 
         <x-adminlte-button label="更新" type="submit" theme="primary"/>

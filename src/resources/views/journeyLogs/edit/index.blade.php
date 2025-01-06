@@ -1,5 +1,5 @@
 @php
-    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;use App\Shared\Route\RouteMap;use JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
+    use App\Shared\Route\RouteMap;use JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;use JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
     /** @var ViewJourneyLog $journeyLog */
 @endphp
 

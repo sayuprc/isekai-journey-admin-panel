@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
-use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
-use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
-use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 use App\Features\Song\Adapter\Web\Controllers\ListSongController;
 use App\Shared\Route\RouteMap;
 use Auth\Adapter\Web\Controllers\LoginController;
@@ -14,6 +10,10 @@ use JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
 use JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
 use JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
 use JourneyLog\Adapter\Web\Controllers\ListJourneyLogController;
+use JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
+use JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
+use JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
+use JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])

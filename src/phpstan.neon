@@ -30,7 +30,7 @@ parameters:
         - '#Argument of an invalid type mixed supplied for foreach, only iterables are supported\.#'
       paths:
         - packages/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
-        - app/Features/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
+        - packages/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
         - app/Features/Song/Infrastructures/Repositories/SongRepository.php
     -
       messages:
@@ -38,7 +38,7 @@ parameters:
         - '#Parameter \#1 \$.* of method .*::.*\(\) expects Generated\\IsekaiJourney\\.*, mixed given\.#'
       paths:
         - packages/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
-        - app/Features/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
+        - packages/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
     -
       messages:
         - '#Cannot call method get(Year|Month|Day)\(\) on mixed\.#'
@@ -56,9 +56,9 @@ parameters:
         - packages/JourneyLog/Infrastructures/Repositories/JourneyLogRepository.php
     -
       messages:
-        - '#Parameter \#1 \$value of class App\\Features\\JourneyLogLinkType\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
+        - '#Parameter \#1 \$value of class JourneyLogLinkType\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'
       paths:
-        - app/Features/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
+        - packages/JourneyLogLinkType/Infrastructures/Repositories/JourneyLogLinkTypeRepository.php
     -
       messages:
         - '#Parameter \#\d \$value of class App\\Features\\Song\\Domain\\Entities\\.* constructor expects (string|int), mixed given\.#'

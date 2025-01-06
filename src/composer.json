@@ -31,7 +31,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "Generated\\": "Generated/",
             "Auth\\": "packages/Auth/",
-            "JourneyLog\\": "packages/JourneyLog/"
+            "JourneyLog\\": "packages/JourneyLog/",
+            "JourneyLogLinkType\\": "packages/JourneyLogLinkType/"
         }
     },
     "autoload-dev": {
