@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
+use App\Http\Presenters\JourneyLog\ViewJourneyLog;
 use App\Models\User;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
-use JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
 use JourneyLog\Domain\Entities\FromOn;
 use JourneyLog\Domain\Entities\JourneyLog;
 use JourneyLog\Domain\Entities\JourneyLogId;

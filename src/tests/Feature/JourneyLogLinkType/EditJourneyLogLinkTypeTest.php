@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
+use App\Http\Presenters\JourneyLogLinkType\ViewJourneyLogLinkType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
-use JourneyLogLinkType\Adapter\Web\Presenters\ViewJourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;

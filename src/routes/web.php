@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Auth\Adapter\Web\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
+use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
+use App\Http\Controllers\JourneyLog\EditJourneyLogController;
+use App\Http\Controllers\JourneyLog\ListJourneyLogController;
+use App\Http\Controllers\JourneyLogLinkType\CreateJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\EditJourneyLogLinkTypeController;
+use App\Http\Controllers\JourneyLogLinkType\ListJourneyLogLinkTypeController;
+use App\Http\Controllers\Song\ListSongController;
 use Illuminate\Support\Facades\Route;
-use JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
-use JourneyLog\Adapter\Web\Controllers\ListJourneyLogController;
-use JourneyLogLinkType\Adapter\Web\Controllers\CreateJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\DeleteJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTypeController;
-use JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 use Shared\Route\RouteMap;
-use Song\Adapter\Web\Controllers\ListSongController;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])
