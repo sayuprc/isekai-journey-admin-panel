@@ -30,7 +30,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Generated\\": "Generated/",
-            "Auth\\": "packages/Auth/"
+            "Auth\\": "packages/Auth/",
+            "JourneyLog\\": "packages/JourneyLog/"
         }
     },
     "autoload-dev": {

@@ -1,7 +1,5 @@
 @php
-    use App\Features\JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
-    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;
-    use App\Shared\Route\RouteMap;
+    use App\Features\JourneyLogLinkType\Adapter\Web\Presenters\ListViewJourneyLogLinkType;use App\Shared\Route\RouteMap;use JourneyLog\Adapter\Web\Presenters\ViewJourneyLog;
     /** @var ViewJourneyLog $journeyLog */
 @endphp
 
@@ -39,15 +37,18 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3" value="{{ old('from_on', $journeyLog->fromOn->format()) }}" id="from_on"/>
-            <x-adminlte-input label="終了日" type="date" name="to_on" value="{{ old('to_on', $journeyLog->toOn->format()) }}" id="to_on"/>
+            <x-adminlte-input label="開始日" type="date" name="from_on" class="mr-3"
+                              value="{{ old('from_on', $journeyLog->fromOn->format()) }}" id="from_on"/>
+            <x-adminlte-input label="終了日" type="date" name="to_on"
+                              value="{{ old('to_on', $journeyLog->toOn->format()) }}" id="to_on"/>
         </div>
 
         <x-adminlte-button label="今日" type="button" id="copy_today_btn"/>
         <x-adminlte-button label="開始日を終了日にコピー" id="copy_from_to_btn"/>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', $journeyLog->orderNo) }}"/>
+            <x-adminlte-input label="表示順" type="number" name="order_no"
+                              value="{{ old('order_no', $journeyLog->orderNo) }}"/>
         </div>
 
         <div class="form-group">
