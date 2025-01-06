@@ -1,0 +1,60 @@
+deptrac:
+  paths:
+    - ./app
+    - ./packages
+  exclude_files:
+    - '#.*test.*#'
+  layers:
+    - name: Domain
+      collectors:
+        - type: classLike
+          value: JourneyLog\\Domain\\.*
+        - type: classLike
+          value: JourneyLogLinkType\\Domain\\.*
+        - type: classLike
+          value: Song\\Domain\\.*
+    - name: UseCase
+      collectors:
+        - type: classLike
+          value: JourneyLog\\UseCases\\.*
+        - type: classLike
+          value: JourneyLogLinkType\\UseCases\\.*
+        - type: classLike
+          value: Shared\\UseCases\\.*
+        - type: classLike
+          value: Song\\UseCases\\.*
+    - name: Application
+      collectors:
+        - type: classLike
+          value: JourneyLog\\Application\\.*
+        - type: classLike
+          value: JourneyLogLinkType\\Application\\.*
+        - type: classLike
+          value: Shared\\Application\\.*
+        - type: classLike
+          value: Song\\Application\\.*
+    - name: Infrastructure
+      collectors:
+        - type: classLike
+          value: JourneyLog\\Infrastructures\\.*
+        - type: classLike
+          value: JourneyLogLinkType\\Infrastructures\\.*
+        - type: classLike
+          value: Song\\Infrastructures\\.*
+    - name: Controller
+      collectors:
+        - type: classLike
+          value: App\\Http\\Controllers\\.*
+  ruleset:
+    # TODO Domain/UseCase は POPO であることを保証させたい
+    Domain: ~
+    UseCase:
+      - Domain
+    Application:
+      - Domain
+      - UseCase
+    Infrastructure:
+      - Domain
+    Controller:
+      - Domain # TODO プレゼンター周りを見直してこれは外す
+      - UseCase
