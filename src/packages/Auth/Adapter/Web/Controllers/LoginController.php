@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Auth\Adapter\Web\Controllers;
+namespace Auth\Adapter\Web\Controllers;
 
-use App\Features\Auth\UseCases\Login\LoginInteractor;
-use App\Features\Auth\UseCases\Login\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Shared\Route\RouteMap;
+use Auth\UseCases\Login\LoginInteractor;
+use Auth\UseCases\Login\LoginRequest;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;

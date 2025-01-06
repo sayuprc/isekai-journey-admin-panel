@@ -6,7 +6,7 @@ return [
     App\Providers\AppServiceProvider::class,
     App\Providers\GrpcServiceProvider::class,
     App\Providers\ProdServiceProvider::class,
-    App\Features\Auth\Adapter\Web\Providers\LoginServiceProvider::class,
+    \Auth\Adapter\Web\Providers\LoginServiceProvider::class,
     App\Features\JourneyLog\Adapter\Web\Providers\CreateServiceProvider::class,
     App\Features\JourneyLog\Adapter\Web\Providers\EditServiceProvider::class,
     App\Features\JourneyLog\Adapter\Web\Providers\DeleteServiceProvider::class,

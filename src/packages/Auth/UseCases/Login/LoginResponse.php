@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Auth\UseCases\Login;
+namespace Auth\UseCases\Login;
 
 class LoginResponse
 {

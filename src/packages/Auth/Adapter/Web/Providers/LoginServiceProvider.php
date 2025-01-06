@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Auth\Adapter\Web\Providers;
+namespace Auth\Adapter\Web\Providers;
 
-use App\Features\Auth\Adapter\Web\Requests\LoginRequest as WebRequest;
-use App\Features\Auth\UseCases\Login\LoginRequest;
 use App\Providers\RequestServiceProviderBase;
+use Auth\Adapter\Web\Requests\LoginRequest as WebRequest;
+use Auth\UseCases\Login\LoginRequest;
 
 class LoginServiceProvider extends RequestServiceProviderBase
 {

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Features\Auth\Adapter\Web\Controllers\LoginController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\CreateJourneyLogController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\DeleteJourneyLogController;
 use App\Features\JourneyLog\Adapter\Web\Controllers\EditJourneyLogController;
@@ -13,6 +12,7 @@ use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\EditJourneyLogLinkTy
 use App\Features\JourneyLogLinkType\Adapter\Web\Controllers\ListJourneyLogLinkTypeController;
 use App\Features\Song\Adapter\Web\Controllers\ListSongController;
 use App\Shared\Route\RouteMap;
+use Auth\Adapter\Web\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {

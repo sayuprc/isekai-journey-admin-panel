@@ -29,7 +29,8 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Generated\\": "Generated/"
+            "Generated\\": "Generated/",
+            "Auth\\": "packages/Auth/"
         }
     },
     "autoload-dev": {

@@ -4,6 +4,7 @@ includes:
 parameters:
   paths:
     - app
+    - packages
 
   level: 10
 
