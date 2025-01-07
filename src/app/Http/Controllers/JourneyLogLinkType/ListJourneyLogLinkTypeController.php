@@ -11,21 +11,15 @@ use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
 
 class ListJourneyLogLinkTypeController extends Controller
 {
-    public function index(ListUseCaseInterface $interactor): View
+    public function index(ListUseCaseInterface $interactor, JourneyLogLinkTypeListPresenter $presenter): View
     {
-        $response = $interactor->handle();
-
         $heads = [
             '名前',
             '表示順',
             '',
         ];
 
-        $journeyLogLinkTypes = [];
-
-        foreach ($response->journeyLogLinkTypes as $journeyLogLinkType) {
-            $journeyLogLinkTypes[] = (new JourneyLogLinkTypeListPresenter($journeyLogLinkType))->present();
-        }
+        $journeyLogLinkTypes = $presenter->present($interactor->handle());
 
         return view('journeyLogLinkTypes.list.index', compact('heads', 'journeyLogLinkTypes'));
     }

@@ -6,19 +6,21 @@ namespace App\Http\Presenters\JourneyLogLinkType;
 
 use App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
+use JourneyLogLinkType\UseCases\List\ListResponse;
 
 class JourneyLogLinkTypeListPresenter
 {
-    public function __construct(private readonly JourneyLogLinkType $journeyLogLinkType)
+    /**
+     * @return array<JourneyLogLinkTypeListView>
+     */
+    public function present(ListResponse $response): array
     {
-    }
-
-    public function present(): JourneyLogLinkTypeListView
-    {
-        return new JourneyLogLinkTypeListView(
-            $this->journeyLogLinkType->journeyLogLinkTypeId->value,
-            $this->journeyLogLinkType->journeyLogLinkTypeName->value,
-            $this->journeyLogLinkType->orderNo->value,
-        );
+        return array_map(function (JourneyLogLinkType $journeyLogLinkType): JourneyLogLinkTypeListView {
+            return new JourneyLogLinkTypeListView(
+                $journeyLogLinkType->journeyLogLinkTypeId->value,
+                $journeyLogLinkType->journeyLogLinkTypeName->value,
+                $journeyLogLinkType->orderNo->value,
+            );
+        }, $response->journeyLogLinkTypes);
     }
 }

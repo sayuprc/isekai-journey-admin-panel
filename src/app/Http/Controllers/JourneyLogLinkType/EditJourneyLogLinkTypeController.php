@@ -17,7 +17,7 @@ use Shared\Route\RouteMap;
 
 class EditJourneyLogLinkTypeController extends Controller
 {
-    public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor): RedirectResponse|View
+    public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor, JourneyLogLinkTypePresenter $presenter): RedirectResponse|View
     {
         try {
             $response = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
@@ -29,7 +29,7 @@ class EditJourneyLogLinkTypeController extends Controller
                 ]);
         }
 
-        $journeyLogLinkType = (new JourneyLogLinkTypePresenter($response->journeyLogLinkType))->present();
+        $journeyLogLinkType = $presenter->present($response);
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }

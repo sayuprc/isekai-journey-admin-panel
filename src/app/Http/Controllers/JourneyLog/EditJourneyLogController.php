@@ -19,8 +19,13 @@ use Shared\Route\RouteMap;
 
 class EditJourneyLogController extends Controller
 {
-    public function index(string $journeyLogId, GetUseCaseInterface $getInteractor, ListUseCaseInterface $listInteractor, JourneyLogPresenter $presenter): RedirectResponse|View
-    {
+    public function index(
+        string $journeyLogId,
+        GetUseCaseInterface $getInteractor,
+        ListUseCaseInterface $listInteractor,
+        JourneyLogPresenter $journeyLogPresenter,
+        JourneyLogLinkTypeListPresenter $journeyLogLinkTypeListPresenter,
+    ): RedirectResponse|View {
         try {
             $getResponse = $getInteractor->handle(new GetRequest($journeyLogId));
             $listResponse = $listInteractor->handle();
@@ -32,13 +37,9 @@ class EditJourneyLogController extends Controller
                 ]);
         }
 
-        $journeyLog = $presenter->present($getResponse);
+        $journeyLog = $journeyLogPresenter->present($getResponse);
 
-        $journeyLogLinkTypes = [];
-
-        foreach ($listResponse->journeyLogLinkTypes as $journeyLogLinkType) {
-            $journeyLogLinkTypes[] = (new JourneyLogLinkTypeListPresenter($journeyLogLinkType))->present();
-        }
+        $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listResponse);
 
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));
     }

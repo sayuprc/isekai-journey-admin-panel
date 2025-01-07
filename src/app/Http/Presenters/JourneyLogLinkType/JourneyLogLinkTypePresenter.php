@@ -5,20 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Presenters\JourneyLogLinkType;
 
 use App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeView;
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
+use JourneyLogLinkType\UseCases\Get\GetResponse;
 
 class JourneyLogLinkTypePresenter
 {
-    public function __construct(private readonly JourneyLogLinkType $journeyLogLinkType)
-    {
-    }
-
-    public function present(): JourneyLogLinkTypeView
+    public function present(GetResponse $response): JourneyLogLinkTypeView
     {
         return new JourneyLogLinkTypeView(
-            $this->journeyLogLinkType->journeyLogLinkTypeId->value,
-            $this->journeyLogLinkType->journeyLogLinkTypeName->value,
-            $this->journeyLogLinkType->orderNo->value,
+            $response->journeyLogLinkType->journeyLogLinkTypeId->value,
+            $response->journeyLogLinkType->journeyLogLinkTypeName->value,
+            $response->journeyLogLinkType->orderNo->value,
         );
     }
 }

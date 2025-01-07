@@ -16,15 +16,11 @@ use Shared\Route\RouteMap;
 
 class CreateJourneyLogController extends Controller
 {
-    public function index(ListUseCaseInterface $interactor): View
+    public function index(ListUseCaseInterface $interactor, JourneyLogLinkTypeListPresenter $presenter): View
     {
         $response = $interactor->handle();
 
-        $journeyLogLinkTypes = [];
-
-        foreach ($response->journeyLogLinkTypes as $journeyLogLinkType) {
-            $journeyLogLinkTypes[] = (new JourneyLogLinkTypeListPresenter($journeyLogLinkType))->present();
-        }
+        $journeyLogLinkTypes = $presenter->present($response);
 
         return view('journeyLogs.create.index', compact('journeyLogLinkTypes'));
     }
