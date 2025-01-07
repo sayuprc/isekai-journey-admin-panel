@@ -7,7 +7,7 @@ namespace App\Http\Controllers\JourneyLog;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\JourneyLog\ViewJourneyLog;
 use App\Http\Presenters\JourneyLog\ViewPeriod;
-use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;
+use App\Http\Presenters\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +54,7 @@ class EditJourneyLogController extends Controller
         $journeyLogLinkTypes = [];
 
         foreach ($listResponse->journeyLogLinkTypes as $journeyLogLinkType) {
-            $journeyLogLinkTypes[] = new ListViewJourneyLogLinkType($journeyLogLinkType);
+            $journeyLogLinkTypes[] = (new JourneyLogLinkTypeListPresenter($journeyLogLinkType))->present();
         }
 
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLogLinkType;
 
-use App\Http\Presenters\JourneyLogLinkType\ViewJourneyLogLinkType;
+use App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeView;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -84,7 +84,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
 
         $data = $response->getOriginalContent()->getData();
 
-        $this->assertInstanceOf(ViewJourneyLogLinkType::class, $data['journeyLogLinkType']);
+        $this->assertInstanceOf(JourneyLogLinkTypeView::class, $data['journeyLogLinkType']);
     }
 
     #[Test]

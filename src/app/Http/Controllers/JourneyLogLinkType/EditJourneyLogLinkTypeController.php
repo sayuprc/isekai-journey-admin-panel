@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\JourneyLogLinkType;
 
 use App\Http\Controllers\Controller;
-use App\Http\Presenters\JourneyLogLinkType\ViewJourneyLogLinkType;
+use App\Http\Presenters\JourneyLogLinkType\JourneyLogLinkTypePresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -29,11 +29,7 @@ class EditJourneyLogLinkTypeController extends Controller
                 ]);
         }
 
-        $journeyLogLinkType = new ViewJourneyLogLinkType(
-            $response->journeyLogLinkType->journeyLogLinkTypeId->value,
-            $response->journeyLogLinkType->journeyLogLinkTypeName->value,
-            $response->journeyLogLinkType->orderNo->value,
-        );
+        $journeyLogLinkType = (new JourneyLogLinkTypePresenter($response->journeyLogLinkType))->present();
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }

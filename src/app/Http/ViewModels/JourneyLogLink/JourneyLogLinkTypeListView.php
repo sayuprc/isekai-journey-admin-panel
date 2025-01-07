@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Presenters\JourneyLogLinkType;
+namespace App\Http\ViewModels\JourneyLogLink;
 
-class ViewJourneyLogLinkType
+class JourneyLogLinkTypeListView
 {
     public function __construct(
         public readonly string $journeyLogLinkTypeId,

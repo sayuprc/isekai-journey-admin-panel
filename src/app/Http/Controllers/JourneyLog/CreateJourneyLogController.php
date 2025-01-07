@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\JourneyLog;
 
 use App\Http\Controllers\Controller;
-use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;
+use App\Http\Presenters\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +23,7 @@ class CreateJourneyLogController extends Controller
         $journeyLogLinkTypes = [];
 
         foreach ($response->journeyLogLinkTypes as $journeyLogLinkType) {
-            $journeyLogLinkTypes[] = new ListViewJourneyLogLinkType($journeyLogLinkType);
+            $journeyLogLinkTypes[] = (new JourneyLogLinkTypeListPresenter($journeyLogLinkType))->present();
         }
 
         return view('journeyLogs.create.index', compact('journeyLogLinkTypes'));

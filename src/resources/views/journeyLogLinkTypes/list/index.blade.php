@@ -1,6 +1,4 @@
-@php
-    use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;use Shared\Route\RouteMap;
-@endphp
+@php use Shared\Route\RouteMap; @endphp
 
 @extends('layout.page')
 
@@ -24,13 +22,13 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var ListViewJourneyLogLinkType $journeyLogLinkType */ @endphp
+        @php /** @var \App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType */ @endphp
         @foreach($journeyLogLinkTypes as $journeyLogLinkType)
             <tr>
-                <td>{{ $journeyLogLinkType->journeyLogLinkTypeName() }}</td>
-                <td>{{ $journeyLogLinkType->orderNo() }}</td>
+                <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
+                <td>{{ $journeyLogLinkType->orderNo }}</td>
                 <td>
-                    <a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId()) }}">編集</a>
+                    <a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a>
                 </td>
             </tr>
         @endforeach
