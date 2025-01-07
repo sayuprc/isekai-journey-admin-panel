@@ -68,4 +68,5 @@ deptrac:
       - UseCase
     Presenter:
       - Domain
+      - UseCase
       - ViewModel
