@@ -23,12 +23,12 @@ class EditJourneyLogController extends Controller
         string $journeyLogId,
         GetUseCaseInterface $getInteractor,
         ListUseCaseInterface $listInteractor,
-        JourneyLogPresenter $journeyLogPresenter,
+        JourneyLogPresenter $presenter,
         JourneyLogLinkTypeListPresenter $journeyLogLinkTypeListPresenter,
     ): RedirectResponse|View {
         try {
-            $getResponse = $getInteractor->handle(new GetRequest($journeyLogId));
-            $listResponse = $listInteractor->handle();
+            $journeyLog = $presenter->present($getInteractor->handle(new GetRequest($journeyLogId)));
+            $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listInteractor->handle());
         } catch (Exception $e) {
             return redirect()
                 ->route(RouteMap::LIST_JOURNEY_LOGS)
@@ -36,10 +36,6 @@ class EditJourneyLogController extends Controller
                     'message' => $e->getMessage(),
                 ]);
         }
-
-        $journeyLog = $journeyLogPresenter->present($getResponse);
-
-        $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listResponse);
 
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));
     }

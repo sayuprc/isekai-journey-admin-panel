@@ -24,6 +24,6 @@ class ListSongController extends Controller
 
         $songs = $presenter->present($interactor->handle());
 
-        return view('songs.list.index', compact('songs', 'heads'));
+        return view('songs.list.index', compact('heads', 'songs'));
     }
 }

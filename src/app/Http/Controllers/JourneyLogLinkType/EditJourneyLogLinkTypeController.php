@@ -20,7 +20,7 @@ class EditJourneyLogLinkTypeController extends Controller
     public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor, JourneyLogLinkTypePresenter $presenter): RedirectResponse|View
     {
         try {
-            $response = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
+            $journeyLogLinkType = $presenter->present($interactor->handle(new GetRequest($journeyLogLinkTypeId)));
         } catch (Exception $e) {
             return redirect()
                 ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
@@ -28,8 +28,6 @@ class EditJourneyLogLinkTypeController extends Controller
                     'message' => $e->getMessage(),
                 ]);
         }
-
-        $journeyLogLinkType = $presenter->present($response);
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }

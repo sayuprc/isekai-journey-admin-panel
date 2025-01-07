@@ -18,9 +18,7 @@ class CreateJourneyLogController extends Controller
 {
     public function index(ListUseCaseInterface $interactor, JourneyLogLinkTypeListPresenter $presenter): View
     {
-        $response = $interactor->handle();
-
-        $journeyLogLinkTypes = $presenter->present($response);
+        $journeyLogLinkTypes = $presenter->present($interactor->handle());
 
         return view('journeyLogs.create.index', compact('journeyLogLinkTypes'));
     }
