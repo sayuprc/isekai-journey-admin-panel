@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Song;
 
 use App\Http\Controllers\Controller;
-use App\Http\Presenters\Song\ListViewSong;
+use App\Http\Presenters\Song\SongListPresenter;
 use Illuminate\Contracts\View\View;
 use Song\UseCases\List\ListUseCaseInterface;
 
@@ -18,7 +18,7 @@ class ListSongController extends Controller
         $songs = [];
 
         foreach ($response->songs as $song) {
-            $songs[] = new ListViewSong($song);
+            $songs[] = (new SongListPresenter($song))->present();
         }
 
         $heads = [
