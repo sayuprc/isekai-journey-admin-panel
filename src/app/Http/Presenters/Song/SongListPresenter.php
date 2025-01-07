@@ -6,21 +6,23 @@ namespace App\Http\Presenters\Song;
 
 use App\Http\ViewModels\Song\SongListView;
 use Song\Domain\Entities\Song;
+use Song\UseCases\List\ListResponse;
 
 class SongListPresenter
 {
-    public function __construct(private readonly Song $song)
+    /**
+     * @return array<SongListView>
+     */
+    public function present(ListResponse $response): array
     {
-    }
-
-    public function present(): SongListView
-    {
-        return new SongListView(
-            $this->song->songId->value,
-            $this->song->title->value,
-            $this->song->description->value,
-            $this->song->orderNo->value,
-            $this->song->releasedOn->value->format('Y-m-d'),
-        );
+        return array_map(function (Song $song): SongListView {
+            return new SongListView(
+                $song->songId->value,
+                $song->title->value,
+                $song->description->value,
+                $song->orderNo->value,
+                $song->releasedOn->value->format('Y-m-d'),
+            );
+        }, $response->songs);
     }
 }

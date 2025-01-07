@@ -11,16 +11,8 @@ use Song\UseCases\List\ListUseCaseInterface;
 
 class ListSongController extends Controller
 {
-    public function index(ListUseCaseInterface $interactor): View
+    public function index(ListUseCaseInterface $interactor, SongListPresenter $presenter): View
     {
-        $response = $interactor->handle();
-
-        $songs = [];
-
-        foreach ($response->songs as $song) {
-            $songs[] = (new SongListPresenter($song))->present();
-        }
-
         $heads = [
             'タイトル',
             '説明',
@@ -29,6 +21,8 @@ class ListSongController extends Controller
             '表示順',
             '',
         ];
+
+        $songs = $presenter->present($interactor->handle());
 
         return view('songs.list.index', compact('songs', 'heads'));
     }
