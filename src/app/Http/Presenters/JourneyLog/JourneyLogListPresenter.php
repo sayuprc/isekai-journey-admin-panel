@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\JourneyLog;
 
+use App\Http\ViewModels\JourneyLog\JourneyLogListView;
 use JourneyLog\Domain\Entities\JourneyLog;
 
-class ListViewJourneyLog
+class JourneyLogListPresenter
 {
     private const string DATE_FORMAT = 'Y-m-d';
 
@@ -14,27 +15,22 @@ class ListViewJourneyLog
     {
     }
 
-    public function journeyLogId(): string
+    public function present(): JourneyLogListView
     {
-        return $this->journeyLog->journeyLogId->value;
+        return new JourneyLogListView(
+            $this->journeyLog->journeyLogId->value,
+            $this->journeyLog->story->value,
+            $this->period(),
+            $this->journeyLog->orderNo->value,
+        );
     }
 
-    public function story(): string
-    {
-        return $this->journeyLog->story->value;
-    }
-
-    public function orderNo(): int
-    {
-        return $this->journeyLog->orderNo->value;
-    }
-
-    public function period(): string
+    private function period(): string
     {
         return $this->journeyLog->period->isSingleDay()
             ? $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
             : $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
-                . ' ~ '
-                . $this->journeyLog->period->toOn->value->format(self::DATE_FORMAT);
+            . ' ~ '
+            . $this->journeyLog->period->toOn->value->format(self::DATE_FORMAT);
     }
 }
