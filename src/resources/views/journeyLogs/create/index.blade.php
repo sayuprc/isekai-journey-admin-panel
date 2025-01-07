@@ -1,6 +1,4 @@
-@php
-    use App\Http\Presenters\JourneyLogLinkType\ListViewJourneyLogLinkType;use Shared\Route\RouteMap;
-@endphp
+@php use Shared\Route\RouteMap; @endphp
 
 @extends('layout.page')
 
@@ -47,11 +45,11 @@
     </form>
 
     @php
-        /** @var ListViewJourneyLogLinkType[] $journeyLogLinkTypes */
-        $data = array_map(function(ListViewJourneyLogLinkType $journeyLogLinkType): array {
+        /** @var array<\App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView> $journeyLogLinkTypes */
+        $data = array_map(function(\App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType): array {
             return [
-                'journey_log_link_type_id' => $journeyLogLinkType->journeyLogLinkTypeId(),
-                'journey_log_link_type_name' => $journeyLogLinkType->journeyLogLinkTypeName(),
+                'journey_log_link_type_id' => $journeyLogLinkType->journeyLogLinkTypeId,
+                'journey_log_link_type_name' => $journeyLogLinkType->journeyLogLinkTypeName,
             ];
         }, $journeyLogLinkTypes);
     @endphp

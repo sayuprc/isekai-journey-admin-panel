@@ -1,7 +1,3 @@
-@php
-    use App\Http\Presenters\Song\ListViewSong;
-@endphp
-
 @extends('layout.page')
 
 @section('title', '楽曲一覧')
@@ -24,13 +20,13 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var ListViewSong $song */ @endphp
+        @php /** @var \App\Http\ViewModels\Song\SongListView $song */ @endphp
         @foreach($songs as $song)
             <tr>
-                <td>{{ $song->title() }}</td>
-                <td>{{ $song->description() }}</td>
-                <td>{{ $song->releasedOn() }}</td>
-                <td>{{ $song->orderNo() }}</td>
+                <td>{{ $song->title }}</td>
+                <td>{{ $song->description }}</td>
+                <td>{{ $song->releasedOn }}</td>
+                <td>{{ $song->orderNo }}</td>
                 <td><a href="">編集</a></td>
             </tr>
         @endforeach

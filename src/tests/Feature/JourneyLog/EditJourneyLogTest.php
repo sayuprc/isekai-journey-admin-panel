@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\JourneyLog;
 
-use App\Http\Presenters\JourneyLog\ViewJourneyLog;
+use App\Http\ViewModels\JourneyLog\JourneyLogView;
 use App\Models\User;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -103,7 +103,7 @@ class EditJourneyLogTest extends TestCase
 
         $data = $response->getOriginalContent()->getData();
 
-        $this->assertInstanceOf(ViewJourneyLog::class, $data['journeyLog']);
+        $this->assertInstanceOf(JourneyLogView::class, $data['journeyLog']);
         $this->assertCount(0, $data['journeyLogLinkTypes']);
     }
 

@@ -5,22 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Song;
 
 use App\Http\Controllers\Controller;
-use App\Http\Presenters\Song\ListViewSong;
+use App\Http\Presenters\Song\SongListPresenter;
 use Illuminate\Contracts\View\View;
 use Song\UseCases\List\ListUseCaseInterface;
 
 class ListSongController extends Controller
 {
-    public function index(ListUseCaseInterface $interactor): View
+    public function index(ListUseCaseInterface $interactor, SongListPresenter $presenter): View
     {
-        $response = $interactor->handle();
-
-        $songs = [];
-
-        foreach ($response->songs as $song) {
-            $songs[] = new ListViewSong($song);
-        }
-
         $heads = [
             'タイトル',
             '説明',
@@ -30,6 +22,8 @@ class ListSongController extends Controller
             '',
         ];
 
-        return view('songs.list.index', compact('songs', 'heads'));
+        $songs = $presenter->present($interactor->handle());
+
+        return view('songs.list.index', compact('heads', 'songs'));
     }
 }

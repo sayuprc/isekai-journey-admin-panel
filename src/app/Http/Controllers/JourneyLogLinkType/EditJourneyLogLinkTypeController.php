@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\JourneyLogLinkType;
 
 use App\Http\Controllers\Controller;
-use App\Http\Presenters\JourneyLogLinkType\ViewJourneyLogLinkType;
+use App\Http\Presenters\JourneyLogLinkType\JourneyLogLinkTypePresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,10 +17,10 @@ use Shared\Route\RouteMap;
 
 class EditJourneyLogLinkTypeController extends Controller
 {
-    public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor): RedirectResponse|View
+    public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor, JourneyLogLinkTypePresenter $presenter): RedirectResponse|View
     {
         try {
-            $response = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
+            $journeyLogLinkType = $presenter->present($interactor->handle(new GetRequest($journeyLogLinkTypeId)));
         } catch (Exception $e) {
             return redirect()
                 ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
@@ -28,12 +28,6 @@ class EditJourneyLogLinkTypeController extends Controller
                     'message' => $e->getMessage(),
                 ]);
         }
-
-        $journeyLogLinkType = new ViewJourneyLogLinkType(
-            $response->journeyLogLinkType->journeyLogLinkTypeId->value,
-            $response->journeyLogLinkType->journeyLogLinkTypeName->value,
-            $response->journeyLogLinkType->orderNo->value,
-        );
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }

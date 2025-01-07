@@ -1,6 +1,4 @@
-@php
-    use App\Http\Presenters\JourneyLog\ListViewJourneyLog;use Shared\Route\RouteMap;
-@endphp
+@php use Shared\Route\RouteMap; @endphp
 
 @extends('layout.page')
 
@@ -24,13 +22,13 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var ListViewJourneyLog $journeyLog */ @endphp
+        @php /** @var \App\Http\ViewModels\JourneyLog\JourneyLogListView $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)
             <tr>
-                <td>{{ $journeyLog->story() }}</td>
-                <td>{{ $journeyLog->period() }}</td>
-                <td>{{ $journeyLog->orderNo() }}</td>
-                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, $journeyLog->journeyLogId()) }}">編集</a>
+                <td>{{ $journeyLog->story }}</td>
+                <td>{{ $journeyLog->period }}</td>
+                <td>{{ $journeyLog->orderNo }}</td>
+                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, $journeyLog->journeyLogId) }}">編集</a>
                 </td>
             </tr>
         @endforeach

@@ -45,6 +45,14 @@ deptrac:
       collectors:
         - type: classLike
           value: App\\Http\\Controllers\\.*
+    - name: Presenter
+      collectors:
+        - type: classLike
+          value: App\\Http\\Presenters\\.*
+    - name: ViewModel
+      collectors:
+        - type: classLike
+          value: App\\Http\\ViewModels\\.*
   ruleset:
     # TODO Domain/UseCase は POPO であることを保証させたい
     Domain: ~
@@ -56,5 +64,9 @@ deptrac:
     Infrastructure:
       - Domain
     Controller:
-      - Domain # TODO プレゼンター周りを見直してこれは外す
+      - Presenter
       - UseCase
+    Presenter:
+      - Domain
+      - UseCase
+      - ViewModel
