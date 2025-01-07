@@ -11,10 +11,8 @@ use JourneyLog\UseCases\List\ListUseCaseInterface;
 
 class ListJourneyLogController extends Controller
 {
-    public function index(ListUseCaseInterface $interactor): View
+    public function index(ListUseCaseInterface $interactor, JourneyLogListPresenter $presenter): View
     {
-        $response = $interactor->handle();
-
         $heads = [
             '内容',
             '期間',
@@ -22,11 +20,7 @@ class ListJourneyLogController extends Controller
             '',
         ];
 
-        $journeyLogs = [];
-
-        foreach ($response->journeyLogs as $journeyLog) {
-            $journeyLogs[] = (new JourneyLogListPresenter($journeyLog))->present();
-        }
+        $journeyLogs = $presenter->present($interactor->handle());
 
         return view('journeyLogs.list.index', compact('heads', 'journeyLogs'));
     }

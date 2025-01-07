@@ -6,31 +6,34 @@ namespace App\Http\Presenters\JourneyLog;
 
 use App\Http\ViewModels\JourneyLog\JourneyLogListView;
 use JourneyLog\Domain\Entities\JourneyLog;
+use JourneyLog\Domain\Entities\Period;
+use JourneyLog\UseCases\List\ListResponse;
 
 class JourneyLogListPresenter
 {
     private const string DATE_FORMAT = 'Y-m-d';
 
-    public function __construct(private readonly JourneyLog $journeyLog)
+    /**
+     * @return array<JourneyLogListView>
+     */
+    public function present(ListResponse $response): array
     {
+        return array_map(function (JourneyLog $journeyLog): JourneyLogListView {
+            return new JourneyLogListView(
+                $journeyLog->journeyLogId->value,
+                $journeyLog->story->value,
+                $this->period($journeyLog->period),
+                $journeyLog->orderNo->value,
+            );
+        }, $response->journeyLogs);
     }
 
-    public function present(): JourneyLogListView
+    private function period(Period $period): string
     {
-        return new JourneyLogListView(
-            $this->journeyLog->journeyLogId->value,
-            $this->journeyLog->story->value,
-            $this->period(),
-            $this->journeyLog->orderNo->value,
-        );
-    }
-
-    private function period(): string
-    {
-        return $this->journeyLog->period->isSingleDay()
-            ? $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
-            : $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT)
+        return $period->isSingleDay()
+            ? $period->fromOn->value->format(self::DATE_FORMAT)
+            : $period->fromOn->value->format(self::DATE_FORMAT)
             . ' ~ '
-            . $this->journeyLog->period->toOn->value->format(self::DATE_FORMAT);
+            . $period->toOn->value->format(self::DATE_FORMAT);
     }
 }

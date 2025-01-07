@@ -6,25 +6,21 @@ namespace App\Http\Presenters\JourneyLog;
 
 use App\Http\ViewModels\JourneyLog\JourneyLogLinkView;
 use App\Http\ViewModels\JourneyLog\JourneyLogView;
-use JourneyLog\Domain\Entities\JourneyLog;
 use JourneyLog\Domain\Entities\JourneyLogLink;
+use JourneyLog\UseCases\Get\GetResponse;
 
 class JourneyLogPresenter
 {
     private const string DATE_FORMAT = 'Y-m-d';
 
-    public function __construct(private readonly JourneyLog $journeyLog)
-    {
-    }
-
-    public function present(): JourneyLogView
+    public function present(GetResponse $response): JourneyLogView
     {
         return new JourneyLogView(
-            $this->journeyLog->journeyLogId->value,
-            $this->journeyLog->story->value,
-            $this->journeyLog->period->fromOn->value->format(self::DATE_FORMAT),
-            $this->journeyLog->period->toOn->value->format(self::DATE_FORMAT),
-            $this->journeyLog->orderNo->value,
+            $response->journeyLog->journeyLogId->value,
+            $response->journeyLog->story->value,
+            $response->journeyLog->period->fromOn->value->format(self::DATE_FORMAT),
+            $response->journeyLog->period->toOn->value->format(self::DATE_FORMAT),
+            $response->journeyLog->orderNo->value,
             array_map(function (JourneyLogLink $journeyLogLink): JourneyLogLinkView {
                 return new JourneyLogLinkView(
                     $journeyLogLink->journeyLogLinkTypeId->value,
@@ -32,7 +28,7 @@ class JourneyLogPresenter
                     $journeyLogLink->orderNo->value,
                     $journeyLogLink->journeyLogLinkTypeId->value,
                 );
-            }, $this->journeyLog->journeyLogLinks)
+            }, $response->journeyLog->journeyLogLinks)
         );
     }
 }
