@@ -13,7 +13,7 @@ GRPC_VERSION := "v1.65.5"
 .PHONY: build
 build: ## Build docker image for develop environment
 	docker build -t isekai-journey-admin-web:1.25 ./docker/nginx
-	docker build -t isekai-journey-admin-php:8.3 ./docker/php \
+	docker build -t isekai-journey-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
