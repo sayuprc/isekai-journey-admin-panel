@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Shared\Domain;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Shared\Domain\Exceptions\InvalidDomainException;
 use Shared\Domain\UuidValueObject;
@@ -22,21 +23,21 @@ class UuidValueObjectTest extends TestCase
     }
 
     #[Test]
-    public function emptyValue(): void
+    #[DataProvider('invalidData')]
+    public function formatIsInvalid(string $value): void
     {
         $this->expectException(InvalidDomainException::class);
         $this->expectExceptionMessage('Value format is invalid');
 
-        new Uuid('');
+        new Uuid($value);
     }
 
-    #[Test]
-    public function invalidFormat(): void
+    public static function invalidData(): array
     {
-        $this->expectException(InvalidDomainException::class);
-        $this->expectExceptionMessage('Value format is invalid');
-
-        new Uuid('invalid format');
+        return [
+            [''],
+            ['invalid format'],
+        ];
     }
 }
 
