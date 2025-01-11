@@ -56,7 +56,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     public function listJourneyLogs(): array
     {
         [$response, $status] = $this->client->ListJourneyLogs(new ListJourneyLogsRequest())->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof ListJourneyLogsResponse);
 
@@ -93,7 +93,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->CreateJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof CreateJourneyLogResponse);
 
@@ -116,7 +116,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->GetJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof GetJourneyLogResponse);
 
@@ -149,7 +149,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->EditJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof EditJourneyLogResponse);
 
@@ -174,7 +174,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->DeleteJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof DeleteJourneyLogResponse);
 

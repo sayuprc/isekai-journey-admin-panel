@@ -38,7 +38,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
     public function listJourneyLogLinkTypes(): array
     {
         [$response, $status] = $this->client->ListJourneyLogLinkTypes(new ListJourneyLogLinkTypesRequest())->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof ListJourneyLogLinkTypesResponse);
 
@@ -68,7 +68,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
         [$response, $status] = $this->client->CreateJourneyLogLinkType($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof CreateJourneyLogLinkTypeResponse);
 
@@ -88,7 +88,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
         [$response, $status] = $this->client->GetJourneyLogLinkType($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof GetJourneyLogLinkTypeResponse);
 
@@ -115,7 +115,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setOrderNo($journeyLogLinkType->orderNo->value);
 
         [$response, $status] = $this->client->EditJourneyLogLinkType($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof EditJourneyLogLinkTypeResponse);
 
@@ -135,7 +135,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
         $request->setJourneyLogLinkTypeId($journeyLogLinkTypeId->value);
 
         [$response, $status] = $this->client->DeleteJourneyLogLinkType($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof DeleteJourneyLogLinkTypeResponse);
 

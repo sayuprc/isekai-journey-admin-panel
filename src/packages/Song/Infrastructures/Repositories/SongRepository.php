@@ -39,7 +39,7 @@ class SongRepository implements SongRepositoryInterface
     public function listSongs(): array
     {
         [$response, $status] = $this->client->ListSongs(new ListSongsRequest())->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof ListSongsResponse);
 
