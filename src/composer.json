@@ -68,6 +68,8 @@
         "test-all": "php artisan test --env=testing",
         "test-unit": "php artisan test tests/Unit",
         "test-feature": "php artisan test tests/Feature --env=testing",
+        "coverage": "php artisan test --env=testing --coverage-html=\"reports/coverage\"",
+        "infection": "infection --threads=4",
         "ide-gen": "php artisan ide-helper:generate",
         "ide-model": "php artisan ide-helper:models -W",
         "ide-meta": "php artisan ide-helper:meta"

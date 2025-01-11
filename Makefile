@@ -70,6 +70,14 @@ test-unit: ## Run PHPUnit
 test-feature: ## Run PHPUnit
 	docker compose exec php composer test-feature
 
+.PHONY: coverage
+coverage: ## Export coverage
+	docker compose exec php composer coverage
+
+.PHONY: infection
+infection: ## Run infection
+	docker compose exec php composer infection
+
 .PHONY: ide-gen
 ide-gen: ## Generate ide helper file
 	docker compose exec php composer ide-gen
