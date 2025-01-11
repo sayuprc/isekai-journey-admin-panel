@@ -39,8 +39,6 @@ use Shared\Exceptions\APIException;
 use Shared\Grpc\Status;
 use Shared\Mapper\MapperInterface;
 
-use const Grpc\STATUS_OK;
-
 class JourneyLogRepository implements JourneyLogRepositoryInterface
 {
     public function __construct(
@@ -58,11 +56,11 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
     public function listJourneyLogs(): array
     {
         [$response, $status] = $this->client->ListJourneyLogs(new ListJourneyLogsRequest())->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof ListJourneyLogsResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -95,11 +93,11 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->CreateJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof CreateJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -118,11 +116,11 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->GetJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof GetJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -151,11 +149,11 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogLinks($this->toGrpcLinks($journeyLog->journeyLogLinks));
 
         [$response, $status] = $this->client->EditJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof EditJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -176,11 +174,11 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
         $request->setJourneyLogId($journeyLogId->value);
 
         [$response, $status] = $this->client->DeleteJourneyLog($request)->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof DeleteJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 

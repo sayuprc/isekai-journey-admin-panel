@@ -14,23 +14,15 @@ class Mapper implements MapperInterface
     {
     }
 
-    public function mapFromArray(string $signature, mixed $source): mixed
+    public function map(string $signature, mixed $source): mixed
     {
-        $source = is_array($source) ? $source : [$source];
+        $json = ! is_string($source) || ! json_validate($source)
+            ? (string)json_encode($source)
+            : $source;
 
         return $this->builder
             ->allowSuperfluousKeys()
             ->enableFlexibleCasting()
-            ->mapper()
-            ->map($signature, Source::array($source)->camelCaseKeys());
-    }
-
-    public function mapFromJson(string $signature, mixed $source): mixed
-    {
-        $json = (string)json_encode($source);
-
-        return $this->builder
-            ->allowSuperfluousKeys()
             ->mapper()
             ->map($signature, Source::json($json)->camelCaseKeys());
     }

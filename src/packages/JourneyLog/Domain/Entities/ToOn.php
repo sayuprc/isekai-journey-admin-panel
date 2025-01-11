@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Entities;
 
-use Shared\Domain\DateTimeValueObject;
+use Shared\Domain\DateValueObject;
 
-class ToOn extends DateTimeValueObject
+class ToOn extends DateValueObject
 {
 }

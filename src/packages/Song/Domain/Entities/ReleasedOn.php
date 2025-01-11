@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Song\Domain\Entities;
 
-use Shared\Domain\DateTimeValueObject;
+use Shared\Domain\DateValueObject;
 
-class ReleasedOn extends DateTimeValueObject
+class ReleasedOn extends DateValueObject
 {
 }

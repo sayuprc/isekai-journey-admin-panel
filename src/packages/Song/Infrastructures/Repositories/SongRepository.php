@@ -28,8 +28,6 @@ use Song\Domain\Entities\Title;
 use Song\Domain\Entities\Url;
 use Song\Domain\Repositories\SongRepositoryInterface;
 
-use const Grpc\STATUS_OK;
-
 class SongRepository implements SongRepositoryInterface
 {
     public function __construct(
@@ -41,11 +39,11 @@ class SongRepository implements SongRepositoryInterface
     public function listSongs(): array
     {
         [$response, $status] = $this->client->ListSongs(new ListSongsRequest())->wait();
-        $status = $this->mapper->mapFromJson(Status::class, $status);
+        $status = $this->mapper->map(Status::class, $status);
 
         assert($response instanceof ListSongsResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
