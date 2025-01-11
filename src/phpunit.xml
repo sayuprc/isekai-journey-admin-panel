@@ -15,6 +15,7 @@
     <source>
         <include>
             <directory>app</directory>
+          <directory>packages</directory>
         </include>
     </source>
     <php>
