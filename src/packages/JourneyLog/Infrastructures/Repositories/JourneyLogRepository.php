@@ -39,8 +39,6 @@ use Shared\Exceptions\APIException;
 use Shared\Grpc\Status;
 use Shared\Mapper\MapperInterface;
 
-use const Grpc\STATUS_OK;
-
 class JourneyLogRepository implements JourneyLogRepositoryInterface
 {
     public function __construct(
@@ -62,7 +60,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         assert($response instanceof ListJourneyLogsResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -99,7 +97,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         assert($response instanceof CreateJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -122,7 +120,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         assert($response instanceof GetJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -155,7 +153,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         assert($response instanceof EditJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -180,7 +178,7 @@ class JourneyLogRepository implements JourneyLogRepositoryInterface
 
         assert($response instanceof DeleteJourneyLogResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 

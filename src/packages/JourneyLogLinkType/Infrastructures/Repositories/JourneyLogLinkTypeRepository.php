@@ -27,8 +27,6 @@ use Shared\Exceptions\APIException;
 use Shared\Grpc\Status;
 use Shared\Mapper\MapperInterface;
 
-use const Grpc\STATUS_OK;
-
 class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
 {
     public function __construct(
@@ -44,7 +42,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         assert($response instanceof ListJourneyLogLinkTypesResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -74,7 +72,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         assert($response instanceof CreateJourneyLogLinkTypeResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -94,7 +92,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         assert($response instanceof GetJourneyLogLinkTypeResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -121,7 +119,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         assert($response instanceof EditJourneyLogLinkTypeResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
@@ -141,7 +139,7 @@ class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterf
 
         assert($response instanceof DeleteJourneyLogLinkTypeResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 

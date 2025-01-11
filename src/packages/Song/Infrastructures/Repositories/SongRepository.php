@@ -28,8 +28,6 @@ use Song\Domain\Entities\Title;
 use Song\Domain\Entities\Url;
 use Song\Domain\Repositories\SongRepositoryInterface;
 
-use const Grpc\STATUS_OK;
-
 class SongRepository implements SongRepositoryInterface
 {
     public function __construct(
@@ -45,7 +43,7 @@ class SongRepository implements SongRepositoryInterface
 
         assert($response instanceof ListSongsResponse);
 
-        if ($status->code !== STATUS_OK) {
+        if (! $status->isOk()) {
             throw new APIException("API Execution Errors: {$status->details}", $status->code);
         }
 
