@@ -32,7 +32,7 @@
         <x-adminlte-button label="開始日を終了日にコピー" id="copy_from_to_btn"/>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 0) }}"/>
+            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', 1) }}"/>
         </div>
 
         <div class="form-group">

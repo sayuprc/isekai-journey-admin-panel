@@ -106,7 +106,7 @@ const addLink = (): void => {
 
   div.appendChild(createInput(`journey_log_links[${count}][journey_log_link_name]`, `リンク名${count + 1}`, `text`))
   div.appendChild(createInput(`journey_log_links[${count}][url]`, `リンクURL${count + 1}`, `text`))
-  div.appendChild(createInput(`journey_log_links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `0`))
+  div.appendChild(createInput(`journey_log_links[${count}][order_no]`, `リンク表示順${count + 1}`, `number`, `1`))
   div.appendChild(createSelect(`journey_log_links[${count}][journey_log_link_type_id]`, `リンク種別${count + 1}`, journeyLogLinkTypes))
   div.appendChild(createDeleteButton(count))
 
