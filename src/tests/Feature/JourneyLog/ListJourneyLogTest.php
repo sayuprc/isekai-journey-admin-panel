@@ -99,11 +99,15 @@ class ListJourneyLogTest extends TestCase
         $data = $response->getOriginalContent()->getData();
 
         $this->assertSame([
-            '内容',
             '期間',
+            '内容',
             '表示順',
             '',
         ], $data['heads']);
+
+        $this->assertSame([
+            'order' => [[0, 'asc']],
+        ], $data['config']);
 
         $this->assertCount(2, $data['journeyLogs']);
     }
@@ -128,11 +132,15 @@ class ListJourneyLogTest extends TestCase
         $data = $response->getOriginalContent()->getData();
 
         $this->assertSame([
-            '内容',
             '期間',
+            '内容',
             '表示順',
             '',
         ], $data['heads']);
+
+        $this->assertSame([
+            'order' => [[0, 'asc']],
+        ], $data['config']);
 
         $this->assertCount(0, $data['journeyLogs']);
     }
