@@ -1,6 +1,10 @@
 name: PHPUnit
 
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
 
 jobs:
   test:
