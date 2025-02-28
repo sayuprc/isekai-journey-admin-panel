@@ -1,0 +1,52 @@
+name: Setup Node.js
+
+on:
+  workflow_call:
+    outputs:
+      node-version:
+        value: ${{ jobs.node-version.outputs.version }}
+
+jobs:
+  setup-node:
+    name: Setup Node ${{ matrix.node-versions }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-versions: ["20"]
+
+    outputs:
+      node-version: ${{ steps.node-version.outputs.version }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-versions }}
+
+      - name: npm cache
+        id: npm_cache
+        uses: actions/cache@v4
+        with:
+          path: ./src/node_modules
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-package-
+
+      - name: Install npm packages
+        shell: bash
+        if: steps.npm_cache.outputs.cache-hit != 'true'
+        run: |
+          cd src
+          npm i
+
+      - name: Node Version
+        id: node-version
+        run: echo "version=$(node -v)" >> $GITHUB_ENV

@@ -1,0 +1,54 @@
+name: Setup PHP
+
+on:
+  workflow_call:
+    outputs:
+      php-version:
+        value: ${{ jobs.php-version.outputs.version }}
+
+jobs:
+  setup-php:
+    name: Setup PHP ${{ matrix.php-versions }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ["8.4"]
+
+    outputs:
+      php-version: ${{ steps.php-version.outputs.version }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: grpc
+          tools: composer
+
+      - name: Composer cache
+        id: composer_cache
+        uses: actions/cache@v4
+        with:
+          path: ./src/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install packages
+        shell: bash
+        if: steps.composer_cache.outputs.cache-hit != 'true'
+        run: |
+          cd src
+          composer install -n --prefer-dist
+
+      - name: PHP Version
+        id: php-version
+        run: echo "version=$(php -v | head -n 1 | cut -f 1-2 -d ' ')" >> $GITHUB_ENV

@@ -3,69 +3,22 @@ name: PHPUnit
 on: [pull_request, push]
 
 jobs:
+  setup-php:
+    uses: ./.github/workflows/setup-php.yaml
+
+  setup-node:
+    uses: ./.github/workflows/setup-node.yaml
+
   test:
-    name: PHPUnit (PHP ${{ matrix.php-versions }}/Node ${{ matrix.node-versions }})
+    needs:
+      - setup-php
+      - setup-node
+
+    name: PHPUnit (PHP ${{ needs.setup-php.outputs.php-version }}/Node ${{ needs.setup-node.outputs.node-version }})
 
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions: ["8.4"]
-        node-versions: ["20"]
-
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Composer cache
-        id: composer_cache
-        uses: actions/cache@v4
-        with:
-          path: ./src/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: grpc
-          tools: composer
-
-      - name: npm cache
-        id: npm_cache
-        uses: actions/cache@v4
-        with:
-          path: ./src/node_modules
-          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-package-
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-versions }}
-
-      - name: Install composer packages
-        shell: bash
-        if: steps.composer_cache.outputs.cache-hit != 'true'
-        run: |
-          echo 'Install packages'
-          cd src
-          composer install -n --prefer-dist
-
-      - name: Install npm packages
-        shell: bash
-        if: steps.npm_cache.outputs.cache-hit != 'true'
-        run: |
-          echo 'Install packages'
-          cd src
-          npm i
-
       - name: Create Database
         shell: bash
         run: |
