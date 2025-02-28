@@ -7,46 +7,17 @@ on:
       - dev
 
 jobs:
+  setup-php:
+    uses: ./.github/workflows/setup-php.yaml
+
   check:
-    name: Deptrac (PHP ${{ matrix.php-versions }})
+    needs: setup-php
+
+    name: Deptrac (PHP ${{ needs.setup-php.outputs.php-version }})
 
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions: ["8.4"]
-
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Composer cache
-        id: composer_cache
-        uses: actions/cache@v4
-        with:
-          path: ./src/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: grpc
-          tools: composer
-
-      - name: Install composer packages
-        shell: bash
-        if: steps.composer_cache.outputs.cache-hit != 'true'
-        run: |
-          echo 'Install packages'
-          cd src
-          composer install -n --prefer-dist
-
       - name: Check Layer
         run: |
           echo 'Check Layer'
