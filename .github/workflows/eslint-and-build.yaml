@@ -7,21 +7,26 @@ on:
       - dev
 
 jobs:
+  setup-node:
+    uses: ./.github/workflows/setup-node.yaml
+
   analyse:
-    name: ESLint and build (Node ${{ matrix.node-versions }})
+    needs: setup-node
+
+    name: ESLint and build (Node ${{ needs.setup-node.outputs.version }})
 
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-versions: ["20"]
 
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ needs.setup-node.outputs.version }}
 
       - name: npm cache
         id: npm_cache
@@ -31,19 +36,6 @@ jobs:
           key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-package-
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-versions }}
-
-      - name: Install packages
-        shell: bash
-        if: steps.npm_cache.outputs.cache-hit != 'true'
-        run: |
-          echo 'Install packages'
-          cd src
-          npm i
 
       - name: Run ESLint
         run: |
