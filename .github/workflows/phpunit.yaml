@@ -7,18 +7,13 @@ on:
       - dev
 
 jobs:
-  setup-php:
-    uses: ./.github/workflows/setup-php.yaml
-
-  setup-node:
-    uses: ./.github/workflows/setup-node.yaml
+  setup:
+    uses: ./.github/workflows/setup.yaml
 
   test:
-    needs:
-      - setup-php
-      - setup-node
+    needs: setup
 
-    name: PHPUnit (PHP ${{ needs.setup-php.outputs.version }}/Node ${{ needs.setup-node.outputs.version }})
+    name: PHPUnit
 
     runs-on: ubuntu-latest
 
@@ -28,59 +23,60 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ needs.setup-php.outputs.version }}
-          extensions: grpc
-          tools: composer
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ needs.setup-node.outputs.version }}
-
-      - name: Composer cache
-        id: composer_cache
+      - name: Cache docker image
+        id: cache-docker-image
         uses: actions/cache@v4
         with:
-          path: ./src/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          path: ${{ needs.setup.outputs.docker-cache-path }}
+          key: ${{ needs.setup.outputs.docker-cache-key }}
 
-      - name: npm cache
-        id: npm_cache
+      - name: Load image
+        if: steps.cache-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ needs.setup.outputs.docker-cache }} | docker load
+
+      - name: Run Container
+        run: docker compose up -d php
+
+      - name: Cache composer
+        id: cache-composer
         uses: actions/cache@v4
         with:
-          path: ./src/node_modules
-          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-package-
+          path: ${{ needs.setup.outputs.vendor-cache-path }}
+          key: ${{ needs.setup.outputs.composer-cache-key }}
 
-      - name: Create Database
-        run: |
-          cd src
-          mkdir -p database
-          touch database/database.sqlite
+      - name: Move vendor
+        if: steps.cache-composer.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
+
+      - name: Cache npm
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.setup.outputs.npm-cache-path }}
+          key: ${{ needs.setup.outputs.npm-cache-key }}
+
+      - name: Move npm
+        if: steps.cache-npm.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.npm-cache }}
+
+      - name: Cache database
+        id: cache-database
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.setup.outputs.database-cache-path }}
+          key: ${{ needs.setup.outputs.database-cache-key }}
+
+      - name: Move database
+        if: steps.cache-database.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.database-cache }}
 
       - name: Setup env
         run: |
-          cd src
-          cp .env.testing.example .env.testing
-          php artisan key:generate --env=testing
+          cp src/.env.testing.example src/.env.testing
+          docker exec ${{ needs.setup.outputs.container }} php artisan key:generate --env=testing
 
       - name: Build
-        run: |
-          cd src
-          npm run build
-
-      - name: Migrate
-        run: |
-          cd src
-          php artisan migrate --env=testing
+        run: docker exec ${{ needs.setup.outputs.container }} npm run build
 
       - name: Run PHPUnit
-        run: |
-          cd src
-          composer test-all
+        run: docker exec ${{ needs.setup.outputs.container }} composer test-all

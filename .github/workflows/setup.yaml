@@ -1,0 +1,206 @@
+name: setup
+
+on:
+  workflow_call:
+    outputs:
+      docker-cache-path:
+        value: ${{ jobs.setup.outputs.docker-cache-path }}
+      docker-cache-key:
+        value: ${{ jobs.setup.outputs.docker-cache-key }}
+      docker-cache:
+        value: ${{ jobs.setup.outputs.docker-cache }}
+      container:
+        value: ${{ jobs.setup.outputs.container }}
+      grpc-cache-path:
+        value: ${{ jobs.setup.outputs.grpc-cache-path }}
+      grpc-cache-key:
+        value: ${{ jobs.setup.outputs.grpc-cache-key }}
+      grpc-cache:
+        value: ${{ jobs.setup.outputs.grpc-cache }}
+      vendor-cache-path:
+        value: ${{ jobs.setup.outputs.vendor-cache-path }}
+      composer-cache-key:
+        value: ${{ jobs.setup.outputs.composer-cache-key }}
+      vendor-cache:
+        value: ${{ jobs.setup.outputs.vendor-cache }}
+      npm-cache-path:
+        value: ${{ jobs.setup.outputs.npm-cache-path }}
+      npm-cache-key:
+        value: ${{ jobs.setup.outputs.npm-cache-key }}
+      npm-cache:
+        value: ${{ jobs.setup.outputs.npm-cache }}
+      database-cache-path:
+       value: ${{ jobs.setup.outputs.database-cache-path }}
+      database-cache-key:
+        value: ${{ jobs.setup.outputs.database-cache-key }}
+      database-cache:
+        value: ${{ jobs.setup.outputs.database-cache }}
+
+jobs:
+  setup:
+    name: Setup
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      docker-cache-path: ${{ steps.define-variables.outputs.DOCKER_CACHE_PATH }}
+      docker-cache-key: ${{ steps.define-variables.outputs.DOCKER_CACHE_KEY }}
+      docker-cache: ${{ steps.define-variables.outputs.DOCKER_CACHE }}
+      container: ${{ steps.define-variables.outputs.CONTAINER }}
+      grpc-cache-path: ${{ steps.define-variables.outputs.GRPC_CACHE_PATH }}
+      grpc-cache-key: ${{ steps.define-variables.outputs.GRPC_CACHE_KEY }}
+      grpc-cache: ${{ steps.define-variables.outputs.GRPC_CACHE }}
+      vendor-cache-path: ${{ steps.define-variables.outputs.VENDOR_CACHE_PATH }}
+      composer-cache-key: ${{ steps.define-variables.outputs.COMPOSER_CACHE_KEY }}
+      vendor-cache: ${{ steps.define-variables.outputs.VENDOR_CACHE }}
+      npm-cache-path: ${{ steps.define-variables.outputs.NPM_CACHE_PATH }}
+      npm-cache-key: ${{ steps.define-variables.outputs.NPM_CACHE_KEY }}
+      npm-cache: ${{ steps.define-variables.outputs.NPM_CACHE }}
+      database-cache-path: ${{ steps.define-variables.outputs.DATABASE_CACHE_PATH }}
+      database-cache-key: ${{ steps.define-variables.outputs.DATABASE_CACHE_KEY }}
+      database-cache: ${{ steps.define-variables.outputs.DATABASE_CACHE }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+
+      - name: Define variables
+        id: define-variables
+        run: |
+          CACHE_ROOT="/tmp/cache"
+          # Docker 関連
+          DOCKER_CACHE_PATH="${CACHE_ROOT}/docker"
+          DOCKERFILE_HASH="${{ hashFiles('./docker/php/Dockerfile.ci') }}"
+          DOCKER_CACHE_KEY="docker-${DOCKERFILE_HASH}"
+          DOCKER_CACHE="${DOCKER_CACHE_PATH}/${DOCKERFILE_HASH}.tar.gz"
+          CONTAINER="isekai-journey-admin-panel-php-1"
+          echo "DOCKER_CACHE_PATH=${DOCKER_CACHE_PATH}" >> $GITHUB_OUTPUT
+          echo "DOCKER_CACHE_KEY=${DOCKER_CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "DOCKER_CACHE=${DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "CONTAINER=${CONTAINER}" >> $GITHUB_OUTPUT
+          # gRPC 関連
+          GRPC_CACHE_PATH="${CACHE_ROOT}/grpc"
+          GRPC_LOCK_HASH="${{ hashFiles('./src/proto/**/*.proto') }}"
+          GRPC_CACHE_KEY="grpc-${GRPC_LOCK_HASH}"
+          GRPC_CACHE="${GRPC_CACHE_PATH}/${GRPC_CACHE_KEY}.tar.gz"
+          echo "GRPC_CACHE_PATH=${GRPC_CACHE_PATH}" >> $GITHUB_OUTPUT
+          echo "GRPC_CACHE_KEY=${GRPC_CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "GRPC_CACHE=${GRPC_CACHE}" >> $GITHUB_OUTPUT
+          # Composer 関連
+          VENDOR_CACHE_PATH="${CACHE_ROOT}/vendor"
+          COMPOSER_LOCK_HASH="${{ hashFiles('./src/composer.lock') }}"
+          COMPOSER_CACHE_KEY="composer-${COMPOSER_LOCK_HASH}"
+          VENDOR_CACHE="${VENDOR_CACHE_PATH}/${COMPOSER_CACHE_KEY}.tar.gz"
+          echo "VENDOR_CACHE_PATH=${VENDOR_CACHE_PATH}" >> $GITHUB_OUTPUT
+          echo "COMPOSER_CACHE_KEY=${COMPOSER_CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "VENDOR_CACHE=${VENDOR_CACHE}" >> $GITHUB_OUTPUT
+          # npm 関連
+          NPM_CACHE_PATH="${CACHE_ROOT}/npm"
+          NPM_LOCK_HASH="${{ hashFiles('./src/package-lock.json') }}"
+          NPM_CACHE_KEY="npm-${NPM_LOCK_HASH}"
+          NPM_CACHE="${NPM_CACHE_PATH}/${NPM_CACHE_KEY}.tar.gz"
+          echo "NPM_CACHE_PATH=${NPM_CACHE_PATH}" >> $GITHUB_OUTPUT
+          echo "NPM_CACHE_KEY=${NPM_CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "NPM_CACHE=${NPM_CACHE}" >> $GITHUB_OUTPUT
+          # テスト用 DB 関連
+          DATABASE_CACHE_PATH="${CACHE_ROOT}/db"
+          DATABASE_HASH="${{ hashFiles('./src/database/migrations/*.php') }}"
+          DATABASE_CACHE_KEY="database-${DATABASE_HASH}"
+          DATABASE_CACHE="${DATABASE_CACHE_PATH}/${DATABASE_CACHE_KEY}.tar.gz"
+          echo "DATABASE_CACHE_PATH=${DATABASE_CACHE_PATH}" >> $GITHUB_OUTPUT
+          echo "DATABASE_CACHE_KEY=${DATABASE_CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "DATABASE_CACHE=${DATABASE_CACHE}" >> $GITHUB_OUTPUT
+
+      - name: Cache docker image
+        id: cache-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.DOCKER_CACHE_PATH }}
+          key: ${{ steps.define-variables.outputs.DOCKER_CACHE_KEY }}
+
+      - name: Build image
+        if: steps.cache-docker-image.outputs.cache-hit != 'true'
+        run: |
+          docker build -t isekai-journey-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php \
+          --build-arg UID=`id -u` \
+          --build-arg GID=`id -g` \
+          --build-arg USERNAME=`id -un` \
+          --build-arg GROUPNAME=`id -gn`
+          mkdir -p ${{ steps.define-variables.outputs.DOCKER_CACHE_PATH }}
+          docker save isekai-journey-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.DOCKER_CACHE }}
+
+      - name: Load image
+        if: steps.cache-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ steps.define-variables.outputs.DOCKER_CACHE }} | docker load
+
+      - name: Copy .env
+        run: |
+          cp src/.env.example src/.env
+          cp src/.env.testing.example src/.env.testing
+
+      - name: Run Container
+        run: docker compose up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.VENDOR_CACHE_PATH }}
+          key: ${{ steps.define-variables.outputs.COMPOSER_CACHE_KEY }}
+
+      - name: Composer install
+        if: steps.cache-composer.outputs.cache-hit != 'true'
+        run: |
+          docker exec ${{ steps.define-variables.outputs.CONTAINER }} composer install -n --prefer-dist
+          mkdir -p ${{ steps.define-variables.outputs.VENDOR_CACHE_PATH }}
+          tar -czf ${{ steps.define-variables.outputs.VENDOR_CACHE }} src/vendor
+
+      - name: Move vendor
+        if: steps.cache-composer.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ steps.define-variables.outputs.VENDOR_CACHE }}
+
+      - name: Cache npm
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.NPM_CACHE_PATH }}
+          key: ${{ steps.define-variables.outputs.NPM_CACHE_KEY }}
+
+      - name: npm install
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: |
+          docker exec ${{ steps.define-variables.outputs.CONTAINER }} npm i
+          mkdir -p ${{ steps.define-variables.outputs.NPM_CACHE_PATH }}
+          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/node_modules
+
+      - name: Cache gRPC
+        id: cache-grpc
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.GRPC_CACHE_PATH }}
+          key: ${{ steps.define-variables.outputs.GRPC_CACHE_KEY }}
+
+      - name: Generate code
+        if: steps.cache-grpc.outputs.cache-hit != 'true'
+        run: |
+          docker exec ${{ steps.define-variables.outputs.CONTAINER }} ./gen-stub.sh
+          mkdir -p ${{ steps.define-variables.outputs.GRPC_CACHE_PATH }}
+          tar -czf ${{ steps.define-variables.outputs.GRPC_CACHE }} src/Generated
+
+      - name: Cache database
+        id: cache-database
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.DATABASE_CACHE_PATH }}
+          key: ${{ steps.define-variables.outputs.DATABASE_CACHE_KEY }}
+
+      - name: Migrate
+        if: steps.cache-database.outputs.cache-hit != 'true'
+        run: |
+          touch src/database/database.sqlite
+          docker exec ${{ steps.define-variables.outputs.CONTAINER }} php artisan migrate --env=testing
+          mkdir -p ${{ steps.define-variables.outputs.DATABASE_CACHE_PATH }}
+          tar -czf ${{ steps.define-variables.outputs.DATABASE_CACHE }} src/database/database.sqlite
