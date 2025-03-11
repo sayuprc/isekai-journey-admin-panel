@@ -7,13 +7,13 @@ on:
       - dev
 
 jobs:
-  setup-php:
-    uses: ./.github/workflows/setup-php.yaml
+  setup:
+    uses: ./.github/workflows/setup.yaml
 
   analyse:
-    needs: setup-php
+    needs: setup
 
-    name: PHPStan (PHP ${{ needs.setup-php.outputs.version }})
+    name: PHPStan
 
     runs-on: ubuntu-latest
 
@@ -23,23 +23,41 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ needs.setup-php.outputs.version }}
-          extensions: grpc
-          tools: composer
-
-      - name: Composer cache
-        id: composer_cache
+      - name: Cache docker image
+        id: cache-docker-image
         uses: actions/cache@v4
         with:
-          path: ./src/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          path: ${{ needs.setup.outputs.docker-cache-path }}
+          key: ${{ needs.setup.outputs.docker-cache-key }}
+
+      - name: Load image
+        if: steps.cache-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ needs.setup.outputs.docker-cache }} | docker load
+
+      - name: Run Container
+        run: docker compose up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.setup.outputs.vendor-cache-path }}
+          key: ${{ needs.setup.outputs.composer-cache-key }}
+
+      - name: Move vendor
+        if: steps.cache-composer.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
+
+      - name: Cache gRPC
+        id: cache-grpc
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.setup.outputs.grpc-cache-path }}
+          key: ${{ needs.setup.outputs.grpc-cache-key }}
+
+      - name: Move generate code
+        if: steps.cache-grpc.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.grpc-cache }}
 
       - name: Run PHPStan
-        run: |
-          cd src
-          composer phpstan
+        run: docker exec ${{ needs.setup.outputs.container }} composer phpstan

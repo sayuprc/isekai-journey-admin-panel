@@ -7,13 +7,13 @@ on:
       - dev
 
 jobs:
-  setup-node:
-    uses: ./.github/workflows/setup-node.yaml
+  setup:
+    uses: ./.github/workflows/setup.yaml
 
   analyse:
-    needs: setup-node
+    needs: setup
 
-    name: ESLint and build (Node ${{ needs.setup-node.outputs.version }})
+    name: ESLint and build
 
     runs-on: ubuntu-latest
 
@@ -23,26 +23,33 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ needs.setup-node.outputs.version }}
-
-      - name: npm cache
-        id: npm_cache
+      - name: Cache docker image
+        id: cache-docker-image
         uses: actions/cache@v4
         with:
-          path: ./src/node_modules
-          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-package-
+          path: ${{ needs.setup.outputs.docker-cache-path }}
+          key: ${{ needs.setup.outputs.docker-cache-key }}
+
+      - name: Load image
+        if: steps.cache-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ needs.setup.outputs.docker-cache }} | docker load
+
+      - name: Run Container
+        run: docker compose up -d php
+
+      - name: Cache npm
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.setup.outputs.npm-cache-path }}
+          key: ${{ needs.setup.outputs.npm-cache-key }}
+
+      - name: Move npm
+        if: steps.cache-npm.outputs.cache-hit == 'true'
+        run: tar -xzf ${{ needs.setup.outputs.npm-cache }}
 
       - name: Run ESLint
-        run: |
-          cd src
-          npm run lint
+        run: docker exec ${{ needs.setup.outputs.container }} npm run lint
 
       - name: Run Build
-        run: |
-          cd src
-          npm run build
+        run: docker exec ${{ needs.setup.outputs.container }} npm run build
