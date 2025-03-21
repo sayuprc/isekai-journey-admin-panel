@@ -1,4 +1,4 @@
-name: Deptrac
+name: Arkitect
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
   check:
     needs: setup
 
-    name: Deptrac
+    name: Arkitect
 
     runs-on: ubuntu-latest
 
@@ -49,4 +49,4 @@ jobs:
         run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
 
       - name: Check Layer
-        run: docker exec ${{ needs.setup.outputs.container }} composer deptrac
+        run: docker exec ${{ needs.setup.outputs.container }} composer arkitect

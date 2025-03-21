@@ -16,7 +16,6 @@
     "require-dev": {
         "askdkc/breezejp": "^2.3",
         "barryvdh/laravel-ide-helper": "^3.5",
-        "deptrac/deptrac": "^3.0",
         "fakerphp/faker": "^1.24",
         "infection/infection": "^0.29",
         "larastan/larastan": "^3.0",
@@ -63,7 +62,6 @@
         ],
         "phpstan": "phpstan analyse --memory-limit=-1 --no-progress",
         "phpstan-clear-cache": "phpstan clear-result-cache",
-        "deptrac": "deptrac analyse",
         "arkitect": "phparkitect check",
         "ecs": "vendor/bin/ecs check --ansi --no-progress-bar",
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",

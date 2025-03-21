@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9717f55354064ee53e265a5cc5ed7c0",
+    "content-hash": "c96cb387a951231acf9a331ff2d7c4bd",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -562,16 +562,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "b115554301161fa21467629f1e1391c1936de517"
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b115554301161fa21467629f1e1391c1936de517",
-                "reference": "b115554301161fa21467629f1e1391c1936de517",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +617,7 @@
             ],
             "support": {
                 "issues": "https://github.com/egulias/EmailValidator/issues",
-                "source": "https://github.com/egulias/EmailValidator/tree/4.0.3"
+                "source": "https://github.com/egulias/EmailValidator/tree/4.0.4"
             },
             "funding": [
                 {
@@ -625,7 +625,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-27T00:36:43+00:00"
+            "time": "2025-03-06T22:45:56+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -6540,54 +6540,6 @@
                 }
             ],
             "time": "2024-05-06T16:37:16+00:00"
-        },
-        {
-            "name": "deptrac/deptrac",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/deptrac/deptrac.git",
-                "reference": "605ee322f273ade1727f5ff2db3b47566140f4bf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/deptrac/deptrac/zipball/605ee322f273ade1727f5ff2db3b47566140f4bf",
-                "reference": "605ee322f273ade1727f5ff2db3b47566140f4bf",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^8.1"
-            },
-            "suggest": {
-                "ext-dom": "For using the JUnit output formatter"
-            },
-            "bin": [
-                "bin/deptrac",
-                "deptrac.phar"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Deptrac\\Deptrac\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Deptrac is a static code analysis tool that helps to enforce rules for dependencies between software layers.",
-            "keywords": [
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/deptrac/deptrac/issues",
-                "source": "https://github.com/deptrac/deptrac/tree/3.0.0"
-            },
-            "time": "2025-02-17T08:20:48+00:00"
         },
         {
             "name": "fakerphp/faker",
