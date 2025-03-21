@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Shared\Application\Uuid;
+namespace Tests\Unit\Shared\Application\Uuid;
 
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Application\Uuid\DummyUuidGenerator;
 use Shared\Uuid\UuidGeneratorInterface;
 use Tests\TestCase;
 

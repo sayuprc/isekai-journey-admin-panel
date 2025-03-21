@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Shared\Application\Mapper;
+namespace Tests\Unit\Shared\Application\Mapper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Shared\Application\Mapper\Mapper;
 use Shared\Mapper\MapperInterface;
 use stdClass;
 use Tests\TestCase;
