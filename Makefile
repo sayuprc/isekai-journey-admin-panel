@@ -50,6 +50,10 @@ phpstan-clear-cache: ## Clear PHPStan cache
 deptrac: ## Run Deptrac
 	docker compose exec php composer deptrac
 
+.PHONY: arkitect
+arkitect: ## Run arkitect
+	docker compose exec php composer arkitect
+
 .PHONY: ecs
 ecs: ## Run ecs
 	docker compose exec php composer ecs
