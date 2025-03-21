@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cdd868dc8da98dc86b19688ec533111b",
+    "content-hash": "c96cb387a951231acf9a331ff2d7c4bd",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -562,16 +562,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "b115554301161fa21467629f1e1391c1936de517"
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b115554301161fa21467629f1e1391c1936de517",
-                "reference": "b115554301161fa21467629f1e1391c1936de517",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
+                "reference": "d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +617,7 @@
             ],
             "support": {
                 "issues": "https://github.com/egulias/EmailValidator/issues",
-                "source": "https://github.com/egulias/EmailValidator/tree/4.0.3"
+                "source": "https://github.com/egulias/EmailValidator/tree/4.0.4"
             },
             "funding": [
                 {
@@ -625,7 +625,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-27T00:36:43+00:00"
+            "time": "2025-03-06T22:45:56+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -6542,54 +6542,6 @@
             "time": "2024-05-06T16:37:16+00:00"
         },
         {
-            "name": "deptrac/deptrac",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/deptrac/deptrac.git",
-                "reference": "605ee322f273ade1727f5ff2db3b47566140f4bf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/deptrac/deptrac/zipball/605ee322f273ade1727f5ff2db3b47566140f4bf",
-                "reference": "605ee322f273ade1727f5ff2db3b47566140f4bf",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^8.1"
-            },
-            "suggest": {
-                "ext-dom": "For using the JUnit output formatter"
-            },
-            "bin": [
-                "bin/deptrac",
-                "deptrac.phar"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Deptrac\\Deptrac\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Deptrac is a static code analysis tool that helps to enforce rules for dependencies between software layers.",
-            "keywords": [
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/deptrac/deptrac/issues",
-                "source": "https://github.com/deptrac/deptrac/tree/3.0.0"
-            },
-            "time": "2025-02-17T08:20:48+00:00"
-        },
-        {
             "name": "fakerphp/faker",
             "version": "v1.24.1",
             "source": {
@@ -7974,6 +7926,136 @@
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
             "time": "2022-02-21T01:04:05+00:00"
+        },
+        {
+            "name": "phparkitect/phparkitect",
+            "version": "0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phparkitect/arkitect.git",
+                "reference": "3bcc97956f8b8b37f2fe26f0b0b4877e918786c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phparkitect/arkitect/zipball/3bcc97956f8b8b37f2fe26f0b0b4877e918786c8",
+                "reference": "3bcc97956f8b8b37f2fe26f0b0b4877e918786c8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "nikic/php-parser": "~5",
+                "ondram/ci-detector": "^4.1",
+                "php": "^7.4|^8",
+                "phpstan/phpdoc-parser": "^1.2|^2.0",
+                "symfony/console": "^3.0|^4.0|^5.0|^6.0|^7.0",
+                "symfony/event-dispatcher": "^3.0|^4.0|^5.0|^6.0|^7.0",
+                "symfony/finder": "^3.0|^4.0|^5.0|^6.0|^7.0",
+                "symfony/polyfill-php80": "^1.20",
+                "webmozart/assert": "^1.9"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.4.0",
+                "mikey179/vfsstream": "^1.6",
+                "phpspec/prophecy": "^1.10",
+                "phpspec/prophecy-phpunit": "^2.3",
+                "phpunit/phpunit": "^7.5|^9.0|^10.0",
+                "roave/security-advisories": "dev-master",
+                "symfony/var-dumper": "^3.0|^4.0|^5.0|^6.0|^7.0"
+            },
+            "bin": [
+                "bin-stub/phparkitect"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Arkitect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pietro Campagnano",
+                    "email": "hello@pietro.camp"
+                },
+                {
+                    "name": "Patrick Luca Fazzi",
+                    "email": "patrick91@live.it"
+                },
+                {
+                    "name": "Alessandro Minoccheri",
+                    "email": "alessandro.minoccheri@gmail.com"
+                },
+                {
+                    "name": "Michele Orselli",
+                    "email": "michele.orselli@gmail.com"
+                }
+            ],
+            "description": "Enforce architectural constraints in your PHP applications",
+            "support": {
+                "issues": "https://github.com/phparkitect/arkitect/issues",
+                "source": "https://github.com/phparkitect/arkitect/tree/0.5.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/AlessandroMinoccheri",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/micheleorselli",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-17T21:23:01+00:00"
+        },
+        {
+            "name": "phpstan/phpdoc-parser",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpdoc-parser.git",
+                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^2.0",
+                "nikic/php-parser": "^5.3.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "symfony/process": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\PhpDocParser\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "support": {
+                "issues": "https://github.com/phpstan/phpdoc-parser/issues",
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.1.0"
+            },
+            "time": "2025-02-19T13:28:12+00:00"
         },
         {
             "name": "phpstan/phpstan",
