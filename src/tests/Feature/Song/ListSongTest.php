@@ -47,9 +47,9 @@ class ListSongTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::LIST_SONGS))
+        $this->get(route(RouteMap::ListSongs))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -90,7 +90,7 @@ class ListSongTest extends TestCase
         $this->app->bind(SongRepositoryInterface::class, fn (): SongRepositoryInterface => $this->songRepository);
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::LIST_SONGS))
+            ->get(route(RouteMap::ListSongs))
             ->assertStatus(200)
             ->assertViewIs('songs.list.index');
 
@@ -117,7 +117,7 @@ class ListSongTest extends TestCase
         $this->app->bind(SongRepositoryInterface::class, fn (): SongRepositoryInterface => $this->songRepository);
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::LIST_SONGS))
+            ->get(route(RouteMap::ListSongs))
             ->assertStatus(200)
             ->assertViewIs('songs.list.index');
 

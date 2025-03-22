@@ -11,10 +11,11 @@
     <div class="d-flex justify-content-between">
         <h1>軌跡リンク種別更新</h1>
 
-        <form action="{{ route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE) }}" method="post">
+        <form action="{{ route(RouteMap::DeleteJourneyLogLinkType) }}" method="post">
             @csrf
             @method('DELETE')
-            <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
+            <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}"
+                   type="hidden">
             <x-adminlte-button label="削除" type="submit" theme="danger"/>
         </form>
     </div>
@@ -28,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE) }}" method="post">
+    <form action="{{ route(RouteMap::EditJourneyLogLinkType) }}" method="post">
         @csrf
         <input name="journey_log_link_type_id" value="{{ $journeyLogLinkType->journeyLogLinkTypeId }}" type="hidden">
 
@@ -37,7 +38,8 @@
         </x-adminlte-textarea>
 
         <div class="row m-0">
-            <x-adminlte-input label="表示順" type="number" name="order_no" value="{{ old('order_no', $journeyLogLinkType->orderNo) }}"/>
+            <x-adminlte-input label="表示順" type="number" name="order_no"
+                              value="{{ old('order_no', $journeyLogLinkType->orderNo) }}"/>
         </div>
 
         <x-adminlte-button label="更新" type="submit" theme="primary"/>

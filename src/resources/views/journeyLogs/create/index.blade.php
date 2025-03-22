@@ -16,7 +16,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::CREATE_JOURNEY_LOG) }}" method="post">
+    <form action="{{ route(RouteMap::CreateJourneyLog) }}" method="post">
         @csrf
         <x-adminlte-textarea label="内容" name="story">
             {{ old('story') }}

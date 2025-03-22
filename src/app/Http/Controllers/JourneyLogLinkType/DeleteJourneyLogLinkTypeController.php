@@ -26,7 +26,7 @@ class DeleteJourneyLogLinkTypeController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE)
+            ->route(RouteMap::ListJourneyLogLinkType)
             ->with([
                 'message' => '削除しました',
             ]);

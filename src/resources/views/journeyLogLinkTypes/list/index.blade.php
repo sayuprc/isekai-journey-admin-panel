@@ -28,7 +28,7 @@
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
                 <td>{{ $journeyLogLinkType->orderNo }}</td>
                 <td>
-                    <a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a>
+                    <a href="{{ route(RouteMap::ShowEditJourneyLogLinkTypeForm, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a>
                 </td>
             </tr>
         @endforeach

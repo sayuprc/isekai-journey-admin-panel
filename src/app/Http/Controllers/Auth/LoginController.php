@@ -29,11 +29,11 @@ class LoginController extends Controller
         if ($interactor->handle($request)->isSucceeded) {
             $session->regenerate();
 
-            return redirect()->route(RouteMap::LIST_JOURNEY_LOGS);
+            return redirect()->route(RouteMap::ListJourneyLogs);
         }
 
         return redirect()
-            ->route(RouteMap::SHOW_LOGIN_FORM)
+            ->route(RouteMap::ShowLoginForm)
             ->withErrors([
                 'message' => $this->translator->get('auth.failed'),
             ]);

@@ -31,7 +31,7 @@ class EditJourneyLogController extends Controller
             $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listInteractor->handle());
         } catch (Exception $e) {
             return redirect()
-                ->route(RouteMap::LIST_JOURNEY_LOGS)
+                ->route(RouteMap::ListJourneyLogs)
                 ->withErrors([
                     'message' => $e->getMessage(),
                 ]);
@@ -53,7 +53,7 @@ class EditJourneyLogController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::LIST_JOURNEY_LOGS)
+            ->route(RouteMap::ListJourneyLogs)
             ->with([
                 'message' => '更新しました',
             ]);

@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectUsersTo(fn () => route(RouteMap::LIST_JOURNEY_LOGS));
+        $middleware->redirectUsersTo(fn () => route(RouteMap::ListJourneyLogs));
     })
     ->withExceptions(function (Exceptions $exceptions) {
     })->create();

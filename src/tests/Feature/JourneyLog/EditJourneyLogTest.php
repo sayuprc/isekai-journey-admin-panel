@@ -51,15 +51,15 @@ class EditJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, ['journeyLogId' => $uuid]))
+        $this->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
-        $this->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, ['journeyLogId' => 'not-uuid-style-id']))
+        $this->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => 'not-uuid-style-id']))
             ->assertStatus(404);
     }
 
@@ -98,7 +98,7 @@ class EditJourneyLogTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, ['journeyLogId' => $uuid]))
+            ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -135,7 +135,7 @@ class EditJourneyLogTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG), [
+            ->post(route(RouteMap::EditJourneyLog), [
                 'journey_log_id' => $uuid,
                 'story' => '軌跡',
                 'from_on' => '2019-12-09',
@@ -151,7 +151,7 @@ class EditJourneyLogTest extends TestCase
                 ],
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOGS))
+            ->assertLocation(route(RouteMap::ListJourneyLogs))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -159,7 +159,7 @@ class EditJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG), [
+            ->post(route(RouteMap::EditJourneyLog), [
                 'journey_log_id' => '',
                 'story' => '',
                 'from_on' => '',
@@ -192,7 +192,7 @@ class EditJourneyLogTest extends TestCase
     public function invalidFormatDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG), [
+            ->post(route(RouteMap::EditJourneyLog), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/09',
@@ -209,7 +209,7 @@ class EditJourneyLogTest extends TestCase
     public function inversionDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG), [
+            ->post(route(RouteMap::EditJourneyLog), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/08',

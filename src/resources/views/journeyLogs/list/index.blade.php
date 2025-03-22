@@ -28,7 +28,7 @@
                 <td>{{ $journeyLog->period }}</td>
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->orderNo }}</td>
-                <td><a href="{{ route(RouteMap::SHOW_EDIT_JOURNEY_LOG_FORM, $journeyLog->journeyLogId) }}">編集</a>
+                <td><a href="{{ route(RouteMap::ShowEditJourneyLogForm, $journeyLog->journeyLogId) }}">編集</a>
                 </td>
             </tr>
         @endforeach
