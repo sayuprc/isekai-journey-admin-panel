@@ -37,16 +37,16 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_LINK_TYPE_FORM))
+        $this->get(route(RouteMap::ShowCreateJourneyLogLinkTypeForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function showCreateForm(): void
     {
         $this->actingAs($this->user)
-            ->get(route(RouteMap::SHOW_CREATE_JOURNEY_LOG_LINK_TYPE_FORM))
+            ->get(route(RouteMap::ShowCreateJourneyLogLinkTypeForm))
             ->assertStatus(200);
     }
 
@@ -69,12 +69,12 @@ class CreateJourneyLogLinkTypeTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE), [
+            ->post(route(RouteMap::CreateJourneyLogLinkType), [
                 'journey_log_link_type_name' => '軌跡リンク種別A',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -82,7 +82,7 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CREATE_JOURNEY_LOG_LINK_TYPE), [
+            ->post(route(RouteMap::CreateJourneyLogLinkType), [
                 'journey_log_link_type_name' => '',
                 'order_no' => '',
             ])

@@ -37,9 +37,9 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->delete(route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE))
+        $this->delete(route(RouteMap::DeleteJourneyLogLinkType))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -59,11 +59,11 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE), [
+            ->delete(route(RouteMap::DeleteJourneyLogLinkType), [
                 'journey_log_link_type_id' => $uuid,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
             ->assertSessionHas('message', '削除しました');
     }
 
@@ -71,7 +71,7 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DELETE_JOURNEY_LOG_LINK_TYPE), [
+            ->delete(route(RouteMap::DeleteJourneyLogLinkType), [
                 'journey_log_link_type_id' => '',
             ])
             ->assertStatus(302)

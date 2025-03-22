@@ -19,7 +19,7 @@ class LoginTest extends TestCase
     #[Test]
     public function showLoginForm(): void
     {
-        $this->get(route(RouteMap::SHOW_LOGIN_FORM))
+        $this->get(route(RouteMap::ShowLoginForm))
             ->assertStatus(200)
             ->assertViewIs('auth.login');
     }
@@ -33,12 +33,12 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOGS));
+            ->assertLocation(route(RouteMap::ListJourneyLogs));
 
         $this->assertAuthenticated();
     }
@@ -52,12 +52,12 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'r@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::SHOW_LOGIN_FORM))
+            ->assertLocation(route(RouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
@@ -70,31 +70,31 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'pass',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::SHOW_LOGIN_FORM))
+            ->assertLocation(route(RouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
     #[Test]
     public function notFoundUser(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::SHOW_LOGIN_FORM))
+            ->assertLocation(route(RouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
     #[Test]
     public function invalidTypeEmail(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'aaaa',
             'password' => 'password',
         ])
@@ -105,7 +105,7 @@ class LoginTest extends TestCase
     #[Test]
     public function emptyEmail(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => '',
             'password' => 'password',
         ])
@@ -116,7 +116,7 @@ class LoginTest extends TestCase
     #[Test]
     public function nullEmail(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'password' => 'password',
         ])
             ->assertStatus(302)
@@ -126,7 +126,7 @@ class LoginTest extends TestCase
     #[Test]
     public function emptyPassword(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'root@example.com',
             'password' => '',
         ])
@@ -137,7 +137,7 @@ class LoginTest extends TestCase
     #[Test]
     public function nullPassword(): void
     {
-        $this->post(route(RouteMap::LOGIN), [
+        $this->post(route(RouteMap::Login), [
             'email' => 'root@example.com',
             'password' => '',
         ])
@@ -155,8 +155,8 @@ class LoginTest extends TestCase
         ]);
 
         $this->actingAs($user)
-            ->get(route(RouteMap::SHOW_LOGIN_FORM))
+            ->get(route(RouteMap::ShowLoginForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::LIST_JOURNEY_LOGS));
+            ->assertRedirect(route(RouteMap::ListJourneyLogs));
     }
 }

@@ -40,9 +40,9 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+        $this->get(route(RouteMap::ListJourneyLogLinkType))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+            ->get(route(RouteMap::ListJourneyLogLinkType))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 
@@ -99,7 +99,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+            ->get(route(RouteMap::ListJourneyLogLinkType))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 

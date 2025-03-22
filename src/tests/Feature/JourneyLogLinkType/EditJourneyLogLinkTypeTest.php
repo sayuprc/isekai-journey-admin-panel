@@ -43,16 +43,16 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, ['journeyLogLinkTypeId' => $uuid]))
+        $this->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::SHOW_LOGIN_FORM));
+            ->assertRedirect(route(RouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
         $this->get(route(
-            RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM,
+            RouteMap::ShowEditJourneyLogLinkTypeForm,
             ['journeyLogLinkTypeId' => 'not-uuid-style-id']
         ))->assertStatus(404);
     }
@@ -79,7 +79,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
         );
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::SHOW_EDIT_JOURNEY_LOG_LINK_TYPE_FORM, ['journeyLogLinkTypeId' => $uuid]))
+            ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -106,13 +106,13 @@ class EditJourneyLogLinkTypeTest extends TestCase
         );
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE), [
+            ->post(route(RouteMap::EditJourneyLogLinkType), [
                 'journey_log_link_type_id' => $uuid,
                 'journey_log_link_type_name' => '動画',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::LIST_JOURNEY_LOG_LINK_TYPE))
+            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -120,7 +120,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EDIT_JOURNEY_LOG_LINK_TYPE), [
+            ->post(route(RouteMap::EditJourneyLogLinkType), [
                 'journey_log_link_type_id' => '',
                 'journey_log_link_type_name' => '',
                 'order_no' => '',
