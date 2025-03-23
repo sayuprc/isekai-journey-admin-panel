@@ -151,7 +151,7 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer::class => [
             __DIR__ . '/ecs.php',
             __DIR__ . '/bootstrap/providers.php',
-            __DIR__ . '/app/Providers/ProdServiceProvider.php',
+            __DIR__ . '/app/Providers/EnvProviders',
             __DIR__ . '/app/Providers/RequestServiceProvider.php',
         ],
     ]);
