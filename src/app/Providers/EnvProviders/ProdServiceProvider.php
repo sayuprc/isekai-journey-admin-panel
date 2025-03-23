@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Providers;
+namespace App\Providers\EnvProviders;
 
 use Illuminate\Support\ServiceProvider;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
