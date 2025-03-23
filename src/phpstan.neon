@@ -4,6 +4,8 @@ includes:
 parameters:
   paths:
     - app
+    - bootstrap
+    - lang
     - packages
 
   level: 10
