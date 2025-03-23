@@ -2,23 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Providers;
+namespace App\Providers\EnvProviders;
 
-use Auth\Application\Login\LoginInteractor;
-use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Support\ServiceProvider;
-use JourneyLog\Application\Create\CreateInteractor;
-use JourneyLog\Application\Delete\DeleteInteractor;
-use JourneyLog\Application\Edit\EditInteractor;
-use JourneyLog\Application\Get\GetInteractor;
-use JourneyLog\Application\List\ListInteractor;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
-use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
-use JourneyLog\UseCases\Edit\EditUseCaseInterface;
-use JourneyLog\UseCases\Get\GetUseCaseInterface;
-use JourneyLog\UseCases\List\ListUseCaseInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\Infrastructures\Repositories\FileJourneyLogLinkTypeRepository;
 use Song\Domain\Repositories\SongRepositoryInterface;
@@ -49,16 +37,16 @@ class MockServiceProvider extends ServiceProvider
 
     private function auth(): void
     {
-        $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
+        $this->app->bind(\Auth\UseCases\Login\LoginUseCaseInterface::class, \Auth\Application\Login\LoginInteractor::class);
     }
 
     private function journeyLog(): void
     {
-        $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
-        $this->app->bind(GetUseCaseInterface::class, GetInteractor::class);
-        $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
-        $this->app->bind(EditUseCaseInterface::class, EditInteractor::class);
-        $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\List\ListUseCaseInterface::class, \JourneyLog\Application\List\ListInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Get\GetUseCaseInterface::class, \JourneyLog\Application\Get\GetInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Create\CreateUseCaseInterface::class, \JourneyLog\Application\Create\CreateInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Edit\EditUseCaseInterface::class, \JourneyLog\Application\Edit\EditInteractor::class);
+        $this->app->bind(\JourneyLog\UseCases\Delete\DeleteUseCaseInterface::class, \JourneyLog\Application\Delete\DeleteInteractor::class);
     }
 
     private function journeyLogLinkType(): void

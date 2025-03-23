@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Providers\EnvProviders\MockServiceProvider;
+use App\Providers\EnvProviders\ProdServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Shared\Application\Mapper\Mapper;
