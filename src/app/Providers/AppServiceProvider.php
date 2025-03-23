@@ -9,16 +9,12 @@ use App\Providers\EnvProviders\ProdServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Shared\Application\Mapper\Mapper;
-use Shared\Application\Uuid\DummyUuidGenerator;
 use Shared\Mapper\MapperInterface;
-use Shared\Uuid\UuidGeneratorInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(UuidGeneratorInterface::class, DummyUuidGenerator::class);
-
         $this->app->bind(MapperInterface::class, Mapper::class);
 
         $this->provider()->register();
