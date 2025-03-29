@@ -1,6 +1,6 @@
 @php
     use Shared\Route\RouteMap;
-    /** @var \App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeView $journeyLogLinkType */
+    /** @var \App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeView $journeyLogLinkType */
 @endphp
 
 @extends('layout.page')

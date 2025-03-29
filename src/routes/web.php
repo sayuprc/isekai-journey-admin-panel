@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\JourneyLog\CreateJourneyLogController;
-use App\Http\Controllers\JourneyLog\DeleteJourneyLogController;
-use App\Http\Controllers\JourneyLog\EditJourneyLogController;
-use App\Http\Controllers\JourneyLog\ListJourneyLogController;
-use App\Http\Controllers\JourneyLogLinkType\CreateJourneyLogLinkTypeController;
-use App\Http\Controllers\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
-use App\Http\Controllers\JourneyLogLinkType\EditJourneyLogLinkTypeController;
-use App\Http\Controllers\JourneyLogLinkType\ListJourneyLogLinkTypeController;
-use App\Http\Controllers\Song\ListSongController;
+use App\Http\Controllers\Web\Auth\LoginController;
+use App\Http\Controllers\Web\JourneyLog\CreateJourneyLogController;
+use App\Http\Controllers\Web\JourneyLog\DeleteJourneyLogController;
+use App\Http\Controllers\Web\JourneyLog\EditJourneyLogController;
+use App\Http\Controllers\Web\JourneyLog\ListJourneyLogController;
+use App\Http\Controllers\Web\JourneyLogLinkType\CreateJourneyLogLinkTypeController;
+use App\Http\Controllers\Web\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
+use App\Http\Controllers\Web\JourneyLogLinkType\EditJourneyLogLinkTypeController;
+use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController;
+use App\Http\Controllers\Web\Song\ListSongController;
 use Illuminate\Support\Facades\Route;
 use Shared\Route\RouteMap;
 

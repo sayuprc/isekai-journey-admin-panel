@@ -20,7 +20,7 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var \App\Http\ViewModels\Song\SongListView $song */ @endphp
+        @php /** @var \App\Http\ViewModels\Web\Song\SongListView $song */ @endphp
         @foreach($songs as $song)
             <tr>
                 <td>{{ $song->title }}</td>

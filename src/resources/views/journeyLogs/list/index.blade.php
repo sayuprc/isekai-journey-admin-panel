@@ -22,7 +22,7 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads" :config="$config">
-        @php /** @var \App\Http\ViewModels\JourneyLog\JourneyLogListView $journeyLog */ @endphp
+        @php /** @var \App\Http\ViewModels\Web\JourneyLog\JourneyLogListView $journeyLog */ @endphp
         @foreach($journeyLogs as $journeyLog)
             <tr>
                 <td>{{ $journeyLog->period }}</td>
