@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Shared\Mapper\MapperInterface;
+
+class WebRequestServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->auth();
+
+        $this->journeyLog();
+
+        $this->journeyLogLinkType();
+    }
+
+    private function auth(): void
+    {
+        $this->app->bind(\Auth\UseCases\Login\LoginRequest::class, function (): \Auth\UseCases\Login\LoginRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\Auth\LoginRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\Auth\LoginRequest);
+
+            return $this->getMapper()->map(\Auth\UseCases\Login\LoginRequest::class, $request->validated());
+        });
+    }
+
+    private function journeyLog(): void
+    {
+        $this->app->bind(\JourneyLog\UseCases\Create\CreateRequest::class, function (): \JourneyLog\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLog\CreateRequest);
+
+            return $this->getMapper()->map(\JourneyLog\UseCases\Create\CreateRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLog\UseCases\Edit\EditRequest::class, function (): \JourneyLog\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLog\EditRequest);
+
+            return $this->getMapper()->map(\JourneyLog\UseCases\Edit\EditRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLog\UseCases\Delete\DeleteRequest::class, function (): \JourneyLog\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLog\DeleteRequest);
+
+            return $this->getMapper()->map(\JourneyLog\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    private function journeyLogLinkType(): void
+    {
+        $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateRequest::class, function (): \JourneyLogLinkType\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLogLinkType\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\CreateRequest);
+
+            return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Create\CreateRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLogLinkType\UseCases\Edit\EditRequest::class, function (): \JourneyLogLinkType\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLogLinkType\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\EditRequest);
+
+            return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Edit\EditRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, function (): \JourneyLogLinkType\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest);
+
+            return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    protected function getMapper(): MapperInterface
+    {
+        return $this->app->make(MapperInterface::class);
+    }
+}

@@ -22,7 +22,7 @@
         </x-adminlte-alert>
     @endif
     <x-adminlte-datatable id="table" :heads="$heads">
-        @php /** @var \App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType */ @endphp
+        @php /** @var \App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType */ @endphp
         @foreach($journeyLogLinkTypes as $journeyLogLinkType)
             <tr>
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>

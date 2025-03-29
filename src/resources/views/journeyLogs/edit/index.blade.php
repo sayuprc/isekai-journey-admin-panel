@@ -1,7 +1,7 @@
 @php
     use Shared\Route\RouteMap;
 
-    /** @var \App\Http\ViewModels\JourneyLog\JourneyLogView $journeyLog */
+    /** @var \App\Http\ViewModels\Web\JourneyLog\JourneyLogView $journeyLog */
 @endphp
 
 @extends('layout.page')
@@ -62,8 +62,8 @@
     </form>
 
     @php
-        /** @var array<\App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView> $journeyLogLinkTypes */
-        $data = array_map(function(\App\Http\ViewModels\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType): array {
+        /** @var array<\App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeListView> $journeyLogLinkTypes */
+        $data = array_map(function(\App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeListView $journeyLogLinkType): array {
             return [
                 'journey_log_link_type_id' => $journeyLogLinkType->journeyLogLinkTypeId,
                 'journey_log_link_type_name' => $journeyLogLinkType->journeyLogLinkTypeName,

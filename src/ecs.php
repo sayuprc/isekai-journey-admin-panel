@@ -152,6 +152,6 @@ return ECSConfig::configure()
             __DIR__ . '/ecs.php',
             __DIR__ . '/bootstrap/providers.php',
             __DIR__ . '/app/Providers/EnvProviders',
-            __DIR__ . '/app/Providers/RequestServiceProvider.php',
+            __DIR__ . '/app/Providers/WebRequestServiceProvider.php',
         ],
     ]);
