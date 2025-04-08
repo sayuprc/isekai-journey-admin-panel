@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use JourneyLog\UseCases\Delete\DeleteRequest;
 use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 class DeleteJourneyLogController extends Controller
 {

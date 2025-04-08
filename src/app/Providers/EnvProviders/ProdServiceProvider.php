@@ -9,10 +9,10 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
-use Shared\Application\Uuid\DummyUuidGenerator;
-use Shared\Uuid\UuidGeneratorInterface;
 use Song\Domain\Repositories\SongRepositoryInterface;
 use Song\Infrastructures\Repositories\SongRepository;
+use Support\Application\Uuid\DummyUuidGenerator;
+use Support\Uuid\UuidGeneratorInterface;
 
 class ProdServiceProvider extends ServiceProvider
 {

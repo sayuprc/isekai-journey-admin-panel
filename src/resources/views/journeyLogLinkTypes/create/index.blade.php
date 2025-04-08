@@ -1,4 +1,4 @@
-@php use Shared\Route\RouteMap; @endphp
+@php use Support\Route\RouteMap; @endphp
 
 @extends('layout.page')
 

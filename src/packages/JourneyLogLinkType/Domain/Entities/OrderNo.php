@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Domain\Entities;
 
-use Shared\Domain\IntegerValueObject;
+use Support\Domain\IntegerValueObject;
 
 class OrderNo extends IntegerValueObject
 {

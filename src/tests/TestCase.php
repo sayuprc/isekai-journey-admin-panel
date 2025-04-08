@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Shared\Application\Uuid\DummyUuidGenerator;
+use Support\Application\Uuid\DummyUuidGenerator;
 
 abstract class TestCase extends BaseTestCase
 {

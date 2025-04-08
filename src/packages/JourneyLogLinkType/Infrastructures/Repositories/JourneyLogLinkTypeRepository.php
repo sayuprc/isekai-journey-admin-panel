@@ -23,9 +23,9 @@ use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Entities\OrderNo;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use Shared\Exceptions\APIException;
-use Shared\Grpc\Status;
-use Shared\Mapper\MapperInterface;
+use Support\Exceptions\APIException;
+use Support\Grpc\Status;
+use Support\Mapper\MapperInterface;
 
 class JourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
 {

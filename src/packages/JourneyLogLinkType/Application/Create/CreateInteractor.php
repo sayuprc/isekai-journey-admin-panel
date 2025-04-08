@@ -11,7 +11,7 @@ use JourneyLogLinkType\Domain\Entities\OrderNo;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\Create\CreateRequest;
 use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
-use Shared\Uuid\UuidGeneratorInterface;
+use Support\Uuid\UuidGeneratorInterface;
 
 class CreateInteractor implements CreateUseCaseInterface
 {

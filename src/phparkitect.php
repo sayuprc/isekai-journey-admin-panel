@@ -24,18 +24,18 @@ return static function (Config $config): void {
             ->component('Song.Domain')->definedBy('Song\Domain\*')
             ->component('Song.UseCase')->definedBy('Song\UseCases\*')
 
-            ->component('Shared.Domain')->definedBy('Shared\Domain\*')
+            ->component('Support.Domain')->definedBy('Support\Domain\*')
 
-            ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Shared.Domain')
+            ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.Domain')
             ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain')
 
-            ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Shared.Domain')
+            ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
             ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain')
 
-            ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'Shared.Domain')
+            ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'Support.Domain')
             ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
 
-            ->where('Shared.Domain')->shouldNotDependOnAnyComponent()
+            ->where('Support.Domain')->shouldNotDependOnAnyComponent()
 
             ->rules()
     );

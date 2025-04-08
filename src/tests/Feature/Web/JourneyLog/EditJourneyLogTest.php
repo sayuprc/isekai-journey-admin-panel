@@ -21,7 +21,7 @@ use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class EditJourneyLogTest extends TestCase

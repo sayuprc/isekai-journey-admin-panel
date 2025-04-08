@@ -15,7 +15,7 @@ use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
 use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 class EditJourneyLogController extends Controller
 {

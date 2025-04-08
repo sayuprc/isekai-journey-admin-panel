@@ -7,7 +7,7 @@ namespace Tests\Unit\JourneyLogLinkType\Domain\Entities;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Shared\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeNameTest extends TestCase

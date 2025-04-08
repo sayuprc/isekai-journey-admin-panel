@@ -24,7 +24,7 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class ListJourneyLogTest extends TestCase

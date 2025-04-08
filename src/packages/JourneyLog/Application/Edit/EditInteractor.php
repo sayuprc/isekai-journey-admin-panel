@@ -21,7 +21,7 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Edit\EditJourneyLogLink;
 use JourneyLog\UseCases\Edit\EditRequest;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
-use Shared\Uuid\UuidGeneratorInterface;
+use Support\Uuid\UuidGeneratorInterface;
 
 class EditInteractor implements EditUseCaseInterface
 {

@@ -7,7 +7,7 @@ namespace JourneyLog\Infrastructures\Repositories;
 use JourneyLog\Domain\Entities\JourneyLog;
 use JourneyLog\Domain\Entities\JourneyLogId;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use Shared\Repository\FileStore;
+use Support\Repository\FileStore;
 
 class FileJourneyLogRepository implements JourneyLogRepositoryInterface
 {

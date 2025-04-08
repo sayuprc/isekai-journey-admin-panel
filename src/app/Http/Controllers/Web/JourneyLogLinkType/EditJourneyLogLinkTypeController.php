@@ -13,7 +13,7 @@ use JourneyLogLinkType\UseCases\Edit\EditRequest;
 use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
 use JourneyLogLinkType\UseCases\Get\GetRequest;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 class EditJourneyLogLinkTypeController extends Controller
 {

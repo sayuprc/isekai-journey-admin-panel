@@ -8,8 +8,8 @@ use App\Providers\EnvProviders\MockServiceProvider;
 use App\Providers\EnvProviders\ProdServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use Shared\Application\Mapper\Mapper;
-use Shared\Mapper\MapperInterface;
+use Support\Application\Mapper\Mapper;
+use Support\Mapper\MapperInterface;
 
 class AppServiceProvider extends ServiceProvider
 {

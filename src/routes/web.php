@@ -13,7 +13,7 @@ use App\Http\Controllers\Web\JourneyLogLinkType\EditJourneyLogLinkTypeController
 use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\Song\ListSongController;
 use Illuminate\Support\Facades\Route;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])
