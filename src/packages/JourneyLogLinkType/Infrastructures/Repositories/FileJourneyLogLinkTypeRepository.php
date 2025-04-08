@@ -7,7 +7,7 @@ namespace JourneyLogLinkType\Infrastructures\Repositories;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use Shared\Repository\FileStore;
+use Support\Repository\FileStore;
 
 class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
 {

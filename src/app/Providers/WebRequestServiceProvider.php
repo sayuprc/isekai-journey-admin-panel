@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Shared\Mapper\MapperInterface;
+use Support\Mapper\MapperInterface;
 
 class WebRequestServiceProvider extends ServiceProvider
 {

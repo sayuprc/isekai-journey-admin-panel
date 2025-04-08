@@ -10,7 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\UseCases\Create\CreateRequest;
 use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 class CreateJourneyLogLinkTypeController extends Controller
 {

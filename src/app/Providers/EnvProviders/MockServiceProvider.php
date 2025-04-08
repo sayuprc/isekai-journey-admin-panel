@@ -9,10 +9,10 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\Infrastructures\Repositories\FileJourneyLogLinkTypeRepository;
-use Shared\Application\Uuid\UuidGenerator;
-use Shared\Uuid\UuidGeneratorInterface;
 use Song\Domain\Repositories\SongRepositoryInterface;
 use Song\Infrastructures\Repositories\FileSongRepository;
+use Support\Application\Uuid\UuidGenerator;
+use Support\Uuid\UuidGeneratorInterface;
 
 class MockServiceProvider extends ServiceProvider
 {

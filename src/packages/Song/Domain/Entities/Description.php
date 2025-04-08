@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Entities;
 
-use Shared\Domain\StringValueObject;
+use Support\Domain\StringValueObject;
 
 class Description extends StringValueObject
 {

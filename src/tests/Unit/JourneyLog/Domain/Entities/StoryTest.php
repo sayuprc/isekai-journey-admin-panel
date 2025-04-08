@@ -7,7 +7,7 @@ namespace Tests\Unit\JourneyLog\Domain\Entities;
 use JourneyLog\Domain\Entities\Story;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Shared\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Exceptions\InvalidDomainException;
 
 class StoryTest extends TestCase
 {

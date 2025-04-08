@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class LoginTest extends TestCase

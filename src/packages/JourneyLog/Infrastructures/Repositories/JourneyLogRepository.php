@@ -35,9 +35,9 @@ use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
 use JourneyLog\Domain\Entities\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use Shared\Exceptions\APIException;
-use Shared\Grpc\Status;
-use Shared\Mapper\MapperInterface;
+use Support\Exceptions\APIException;
+use Support\Grpc\Status;
+use Support\Mapper\MapperInterface;
 
 class JourneyLogRepository implements JourneyLogRepositoryInterface
 {

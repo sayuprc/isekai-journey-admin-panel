@@ -11,7 +11,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Translation\Translator;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 class LoginController extends Controller
 {

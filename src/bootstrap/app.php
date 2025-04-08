@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Shared\Route\RouteMap;
+use Support\Route\RouteMap;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
