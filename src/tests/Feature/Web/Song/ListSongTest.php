@@ -18,10 +18,10 @@ use Song\Domain\Entities\SongId;
 use Song\Domain\Entities\SongLink;
 use Song\Domain\Entities\SongLinkId;
 use Song\Domain\Entities\SongLinkName;
-use Song\Domain\Entities\SongTypeId;
 use Song\Domain\Entities\Title;
 use Song\Domain\Entities\Url;
 use Song\Domain\Repositories\SongRepositoryInterface;
+use SongType\Domain\Entities\SongTypeId;
 use Support\Route\RouteMap;
 use Tests\TestCase;
 

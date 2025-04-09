@@ -38,7 +38,8 @@
             "JourneyLog\\": "packages/JourneyLog/",
             "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
             "Support\\": "packages/Support/",
-            "Song\\": "packages/Song/"
+            "Song\\": "packages/Song/",
+            "SongType\\": "packages/SongType/"
         }
     },
     "autoload-dev": {
