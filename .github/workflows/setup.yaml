@@ -73,7 +73,7 @@ jobs:
           CACHE_ROOT="/tmp/cache"
           # Docker 関連
           DOCKER_CACHE_PATH="${CACHE_ROOT}/docker"
-          DOCKERFILE_HASH="${{ hashFiles('./docker/php/Dockerfile.ci') }}"
+          DOCKERFILE_HASH="${{ hashFiles('./docker/php/Dockerfile') }}"
           DOCKER_CACHE_KEY="docker-${DOCKERFILE_HASH}"
           DOCKER_CACHE="${DOCKER_CACHE_PATH}/${DOCKERFILE_HASH}.tar.gz"
           CONTAINER="isekai-journey-admin-panel-php-1"
@@ -120,6 +120,14 @@ jobs:
         with:
           path: ${{ steps.define-variables.outputs.DOCKER_CACHE_PATH }}
           key: ${{ steps.define-variables.outputs.DOCKER_CACHE_KEY }}
+
+      - name: Login to Docker Hub
+        if: steps.cache-docker-image.outputs.cache-hit != 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN  }}
 
       - name: Build image
         if: steps.cache-docker-image.outputs.cache-hit != 'true'
