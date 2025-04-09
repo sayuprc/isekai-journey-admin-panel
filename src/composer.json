@@ -17,6 +17,7 @@
     "require-dev": {
         "askdkc/breezejp": "^2.3",
         "barryvdh/laravel-ide-helper": "^3.5",
+        "brianium/paratest": "^7.8",
         "fakerphp/faker": "^1.24",
         "infection/infection": "^0.29",
         "larastan/larastan": "^3.0",
