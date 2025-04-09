@@ -78,5 +78,8 @@ jobs:
       - name: Build
         run: docker exec ${{ needs.setup.outputs.container }} npm run build
 
+      - name: Dump autoload
+        run: docker exec ${{ needs.setup.outputs.container }} composer dump-autoload
+
       - name: Run PHPUnit
         run: docker exec ${{ needs.setup.outputs.container }} composer test-all
