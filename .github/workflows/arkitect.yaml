@@ -48,5 +48,8 @@ jobs:
         if: steps.cache-composer.outputs.cache-hit == 'true'
         run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
 
+      - name: Dump autoload
+        run: docker exec ${{ needs.setup.outputs.container }} composer dump-autoload
+
       - name: Check Layer
         run: docker exec ${{ needs.setup.outputs.container }} composer arkitect

@@ -59,5 +59,8 @@ jobs:
         if: steps.cache-grpc.outputs.cache-hit == 'true'
         run: tar -xzf ${{ needs.setup.outputs.grpc-cache }}
 
+      - name: Dump autoload
+        run: docker exec ${{ needs.setup.outputs.container }} composer dump-autoload
+
       - name: Run PHPStan
         run: docker exec ${{ needs.setup.outputs.container }} composer phpstan
