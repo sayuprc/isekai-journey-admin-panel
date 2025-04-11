@@ -22,7 +22,7 @@ use Song\Domain\Models\SongLinkName;
 use Song\Domain\Models\Title;
 use Song\Domain\Models\Url;
 use Song\Domain\Repositories\SongRepositoryInterface;
-use SongType\Domain\Entities\SongTypeId;
+use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Exceptions\APIException;
 use Support\Grpc\Status;

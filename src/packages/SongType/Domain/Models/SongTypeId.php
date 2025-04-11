@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SongType\Domain\Entities;
+namespace SongType\Domain\Models;
 
 use Support\Domain\ValueObjects\UuidValueObject;
 

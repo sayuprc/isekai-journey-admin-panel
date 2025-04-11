@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Models;
 
-use SongType\Domain\Entities\SongTypeId;
+use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 
 class Song
