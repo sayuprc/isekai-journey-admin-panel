@@ -64,6 +64,9 @@ class SongRepository implements SongRepositoryInterface
             new Title($song->getTitle()),
             new Description($song->getDescription()),
             new SongTypeId($song->getSongTypeId()),
+            [],
+            [],
+            [],
             new OrderNo($song->getOrderNo()),
         );
     }
