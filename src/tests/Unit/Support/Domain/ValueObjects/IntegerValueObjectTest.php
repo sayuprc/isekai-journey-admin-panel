@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Domain;
+namespace Tests\Unit\Support\Domain\ValueObjects;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\StringValueObject;
+use Support\Domain\ValueObjects\IntegerValueObject;
 use Tests\TestCase;
 
-class StringValueObjectTest extends TestCase
+class IntegerValueObjectTest extends TestCase
 {
     #[Test]
     #[DataProvider('validData')]
-    public function canBeInstanced(string $value): void
+    public function canBeInstanced(int $value): void
     {
-        $string = new StringObject($value);
+        $string = new IntegerObject($value);
 
         $this->assertSame($value, $string->value);
     }
@@ -23,12 +23,13 @@ class StringValueObjectTest extends TestCase
     public static function validData(): array
     {
         return [
-            [''],
-            ['value'],
+            [-1],
+            [0],
+            [1],
         ];
     }
 }
 
-class StringObject extends StringValueObject
+class IntegerObject extends IntegerValueObject
 {
 }

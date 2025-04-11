@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SongType\Domain\Entities;
 
-use Support\Domain\UuidValueObject;
+use Support\Domain\ValueObjects\UuidValueObject;
 
 class SongTypeId extends UuidValueObject
 {
