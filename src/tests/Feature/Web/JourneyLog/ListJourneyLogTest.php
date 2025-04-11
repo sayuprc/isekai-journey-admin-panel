@@ -14,7 +14,6 @@ use JourneyLog\Domain\Entities\JourneyLogId;
 use JourneyLog\Domain\Entities\JourneyLogLink;
 use JourneyLog\Domain\Entities\JourneyLogLinkId;
 use JourneyLog\Domain\Entities\JourneyLogLinkName;
-use JourneyLog\Domain\Entities\OrderNo;
 use JourneyLog\Domain\Entities\Period;
 use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
@@ -24,6 +23,7 @@ use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
 use Tests\TestCase;
 

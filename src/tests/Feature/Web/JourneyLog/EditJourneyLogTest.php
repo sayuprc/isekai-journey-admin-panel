@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use JourneyLog\Domain\Entities\FromOn;
 use JourneyLog\Domain\Entities\JourneyLog;
 use JourneyLog\Domain\Entities\JourneyLogId;
-use JourneyLog\Domain\Entities\OrderNo;
 use JourneyLog\Domain\Entities\Period;
 use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
@@ -21,6 +20,7 @@ use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
 use Tests\TestCase;
 

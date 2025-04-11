@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JourneyLog\Domain\Entities;
 
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use Support\Domain\ValueObjects\OrderNo;
 
 class JourneyLogLink
 {
