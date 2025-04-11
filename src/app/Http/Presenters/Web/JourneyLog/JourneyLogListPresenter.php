@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\JourneyLog;
 
 use App\Http\ViewModels\Web\JourneyLog\JourneyLogListView;
-use JourneyLog\Domain\Entities\JourneyLog;
-use JourneyLog\Domain\Entities\Period;
+use JourneyLog\Domain\Models\JourneyLog;
+use JourneyLog\Domain\Models\Period;
 use JourneyLog\UseCases\List\ListResponse;
 
 class JourneyLogListPresenter

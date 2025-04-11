@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLog\Domain\Entities;
+namespace Tests\Unit\JourneyLog\Domain\Models;
 
-use JourneyLog\Domain\Entities\Story;
+use JourneyLog\Domain\Models\Story;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Support\Domain\Exceptions\InvalidDomainException;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Application\Get;
 
-use JourneyLog\Domain\Entities\JourneyLogId;
+use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLog\UseCases\Get\GetResponse;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLog\Domain\Entities;
+namespace Tests\Unit\JourneyLog\Domain\Models;
 
 use DateTime;
-use JourneyLog\Domain\Entities\FromOn;
-use JourneyLog\Domain\Entities\Period;
-use JourneyLog\Domain\Entities\ToOn;
+use JourneyLog\Domain\Models\FromOn;
+use JourneyLog\Domain\Models\Period;
+use JourneyLog\Domain\Models\ToOn;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
