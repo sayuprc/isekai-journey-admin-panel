@@ -7,10 +7,10 @@ namespace JourneyLogLinkType\Application\Create;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
-use JourneyLogLinkType\Domain\Entities\OrderNo;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\Create\CreateRequest;
 use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
+use Support\Domain\ValueObjects\OrderNo;
 use Support\Uuid\UuidGeneratorInterface;
 
 class CreateInteractor implements CreateUseCaseInterface

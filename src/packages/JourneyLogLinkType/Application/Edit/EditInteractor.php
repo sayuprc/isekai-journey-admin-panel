@@ -7,10 +7,10 @@ namespace JourneyLogLinkType\Application\Edit;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
-use JourneyLogLinkType\Domain\Entities\OrderNo;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\Edit\EditRequest;
 use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
+use Support\Domain\ValueObjects\OrderNo;
 
 class EditInteractor implements EditUseCaseInterface
 {

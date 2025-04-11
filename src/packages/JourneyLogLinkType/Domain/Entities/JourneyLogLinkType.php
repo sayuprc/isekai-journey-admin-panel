@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Domain\Entities;
 
+use Support\Domain\ValueObjects\OrderNo;
+
 class JourneyLogLinkType
 {
     public function __construct(

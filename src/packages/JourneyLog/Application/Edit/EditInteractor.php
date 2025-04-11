@@ -11,7 +11,6 @@ use JourneyLog\Domain\Entities\JourneyLogId;
 use JourneyLog\Domain\Entities\JourneyLogLink;
 use JourneyLog\Domain\Entities\JourneyLogLinkId;
 use JourneyLog\Domain\Entities\JourneyLogLinkName;
-use JourneyLog\Domain\Entities\OrderNo;
 use JourneyLog\Domain\Entities\Period;
 use JourneyLog\Domain\Entities\Story;
 use JourneyLog\Domain\Entities\ToOn;
@@ -21,6 +20,7 @@ use JourneyLog\UseCases\Edit\EditJourneyLogLink;
 use JourneyLog\UseCases\Edit\EditRequest;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use Support\Domain\ValueObjects\OrderNo;
 use Support\Uuid\UuidGeneratorInterface;
 
 class EditInteractor implements EditUseCaseInterface
