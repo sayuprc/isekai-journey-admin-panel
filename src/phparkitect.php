@@ -26,6 +26,8 @@ return static function (Config $config): void {
 
             ->component('SongType.Domain')->definedBy('SongType\Domain\*')
 
+            ->component('Creator.Domain')->definedBy('Creator\Domain\*')
+
             ->component('Support.Domain')->definedBy('Support\Domain\*')
 
             ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'JourneyLogLinkType.Domain', 'Support.Domain')
@@ -34,7 +36,7 @@ return static function (Config $config): void {
             ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
             ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain')
 
-            ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Support.Domain')
+            ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Creator.Domain', 'Support.Domain')
             ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
             ->where('SongType.Domain')->shouldOnlyDependOnComponents('SongType.Domain', 'Support.Domain')
 
