@@ -58,6 +58,9 @@ class ListSongTest extends TestCase
                     new Title('楽曲1'),
                     new Description('説明1'),
                     new SongTypeId($uuid),
+                    [],
+                    [],
+                    [],
                     new OrderNo(1),
                 ),
                 new Song(
@@ -65,6 +68,9 @@ class ListSongTest extends TestCase
                     new Title('楽曲2'),
                     new Description('説明2'),
                     new SongTypeId($uuid),
+                    [],
+                    [],
+                    [],
                     new OrderNo(2),
                 ),
             ])
