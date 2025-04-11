@@ -25,7 +25,6 @@
             <tr>
                 <td>{{ $song->title }}</td>
                 <td>{{ $song->description }}</td>
-                <td>{{ $song->releasedOn }}</td>
                 <td>{{ $song->orderNo }}</td>
                 <td><a href="">編集</a></td>
             </tr>

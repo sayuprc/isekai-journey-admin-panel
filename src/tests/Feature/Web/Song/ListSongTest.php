@@ -5,20 +5,14 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Song;
 
 use App\Models\User;
-use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Description;
-use Song\Domain\Models\ReleasedOn;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
-use Song\Domain\Models\SongLink;
-use Song\Domain\Models\SongLinkId;
-use Song\Domain\Models\SongLinkName;
 use Song\Domain\Models\Title;
-use Song\Domain\Models\Url;
 use Song\Domain\Repositories\SongRepositoryInterface;
 use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
@@ -63,26 +57,15 @@ class ListSongTest extends TestCase
                     new SongId($uuid),
                     new Title('楽曲1'),
                     new Description('説明1'),
-                    new ReleasedOn(new DateTimeImmutable()),
                     new SongTypeId($uuid),
                     new OrderNo(1),
-                    []
                 ),
                 new Song(
                     new SongId($uuid),
                     new Title('楽曲2'),
                     new Description('説明2'),
-                    new ReleasedOn(new DateTimeImmutable()),
                     new SongTypeId($uuid),
                     new OrderNo(2),
-                    [
-                        new SongLink(
-                            new SongLinkId($uuid),
-                            new SongLinkName('楽曲リンク名'),
-                            new Url('https://'),
-                            new OrderNo(1),
-                        ),
-                    ]
                 ),
             ])
             ->once();
