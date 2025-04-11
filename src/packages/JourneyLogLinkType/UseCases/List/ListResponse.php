@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\UseCases\List;
 
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 
 class ListResponse
 {

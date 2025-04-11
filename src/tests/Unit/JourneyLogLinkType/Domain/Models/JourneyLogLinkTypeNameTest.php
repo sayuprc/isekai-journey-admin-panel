@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLogLinkType\Domain\Entities;
+namespace Tests\Unit\JourneyLogLinkType\Domain\Models;
 
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeName;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\Exceptions\InvalidDomainException;

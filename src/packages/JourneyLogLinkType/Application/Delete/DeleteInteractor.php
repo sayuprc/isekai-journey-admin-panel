@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Application\Delete;
 
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\Delete\DeleteRequest;
 use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;

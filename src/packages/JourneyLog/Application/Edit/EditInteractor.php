@@ -19,7 +19,7 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Edit\EditJourneyLogLink;
 use JourneyLog\UseCases\Edit\EditRequest;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Uuid\UuidGeneratorInterface;
 

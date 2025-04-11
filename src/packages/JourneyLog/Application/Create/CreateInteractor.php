@@ -19,7 +19,7 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Create\CreateJourneyLogLink;
 use JourneyLog\UseCases\Create\CreateRequest;
 use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Uuid\UuidGeneratorInterface;
 
