@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Domain\Repositories;
 
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkType;
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 
 interface JourneyLogLinkTypeRepositoryInterface
 {

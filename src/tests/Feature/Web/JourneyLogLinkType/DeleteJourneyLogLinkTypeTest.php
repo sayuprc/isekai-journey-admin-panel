@@ -7,7 +7,7 @@ namespace Tests\Feature\Web\JourneyLogLinkType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
-use JourneyLogLinkType\Domain\Entities\JourneyLogLinkTypeId;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\LegacyMockInterface;

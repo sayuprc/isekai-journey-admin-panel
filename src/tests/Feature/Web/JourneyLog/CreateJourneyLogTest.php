@@ -7,7 +7,7 @@ namespace Tests\Feature\Web\JourneyLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
-use JourneyLog\Domain\Entities\JourneyLog;
+use JourneyLog\Domain\Models\JourneyLog;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\UseCases\Get;
 
-use JourneyLog\Domain\Entities\JourneyLog;
+use JourneyLog\Domain\Models\JourneyLog;
 
 class GetResponse
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Repositories;
 
-use Song\Domain\Entities\Song;
+use Song\Domain\Models\Song;
 
 interface SongRepositoryInterface
 {
