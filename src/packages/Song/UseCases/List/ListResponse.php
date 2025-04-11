@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\UseCases\List;
 
-use Song\Domain\Entities\Song;
+use Song\Domain\Models\Song;
 
 class ListResponse
 {

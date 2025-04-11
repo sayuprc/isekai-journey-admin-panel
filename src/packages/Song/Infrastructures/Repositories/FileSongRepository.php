@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures\Repositories;
 
-use Song\Domain\Entities\Song;
+use Song\Domain\Models\Song;
 use Song\Domain\Repositories\SongRepositoryInterface;
 use Support\Repository\FileStore;
 

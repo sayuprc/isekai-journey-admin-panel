@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\Song;
 
 use App\Http\ViewModels\Web\Song\SongListView;
-use Song\Domain\Entities\Song;
+use Song\Domain\Models\Song;
 use Song\UseCases\List\ListResponse;
 
 class SongListPresenter
