@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Domain;
+namespace Tests\Unit\Support\Domain\ValueObjects;
 
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\DateValueObject;
+use Support\Domain\ValueObjects\DateValueObject;
 use Tests\TestCase;
 
 class DateValueObjectTest extends TestCase

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JourneyLog\Domain\Entities;
 
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\StringValueObject;
+use Support\Domain\ValueObjects\StringValueObject;
 
 class Story extends StringValueObject
 {

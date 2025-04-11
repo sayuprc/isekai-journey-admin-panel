@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Entities;
 
-use Support\Domain\UuidValueObject;
+use Support\Domain\ValueObjects\UuidValueObject;
 
 class JourneyLogId extends UuidValueObject
 {
