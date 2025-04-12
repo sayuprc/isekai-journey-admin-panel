@@ -11,7 +11,6 @@ class SongListView
         public readonly string $title,
         public readonly string $description,
         public readonly int $orderNo,
-        public readonly string $releasedOn,
     ) {
     }
 }

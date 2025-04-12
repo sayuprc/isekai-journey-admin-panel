@@ -21,7 +21,6 @@ class SongListPresenter
                 $song->title->value,
                 $song->description->value,
                 $song->orderNo->value,
-                $song->releasedOn->value->format('Y-m-d'),
             );
         }, $response->songs);
     }

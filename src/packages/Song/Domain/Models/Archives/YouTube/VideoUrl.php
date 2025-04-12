@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Models;
+namespace Song\Domain\Models\Archives\YouTube;
 
 use Support\Domain\ValueObjects\StringValueObject;
 
-class SongLinkName extends StringValueObject
+class VideoUrl extends StringValueObject
 {
 }

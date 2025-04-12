@@ -16,7 +16,6 @@ class ListSongController extends Controller
         $heads = [
             'タイトル',
             '説明',
-            'リリース日',
             // '楽曲種別', // TODO 楽曲種別を実装したらここも実装する
             '表示順',
             '',
