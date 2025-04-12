@@ -90,7 +90,6 @@ class ListSongTest extends TestCase
         $this->assertSame([
             'タイトル',
             '説明',
-            'リリース日',
             '表示順',
             '',
         ], $data['heads']);
@@ -117,7 +116,6 @@ class ListSongTest extends TestCase
         $this->assertSame([
             'タイトル',
             '説明',
-            'リリース日',
             '表示順',
             '',
         ], $data['heads']);
