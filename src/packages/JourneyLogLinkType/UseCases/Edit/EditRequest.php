@@ -6,6 +6,9 @@ namespace JourneyLogLinkType\UseCases\Edit;
 
 class EditRequest
 {
+    /**
+     * @param positive-int $orderNo
+     */
     public function __construct(
         public readonly string $journeyLogLinkTypeId,
         public readonly string $journeyLogLinkTypeName,

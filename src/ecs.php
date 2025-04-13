@@ -164,7 +164,7 @@ return ECSConfig::configure()
 
         __DIR__ . '/bootstrap/cache',
 
-        __DIR__ . '/phpstan.baseline.php',
+        __DIR__ . '/baseline.php',
 
         \PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer::class => [
             __DIR__ . '/ecs.php',

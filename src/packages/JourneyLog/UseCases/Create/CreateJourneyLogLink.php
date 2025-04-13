@@ -6,6 +6,9 @@ namespace JourneyLog\UseCases\Create;
 
 class CreateJourneyLogLink
 {
+    /**
+     * @param positive-int $orderNo
+     */
     public function __construct(
         public readonly string $journeyLogLinkName,
         public readonly string $url,

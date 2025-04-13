@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Support\Domain\ValueObjects;
 
-use Support\Domain\ValueObjects\Numeric\IntegerValueObject;
+use Support\Domain\ValueObjects\Numeric\PositiveIntegerValueObject;
 
-class OrderNo extends IntegerValueObject
+class OrderNo extends PositiveIntegerValueObject
 {
 }
