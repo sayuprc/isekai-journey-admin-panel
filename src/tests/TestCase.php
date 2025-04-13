@@ -11,6 +11,6 @@ abstract class TestCase extends BaseTestCase
 {
     protected function generateUuid(): string
     {
-        return (new DummyUuidGenerator())->generate();
+        return new DummyUuidGenerator()->generate();
     }
 }
