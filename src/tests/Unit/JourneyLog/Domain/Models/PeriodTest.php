@@ -16,15 +16,16 @@ use Support\Domain\Exceptions\InvalidDomainException;
 class PeriodTest extends TestCase
 {
     #[Test]
-    #[DataProvider('validData')]
-    public function can(FromOn $fromOn, ToOn $toOn): void
+    #[DataProvider('provideProperlyStoresValue')]
+    public function properlyStoresValue(FromOn $fromOn, ToOn $toOn): void
     {
-        $period = new Period($fromOn, $toOn);
+        $instance = new Period($fromOn, $toOn);
 
-        $this->assertInstanceOf(Period::class, $period);
+        $this->assertSame($fromOn, $instance->fromOn);
+        $this->assertSame($toOn, $instance->toOn);
     }
 
-    public static function validData(): array
+    public static function provideProperlyStoresValue(): array
     {
         return [
             [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09'))],
@@ -34,36 +35,36 @@ class PeriodTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('singleDayData')]
-    public function singleDay(FromOn $fromOn, ToOn $toOn, bool $expected): void
+    public function isSingleDay(): void
     {
-        $period = new Period($fromOn, $toOn);
+        $instance = new Period(
+            new FromOn(new DateTime('2019-12-09')),
+            new ToOn(new DateTime('2019-12-09'))
+        );
 
-        $this->assertSame($expected, $period->isSingleDay());
-    }
-
-    public static function singleDayData(): array
-    {
-        return [
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09')), true],
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-10')), false],
-        ];
+        $this->assertTrue($instance->isSingleDay());
     }
 
     #[Test]
-    #[DataProvider('invalidData')]
-    public function invalidPeriodRange(FromOn $fromOn, ToOn $toOn): void
+    public function isNotSingleDay(): void
+    {
+        $instance = new Period(
+            new FromOn(new DateTime('2019-12-09')),
+            new ToOn(new DateTime('2019-12-10'))
+        );
+
+        $this->assertFalse($instance->isSingleDay());
+    }
+
+    #[Test]
+    public function throwExceptionWhenInvalidPeriodRange(): void
     {
         $this->expectException(InvalidDomainException::class);
         $this->expectExceptionMessage('fromOn needs to be before toOn');
 
-        new Period($fromOn, $toOn);
-    }
-
-    public static function invalidData(): array
-    {
-        return [
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-08'))],
-        ];
+        new Period(
+            new FromOn(new DateTime('2019-12-09')),
+            new ToOn(new DateTime('2019-12-08')),
+        );
     }
 }

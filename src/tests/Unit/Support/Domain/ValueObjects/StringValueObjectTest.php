@@ -12,15 +12,13 @@ use Tests\TestCase;
 class StringValueObjectTest extends TestCase
 {
     #[Test]
-    #[DataProvider('validData')]
-    public function canBeInstanced(string $value): void
+    #[DataProvider('provideProperlyStoresValue')]
+    public function properlyStoresValue(string $value): void
     {
-        $string = new StringObject($value);
-
-        $this->assertSame($value, $string->value);
+        $this->assertSame($value, new StringObject($value)->value);
     }
 
-    public static function validData(): array
+    public static function provideProperlyStoresValue(): array
     {
         return [
             [''],

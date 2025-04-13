@@ -12,11 +12,14 @@ use Tests\TestCase;
 class DummyUuidGeneratorTest extends TestCase
 {
     #[Test]
-    public function generateDummy(): void
+    public function isImplementsSpecificInterface(): void
     {
-        $generator = new DummyUuidGenerator();
+        $this->assertInstanceOf(UuidGeneratorInterface::class, new DummyUuidGenerator());
+    }
 
-        $this->assertInstanceOf(UuidGeneratorInterface::class, $generator);
-        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $generator->generate());
+    #[Test]
+    public function generateDummyValue(): void
+    {
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', new DummyUuidGenerator()->generate());
     }
 }
