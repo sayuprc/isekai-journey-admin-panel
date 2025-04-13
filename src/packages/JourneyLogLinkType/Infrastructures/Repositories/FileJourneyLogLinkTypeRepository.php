@@ -7,17 +7,23 @@ namespace JourneyLogLinkType\Infrastructures\Repositories;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use Support\Config\ConfigInterface;
 use Support\Repository\FileStore;
 
 class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
 {
-    private const string PATH = 'journey-log-link-types.dat';
+    private const string FILE_NAME = 'journey-log-link-types.dat';
+
+    private readonly string $filePath;
 
     /**
      * @param FileStore<JourneyLogLinkType> $store
      */
-    public function __construct(private readonly FileStore $store)
-    {
+    public function __construct(
+        private readonly FileStore $store,
+        private readonly ConfigInterface $config,
+    ) {
+        $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }
 
     /**
@@ -25,17 +31,17 @@ class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryIn
      */
     public function listJourneyLogLinkTypes(): array
     {
-        return array_values($this->store->getAll(self::PATH));
+        return array_values($this->store->getAll($this->filePath));
     }
 
     public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
     {
-        $this->store->put(self::PATH, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
+        $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
     }
 
     public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
     {
-        $found = $this->store->get(self::PATH, $journeyLogLinkTypeId->value);
+        $found = $this->store->get($this->filePath, $journeyLogLinkTypeId->value);
         assert($found instanceof JourneyLogLinkType);
 
         return $found;
@@ -43,11 +49,11 @@ class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryIn
 
     public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
     {
-        $this->store->put(self::PATH, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
+        $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
     }
 
     public function deleteJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): void
     {
-        $this->store->unset(self::PATH, $journeyLogLinkTypeId->value);
+        $this->store->unset($this->filePath, $journeyLogLinkTypeId->value);
     }
 }
