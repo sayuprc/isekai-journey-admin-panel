@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Archives\Twitter;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Archives\Twitter\PostUrl;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class PostUrlTest extends TestCase

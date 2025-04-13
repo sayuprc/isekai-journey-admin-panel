@@ -7,6 +7,7 @@ namespace JourneyLog\UseCases\Create;
 class CreateRequest
 {
     /**
+     * @param positive-int                $orderNo
      * @param array<CreateJourneyLogLink> $journeyLogLinks
      */
     public function __construct(

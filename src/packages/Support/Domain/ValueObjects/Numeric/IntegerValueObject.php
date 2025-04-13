@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Domain\ValueObjects;
+namespace Support\Domain\ValueObjects\Numeric;
 
 abstract class IntegerValueObject
 {

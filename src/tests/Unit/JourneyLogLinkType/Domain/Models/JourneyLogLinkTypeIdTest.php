@@ -6,7 +6,7 @@ namespace Tests\Unit\JourneyLogLinkType\Domain\Models;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\UuidValueObject;
+use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeIdTest extends TestCase

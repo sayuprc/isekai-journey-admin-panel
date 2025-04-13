@@ -65,20 +65,20 @@ class ListJourneyLogTest extends TestCase
                     new JourneyLogId($uuid),
                     new Story('軌跡 A'),
                     new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
-                    new OrderNo(0),
+                    new OrderNo(1),
                     [],
                 ),
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡 B'),
                     new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
-                    new OrderNo(0),
+                    new OrderNo(2),
                     [
                         new JourneyLogLink(
                             new JourneyLogLinkId($uuid),
                             new JourneyLogLinkName('管理画面'),
                             new Url('https://local.admin.journey.isekaijoucho.fan'),
-                            new OrderNo(0),
+                            new OrderNo(1),
                             new JourneyLogLinkTypeId($uuid),
                         ),
                     ],

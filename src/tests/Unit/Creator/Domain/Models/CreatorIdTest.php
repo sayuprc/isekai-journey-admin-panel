@@ -6,7 +6,7 @@ namespace Tests\Unit\Creator\Domain\Models;
 
 use Creator\Domain\Models\CreatorId;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\UuidValueObject;
+use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
 class CreatorIdTest extends TestCase

@@ -7,6 +7,7 @@ namespace JourneyLog\UseCases\Edit;
 class EditRequest
 {
     /**
+     * @param positive-int              $orderNo
      * @param array<EditJourneyLogLink> $journeyLogLinks
      */
     public function __construct(

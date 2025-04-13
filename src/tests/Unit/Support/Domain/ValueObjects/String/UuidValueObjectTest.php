@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Domain\ValueObjects;
+namespace Tests\Unit\Support\Domain\ValueObjects\String;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\ValueObjects\UuidValueObject;
+use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
 class UuidValueObjectTest extends TestCase

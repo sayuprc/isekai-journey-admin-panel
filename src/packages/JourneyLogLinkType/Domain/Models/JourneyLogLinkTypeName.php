@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JourneyLogLinkType\Domain\Models;
 
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 
 class JourneyLogLinkTypeName extends StringValueObject
 {

@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Title;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class TitleTest extends TestCase
