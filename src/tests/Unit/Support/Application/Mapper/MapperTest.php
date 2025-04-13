@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Support\Application\Mapper;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Support\Application\Mapper\Mapper;
@@ -14,12 +13,30 @@ use Tests\TestCase;
 class MapperTest extends TestCase
 {
     #[Test]
-    #[DataProvider('arrayData')]
-    public function mapWithArray(array $source): void
+    public function isImplementsSpecificInterface(): void
     {
-        $mapper = $this->getMapper();
+        $this->assertInstanceOf(MapperInterface::class, $this->getMapper());
+    }
 
-        $instance = $mapper->map(Sample::class, $source);
+    #[Test]
+    public function mapFromArray(): void
+    {
+        $source = [
+            'id' => 1,
+            'name' => 'sample',
+            'items' => [
+                [
+                    'id' => 1,
+                    'name' => 'item name 1',
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'item name 2',
+                ],
+            ],
+        ];
+
+        $instance = $this->getMapper()->map(Sample::class, $source);
 
         $this->assertInstanceOf(Sample::class, $instance);
         $this->assertSame($instance->id, $source['id']);
@@ -31,35 +48,23 @@ class MapperTest extends TestCase
         $this->assertSame($instance->items[1]->name, $source['items'][1]['name']);
     }
 
-    public static function arrayData(): array
-    {
-        return [
-            [
-                [
-                    'id' => 1,
-                    'name' => 'sample',
-                    'items' => [
-                        [
-                            'id' => 1,
-                            'name' => 'item name 1',
-                        ],
-                        [
-                            'id' => 2,
-                            'name' => 'item name 2',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
     #[Test]
-    #[DataProvider('withStdClassData')]
-    public function mapWithStdClass(stdClass $source): void
+    public function mapFromStdClass(): void
     {
-        $mapper = $this->getMapper();
+        $item1 = new stdClass();
+        $item1->id = 1;
+        $item1->name = 'item name 1';
 
-        $instance = $mapper->map(Sample::class, $source);
+        $item2 = new stdClass();
+        $item2->id = 2;
+        $item2->name = 'item name 2';
+
+        $source = new stdClass();
+        $source->id = 1;
+        $source->name = 'sample';
+        $source->items = [$item1, $item2];
+
+        $instance = $this->getMapper()->map(Sample::class, $source);
 
         $this->assertInstanceOf(Sample::class, $instance);
         $this->assertSame($instance->id, $source->id);
@@ -71,33 +76,25 @@ class MapperTest extends TestCase
         $this->assertSame($instance->items[1]->name, $source->items[1]->name);
     }
 
-    public static function withStdClassData(): array
-    {
-        $item1 = new stdClass();
-        $item1->id = 1;
-        $item1->name = 'item name 1';
-
-        $item2 = new stdClass();
-        $item2->id = 2;
-        $item2->name = 'item name 2';
-
-        $sample1 = new stdClass();
-        $sample1->id = 1;
-        $sample1->name = 'sample';
-        $sample1->items = [$item1, $item2];
-
-        return [
-            [$sample1],
-        ];
-    }
-
     #[Test]
-    #[DataProvider('withJsonData')]
-    public function mapWithJson(string $source): void
+    public function mapFromJson(): void
     {
-        $mapper = $this->getMapper();
+        $source = json_encode([
+            'id' => 1,
+            'name' => 'sample',
+            'items' => [
+                [
+                    'id' => 1,
+                    'name' => 'item name 1',
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'item name 2',
+                ],
+            ],
+        ]);
 
-        $instance = $mapper->map(Sample::class, $source);
+        $instance = $this->getMapper()->map(Sample::class, $source);
 
         $expected = json_decode($source, true);
 
@@ -109,28 +106,6 @@ class MapperTest extends TestCase
         $this->assertSame($instance->items[0]->name, $expected['items'][0]['name']);
         $this->assertSame($instance->items[1]->id, $expected['items'][1]['id']);
         $this->assertSame($instance->items[1]->name, $expected['items'][1]['name']);
-    }
-
-    public static function withJsonData(): array
-    {
-        return [
-            [
-                json_encode([
-                    'id' => 1,
-                    'name' => 'sample',
-                    'items' => [
-                        [
-                            'id' => 1,
-                            'name' => 'item name 1',
-                        ],
-                        [
-                            'id' => 2,
-                            'name' => 'item name 2',
-                        ],
-                    ],
-                ]),
-            ],
-        ];
     }
 
     private function getMapper(): Mapper

@@ -8,20 +8,25 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\ValueObjects\StringValueObject;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeNameTest extends TestCase
 {
     #[Test]
-    #[DataProvider('validData')]
-    public function canBeInstanced(string $value): void
+    public function isExtendsSpecificClass(): void
     {
-        $story = new JourneyLogLinkTypeName($value);
-
-        $this->assertSame($value, $story->value);
+        $this->assertInstanceOf(StringValueObject::class, new JourneyLogLinkTypeName('value'));
     }
 
-    public static function validData(): array
+    #[Test]
+    #[DataProvider('provideProperlyStoresValue')]
+    public function properlyStoresValue(string $value): void
+    {
+        $this->assertSame($value, new JourneyLogLinkTypeName($value)->value);
+    }
+
+    public static function provideProperlyStoresValue(): array
     {
         return [
             ['a'],
@@ -31,19 +36,11 @@ class JourneyLogLinkTypeNameTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('invalidData')]
-    public function invalidValue(string $value): void
+    public function throwExceptionWhenEmptyValue(): void
     {
         $this->expectException(InvalidDomainException::class);
         $this->expectExceptionMessage('journey log link type name must be at least 1 characters');
 
-        new JourneyLogLinkTypeName($value);
-    }
-
-    public static function invalidData(): array
-    {
-        return [
-            [''],
-        ];
+        new JourneyLogLinkTypeName('');
     }
 }

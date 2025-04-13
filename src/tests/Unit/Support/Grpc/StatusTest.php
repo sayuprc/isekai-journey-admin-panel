@@ -12,37 +12,28 @@ use Tests\TestCase;
 class StatusTest extends TestCase
 {
     #[Test]
-    #[DataProvider('validData')]
-    public function canBeInstanced(int $code, string $details): void
+    public function isOk(): void
     {
-        $status = new Status($code, $details);
+        $status = new Status(0, '');
 
-        $this->assertSame($code, $status->code);
-        $this->assertSame($details, $status->details);
-    }
-
-    public static function validData(): array
-    {
-        return [
-            [0, ''],
-            [1, 'error'],
-        ];
+        $this->assertTrue($status->isOk());
     }
 
     #[Test]
-    #[DataProvider('isOkData')]
-    public function isOk(int $code, string $details, bool $expected): void
+    #[DataProvider('provideIsNotOk')]
+    public function isNotOk(int $code, string $details): void
     {
         $status = new Status($code, $details);
 
-        $this->assertSame($expected, $status->isOk());
+        $this->assertFalse($status->isOk());
     }
 
-    public static function isOkData(): array
+    public static function provideIsNotOk(): array
     {
         return [
-            [0, '', true],
-            [1, 'error', false],
+            [1, 'error'],
+            [2, 'error'],
+            [3, 'error'],
         ];
     }
 }
