@@ -17,7 +17,7 @@ class Config implements ConfigInterface
         $value = $this->get($key, $default);
 
         if (! is_string($value)) {
-            throw new Exception('Config value is not a string');
+            throw new Exception(sprintf('Config value for key "%s" is not a string', $key));
         }
 
         return $value;
