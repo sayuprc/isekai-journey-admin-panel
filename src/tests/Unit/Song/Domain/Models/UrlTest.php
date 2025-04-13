@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models;
 
 use JourneyLog\Domain\Models\Url;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class UrlTest extends TestCase

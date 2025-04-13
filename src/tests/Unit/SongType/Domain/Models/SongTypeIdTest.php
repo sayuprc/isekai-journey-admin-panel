@@ -6,7 +6,7 @@ namespace Tests\Unit\SongType\Domain\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use SongType\Domain\Models\SongTypeId;
-use Support\Domain\ValueObjects\UuidValueObject;
+use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
 class SongTypeIdTest extends TestCase

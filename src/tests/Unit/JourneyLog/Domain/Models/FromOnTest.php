@@ -7,7 +7,7 @@ namespace Tests\Unit\JourneyLog\Domain\Models;
 use DateTime;
 use JourneyLog\Domain\Models\FromOn;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\DateValueObject;
+use Support\Domain\ValueObjects\DateTime\DateValueObject;
 use Tests\TestCase;
 
 class FromOnTest extends TestCase

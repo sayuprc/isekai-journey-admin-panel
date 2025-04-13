@@ -8,7 +8,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeNameTest extends TestCase

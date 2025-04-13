@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Archives\YouTube;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Archives\YouTube\VideoUrl;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class VideoUrlTest extends TestCase

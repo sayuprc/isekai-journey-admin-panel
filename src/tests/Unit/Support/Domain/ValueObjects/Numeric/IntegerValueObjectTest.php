@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Domain\ValueObjects;
+namespace Tests\Unit\Support\Domain\ValueObjects\Numeric;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\IntegerValueObject;
+use Support\Domain\ValueObjects\Numeric\IntegerValueObject;
 use Tests\TestCase;
 
 class IntegerValueObjectTest extends TestCase

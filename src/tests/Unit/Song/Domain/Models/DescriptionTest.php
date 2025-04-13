@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Description;
-use Support\Domain\ValueObjects\StringValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;
 
 class DescriptionTest extends TestCase
