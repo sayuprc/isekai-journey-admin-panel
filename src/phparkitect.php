@@ -38,7 +38,10 @@ return static function (Config $config): void {
 
             ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Creator.Domain', 'Support.Domain')
             ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
+
             ->where('SongType.Domain')->shouldOnlyDependOnComponents('SongType.Domain', 'Support.Domain')
+
+            ->where('Creator.Domain')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Domain')
 
             ->where('Support.Domain')->shouldNotDependOnAnyComponent()
 
