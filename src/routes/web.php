@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Web\Auth\LoginController;
+use App\Http\Controllers\Web\Creator\CreateCreatorController;
 use App\Http\Controllers\Web\JourneyLog\CreateJourneyLogController;
 use App\Http\Controllers\Web\JourneyLog\DeleteJourneyLogController;
 use App\Http\Controllers\Web\JourneyLog\EditJourneyLogController;
@@ -64,5 +65,12 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('songs')->group(function (): void {
         Route::get('/', [ListSongController::class, 'index'])
             ->name(RouteMap::ListSongs);
+    });
+
+    Route::prefix('creators')->group(function (): void {
+        Route::get('/create', [CreateCreatorController::class, 'index'])
+            ->name(RouteMap::ShowCreateCreatorForm);
+        Route::post('/create', [CreateCreatorController::class, 'handle'])
+            ->name(RouteMap::CreateCreator);
     });
 });

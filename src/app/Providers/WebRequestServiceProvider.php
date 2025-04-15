@@ -16,6 +16,8 @@ class WebRequestServiceProvider extends ServiceProvider
         $this->journeyLog();
 
         $this->journeyLogLinkType();
+
+        $this->creator();
     }
 
     private function auth(): void
@@ -73,6 +75,16 @@ class WebRequestServiceProvider extends ServiceProvider
             assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest);
 
             return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    private function creator(): void
+    {
+        $this->app->bind(\Creator\UseCases\Create\CreateRequest::class, function (): \Creator\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\Creator\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\Creator\CreateRequest);
+
+            return $this->getMapper()->map(\Creator\UseCases\Create\CreateRequest::class, $request->validated());
         });
     }
 
