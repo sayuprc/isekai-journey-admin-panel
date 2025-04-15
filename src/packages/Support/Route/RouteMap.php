@@ -28,4 +28,8 @@ enum RouteMap: string
 
     // 楽曲関連
     case ListSongs = 'songs.index';
+
+    // クリエイター関連
+    case ShowCreateCreatorForm = 'creators.create.index';
+    case CreateCreator = 'creators.create.handle';
 }

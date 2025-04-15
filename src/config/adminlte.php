@@ -340,6 +340,15 @@ return [
             'url' => 'songs',
             'icon' => 'fas fa-list',
         ],
+        // クリエイター
+        [
+            'header' => 'creator',
+        ],
+        [
+            'text' => 'create-creator',
+            'url' => 'creators/create',
+            'icon' => 'fas fa-plus',
+        ],
     ],
 
     /*

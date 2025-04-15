@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers\EnvProviders;
 
+use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Infrastructures\Repositories\FileCreatorRepository;
 use Illuminate\Support\ServiceProvider;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
@@ -26,6 +28,9 @@ class ProdServiceProvider extends ServiceProvider
 
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
 
+        // TODO 正式なリポジトリを作成したら差し替える
+        $this->app->bind(CreatorRepositoryInterface::class, FileCreatorRepository::class);
+
         $this->auth();
 
         $this->journeyLog();
@@ -33,6 +38,8 @@ class ProdServiceProvider extends ServiceProvider
         $this->journeyLogLinkType();
 
         $this->song();
+
+        $this->creator();
     }
 
     public function boot(): void
@@ -65,5 +72,10 @@ class ProdServiceProvider extends ServiceProvider
     private function song(): void
     {
         $this->app->bind(\Song\UseCases\List\ListUseCaseInterface::class, \Song\Application\List\ListInteractor::class);
+    }
+
+    private function creator(): void
+    {
+        $this->app->bind(\Creator\UseCases\Create\CreateUseCaseInterface::class, \Creator\Application\Create\CreateInteractor::class);
     }
 }
