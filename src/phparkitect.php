@@ -27,6 +27,7 @@ return static function (Config $config): void {
             ->component('SongType.Domain')->definedBy('SongType\Domain\*')
 
             ->component('Creator.Domain')->definedBy('Creator\Domain\*')
+            ->component('Creator.UseCase')->definedBy('Creator\UseCases\*')
 
             ->component('Support.Domain')->definedBy('Support\Domain\*')
 
@@ -42,6 +43,7 @@ return static function (Config $config): void {
             ->where('SongType.Domain')->shouldOnlyDependOnComponents('SongType.Domain', 'Support.Domain')
 
             ->where('Creator.Domain')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Domain')
+            ->where('Creator.UseCase')->shouldOnlyDependOnComponents('Creator.Domain')
 
             ->where('Support.Domain')->shouldNotDependOnAnyComponent()
 
