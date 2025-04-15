@@ -25,5 +25,6 @@ return [
     'song' => '楽曲管理',
     'list-song' => '楽曲一覧',
     'creator' => 'クリエイター管理',
+    'list-creator' => 'クリエイター一覧',
     'create-creator' => 'クリエイター登録',
 ];

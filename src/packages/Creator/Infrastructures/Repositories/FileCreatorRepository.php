@@ -25,6 +25,14 @@ class FileCreatorRepository implements CreatorRepositoryInterface
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }
 
+    /**
+     * @return array<Creator>
+     */
+    public function listCreators(): array
+    {
+        return array_values($this->store->getAll($this->filePath));
+    }
+
     public function createCreator(Creator $creator): void
     {
         $this->store->put($this->filePath, $creator->creatorId->value, $creator);

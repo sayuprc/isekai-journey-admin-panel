@@ -345,6 +345,11 @@ return [
             'header' => 'creator',
         ],
         [
+            'text' => 'list-creator',
+            'url' => 'creators',
+            'icon' => 'fas fa-list',
+        ],
+        [
             'text' => 'create-creator',
             'url' => 'creators/create',
             'icon' => 'fas fa-plus',

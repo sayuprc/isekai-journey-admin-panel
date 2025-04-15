@@ -32,8 +32,7 @@ class CreateCreatorController extends Controller
         }
 
         return redirect()
-            // TODO クリエイター一覧ができたらそちらに移動
-            ->route(RouteMap::ListJourneyLogs)
+            ->route(RouteMap::ListCreators)
             ->with(['message' => '登録完了しました']);
     }
 }

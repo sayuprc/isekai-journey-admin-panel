@@ -8,5 +8,10 @@ use Creator\Domain\Models\Creator;
 
 interface CreatorRepositoryInterface
 {
+    /**
+     * @return array<Creator>
+     */
+    public function listCreators(): array;
+
     public function createCreator(Creator $creator): void;
 }

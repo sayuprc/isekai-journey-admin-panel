@@ -30,6 +30,7 @@ enum RouteMap: string
     case ListSongs = 'songs.index';
 
     // クリエイター関連
+    case ListCreators = 'creators.index';
     case ShowCreateCreatorForm = 'creators.create.index';
     case CreateCreator = 'creators.create.handle';
 }
