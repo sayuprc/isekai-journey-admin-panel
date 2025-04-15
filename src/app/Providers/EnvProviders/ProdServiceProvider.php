@@ -76,6 +76,7 @@ class ProdServiceProvider extends ServiceProvider
 
     private function creator(): void
     {
+        $this->app->bind(\Creator\UseCases\List\ListUseCaseInterface::class, \Creator\Application\List\ListInteractor::class);
         $this->app->bind(\Creator\UseCases\Create\CreateUseCaseInterface::class, \Creator\Application\Create\CreateInteractor::class);
     }
 }

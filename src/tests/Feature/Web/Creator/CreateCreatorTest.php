@@ -69,7 +69,7 @@ class CreateCreatorTest extends TestCase
                 'creator_name' => 'クリエイター',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs))
+            ->assertLocation(route(RouteMap::ListCreators))
             ->assertSessionHas('message', '登録完了しました');
     }
 
