@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Creator\CreateCreatorController;
+use App\Http\Controllers\Web\Creator\DeleteCreatorController;
 use App\Http\Controllers\Web\Creator\EditCreatorController;
 use App\Http\Controllers\Web\Creator\ListCreatorController;
 use App\Http\Controllers\Web\JourneyLog\CreateJourneyLogController;
@@ -83,5 +84,8 @@ Route::middleware('auth')->group(function (): void {
             ->name(RouteMap::ShowEditCreatorForm);
         Route::post('/edit', [EditCreatorController::class, 'handle'])
             ->name(RouteMap::EditCreator);
+
+        Route::delete('/', [DeleteCreatorController::class, 'handle'])
+            ->name(RouteMap::DeleteCreator);
     });
 });

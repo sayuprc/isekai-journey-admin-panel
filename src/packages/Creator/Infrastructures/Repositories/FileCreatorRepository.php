@@ -53,4 +53,9 @@ class FileCreatorRepository implements CreatorRepositoryInterface
 
         return $creator->creatorId;
     }
+
+    public function deleteCreator(CreatorId $creatorId): void
+    {
+        $this->store->unset($this->filePath, $creatorId->value);
+    }
 }
