@@ -46,4 +46,11 @@ class FileCreatorRepository implements CreatorRepositoryInterface
 
         return $found;
     }
+
+    public function editCreator(Creator $creator): CreatorId
+    {
+        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
+
+        return $creator->creatorId;
+    }
 }

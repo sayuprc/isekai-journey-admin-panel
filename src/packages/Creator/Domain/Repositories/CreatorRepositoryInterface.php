@@ -17,4 +17,6 @@ interface CreatorRepositoryInterface
     public function createCreator(Creator $creator): void;
 
     public function getCreator(CreatorId $creatorId): Creator;
+
+    public function editCreator(Creator $creator): CreatorId;
 }
