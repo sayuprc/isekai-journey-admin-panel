@@ -10,12 +10,12 @@ use JourneyLog\UseCases\List\ListUseCaseInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogRepositoryInterface $client)
+    public function __construct(private readonly JourneyLogRepositoryInterface $repository)
     {
     }
 
     public function handle(): ListResponse
     {
-        return new ListResponse($this->client->listJourneyLogs());
+        return new ListResponse($this->repository->listJourneyLogs());
     }
 }

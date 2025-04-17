@@ -26,7 +26,7 @@ use Support\Uuid\UuidGeneratorInterface;
 class EditInteractor implements EditUseCaseInterface
 {
     public function __construct(
-        private readonly JourneyLogRepositoryInterface $client,
+        private readonly JourneyLogRepositoryInterface $repository,
         private readonly UuidGeneratorInterface $generator,
     ) {
     }
@@ -44,7 +44,7 @@ class EditInteractor implements EditUseCaseInterface
             $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
-        $this->client->editJourneyLog($journeyLog);
+        $this->repository->editJourneyLog($journeyLog);
     }
 
     /**

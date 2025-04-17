@@ -10,12 +10,12 @@ use Song\UseCases\List\ListUseCaseInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly SongRepositoryInterface $client)
+    public function __construct(private readonly SongRepositoryInterface $repository)
     {
     }
 
     public function handle(): ListResponse
     {
-        return new ListResponse($this->client->listSongs());
+        return new ListResponse($this->repository->listSongs());
     }
 }

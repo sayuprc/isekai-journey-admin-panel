@@ -13,7 +13,7 @@ use Creator\UseCases\Edit\EditUseCaseInterface;
 
 class EditInteractor implements EditUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $client)
+    public function __construct(private readonly CreatorRepositoryInterface $repository)
     {
     }
 
@@ -24,6 +24,6 @@ class EditInteractor implements EditUseCaseInterface
             new CreatorName($request->creatorName),
         );
 
-        $this->client->editCreator($creator);
+        $this->repository->editCreator($creator);
     }
 }

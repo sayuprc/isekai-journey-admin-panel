@@ -26,7 +26,7 @@ use Support\Uuid\UuidGeneratorInterface;
 class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly JourneyLogRepositoryInterface $client,
+        private readonly JourneyLogRepositoryInterface $repository,
         private readonly UuidGeneratorInterface $generator,
     ) {
     }
@@ -44,7 +44,7 @@ class CreateInteractor implements CreateUseCaseInterface
             $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
-        $this->client->createJourneyLog($journeyLog);
+        $this->repository->createJourneyLog($journeyLog);
     }
 
     /**

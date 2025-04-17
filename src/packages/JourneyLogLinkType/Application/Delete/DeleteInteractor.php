@@ -11,7 +11,7 @@ use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $client)
+    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $repository)
     {
     }
 
@@ -19,6 +19,6 @@ class DeleteInteractor implements DeleteUseCaseInterface
     {
         $journeyLogLinkTypeId = new JourneyLogLinkTypeId($request->journeyLogLinkTypeId);
 
-        $this->client->deleteJourneyLogLinkType($journeyLogLinkTypeId);
+        $this->repository->deleteJourneyLogLinkType($journeyLogLinkTypeId);
     }
 }
