@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\Creator\Application\Get;
+namespace Tests\Unit\Creator\Application\Get;
 
 use Creator\Application\Get\GetInteractor;
 use Creator\Domain\Models\Creator;
