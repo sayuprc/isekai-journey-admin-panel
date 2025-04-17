@@ -35,4 +35,5 @@ enum RouteMap: string
     case CreateCreator = 'creators.create.handle';
     case ShowEditCreatorForm = 'creators.edit.index';
     case EditCreator = 'creators.edit.handle';
+    case DeleteCreator = 'creators.delete.handle';
 }

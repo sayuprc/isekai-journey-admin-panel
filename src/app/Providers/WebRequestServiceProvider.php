@@ -93,6 +93,13 @@ class WebRequestServiceProvider extends ServiceProvider
 
             return $this->getMapper()->map(\Creator\UseCases\Edit\EditRequest::class, $request->validated());
         });
+
+        $this->app->bind(\Creator\UseCases\Delete\DeleteRequest::class, function (): \Creator\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\Creator\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\Creator\DeleteRequest);
+
+            return $this->getMapper()->map(\Creator\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
     }
 
     protected function getMapper(): MapperInterface

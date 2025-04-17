@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>クリエイター更新</h1>
 
-        <form action="" method="post">
+        <form action="{{ route(RouteMap::DeleteCreator, $creator->creatorId) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="creator_id" value="{{ $creator->creatorId }}" type="hidden">
