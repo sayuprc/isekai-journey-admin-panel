@@ -17,14 +17,14 @@ class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
         private readonly JourneyLogLinkTypeRepositoryInterface $repository,
-        private readonly UuidGeneratorInterface $generator,
+        private readonly UuidGeneratorInterface $uuid,
     ) {
     }
 
     public function handle(CreateRequest $request): void
     {
         $journeyLogLinkType = new JourneyLogLinkType(
-            new JourneyLogLinkTypeId($this->generator->generate()),
+            new JourneyLogLinkTypeId($this->uuid->generate()),
             new JourneyLogLinkTypeName($request->journeyLogLinkTypeName),
             new OrderNo($request->orderNo),
         );

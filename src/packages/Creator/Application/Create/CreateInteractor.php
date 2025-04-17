@@ -15,13 +15,13 @@ use Support\Uuid\UuidGeneratorInterface;
 class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly CreatorRepositoryInterface $client,
+        private readonly CreatorRepositoryInterface $repository,
         private readonly UuidGeneratorInterface $uuid,
     ) {
     }
 
     public function handle(CreateRequest $request): void
     {
-        $this->client->createCreator(new Creator(new CreatorId($this->uuid->generate()), new CreatorName($request->creatorName)));
+        $this->repository->createCreator(new Creator(new CreatorId($this->uuid->generate()), new CreatorName($request->creatorName)));
     }
 }

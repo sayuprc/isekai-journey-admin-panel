@@ -12,12 +12,12 @@ use Creator\UseCases\Get\GetUseCaseInterface;
 
 class GetInteractor implements GetUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $client)
+    public function __construct(private readonly CreatorRepositoryInterface $repository)
     {
     }
 
     public function handle(GetRequest $request): GetResponse
     {
-        return new GetResponse($this->client->getCreator(new CreatorId($request->creatorId)));
+        return new GetResponse($this->repository->getCreator(new CreatorId($request->creatorId)));
     }
 }

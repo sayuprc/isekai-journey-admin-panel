@@ -26,15 +26,15 @@ use Support\Uuid\UuidGeneratorInterface;
 class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly JourneyLogRepositoryInterface $client,
-        private readonly UuidGeneratorInterface $generator,
+        private readonly JourneyLogRepositoryInterface $repository,
+        private readonly UuidGeneratorInterface $uuid,
     ) {
     }
 
     public function handle(CreateRequest $request): void
     {
         $journeyLog = new JourneyLog(
-            new JourneyLogId($this->generator->generate()), // 新規登録に ID は不要なのでダミーの ID を持たせている
+            new JourneyLogId($this->uuid->generate()), // 新規登録に ID は不要なのでダミーの ID を持たせている
             new Story($request->story),
             new Period(
                 new FromOn(new DateTimeImmutable($request->fromOn)),
@@ -44,7 +44,7 @@ class CreateInteractor implements CreateUseCaseInterface
             $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
-        $this->client->createJourneyLog($journeyLog);
+        $this->repository->createJourneyLog($journeyLog);
     }
 
     /**
@@ -58,7 +58,7 @@ class CreateInteractor implements CreateUseCaseInterface
 
         foreach ($data as $link) {
             $journeyLogLinks[] = new JourneyLogLink(
-                new JourneyLogLinkId($this->generator->generate()), // リンクはデリートインサートなのでダミー値でよい
+                new JourneyLogLinkId($this->uuid->generate()), // リンクはデリートインサートなのでダミー値でよい
                 new JourneyLogLinkName($link->journeyLogLinkName),
                 new Url($link->url),
                 new OrderNo($link->orderNo),

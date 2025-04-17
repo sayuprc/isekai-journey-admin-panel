@@ -11,12 +11,12 @@ use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogRepositoryInterface $client)
+    public function __construct(private readonly JourneyLogRepositoryInterface $repository)
     {
     }
 
     public function handle(DeleteRequest $request): void
     {
-        $this->client->deleteJourneyLog(new JourneyLogId($request->journeyLogId));
+        $this->repository->deleteJourneyLog(new JourneyLogId($request->journeyLogId));
     }
 }

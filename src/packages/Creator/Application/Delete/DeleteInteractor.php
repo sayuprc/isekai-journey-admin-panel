@@ -11,12 +11,12 @@ use Creator\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $client)
+    public function __construct(private readonly CreatorRepositoryInterface $repository)
     {
     }
 
     public function handle(DeleteRequest $request): void
     {
-        $this->client->deleteCreator(new CreatorId($request->creatorId));
+        $this->repository->deleteCreator(new CreatorId($request->creatorId));
     }
 }

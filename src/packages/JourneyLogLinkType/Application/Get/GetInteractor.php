@@ -12,7 +12,7 @@ use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 
 class GetInteractor implements GetUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $client)
+    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $repository)
     {
     }
 
@@ -20,6 +20,6 @@ class GetInteractor implements GetUseCaseInterface
     {
         $journeyLogLinkTypeId = new JourneyLogLinkTypeId($request->journeyLogLinkTypeId);
 
-        return new GetResponse($this->client->getJourneyLogLinkType($journeyLogLinkTypeId));
+        return new GetResponse($this->repository->getJourneyLogLinkType($journeyLogLinkTypeId));
     }
 }

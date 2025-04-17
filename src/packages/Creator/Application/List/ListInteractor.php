@@ -10,12 +10,12 @@ use Creator\UseCases\List\ListUseCaseInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $client)
+    public function __construct(private readonly CreatorRepositoryInterface $repository)
     {
     }
 
     public function handle(): ListResponse
     {
-        return new ListResponse($this->client->listCreators());
+        return new ListResponse($this->repository->listCreators());
     }
 }

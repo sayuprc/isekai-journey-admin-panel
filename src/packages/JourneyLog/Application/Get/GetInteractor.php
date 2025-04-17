@@ -12,12 +12,12 @@ use JourneyLog\UseCases\Get\GetUseCaseInterface;
 
 class GetInteractor implements GetUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogRepositoryInterface $client)
+    public function __construct(private readonly JourneyLogRepositoryInterface $repository)
     {
     }
 
     public function handle(GetRequest $request): GetResponse
     {
-        return new GetResponse($this->client->getJourneyLog(new JourneyLogId($request->journeyLogId)));
+        return new GetResponse($this->repository->getJourneyLog(new JourneyLogId($request->journeyLogId)));
     }
 }
