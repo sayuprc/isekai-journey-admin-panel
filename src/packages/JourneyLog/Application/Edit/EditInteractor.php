@@ -27,7 +27,7 @@ class EditInteractor implements EditUseCaseInterface
 {
     public function __construct(
         private readonly JourneyLogRepositoryInterface $repository,
-        private readonly UuidGeneratorInterface $generator,
+        private readonly UuidGeneratorInterface $uuid,
     ) {
     }
 
@@ -58,7 +58,7 @@ class EditInteractor implements EditUseCaseInterface
 
         foreach ($data as $link) {
             $journeyLogLinks[] = new JourneyLogLink(
-                new JourneyLogLinkId($this->generator->generate()), // リンクはデリートインサートなのでダミー値でよい
+                new JourneyLogLinkId($this->uuid->generate()), // リンクはデリートインサートなのでダミー値でよい
                 new JourneyLogLinkName($link->journeyLogLinkName),
                 new Url($link->url),
                 new OrderNo($link->orderNo),
