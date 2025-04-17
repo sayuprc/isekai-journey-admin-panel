@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Creator\Infrastructures\Repositories;
 
 use Creator\Domain\Models\Creator;
+use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Support\Config\ConfigInterface;
 use Support\Repository\FileStore;
@@ -36,5 +37,20 @@ class FileCreatorRepository implements CreatorRepositoryInterface
     public function createCreator(Creator $creator): void
     {
         $this->store->put($this->filePath, $creator->creatorId->value, $creator);
+    }
+
+    public function getCreator(CreatorId $creatorId): Creator
+    {
+        $found = $this->store->get($this->filePath, $creatorId->value);
+        assert($found instanceof Creator);
+
+        return $found;
+    }
+
+    public function editCreator(Creator $creator): CreatorId
+    {
+        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
+
+        return $creator->creatorId;
     }
 }

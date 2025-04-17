@@ -26,7 +26,7 @@
         @foreach($creators as $creator)
             <tr>
                 <td>{{ $creator->creatorName }}</td>
-                <td><a href="">編集</a>
+                <td><a href="{{route(RouteMap::ShowEditCreatorForm,$creator->creatorId)}}">編集</a>
                 </td>
             </tr>
         @endforeach

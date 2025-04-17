@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature\Web\Creator;
+namespace Tests\Feature\Web\Creator;
 
 use App\Models\User;
 use Creator\Domain\Models\Creator;

@@ -86,6 +86,13 @@ class WebRequestServiceProvider extends ServiceProvider
 
             return $this->getMapper()->map(\Creator\UseCases\Create\CreateRequest::class, $request->validated());
         });
+
+        $this->app->bind(\Creator\UseCases\Edit\EditRequest::class, function (): \Creator\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\Creator\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\Creator\EditRequest);
+
+            return $this->getMapper()->map(\Creator\UseCases\Edit\EditRequest::class, $request->validated());
+        });
     }
 
     protected function getMapper(): MapperInterface

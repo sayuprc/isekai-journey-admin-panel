@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\Creator\Application\Get;
+
+use Creator\Application\Get\GetInteractor;
+use Creator\Domain\Models\Creator;
+use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
+use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\UseCases\Get\GetRequest;
+use Creator\UseCases\Get\GetResponse;
+use Creator\UseCases\Get\GetUseCaseInterface;
+use Mockery;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+
+class GetInteractorTest extends TestCase
+{
+    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+
+    private GetInteractor $interactor;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->interactor = new GetInteractor($this->creatorRepository);
+    }
+
+    #[Test]
+    public function isImplementsSpecificInterface(): void
+    {
+        $this->assertInstanceOf(GetUseCaseInterface::class, $this->interactor);
+    }
+
+    #[Test]
+    public function getCreator(): void
+    {
+        $this->creatorRepository->shouldReceive('getCreator')
+            ->with(Mockery::on(
+                fn ($arg) => $arg instanceof CreatorId
+                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+            ))
+            ->andReturnUsing(
+                fn () => new Creator(
+                    new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                    new CreatorName('クリエイター名'),
+                )
+            )
+            ->once();
+
+        $response = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(GetResponse::class, $response);
+
+        $this->assertInstanceOf(Creator::class, $response->creator);
+        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->creator->creatorId->value);
+        $this->assertSame('クリエイター名', $response->creator->creatorName->value);
+    }
+}
