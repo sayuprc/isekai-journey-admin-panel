@@ -38,7 +38,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createJourneyLogLinkType(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('createJourneyLogLinkType')
+        $this->journeyLogLinkTypeRepository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogLinkType
                     && $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'

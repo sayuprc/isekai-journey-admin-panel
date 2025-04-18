@@ -12,13 +12,13 @@ interface CreatorRepositoryInterface
     /**
      * @return array<Creator>
      */
-    public function listCreators(): array;
+    public function all(): array;
 
-    public function createCreator(Creator $creator): void;
+    public function find(CreatorId $creatorId): Creator;
 
-    public function getCreator(CreatorId $creatorId): Creator;
+    public function insert(Creator $creator): void;
 
-    public function editCreator(Creator $creator): CreatorId;
+    public function update(Creator $creator): CreatorId;
 
-    public function deleteCreator(CreatorId $creatorId): void;
+    public function delete(CreatorId $creatorId): void;
 }

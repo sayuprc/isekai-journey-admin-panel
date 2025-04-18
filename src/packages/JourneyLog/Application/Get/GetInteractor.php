@@ -18,6 +18,6 @@ class GetInteractor implements GetUseCaseInterface
 
     public function handle(GetRequest $request): GetResponse
     {
-        return new GetResponse($this->repository->getJourneyLog(new JourneyLogId($request->journeyLogId)));
+        return new GetResponse($this->repository->find(new JourneyLogId($request->journeyLogId)));
     }
 }

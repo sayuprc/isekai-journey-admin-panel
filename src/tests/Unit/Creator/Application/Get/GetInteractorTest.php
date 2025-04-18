@@ -40,7 +40,7 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getCreator(): void
     {
-        $this->creatorRepository->shouldReceive('getCreator')
+        $this->creatorRepository->shouldReceive('find')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof CreatorId
                     && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'

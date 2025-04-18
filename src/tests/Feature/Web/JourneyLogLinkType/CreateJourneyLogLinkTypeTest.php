@@ -55,7 +55,7 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('createJourneyLogLinkType')
+        $this->journeyLogLinkTypeRepository->shouldReceive('insert')
             ->with(Mockery::on(function (JourneyLogLinkType $arg) use ($uuid): bool {
                 return $arg->journeyLogLinkTypeId->value === $uuid
                     && $arg->journeyLogLinkTypeName->value === '軌跡リンク種別A'

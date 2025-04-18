@@ -29,17 +29,12 @@ class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryIn
     /**
      * @return array<JourneyLogLinkType>
      */
-    public function listJourneyLogLinkTypes(): array
+    public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
-    {
-        $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
-    }
-
-    public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
+    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
     {
         $found = $this->store->get($this->filePath, $journeyLogLinkTypeId->value);
         assert($found instanceof JourneyLogLinkType);
@@ -47,12 +42,17 @@ class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryIn
         return $found;
     }
 
-    public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void
+    public function insert(JourneyLogLinkType $journeyLogLinkType): void
     {
         $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
     }
 
-    public function deleteJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): void
+    public function update(JourneyLogLinkType $journeyLogLinkType): void
+    {
+        $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
+    }
+
+    public function delete(JourneyLogLinkTypeId $journeyLogLinkTypeId): void
     {
         $this->store->unset($this->filePath, $journeyLogLinkTypeId->value);
     }

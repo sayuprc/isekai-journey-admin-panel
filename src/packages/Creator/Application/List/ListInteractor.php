@@ -16,6 +16,6 @@ class ListInteractor implements ListUseCaseInterface
 
     public function handle(): ListResponse
     {
-        return new ListResponse($this->repository->listCreators());
+        return new ListResponse($this->repository->all());
     }
 }

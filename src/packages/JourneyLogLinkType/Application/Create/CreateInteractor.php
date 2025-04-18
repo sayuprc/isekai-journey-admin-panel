@@ -29,6 +29,6 @@ class CreateInteractor implements CreateUseCaseInterface
             new OrderNo($request->orderNo),
         );
 
-        $this->repository->createJourneyLogLinkType($journeyLogLinkType);
+        $this->repository->insert($journeyLogLinkType);
     }
 }

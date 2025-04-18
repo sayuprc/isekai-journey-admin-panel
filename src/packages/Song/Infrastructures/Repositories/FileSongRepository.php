@@ -28,7 +28,7 @@ class FileSongRepository implements SongRepositoryInterface
     /**
      * @return array<Song>
      */
-    public function listSongs(): array
+    public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
     }

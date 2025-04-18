@@ -44,7 +44,7 @@ class CreateInteractor implements CreateUseCaseInterface
             $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
-        $this->repository->createJourneyLog($journeyLog);
+        $this->repository->insert($journeyLog);
     }
 
     /**

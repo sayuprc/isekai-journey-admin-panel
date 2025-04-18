@@ -49,7 +49,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyJourneyLogs(): void
     {
-        $this->journeyLogRepository->shouldReceive('listJourneyLogs')
+        $this->journeyLogRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [])
             ->once();
 
@@ -63,7 +63,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyJourneyLogs(): void
     {
-        $this->journeyLogRepository->shouldReceive('listJourneyLogs')
+        $this->journeyLogRepository->shouldReceive('all')
             ->andReturnUsing(
                 fn () => [
                     new JourneyLog(

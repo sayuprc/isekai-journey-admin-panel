@@ -49,7 +49,7 @@ class ListCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('listCreators')
+        $this->creatorRepository->shouldReceive('all')
             ->andReturn([
                 new Creator(
                     new CreatorId($uuid),
@@ -86,7 +86,7 @@ class ListCreatorTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->creatorRepository->shouldReceive('listCreators')
+        $this->creatorRepository->shouldReceive('all')
             ->andReturn([])
             ->once();
 

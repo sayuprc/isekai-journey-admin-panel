@@ -47,7 +47,7 @@ class DeleteCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('deleteCreator')
+        $this->creatorRepository->shouldReceive('delete')
             ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
             ->once();
 

@@ -20,6 +20,6 @@ class GetInteractor implements GetUseCaseInterface
     {
         $journeyLogLinkTypeId = new JourneyLogLinkTypeId($request->journeyLogLinkTypeId);
 
-        return new GetResponse($this->repository->getJourneyLogLinkType($journeyLogLinkTypeId));
+        return new GetResponse($this->repository->find($journeyLogLinkTypeId));
     }
 }

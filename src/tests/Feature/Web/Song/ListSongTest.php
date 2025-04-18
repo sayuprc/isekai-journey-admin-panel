@@ -51,7 +51,7 @@ class ListSongTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->songRepository->shouldReceive('listSongs')
+        $this->songRepository->shouldReceive('all')
             ->andReturn([
                 new Song(
                     new SongId($uuid),
@@ -100,7 +100,7 @@ class ListSongTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->songRepository->shouldReceive('listSongs')
+        $this->songRepository->shouldReceive('all')
             ->andReturn([])
             ->once();
 

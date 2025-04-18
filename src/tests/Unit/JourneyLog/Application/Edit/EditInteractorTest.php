@@ -39,7 +39,7 @@ class EditInteractorTest extends TestCase
     #[Test]
     public function editJourneyLogWithoutLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('editJourneyLog')
+        $this->journeyLogRepository->shouldReceive('update')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLog
                     && $arg->journeyLogId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
@@ -64,7 +64,7 @@ class EditInteractorTest extends TestCase
     #[Test]
     public function editJourneyLogWithLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('editJourneyLog')
+        $this->journeyLogRepository->shouldReceive('update')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLog
                     && $arg->journeyLogId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'

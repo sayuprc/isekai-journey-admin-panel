@@ -50,7 +50,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturn([
                 new JourneyLogLinkType(
                     new JourneyLogLinkTypeId($uuid),
@@ -89,7 +89,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturn([])
             ->once();
 

@@ -29,17 +29,12 @@ class FileJourneyLogRepository implements JourneyLogRepositoryInterface
     /**
      * @return array<JourneyLog>
      */
-    public function listJourneyLogs(): array
+    public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function createJourneyLog(JourneyLog $journeyLog): void
-    {
-        $this->store->put($this->filePath, $journeyLog->journeyLogId->value, $journeyLog);
-    }
-
-    public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog
+    public function find(JourneyLogId $journeyLogId): JourneyLog
     {
         $found = $this->store->get($this->filePath, $journeyLogId->value);
         assert($found instanceof JourneyLog);
@@ -47,14 +42,19 @@ class FileJourneyLogRepository implements JourneyLogRepositoryInterface
         return $found;
     }
 
-    public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId
+    public function insert(JourneyLog $journeyLog): void
+    {
+        $this->store->put($this->filePath, $journeyLog->journeyLogId->value, $journeyLog);
+    }
+
+    public function update(JourneyLog $journeyLog): JourneyLogId
     {
         $this->store->put($this->filePath, $journeyLog->journeyLogId->value, $journeyLog);
 
         return $journeyLog->journeyLogId;
     }
 
-    public function deleteJourneyLog(JourneyLogId $journeyLogId): void
+    public function delete(JourneyLogId $journeyLogId): void
     {
         $this->store->unset($this->filePath, $journeyLogId->value);
     }

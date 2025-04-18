@@ -39,7 +39,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createWithoutLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('createJourneyLog')
+        $this->journeyLogRepository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLog
                     && $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
@@ -63,7 +63,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createWithLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('createJourneyLog')
+        $this->journeyLogRepository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLog
                     && $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'

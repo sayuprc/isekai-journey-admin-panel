@@ -39,7 +39,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyJourneyLogLinkTypes(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [])
             ->once();
 
@@ -53,7 +53,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyJourneyLogLinkTypes(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [
                 new JourneyLogLinkType(
                     new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),

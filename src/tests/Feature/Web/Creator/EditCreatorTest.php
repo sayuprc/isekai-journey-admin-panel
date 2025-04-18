@@ -59,7 +59,7 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('getCreator')
+        $this->creatorRepository->shouldReceive('find')
             ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
             ->andReturn(new Creator(
                 new CreatorId($uuid),
@@ -86,7 +86,7 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('editCreator')
+        $this->creatorRepository->shouldReceive('update')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof Creator
                 && $arg->creatorId->value === $uuid

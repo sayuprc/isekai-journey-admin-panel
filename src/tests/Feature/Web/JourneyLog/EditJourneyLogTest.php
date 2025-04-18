@@ -68,7 +68,7 @@ class EditJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturn([])
             ->once();
 
@@ -77,7 +77,7 @@ class EditJourneyLogTest extends TestCase
             fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
         );
 
-        $this->journeyLogRepository->shouldReceive('getJourneyLog')
+        $this->journeyLogRepository->shouldReceive('find')
             ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
                 return $arg->value === $uuid;
             }))
@@ -112,7 +112,7 @@ class EditJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogRepository->shouldReceive('editJourneyLog')
+        $this->journeyLogRepository->shouldReceive('update')
             ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
                 return $arg->journeyLogId->value === $uuid
                      && $arg->story->value === '軌跡'

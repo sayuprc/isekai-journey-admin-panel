@@ -18,6 +18,6 @@ class GetInteractor implements GetUseCaseInterface
 
     public function handle(GetRequest $request): GetResponse
     {
-        return new GetResponse($this->repository->getCreator(new CreatorId($request->creatorId)));
+        return new GetResponse($this->repository->find(new CreatorId($request->creatorId)));
     }
 }
