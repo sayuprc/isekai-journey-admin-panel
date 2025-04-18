@@ -29,17 +29,12 @@ class FileCreatorRepository implements CreatorRepositoryInterface
     /**
      * @return array<Creator>
      */
-    public function listCreators(): array
+    public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function createCreator(Creator $creator): void
-    {
-        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
-    }
-
-    public function getCreator(CreatorId $creatorId): Creator
+    public function find(CreatorId $creatorId): Creator
     {
         $found = $this->store->get($this->filePath, $creatorId->value);
         assert($found instanceof Creator);
@@ -47,14 +42,19 @@ class FileCreatorRepository implements CreatorRepositoryInterface
         return $found;
     }
 
-    public function editCreator(Creator $creator): CreatorId
+    public function insert(Creator $creator): void
+    {
+        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
+    }
+
+    public function update(Creator $creator): CreatorId
     {
         $this->store->put($this->filePath, $creator->creatorId->value, $creator);
 
         return $creator->creatorId;
     }
 
-    public function deleteCreator(CreatorId $creatorId): void
+    public function delete(CreatorId $creatorId): void
     {
         $this->store->unset($this->filePath, $creatorId->value);
     }

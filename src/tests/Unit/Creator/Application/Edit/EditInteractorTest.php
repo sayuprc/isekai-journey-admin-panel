@@ -37,7 +37,7 @@ class EditInteractorTest extends TestCase
     #[Test]
     public function editCreator(): void
     {
-        $this->creatorRepository->shouldReceive('editCreator')
+        $this->creatorRepository->shouldReceive('update')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof Creator
                     && $arg->creatorId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'

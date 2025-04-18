@@ -56,7 +56,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptySongs(): void
     {
-        $this->songRepository->shouldReceive('listSongs')
+        $this->songRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [])
             ->once();
 
@@ -70,7 +70,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongs(): void
     {
-        $this->songRepository->shouldReceive('listSongs')
+        $this->songRepository->shouldReceive('all')
             ->andReturnUsing(
                 fn () => [
                     new Song(

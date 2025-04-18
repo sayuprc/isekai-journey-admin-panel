@@ -9,7 +9,7 @@ use Song\Domain\Models\Song;
 interface SongRepositoryInterface
 {
     /**
-     * @return Song[]
+     * @return array<Song>
      */
-    public function listSongs(): array;
+    public function all(): array;
 }

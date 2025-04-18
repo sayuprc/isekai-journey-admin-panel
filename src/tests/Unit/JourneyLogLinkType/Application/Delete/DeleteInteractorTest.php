@@ -37,7 +37,7 @@ class DeleteInteractorTest extends TestCase
     #[Test]
     public function deleteJourneyLogLinkType(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('deleteJourneyLogLinkType')
+        $this->journeyLogLinkTypeRepository->shouldReceive('delete')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogLinkTypeId
                     && $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'

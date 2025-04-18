@@ -50,7 +50,7 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getJourneyLogWithoutLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('getJourneyLog')
+        $this->journeyLogRepository->shouldReceive('find')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogId
                     && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
@@ -82,7 +82,7 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getJourneyLogWithLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('getJourneyLog')
+        $this->journeyLogRepository->shouldReceive('find')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogId
                     && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'

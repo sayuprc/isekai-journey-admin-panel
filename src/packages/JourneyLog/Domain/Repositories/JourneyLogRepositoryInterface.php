@@ -10,15 +10,15 @@ use JourneyLog\Domain\Models\JourneyLogId;
 interface JourneyLogRepositoryInterface
 {
     /**
-     * @return JourneyLog[]
+     * @return array<JourneyLog>
      */
-    public function listJourneyLogs(): array;
+    public function all(): array;
 
-    public function createJourneyLog(JourneyLog $journeyLog): void;
+    public function find(JourneyLogId $journeyLogId): JourneyLog;
 
-    public function getJourneyLog(JourneyLogId $journeyLogId): JourneyLog;
+    public function insert(JourneyLog $journeyLog): void;
 
-    public function editJourneyLog(JourneyLog $journeyLog): JourneyLogId;
+    public function update(JourneyLog $journeyLog): JourneyLogId;
 
-    public function deleteJourneyLog(JourneyLogId $journeyLogId): void;
+    public function delete(JourneyLogId $journeyLogId): void;
 }

@@ -39,7 +39,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyCreators(): void
     {
-        $this->creatorRepository->shouldReceive('listCreators')
+        $this->creatorRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [])
             ->once();
 
@@ -53,7 +53,7 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyCreators(): void
     {
-        $this->creatorRepository->shouldReceive('listCreators')
+        $this->creatorRepository->shouldReceive('all')
             ->andReturnUsing(fn () => [
                 new Creator(
                     new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),

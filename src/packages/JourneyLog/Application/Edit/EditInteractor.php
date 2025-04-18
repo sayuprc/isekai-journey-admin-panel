@@ -44,7 +44,7 @@ class EditInteractor implements EditUseCaseInterface
             $this->toJourneyLogLinks($request->journeyLogLinks),
         );
 
-        $this->repository->editJourneyLog($journeyLog);
+        $this->repository->update($journeyLog);
     }
 
     /**

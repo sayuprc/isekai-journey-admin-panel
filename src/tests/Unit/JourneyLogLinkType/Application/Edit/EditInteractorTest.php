@@ -37,7 +37,7 @@ class EditInteractorTest extends TestCase
     #[Test]
     public function editJourneyLogLinkType(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('editJourneyLogLinkType')
+        $this->journeyLogLinkTypeRepository->shouldReceive('update')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogLinkType
                     && $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'

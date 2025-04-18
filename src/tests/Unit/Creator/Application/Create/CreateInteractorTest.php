@@ -38,7 +38,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $this->creatorRepository->shouldReceive('createCreator')
+        $this->creatorRepository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof Creator
                     && $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'

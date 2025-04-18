@@ -49,7 +49,7 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function showCreateForm(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('listJourneyLogLinkTypes')
+        $this->journeyLogLinkTypeRepository->shouldReceive('all')
             ->andReturn([])
             ->once();
 
@@ -72,7 +72,7 @@ class CreateJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogRepository->shouldReceive('createJourneyLog')
+        $this->journeyLogRepository->shouldReceive('insert')
             ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
                 return $arg->journeyLogId->value === $uuid
                     && $arg->story->value === '軌跡'

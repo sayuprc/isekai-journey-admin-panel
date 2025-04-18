@@ -55,7 +55,7 @@ class CreateCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('createCreator')
+        $this->creatorRepository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === $uuid
                     && $arg->creatorName->value === 'クリエイター'

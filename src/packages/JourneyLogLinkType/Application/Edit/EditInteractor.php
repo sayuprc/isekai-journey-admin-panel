@@ -26,6 +26,6 @@ class EditInteractor implements EditUseCaseInterface
             new OrderNo($request->orderNo),
         );
 
-        $this->repository->editJourneyLogLinkType($journeyLogLinkType);
+        $this->repository->update($journeyLogLinkType);
     }
 }

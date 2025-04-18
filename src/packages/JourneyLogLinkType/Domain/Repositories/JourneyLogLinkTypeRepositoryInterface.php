@@ -10,15 +10,15 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 interface JourneyLogLinkTypeRepositoryInterface
 {
     /**
-     * @return JourneyLogLinkType[]
+     * @return array<JourneyLogLinkType>
      */
-    public function listJourneyLogLinkTypes(): array;
+    public function all(): array;
 
-    public function createJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void;
+    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType;
 
-    public function getJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType;
+    public function insert(JourneyLogLinkType $journeyLogLinkType): void;
 
-    public function editJourneyLogLinkType(JourneyLogLinkType $journeyLogLinkType): void;
+    public function update(JourneyLogLinkType $journeyLogLinkType): void;
 
-    public function deleteJourneyLogLinkType(JourneyLogLinkTypeId $journeyLogLinkTypeId): void;
+    public function delete(JourneyLogLinkTypeId $journeyLogLinkTypeId): void;
 }

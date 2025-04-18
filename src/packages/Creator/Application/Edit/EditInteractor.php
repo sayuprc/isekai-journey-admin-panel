@@ -24,6 +24,6 @@ class EditInteractor implements EditUseCaseInterface
             new CreatorName($request->creatorName),
         );
 
-        $this->repository->editCreator($creator);
+        $this->repository->update($creator);
     }
 }

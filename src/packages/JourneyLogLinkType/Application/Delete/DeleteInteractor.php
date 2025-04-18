@@ -19,6 +19,6 @@ class DeleteInteractor implements DeleteUseCaseInterface
     {
         $journeyLogLinkTypeId = new JourneyLogLinkTypeId($request->journeyLogLinkTypeId);
 
-        $this->repository->deleteJourneyLogLinkType($journeyLogLinkTypeId);
+        $this->repository->delete($journeyLogLinkTypeId);
     }
 }

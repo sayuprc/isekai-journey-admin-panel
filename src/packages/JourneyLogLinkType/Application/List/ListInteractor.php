@@ -16,6 +16,6 @@ class ListInteractor implements ListUseCaseInterface
 
     public function handle(): ListResponse
     {
-        return new ListResponse($this->repository->listJourneyLogLinkTypes());
+        return new ListResponse($this->repository->all());
     }
 }

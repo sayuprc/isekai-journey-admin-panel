@@ -22,6 +22,6 @@ class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateRequest $request): void
     {
-        $this->repository->createCreator(new Creator(new CreatorId($this->uuid->generate()), new CreatorName($request->creatorName)));
+        $this->repository->insert(new Creator(new CreatorId($this->uuid->generate()), new CreatorName($request->creatorName)));
     }
 }

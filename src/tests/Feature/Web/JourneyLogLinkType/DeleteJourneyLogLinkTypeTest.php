@@ -47,7 +47,7 @@ class DeleteJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('deleteJourneyLogLinkType')
+        $this->journeyLogLinkTypeRepository->shouldReceive('delete')
             ->with(Mockery::on(function (JourneyLogLinkTypeId $arg) use ($uuid): bool {
                 return $arg->value === $uuid;
             }))

@@ -17,6 +17,6 @@ class DeleteInteractor implements DeleteUseCaseInterface
 
     public function handle(DeleteRequest $request): void
     {
-        $this->repository->deleteCreator(new CreatorId($request->creatorId));
+        $this->repository->delete(new CreatorId($request->creatorId));
     }
 }
