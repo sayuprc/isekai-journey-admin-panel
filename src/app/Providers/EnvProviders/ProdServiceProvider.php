@@ -8,11 +8,11 @@ use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Infrastructures\Repositories\FileCreatorRepository;
 use Illuminate\Support\ServiceProvider;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\Infrastructures\Repositories\JourneyLogRepository;
+use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\Infrastructures\Repositories\JourneyLogLinkTypeRepository;
+use JourneyLogLinkType\Infrastructures\Repositories\FileJourneyLogLinkTypeRepository;
 use Song\Domain\Repositories\SongRepositoryInterface;
-use Song\Infrastructures\Repositories\SongRepository;
+use Song\Infrastructures\Repositories\FileSongRepository;
 use Support\Application\Uuid\DummyUuidGenerator;
 use Support\Uuid\UuidGeneratorInterface;
 
@@ -22,11 +22,11 @@ class ProdServiceProvider extends ServiceProvider
     {
         $this->app->bind(UuidGeneratorInterface::class, DummyUuidGenerator::class);
 
-        $this->app->bind(JourneyLogRepositoryInterface::class, JourneyLogRepository::class);
+        $this->app->bind(JourneyLogRepositoryInterface::class, FileJourneyLogRepository::class);
 
-        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, JourneyLogLinkTypeRepository::class);
+        $this->app->bind(JourneyLogLinkTypeRepositoryInterface::class, FileJourneyLogLinkTypeRepository::class);
 
-        $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
+        $this->app->bind(SongRepositoryInterface::class, FileSongRepository::class);
 
         // TODO 正式なリポジトリを作成したら差し替える
         $this->app->bind(CreatorRepositoryInterface::class, FileCreatorRepository::class);
