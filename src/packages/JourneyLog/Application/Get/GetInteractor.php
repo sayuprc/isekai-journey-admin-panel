@@ -25,7 +25,7 @@ class GetInteractor implements GetUseCaseInterface
     public function handle(GetRequest $request): Result
     {
         if (is_null($found = $this->repository->find(new JourneyLogId($request->journeyLogId)))) {
-            return new Err("Journey log not found: {$request->journeyLogId}");
+            return new Err("JourneyLog not found: {$request->journeyLogId}");
         }
 
         return new Ok(new GetResponse($found));

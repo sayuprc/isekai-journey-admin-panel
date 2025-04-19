@@ -135,7 +135,7 @@ class EditJourneyLogTest extends TestCase
             ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
             ->assertStatus(302)
             ->assertLocation(route(RouteMap::ListJourneyLogs))
-            ->assertInvalid(['message' => "Journey log not found: {$uuid}"]);
+            ->assertInvalid(['message' => "JourneyLog not found: {$uuid}"]);
     }
 
     #[Test]
