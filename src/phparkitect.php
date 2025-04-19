@@ -36,7 +36,7 @@ return static function (Config $config): void {
             ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.Result')
 
             ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain')
+            ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Result')
 
             ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Creator.Domain', 'Support.Domain')
             ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
