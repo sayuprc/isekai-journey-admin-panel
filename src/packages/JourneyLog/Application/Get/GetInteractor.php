@@ -9,6 +9,9 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLog\UseCases\Get\GetResponse;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
+use Support\Result\Err;
+use Support\Result\Ok;
+use Support\Result\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {
@@ -16,8 +19,15 @@ class GetInteractor implements GetUseCaseInterface
     {
     }
 
-    public function handle(GetRequest $request): GetResponse
+    /**
+     * @return Result<GetResponse, string>
+     */
+    public function handle(GetRequest $request): Result
     {
-        return new GetResponse($this->repository->find(new JourneyLogId($request->journeyLogId)));
+        if (is_null($found = $this->repository->find(new JourneyLogId($request->journeyLogId)))) {
+            return new Err("Journey log not found: {$request->journeyLogId}");
+        }
+
+        return new Ok(new GetResponse($found));
     }
 }
