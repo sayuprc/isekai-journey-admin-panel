@@ -14,7 +14,7 @@ interface JourneyLogRepositoryInterface
      */
     public function all(): array;
 
-    public function find(JourneyLogId $journeyLogId): JourneyLog;
+    public function find(JourneyLogId $journeyLogId): ?JourneyLog;
 
     public function insert(JourneyLog $journeyLog): void;
 
