@@ -25,6 +25,7 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
+use Support\Result\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
@@ -66,7 +67,13 @@ class GetInteractorTest extends TestCase
             )
             ->once();
 
-        $response = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertTrue($result->isOk());
+
+        $response = $result->getValue();
 
         $this->assertInstanceOf(GetResponse::class, $response);
 
@@ -106,7 +113,12 @@ class GetInteractorTest extends TestCase
             )
             ->once();
 
-        $response = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->isOk());
+
+        $response = $result->getValue();
 
         $this->assertInstanceOf(GetResponse::class, $response);
 
@@ -122,5 +134,24 @@ class GetInteractorTest extends TestCase
         $this->assertSame('https://example.com', $response->journeyLog->journeyLogLinks[0]->url->value);
         $this->assertSame(1, $response->journeyLog->journeyLogLinks[0]->orderNo->value);
         $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $response->journeyLog->journeyLogLinks[0]->journeyLogLinkTypeId->value);
+    }
+
+    #[Test]
+    public function failureGetJourneyLog(): void
+    {
+        $this->journeyLogRepository->shouldReceive('find')
+            ->with(Mockery::on(
+                fn ($arg) => $arg instanceof JourneyLogId
+                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+            ))
+            ->andReturnNull()
+            ->once();
+
+        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isOk());
+
+        $this->assertSame('Journey log not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->getErr());
     }
 }

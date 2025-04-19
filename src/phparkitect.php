@@ -30,9 +30,10 @@ return static function (Config $config): void {
             ->component('Creator.UseCase')->definedBy('Creator\UseCases\*')
 
             ->component('Support.Domain')->definedBy('Support\Domain\*')
+            ->component('Support.Result')->definedBy('Support\Result\*')
 
             ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain')
+            ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.Result')
 
             ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
             ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain')
