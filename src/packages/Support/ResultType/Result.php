@@ -15,10 +15,10 @@ interface Result
     /**
      * @return T
      */
-    public function getValue(): mixed;
+    public function unwrap(): mixed;
 
     /**
      * @return E
      */
-    public function getErr(): mixed;
+    public function unwrapErr(): mixed;
 }

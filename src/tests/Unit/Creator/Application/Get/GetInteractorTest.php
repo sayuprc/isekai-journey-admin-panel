@@ -59,7 +59,7 @@ class GetInteractorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
-        $response = $result->getValue();
+        $response = $result->unwrap();
 
         $this->assertInstanceOf(GetResponse::class, $response);
 
@@ -84,6 +84,6 @@ class GetInteractorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());
 
-        $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->getErr());
+        $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->unwrapErr());
     }
 }

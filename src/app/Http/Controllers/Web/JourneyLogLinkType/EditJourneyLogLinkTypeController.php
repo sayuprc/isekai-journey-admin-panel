@@ -25,11 +25,11 @@ class EditJourneyLogLinkTypeController extends Controller
             return redirect()
                 ->route(RouteMap::ListJourneyLogLinkType)
                 ->withErrors([
-                    'message' => $result->getErr(),
+                    'message' => $result->unwrapErr(),
                 ]);
         }
 
-        $journeyLogLinkType = $presenter->present($result->getValue());
+        $journeyLogLinkType = $presenter->present($result->unwrap());
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }

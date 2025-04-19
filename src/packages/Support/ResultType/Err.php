@@ -25,7 +25,7 @@ class Err implements Result
         return false;
     }
 
-    public function getValue(): mixed
+    public function unwrap(): mixed
     {
         throw new LogicException('Cannot get value from Err result');
     }
@@ -33,7 +33,7 @@ class Err implements Result
     /**
      * @return E
      */
-    public function getErr(): mixed
+    public function unwrapErr(): mixed
     {
         return $this->value;
     }

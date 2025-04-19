@@ -27,13 +27,13 @@ class ErrTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('provideGetErr')]
-    public function getErr(mixed $value): void
+    #[DataProvider('provideUnwrapErr')]
+    public function unwrapErr(mixed $value): void
     {
-        $this->assertSame($value, new Err($value)->getErr());
+        $this->assertSame($value, new Err($value)->unwrapErr());
     }
 
-    public static function provideGetErr(): array
+    public static function provideUnwrapErr(): array
     {
         return [
             [null],
@@ -45,12 +45,12 @@ class ErrTest extends TestCase
     }
 
     #[Test]
-    public function throwInGetValue(): void
+    public function throwWhenUnwrap(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Cannot get value from Err result');
 
-        new Err(null)->getValue();
+        new Err(null)->unwrap();
     }
 }
 

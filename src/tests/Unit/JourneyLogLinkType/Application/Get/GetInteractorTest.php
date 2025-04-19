@@ -60,7 +60,7 @@ class GetInteractorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
-        $response = $result->getValue();
+        $response = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->journeyLogLinkType->journeyLogLinkTypeId->value);
         $this->assertSame('リンク', $response->journeyLogLinkType->journeyLogLinkTypeName->value);
@@ -83,6 +83,6 @@ class GetInteractorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());
 
-        $this->assertSame('JourneyLogLinkType not found: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $result->getErr());
+        $this->assertSame('JourneyLogLinkType not found: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $result->unwrapErr());
     }
 }
