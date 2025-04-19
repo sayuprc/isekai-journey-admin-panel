@@ -10,12 +10,12 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\Get\GetRequest;
-use JourneyLogLinkType\UseCases\Get\GetResponse;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
+use Support\Result\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
@@ -55,12 +55,34 @@ class GetInteractorTest extends TestCase
             )
             ->once();
 
-        $response = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $result = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
 
-        $this->assertInstanceOf(GetResponse::class, $response);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->isOk());
+
+        $response = $result->getValue();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->journeyLogLinkType->journeyLogLinkTypeId->value);
         $this->assertSame('リンク', $response->journeyLogLinkType->journeyLogLinkTypeName->value);
         $this->assertSame(1, $response->journeyLogLinkType->orderNo->value);
+    }
+
+    #[Test]
+    public function failureGetJourneyLogLinkType(): void
+    {
+        $this->journeyLogLinkTypeRepository->shouldReceive('find')
+            ->with(Mockery::on(
+                fn ($arg) => $arg instanceof JourneyLogLinkTypeId
+                    && $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+            ))
+            ->andReturnNull()
+            ->once();
+
+        $result = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isOk());
+
+        $this->assertSame('JourneyLogLinkType not found: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $result->getErr());
     }
 }

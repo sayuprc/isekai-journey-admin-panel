@@ -19,15 +19,17 @@ class EditJourneyLogLinkTypeController extends Controller
 {
     public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor, JourneyLogLinkTypePresenter $presenter): RedirectResponse|View
     {
-        try {
-            $journeyLogLinkType = $presenter->present($interactor->handle(new GetRequest($journeyLogLinkTypeId)));
-        } catch (Exception $e) {
+        $result = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
+
+        if (! $result->isOk()) {
             return redirect()
                 ->route(RouteMap::ListJourneyLogLinkType)
                 ->withErrors([
-                    'message' => $e->getMessage(),
+                    'message' => $result->getErr(),
                 ]);
         }
+
+        $journeyLogLinkType = $presenter->present($result->getValue());
 
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }
