@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Result;
+namespace Support\ResultType;
 
 /**
  * @template-covariant T

@@ -15,7 +15,7 @@ use Creator\UseCases\Get\GetUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Result\Result;
+use Support\ResultType\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase

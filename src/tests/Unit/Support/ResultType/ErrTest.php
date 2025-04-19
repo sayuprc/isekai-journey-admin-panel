@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Result;
+namespace Tests\Unit\Support\ResultType;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Result\Err;
-use Support\Result\Result;
+use Support\ResultType\Err;
+use Support\ResultType\Result;
 use Tests\TestCase;
 
 class ErrTest extends TestCase

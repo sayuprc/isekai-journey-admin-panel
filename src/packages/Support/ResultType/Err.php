@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Support\Result;
+namespace Support\ResultType;
 
 use LogicException;
 
 /**
- * @template-covariant T
+ * @template-covariant E
  *
- * @template-implements Result<T, never>
+ * @template-implements Result<never, E>
  */
-class Ok implements Result
+class Err implements Result
 {
     /**
-     * @param T $value
+     * @param E $value
      */
     public function __construct(private readonly mixed $value)
     {
@@ -22,19 +22,19 @@ class Ok implements Result
 
     public function isOk(): bool
     {
-        return true;
+        return false;
+    }
+
+    public function getValue(): mixed
+    {
+        throw new LogicException('Cannot get value from Err result');
     }
 
     /**
-     * @return T
+     * @return E
      */
-    public function getValue(): mixed
-    {
-        return $this->value;
-    }
-
     public function getErr(): mixed
     {
-        throw new LogicException('Cannot get error from Ok result');
+        return $this->value;
     }
 }

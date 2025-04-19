@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\UseCases\Get;
 
-use Support\Result\Result;
+use Support\ResultType\Result;
 
 interface GetUseCaseInterface
 {
