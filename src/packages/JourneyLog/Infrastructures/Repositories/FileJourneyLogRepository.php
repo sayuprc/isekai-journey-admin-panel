@@ -34,12 +34,9 @@ class FileJourneyLogRepository implements JourneyLogRepositoryInterface
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function find(JourneyLogId $journeyLogId): JourneyLog
+    public function find(JourneyLogId $journeyLogId): ?JourneyLog
     {
-        $found = $this->store->get($this->filePath, $journeyLogId->value);
-        assert($found instanceof JourneyLog);
-
-        return $found;
+        return $this->store->get($this->filePath, $journeyLogId->value);
     }
 
     public function insert(JourneyLog $journeyLog): void

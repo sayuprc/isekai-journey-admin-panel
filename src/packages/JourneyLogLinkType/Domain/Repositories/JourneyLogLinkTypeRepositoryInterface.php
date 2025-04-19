@@ -14,7 +14,7 @@ interface JourneyLogLinkTypeRepositoryInterface
      */
     public function all(): array;
 
-    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType;
+    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): ?JourneyLogLinkType;
 
     public function insert(JourneyLogLinkType $journeyLogLinkType): void;
 

@@ -9,6 +9,9 @@ use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\UseCases\Get\GetRequest;
 use Creator\UseCases\Get\GetResponse;
 use Creator\UseCases\Get\GetUseCaseInterface;
+use Support\Result\Err;
+use Support\Result\Ok;
+use Support\Result\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {
@@ -16,8 +19,15 @@ class GetInteractor implements GetUseCaseInterface
     {
     }
 
-    public function handle(GetRequest $request): GetResponse
+    /**
+     * @return Result<GetResponse, string>
+     */
+    public function handle(GetRequest $request): Result
     {
-        return new GetResponse($this->repository->find(new CreatorId($request->creatorId)));
+        if (is_null($found = $this->repository->find(new CreatorId($request->creatorId)))) {
+            return new Err("Creator not found: {$request->creatorId}");
+        }
+
+        return new Ok(new GetResponse($found));
     }
 }

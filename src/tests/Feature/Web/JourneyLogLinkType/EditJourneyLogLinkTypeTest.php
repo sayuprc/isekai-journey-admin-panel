@@ -88,6 +88,28 @@ class EditJourneyLogLinkTypeTest extends TestCase
     }
 
     #[Test]
+    public function failureShowEditForm(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->journeyLogLinkTypeRepository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === $uuid))
+            ->andReturnNull()
+            ->once();
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
+        );
+
+        $this->actingAs($this->user)
+            ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
+            ->assertStatus(302)
+            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
+            ->assertInvalid(['message' => "JourneyLogLinkType not found: {$uuid}"]);
+    }
+
+    #[Test]
     public function canEdit(): void
     {
         $uuid = $this->generateUuid();

@@ -15,6 +15,7 @@ use Creator\UseCases\Get\GetUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Result\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
@@ -53,12 +54,36 @@ class GetInteractorTest extends TestCase
             )
             ->once();
 
-        $response = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->isOk());
+
+        $response = $result->getValue();
 
         $this->assertInstanceOf(GetResponse::class, $response);
 
         $this->assertInstanceOf(Creator::class, $response->creator);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->creator->creatorId->value);
         $this->assertSame('クリエイター名', $response->creator->creatorName->value);
+    }
+
+    #[Test]
+    public function failureGetCreator(): void
+    {
+        $this->creatorRepository->shouldReceive('find')
+            ->with(Mockery::on(
+                fn ($arg) => $arg instanceof CreatorId
+                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+            ))
+            ->andReturnNull()
+            ->once();
+
+        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isOk());
+
+        $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->getErr());
     }
 }

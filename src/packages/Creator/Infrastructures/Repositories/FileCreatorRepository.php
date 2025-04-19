@@ -34,12 +34,9 @@ class FileCreatorRepository implements CreatorRepositoryInterface
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function find(CreatorId $creatorId): Creator
+    public function find(CreatorId $creatorId): ?Creator
     {
-        $found = $this->store->get($this->filePath, $creatorId->value);
-        assert($found instanceof Creator);
-
-        return $found;
+        return $this->store->get($this->filePath, $creatorId->value);
     }
 
     public function insert(Creator $creator): void

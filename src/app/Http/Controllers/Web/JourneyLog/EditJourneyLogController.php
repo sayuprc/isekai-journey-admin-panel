@@ -26,16 +26,18 @@ class EditJourneyLogController extends Controller
         JourneyLogPresenter $presenter,
         JourneyLogLinkTypeListPresenter $journeyLogLinkTypeListPresenter,
     ): RedirectResponse|View {
-        try {
-            $journeyLog = $presenter->present($getInteractor->handle(new GetRequest($journeyLogId)));
-            $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listInteractor->handle());
-        } catch (Exception $e) {
+        $result = $getInteractor->handle(new GetRequest($journeyLogId));
+
+        if (! $result->isOk()) {
             return redirect()
                 ->route(RouteMap::ListJourneyLogs)
                 ->withErrors([
-                    'message' => $e->getMessage(),
+                    'message' => $result->getErr(),
                 ]);
         }
+
+        $journeyLog = $presenter->present($result->getValue());
+        $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listInteractor->handle());
 
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));
     }

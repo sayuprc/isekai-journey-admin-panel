@@ -9,6 +9,9 @@ use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface
 use JourneyLogLinkType\UseCases\Get\GetRequest;
 use JourneyLogLinkType\UseCases\Get\GetResponse;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
+use Support\Result\Err;
+use Support\Result\Ok;
+use Support\Result\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {
@@ -16,10 +19,15 @@ class GetInteractor implements GetUseCaseInterface
     {
     }
 
-    public function handle(GetRequest $request): GetResponse
+    /**
+     * @return Result<GetResponse, string>
+     */
+    public function handle(GetRequest $request): Result
     {
-        $journeyLogLinkTypeId = new JourneyLogLinkTypeId($request->journeyLogLinkTypeId);
+        if (is_null($found = $this->repository->find(new JourneyLogLinkTypeId($request->journeyLogLinkTypeId)))) {
+            return new Err("JourneyLogLinkType not found: {$request->journeyLogLinkTypeId}");
+        }
 
-        return new GetResponse($this->repository->find($journeyLogLinkTypeId));
+        return new Ok(new GetResponse($found));
     }
 }
