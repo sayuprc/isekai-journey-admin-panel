@@ -24,7 +24,7 @@ class EditCreatorController extends Controller
     ): RedirectResponse|View {
         $result = $getInteractor->handle(new GetRequest($creatorId));
 
-        if (! $result->isOk()) {
+        if ($result->isErr()) {
             return redirect()
                 ->route(RouteMap::ListCreators)
                 ->withErrors([

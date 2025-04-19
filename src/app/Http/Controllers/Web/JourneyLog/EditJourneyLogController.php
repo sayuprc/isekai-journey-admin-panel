@@ -28,7 +28,7 @@ class EditJourneyLogController extends Controller
     ): RedirectResponse|View {
         $result = $getInteractor->handle(new GetRequest($journeyLogId));
 
-        if (! $result->isOk()) {
+        if ($result->isErr()) {
             return redirect()
                 ->route(RouteMap::ListJourneyLogs)
                 ->withErrors([

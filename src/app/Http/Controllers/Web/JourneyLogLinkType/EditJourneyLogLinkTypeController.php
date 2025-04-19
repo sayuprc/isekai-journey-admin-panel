@@ -21,7 +21,7 @@ class EditJourneyLogLinkTypeController extends Controller
     {
         $result = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
 
-        if (! $result->isOk()) {
+        if ($result->isErr()) {
             return redirect()
                 ->route(RouteMap::ListJourneyLogLinkType)
                 ->withErrors([
