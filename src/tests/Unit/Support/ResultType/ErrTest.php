@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Result;
+namespace Tests\Unit\Support\ResultType;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Result\Err;
-use Support\Result\Result;
+use Support\ResultType\Err;
+use Support\ResultType\Result;
 use Tests\TestCase;
 
 class ErrTest extends TestCase
@@ -27,13 +27,19 @@ class ErrTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('provideGetErr')]
-    public function getErr(mixed $value): void
+    public function isErr(): void
     {
-        $this->assertSame($value, new Err($value)->getErr());
+        $this->assertTrue(new Err(null)->isErr());
     }
 
-    public static function provideGetErr(): array
+    #[Test]
+    #[DataProvider('provideUnwrapErr')]
+    public function unwrapErr(mixed $value): void
+    {
+        $this->assertSame($value, new Err($value)->unwrapErr());
+    }
+
+    public static function provideUnwrapErr(): array
     {
         return [
             [null],
@@ -45,12 +51,12 @@ class ErrTest extends TestCase
     }
 
     #[Test]
-    public function throwInGetValue(): void
+    public function throwWhenUnwrap(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Cannot get value from Err result');
 
-        new Err(null)->getValue();
+        new Err(null)->unwrap();
     }
 }
 

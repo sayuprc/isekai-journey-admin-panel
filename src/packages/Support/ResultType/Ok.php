@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Result;
+namespace Support\ResultType;
 
 use LogicException;
 
@@ -25,15 +25,20 @@ class Ok implements Result
         return true;
     }
 
+    public function isErr(): bool
+    {
+        return false;
+    }
+
     /**
      * @return T
      */
-    public function getValue(): mixed
+    public function unwrap(): mixed
     {
         return $this->value;
     }
 
-    public function getErr(): mixed
+    public function unwrapErr(): mixed
     {
         throw new LogicException('Cannot get error from Ok result');
     }

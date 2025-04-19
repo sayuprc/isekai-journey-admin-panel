@@ -24,15 +24,15 @@ class EditCreatorController extends Controller
     ): RedirectResponse|View {
         $result = $getInteractor->handle(new GetRequest($creatorId));
 
-        if (! $result->isOk()) {
+        if ($result->isErr()) {
             return redirect()
                 ->route(RouteMap::ListCreators)
                 ->withErrors([
-                    'message' => $result->getErr(),
+                    'message' => $result->unwrapErr(),
                 ]);
         }
 
-        $creator = $presenter->present($result->getValue());
+        $creator = $presenter->present($result->unwrap());
 
         return view('creators.edit.index', compact('creator'));
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Result;
+namespace Support\ResultType;
 
 /**
  * @template-covariant T
@@ -12,13 +12,15 @@ interface Result
 {
     public function isOk(): bool;
 
+    public function isErr(): bool;
+
     /**
      * @return T
      */
-    public function getValue(): mixed;
+    public function unwrap(): mixed;
 
     /**
      * @return E
      */
-    public function getErr(): mixed;
+    public function unwrapErr(): mixed;
 }

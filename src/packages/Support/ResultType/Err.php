@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Result;
+namespace Support\ResultType;
 
 use LogicException;
 
@@ -25,7 +25,12 @@ class Err implements Result
         return false;
     }
 
-    public function getValue(): mixed
+    public function isErr(): bool
+    {
+        return true;
+    }
+
+    public function unwrap(): mixed
     {
         throw new LogicException('Cannot get value from Err result');
     }
@@ -33,7 +38,7 @@ class Err implements Result
     /**
      * @return E
      */
-    public function getErr(): mixed
+    public function unwrapErr(): mixed
     {
         return $this->value;
     }

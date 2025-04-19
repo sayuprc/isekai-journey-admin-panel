@@ -28,15 +28,15 @@ class EditJourneyLogController extends Controller
     ): RedirectResponse|View {
         $result = $getInteractor->handle(new GetRequest($journeyLogId));
 
-        if (! $result->isOk()) {
+        if ($result->isErr()) {
             return redirect()
                 ->route(RouteMap::ListJourneyLogs)
                 ->withErrors([
-                    'message' => $result->getErr(),
+                    'message' => $result->unwrapErr(),
                 ]);
         }
 
-        $journeyLog = $presenter->present($result->getValue());
+        $journeyLog = $presenter->present($result->unwrap());
         $journeyLogLinkTypes = $journeyLogLinkTypeListPresenter->present($listInteractor->handle());
 
         return view('journeyLogs.edit.index', compact('journeyLog', 'journeyLogLinkTypes'));

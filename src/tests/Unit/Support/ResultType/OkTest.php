@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Result;
+namespace Tests\Unit\Support\ResultType;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Result\Ok;
-use Support\Result\Result;
+use Support\ResultType\Ok;
+use Support\ResultType\Result;
 use Tests\TestCase;
 
 class OkTest extends TestCase
@@ -27,13 +27,19 @@ class OkTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('provideGetValue')]
-    public function getValue(mixed $value): void
+    public function isErr(): void
     {
-        $this->assertSame($value, new Ok($value)->getValue());
+        $this->assertFalse(new Ok(null)->isErr());
     }
 
-    public static function provideGetValue(): array
+    #[Test]
+    #[DataProvider('provideUnwrap')]
+    public function unwrap(mixed $value): void
+    {
+        $this->assertSame($value, new Ok($value)->unwrap());
+    }
+
+    public static function provideUnwrap(): array
     {
         return [
             [null],
@@ -45,12 +51,12 @@ class OkTest extends TestCase
     }
 
     #[Test]
-    public function throwInGetErr(): void
+    public function throwWhenUnwrapErr(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Cannot get error from Ok result');
 
-        new Ok(null)->getErr();
+        new Ok(null)->unwrapErr();
     }
 }
 

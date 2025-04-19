@@ -30,13 +30,13 @@ return static function (Config $config): void {
             ->component('Creator.UseCase')->definedBy('Creator\UseCases\*')
 
             ->component('Support.Domain')->definedBy('Support\Domain\*')
-            ->component('Support.Result')->definedBy('Support\Result\*')
+            ->component('Support.ResultType')->definedBy('Support\ResultType\*')
 
             ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.Result')
+            ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.ResultType')
 
             ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Result')
+            ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.ResultType')
 
             ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Creator.Domain', 'Support.Domain')
             ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
@@ -44,10 +44,10 @@ return static function (Config $config): void {
             ->where('SongType.Domain')->shouldOnlyDependOnComponents('SongType.Domain', 'Support.Domain')
 
             ->where('Creator.Domain')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Domain')
-            ->where('Creator.UseCase')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Result')
+            ->where('Creator.UseCase')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.ResultType')
 
             ->where('Support.Domain')->shouldNotDependOnAnyComponent()
-            ->where('Support.Result')->shouldNotDependOnAnyComponent()
+            ->where('Support.ResultType')->shouldNotDependOnAnyComponent()
 
             ->rules()
     );
