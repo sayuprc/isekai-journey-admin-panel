@@ -82,6 +82,28 @@ class EditCreatorTest extends TestCase
     }
 
     #[Test]
+    public function failureShowEditForm(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->creatorRepository->shouldReceive('find')
+            ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
+            ->andReturnNull()
+            ->once();
+
+        $this->app->bind(
+            CreatorRepositoryInterface::class,
+            fn (): CreatorRepositoryInterface => $this->creatorRepository,
+        );
+
+        $this->actingAs($this->user)
+            ->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
+            ->assertStatus(302)
+            ->assertLocation(route(RouteMap::ListCreators))
+            ->assertInvalid(['message' => "Creator not found: {$uuid}"]);
+    }
+
+    #[Test]
     public function canEdit(): void
     {
         $uuid = $this->generateUuid();
