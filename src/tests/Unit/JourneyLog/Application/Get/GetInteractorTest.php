@@ -152,6 +152,6 @@ class GetInteractorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());
 
-        $this->assertSame('Journey log not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->getErr());
+        $this->assertSame('JourneyLog not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->getErr());
     }
 }
