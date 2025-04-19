@@ -14,7 +14,7 @@ interface CreatorRepositoryInterface
      */
     public function all(): array;
 
-    public function find(CreatorId $creatorId): Creator;
+    public function find(CreatorId $creatorId): ?Creator;
 
     public function insert(Creator $creator): void;
 

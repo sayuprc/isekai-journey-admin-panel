@@ -22,15 +22,17 @@ class EditCreatorController extends Controller
         GetUseCaseInterface $getInteractor,
         CreatorPresenter $presenter,
     ): RedirectResponse|View {
-        try {
-            $creator = $presenter->present($getInteractor->handle(new GetRequest($creatorId)));
-        } catch (Exception $e) {
+        $result = $getInteractor->handle(new GetRequest($creatorId));
+
+        if (! $result->isOk()) {
             return redirect()
                 ->route(RouteMap::ListCreators)
                 ->withErrors([
-                    'message' => $e->getMessage(),
+                    'message' => $result->getErr(),
                 ]);
         }
+
+        $creator = $presenter->present($result->getValue());
 
         return view('creators.edit.index', compact('creator'));
     }
