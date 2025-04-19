@@ -25,6 +25,11 @@ class Err implements Result
         return false;
     }
 
+    public function isErr(): bool
+    {
+        return true;
+    }
+
     public function unwrap(): mixed
     {
         throw new LogicException('Cannot get value from Err result');

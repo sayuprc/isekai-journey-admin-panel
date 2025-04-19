@@ -27,6 +27,12 @@ class ErrTest extends TestCase
     }
 
     #[Test]
+    public function isErr(): void
+    {
+        $this->assertTrue(new Err(null)->isErr());
+    }
+
+    #[Test]
     #[DataProvider('provideUnwrapErr')]
     public function unwrapErr(mixed $value): void
     {

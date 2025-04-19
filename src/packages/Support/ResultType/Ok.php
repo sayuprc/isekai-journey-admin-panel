@@ -25,6 +25,11 @@ class Ok implements Result
         return true;
     }
 
+    public function isErr(): bool
+    {
+        return false;
+    }
+
     /**
      * @return T
      */

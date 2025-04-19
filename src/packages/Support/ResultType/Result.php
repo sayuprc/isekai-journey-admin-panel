@@ -12,6 +12,8 @@ interface Result
 {
     public function isOk(): bool;
 
+    public function isErr(): bool;
+
     /**
      * @return T
      */
