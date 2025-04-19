@@ -34,12 +34,9 @@ class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryIn
         return array_values($this->store->getAll($this->filePath));
     }
 
-    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): JourneyLogLinkType
+    public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): ?JourneyLogLinkType
     {
-        $found = $this->store->get($this->filePath, $journeyLogLinkTypeId->value);
-        assert($found instanceof JourneyLogLinkType);
-
-        return $found;
+        return $this->store->get($this->filePath, $journeyLogLinkTypeId->value);
     }
 
     public function insert(JourneyLogLinkType $journeyLogLinkType): void
