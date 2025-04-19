@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Arkitect\ClassSet;
 use Arkitect\CLI\Config;
 use Arkitect\RuleBuilders\Architecture\Architecture;
+use Arkitect\RuleBuilders\Architecture\Component;
+use Tools\Arkitect\Define;
 
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(
@@ -12,43 +14,21 @@ return static function (Config $config): void {
         __DIR__ . '/packages'
     );
 
-    $config->add(
-        $classSet,
-        ...Architecture::withComponents()
-            ->component('JourneyLog.Domain')->definedBy('JourneyLog\Domain\*')
-            ->component('JourneyLog.UseCase')->definedBy('JourneyLog\UseCases\*')
+    $components = array_reduce(
+        require_once __DIR__ . '/tools/Arkitect/config.php',
+        function (Component $component, Define $define): Component {
+            $name = $define->componentName();
 
-            ->component('JourneyLogLinkType.Domain')->definedBy('JourneyLogLinkType\Domain\*')
-            ->component('JourneyLogLinkType.UseCase')->definedBy('JourneyLogLinkType\UseCases\*')
+            $component = $component->component($name)
+                ->definedBy($define->namespace())
+                ->where($name);
 
-            ->component('Song.Domain')->definedBy('Song\Domain\*')
-            ->component('Song.UseCase')->definedBy('Song\UseCases\*')
-
-            ->component('SongType.Domain')->definedBy('SongType\Domain\*')
-
-            ->component('Creator.Domain')->definedBy('Creator\Domain\*')
-            ->component('Creator.UseCase')->definedBy('Creator\UseCases\*')
-
-            ->component('Support.Domain')->definedBy('Support\Domain\*')
-            ->component('Support.ResultType')->definedBy('Support\ResultType\*')
-
-            ->where('JourneyLog.Domain')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLog.UseCase')->shouldOnlyDependOnComponents('JourneyLog.Domain', 'Support.ResultType')
-
-            ->where('JourneyLogLinkType.Domain')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.Domain')
-            ->where('JourneyLogLinkType.UseCase')->shouldOnlyDependOnComponents('JourneyLogLinkType.Domain', 'Support.ResultType')
-
-            ->where('Song.Domain')->shouldOnlyDependOnComponents('Song.Domain', 'SongType.Domain', 'Creator.Domain', 'Support.Domain')
-            ->where('Song.UseCase')->shouldOnlyDependOnComponents('Song.Domain')
-
-            ->where('SongType.Domain')->shouldOnlyDependOnComponents('SongType.Domain', 'Support.Domain')
-
-            ->where('Creator.Domain')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Domain')
-            ->where('Creator.UseCase')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.ResultType')
-
-            ->where('Support.Domain')->shouldNotDependOnAnyComponent()
-            ->where('Support.ResultType')->shouldNotDependOnAnyComponent()
-
-            ->rules()
+            return $define->hasDependencies()
+                ? $component->shouldOnlyDependOnComponents(...$define->dependencies())
+                : $component->shouldNotDependOnAnyComponent();
+        },
+        Architecture::withComponents()
     );
+
+    $config->add($classSet, ...$components->rules());
 };

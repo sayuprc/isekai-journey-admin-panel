@@ -40,7 +40,8 @@
             "Support\\": "packages/Support/",
             "Song\\": "packages/Song/",
             "SongType\\": "packages/SongType/",
-            "Creator\\": "packages/Creator/"
+            "Creator\\": "packages/Creator/",
+            "Tools\\": "tools/"
         }
     },
     "autoload-dev": {
