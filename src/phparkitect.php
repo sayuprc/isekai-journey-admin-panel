@@ -47,6 +47,7 @@ return static function (Config $config): void {
             ->where('Creator.UseCase')->shouldOnlyDependOnComponents('Creator.Domain', 'Support.Result')
 
             ->where('Support.Domain')->shouldNotDependOnAnyComponent()
+            ->where('Support.Result')->shouldNotDependOnAnyComponent()
 
             ->rules()
     );
