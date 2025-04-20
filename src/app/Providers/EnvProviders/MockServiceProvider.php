@@ -63,6 +63,8 @@ class MockServiceProvider extends ServiceProvider
 
     private function journeyLogLinkType(): void
     {
+        $this->app->bind(\JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface::class, \JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory::class);
+
         $this->app->bind(\JourneyLogLinkType\UseCases\List\ListUseCaseInterface::class, \JourneyLogLinkType\Application\List\ListInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Get\GetUseCaseInterface::class, \JourneyLogLinkType\Application\Get\GetInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface::class, \JourneyLogLinkType\Application\Create\CreateInteractor::class);
