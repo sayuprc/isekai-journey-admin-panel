@@ -10,7 +10,6 @@ interface MapperInterface
      * @template T
      *
      * @param string|class-string<T> $signature
-     * @param mixed                  $source
      *
      * @return T
      *

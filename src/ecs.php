@@ -72,6 +72,7 @@ return ECSConfig::configure()
 
         \PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer::class,
+        \PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocAddMissingParamAnnotationFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer::class,
