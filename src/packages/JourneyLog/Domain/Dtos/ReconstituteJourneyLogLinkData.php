@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\UseCases\Edit;
+namespace JourneyLog\Domain\Dtos;
 
-class EditJourneyLogLink
+class ReconstituteJourneyLogLinkData
 {
     /**
      * @param positive-int $orderNo
      */
     public function __construct(
+        public readonly string $journeyLogLinkId,
         public readonly string $journeyLogLinkName,
         public readonly string $url,
         public readonly int $orderNo,
-        public readonly string $journeyLogLinkTypeId,
+        public readonly string $journeyLogLinkTypeId
     ) {
     }
 }
