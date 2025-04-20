@@ -6,18 +6,22 @@ namespace Tests\Unit\Creator\Application\Create;
 
 use Creator\Application\Create\CreateInteractor;
 use Creator\Domain\Models\Creator;
+use Creator\Domain\Models\CreatorFactoryInterface;
+use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\UseCases\Create\CreateRequest;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Application\Uuid\DummyUuidGenerator;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
     private CreatorRepositoryInterface&MockInterface $creatorRepository;
+
+    private CreatorFactoryInterface&MockInterface $factory;
 
     private CreateInteractor $interactor;
 
@@ -25,8 +29,9 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = $this->mock(CreatorRepositoryInterface::class);
-        $this->interactor = new CreateInteractor($this->creatorRepository, $this->app->make(DummyUuidGenerator::class));
+        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->factory = Mockery::mock(CreatorFactoryInterface::class);
+        $this->interactor = new CreateInteractor($this->creatorRepository, $this->factory);
     }
 
     #[Test]
@@ -38,10 +43,17 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
+        $this->factory->shouldReceive('create')
+            ->with('クリエイター')
+            ->andReturnUsing(fn (): Creator => new Creator(
+                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new CreatorName('クリエイター')
+            ))
+            ->once();
+
         $this->creatorRepository->shouldReceive('insert')
             ->with(Mockery::on(
-                fn ($arg) => $arg instanceof Creator
-                    && $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->creatorName->value === 'クリエイター'
             ))
             ->once();
