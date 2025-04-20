@@ -6,6 +6,8 @@ namespace Tests\Feature\Web\Creator;
 
 use App\Models\User;
 use Creator\Domain\Models\Creator;
+use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -57,6 +59,11 @@ class CreateCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andReturnNull()
+            ->once();
+
         $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === $uuid
@@ -71,6 +78,27 @@ class CreateCreatorTest extends TestCase
             ->assertStatus(302)
             ->assertLocation(route(RouteMap::ListCreators))
             ->assertSessionHas('message', '登録完了しました');
+    }
+
+    #[Test]
+    public function createFails(): void
+    {
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andReturn(new Creator(
+                new CreatorId($this->generateUuid()),
+                new CreatorName('クリエイター')
+            ))
+            ->once();
+
+        $this->actingAs($this->user)
+            ->post(route(RouteMap::CreateCreator), [
+                'creator_name' => 'クリエイター',
+            ])
+            ->assertStatus(302)
+            ->assertInvalid([
+                'message' => 'Creator name already exists: クリエイター',
+            ]);
     }
 
     #[Test]
