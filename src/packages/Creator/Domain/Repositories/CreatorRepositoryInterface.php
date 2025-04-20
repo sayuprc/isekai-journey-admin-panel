@@ -6,6 +6,7 @@ namespace Creator\Domain\Repositories;
 
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
 
 interface CreatorRepositoryInterface
 {
@@ -15,6 +16,8 @@ interface CreatorRepositoryInterface
     public function all(): array;
 
     public function find(CreatorId $creatorId): ?Creator;
+
+    public function findByName(CreatorName $creatorName): ?Creator;
 
     public function insert(Creator $creator): void;
 

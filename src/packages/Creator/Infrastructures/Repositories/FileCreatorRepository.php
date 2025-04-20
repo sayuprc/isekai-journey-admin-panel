@@ -6,6 +6,7 @@ namespace Creator\Infrastructures\Repositories;
 
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Support\Config\ConfigInterface;
 use Support\Repository\FileStore;
@@ -37,6 +38,17 @@ class FileCreatorRepository implements CreatorRepositoryInterface
     public function find(CreatorId $creatorId): ?Creator
     {
         return $this->store->get($this->filePath, $creatorId->value);
+    }
+
+    public function findByName(CreatorName $creatorName): ?Creator
+    {
+        foreach ($this->store->getAll($this->filePath) as $creator) {
+            if ($creator->creatorName->value === $creatorName->value) {
+                return $creator;
+            }
+        }
+
+        return null;
     }
 
     public function insert(Creator $creator): void
