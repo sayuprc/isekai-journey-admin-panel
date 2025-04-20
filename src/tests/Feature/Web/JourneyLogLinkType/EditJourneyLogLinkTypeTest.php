@@ -13,7 +13,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
@@ -25,7 +25,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
-    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -35,7 +35,12 @@ class EditJourneyLogLinkTypeTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->repository
+        );
     }
 
     #[Test]
@@ -62,21 +67,14 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('find')
-            ->with(Mockery::on(function (JourneyLogLinkTypeId $arg) use ($uuid): bool {
-                return $arg->value === $uuid;
-            }))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === $uuid))
             ->andReturn(new JourneyLogLinkType(
                 new JourneyLogLinkTypeId($uuid),
                 new JourneyLogLinkTypeName('名前'),
                 new OrderNo(1),
             ))
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
@@ -92,15 +90,10 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('find')
+        $this->repository->shouldReceive('find')
             ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === $uuid))
             ->andReturnNull()
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
@@ -114,18 +107,13 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('update')
-            ->with(Mockery::on(function (JourneyLogLinkType $arg) use ($uuid): bool {
-                return $arg->journeyLogLinkTypeId->value === $uuid
+        $this->repository->shouldReceive('update')
+            ->with(Mockery::on(
+                fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === $uuid
                     && $arg->journeyLogLinkTypeName->value === '動画'
-                    && $arg->orderNo->value === 1;
-            }))
+                    && $arg->orderNo->value === 1
+            ))
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::EditJourneyLogLinkType), [

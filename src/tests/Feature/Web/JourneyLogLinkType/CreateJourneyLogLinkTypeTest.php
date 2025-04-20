@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Route\RouteMap;
 use Tests\TestCase;
@@ -21,7 +21,7 @@ class CreateJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
-    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -31,7 +31,12 @@ class CreateJourneyLogLinkTypeTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->repository
+        );
     }
 
     #[Test]
@@ -55,18 +60,13 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('insert')
-            ->with(Mockery::on(function (JourneyLogLinkType $arg) use ($uuid): bool {
-                return $arg->journeyLogLinkTypeId->value === $uuid
+        $this->repository->shouldReceive('insert')
+            ->with(Mockery::on(
+                fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === $uuid
                     && $arg->journeyLogLinkTypeName->value === '軌跡リンク種別A'
-                    && $arg->orderNo->value === 1;
-            }))
+                    && $arg->orderNo->value === 1
+            ))
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::CreateJourneyLogLinkType), [

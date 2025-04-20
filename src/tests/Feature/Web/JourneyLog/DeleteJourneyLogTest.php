@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Route\RouteMap;
 use Tests\TestCase;
@@ -21,7 +21,7 @@ class DeleteJourneyLogTest extends TestCase
 
     private User $user;
 
-    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -31,7 +31,9 @@ class DeleteJourneyLogTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
+
+        $this->app->bind(JourneyLogRepositoryInterface::class, fn (): JourneyLogRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -47,16 +49,9 @@ class DeleteJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogRepository->shouldReceive('delete')
-            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
-                return $arg->value === $uuid;
-            }))
+        $this->repository->shouldReceive('delete')
+            ->with(Mockery::on(fn (JourneyLogId $arg): bool => $arg->value === $uuid))
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $this->actingAs($this->user)
             ->delete(route(RouteMap::DeleteJourneyLog), [

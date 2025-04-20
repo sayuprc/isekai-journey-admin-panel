@@ -31,7 +31,7 @@ use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
-    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     private JourneyLogFactoryInterface&MockInterface $factory;
 
@@ -41,9 +41,10 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
         $this->factory = Mockery::mock(JourneyLogFactoryInterface::class);
-        $this->interactor = new CreateInteractor($this->journeyLogRepository, $this->factory);
+
+        $this->interactor = new CreateInteractor($this->repository, $this->factory);
     }
 
     #[Test]
@@ -63,7 +64,7 @@ class CreateInteractorTest extends TestCase
                 1,
                 [],
             )
-            ->andReturnUsing(fn (): JourneyLog => new JourneyLog(
+            ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
@@ -72,7 +73,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->journeyLogRepository->shouldReceive('insert')
+        $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -115,7 +116,7 @@ class CreateInteractorTest extends TestCase
                         && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                 ),
             )
-            ->andReturnUsing(fn (): JourneyLog => new JourneyLog(
+            ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
@@ -139,10 +140,9 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->journeyLogRepository->shouldReceive('insert')
+        $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
-                fn ($arg) => $arg instanceof JourneyLog
-                    && $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
                     && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-08'
                     && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'

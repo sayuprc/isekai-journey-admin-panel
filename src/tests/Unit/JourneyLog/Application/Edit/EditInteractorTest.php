@@ -31,7 +31,7 @@ use Tests\TestCase;
 
 class EditInteractorTest extends TestCase
 {
-    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     private JourneyLogFactoryInterface&MockInterface $factory;
 
@@ -41,9 +41,10 @@ class EditInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
         $this->factory = Mockery::mock(JourneyLogFactoryInterface::class);
-        $this->interactor = new EditInteractor($this->journeyLogRepository, $this->factory);
+
+        $this->interactor = new EditInteractor($this->repository, $this->factory);
     }
 
     #[Test]
@@ -64,7 +65,7 @@ class EditInteractorTest extends TestCase
                 1,
                 [],
             )
-            ->andReturnUsing(fn (): JourneyLog => new JourneyLog(
+            ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
@@ -73,7 +74,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->journeyLogRepository->shouldReceive('update')
+        $this->repository->shouldReceive('update')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -118,7 +119,7 @@ class EditInteractorTest extends TestCase
                         && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                 ),
             )
-            ->andReturnUsing(fn (): JourneyLog => new JourneyLog(
+            ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
@@ -142,7 +143,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->journeyLogRepository->shouldReceive('update')
+        $this->repository->shouldReceive('update')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'

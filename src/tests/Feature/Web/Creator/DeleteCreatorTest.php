@@ -21,7 +21,7 @@ class DeleteCreatorTest extends TestCase
 
     private User $user;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -31,7 +31,9 @@ class DeleteCreatorTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -47,14 +49,9 @@ class DeleteCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('delete')
+        $this->repository->shouldReceive('delete')
             ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
             ->once();
-
-        $this->app->bind(
-            CreatorRepositoryInterface::class,
-            fn (): CreatorRepositoryInterface => $this->creatorRepository,
-        );
 
         $this->actingAs($this->user)
             ->delete(route(RouteMap::DeleteCreator), [

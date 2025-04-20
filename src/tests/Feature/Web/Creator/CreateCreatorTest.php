@@ -21,7 +21,7 @@ class CreateCreatorTest extends TestCase
 
     private User $user;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -31,7 +31,9 @@ class CreateCreatorTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -45,7 +47,7 @@ class CreateCreatorTest extends TestCase
     #[Test]
     public function showCreateForm(): void
     {
-        $response = $this->actingAs($this->user)
+        $this->actingAs($this->user)
             ->get(route(RouteMap::ShowCreateCreatorForm))
             ->assertStatus(200);
     }
@@ -55,14 +57,12 @@ class CreateCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('insert')
+        $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === $uuid
                     && $arg->creatorName->value === 'クリエイター'
             ))
             ->once();
-
-        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->creatorRepository);
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::CreateCreator), [

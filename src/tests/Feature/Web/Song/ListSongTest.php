@@ -7,7 +7,7 @@ namespace Tests\Feature\Web\Song;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
@@ -25,7 +25,7 @@ class ListSongTest extends TestCase
 
     private User $user;
 
-    private LegacyMockInterface&SongRepositoryInterface $songRepository;
+    private MockInterface&SongRepositoryInterface $repository;
 
     protected function setUp(): void
     {
@@ -35,7 +35,9 @@ class ListSongTest extends TestCase
             'user_id' => $this->generateUuid(),
         ]);
 
-        $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
+        $this->repository = Mockery::mock(SongRepositoryInterface::class);
+
+        $this->app->bind(SongRepositoryInterface::class, fn (): SongRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -51,7 +53,7 @@ class ListSongTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->songRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([
                 new Song(
                     new SongId($uuid),
@@ -78,8 +80,6 @@ class ListSongTest extends TestCase
             ])
             ->once();
 
-        $this->app->bind(SongRepositoryInterface::class, fn (): SongRepositoryInterface => $this->songRepository);
-
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListSongs))
             ->assertStatus(200)
@@ -100,11 +100,9 @@ class ListSongTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->songRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([])
             ->once();
-
-        $this->app->bind(SongRepositoryInterface::class, fn (): SongRepositoryInterface => $this->songRepository);
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListSongs))

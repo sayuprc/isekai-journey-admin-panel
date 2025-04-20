@@ -21,7 +21,7 @@ use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
@@ -33,7 +33,7 @@ class ListJourneyLogTest extends TestCase
 
     private User $user;
 
-    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -43,7 +43,9 @@ class ListJourneyLogTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
+
+        $this->app->bind(JourneyLogRepositoryInterface::class, fn (): JourneyLogRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -59,7 +61,7 @@ class ListJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([
                 new JourneyLog(
                     new JourneyLogId($uuid),
@@ -86,11 +88,6 @@ class ListJourneyLogTest extends TestCase
             ])
             ->once();
 
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
-
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListJourneyLogs))
             ->assertStatus(200)
@@ -115,14 +112,9 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->journeyLogRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([])
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListJourneyLogs))

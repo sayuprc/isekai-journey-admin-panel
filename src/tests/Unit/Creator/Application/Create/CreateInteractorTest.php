@@ -19,7 +19,7 @@ use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     private CreatorFactoryInterface&MockInterface $factory;
 
@@ -29,9 +29,10 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->factory = Mockery::mock(CreatorFactoryInterface::class);
-        $this->interactor = new CreateInteractor($this->creatorRepository, $this->factory);
+
+        $this->interactor = new CreateInteractor($this->repository, $this->factory);
     }
 
     #[Test]
@@ -45,13 +46,13 @@ class CreateInteractorTest extends TestCase
     {
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
-            ->andReturnUsing(fn (): Creator => new Creator(
+            ->andReturn(new Creator(
                 new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new CreatorName('クリエイター')
             ))
             ->once();
 
-        $this->creatorRepository->shouldReceive('insert')
+        $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->creatorName->value === 'クリエイター'

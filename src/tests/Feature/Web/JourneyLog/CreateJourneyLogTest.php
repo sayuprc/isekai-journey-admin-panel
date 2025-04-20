@@ -11,7 +11,7 @@ use JourneyLog\Domain\Models\JourneyLog;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Route\RouteMap;
 use Tests\TestCase;
@@ -22,9 +22,9 @@ class CreateJourneyLogTest extends TestCase
 
     private User $user;
 
-    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
 
-    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $journeyLogLinkTypeRepository;
 
     public function setUp(): void
     {
@@ -36,6 +36,16 @@ class CreateJourneyLogTest extends TestCase
 
         $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
         $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
+        );
+
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
+        );
     }
 
     #[Test]
@@ -53,11 +63,6 @@ class CreateJourneyLogTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
-
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ShowCreateJourneyLogForm))
             ->assertStatus(200);
@@ -73,8 +78,8 @@ class CreateJourneyLogTest extends TestCase
         $uuid = $this->generateUuid();
 
         $this->journeyLogRepository->shouldReceive('insert')
-            ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
-                return $arg->journeyLogId->value === $uuid
+            ->with(Mockery::on(
+                fn (JourneyLog $arg): bool => $arg->journeyLogId->value === $uuid
                     && $arg->story->value === '軌跡'
                     && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-09'
                     && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
@@ -84,14 +89,9 @@ class CreateJourneyLogTest extends TestCase
                     && $arg->journeyLogLinks[0]->journeyLogLinkName->value === '管理画面'
                     && $arg->journeyLogLinks[0]->url->value === 'https://local.admin.journey.isekaijoucho.fan'
                     && $arg->journeyLogLinks[0]->orderNo->value === 1
-                    && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === $uuid;
-            }))
+                    && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === $uuid
+            ))
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::CreateJourneyLog), [
