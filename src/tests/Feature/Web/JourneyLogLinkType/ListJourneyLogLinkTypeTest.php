@@ -12,7 +12,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
@@ -24,7 +24,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
 
     private User $user;
 
-    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -34,7 +34,12 @@ class ListJourneyLogLinkTypeTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->repository
+        );
     }
 
     #[Test]
@@ -50,7 +55,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([
                 new JourneyLogLinkType(
                     new JourneyLogLinkTypeId($uuid),
@@ -64,11 +69,6 @@ class ListJourneyLogLinkTypeTest extends TestCase
                 ),
             ])
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListJourneyLogLinkType))
@@ -89,14 +89,9 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([])
             ->once();
-
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListJourneyLogLinkType))

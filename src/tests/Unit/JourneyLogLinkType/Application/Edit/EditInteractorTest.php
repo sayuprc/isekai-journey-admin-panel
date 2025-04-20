@@ -20,7 +20,7 @@ use Tests\TestCase;
 
 class EditInteractorTest extends TestCase
 {
-    private JourneyLogLinkTypeRepositoryInterface&MockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     private JourneyLogLinkTypeFactoryInterface&MockInterface $factory;
 
@@ -30,9 +30,10 @@ class EditInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
         $this->factory = Mockery::mock(JourneyLogLinkTypeFactoryInterface::class);
-        $this->interactor = new EditInteractor($this->journeyLogLinkTypeRepository, $this->factory);
+
+        $this->interactor = new EditInteractor($this->repository, $this->factory);
     }
 
     #[Test]
@@ -46,14 +47,14 @@ class EditInteractorTest extends TestCase
     {
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'リンク', 1)
-            ->andReturnUsing(fn (): JourneyLogLinkType => new JourneyLogLinkType(
+            ->andReturn(new JourneyLogLinkType(
                 new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new JourneyLogLinkTypeName('リンク'),
                 new OrderNo(1),
             ))
             ->once();
 
-        $this->journeyLogLinkTypeRepository->shouldReceive('update')
+        $this->repository->shouldReceive('update')
             ->with(Mockery::on(
                 fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->journeyLogLinkTypeName->value === 'リンク'

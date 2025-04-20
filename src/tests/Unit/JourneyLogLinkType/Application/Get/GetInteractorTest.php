@@ -20,7 +20,7 @@ use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
-    private JourneyLogLinkTypeRepositoryInterface&MockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     private GetInteractor $interactor;
 
@@ -28,8 +28,9 @@ class GetInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
-        $this->interactor = new GetInteractor($this->journeyLogLinkTypeRepository);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->interactor = new GetInteractor($this->repository);
     }
 
     #[Test]
@@ -41,18 +42,13 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getJourneyLogLinkType(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof JourneyLogLinkTypeId
-                    && $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn(new JourneyLogLinkType(
+                new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new JourneyLogLinkTypeName('リンク'),
+                new OrderNo(1)
             ))
-            ->andReturnUsing(
-                fn () => new JourneyLogLinkType(
-                    new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new JourneyLogLinkTypeName('リンク'),
-                    new OrderNo(1)
-                )
-            )
             ->once();
 
         $result = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
@@ -70,11 +66,8 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function failureGetJourneyLogLinkType(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof JourneyLogLinkTypeId
-                    && $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-            ))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->andReturnNull()
             ->once();
 

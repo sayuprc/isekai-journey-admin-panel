@@ -20,7 +20,7 @@ use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     private GetInteractor $interactor;
 
@@ -28,8 +28,9 @@ class GetInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->interactor = new GetInteractor($this->creatorRepository);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->interactor = new GetInteractor($this->repository);
     }
 
     #[Test]
@@ -41,17 +42,12 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getCreator(): void
     {
-        $this->creatorRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof CreatorId
-                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
+            ->andReturn(new Creator(
+                new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                new CreatorName('クリエイター名'),
             ))
-            ->andReturnUsing(
-                fn () => new Creator(
-                    new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new CreatorName('クリエイター名'),
-                )
-            )
             ->once();
 
         $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
@@ -71,11 +67,8 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function failureGetCreator(): void
     {
-        $this->creatorRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof CreatorId
-                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
-            ))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
             ->andReturnNull()
             ->once();
 

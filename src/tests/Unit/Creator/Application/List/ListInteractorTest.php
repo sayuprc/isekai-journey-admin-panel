@@ -18,7 +18,7 @@ use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     private ListInteractor $interactor;
 
@@ -26,8 +26,9 @@ class ListInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->interactor = new ListInteractor($this->creatorRepository);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->interactor = new ListInteractor($this->repository);
     }
 
     #[Test]
@@ -39,8 +40,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyCreators(): void
     {
-        $this->creatorRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [])
+        $this->repository->shouldReceive('all')
+            ->andReturn([])
             ->once();
 
         $response = $this->interactor->handle();
@@ -53,8 +54,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyCreators(): void
     {
-        $this->creatorRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [
+        $this->repository->shouldReceive('all')
+            ->andReturn([
                 new Creator(
                     new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new CreatorName('クリエイターA')

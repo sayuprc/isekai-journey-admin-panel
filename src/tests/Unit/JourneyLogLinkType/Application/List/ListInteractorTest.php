@@ -11,6 +11,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\UseCases\List\ListResponse;
 use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
+use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
@@ -18,7 +19,7 @@ use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    private JourneyLogLinkTypeRepositoryInterface&MockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $repository;
 
     private ListInteractor $interactor;
 
@@ -26,8 +27,9 @@ class ListInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogLinkTypeRepository = \Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
-        $this->interactor = new ListInteractor($this->journeyLogLinkTypeRepository);
+        $this->repository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->interactor = new ListInteractor($this->repository);
     }
 
     #[Test]
@@ -39,8 +41,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyJourneyLogLinkTypes(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [])
+        $this->repository->shouldReceive('all')
+            ->andReturn([])
             ->once();
 
         $response = $this->interactor->handle();
@@ -53,8 +55,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyJourneyLogLinkTypes(): void
     {
-        $this->journeyLogLinkTypeRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [
+        $this->repository->shouldReceive('all')
+            ->andReturn([
                 new JourneyLogLinkType(
                     new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new JourneyLogLinkTypeName('リンク'),

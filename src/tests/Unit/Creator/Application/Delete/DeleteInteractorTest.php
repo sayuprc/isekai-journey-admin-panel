@@ -16,7 +16,7 @@ use Tests\TestCase;
 
 class DeleteInteractorTest extends TestCase
 {
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     private DeleteInteractor $interactor;
 
@@ -24,8 +24,9 @@ class DeleteInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->interactor = new DeleteInteractor($this->creatorRepository);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->interactor = new DeleteInteractor($this->repository);
     }
 
     #[Test]
@@ -37,11 +38,8 @@ class DeleteInteractorTest extends TestCase
     #[Test]
     public function deleteJourneyLog(): void
     {
-        $this->creatorRepository->shouldReceive('delete')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof CreatorId
-                    && $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-            ))
+        $this->repository->shouldReceive('delete')
+            ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
         $this->interactor->handle(new DeleteRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));

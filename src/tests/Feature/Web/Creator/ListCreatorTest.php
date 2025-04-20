@@ -23,7 +23,7 @@ class ListCreatorTest extends TestCase
 
     private User $user;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -33,7 +33,9 @@ class ListCreatorTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -49,7 +51,7 @@ class ListCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([
                 new Creator(
                     new CreatorId($uuid),
@@ -61,8 +63,6 @@ class ListCreatorTest extends TestCase
                 ),
             ])
             ->once();
-
-        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->creatorRepository);
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListCreators))
@@ -86,11 +86,9 @@ class ListCreatorTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->creatorRepository->shouldReceive('all')
+        $this->repository->shouldReceive('all')
             ->andReturn([])
             ->once();
-
-        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->creatorRepository);
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ListCreators))

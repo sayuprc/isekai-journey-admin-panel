@@ -35,7 +35,7 @@ use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    private MockInterface&SongRepositoryInterface $songRepository;
+    private MockInterface&SongRepositoryInterface $repository;
 
     private ListInteractor $interactor;
 
@@ -43,8 +43,9 @@ class ListInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
-        $this->interactor = new ListInteractor($this->songRepository);
+        $this->repository = Mockery::mock(SongRepositoryInterface::class);
+
+        $this->interactor = new ListInteractor($this->repository);
     }
 
     #[Test]
@@ -56,8 +57,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptySongs(): void
     {
-        $this->songRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [])
+        $this->repository->shouldReceive('all')
+            ->andReturn([])
             ->once();
 
         $response = $this->interactor->handle();
@@ -70,120 +71,118 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongs(): void
     {
-        $this->songRepository->shouldReceive('all')
-            ->andReturnUsing(
-                fn () => [
-                    new Song(
-                        new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                        new Title('楽曲A'),
-                        new Description('楽曲Aの説明'),
-                        new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
-                        [
-                            new Lyricist(
-                                new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Composer(
-                                new CreatorId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Arranger(
-                                new CreatorId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new YouTubeArchive(
-                                new ArchiveId('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'),
-                                new ArchiveName('MV'),
-                                new VideoUrl('https://example.com'),
-                                new ThumbnailUrl('https://example.com'),
-                                new ArchivedOn(new DateTime('2019-12-09')),
-                                new OrderNo(1),
-                            ),
-                            new YouTubeArchive(
-                                new ArchiveId('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'),
-                                new ArchiveName('LIVE'),
-                                new VideoUrl('https://example.com'),
-                                new ThumbnailUrl('https://example.com'),
-                                new ArchivedOn(new DateTime('2019-12-10')),
-                                new OrderNo(2),
-                            ),
-                        ],
-                        new OrderNo(1),
-                    ),
-                    new Song(
-                        new SongId('00000000-0000-0000-0000-000000000000'),
-                        new Title('楽曲B'),
-                        new Description('楽曲Bの説明'),
-                        new SongTypeId('11111111-1111-1111-1111-111111111111'),
-                        [
-                            new Lyricist(
-                                new CreatorId('22222222-2222-2222-2222-222222222222'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Composer(
-                                new CreatorId('33333333-3333-3333-3333-333333333333'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Arranger(
-                                new CreatorId('44444444-4444-4444-4444-444444444444'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new TwitterArchive(
-                                new ArchiveId('55555555-5555-5555-5555-555555555555'),
-                                new ArchiveName('Tweet'),
-                                new PostUrl('https://example.com'),
-                                new ArchivedOn(new DateTime('2019-12-11')),
-                                new OrderNo(1),
-                            ),
-                        ],
-                        new OrderNo(2),
-                    ),
-                    new Song(
-                        new SongId('66666666-6666-6666-6666-666666666666'),
-                        new Title('楽曲C'),
-                        new Description('楽曲Cの説明'),
-                        new SongTypeId('77777777-7777-7777-7777-777777777777'),
-                        [
-                            new Lyricist(
-                                new CreatorId('88888888-8888-8888-8888-888888888888'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Composer(
-                                new CreatorId('99999999-9999-9999-9999-999999999999'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new Arranger(
-                                new CreatorId('10101010-1010-1010-1010-101010101010'),
-                                new OrderNo(1)
-                            ),
-                        ],
-                        [
-                            new NonLinkArchive(
-                                new ArchiveId('12121212-1212-1212-1212-121212121212'),
-                                new ArchivedOn(new DateTime('2019-12-12')),
-                                new OrderNo(1),
-                            ),
-                        ],
-                        new OrderNo(3),
-                    ),
-                ]
-            )
+        $this->repository->shouldReceive('all')
+            ->andReturn([
+                new Song(
+                    new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new Title('楽曲A'),
+                    new Description('楽曲Aの説明'),
+                    new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    [
+                        new Lyricist(
+                            new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Composer(
+                            new CreatorId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Arranger(
+                            new CreatorId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new YouTubeArchive(
+                            new ArchiveId('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'),
+                            new ArchiveName('MV'),
+                            new VideoUrl('https://example.com'),
+                            new ThumbnailUrl('https://example.com'),
+                            new ArchivedOn(new DateTime('2019-12-09')),
+                            new OrderNo(1),
+                        ),
+                        new YouTubeArchive(
+                            new ArchiveId('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'),
+                            new ArchiveName('LIVE'),
+                            new VideoUrl('https://example.com'),
+                            new ThumbnailUrl('https://example.com'),
+                            new ArchivedOn(new DateTime('2019-12-10')),
+                            new OrderNo(2),
+                        ),
+                    ],
+                    new OrderNo(1),
+                ),
+                new Song(
+                    new SongId('00000000-0000-0000-0000-000000000000'),
+                    new Title('楽曲B'),
+                    new Description('楽曲Bの説明'),
+                    new SongTypeId('11111111-1111-1111-1111-111111111111'),
+                    [
+                        new Lyricist(
+                            new CreatorId('22222222-2222-2222-2222-222222222222'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Composer(
+                            new CreatorId('33333333-3333-3333-3333-333333333333'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Arranger(
+                            new CreatorId('44444444-4444-4444-4444-444444444444'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new TwitterArchive(
+                            new ArchiveId('55555555-5555-5555-5555-555555555555'),
+                            new ArchiveName('Tweet'),
+                            new PostUrl('https://example.com'),
+                            new ArchivedOn(new DateTime('2019-12-11')),
+                            new OrderNo(1),
+                        ),
+                    ],
+                    new OrderNo(2),
+                ),
+                new Song(
+                    new SongId('66666666-6666-6666-6666-666666666666'),
+                    new Title('楽曲C'),
+                    new Description('楽曲Cの説明'),
+                    new SongTypeId('77777777-7777-7777-7777-777777777777'),
+                    [
+                        new Lyricist(
+                            new CreatorId('88888888-8888-8888-8888-888888888888'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Composer(
+                            new CreatorId('99999999-9999-9999-9999-999999999999'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new Arranger(
+                            new CreatorId('10101010-1010-1010-1010-101010101010'),
+                            new OrderNo(1)
+                        ),
+                    ],
+                    [
+                        new NonLinkArchive(
+                            new ArchiveId('12121212-1212-1212-1212-121212121212'),
+                            new ArchivedOn(new DateTime('2019-12-12')),
+                            new OrderNo(1),
+                        ),
+                    ],
+                    new OrderNo(3),
+                ),
+            ])
             ->once();
 
         $response = $this->interactor->handle();

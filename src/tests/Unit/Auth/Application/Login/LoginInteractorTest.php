@@ -26,6 +26,7 @@ class LoginInteractorTest extends TestCase
         parent::setUp();
 
         $this->authManager = Mockery::mock(AuthManager::class);
+
         $this->interactor = new LoginInteractor($this->authManager);
     }
 
@@ -39,7 +40,7 @@ class LoginInteractorTest extends TestCase
     public function successLoginAttempt(): void
     {
         $this->authManager->shouldReceive('guard')
-            ->andReturnUsing(function () {
+            ->andReturnUsing(function (): MockInterface&StatefulGuard {
                 $guard = Mockery::mock(StatefulGuard::class);
 
                 $guard->shouldReceive('attempt')
@@ -69,7 +70,7 @@ class LoginInteractorTest extends TestCase
     public function failureLoginAttempt(): void
     {
         $this->authManager->shouldReceive('guard')
-            ->andReturnUsing(function () {
+            ->andReturnUsing(function (): MockInterface&StatefulGuard {
                 $guard = Mockery::mock(StatefulGuard::class);
 
                 $guard->shouldReceive('attempt')

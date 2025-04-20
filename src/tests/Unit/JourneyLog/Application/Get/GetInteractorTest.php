@@ -30,7 +30,7 @@ use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
-    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     private GetInteractor $interactor;
 
@@ -38,8 +38,9 @@ class GetInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
-        $this->interactor = new GetInteractor($this->journeyLogRepository);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
+
+        $this->interactor = new GetInteractor($this->repository);
     }
 
     #[Test]
@@ -51,20 +52,15 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getJourneyLogWithoutLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof JourneyLogId
-                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
+            ->andReturn(new JourneyLog(
+                new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                new Story('ストーリー'),
+                new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                new OrderNo(1),
+                []
             ))
-            ->andReturnUsing(
-                fn () => new JourneyLog(
-                    new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new Story('ストーリー'),
-                    new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
-                    new OrderNo(1),
-                    []
-                )
-            )
             ->once();
 
         $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
@@ -89,28 +85,26 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getJourneyLogWithLinks(): void
     {
-        $this->journeyLogRepository->shouldReceive('find')
+        $this->repository->shouldReceive('find')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogId
                     && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
             ))
-            ->andReturnUsing(
-                fn () => new JourneyLog(
-                    new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new Story('ストーリー'),
-                    new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
-                    new OrderNo(1),
-                    [
-                        new JourneyLogLink(
-                            new JourneyLogLinkId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
-                            new JourneyLogLinkName('リンク'),
-                            new Url('https://example.com'),
-                            new OrderNo(1),
-                            new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
-                        ),
-                    ]
-                )
-            )
+            ->andReturn(new JourneyLog(
+                new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                new Story('ストーリー'),
+                new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                new OrderNo(1),
+                [
+                    new JourneyLogLink(
+                        new JourneyLogLinkId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
+                        new JourneyLogLinkName('リンク'),
+                        new Url('https://example.com'),
+                        new OrderNo(1),
+                        new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
+                    ),
+                ]
+            ))
             ->once();
 
         $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
@@ -139,11 +133,8 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function failureGetJourneyLog(): void
     {
-        $this->journeyLogRepository->shouldReceive('find')
-            ->with(Mockery::on(
-                fn ($arg) => $arg instanceof JourneyLogId
-                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
-            ))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (JourneyLogId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
             ->andReturnNull()
             ->once();
 

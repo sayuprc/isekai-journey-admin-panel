@@ -18,7 +18,7 @@ use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
-use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\Route\RouteMap;
@@ -30,9 +30,9 @@ class EditJourneyLogTest extends TestCase
 
     private User $user;
 
-    private JourneyLogRepositoryInterface&LegacyMockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
 
-    private JourneyLogLinkTypeRepositoryInterface&LegacyMockInterface $journeyLogLinkTypeRepository;
+    private JourneyLogLinkTypeRepositoryInterface&MockInterface $journeyLogLinkTypeRepository;
 
     public function setUp(): void
     {
@@ -44,6 +44,16 @@ class EditJourneyLogTest extends TestCase
 
         $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
         $this->journeyLogLinkTypeRepository = Mockery::mock(JourneyLogLinkTypeRepositoryInterface::class);
+
+        $this->app->bind(
+            JourneyLogLinkTypeRepositoryInterface::class,
+            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
+        );
+
+        $this->app->bind(
+            JourneyLogRepositoryInterface::class,
+            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
+        );
     }
 
     #[Test]
@@ -72,30 +82,16 @@ class EditJourneyLogTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
-
         $this->journeyLogRepository->shouldReceive('find')
-            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
-                return $arg->value === $uuid;
-            }))
-            ->andReturn(
-                new JourneyLog(
-                    new JourneyLogId($uuid),
-                    new Story('軌跡'),
-                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
-                    new OrderNo(1),
-                    []
-                )
-            )
+            ->with(Mockery::on(fn (JourneyLogId $arg): bool => $arg->value === $uuid))
+            ->andReturn(new JourneyLog(
+                new JourneyLogId($uuid),
+                new Story('軌跡'),
+                new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
+                new OrderNo(1),
+                []
+            ))
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
@@ -114,22 +110,10 @@ class EditJourneyLogTest extends TestCase
 
         $this->journeyLogLinkTypeRepository->shouldNotReceive('all');
 
-        $this->app->bind(
-            JourneyLogLinkTypeRepositoryInterface::class,
-            fn (): JourneyLogLinkTypeRepositoryInterface => $this->journeyLogLinkTypeRepository,
-        );
-
         $this->journeyLogRepository->shouldReceive('find')
-            ->with(Mockery::on(function (JourneyLogId $arg) use ($uuid): bool {
-                return $arg->value === $uuid;
-            }))
+            ->with(Mockery::on(fn (JourneyLogId $arg): bool => $arg->value === $uuid))
             ->andReturnNull()
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
@@ -144,26 +128,21 @@ class EditJourneyLogTest extends TestCase
         $uuid = $this->generateUuid();
 
         $this->journeyLogRepository->shouldReceive('update')
-            ->with(Mockery::on(function (JourneyLog $arg) use ($uuid): bool {
-                return $arg->journeyLogId->value === $uuid
-                     && $arg->story->value === '軌跡'
-                     && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-09'
-                     && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
-                     && $arg->orderNo->value === 1
-                     && count($arg->journeyLogLinks) === 1
-                     && $arg->journeyLogLinks[0]->journeyLogLinkId->value === $uuid
-                     && $arg->journeyLogLinks[0]->journeyLogLinkName->value === '管理画面'
-                     && $arg->journeyLogLinks[0]->url->value === 'https://local.admin.journey.isekaijoucho.fan'
-                     && $arg->journeyLogLinks[0]->orderNo->value === 1
-                     && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === $uuid;
-            }))
+            ->with(Mockery::on(
+                fn (JourneyLog $arg): bool => $arg->journeyLogId->value === $uuid
+                    && $arg->story->value === '軌跡'
+                    && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-09'
+                    && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
+                    && $arg->orderNo->value === 1
+                    && count($arg->journeyLogLinks) === 1
+                    && $arg->journeyLogLinks[0]->journeyLogLinkId->value === $uuid
+                    && $arg->journeyLogLinks[0]->journeyLogLinkName->value === '管理画面'
+                    && $arg->journeyLogLinks[0]->url->value === 'https://local.admin.journey.isekaijoucho.fan'
+                    && $arg->journeyLogLinks[0]->orderNo->value === 1
+                    && $arg->journeyLogLinks[0]->journeyLogLinkTypeId->value === $uuid
+            ))
             ->andReturn(new JourneyLogId($uuid))
             ->once();
-
-        $this->app->bind(
-            JourneyLogRepositoryInterface::class,
-            fn (): JourneyLogRepositoryInterface => $this->journeyLogRepository,
-        );
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::EditJourneyLog), [

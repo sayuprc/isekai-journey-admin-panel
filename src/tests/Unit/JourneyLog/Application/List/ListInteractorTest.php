@@ -28,7 +28,7 @@ use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    private JourneyLogRepositoryInterface&MockInterface $journeyLogRepository;
+    private JourneyLogRepositoryInterface&MockInterface $repository;
 
     private ListInteractor $interactor;
 
@@ -36,8 +36,9 @@ class ListInteractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->journeyLogRepository = Mockery::mock(JourneyLogRepositoryInterface::class);
-        $this->interactor = new ListInteractor($this->journeyLogRepository);
+        $this->repository = Mockery::mock(JourneyLogRepositoryInterface::class);
+
+        $this->interactor = new ListInteractor($this->repository);
     }
 
     #[Test]
@@ -49,8 +50,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function emptyJourneyLogs(): void
     {
-        $this->journeyLogRepository->shouldReceive('all')
-            ->andReturnUsing(fn () => [])
+        $this->repository->shouldReceive('all')
+            ->andReturn([])
             ->once();
 
         $response = $this->interactor->handle();
@@ -63,33 +64,31 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptyJourneyLogs(): void
     {
-        $this->journeyLogRepository->shouldReceive('all')
-            ->andReturnUsing(
-                fn () => [
-                    new JourneyLog(
-                        new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                        new Story('ストーリー1'),
-                        new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
-                        new OrderNo(1),
-                        []
-                    ),
-                    new JourneyLog(
-                        new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                        new Story('ストーリー2'),
-                        new Period(new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09'))),
-                        new OrderNo(2),
-                        [
-                            new JourneyLogLink(
-                                new JourneyLogLinkId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
-                                new JourneyLogLinkName('リンク'),
-                                new Url('https://example.com'),
-                                new OrderNo(1),
-                                new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
-                            ),
-                        ]
-                    ),
-                ]
-            )
+        $this->repository->shouldReceive('all')
+            ->andReturn([
+                new JourneyLog(
+                    new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                    new Story('ストーリー1'),
+                    new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                    new OrderNo(1),
+                    []
+                ),
+                new JourneyLog(
+                    new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                    new Story('ストーリー2'),
+                    new Period(new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09'))),
+                    new OrderNo(2),
+                    [
+                        new JourneyLogLink(
+                            new JourneyLogLinkId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
+                            new JourneyLogLinkName('リンク'),
+                            new Url('https://example.com'),
+                            new OrderNo(1),
+                            new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
+                        ),
+                    ]
+                ),
+            ])
             ->once();
 
         $response = $this->interactor->handle();

@@ -24,7 +24,7 @@ class EditCreatorTest extends TestCase
 
     private User $user;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private CreatorRepositoryInterface&MockInterface $repository;
 
     public function setUp(): void
     {
@@ -34,7 +34,9 @@ class EditCreatorTest extends TestCase
             'user_id' => Str::uuid()->toString(),
         ]);
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
+
+        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->repository);
     }
 
     #[Test]
@@ -59,18 +61,13 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('find')
-            ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid))
             ->andReturn(new Creator(
                 new CreatorId($uuid),
                 new CreatorName('クリエイター名'),
             ))
             ->once();
-
-        $this->app->bind(
-            CreatorRepositoryInterface::class,
-            fn (): CreatorRepositoryInterface => $this->creatorRepository,
-        );
 
         $response = $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
@@ -86,15 +83,10 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('find')
-            ->with(Mockery::on(fn ($arg) => $arg instanceof CreatorId && $arg->value === $uuid))
+        $this->repository->shouldReceive('find')
+            ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid))
             ->andReturnNull()
             ->once();
-
-        $this->app->bind(
-            CreatorRepositoryInterface::class,
-            fn (): CreatorRepositoryInterface => $this->creatorRepository,
-        );
 
         $this->actingAs($this->user)
             ->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
@@ -108,19 +100,13 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->creatorRepository->shouldReceive('update')
+        $this->repository->shouldReceive('update')
             ->with(Mockery::on(
-                fn ($arg) => $arg instanceof Creator
-                && $arg->creatorId->value === $uuid
-                && $arg->creatorName->value === 'クリエイター名'
+                fn (Creator $arg): bool => $arg->creatorId->value === $uuid
+                    && $arg->creatorName->value === 'クリエイター名'
             ))
             ->andReturn(new CreatorId($uuid))
             ->once();
-
-        $this->app->bind(
-            CreatorRepositoryInterface::class,
-            fn (): CreatorRepositoryInterface => $this->creatorRepository,
-        );
 
         $this->actingAs($this->user)
             ->post(route(RouteMap::EditCreator), [
