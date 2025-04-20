@@ -52,6 +52,8 @@ class MockServiceProvider extends ServiceProvider
 
     private function journeyLog(): void
     {
+        $this->app->bind(\JourneyLog\Domain\Models\JourneyLogFactoryInterface::class, \JourneyLog\Infrastructures\Factories\JourneyLogFactory::class);
+
         $this->app->bind(\JourneyLog\UseCases\List\ListUseCaseInterface::class, \JourneyLog\Application\List\ListInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Get\GetUseCaseInterface::class, \JourneyLog\Application\Get\GetInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Create\CreateUseCaseInterface::class, \JourneyLog\Application\Create\CreateInteractor::class);
