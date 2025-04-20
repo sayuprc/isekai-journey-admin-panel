@@ -10,6 +10,7 @@ use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Creator\UseCases\Edit\EditRequest;
 use Creator\UseCases\Edit\EditUseCaseInterface;
 use Mockery;
@@ -23,6 +24,8 @@ class EditInteractorTest extends TestCase
 
     private CreatorFactoryInterface&MockInterface $factory;
 
+    private CreatorNameDuplicateCheckService&MockInterface $service;
+
     private EditInteractor $interactor;
 
     protected function setUp(): void
@@ -31,8 +34,9 @@ class EditInteractorTest extends TestCase
 
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->factory = Mockery::mock(CreatorFactoryInterface::class);
+        $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
 
-        $this->interactor = new EditInteractor($this->repository, $this->factory);
+        $this->interactor = new EditInteractor($this->repository, $this->factory, $this->service);
     }
 
     #[Test]
@@ -52,6 +56,11 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
+        $this->service->shouldReceive('exists')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andReturn(false)
+            ->once();
+
         $this->repository->shouldReceive('update')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
@@ -59,9 +68,29 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new EditRequest(
-            'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            'クリエイター',
-        ));
+        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+
+        $this->assertTrue($result->isOk());
+    }
+
+    #[Test]
+    public function editFailsIfNameAlreadyExists(): void
+    {
+        $this->factory->shouldReceive('reconstitute')
+            ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')
+            ->andReturn(new Creator(
+                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new CreatorName('クリエイター')
+            ))
+            ->once();
+
+        $this->service->shouldReceive('exists')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andReturn(true)
+            ->once();
+
+        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+
+        $this->assertTrue($result->isErr());
     }
 }

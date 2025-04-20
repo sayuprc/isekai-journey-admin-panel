@@ -100,6 +100,11 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター名'))
+            ->andReturnNull()
+            ->once();
+
         $this->repository->shouldReceive('update')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === $uuid
@@ -116,6 +121,30 @@ class EditCreatorTest extends TestCase
             ->assertStatus(302)
             ->assertLocation(route(RouteMap::ListCreators))
             ->assertSessionHas('message', '更新しました');
+    }
+
+    #[Test]
+    public function editFails(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター名'))
+            ->andReturn(new Creator(
+                new CreatorId($uuid),
+                new CreatorName('クリエイター名')
+            ))
+            ->once();
+
+        $this->actingAs($this->user)
+            ->post(route(RouteMap::EditCreator), [
+                'creator_id' => $uuid,
+                'creator_name' => 'クリエイター名',
+            ])
+            ->assertStatus(302)
+            ->assertInvalid([
+                'message' => 'Creator name already exists: クリエイター名',
+            ]);
     }
 
     #[Test]

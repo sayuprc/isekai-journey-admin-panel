@@ -10,7 +10,6 @@ use Creator\UseCases\Edit\EditRequest;
 use Creator\UseCases\Edit\EditUseCaseInterface;
 use Creator\UseCases\Get\GetRequest;
 use Creator\UseCases\Get\GetUseCaseInterface;
-use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Support\Route\RouteMap;
@@ -39,20 +38,18 @@ class EditCreatorController extends Controller
 
     public function handle(EditRequest $request, EditUseCaseInterface $interactor): RedirectResponse
     {
-        try {
-            $interactor->handle($request);
-        } catch (Exception $e) {
-            return back()
-                ->withErrors([
-                    'message' => $e->getMessage(),
-                ])
-                ->withInput();
-        }
+        $result = $interactor->handle($request);
 
-        return redirect()
-            ->route(RouteMap::ListCreators)
-            ->with([
-                'message' => '更新しました',
-            ]);
+        return $result->isErr()
+            ? back()
+                ->withErrors([
+                    'message' => $result->unwrapErr(),
+                ])
+                ->withInput()
+            : redirect()
+                ->route(RouteMap::ListCreators)
+                ->with([
+                    'message' => '更新しました',
+                ]);
     }
 }

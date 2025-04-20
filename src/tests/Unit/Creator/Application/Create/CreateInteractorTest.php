@@ -10,6 +10,7 @@ use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Creator\UseCases\Create\CreateRequest;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Mockery;
@@ -23,6 +24,8 @@ class CreateInteractorTest extends TestCase
 
     private CreatorFactoryInterface&MockInterface $factory;
 
+    private CreatorNameDuplicateCheckService&MockInterface $service;
+
     private CreateInteractor $interactor;
 
     protected function setUp(): void
@@ -31,8 +34,9 @@ class CreateInteractorTest extends TestCase
 
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->factory = Mockery::mock(CreatorFactoryInterface::class);
+        $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
 
-        $this->interactor = new CreateInteractor($this->repository, $this->factory);
+        $this->interactor = new CreateInteractor($this->repository, $this->factory, $this->service);
     }
 
     #[Test]
@@ -52,6 +56,11 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
+        $this->service->shouldReceive('exists')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andreturn(false)
+            ->once();
+
         $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
@@ -59,6 +68,29 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new CreateRequest('クリエイター'));
+        $result = $this->interactor->handle(new CreateRequest('クリエイター'));
+
+        $this->assertTrue($result->isOk());
+    }
+
+    #[Test]
+    public function createFailsIfNameAlreadyExists(): void
+    {
+        $this->factory->shouldReceive('create')
+            ->with('クリエイター')
+            ->andReturn(new Creator(
+                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                new CreatorName('クリエイター')
+            ))
+            ->once();
+
+        $this->service->shouldReceive('exists')
+            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
+            ->andreturn(true)
+            ->once();
+
+        $result = $this->interactor->handle(new CreateRequest('クリエイター'));
+
+        $this->assertTrue($result->isErr());
     }
 }
