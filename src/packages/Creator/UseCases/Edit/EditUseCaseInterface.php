@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Creator\UseCases\Edit;
 
+use Support\ResultType\Result;
+
 interface EditUseCaseInterface
 {
-    public function handle(EditRequest $request): void;
+    /**
+     * @return Result<null, string>
+     */
+    public function handle(EditRequest $request): Result;
 }
