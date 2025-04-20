@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Models;
 
+use JourneyLog\Domain\Models\JourneyLogLink\JourneyLogLink;
 use Support\Domain\ValueObjects\OrderNo;
 
 class JourneyLog

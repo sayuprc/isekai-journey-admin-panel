@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLog\Domain\Models;
+namespace Tests\Unit\JourneyLog\Domain\Models\JourneyLogLink;
 
-use JourneyLog\Domain\Models\JourneyLogLinkName;
+use JourneyLog\Domain\Models\JourneyLogLink\JourneyLogLinkName;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\String\StringValueObject;
 use Tests\TestCase;

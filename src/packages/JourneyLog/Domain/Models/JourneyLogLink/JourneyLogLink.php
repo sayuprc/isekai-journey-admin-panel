@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\Domain\Models;
+namespace JourneyLog\Domain\Models\JourneyLogLink;
 
+use JourneyLog\Domain\Models\Url;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 
