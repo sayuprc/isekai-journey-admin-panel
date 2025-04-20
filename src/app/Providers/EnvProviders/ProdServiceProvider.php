@@ -53,6 +53,8 @@ class ProdServiceProvider extends ServiceProvider
 
     private function journeyLog(): void
     {
+        $this->app->bind(\JourneyLog\Domain\Models\JourneyLogFactoryInterface::class, \JourneyLog\Infrastructures\Factories\JourneyLogFactory::class);
+
         $this->app->bind(\JourneyLog\UseCases\List\ListUseCaseInterface::class, \JourneyLog\Application\List\ListInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Get\GetUseCaseInterface::class, \JourneyLog\Application\Get\GetInteractor::class);
         $this->app->bind(\JourneyLog\UseCases\Create\CreateUseCaseInterface::class, \JourneyLog\Application\Create\CreateInteractor::class);
@@ -62,6 +64,8 @@ class ProdServiceProvider extends ServiceProvider
 
     private function journeyLogLinkType(): void
     {
+        $this->app->bind(\JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface::class, \JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory::class);
+
         $this->app->bind(\JourneyLogLinkType\UseCases\List\ListUseCaseInterface::class, \JourneyLogLinkType\Application\List\ListInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Get\GetUseCaseInterface::class, \JourneyLogLinkType\Application\Get\GetInteractor::class);
         $this->app->bind(\JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface::class, \JourneyLogLinkType\Application\Create\CreateInteractor::class);
@@ -76,6 +80,8 @@ class ProdServiceProvider extends ServiceProvider
 
     private function creator(): void
     {
+        $this->app->bind(\Creator\Domain\Models\CreatorFactoryInterface::class, \Creator\Infrastructures\Factories\CreatorFactory::class);
+
         $this->app->bind(\Creator\UseCases\List\ListUseCaseInterface::class, \Creator\Application\List\ListInteractor::class);
         $this->app->bind(\Creator\UseCases\Create\CreateUseCaseInterface::class, \Creator\Application\Create\CreateInteractor::class);
         $this->app->bind(\Creator\UseCases\Get\GetUseCaseInterface::class, \Creator\Application\Get\GetInteractor::class);

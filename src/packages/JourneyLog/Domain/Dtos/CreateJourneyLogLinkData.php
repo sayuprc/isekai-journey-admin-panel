@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\UseCases\Create;
+namespace JourneyLog\Domain\Dtos;
 
-class CreateJourneyLogLink
+class CreateJourneyLogLinkData
 {
     /**
      * @param positive-int $orderNo
@@ -13,7 +13,7 @@ class CreateJourneyLogLink
         public readonly string $journeyLogLinkName,
         public readonly string $url,
         public readonly int $orderNo,
-        public readonly string $journeyLogLinkTypeId,
+        public readonly string $journeyLogLinkTypeId
     ) {
     }
 }
