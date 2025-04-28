@@ -41,6 +41,7 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
     zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
+  && curl -sSf https://atlasgo.sh | sh \
   && pecl install xdebug protobuf grpc \
   && docker-php-ext-enable xdebug protobuf grpc \
   && docker-php-ext-install pgsql pdo_pgsql
