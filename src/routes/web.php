@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/{songTypeId}', [EditSongTypeController::class, 'index'])
             ->whereUuid('songTypeId')
             ->name(RouteMap::ShowEditSongTypeForm);
+        Route::post('/edit', [EditSongTypeController::class, 'handle'])
+            ->name(RouteMap::EditSongType);
     });
 
     Route::prefix('creators')->group(function (): void {

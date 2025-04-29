@@ -89,6 +89,7 @@ class ProdServiceProvider extends ServiceProvider
         $this->app->bind(\SongType\UseCases\List\ListUseCaseInterface::class, \SongType\Application\List\ListInteractor::class);
         $this->app->bind(\SongType\UseCases\Create\CreateUseCaseInterface::class, \SongType\Application\Create\CreateInteractor::class);
         $this->app->bind(\SongType\UseCases\Get\GetUseCaseInterface::class, \SongType\Application\Get\GetInteractor::class);
+        $this->app->bind(\SongType\UseCases\Edit\EditUseCaseInterface::class, \SongType\Application\Edit\EditInteractor::class);
     }
 
     private function creator(): void

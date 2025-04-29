@@ -88,6 +88,13 @@ class WebRequestServiceProvider extends ServiceProvider
 
             return $this->getMapper()->map(\SongType\UseCases\Create\CreateRequest::class, $request->validated());
         });
+
+        $this->app->bind(\SongType\UseCases\Edit\EditRequest::class, function (): \SongType\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\EditRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Edit\EditRequest::class, $request->validated());
+        });
     }
 
     private function creator(): void

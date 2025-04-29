@@ -96,4 +96,77 @@ class EditSongTypeTest extends TestCase
             ->assertLocation(route(RouteMap::ListSongTypes))
             ->assertInvalid(['message' => "Song type not found: {$uuid}"]);
     }
+
+    #[Test]
+    public function canEdit(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (SongTypeName $arg): bool => $arg->value === '楽曲種別'))
+            ->andReturnNull()
+            ->once();
+
+        $this->repository->shouldReceive('update')
+            ->with(Mockery::on(
+                fn (SongType $arg): bool => $arg->songTypeId->value === $uuid
+                    && $arg->songTypeName->value === '楽曲種別'
+                    && $arg->orderNo->value === 1
+            ))
+            ->andReturn(new SongTypeId($uuid))
+            ->once();
+
+        $this->actingAs($this->user)
+            ->post(route(RouteMap::EditSongType), [
+                'song_type_id' => $uuid,
+                'song_type_name' => '楽曲種別',
+                'order_no' => 1,
+            ])
+            ->assertStatus(302)
+            ->assertLocation(route(RouteMap::ListSongTypes))
+            ->assertSessionHas('message', '更新しました');
+    }
+
+    #[Test]
+    public function editFails(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->repository->shouldReceive('findByName')
+            ->with(Mockery::on(fn (SongTypeName $arg): bool => $arg->value === '楽曲種別'))
+            ->andReturn(new SongType(
+                new SongTypeId('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'),
+                new SongTypeName('楽曲種別'),
+                new OrderNo(1),
+            ))
+            ->once();
+
+        $this->actingAs($this->user)
+            ->post(route(RouteMap::EditSongType), [
+                'song_type_id' => $uuid,
+                'song_type_name' => '楽曲種別',
+                'order_no' => 1,
+            ])
+            ->assertStatus(302)
+            ->assertInvalid([
+                'message' => "Song type already exists: {$uuid}",
+            ]);
+    }
+
+    #[Test]
+    public function emptyParameters(): void
+    {
+        $this->actingAs($this->user)
+            ->post(route(RouteMap::EditSongType), [
+                'song_type_id' => '',
+                'song_type_name' => '',
+                'order_no' => '',
+            ])
+            ->assertStatus(302)
+            ->assertSessionHasErrors([
+                'song_type_id',
+                'song_type_name',
+                'order_no',
+            ]);
+    }
 }

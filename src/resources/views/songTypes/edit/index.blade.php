@@ -29,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="" method="post">
+    <form action="{{ route(RouteMap::EditSongType, $songType->songTypeId) }}" method="post">
         @csrf
         <input name="song_type_id" value="{{ $songType->songTypeId }}" type="hidden">
 
