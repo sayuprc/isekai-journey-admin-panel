@@ -38,6 +38,8 @@ class MockServiceProvider extends ServiceProvider
 
         $this->song();
 
+        $this->songType();
+
         $this->creator();
     }
 
@@ -75,6 +77,15 @@ class MockServiceProvider extends ServiceProvider
     private function song(): void
     {
         $this->app->bind(\Song\UseCases\List\ListUseCaseInterface::class, \Song\Application\List\ListInteractor::class);
+    }
+
+    private function songType(): void
+    {
+        $this->app->bind(\SongType\Domain\Models\SongTypeFactoryInterface::class, \SongType\Infrastructures\Factories\SongTypeFactory::class);
+
+        $this->app->bind(\SongType\Domain\Models\SongTypeRepositoryInterface::class, \SongType\Infrastructures\Repositories\FileSongTypeRepository::class);
+
+        $this->app->bind(\SongType\UseCases\List\ListUseCaseInterface::class, \SongType\Application\List\ListInteractor::class);
     }
 
     private function creator(): void

@@ -6,4 +6,8 @@ namespace SongType\Domain\Models;
 
 interface SongTypeRepositoryInterface
 {
+    /**
+     * @return array<SongType>
+     */
+    public function all(): array;
 }
