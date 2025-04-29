@@ -9,6 +9,7 @@ use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Generated\IsekaiJourney\Song\SongServiceClient;
 use Grpc\ChannelCredentials;
 use Illuminate\Support\ServiceProvider;
+use Support\Application\Config\Config;
 
 class GrpcServiceProvider extends ServiceProvider
 {
@@ -42,11 +43,11 @@ class GrpcServiceProvider extends ServiceProvider
      */
     private function getConfig(): array
     {
-        $url = config('grpc.api_url');
-        assert(is_string($url));
+        $config = $this->app->make(Config::class);
 
-        $rootCa = config('grpc.root_ca');
-        assert(is_string($rootCa));
+        $url = $config->getString('grpc.api_url');
+
+        $rootCa = $config->getString('grpc.root_ca');
 
         return [
             $url,
