@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature\Web\SongType;
+namespace Tests\Feature\Web\SongType;
 
 use App\Http\ViewModels\Web\SongType\SongTypeView;
 use App\Models\User;
