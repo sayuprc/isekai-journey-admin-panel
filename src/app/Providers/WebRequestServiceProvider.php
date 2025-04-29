@@ -95,6 +95,13 @@ class WebRequestServiceProvider extends ServiceProvider
 
             return $this->getMapper()->map(\SongType\UseCases\Edit\EditRequest::class, $request->validated());
         });
+
+        $this->app->bind(\SongType\UseCases\Delete\DeleteRequest::class, function (): \SongType\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\DeleteRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
     }
 
     private function creator(): void
