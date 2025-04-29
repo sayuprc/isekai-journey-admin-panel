@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tools\Arkitect;
 
+use tools\Arkitect\ComponentMaps\ComponentMap;
+
 class Define
 {
     /**
@@ -17,12 +19,12 @@ class Define
 
     public function componentName(): string
     {
-        return $this->component->name;
+        return $this->component->getName();
     }
 
     public function namespace(): string
     {
-        return $this->component->value;
+        return $this->component->getNamespace();
     }
 
     public function hasDependencies(): bool
@@ -35,6 +37,6 @@ class Define
      */
     public function dependencies(): array
     {
-        return array_map(fn (ComponentMap $component): string => $component->name, $this->dependencies);
+        return array_map(fn (ComponentMap $component): string => $component->getName(), $this->dependencies);
     }
 }
