@@ -16,4 +16,6 @@ interface SongTypeRepositoryInterface
     public function findByName(SongTypeName $songTypeName): ?SongType;
 
     public function insert(SongType $songType): void;
+
+    public function update(SongType $songType): SongTypeId;
 }
