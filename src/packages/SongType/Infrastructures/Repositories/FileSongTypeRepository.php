@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SongType\Infrastructures\Repositories;
 
 use SongType\Domain\Models\SongType;
+use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use Support\Config\ConfigInterface;
@@ -32,6 +33,11 @@ class FileSongTypeRepository implements SongTypeRepositoryInterface
     public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
+    }
+
+    public function find(SongTypeId $songTypeId): ?SongType
+    {
+        return $this->store->get($this->filePath, $songTypeId->value);
     }
 
     public function findByName(SongTypeName $songTypeName): ?SongType

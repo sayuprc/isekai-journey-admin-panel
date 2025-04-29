@@ -11,6 +11,8 @@ interface SongTypeRepositoryInterface
      */
     public function all(): array;
 
+    public function find(SongTypeId $songTypeId): ?SongType;
+
     public function findByName(SongTypeName $songTypeName): ?SongType;
 
     public function insert(SongType $songType): void;
