@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use SongType\Route\SongTypeRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -16,7 +16,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::CreateSongType) }}" method="post">
+    <form action="{{ route(SongTypeRouteMap::Create) }}" method="post">
         @csrf
         <x-adminlte-textarea label="楽曲種別名" name="song_type_name">
             {{ old('song_type_name') }}

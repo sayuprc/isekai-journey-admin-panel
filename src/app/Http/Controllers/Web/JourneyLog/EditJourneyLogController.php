@@ -10,12 +10,12 @@ use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLog\UseCases\Edit\EditRequest;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLog\UseCases\Get\GetRequest;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
 use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
-use Support\Route\RouteMap;
 
 class EditJourneyLogController extends Controller
 {
@@ -30,7 +30,7 @@ class EditJourneyLogController extends Controller
 
         if ($result->isErr()) {
             return redirect()
-                ->route(RouteMap::ListJourneyLogs)
+                ->route(JourneyLogRouteMap::List)
                 ->withErrors([
                     'message' => $result->unwrapErr(),
                 ]);
@@ -55,7 +55,7 @@ class EditJourneyLogController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListJourneyLogs)
+            ->route(JourneyLogRouteMap::List)
             ->with([
                 'message' => '更新しました',
             ]);

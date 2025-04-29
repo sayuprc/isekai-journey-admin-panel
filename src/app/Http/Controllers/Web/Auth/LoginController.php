@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use Auth\Route\AuthRouteMap;
 use Auth\UseCases\Login\LoginRequest;
 use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Translation\Translator;
-use Support\Route\RouteMap;
+use JourneyLog\Route\JourneyLogRouteMap;
 
 class LoginController extends Controller
 {
@@ -29,11 +30,11 @@ class LoginController extends Controller
         if ($interactor->handle($request)->isSucceeded) {
             $session->regenerate();
 
-            return redirect()->route(RouteMap::ListJourneyLogs);
+            return redirect()->route(JourneyLogRouteMap::List);
         }
 
         return redirect()
-            ->route(RouteMap::ShowLoginForm)
+            ->route(AuthRouteMap::ShowLoginForm)
             ->withErrors([
                 'message' => $this->translator->get('auth.failed'),
             ]);

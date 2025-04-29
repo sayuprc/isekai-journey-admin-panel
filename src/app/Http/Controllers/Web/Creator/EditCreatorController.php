@@ -6,13 +6,13 @@ namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Creator\CreatorPresenter;
+use Creator\Route\CreatorRouteMap;
 use Creator\UseCases\Edit\EditRequest;
 use Creator\UseCases\Edit\EditUseCaseInterface;
 use Creator\UseCases\Get\GetRequest;
 use Creator\UseCases\Get\GetUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Support\Route\RouteMap;
 
 class EditCreatorController extends Controller
 {
@@ -25,7 +25,7 @@ class EditCreatorController extends Controller
 
         if ($result->isErr()) {
             return redirect()
-                ->route(RouteMap::ListCreators)
+                ->route(CreatorRouteMap::List)
                 ->withErrors([
                     'message' => $result->unwrapErr(),
                 ]);
@@ -47,7 +47,7 @@ class EditCreatorController extends Controller
                 ])
                 ->withInput()
             : redirect()
-                ->route(RouteMap::ListCreators)
+                ->route(CreatorRouteMap::List)
                 ->with([
                     'message' => '更新しました',
                 ]);

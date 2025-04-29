@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use Creator\Route\CreatorRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -26,7 +26,7 @@
         @foreach($creators as $creator)
             <tr>
                 <td>{{ $creator->creatorName }}</td>
-                <td><a href="{{route(RouteMap::ShowEditCreatorForm,$creator->creatorId)}}">編集</a>
+                <td><a href="{{ route(CreatorRouteMap::ShowEditForm, $creator->creatorId) }}">編集</a>
                 </td>
             </tr>
         @endforeach

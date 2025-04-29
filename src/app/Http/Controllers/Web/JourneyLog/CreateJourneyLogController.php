@@ -9,10 +9,10 @@ use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLog\UseCases\Create\CreateRequest;
 use JourneyLog\UseCases\Create\CreateUseCaseInterface;
 use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
-use Support\Route\RouteMap;
 
 class CreateJourneyLogController extends Controller
 {
@@ -36,7 +36,7 @@ class CreateJourneyLogController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListJourneyLogs)
+            ->route(JourneyLogRouteMap::List)
             ->with(['message' => '登録完了しました']);
     }
 }

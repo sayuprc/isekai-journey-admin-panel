@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -16,7 +16,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::CreateJourneyLogLinkType) }}" method="post">
+    <form action="{{ route(JourneyLogLinkTypeRouteMap::Create) }}" method="post">
         @csrf
         <x-adminlte-textarea label="名前" name="journey_log_link_type_name">
             {{ old('journey_log_link_type_name') }}

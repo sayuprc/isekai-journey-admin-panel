@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\SongType;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use SongType\Route\SongTypeRouteMap;
 use SongType\UseCases\Create\CreateRequest;
 use SongType\UseCases\Create\CreateUseCaseInterface;
-use Support\Route\RouteMap;
 
 class CreateSongTypeController extends Controller
 {
@@ -29,7 +29,7 @@ class CreateSongTypeController extends Controller
                 ])
                 ->withInput()
             : redirect()
-                ->route(RouteMap::ListSongTypes)
+                ->route(SongTypeRouteMap::List)
                 ->with(['message' => '登録完了しました']);
     }
 }

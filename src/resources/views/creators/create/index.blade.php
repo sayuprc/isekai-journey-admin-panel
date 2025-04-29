@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use Creator\Route\CreatorRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -16,7 +16,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::CreateCreator) }}" method="post">
+    <form action="{{ route(CreatorRouteMap::Create) }}" method="post">
         @csrf
         <x-adminlte-input label="クリエイター名" type="text" name="creator_name" value="{{ old('creator_name') }}"/>
 

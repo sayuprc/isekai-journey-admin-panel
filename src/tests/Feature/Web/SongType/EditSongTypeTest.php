@@ -6,6 +6,7 @@ namespace Tests\Feature\Web\SongType;
 
 use App\Http\ViewModels\Web\SongType\SongTypeView;
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -15,8 +16,8 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
+use SongType\Route\SongTypeRouteMap;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class EditSongTypeTest extends TestCase
@@ -45,15 +46,15 @@ class EditSongTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::ShowEditSongTypeForm, ['songTypeId' => $uuid]))
+        $this->get(route(SongTypeRouteMap::ShowEditForm, ['songTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
-        $this->get(route(RouteMap::ShowEditSongTypeForm, ['songTypeId' => 'not-uuid-style-id']))
+        $this->get(route(SongTypeRouteMap::ShowEditForm, ['songTypeId' => 'not-uuid-style-id']))
             ->assertStatus(404);
     }
 
@@ -72,7 +73,7 @@ class EditSongTypeTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditSongTypeForm, ['songTypeId' => $uuid]))
+            ->get(route(SongTypeRouteMap::ShowEditForm, ['songTypeId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -91,9 +92,9 @@ class EditSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditSongTypeForm, ['songTypeId' => $uuid]))
+            ->get(route(SongTypeRouteMap::ShowEditForm, ['songTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListSongTypes))
+            ->assertLocation(route(SongTypeRouteMap::List))
             ->assertInvalid(['message' => "Song type not found: {$uuid}"]);
     }
 
@@ -117,13 +118,13 @@ class EditSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditSongType), [
+            ->post(route(SongTypeRouteMap::Edit), [
                 'song_type_id' => $uuid,
                 'song_type_name' => '楽曲種別',
                 'order_no' => 1,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListSongTypes))
+            ->assertLocation(route(SongTypeRouteMap::List))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -142,7 +143,7 @@ class EditSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditSongType), [
+            ->post(route(SongTypeRouteMap::Edit), [
                 'song_type_id' => $uuid,
                 'song_type_name' => '楽曲種別',
                 'order_no' => 1,
@@ -157,7 +158,7 @@ class EditSongTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditSongType), [
+            ->post(route(SongTypeRouteMap::Edit), [
                 'song_type_id' => '',
                 'song_type_name' => '',
                 'order_no' => '',

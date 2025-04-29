@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Creator;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class DeleteCreatorTest extends TestCase
@@ -39,9 +40,9 @@ class DeleteCreatorTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->delete(route(RouteMap::DeleteCreator))
+        $this->delete(route(CreatorRouteMap::Delete))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -54,11 +55,11 @@ class DeleteCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteCreator), [
+            ->delete(route(CreatorRouteMap::Delete), [
                 'creator_id' => $uuid,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListCreators))
+            ->assertLocation(route(CreatorRouteMap::List))
             ->assertSessionHas('message', '削除しました');
     }
 
@@ -66,7 +67,7 @@ class DeleteCreatorTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteCreator), [
+            ->delete(route(CreatorRouteMap::Delete), [
                 'creator_id' => '',
             ])
             ->assertStatus(302)

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Creator;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class ListCreatorTest extends TestCase
@@ -41,9 +42,9 @@ class ListCreatorTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ListCreators))
+        $this->get(route(CreatorRouteMap::List))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -65,7 +66,7 @@ class ListCreatorTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListCreators))
+            ->get(route(CreatorRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('creators.list.index');
 
@@ -91,7 +92,7 @@ class ListCreatorTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListCreators))
+            ->get(route(CreatorRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('creators.list.index');
 

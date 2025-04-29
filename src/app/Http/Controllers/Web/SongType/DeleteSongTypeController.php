@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\SongType;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use SongType\Route\SongTypeRouteMap;
 use SongType\UseCases\Delete\DeleteRequest;
 use SongType\UseCases\Delete\DeleteUseCaseInterface;
-use Support\Route\RouteMap;
 
 class DeleteSongTypeController extends Controller
 {
@@ -24,7 +24,7 @@ class DeleteSongTypeController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListSongTypes)
+            ->route(SongTypeRouteMap::List)
             ->with([
                 'message' => '削除しました',
             ]);

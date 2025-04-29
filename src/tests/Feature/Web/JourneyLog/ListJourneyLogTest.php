@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\JourneyLog;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -19,12 +20,12 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class ListJourneyLogTest extends TestCase
@@ -51,9 +52,9 @@ class ListJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ListJourneyLogs))
+        $this->get(route(JourneyLogRouteMap::List))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -89,7 +90,7 @@ class ListJourneyLogTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListJourneyLogs))
+            ->get(route(JourneyLogRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 
@@ -117,7 +118,7 @@ class ListJourneyLogTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListJourneyLogs))
+            ->get(route(JourneyLogRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('journeyLogs.list.index');
 

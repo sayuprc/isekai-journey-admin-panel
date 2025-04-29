@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use JourneyLog\Route\JourneyLogRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -28,7 +28,8 @@
                 <td>{{ $journeyLog->period }}</td>
                 <td>{{ $journeyLog->story }}</td>
                 <td>{{ $journeyLog->orderNo }}</td>
-                <td><a href="{{ route(RouteMap::ShowEditJourneyLogForm, $journeyLog->journeyLogId) }}">編集</a>
+                <td>
+                    <a href="{{ route(JourneyLogRouteMap::ShowEditForm, $journeyLog->journeyLogId) }}">編集</a>
                 </td>
             </tr>
         @endforeach

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Auth;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use JourneyLog\Route\JourneyLogRouteMap;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -19,7 +20,7 @@ class LoginTest extends TestCase
     #[Test]
     public function showLoginForm(): void
     {
-        $this->get(route(RouteMap::ShowLoginForm))
+        $this->get(route(AuthRouteMap::ShowLoginForm))
             ->assertStatus(200)
             ->assertViewIs('auth.login');
     }
@@ -33,12 +34,12 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs));
+            ->assertLocation(route(JourneyLogRouteMap::List));
 
         $this->assertAuthenticated();
     }
@@ -52,12 +53,12 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'r@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ShowLoginForm))
+            ->assertLocation(route(AuthRouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
@@ -70,31 +71,31 @@ class LoginTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'pass',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ShowLoginForm))
+            ->assertLocation(route(AuthRouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
     #[Test]
     public function notFoundUser(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'root@example.com',
             'password' => 'password',
         ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ShowLoginForm))
+            ->assertLocation(route(AuthRouteMap::ShowLoginForm))
             ->assertSessionHasErrors(['message']);
     }
 
     #[Test]
     public function invalidTypeEmail(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'aaaa',
             'password' => 'password',
         ])
@@ -105,7 +106,7 @@ class LoginTest extends TestCase
     #[Test]
     public function emptyEmail(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => '',
             'password' => 'password',
         ])
@@ -116,7 +117,7 @@ class LoginTest extends TestCase
     #[Test]
     public function nullEmail(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'password' => 'password',
         ])
             ->assertStatus(302)
@@ -126,7 +127,7 @@ class LoginTest extends TestCase
     #[Test]
     public function emptyPassword(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'root@example.com',
             'password' => '',
         ])
@@ -137,7 +138,7 @@ class LoginTest extends TestCase
     #[Test]
     public function nullPassword(): void
     {
-        $this->post(route(RouteMap::Login), [
+        $this->post(route(AuthRouteMap::Login), [
             'email' => 'root@example.com',
             'password' => '',
         ])
@@ -155,8 +156,8 @@ class LoginTest extends TestCase
         ]);
 
         $this->actingAs($user)
-            ->get(route(RouteMap::ShowLoginForm))
+            ->get(route(AuthRouteMap::ShowLoginForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ListJourneyLogs));
+            ->assertRedirect(route(JourneyLogRouteMap::List));
     }
 }

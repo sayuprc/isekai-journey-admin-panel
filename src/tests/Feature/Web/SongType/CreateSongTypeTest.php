@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\SongType;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -14,8 +15,8 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
+use SongType\Route\SongTypeRouteMap;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class CreateSongTypeTest extends TestCase
@@ -42,16 +43,16 @@ class CreateSongTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ShowCreateSongTypeForm))
+        $this->get(route(SongTypeRouteMap::ShowCreateForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function showCreateForm(): void
     {
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowCreateSongTypeForm))
+            ->get(route(SongTypeRouteMap::ShowCreateForm))
             ->assertStatus(200);
     }
 
@@ -74,12 +75,12 @@ class CreateSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateSongType), [
+            ->post(route(SongTypeRouteMap::Create), [
                 'song_type_name' => '楽曲種別',
                 'order_no' => 1,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListSongTypes))
+            ->assertLocation(route(SongTypeRouteMap::List))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -96,7 +97,7 @@ class CreateSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateSongType), [
+            ->post(route(SongTypeRouteMap::Create), [
                 'song_type_name' => '楽曲種別',
                 'order_no' => 1,
             ])
@@ -110,7 +111,7 @@ class CreateSongTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateSongType), [
+            ->post(route(SongTypeRouteMap::Create), [
                 'song_type_name' => '',
                 'order_no' => '',
             ])
