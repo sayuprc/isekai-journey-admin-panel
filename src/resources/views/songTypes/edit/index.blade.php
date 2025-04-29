@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>楽曲種別更新</h1>
 
-        <form action="{{ $songType->songTypeId }}" method="post">
+        <form action="{{ route(RouteMap::DeleteSongType, $songType->songTypeId) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="song_type_id" value="{{ $songType->songTypeId }}" type="hidden">
