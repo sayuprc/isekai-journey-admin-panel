@@ -20,7 +20,7 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\Edit\EditRequest;
+use JourneyLog\UseCases\Edit\EditInputData;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
@@ -85,7 +85,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new EditRequest(
+        $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
             new DateTimeImmutable('2019-12-08'),
@@ -164,7 +164,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new EditRequest(
+        $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
             new DateTimeImmutable('2019-12-08'),

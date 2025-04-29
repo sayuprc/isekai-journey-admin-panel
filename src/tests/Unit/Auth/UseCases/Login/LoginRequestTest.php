@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\UseCases\Login;
 
-use Auth\UseCases\Login\LoginRequest;
+use Auth\UseCases\Login\LoginInputData;
 use Exception;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +15,7 @@ class LoginRequestTest extends TestCase
     #[Test]
     public function properlyStoresValue(): void
     {
-        $instance = new LoginRequest([
+        $instance = new LoginInputData([
             'email' => 'user@example.com',
             'password' => 'plain password',
         ]);
@@ -36,7 +36,7 @@ class LoginRequestTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid credentials');
 
-        new LoginRequest($array);
+        new LoginInputData($array);
     }
 
     public static function provideThrowExceptionWhenInvalidValue(): array

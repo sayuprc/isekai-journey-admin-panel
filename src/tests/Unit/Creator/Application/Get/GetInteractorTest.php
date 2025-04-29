@@ -9,8 +9,8 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\UseCases\Get\GetRequest;
-use Creator\UseCases\Get\GetResponse;
+use Creator\UseCases\Get\GetInputData;
+use Creator\UseCases\Get\GetOutputData;
 use Creator\UseCases\Get\GetUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -50,14 +50,14 @@ class GetInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
         $response = $result->unwrap();
 
-        $this->assertInstanceOf(GetResponse::class, $response);
+        $this->assertInstanceOf(GetOutputData::class, $response);
 
         $this->assertInstanceOf(Creator::class, $response->creator);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->creator->creatorId->value);
@@ -72,7 +72,7 @@ class GetInteractorTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());

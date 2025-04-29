@@ -6,7 +6,7 @@ namespace Auth\UseCases\Login;
 
 use Exception;
 
-class LoginRequest
+class LoginInputData
 {
     /**
      * @param array{email: string, password: string} $credentials

@@ -6,8 +6,8 @@ namespace JourneyLogLinkType\Application\Get;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Get\GetRequest;
-use JourneyLogLinkType\UseCases\Get\GetResponse;
+use JourneyLogLinkType\UseCases\Get\GetInputData;
+use JourneyLogLinkType\UseCases\Get\GetOutputData;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -20,14 +20,14 @@ class GetInteractor implements GetUseCaseInterface
     }
 
     /**
-     * @return Result<GetResponse, string>
+     * @return Result<GetOutputData, string>
      */
-    public function handle(GetRequest $request): Result
+    public function handle(GetInputData $inputData): Result
     {
-        if (is_null($found = $this->repository->find(new JourneyLogLinkTypeId($request->journeyLogLinkTypeId)))) {
-            return new Err("JourneyLogLinkType not found: {$request->journeyLogLinkTypeId}");
+        if (is_null($found = $this->repository->find(new JourneyLogLinkTypeId($inputData->journeyLogLinkTypeId)))) {
+            return new Err("JourneyLogLinkType not found: {$inputData->journeyLogLinkTypeId}");
         }
 
-        return new Ok(new GetResponse($found));
+        return new Ok(new GetOutputData($found));
     }
 }

@@ -20,7 +20,7 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\Create\CreateRequest;
+use JourneyLog\UseCases\Create\CreateInputData;
 use JourneyLog\UseCases\Create\CreateUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
@@ -84,7 +84,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new CreateRequest(
+        $this->interactor->handle(new CreateInputData(
             'story',
             new DateTimeImmutable('2019-12-08'),
             new DateTimeImmutable('2019-12-09'),
@@ -161,7 +161,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new CreateRequest(
+        $this->interactor->handle(new CreateInputData(
             'story',
             new DateTimeImmutable('2019-12-08'),
             new DateTimeImmutable('2019-12-09'),

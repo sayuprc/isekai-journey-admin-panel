@@ -6,5 +6,5 @@ namespace JourneyLog\UseCases\Edit;
 
 interface EditUseCaseInterface
 {
-    public function handle(EditRequest $request): void;
+    public function handle(EditInputData $inputData): void;
 }

@@ -8,15 +8,15 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use JourneyLog\Route\JourneyLogRouteMap;
-use JourneyLog\UseCases\Delete\DeleteRequest;
+use JourneyLog\UseCases\Delete\DeleteInputData;
 use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteJourneyLogController extends Controller
 {
-    public function handle(DeleteRequest $request, DeleteUseCaseInterface $interactor): RedirectResponse
+    public function handle(DeleteInputData $inputData, DeleteUseCaseInterface $interactor): RedirectResponse
     {
         try {
-            $interactor->handle($request);
+            $interactor->handle($inputData);
         } catch (Exception $e) {
             return back()->withErrors([
                 'message' => $e->getMessage(),

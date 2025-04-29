@@ -17,7 +17,7 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\List\ListResponse;
+use JourneyLog\UseCases\List\ListOutputData;
 use JourneyLog\UseCases\List\ListUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
@@ -56,7 +56,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(0, $response->journeyLogs);
     }
@@ -93,7 +93,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(2, $response->journeyLogs);
 

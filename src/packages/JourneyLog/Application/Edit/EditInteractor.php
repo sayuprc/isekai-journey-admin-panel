@@ -6,7 +6,7 @@ namespace JourneyLog\Application\Edit;
 
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\Edit\EditRequest;
+use JourneyLog\UseCases\Edit\EditInputData;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 
 class EditInteractor implements EditUseCaseInterface
@@ -17,15 +17,15 @@ class EditInteractor implements EditUseCaseInterface
     ) {
     }
 
-    public function handle(EditRequest $request): void
+    public function handle(EditInputData $inputData): void
     {
         $journeyLog = $this->factory->createForUpdate(
-            $request->journeyLogId,
-            $request->story,
-            $request->fromOn,
-            $request->toOn,
-            $request->orderNo,
-            $request->journeyLogLinks,
+            $inputData->journeyLogId,
+            $inputData->story,
+            $inputData->fromOn,
+            $inputData->toOn,
+            $inputData->orderNo,
+            $inputData->journeyLogLinks,
         );
 
         $this->repository->update($journeyLog);

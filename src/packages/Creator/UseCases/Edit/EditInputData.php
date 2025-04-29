@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\UseCases\Edit;
 
-class EditRequest
+class EditInputData
 {
     public function __construct(
         public readonly string $creatorId,

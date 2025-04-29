@@ -6,7 +6,7 @@ namespace JourneyLog\Application\Delete;
 
 use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\Delete\DeleteRequest;
+use JourneyLog\UseCases\Delete\DeleteInputData;
 use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
@@ -15,8 +15,8 @@ class DeleteInteractor implements DeleteUseCaseInterface
     {
     }
 
-    public function handle(DeleteRequest $request): void
+    public function handle(DeleteInputData $inputData): void
     {
-        $this->repository->delete(new JourneyLogId($request->journeyLogId));
+        $this->repository->delete(new JourneyLogId($inputData->journeyLogId));
     }
 }

@@ -12,8 +12,8 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\UseCases\Get\GetRequest;
-use SongType\UseCases\Get\GetResponse;
+use SongType\UseCases\Get\GetInputData;
+use SongType\UseCases\Get\GetOutputData;
 use SongType\UseCases\Get\GetUseCaseInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Support\ResultType\Result;
@@ -52,14 +52,14 @@ class GetInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
         $response = $result->unwrap();
 
-        $this->assertInstanceOf(GetResponse::class, $response);
+        $this->assertInstanceOf(GetOutputData::class, $response);
 
         $this->assertInstanceOf(SongType::class, $response->songType);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->songType->songTypeId->value);
@@ -75,7 +75,7 @@ class GetInteractorTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());

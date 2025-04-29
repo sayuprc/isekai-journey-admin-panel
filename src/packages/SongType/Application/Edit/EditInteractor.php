@@ -7,7 +7,7 @@ namespace SongType\Application\Edit;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
-use SongType\UseCases\Edit\EditRequest;
+use SongType\UseCases\Edit\EditInputData;
 use SongType\UseCases\Edit\EditUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -25,12 +25,12 @@ class EditInteractor implements EditUseCaseInterface
     /**
      * @return Result<null, string>
      */
-    public function handle(EditRequest $request): Result
+    public function handle(EditInputData $inputData): Result
     {
-        $songType = $this->factory->reconstitute($request->songTypeId, $request->songTypeName, $request->orderNo);
+        $songType = $this->factory->reconstitute($inputData->songTypeId, $inputData->songTypeName, $inputData->orderNo);
 
         if ($this->service->existsForUpdate($songType->songTypeId, $songType->songTypeName)) {
-            return new Err("Song type already exists: {$request->songTypeId}");
+            return new Err("Song type already exists: {$inputData->songTypeId}");
         }
 
         $this->repository->update($songType);

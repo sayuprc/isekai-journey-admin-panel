@@ -6,5 +6,5 @@ namespace Auth\UseCases\Login;
 
 interface LoginUseCaseInterface
 {
-    public function handle(LoginRequest $request): LoginResponse;
+    public function handle(LoginInputData $inputData): LoginOutputData;
 }

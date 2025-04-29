@@ -10,7 +10,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Create\CreateRequest;
+use JourneyLogLinkType\UseCases\Create\CreateInputData;
 use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -62,7 +62,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new CreateRequest(
+        $this->interactor->handle(new CreateInputData(
             'リンク',
             1
         ));

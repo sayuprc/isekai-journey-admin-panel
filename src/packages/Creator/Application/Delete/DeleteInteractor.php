@@ -6,7 +6,7 @@ namespace Creator\Application\Delete;
 
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\UseCases\Delete\DeleteRequest;
+use Creator\UseCases\Delete\DeleteInputData;
 use Creator\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
@@ -15,8 +15,8 @@ class DeleteInteractor implements DeleteUseCaseInterface
     {
     }
 
-    public function handle(DeleteRequest $request): void
+    public function handle(DeleteInputData $inputData): void
     {
-        $this->repository->delete(new CreatorId($request->creatorId));
+        $this->repository->delete(new CreatorId($inputData->creatorId));
     }
 }

@@ -6,7 +6,7 @@ namespace JourneyLogLinkType\Application\Edit;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Edit\EditRequest;
+use JourneyLogLinkType\UseCases\Edit\EditInputData;
 use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
 
 class EditInteractor implements EditUseCaseInterface
@@ -17,12 +17,12 @@ class EditInteractor implements EditUseCaseInterface
     ) {
     }
 
-    public function handle(EditRequest $request): void
+    public function handle(EditInputData $inputData): void
     {
         $journeyLogLinkType = $this->factory->reconstitute(
-            $request->journeyLogLinkTypeId,
-            $request->journeyLogLinkTypeName,
-            $request->orderNo,
+            $inputData->journeyLogLinkTypeId,
+            $inputData->journeyLogLinkTypeName,
+            $inputData->orderNo,
         );
 
         $this->repository->update($journeyLogLinkType);

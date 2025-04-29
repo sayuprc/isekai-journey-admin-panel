@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
-use JourneyLogLinkType\UseCases\Create\CreateRequest;
+use JourneyLogLinkType\UseCases\Create\CreateInputData;
 use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
 
 class CreateJourneyLogLinkTypeController extends Controller
@@ -19,10 +19,10 @@ class CreateJourneyLogLinkTypeController extends Controller
         return view('journeyLogLinkTypes.create.index');
     }
 
-    public function handle(CreateRequest $request, CreateUseCaseInterface $interactor): RedirectResponse
+    public function handle(CreateInputData $inputData, CreateUseCaseInterface $interactor): RedirectResponse
     {
         try {
-            $interactor->handle($request);
+            $interactor->handle($inputData);
         } catch (Exception $e) {
             return back()
                 ->withErrors([

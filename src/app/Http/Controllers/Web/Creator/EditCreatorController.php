@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\Creator;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Creator\CreatorPresenter;
 use Creator\Route\CreatorRouteMap;
-use Creator\UseCases\Edit\EditRequest;
+use Creator\UseCases\Edit\EditInputData;
 use Creator\UseCases\Edit\EditUseCaseInterface;
-use Creator\UseCases\Get\GetRequest;
+use Creator\UseCases\Get\GetInputData;
 use Creator\UseCases\Get\GetUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +21,7 @@ class EditCreatorController extends Controller
         GetUseCaseInterface $getInteractor,
         CreatorPresenter $presenter,
     ): RedirectResponse|View {
-        $result = $getInteractor->handle(new GetRequest($creatorId));
+        $result = $getInteractor->handle(new GetInputData($creatorId));
 
         if ($result->isErr()) {
             return redirect()
@@ -36,9 +36,9 @@ class EditCreatorController extends Controller
         return view('creators.edit.index', compact('creator'));
     }
 
-    public function handle(EditRequest $request, EditUseCaseInterface $interactor): RedirectResponse
+    public function handle(EditInputData $inputData, EditUseCaseInterface $interactor): RedirectResponse
     {
-        $result = $interactor->handle($request);
+        $result = $interactor->handle($inputData);
 
         return $result->isErr()
             ? back()

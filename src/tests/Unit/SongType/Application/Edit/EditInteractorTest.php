@@ -14,7 +14,7 @@ use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
-use SongType\UseCases\Edit\EditRequest;
+use SongType\UseCases\Edit\EditInputData;
 use SongType\UseCases\Edit\EditUseCaseInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
@@ -74,7 +74,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
+        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
 
         $this->assertTrue($result->isOk());
     }
@@ -99,7 +99,7 @@ class EditInteractorTest extends TestCase
             ->andReturnTrue()
             ->once();
 
-        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
+        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
 
         $this->assertTrue($result->isErr());
     }

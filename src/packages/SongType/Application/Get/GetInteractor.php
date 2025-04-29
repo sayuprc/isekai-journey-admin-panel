@@ -6,8 +6,8 @@ namespace SongType\Application\Get;
 
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\UseCases\Get\GetRequest;
-use SongType\UseCases\Get\GetResponse;
+use SongType\UseCases\Get\GetInputData;
+use SongType\UseCases\Get\GetOutputData;
 use SongType\UseCases\Get\GetUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -20,14 +20,14 @@ class GetInteractor implements GetUseCaseInterface
     }
 
     /**
-     * @return Result<GetResponse, string>
+     * @return Result<GetOutputData, string>
      */
-    public function handle(GetRequest $request): Result
+    public function handle(GetInputData $inputData): Result
     {
-        if (is_null($found = $this->repository->find(new SongTypeId($request->songTypeId)))) {
-            return new Err("Song type not found: {$request->songTypeId}");
+        if (is_null($found = $this->repository->find(new SongTypeId($inputData->songTypeId)))) {
+            return new Err("Song type not found: {$inputData->songTypeId}");
         }
 
-        return new Ok(new GetResponse($found));
+        return new Ok(new GetOutputData($found));
     }
 }

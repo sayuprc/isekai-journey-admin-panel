@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
 use Creator\Route\CreatorRouteMap;
-use Creator\UseCases\Create\CreateRequest;
+use Creator\UseCases\Create\CreateInputData;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -18,9 +18,9 @@ class CreateCreatorController extends Controller
         return view('creators.create.index');
     }
 
-    public function handle(CreateRequest $request, CreateUseCaseInterface $interactor): RedirectResponse
+    public function handle(CreateInputData $inputData, CreateUseCaseInterface $interactor): RedirectResponse
     {
-        $result = $interactor->handle($request);
+        $result = $interactor->handle($inputData);
 
         return $result->isErr()
             ? back()

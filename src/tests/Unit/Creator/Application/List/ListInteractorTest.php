@@ -9,7 +9,7 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\UseCases\List\ListResponse;
+use Creator\UseCases\List\ListOutputData;
 use Creator\UseCases\List\ListUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -46,7 +46,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(0, $response->creators);
     }
@@ -69,7 +69,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(2, $response->creators);
 

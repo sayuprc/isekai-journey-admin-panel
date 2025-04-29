@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use SongType\Application\Delete\DeleteInteractor;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\UseCases\Delete\DeleteRequest;
+use SongType\UseCases\Delete\DeleteInputData;
 use SongType\UseCases\Delete\DeleteUseCaseInterface;
 use Tests\TestCase;
 
@@ -42,6 +42,6 @@ class DeleteInteractorTest extends TestCase
             ->with(Mockery::on(fn (SongTypeId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
-        $this->interactor->handle(new DeleteRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->interactor->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 }

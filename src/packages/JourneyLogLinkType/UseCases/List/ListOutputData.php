@@ -6,7 +6,7 @@ namespace JourneyLogLinkType\UseCases\List;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 
-class ListResponse
+class ListOutputData
 {
     /**
      * @param JourneyLogLinkType[] $journeyLogLinkTypes

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use App\Http\Requests\Web\SongType\CreateRequest;
+use App\Http\Requests\Web\SongType\DeleteRequest;
+use App\Http\Requests\Web\SongType\EditRequest;
 use SongType\Application\Create\CreateInteractor;
 use SongType\Application\Delete\DeleteInteractor;
 use SongType\Application\Edit\EditInteractor;
@@ -13,11 +16,11 @@ use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Infrastructures\Factories\SongTypeFactory;
 use SongType\Infrastructures\Repositories\FileSongTypeRepository;
-use SongType\UseCases\Create\CreateRequest;
+use SongType\UseCases\Create\CreateInputData;
 use SongType\UseCases\Create\CreateUseCaseInterface;
-use SongType\UseCases\Delete\DeleteRequest;
+use SongType\UseCases\Delete\DeleteInputData;
 use SongType\UseCases\Delete\DeleteUseCaseInterface;
-use SongType\UseCases\Edit\EditRequest;
+use SongType\UseCases\Edit\EditInputData;
 use SongType\UseCases\Edit\EditUseCaseInterface;
 use SongType\UseCases\Get\GetUseCaseInterface;
 use SongType\UseCases\List\ListUseCaseInterface;
@@ -36,25 +39,25 @@ class SongTypeServiceProvider extends EnvServiceProvider
         $this->app->bind(EditUseCaseInterface::class, EditInteractor::class);
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
-        $this->app->bind(CreateRequest::class, function (): CreateRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\SongType\CreateRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\SongType\CreateRequest);
+        $this->app->bind(CreateInputData::class, function (): CreateInputData {
+            $request = $this->app->make(CreateRequest::class);
+            assert($request instanceof CreateRequest);
 
-            return $this->getMapper()->map(CreateRequest::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->validated());
         });
 
-        $this->app->bind(EditRequest::class, function (): EditRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\SongType\EditRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\SongType\EditRequest);
+        $this->app->bind(EditInputData::class, function (): EditInputData {
+            $request = $this->app->make(EditRequest::class);
+            assert($request instanceof EditRequest);
 
-            return $this->getMapper()->map(EditRequest::class, $request->validated());
+            return $this->getMapper()->map(EditInputData::class, $request->validated());
         });
 
-        $this->app->bind(DeleteRequest::class, function (): DeleteRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\SongType\DeleteRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\SongType\DeleteRequest);
+        $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
+            $request = $this->app->make(DeleteRequest::class);
+            assert($request instanceof DeleteRequest);
 
-            return $this->getMapper()->map(DeleteRequest::class, $request->validated());
+            return $this->getMapper()->map(DeleteInputData::class, $request->validated());
         });
     }
 }

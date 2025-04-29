@@ -6,8 +6,8 @@ namespace Creator\Application\Get;
 
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\UseCases\Get\GetRequest;
-use Creator\UseCases\Get\GetResponse;
+use Creator\UseCases\Get\GetInputData;
+use Creator\UseCases\Get\GetOutputData;
 use Creator\UseCases\Get\GetUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -20,14 +20,14 @@ class GetInteractor implements GetUseCaseInterface
     }
 
     /**
-     * @return Result<GetResponse, string>
+     * @return Result<GetOutputData, string>
      */
-    public function handle(GetRequest $request): Result
+    public function handle(GetInputData $inputData): Result
     {
-        if (is_null($found = $this->repository->find(new CreatorId($request->creatorId)))) {
-            return new Err("Creator not found: {$request->creatorId}");
+        if (is_null($found = $this->repository->find(new CreatorId($inputData->creatorId)))) {
+            return new Err("Creator not found: {$inputData->creatorId}");
         }
 
-        return new Ok(new GetResponse($found));
+        return new Ok(new GetOutputData($found));
     }
 }

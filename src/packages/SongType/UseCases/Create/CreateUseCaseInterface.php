@@ -11,5 +11,5 @@ interface CreateUseCaseInterface
     /**
      * @return Result<null, string>
      */
-    public function handle(CreateRequest $request): Result;
+    public function handle(CreateInputData $inputData): Result;
 }

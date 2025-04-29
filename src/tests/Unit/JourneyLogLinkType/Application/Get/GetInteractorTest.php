@@ -9,7 +9,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Get\GetRequest;
+use JourneyLogLinkType\UseCases\Get\GetInputData;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -51,7 +51,7 @@ class GetInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $result = $this->interactor->handle(new GetInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
@@ -71,7 +71,7 @@ class GetInteractorTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $result = $this->interactor->handle(new GetInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());

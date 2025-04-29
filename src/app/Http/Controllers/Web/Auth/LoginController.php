@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
 use Auth\Route\AuthRouteMap;
-use Auth\UseCases\Login\LoginRequest;
+use Auth\UseCases\Login\LoginInputData;
 use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
@@ -25,9 +25,9 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function handle(Session $session, LoginRequest $request, LoginUseCaseInterface $interactor): RedirectResponse
+    public function handle(Session $session, LoginInputData $inputData, LoginUseCaseInterface $interactor): RedirectResponse
     {
-        if ($interactor->handle($request)->isSucceeded) {
+        if ($interactor->handle($inputData)->isSucceeded) {
             $session->regenerate();
 
             return redirect()->route(JourneyLogRouteMap::List);

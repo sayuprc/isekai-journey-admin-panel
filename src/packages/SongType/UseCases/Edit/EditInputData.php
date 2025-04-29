@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace JourneyLogLinkType\UseCases\Edit;
+namespace SongType\UseCases\Edit;
 
-class EditRequest
+class EditInputData
 {
     /**
      * @param positive-int $orderNo
      */
     public function __construct(
-        public readonly string $journeyLogLinkTypeId,
-        public readonly string $journeyLogLinkTypeName,
+        public readonly string $songTypeId,
+        public readonly string $songTypeName,
         public readonly int $orderNo,
     ) {
     }

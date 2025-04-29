@@ -6,7 +6,7 @@ namespace JourneyLog\UseCases\List;
 
 use JourneyLog\Domain\Models\JourneyLog;
 
-class ListResponse
+class ListOutputData
 {
     /**
      * @param JourneyLog[] $journeyLogs

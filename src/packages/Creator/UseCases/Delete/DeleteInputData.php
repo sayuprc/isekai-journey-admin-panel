@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Creator\UseCases\Get;
+namespace Creator\UseCases\Delete;
 
-class GetRequest
+class DeleteInputData
 {
     public function __construct(public readonly string $creatorId)
     {
