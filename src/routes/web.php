@@ -16,6 +16,7 @@ use App\Http\Controllers\Web\JourneyLogLinkType\DeleteJourneyLogLinkTypeControll
 use App\Http\Controllers\Web\JourneyLogLinkType\EditJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\Song\ListSongController;
+use App\Http\Controllers\Web\SongType\ListSongTypeController;
 use Illuminate\Support\Facades\Route;
 use Support\Route\RouteMap;
 
@@ -68,6 +69,11 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('songs')->group(function (): void {
         Route::get('/', [ListSongController::class, 'index'])
             ->name(RouteMap::ListSongs);
+    });
+
+    Route::prefix('song-types')->group(function (): void {
+        Route::get('/', [ListSongTypeController::class, 'index'])
+            ->name(RouteMap::ListSongTypes);
     });
 
     Route::prefix('creators')->group(function (): void {
