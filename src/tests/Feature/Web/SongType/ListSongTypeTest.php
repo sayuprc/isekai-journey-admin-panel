@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature\Web\SongType;
+namespace Tests\Feature\Web\SongType;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
