@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SongType\UseCases\Edit;
+
+use Support\ResultType\Result;
+
+interface EditUseCaseInterface
+{
+    /**
+     * @return Result<null, string>
+     */
+    public function handle(EditRequest $request): Result;
+}
