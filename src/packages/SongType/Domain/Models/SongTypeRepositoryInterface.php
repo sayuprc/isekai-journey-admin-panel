@@ -18,4 +18,6 @@ interface SongTypeRepositoryInterface
     public function insert(SongType $songType): void;
 
     public function update(SongType $songType): SongTypeId;
+
+    public function delete(SongTypeId $songTypeId): void;
 }

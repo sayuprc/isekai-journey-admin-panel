@@ -62,4 +62,9 @@ class FileSongTypeRepository implements SongTypeRepositoryInterface
 
         return $songType->songTypeId;
     }
+
+    public function delete(SongTypeId $songTypeId): void
+    {
+        $this->store->unset($this->filePath, $songTypeId->value);
+    }
 }
