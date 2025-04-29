@@ -2,88 +2,93 @@
 
 declare(strict_types=1);
 
-use Tools\Arkitect\ComponentMap;
+use Tools\Arkitect\ComponentMaps\CreatorComponent;
+use Tools\Arkitect\ComponentMaps\JourneyLogComponent;
+use Tools\Arkitect\ComponentMaps\JourneyLogLinkTypeComponent;
+use Tools\Arkitect\ComponentMaps\SongComponent;
+use Tools\Arkitect\ComponentMaps\SongTypeComponent;
+use Tools\Arkitect\ComponentMaps\SupportComponent;
 use Tools\Arkitect\Define;
 
 return [
     new Define(
-        ComponentMap::journeyLogDomain,
+        JourneyLogComponent::Domain,
         [
-            ComponentMap::journeyLogDomain,
-            ComponentMap::journeyLogLinkTypeDomain,
-            ComponentMap::supportDomain,
+            JourneyLogComponent::Domain,
+            JourneyLogLinkTypeComponent::Domain,
+            SupportComponent::Domain,
         ]
     ),
     new Define(
-        ComponentMap::journeyLogUseCase,
+        JourneyLogComponent::UseCase,
         [
-            ComponentMap::journeyLogDomain,
-            ComponentMap::supportResultType,
+            JourneyLogComponent::Domain,
+            SupportComponent::ResultType,
         ]
     ),
 
     new Define(
-        ComponentMap::journeyLogLinkTypeDomain,
+        JourneyLogLinkTypeComponent::Domain,
         [
-            ComponentMap::journeyLogLinkTypeDomain,
-            ComponentMap::supportDomain,
+            JourneyLogLinkTypeComponent::Domain,
+            SupportComponent::Domain,
         ]
     ),
     new Define(
-        ComponentMap::journeyLogLinkTypeUseCase,
+        JourneyLogLinkTypeComponent::UseCase,
         [
-            ComponentMap::journeyLogLinkTypeDomain,
-            ComponentMap::supportResultType,
+            JourneyLogLinkTypeComponent::Domain,
+            SupportComponent::ResultType,
         ]
     ),
 
     new Define(
-        ComponentMap::songDomain,
+        SongComponent::Domain,
         [
-            ComponentMap::songDomain,
-            ComponentMap::songTypeDomain,
-            ComponentMap::creatorDomain,
-            ComponentMap::supportDomain,
+            SongComponent::Domain,
+            SongTypeComponent::Domain,
+            CreatorComponent::Domain,
+            SupportComponent::Domain,
         ]
     ),
     new Define(
-        ComponentMap::songUseCase,
+        SongComponent::UseCase,
         [
-            ComponentMap::songDomain,
+            SongComponent::Domain,
         ]
     ),
 
     new Define(
-        ComponentMap::songTypeDomain,
+        SongTypeComponent::Domain,
         [
-            ComponentMap::songTypeDomain,
-            ComponentMap::supportDomain,
+            SongTypeComponent::Domain,
+            SupportComponent::Domain,
         ]
     ),
 
     new Define(
-        ComponentMap::songTypeUseCase,
+        SongTypeComponent::UseCase,
         [
-            ComponentMap::songTypeDomain,
-            ComponentMap::supportResultType,
+            SongTypeComponent::Domain,
+            SupportComponent::ResultType,
         ]
     ),
 
     new Define(
-        ComponentMap::creatorDomain,
+        CreatorComponent::Domain,
         [
-            ComponentMap::creatorDomain,
-            ComponentMap::supportDomain,
+            CreatorComponent::Domain,
+            SupportComponent::Domain,
         ]
     ),
     new Define(
-        ComponentMap::creatorUseCase,
+        CreatorComponent::UseCase,
         [
-            ComponentMap::creatorDomain,
-            ComponentMap::supportResultType,
+            CreatorComponent::Domain,
+            SupportComponent::ResultType,
         ]
     ),
 
-    new Define(ComponentMap::supportDomain),
-    new Define(ComponentMap::supportResultType),
+    new Define(SupportComponent::Domain),
+    new Define(SupportComponent::ResultType),
 ];
