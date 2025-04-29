@@ -10,4 +10,8 @@ interface SongTypeRepositoryInterface
      * @return array<SongType>
      */
     public function all(): array;
+
+    public function findByName(SongTypeName $songTypeName): ?SongType;
+
+    public function insert(SongType $songType): void;
 }
