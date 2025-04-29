@@ -17,6 +17,8 @@ class WebRequestServiceProvider extends ServiceProvider
 
         $this->journeyLogLinkType();
 
+        $this->songType();
+
         $this->creator();
     }
 
@@ -75,6 +77,16 @@ class WebRequestServiceProvider extends ServiceProvider
             assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest);
 
             return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    private function songType(): void
+    {
+        $this->app->bind(\SongType\UseCases\Create\CreateRequest::class, function (): \SongType\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\CreateRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Create\CreateRequest::class, $request->validated());
         });
     }
 
