@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\UseCases\Edit;
+namespace JourneyLog\UseCases\Create;
 
 use DateTimeInterface;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 
-class EditRequest
+class CreateInputData
 {
     /**
      * @param positive-int                    $orderNo
      * @param array<CreateJourneyLogLinkData> $journeyLogLinks
      */
     public function __construct(
-        public readonly string $journeyLogId,
         public readonly string $story,
         public readonly DateTimeInterface $fromOn,
         public readonly DateTimeInterface $toOn,

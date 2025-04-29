@@ -11,7 +11,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
-use Creator\UseCases\Edit\EditRequest;
+use Creator\UseCases\Edit\EditInputData;
 use Creator\UseCases\Edit\EditUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -68,7 +68,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
 
         $this->assertTrue($result->isOk());
     }
@@ -89,7 +89,7 @@ class EditInteractorTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $result = $this->interactor->handle(new EditRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
 
         $this->assertTrue($result->isErr());
     }

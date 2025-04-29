@@ -11,5 +11,5 @@ interface EditUseCaseInterface
     /**
      * @return Result<null, string>
      */
-    public function handle(EditRequest $request): Result;
+    public function handle(EditInputData $inputData): Result;
 }

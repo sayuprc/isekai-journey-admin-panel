@@ -14,7 +14,7 @@ use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
-use SongType\UseCases\Create\CreateRequest;
+use SongType\UseCases\Create\CreateInputData;
 use SongType\UseCases\Create\CreateUseCaseInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
@@ -71,7 +71,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new CreateRequest('楽曲種別', 1));
+        $result = $this->interactor->handle(new CreateInputData('楽曲種別', 1));
 
         $this->assertTrue($result->isOk());
     }
@@ -93,7 +93,7 @@ class CreateInteractorTest extends TestCase
             ->andReturnTrue()
             ->once();
 
-        $result = $this->interactor->handle(new CreateRequest('楽曲種別', 1));
+        $result = $this->interactor->handle(new CreateInputData('楽曲種別', 1));
 
         $this->assertTrue($result->isErr());
     }

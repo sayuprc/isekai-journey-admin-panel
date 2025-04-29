@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\SongType;
 
 use App\Http\ViewModels\Web\SongType\SongTypeView;
-use SongType\UseCases\Get\GetResponse;
+use SongType\UseCases\Get\GetOutputData;
 
 class SongTypePresenter
 {
-    public function present(GetResponse $response): SongTypeView
+    public function present(GetOutputData $outputData): SongTypeView
     {
         return new SongTypeView(
-            $response->songType->songTypeId->value,
-            $response->songType->songTypeName->value,
-            $response->songType->orderNo->value,
+            $outputData->songType->songTypeId->value,
+            $outputData->songType->songTypeName->value,
+            $outputData->songType->orderNo->value,
         );
     }
 }

@@ -6,7 +6,7 @@ namespace Creator\UseCases\Get;
 
 use Creator\Domain\Models\Creator;
 
-class GetResponse
+class GetOutputData
 {
     public function __construct(public readonly Creator $creator)
     {

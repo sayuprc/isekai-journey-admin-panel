@@ -8,15 +8,15 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use SongType\Route\SongTypeRouteMap;
-use SongType\UseCases\Delete\DeleteRequest;
+use SongType\UseCases\Delete\DeleteInputData;
 use SongType\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteSongTypeController extends Controller
 {
-    public function handle(DeleteRequest $request, DeleteUseCaseInterface $interactor): RedirectResponse
+    public function handle(DeleteInputData $inputData, DeleteUseCaseInterface $interactor): RedirectResponse
     {
         try {
-            $interactor->handle($request);
+            $interactor->handle($inputData);
         } catch (Exception $e) {
             return back()->withErrors([
                 'message' => $e->getMessage(),

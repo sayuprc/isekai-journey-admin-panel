@@ -6,5 +6,5 @@ namespace JourneyLog\UseCases\Create;
 
 interface CreateUseCaseInterface
 {
-    public function handle(CreateRequest $request): void;
+    public function handle(CreateInputData $inputData): void;
 }

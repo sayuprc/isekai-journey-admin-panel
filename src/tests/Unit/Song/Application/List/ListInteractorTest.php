@@ -27,7 +27,7 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
 use Song\Domain\Repositories\SongRepositoryInterface;
-use Song\UseCases\List\ListResponse;
+use Song\UseCases\List\ListOutputData;
 use Song\UseCases\List\ListUseCaseInterface;
 use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
@@ -63,7 +63,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(0, $response->songs);
     }
@@ -187,7 +187,7 @@ class ListInteractorTest extends TestCase
 
         $response = $this->interactor->handle();
 
-        $this->assertInstanceOf(ListResponse::class, $response);
+        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(3, $response->songs);
 

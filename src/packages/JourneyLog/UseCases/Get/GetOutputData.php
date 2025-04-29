@@ -6,7 +6,7 @@ namespace JourneyLog\UseCases\Get;
 
 use JourneyLog\Domain\Models\JourneyLog;
 
-class GetResponse
+class GetOutputData
 {
     public function __construct(public readonly JourneyLog $journeyLog)
     {

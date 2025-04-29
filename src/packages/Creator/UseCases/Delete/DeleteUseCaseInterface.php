@@ -6,5 +6,5 @@ namespace Creator\UseCases\Delete;
 
 interface DeleteUseCaseInterface
 {
-    public function handle(DeleteRequest $request): void;
+    public function handle(DeleteInputData $inputData): void;
 }

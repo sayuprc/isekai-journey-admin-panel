@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use SongType\Route\SongTypeRouteMap;
-use SongType\UseCases\Create\CreateRequest;
+use SongType\UseCases\Create\CreateInputData;
 use SongType\UseCases\Create\CreateUseCaseInterface;
 
 class CreateSongTypeController extends Controller
@@ -18,9 +18,9 @@ class CreateSongTypeController extends Controller
         return view('songTypes.create.index');
     }
 
-    public function handle(CreateRequest $request, CreateUseCaseInterface $interactor): RedirectResponse
+    public function handle(CreateInputData $inputData, CreateUseCaseInterface $interactor): RedirectResponse
     {
-        $result = $interactor->handle($request);
+        $result = $interactor->handle($inputData);
 
         return $result->isErr()
             ? back()

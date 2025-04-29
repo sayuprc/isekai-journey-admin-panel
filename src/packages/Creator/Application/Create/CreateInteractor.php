@@ -7,7 +7,7 @@ namespace Creator\Application\Create;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
-use Creator\UseCases\Create\CreateRequest;
+use Creator\UseCases\Create\CreateInputData;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -25,12 +25,12 @@ class CreateInteractor implements CreateUseCaseInterface
     /**
      * @return Result<null, string>
      */
-    public function handle(CreateRequest $request): Result
+    public function handle(CreateInputData $inputData): Result
     {
-        $creator = $this->factory->create($request->creatorName);
+        $creator = $this->factory->create($inputData->creatorName);
 
         if ($this->service->exists($creator->creatorName)) {
-            return new Err("Creator name already exists: {$request->creatorName}");
+            return new Err("Creator name already exists: {$inputData->creatorName}");
         }
 
         $this->repository->insert($creator);

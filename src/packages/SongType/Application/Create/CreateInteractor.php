@@ -7,7 +7,7 @@ namespace SongType\Application\Create;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
-use SongType\UseCases\Create\CreateRequest;
+use SongType\UseCases\Create\CreateInputData;
 use SongType\UseCases\Create\CreateUseCaseInterface;
 use Support\ResultType\Err;
 use Support\ResultType\Ok;
@@ -25,12 +25,12 @@ class CreateInteractor implements CreateUseCaseInterface
     /**
      * @return Result<null, string>
      */
-    public function handle(CreateRequest $request): Result
+    public function handle(CreateInputData $inputData): Result
     {
-        $songType = $this->factory->create($request->songTypeName, $request->orderNo);
+        $songType = $this->factory->create($inputData->songTypeName, $inputData->orderNo);
 
         if ($this->service->exists($songType->songTypeName)) {
-            return new Err("Song type already exists: {$request->songTypeName}");
+            return new Err("Song type already exists: {$inputData->songTypeName}");
         }
 
         $this->repository->insert($songType);

@@ -9,7 +9,7 @@ use Support\ResultType\Result;
 interface GetUseCaseInterface
 {
     /**
-     * @return Result<GetResponse, string>
+     * @return Result<GetOutputData, string>
      */
-    public function handle(GetRequest $request): Result;
+    public function handle(GetInputData $inputData): Result;
 }

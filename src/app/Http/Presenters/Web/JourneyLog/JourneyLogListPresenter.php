@@ -7,7 +7,7 @@ namespace App\Http\Presenters\Web\JourneyLog;
 use App\Http\ViewModels\Web\JourneyLog\JourneyLogListView;
 use JourneyLog\Domain\Models\JourneyLog;
 use JourneyLog\Domain\Models\Period;
-use JourneyLog\UseCases\List\ListResponse;
+use JourneyLog\UseCases\List\ListOutputData;
 
 class JourneyLogListPresenter
 {
@@ -16,7 +16,7 @@ class JourneyLogListPresenter
     /**
      * @return array<JourneyLogListView>
      */
-    public function present(ListResponse $response): array
+    public function present(ListOutputData $outputData): array
     {
         return array_map(function (JourneyLog $journeyLog): JourneyLogListView {
             return new JourneyLogListView(
@@ -25,7 +25,7 @@ class JourneyLogListPresenter
                 $this->period($journeyLog->period),
                 $journeyLog->orderNo->value,
             );
-        }, $response->journeyLogs);
+        }, $outputData->journeyLogs);
     }
 
     private function period(Period $period): string

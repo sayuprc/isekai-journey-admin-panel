@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JourneyLog\Application\List;
 
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\List\ListResponse;
+use JourneyLog\UseCases\List\ListOutputData;
 use JourneyLog\UseCases\List\ListUseCaseInterface;
 
 class ListInteractor implements ListUseCaseInterface
@@ -14,8 +14,8 @@ class ListInteractor implements ListUseCaseInterface
     {
     }
 
-    public function handle(): ListResponse
+    public function handle(): ListOutputData
     {
-        return new ListResponse($this->repository->all());
+        return new ListOutputData($this->repository->all());
     }
 }

@@ -6,7 +6,7 @@ namespace Creator\UseCases\List;
 
 use Creator\Domain\Models\Creator;
 
-class ListResponse
+class ListOutputData
 {
     /**
      * @param array<Creator> $creators

@@ -6,7 +6,7 @@ namespace SongType\Application\Delete;
 
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\UseCases\Delete\DeleteRequest;
+use SongType\UseCases\Delete\DeleteInputData;
 use SongType\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
@@ -15,8 +15,8 @@ class DeleteInteractor implements DeleteUseCaseInterface
     {
     }
 
-    public function handle(DeleteRequest $request): void
+    public function handle(DeleteInputData $inputData): void
     {
-        $this->repository->delete(new SongTypeId($request->songTypeId));
+        $this->repository->delete(new SongTypeId($inputData->songTypeId));
     }
 }

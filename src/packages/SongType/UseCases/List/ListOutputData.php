@@ -6,7 +6,7 @@ namespace SongType\UseCases\List;
 
 use SongType\Domain\Models\SongType;
 
-class ListResponse
+class ListOutputData
 {
     /**
      * @param array<SongType> $songTypes

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Auth\Application\Login;
 
 use Auth\Application\Login\LoginInteractor;
-use Auth\UseCases\Login\LoginRequest;
-use Auth\UseCases\Login\LoginResponse;
+use Auth\UseCases\Login\LoginInputData;
+use Auth\UseCases\Login\LoginOutputData;
 use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -55,14 +55,14 @@ class LoginInteractorTest extends TestCase
             })
             ->once();
 
-        $request = new LoginRequest([
+        $request = new LoginInputData([
             'email' => 'user@example.com',
             'password' => 'plain password',
         ]);
 
         $response = $this->interactor->handle($request);
 
-        $this->assertInstanceOf(LoginResponse::class, $response);
+        $this->assertInstanceOf(LoginOutputData::class, $response);
         $this->assertTrue($response->isSucceeded);
     }
 
@@ -85,14 +85,14 @@ class LoginInteractorTest extends TestCase
             })
             ->once();
 
-        $request = new LoginRequest([
+        $request = new LoginInputData([
             'email' => 'user@example.com',
             'password' => 'plain password',
         ]);
 
         $response = $this->interactor->handle($request);
 
-        $this->assertInstanceOf(LoginResponse::class, $response);
+        $this->assertInstanceOf(LoginOutputData::class, $response);
         $this->assertFalse($response->isSucceeded);
     }
 }

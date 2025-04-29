@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use App\Http\Requests\Web\JourneyLog\CreateRequest;
+use App\Http\Requests\Web\JourneyLog\DeleteRequest;
+use App\Http\Requests\Web\JourneyLog\EditRequest;
 use JourneyLog\Application\Create\CreateInteractor;
 use JourneyLog\Application\Delete\DeleteInteractor;
 use JourneyLog\Application\Edit\EditInteractor;
@@ -13,11 +16,11 @@ use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Factories\JourneyLogFactory;
 use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
-use JourneyLog\UseCases\Create\CreateRequest;
+use JourneyLog\UseCases\Create\CreateInputData;
 use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLog\UseCases\Delete\DeleteRequest;
+use JourneyLog\UseCases\Delete\DeleteInputData;
 use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
-use JourneyLog\UseCases\Edit\EditRequest;
+use JourneyLog\UseCases\Edit\EditInputData;
 use JourneyLog\UseCases\Edit\EditUseCaseInterface;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
 use JourneyLog\UseCases\List\ListUseCaseInterface;
@@ -35,25 +38,25 @@ class JourneyLogServiceProvider extends EnvServiceProvider
         $this->app->bind(EditUseCaseInterface::class, EditInteractor::class);
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
-        $this->app->bind(CreateRequest::class, function (): CreateRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\CreateRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\JourneyLog\CreateRequest);
+        $this->app->bind(CreateInputData::class, function (): CreateInputData {
+            $request = $this->app->make(CreateRequest::class);
+            assert($request instanceof CreateRequest);
 
-            return $this->getMapper()->map(CreateRequest::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->validated());
         });
 
-        $this->app->bind(EditRequest::class, function (): EditRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\EditRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\JourneyLog\EditRequest);
+        $this->app->bind(EditInputData::class, function (): EditInputData {
+            $request = $this->app->make(EditRequest::class);
+            assert($request instanceof EditRequest);
 
-            return $this->getMapper()->map(EditRequest::class, $request->validated());
+            return $this->getMapper()->map(EditInputData::class, $request->validated());
         });
 
-        $this->app->bind(DeleteRequest::class, function (): DeleteRequest {
-            $request = $this->app->make(\App\Http\Requests\Web\JourneyLog\DeleteRequest::class);
-            assert($request instanceof \App\Http\Requests\Web\JourneyLog\DeleteRequest);
+        $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
+            $request = $this->app->make(DeleteRequest::class);
+            assert($request instanceof DeleteRequest);
 
-            return $this->getMapper()->map(DeleteRequest::class, $request->validated());
+            return $this->getMapper()->map(DeleteInputData::class, $request->validated());
         });
     }
 }

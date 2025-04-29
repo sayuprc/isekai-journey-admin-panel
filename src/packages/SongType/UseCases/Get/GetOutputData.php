@@ -6,7 +6,7 @@ namespace SongType\UseCases\Get;
 
 use SongType\Domain\Models\SongType;
 
-class GetResponse
+class GetOutputData
 {
     public function __construct(public readonly SongType $songType)
     {

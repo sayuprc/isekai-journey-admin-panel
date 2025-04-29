@@ -17,8 +17,8 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
-use JourneyLog\UseCases\Get\GetRequest;
-use JourneyLog\UseCases\Get\GetResponse;
+use JourneyLog\UseCases\Get\GetInputData;
+use JourneyLog\UseCases\Get\GetOutputData;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
@@ -63,7 +63,7 @@ class GetInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
 
@@ -71,7 +71,7 @@ class GetInteractorTest extends TestCase
 
         $response = $result->unwrap();
 
-        $this->assertInstanceOf(GetResponse::class, $response);
+        $this->assertInstanceOf(GetOutputData::class, $response);
 
         $this->assertInstanceOf(JourneyLog::class, $response->journeyLog);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->journeyLog->journeyLogId->value);
@@ -107,14 +107,14 @@ class GetInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
         $response = $result->unwrap();
 
-        $this->assertInstanceOf(GetResponse::class, $response);
+        $this->assertInstanceOf(GetOutputData::class, $response);
 
         $this->assertInstanceOf(JourneyLog::class, $response->journeyLog);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->journeyLog->journeyLogId->value);
@@ -138,7 +138,7 @@ class GetInteractorTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->interactor->handle(new GetRequest('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());

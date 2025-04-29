@@ -7,7 +7,7 @@ namespace Tests\Unit\JourneyLogLinkType\Application\Delete;
 use JourneyLogLinkType\Application\Delete\DeleteInteractor;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Delete\DeleteRequest;
+use JourneyLogLinkType\UseCases\Delete\DeleteInputData;
 use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -42,6 +42,6 @@ class DeleteInteractorTest extends TestCase
             ->with(Mockery::on(fn (JourneyLogLinkTypeId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
-        $this->interactor->handle(new DeleteRequest('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->interactor->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 }

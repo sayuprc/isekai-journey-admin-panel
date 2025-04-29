@@ -6,14 +6,14 @@ namespace App\Http\Presenters\Web\SongType;
 
 use App\Http\ViewModels\Web\SongType\SongTypeListView;
 use SongType\Domain\Models\SongType;
-use SongType\UseCases\List\ListResponse;
+use SongType\UseCases\List\ListOutputData;
 
 class SongTypeListPresenter
 {
     /**
      * @return array<SongTypeListView>
      */
-    public function present(ListResponse $response): array
+    public function present(ListOutputData $outputData): array
     {
         return array_map(
             fn (SongType $songType): SongTypeListView => new SongTypeListView(
@@ -21,7 +21,7 @@ class SongTypeListPresenter
                 $songType->songTypeName->value,
                 $songType->orderNo->value,
             ),
-            $response->songTypes
+            $outputData->songTypes
         );
     }
 }

@@ -11,7 +11,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
-use Creator\UseCases\Create\CreateRequest;
+use Creator\UseCases\Create\CreateInputData;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -68,7 +68,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new CreateRequest('クリエイター'));
+        $result = $this->interactor->handle(new CreateInputData('クリエイター'));
 
         $this->assertTrue($result->isOk());
     }
@@ -89,7 +89,7 @@ class CreateInteractorTest extends TestCase
             ->andreturn(true)
             ->once();
 
-        $result = $this->interactor->handle(new CreateRequest('クリエイター'));
+        $result = $this->interactor->handle(new CreateInputData('クリエイター'));
 
         $this->assertTrue($result->isErr());
     }

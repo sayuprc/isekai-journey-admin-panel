@@ -10,16 +10,16 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
-use JourneyLogLinkType\UseCases\Edit\EditRequest;
+use JourneyLogLinkType\UseCases\Edit\EditInputData;
 use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
-use JourneyLogLinkType\UseCases\Get\GetRequest;
+use JourneyLogLinkType\UseCases\Get\GetInputData;
 use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 
 class EditJourneyLogLinkTypeController extends Controller
 {
     public function index(string $journeyLogLinkTypeId, GetUseCaseInterface $interactor, JourneyLogLinkTypePresenter $presenter): RedirectResponse|View
     {
-        $result = $interactor->handle(new GetRequest($journeyLogLinkTypeId));
+        $result = $interactor->handle(new GetInputData($journeyLogLinkTypeId));
 
         if ($result->isErr()) {
             return redirect()
@@ -34,10 +34,10 @@ class EditJourneyLogLinkTypeController extends Controller
         return view('journeyLogLinkTypes.edit.index', compact('journeyLogLinkType'));
     }
 
-    public function handle(EditRequest $request, EditUseCaseInterface $interactor): RedirectResponse
+    public function handle(EditInputData $inputData, EditUseCaseInterface $interactor): RedirectResponse
     {
         try {
-            $interactor->handle($request);
+            $interactor->handle($inputData);
         } catch (Exception $e) {
             return back()
                 ->withErrors([

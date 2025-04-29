@@ -10,7 +10,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\UseCases\Edit\EditRequest;
+use JourneyLogLinkType\UseCases\Edit\EditInputData;
 use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -62,7 +62,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->interactor->handle(new EditRequest(
+        $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'リンク',
             1

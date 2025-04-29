@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\UseCases\Create;
 
-class CreateRequest
+class CreateInputData
 {
     /**
      * @param positive-int $orderNo

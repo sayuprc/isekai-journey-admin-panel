@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SongType\Application\List;
 
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\UseCases\List\ListResponse;
+use SongType\UseCases\List\ListOutputData;
 use SongType\UseCases\List\ListUseCaseInterface;
 
 class ListInteractor implements ListUseCaseInterface
@@ -14,8 +14,8 @@ class ListInteractor implements ListUseCaseInterface
     {
     }
 
-    public function handle(): ListResponse
+    public function handle(): ListOutputData
     {
-        return new ListResponse($this->repository->all());
+        return new ListOutputData($this->repository->all());
     }
 }
