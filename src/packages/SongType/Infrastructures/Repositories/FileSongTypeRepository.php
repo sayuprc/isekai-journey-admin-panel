@@ -55,4 +55,11 @@ class FileSongTypeRepository implements SongTypeRepositoryInterface
     {
         $this->store->put($this->filePath, $songType->songTypeId->value, $songType);
     }
+
+    public function update(SongType $songType): SongTypeId
+    {
+        $this->store->put($this->filePath, $songType->songTypeId->value, $songType);
+
+        return $songType->songTypeId;
+    }
 }
