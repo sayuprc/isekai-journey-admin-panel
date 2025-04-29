@@ -1,3 +1,4 @@
+@php use Support\Route\RouteMap; @endphp
 @extends('layout.page')
 
 @section('title', '楽曲種別一覧')
@@ -26,7 +27,7 @@
                 <td>{{ $songType->songTypeName }}</td>
                 <td>{{ $songType->orderNo }}</td>
                 <td>
-                    <a href="{{ $songType->songTypeId }}">編集</a>
+                    <a href="{{ route(RouteMap::ShowEditSongTypeForm,$songType->songTypeId) }}">編集</a>
                 </td>
             </tr>
         @endforeach
