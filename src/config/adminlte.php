@@ -340,6 +340,20 @@ return [
             'url' => 'songs',
             'icon' => 'fas fa-list',
         ],
+        // 楽曲種別
+        [
+            'header' => 'song_type',
+        ],
+        [
+            'text' => 'list-song_type',
+            'url' => 'song-types',
+            'icon' => 'fas fa-list',
+        ],
+        [
+            'text' => 'create-song_type',
+            'url' => 'song-types/create',
+            'icon' => 'fas fa-plus',
+        ],
         // クリエイター
         [
             'header' => 'creator',

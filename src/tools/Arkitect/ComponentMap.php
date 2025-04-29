@@ -20,6 +20,7 @@ enum ComponentMap: string
 
     // SongType ComponentMap
     case songTypeDomain = 'SongType\Domain\*';
+    case songTypeUseCase = 'SongType\Usecases\*';
 
     // Creator ComponentMap
     case creatorDomain = 'Creator\Domain\*';

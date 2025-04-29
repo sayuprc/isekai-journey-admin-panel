@@ -29,6 +29,14 @@ enum RouteMap: string
     // 楽曲関連
     case ListSongs = 'songs.index';
 
+    // 楽曲種別関連
+    case ListSongTypes = 'song-types.index';
+    case ShowCreateSongTypeForm = 'song-types.create.index';
+    case CreateSongType = 'song-types.create.handle';
+    case ShowEditSongTypeForm = 'song-types.edit.index';
+    case EditSongType = 'song-types.edit.handle';
+    case DeleteSongType = 'song-types.delete.handle';
+
     // クリエイター関連
     case ListCreators = 'creators.index';
     case ShowCreateCreatorForm = 'creators.create.index';

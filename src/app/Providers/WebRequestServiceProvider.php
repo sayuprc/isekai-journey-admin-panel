@@ -17,6 +17,8 @@ class WebRequestServiceProvider extends ServiceProvider
 
         $this->journeyLogLinkType();
 
+        $this->songType();
+
         $this->creator();
     }
 
@@ -75,6 +77,30 @@ class WebRequestServiceProvider extends ServiceProvider
             assert($request instanceof \App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest);
 
             return $this->getMapper()->map(\JourneyLogLinkType\UseCases\Delete\DeleteRequest::class, $request->validated());
+        });
+    }
+
+    private function songType(): void
+    {
+        $this->app->bind(\SongType\UseCases\Create\CreateRequest::class, function (): \SongType\UseCases\Create\CreateRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\CreateRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\CreateRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Create\CreateRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\SongType\UseCases\Edit\EditRequest::class, function (): \SongType\UseCases\Edit\EditRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\EditRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\EditRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Edit\EditRequest::class, $request->validated());
+        });
+
+        $this->app->bind(\SongType\UseCases\Delete\DeleteRequest::class, function (): \SongType\UseCases\Delete\DeleteRequest {
+            $request = $this->app->make(\App\Http\Requests\Web\SongType\DeleteRequest::class);
+            assert($request instanceof \App\Http\Requests\Web\SongType\DeleteRequest);
+
+            return $this->getMapper()->map(\SongType\UseCases\Delete\DeleteRequest::class, $request->validated());
         });
     }
 

@@ -62,6 +62,14 @@ return [
     ),
 
     new Define(
+        ComponentMap::songTypeUseCase,
+        [
+            ComponentMap::songTypeDomain,
+            ComponentMap::supportResultType,
+        ]
+    ),
+
+    new Define(
         ComponentMap::creatorDomain,
         [
             ComponentMap::creatorDomain,
