@@ -20,95 +20,100 @@ use App\Http\Controllers\Web\SongType\CreateSongTypeController;
 use App\Http\Controllers\Web\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Web\SongType\EditSongTypeController;
 use App\Http\Controllers\Web\SongType\ListSongTypeController;
+use Auth\Route\AuthRouteMap;
+use Creator\Route\CreatorRouteMap;
 use Illuminate\Support\Facades\Route;
-use Support\Route\RouteMap;
+use JourneyLog\Route\JourneyLogRouteMap;
+use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
+use Song\Route\SongRouteMap;
+use SongType\Route\SongTypeRouteMap;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])
-        ->name(RouteMap::ShowLoginForm);
+        ->name(AuthRouteMap::ShowLoginForm);
     Route::post('/login', [LoginController::class, 'handle'])
-        ->name(RouteMap::Login);
+        ->name(AuthRouteMap::Login);
 });
 
 Route::middleware('auth')->group(function (): void {
     Route::prefix('journey-logs')->group(function (): void {
         Route::get('/', [ListJourneyLogController::class, 'index'])
-            ->name(RouteMap::ListJourneyLogs);
+            ->name(JourneyLogRouteMap::List);
 
         Route::get('/create', [CreateJourneyLogController::class, 'index'])
-            ->name(RouteMap::ShowCreateJourneyLogForm);
+            ->name(JourneyLogRouteMap::ShowCreateForm);
         Route::post('/create', [CreateJourneyLogController::class, 'handle'])
-            ->name(RouteMap::CreateJourneyLog);
+            ->name(JourneyLogRouteMap::Create);
 
         Route::get('/{journeyLogId}', [EditJourneyLogController::class, 'index'])
             ->whereUuid('journeyLogId')
-            ->name(RouteMap::ShowEditJourneyLogForm);
+            ->name(JourneyLogRouteMap::ShowEditForm);
         Route::post('/edit', [EditJourneyLogController::class, 'handle'])
-            ->name(RouteMap::EditJourneyLog);
+            ->name(JourneyLogRouteMap::Edit);
 
         Route::delete('/', [DeleteJourneyLogController::class, 'handle'])
-            ->name(RouteMap::DeleteJourneyLog);
+            ->name(JourneyLogRouteMap::Delete);
     });
 
     Route::prefix('journey-log-link-types')->group(function (): void {
         Route::get('/', [ListJourneyLogLinkTypeController::class, 'index'])
-            ->name(RouteMap::ListJourneyLogLinkType);
+            ->name(JourneyLogLinkTypeRouteMap::List);
 
         Route::get('/create', [CreateJourneyLogLinkTypeController::class, 'index'])
-            ->name(RouteMap::ShowCreateJourneyLogLinkTypeForm);
+            ->name(JourneyLogLinkTypeRouteMap::ShowCreateForm);
         Route::post('/create', [CreateJourneyLogLinkTypeController::class, 'handle'])
-            ->name(RouteMap::CreateJourneyLogLinkType);
+            ->name(JourneyLogLinkTypeRouteMap::Create);
 
         Route::get('/{journeyLogLinkTypeId}', [EditJourneyLogLinkTypeController::class, 'index'])
             ->whereUuid('journeyLogLinkTypeId')
-            ->name(RouteMap::ShowEditJourneyLogLinkTypeForm);
+            ->name(JourneyLogLinkTypeRouteMap::ShowEditForm);
         Route::post('/edit', [EditJourneyLogLinkTypeController::class, 'handle'])
-            ->name(RouteMap::EditJourneyLogLinkType);
+            ->name(JourneyLogLinkTypeRouteMap::Edit);
 
         Route::delete('/', [DeleteJourneyLogLinkTypeController::class, 'handle'])
-            ->name(RouteMap::DeleteJourneyLogLinkType);
+            ->name(JourneyLogLinkTypeRouteMap::Delete);
     });
 
     Route::prefix('songs')->group(function (): void {
         Route::get('/', [ListSongController::class, 'index'])
-            ->name(RouteMap::ListSongs);
+            ->name(SongRouteMap::List);
     });
 
     Route::prefix('song-types')->group(function (): void {
         Route::get('/', [ListSongTypeController::class, 'index'])
-            ->name(RouteMap::ListSongTypes);
+            ->name(SongTypeRouteMap::List);
 
         Route::get('/create', [CreateSongTypeController::class, 'index'])
-            ->name(RouteMap::ShowCreateSongTypeForm);
+            ->name(SongTypeRouteMap::ShowCreateForm);
         Route::post('/create', [CreateSongTypeController::class, 'handle'])
-            ->name(RouteMap::CreateSongType);
+            ->name(SongTypeRouteMap::Create);
 
         Route::get('/{songTypeId}', [EditSongTypeController::class, 'index'])
             ->whereUuid('songTypeId')
-            ->name(RouteMap::ShowEditSongTypeForm);
+            ->name(SongTypeRouteMap::ShowEditForm);
         Route::post('/edit', [EditSongTypeController::class, 'handle'])
-            ->name(RouteMap::EditSongType);
+            ->name(SongTypeRouteMap::Edit);
 
         Route::delete('/', [DeleteSongTypeController::class, 'handle'])
-            ->name(RouteMap::DeleteSongType);
+            ->name(SongTypeRouteMap::Delete);
     });
 
     Route::prefix('creators')->group(function (): void {
         Route::get('/', [ListCreatorController::class, 'index'])
-            ->name(RouteMap::ListCreators);
+            ->name(CreatorRouteMap::List);
 
         Route::get('/create', [CreateCreatorController::class, 'index'])
-            ->name(RouteMap::ShowCreateCreatorForm);
+            ->name(CreatorRouteMap::ShowCreateForm);
         Route::post('/create', [CreateCreatorController::class, 'handle'])
-            ->name(RouteMap::CreateCreator);
+            ->name(CreatorRouteMap::Create);
 
         Route::get('/{creatorId}', [EditCreatorController::class, 'index'])
             ->whereUuid('creatorId')
-            ->name(RouteMap::ShowEditCreatorForm);
+            ->name(CreatorRouteMap::ShowEditForm);
         Route::post('/edit', [EditCreatorController::class, 'handle'])
-            ->name(RouteMap::EditCreator);
+            ->name(CreatorRouteMap::Edit);
 
         Route::delete('/', [DeleteCreatorController::class, 'handle'])
-            ->name(RouteMap::DeleteCreator);
+            ->name(CreatorRouteMap::Delete);
     });
 });

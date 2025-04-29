@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\JourneyLog;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLog\Domain\Models\JourneyLog;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class CreateJourneyLogTest extends TestCase
@@ -51,9 +52,9 @@ class CreateJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ShowCreateJourneyLogForm))
+        $this->get(route(JourneyLogRouteMap::ShowCreateForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -64,7 +65,7 @@ class CreateJourneyLogTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowCreateJourneyLogForm))
+            ->get(route(JourneyLogRouteMap::ShowCreateForm))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -94,7 +95,7 @@ class CreateJourneyLogTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Create), [
                 'story' => '軌跡',
                 'from_on' => '2019-12-09',
                 'to_on' => '2019-12-09',
@@ -109,7 +110,7 @@ class CreateJourneyLogTest extends TestCase
                 ],
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs))
+            ->assertLocation(route(JourneyLogRouteMap::List))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -117,7 +118,7 @@ class CreateJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Create), [
                 'story' => '',
                 'from_on' => '',
                 'to_on' => '',
@@ -148,7 +149,7 @@ class CreateJourneyLogTest extends TestCase
     public function invalidFormatDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Create), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/09',
@@ -165,7 +166,7 @@ class CreateJourneyLogTest extends TestCase
     public function inversionDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Create), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/08',

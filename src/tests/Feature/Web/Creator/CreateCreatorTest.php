@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Creator;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class CreateCreatorTest extends TestCase
@@ -41,16 +42,16 @@ class CreateCreatorTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ShowCreateCreatorForm))
+        $this->get(route(CreatorRouteMap::ShowCreateForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function showCreateForm(): void
     {
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowCreateCreatorForm))
+            ->get(route(CreatorRouteMap::ShowCreateForm))
             ->assertStatus(200);
     }
 
@@ -72,11 +73,11 @@ class CreateCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateCreator), [
+            ->post(route(CreatorRouteMap::Create), [
                 'creator_name' => 'クリエイター',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListCreators))
+            ->assertLocation(route(CreatorRouteMap::List))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -92,7 +93,7 @@ class CreateCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateCreator), [
+            ->post(route(CreatorRouteMap::Create), [
                 'creator_name' => 'クリエイター',
             ])
             ->assertStatus(302)
@@ -105,7 +106,7 @@ class CreateCreatorTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateCreator), [
+            ->post(route(CreatorRouteMap::Create), [
                 'creator_name' => '',
             ])
             ->assertStatus(302)

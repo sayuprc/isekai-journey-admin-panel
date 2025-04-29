@@ -8,11 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\SongType\SongTypePresenter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use SongType\Route\SongTypeRouteMap;
 use SongType\UseCases\Edit\EditRequest;
 use SongType\UseCases\Edit\EditUseCaseInterface;
 use SongType\UseCases\Get\GetRequest;
 use SongType\UseCases\Get\GetUseCaseInterface;
-use Support\Route\RouteMap;
 
 class EditSongTypeController extends Controller
 {
@@ -25,7 +25,7 @@ class EditSongTypeController extends Controller
 
         if ($result->isErr()) {
             return redirect()
-                ->route(RouteMap::ListSongTypes)
+                ->route(SongTypeRouteMap::List)
                 ->withErrors([
                     'message' => $result->unwrapErr(),
                 ]);
@@ -47,7 +47,7 @@ class EditSongTypeController extends Controller
                 ])
                 ->withInput()
             : redirect()
-                ->route(RouteMap::ListSongTypes)
+                ->route(SongTypeRouteMap::List)
                 ->with([
                     'message' => '更新しました',
                 ]);

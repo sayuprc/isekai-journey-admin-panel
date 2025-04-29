@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\JourneyLogLinkType;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class ListJourneyLogLinkTypeTest extends TestCase
@@ -45,9 +46,9 @@ class ListJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ListJourneyLogLinkType))
+        $this->get(route(JourneyLogLinkTypeRouteMap::List))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -71,7 +72,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListJourneyLogLinkType))
+            ->get(route(JourneyLogLinkTypeRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 
@@ -94,7 +95,7 @@ class ListJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListJourneyLogLinkType))
+            ->get(route(JourneyLogLinkTypeRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('journeyLogLinkTypes.list.index');
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\SongType;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
@@ -12,7 +13,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use Support\Route\RouteMap;
+use SongType\Route\SongTypeRouteMap;
 use Tests\TestCase;
 
 class DeleteSongTypeTest extends TestCase
@@ -39,9 +40,9 @@ class DeleteSongTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->delete(route(RouteMap::DeleteSongType))
+        $this->delete(route(SongTypeRouteMap::Delete))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -54,11 +55,11 @@ class DeleteSongTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteSongType), [
+            ->delete(route(SongTypeRouteMap::Delete), [
                 'song_type_id' => $uuid,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListSongTypes))
+            ->assertLocation(route(SongTypeRouteMap::List))
             ->assertSessionHas('message', '削除しました');
     }
 
@@ -66,7 +67,7 @@ class DeleteSongTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteSongType), [
+            ->delete(route(SongTypeRouteMap::Delete), [
                 'song_type_id' => '',
             ])
             ->assertStatus(302)

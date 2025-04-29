@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\JourneyLog;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLog\UseCases\Delete\DeleteRequest;
 use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
-use Support\Route\RouteMap;
 
 class DeleteJourneyLogController extends Controller
 {
@@ -24,7 +24,7 @@ class DeleteJourneyLogController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListJourneyLogs)
+            ->route(JourneyLogRouteMap::List)
             ->with([
                 'message' => '削除しました',
             ]);

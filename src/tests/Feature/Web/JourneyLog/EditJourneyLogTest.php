@@ -6,6 +6,7 @@ namespace Tests\Feature\Web\JourneyLog;
 
 use App\Http\ViewModels\Web\JourneyLog\JourneyLogView;
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -16,12 +17,12 @@ use JourneyLog\Domain\Models\Period;
 use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class EditJourneyLogTest extends TestCase
@@ -61,15 +62,15 @@ class EditJourneyLogTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
+        $this->get(route(JourneyLogRouteMap::ShowEditForm, ['journeyLogId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
-        $this->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => 'not-uuid-style-id']))
+        $this->get(route(JourneyLogRouteMap::ShowEditForm, ['journeyLogId' => 'not-uuid-style-id']))
             ->assertStatus(404);
     }
 
@@ -94,7 +95,7 @@ class EditJourneyLogTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
+            ->get(route(JourneyLogRouteMap::ShowEditForm, ['journeyLogId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -116,9 +117,9 @@ class EditJourneyLogTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditJourneyLogForm, ['journeyLogId' => $uuid]))
+            ->get(route(JourneyLogRouteMap::ShowEditForm, ['journeyLogId' => $uuid]))
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs))
+            ->assertLocation(route(JourneyLogRouteMap::List))
             ->assertInvalid(['message' => "JourneyLog not found: {$uuid}"]);
     }
 
@@ -145,7 +146,7 @@ class EditJourneyLogTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Edit), [
                 'journey_log_id' => $uuid,
                 'story' => '軌跡',
                 'from_on' => '2019-12-09',
@@ -161,7 +162,7 @@ class EditJourneyLogTest extends TestCase
                 ],
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs))
+            ->assertLocation(route(JourneyLogRouteMap::List))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -169,7 +170,7 @@ class EditJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Edit), [
                 'journey_log_id' => '',
                 'story' => '',
                 'from_on' => '',
@@ -202,7 +203,7 @@ class EditJourneyLogTest extends TestCase
     public function invalidFormatDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Edit), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/09',
@@ -219,7 +220,7 @@ class EditJourneyLogTest extends TestCase
     public function inversionDate(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLog), [
+            ->post(route(JourneyLogRouteMap::Edit), [
                 'story' => '軌跡',
                 'from_on' => '2019/12/09',
                 'to_on' => '2019/12/08',

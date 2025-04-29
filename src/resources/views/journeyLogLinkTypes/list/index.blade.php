@@ -1,4 +1,4 @@
-@php use Support\Route\RouteMap; @endphp
+@php use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap; @endphp
 
 @extends('layout.page')
 
@@ -28,7 +28,7 @@
                 <td>{{ $journeyLogLinkType->journeyLogLinkTypeName }}</td>
                 <td>{{ $journeyLogLinkType->orderNo }}</td>
                 <td>
-                    <a href="{{ route(RouteMap::ShowEditJourneyLogLinkTypeForm, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a>
+                    <a href="{{ route(JourneyLogLinkTypeRouteMap::ShowEditForm, $journeyLogLinkType->journeyLogLinkTypeId) }}">編集</a>
                 </td>
             </tr>
         @endforeach

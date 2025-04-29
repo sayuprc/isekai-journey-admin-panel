@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\JourneyLog;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Route\JourneyLogRouteMap;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class DeleteJourneyLogTest extends TestCase
@@ -39,9 +40,9 @@ class DeleteJourneyLogTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->delete(route(RouteMap::DeleteJourneyLog))
+        $this->delete(route(JourneyLogRouteMap::Delete))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -54,11 +55,11 @@ class DeleteJourneyLogTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteJourneyLog), [
+            ->delete(route(JourneyLogRouteMap::Delete), [
                 'journey_log_id' => $uuid,
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogs))
+            ->assertLocation(route(JourneyLogRouteMap::List))
             ->assertSessionHas('message', '削除しました');
     }
 
@@ -66,7 +67,7 @@ class DeleteJourneyLogTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->delete(route(RouteMap::DeleteJourneyLog), [
+            ->delete(route(JourneyLogRouteMap::Delete), [
                 'journey_log_id' => '',
             ])
             ->assertStatus(302)

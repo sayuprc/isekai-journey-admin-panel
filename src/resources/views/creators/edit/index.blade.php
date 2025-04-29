@@ -1,5 +1,5 @@
 @php
-    use Support\Route\RouteMap;
+    use Creator\Route\CreatorRouteMap;
 
     /** @var \App\Http\ViewModels\Web\Creator\CreatorView $creator */
 @endphp
@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>クリエイター更新</h1>
 
-        <form action="{{ route(RouteMap::DeleteCreator, $creator->creatorId) }}" method="post">
+        <form action="{{ route(CreatorRouteMap::Delete, $creator->creatorId) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="creator_id" value="{{ $creator->creatorId }}" type="hidden">
@@ -29,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::EditCreator) }}" method="post">
+    <form action="{{ route(CreatorRouteMap::Edit) }}" method="post">
         @csrf
         <input name="creator_id" value="{{ $creator->creatorId }}" type="hidden">
 

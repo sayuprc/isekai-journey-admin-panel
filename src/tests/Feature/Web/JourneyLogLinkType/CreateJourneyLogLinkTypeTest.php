@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\JourneyLogLinkType;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class CreateJourneyLogLinkTypeTest extends TestCase
@@ -42,16 +43,16 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ShowCreateJourneyLogLinkTypeForm))
+        $this->get(route(JourneyLogLinkTypeRouteMap::ShowCreateForm))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function showCreateForm(): void
     {
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowCreateJourneyLogLinkTypeForm))
+            ->get(route(JourneyLogLinkTypeRouteMap::ShowCreateForm))
             ->assertStatus(200);
     }
 
@@ -69,12 +70,12 @@ class CreateJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLogLinkType), [
+            ->post(route(JourneyLogLinkTypeRouteMap::Create), [
                 'journey_log_link_type_name' => '軌跡リンク種別A',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
+            ->assertLocation(route(JourneyLogLinkTypeRouteMap::List))
             ->assertSessionHas('message', '登録完了しました');
     }
 
@@ -82,7 +83,7 @@ class CreateJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::CreateJourneyLogLinkType), [
+            ->post(route(JourneyLogLinkTypeRouteMap::Create), [
                 'journey_log_link_type_name' => '',
                 'order_no' => '',
             ])

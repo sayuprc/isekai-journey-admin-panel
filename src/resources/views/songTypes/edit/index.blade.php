@@ -1,5 +1,5 @@
 @php
-    use Support\Route\RouteMap;
+    use SongType\Route\SongTypeRouteMap;
 
     /** @var \App\Http\ViewModels\Web\SongType\SongTypeView $songType */
 @endphp
@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>楽曲種別更新</h1>
 
-        <form action="{{ route(RouteMap::DeleteSongType, $songType->songTypeId) }}" method="post">
+        <form action="{{ route(SongTypeRouteMap::Delete, $songType->songTypeId) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="song_type_id" value="{{ $songType->songTypeId }}" type="hidden">
@@ -29,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::EditSongType, $songType->songTypeId) }}" method="post">
+    <form action="{{ route(SongTypeRouteMap::Edit, $songType->songTypeId) }}" method="post">
         @csrf
         <input name="song_type_id" value="{{ $songType->songTypeId }}" type="hidden">
 

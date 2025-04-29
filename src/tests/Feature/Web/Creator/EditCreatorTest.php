@@ -6,16 +6,17 @@ namespace Tests\Feature\Web\Creator;
 
 use App\Http\ViewModels\Web\Creator\CreatorView;
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class EditCreatorTest extends TestCase
@@ -44,15 +45,15 @@ class EditCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
+        $this->get(route(CreatorRouteMap::ShowEditForm, ['creatorId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
-        $this->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => 'not-uuid-style-id']))
+        $this->get(route(CreatorRouteMap::ShowEditForm, ['creatorId' => 'not-uuid-style-id']))
             ->assertStatus(404);
     }
 
@@ -70,7 +71,7 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
+            ->get(route(CreatorRouteMap::ShowEditForm, ['creatorId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -89,9 +90,9 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditCreatorForm, ['creatorId' => $uuid]))
+            ->get(route(CreatorRouteMap::ShowEditForm, ['creatorId' => $uuid]))
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListCreators))
+            ->assertLocation(route(CreatorRouteMap::List))
             ->assertInvalid(['message' => "Creator not found: {$uuid}"]);
     }
 
@@ -114,12 +115,12 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditCreator), [
+            ->post(route(CreatorRouteMap::Edit), [
                 'creator_id' => $uuid,
                 'creator_name' => 'クリエイター名',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListCreators))
+            ->assertLocation(route(CreatorRouteMap::List))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -137,7 +138,7 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditCreator), [
+            ->post(route(CreatorRouteMap::Edit), [
                 'creator_id' => $uuid,
                 'creator_name' => 'クリエイター名',
             ])
@@ -151,7 +152,7 @@ class EditCreatorTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditCreator), [
+            ->post(route(CreatorRouteMap::Edit), [
                 'creator_id' => '',
                 'creator_name' => '',
             ])

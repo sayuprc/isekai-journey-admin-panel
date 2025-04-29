@@ -1,5 +1,5 @@
 @php
-    use Support\Route\RouteMap;
+    use JourneyLog\Route\JourneyLogRouteMap;
 
     /** @var \App\Http\ViewModels\Web\JourneyLog\JourneyLogView $journeyLog */
 @endphp
@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h1>軌跡更新</h1>
 
-        <form action="{{ route(RouteMap::DeleteJourneyLog) }}" method="post">
+        <form action="{{ route(JourneyLogRouteMap::Delete) }}" method="post">
             @csrf
             @method('DELETE')
             <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
@@ -29,7 +29,7 @@
             @endforeach
         </x-adminlte-alert>
     @endif
-    <form action="{{ route(RouteMap::EditJourneyLog) }}" method="post">
+    <form action="{{ route(JourneyLogRouteMap::Edit) }}" method="post">
         @csrf
         <input name="journey_log_id" value="{{ $journeyLog->journeyLogId }}" type="hidden">
 

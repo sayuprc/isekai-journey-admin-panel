@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\JourneyLogLinkType;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
 use JourneyLogLinkType\UseCases\Delete\DeleteRequest;
 use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;
-use Support\Route\RouteMap;
 
 class DeleteJourneyLogLinkTypeController extends Controller
 {
@@ -26,7 +26,7 @@ class DeleteJourneyLogLinkTypeController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListJourneyLogLinkType)
+            ->route(JourneyLogLinkTypeRouteMap::List)
             ->with([
                 'message' => '削除しました',
             ]);

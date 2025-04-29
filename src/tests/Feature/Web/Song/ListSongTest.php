@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Web\Song;
 
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery;
 use Mockery\MockInterface;
@@ -14,9 +15,9 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
 use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class ListSongTest extends TestCase
@@ -43,9 +44,9 @@ class ListSongTest extends TestCase
     #[Test]
     public function notLoggedIn(): void
     {
-        $this->get(route(RouteMap::ListSongs))
+        $this->get(route(SongRouteMap::List))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -81,7 +82,7 @@ class ListSongTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListSongs))
+            ->get(route(SongRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('songs.list.index');
 
@@ -105,7 +106,7 @@ class ListSongTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ListSongs))
+            ->get(route(SongRouteMap::List))
             ->assertStatus(200)
             ->assertViewIs('songs.list.index');
 

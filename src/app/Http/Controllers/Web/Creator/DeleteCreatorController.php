@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
+use Creator\Route\CreatorRouteMap;
 use Creator\UseCases\Delete\DeleteRequest;
 use Creator\UseCases\Delete\DeleteUseCaseInterface;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Support\Route\RouteMap;
 
 class DeleteCreatorController extends Controller
 {
@@ -24,7 +24,7 @@ class DeleteCreatorController extends Controller
         }
 
         return redirect()
-            ->route(RouteMap::ListCreators)
+            ->route(CreatorRouteMap::List)
             ->with([
                 'message' => '削除しました',
             ]);

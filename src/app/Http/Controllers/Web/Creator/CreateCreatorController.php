@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
+use Creator\Route\CreatorRouteMap;
 use Creator\UseCases\Create\CreateRequest;
 use Creator\UseCases\Create\CreateUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Support\Route\RouteMap;
 
 class CreateCreatorController extends Controller
 {
@@ -29,7 +29,7 @@ class CreateCreatorController extends Controller
                 ])
                 ->withInput()
             : redirect()
-                ->route(RouteMap::ListCreators)
+                ->route(CreatorRouteMap::List)
                 ->with(['message' => '登録完了しました']);
     }
 }

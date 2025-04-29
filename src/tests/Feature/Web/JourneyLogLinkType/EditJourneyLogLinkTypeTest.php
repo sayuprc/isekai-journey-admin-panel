@@ -6,17 +6,18 @@ namespace Tests\Feature\Web\JourneyLogLinkType;
 
 use App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeView;
 use App\Models\User;
+use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Route\RouteMap;
 use Tests\TestCase;
 
 class EditJourneyLogLinkTypeTest extends TestCase
@@ -48,18 +49,16 @@ class EditJourneyLogLinkTypeTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
+        $this->get(route(JourneyLogLinkTypeRouteMap::ShowEditForm, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertRedirect(route(RouteMap::ShowLoginForm));
+            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
     public function withNotUuidStyleId(): void
     {
-        $this->get(route(
-            RouteMap::ShowEditJourneyLogLinkTypeForm,
-            ['journeyLogLinkTypeId' => 'not-uuid-style-id']
-        ))->assertStatus(404);
+        $this->get(route(JourneyLogLinkTypeRouteMap::ShowEditForm, ['journeyLogLinkTypeId' => 'not-uuid-style-id']))
+            ->assertStatus(404);
     }
 
     #[Test]
@@ -77,7 +76,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $response = $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
+            ->get(route(JourneyLogLinkTypeRouteMap::ShowEditForm, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(200);
 
         $data = $response->getOriginalContent()->getData();
@@ -96,9 +95,9 @@ class EditJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->get(route(RouteMap::ShowEditJourneyLogLinkTypeForm, ['journeyLogLinkTypeId' => $uuid]))
+            ->get(route(JourneyLogLinkTypeRouteMap::ShowEditForm, ['journeyLogLinkTypeId' => $uuid]))
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
+            ->assertLocation(route(JourneyLogLinkTypeRouteMap::List))
             ->assertInvalid(['message' => "JourneyLogLinkType not found: {$uuid}"]);
     }
 
@@ -116,13 +115,13 @@ class EditJourneyLogLinkTypeTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLogLinkType), [
+            ->post(route(JourneyLogLinkTypeRouteMap::Edit), [
                 'journey_log_link_type_id' => $uuid,
                 'journey_log_link_type_name' => '動画',
                 'order_no' => '1',
             ])
             ->assertStatus(302)
-            ->assertLocation(route(RouteMap::ListJourneyLogLinkType))
+            ->assertLocation(route(JourneyLogLinkTypeRouteMap::List))
             ->assertSessionHas('message', '更新しました');
     }
 
@@ -130,7 +129,7 @@ class EditJourneyLogLinkTypeTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(RouteMap::EditJourneyLogLinkType), [
+            ->post(route(JourneyLogLinkTypeRouteMap::Edit), [
                 'journey_log_link_type_id' => '',
                 'journey_log_link_type_name' => '',
                 'order_no' => '',
