@@ -24,11 +24,11 @@ class Song
         public readonly Title $title,
         public readonly Description $description,
         public readonly SongTypeId $songTypeId,
+        public readonly OrderNo $orderNo,
         public readonly array $lyricists,
         public readonly array $composers,
         public readonly array $arrangers,
         public readonly array $archives,
-        public readonly OrderNo $orderNo,
     ) {
     }
 }
