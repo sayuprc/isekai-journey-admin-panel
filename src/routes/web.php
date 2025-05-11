@@ -15,6 +15,7 @@ use App\Http\Controllers\Web\JourneyLogLinkType\CreateJourneyLogLinkTypeControll
 use App\Http\Controllers\Web\JourneyLogLinkType\DeleteJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\JourneyLogLinkType\EditJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController;
+use App\Http\Controllers\Web\Song\CreateSongController;
 use App\Http\Controllers\Web\Song\ListSongController;
 use App\Http\Controllers\Web\SongType\CreateSongTypeController;
 use App\Http\Controllers\Web\SongType\DeleteSongTypeController;
@@ -77,6 +78,11 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('songs')->group(function (): void {
         Route::get('/', [ListSongController::class, 'index'])
             ->name(SongRouteMap::List);
+
+        Route::get('/create', [CreateSongController::class, 'index'])
+            ->name(SongRouteMap::ShowCreateForm);
+        Route::post('/create', [CreateSongController::class, 'handle'])
+            ->name(SongRouteMap::Create);
     });
 
     Route::prefix('song-types')->group(function (): void {
