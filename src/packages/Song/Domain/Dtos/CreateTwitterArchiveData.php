@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Song\Domain\Dtos;
+
+use DateTimeInterface;
+
+class CreateTwitterArchiveData
+{
+    /**
+     * @param positive-int $orderNo
+     */
+    public function __construct(
+        public readonly string $archiveName,
+        public readonly string $postUrl,
+        public readonly DateTimeInterface $archivedOn,
+        public readonly int $orderNo,
+    ) {
+    }
+}

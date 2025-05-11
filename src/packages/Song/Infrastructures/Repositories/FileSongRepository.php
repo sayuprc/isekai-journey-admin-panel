@@ -32,4 +32,9 @@ class FileSongRepository implements SongRepositoryInterface
     {
         return array_values($this->store->getAll($this->filePath));
     }
+
+    public function insert(Song $song): void
+    {
+        $this->store->put($this->filePath, $song->songId->value, $song);
+    }
 }

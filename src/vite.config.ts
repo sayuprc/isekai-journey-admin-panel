@@ -8,6 +8,7 @@ export default defineConfig({
         'resources/css/app.css',
         'resources/ts/app.ts',
         'resources/ts/journey-log.ts',
+        'resources/ts/song.ts',
       ],
       refresh: true,
     }),

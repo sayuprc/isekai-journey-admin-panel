@@ -78,6 +78,7 @@ class ListInteractorTest extends TestCase
                     new Title('楽曲A'),
                     new Description('楽曲Aの説明'),
                     new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
+                    new OrderNo(1),
                     [
                         new Lyricist(
                             new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
@@ -114,13 +115,13 @@ class ListInteractorTest extends TestCase
                             new OrderNo(2),
                         ),
                     ],
-                    new OrderNo(1),
                 ),
                 new Song(
                     new SongId('00000000-0000-0000-0000-000000000000'),
                     new Title('楽曲B'),
                     new Description('楽曲Bの説明'),
                     new SongTypeId('11111111-1111-1111-1111-111111111111'),
+                    new OrderNo(2),
                     [
                         new Lyricist(
                             new CreatorId('22222222-2222-2222-2222-222222222222'),
@@ -148,13 +149,13 @@ class ListInteractorTest extends TestCase
                             new OrderNo(1),
                         ),
                     ],
-                    new OrderNo(2),
                 ),
                 new Song(
                     new SongId('66666666-6666-6666-6666-666666666666'),
                     new Title('楽曲C'),
                     new Description('楽曲Cの説明'),
                     new SongTypeId('77777777-7777-7777-7777-777777777777'),
+                    new OrderNo(3),
                     [
                         new Lyricist(
                             new CreatorId('88888888-8888-8888-8888-888888888888'),
@@ -180,7 +181,6 @@ class ListInteractorTest extends TestCase
                             new OrderNo(1),
                         ),
                     ],
-                    new OrderNo(3),
                 ),
             ])
             ->once();
