@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tools\Arkitect\ComponentMaps;
+namespace Tools\Arkitect\ComponentMaps;
 
 trait Accessor
 {
