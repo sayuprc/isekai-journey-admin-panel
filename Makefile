@@ -20,6 +20,7 @@ build: ## Build docker image for develop environment
 		--build-arg GROUPNAME=${GROUPNAME} \
 		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
 		--build-arg GRPC_VERSION=${GRPC_VERSION}
+	docker build -t isekai-journey-admin-node:22 ./docker/node
 	docker build -t isekai-journey-admin-db:16 ./docker/postgresql
 
 .PHONY: up
@@ -102,29 +103,22 @@ migrate-test: ## Migrate database for test db
 tinker: ## Run tinker
 	docker compose exec php php artisan tinker
 
-.PHONY: npm-install
-npm-install: ## Install npm packages
-	docker compose run --rm php npm i
-
-.PHONY: npm-dev
-npm-dev: ## Run npm run dev
-	docker compose exec php npm run dev --host
-
-.PHONY: eslint
-eslint: ## Run npm run eslint
-	docker compose exec php npm run eslint
-
-.PHONY: eslint-fix
-eslint-fix: ## Run npm run lint:fix
-	docker compose exec php npm run eslint:fix
-
 .PHONY: copy-root-ca
 copy-root-ca: ## Copy local rootCA.pem
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
+	cp $$(mkcert -CAROOT)/rootCA.pem docker/node/certs/
 
 .PHONY: generate-grpc-stub
 generate-grpc-stub: ## Generate gRPC Stub files
 	docker compose exec php ./gen-stub.sh
+
+.PHONY: node
+node: ## Enter node container
+	docker compose exec node bash
+
+.PHONY: npm-install
+npm-install: ## Install npm packages
+	docker compose run --rm node npm i
 
 .PHONY: help
 help: ## Display a list of targets
