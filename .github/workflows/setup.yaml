@@ -91,7 +91,7 @@ jobs:
           echo "GRPC_CACHE=${GRPC_CACHE}" >> $GITHUB_OUTPUT
           # Composer 関連
           VENDOR_CACHE_PATH="${CACHE_ROOT}/vendor"
-          COMPOSER_LOCK_HASH="${{ hashFiles('./src/composer.lock') }}"
+          COMPOSER_LOCK_HASH="${{ hashFiles('./src/server/composer.lock') }}"
           COMPOSER_CACHE_KEY="composer-${COMPOSER_LOCK_HASH}"
           VENDOR_CACHE="${VENDOR_CACHE_PATH}/${COMPOSER_CACHE_KEY}.tar.gz"
           echo "VENDOR_CACHE_PATH=${VENDOR_CACHE_PATH}" >> $GITHUB_OUTPUT
@@ -99,7 +99,7 @@ jobs:
           echo "VENDOR_CACHE=${VENDOR_CACHE}" >> $GITHUB_OUTPUT
           # npm 関連
           NPM_CACHE_PATH="${CACHE_ROOT}/npm"
-          NPM_LOCK_HASH="${{ hashFiles('./src/package-lock.json') }}"
+          NPM_LOCK_HASH="${{ hashFiles('./src/server/package-lock.json') }}"
           NPM_CACHE_KEY="npm-${NPM_LOCK_HASH}"
           NPM_CACHE="${NPM_CACHE_PATH}/${NPM_CACHE_KEY}.tar.gz"
           echo "NPM_CACHE_PATH=${NPM_CACHE_PATH}" >> $GITHUB_OUTPUT
@@ -107,7 +107,7 @@ jobs:
           echo "NPM_CACHE=${NPM_CACHE}" >> $GITHUB_OUTPUT
           # テスト用 DB 関連
           DATABASE_CACHE_PATH="${CACHE_ROOT}/db"
-          DATABASE_HASH="${{ hashFiles('./src/database/migrations/*.php') }}"
+          DATABASE_HASH="${{ hashFiles('./src/server/database/migrations/*.php') }}"
           DATABASE_CACHE_KEY="database-${DATABASE_HASH}"
           DATABASE_CACHE="${DATABASE_CACHE_PATH}/${DATABASE_CACHE_KEY}.tar.gz"
           echo "DATABASE_CACHE_PATH=${DATABASE_CACHE_PATH}" >> $GITHUB_OUTPUT
@@ -146,8 +146,8 @@ jobs:
 
       - name: Copy .env
         run: |
-          cp src/.env.example src/.env
-          cp src/.env.testing.example src/.env.testing
+          cp src/server/.env.example src/server/.env
+          cp src/server/.env.testing.example src/server/.env.testing
 
       - name: Run Container
         run: docker compose up -d php
@@ -164,7 +164,7 @@ jobs:
         run: |
           docker exec ${{ steps.define-variables.outputs.CONTAINER }} composer install -n --prefer-dist
           mkdir -p ${{ steps.define-variables.outputs.VENDOR_CACHE_PATH }}
-          tar -czf ${{ steps.define-variables.outputs.VENDOR_CACHE }} src/vendor
+          tar -czf ${{ steps.define-variables.outputs.VENDOR_CACHE }} src/server/vendor
 
       - name: Move vendor
         if: steps.cache-composer.outputs.cache-hit == 'true'
@@ -182,7 +182,7 @@ jobs:
         run: |
           docker exec ${{ steps.define-variables.outputs.CONTAINER }} npm i
           mkdir -p ${{ steps.define-variables.outputs.NPM_CACHE_PATH }}
-          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/node_modules
+          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/server/node_modules
 
       - name: Cache gRPC
         id: cache-grpc
@@ -196,7 +196,7 @@ jobs:
         run: |
           docker exec ${{ steps.define-variables.outputs.CONTAINER }} ./gen-stub.sh
           mkdir -p ${{ steps.define-variables.outputs.GRPC_CACHE_PATH }}
-          tar -czf ${{ steps.define-variables.outputs.GRPC_CACHE }} src/Generated
+          tar -czf ${{ steps.define-variables.outputs.GRPC_CACHE }} src/server/Generated
 
       - name: Cache database
         id: cache-database
@@ -208,7 +208,7 @@ jobs:
       - name: Migrate
         if: steps.cache-database.outputs.cache-hit != 'true'
         run: |
-          touch src/database/database.sqlite
+          touch src/server/database/database.sqlite
           docker exec ${{ steps.define-variables.outputs.CONTAINER }} php artisan migrate --env=testing
           mkdir -p ${{ steps.define-variables.outputs.DATABASE_CACHE_PATH }}
-          tar -czf ${{ steps.define-variables.outputs.DATABASE_CACHE }} src/database/database.sqlite
+          tar -czf ${{ steps.define-variables.outputs.DATABASE_CACHE }} src/server/database/database.sqlite
