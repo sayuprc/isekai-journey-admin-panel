@@ -27,8 +27,8 @@ jobs:
         id: cache-docker-image
         uses: actions/cache@v4
         with:
-          path: ${{ needs.setup.outputs.docker-cache-path }}
-          key: ${{ needs.setup.outputs.docker-cache-key }}
+          path: ${{ needs.setup.outputs.path-docker-cache }}
+          key: ${{ needs.setup.outputs.key-docker-cache }}
 
       - name: Load image
         if: steps.cache-docker-image.outputs.cache-hit == 'true'
@@ -41,8 +41,8 @@ jobs:
         id: cache-composer
         uses: actions/cache@v4
         with:
-          path: ${{ needs.setup.outputs.vendor-cache-path }}
-          key: ${{ needs.setup.outputs.composer-cache-key }}
+          path: ${{ needs.setup.outputs.path-vendor-cache }}
+          key: ${{ needs.setup.outputs.key-composer-cache }}
 
       - name: Move vendor
         if: steps.cache-composer.outputs.cache-hit == 'true'
