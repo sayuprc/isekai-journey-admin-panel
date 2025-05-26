@@ -11,6 +11,14 @@ on:
         value: ${{ jobs.setup.outputs.server-docker-cache }}
       server-container:
         value: ${{ jobs.setup.outputs.server-container }}
+      path-client-docker-cache:
+        value: ${{ jobs.setup.outputs.path-client-docker-cache }}
+      key-client-docker-cache:
+        value: ${{ jobs.setup.outputs.key-client-docker-cache }}
+      client-docker-cache:
+        value: ${{ jobs.setup.outputs.client-docker-cache }}
+      client-container:
+        value: ${{ jobs.setup.outputs.client-container }}
       path-grpc-cache:
         value: ${{ jobs.setup.outputs.path-grpc-cache }}
       key-grpc-cache:
@@ -47,6 +55,10 @@ jobs:
       key-server-docker-cache: ${{ steps.define-variables.outputs.KEY_SERVER_DOCKER_CACHE }}
       server-docker-cache: ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
       server-container: ${{ steps.define-variables.outputs.SERVER_CONTAINER }}
+      path-client-docker-cache: ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+      key-client-docker-cache: ${{ steps.define-variables.outputs.KEY_CLIENT_DOCKER_CACHE }}
+      client-docker-cache: ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
+      client-container: ${{ steps.define-variables.outputs.CLIENT_CONTAINER }}
       path-grpc-cache: ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
       key-grpc-cache: ${{ steps.define-variables.outputs.KEY_GRPC_CACHE }}
       grpc-cache: ${{ steps.define-variables.outputs.GRPC_CACHE }}
@@ -71,7 +83,7 @@ jobs:
         id: define-variables
         run: |
           ROOT_CACHE="/tmp/cache"
-          # Docker 関連
+          # Docker 関連(Server)
           PATH_SERVER_DOCKER_CACHE="${ROOT_CACHE}/docker/server"
           HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile') }}"
           KEY_SERVER_DOCKER_CACHE="docker-server-${HASH_SERVER_DOCKERFILE}"
@@ -81,6 +93,16 @@ jobs:
           echo "KEY_SERVER_DOCKER_CACHE=${KEY_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "SERVER_DOCKER_CACHE=${SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "SERVER_CONTAINER=${SERVER_CONTAINER}" >> $GITHUB_OUTPUT
+          # Docker 関連(Client)
+          PATH_CLIENT_DOCKER_CACHE="${ROOT_CACHE}/docker/client"
+          HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile') }}"
+          KEY_CLIENT_DOCKER_CACHE="docker-client-${HASH_CLIENT_DOCKERFILE}"
+          CLIENT_DOCKER_CACHE="${PATH_CLIENT_DOCKER_CACHE}/${HASH_CLIENT_DOCKERFILE}.tar.gz"
+          CLIENT_CONTAINER="isekai-journey-admin-panel-php-1"
+          echo "PATH_CLIENT_DOCKER_CACHE=${PATH_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "CLIENT_CONTAINER=${CLIENT_CONTAINER}" >> $GITHUB_OUTPUT
           # gRPC 関連
           PATH_GRPC_CACHE="${ROOT_CACHE}/grpc"
           HASH_GRPC_LOCK="${{ hashFiles('./src/proto/**/*.proto') }}"
@@ -99,7 +121,7 @@ jobs:
           echo "VENDOR_CACHE=${VENDOR_CACHE}" >> $GITHUB_OUTPUT
           # npm 関連
           PATH_NPM_CACHE="${ROOT_CACHE}/npm"
-          HASH_NPM_LOCK="${{ hashFiles('./src/server/package-lock.json') }}"
+          HASH_NPM_LOCK="${{ hashFiles('./src/client/package-lock.json') }}"
           KEY_NPM_CACHE="npm-${HASH_NPM_LOCK}"
           NPM_CACHE="${PATH_NPM_CACHE}/${KEY_NPM_CACHE}.tar.gz"
           echo "PATH_NPM_CACHE=${PATH_NPM_CACHE}" >> $GITHUB_OUTPUT
@@ -144,6 +166,24 @@ jobs:
         if: steps.cache-server-docker-image.outputs.cache-hit == 'true'
         run: gunzip -c ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }} | docker load
 
+      - name: Cache client docker image
+        id: cache-client-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+          key: ${{ steps.define-variables.outputs.KEY_CLIENT_DOCKER_CACHE }}
+
+      - name: Build client image
+        if: steps.cache-client-docker-image.outputs.cache-hit != 'true'
+        run: |
+          docker build -t isekai-journey-admin-node:22 -f ./docker/node/Dockerfile.ci ./docker/node
+          mkdir -p ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+          docker save isekai-journey-admin-node:22 | gzip > ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
+
+      - name: Load client image
+        if: steps.cache-client-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }} | docker load
+
       - name: Copy .env
         run: |
           cp src/server/.env.example src/server/.env
@@ -177,10 +217,10 @@ jobs:
           path: ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
           key: ${{ steps.define-variables.outputs.KEY_NPM_CACHE }}
 
-      - name: npm install
+      - name: Npm install
         if: steps.cache-npm.outputs.cache-hit != 'true'
         run: |
-          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} npm i
+          docker exec ${{ steps.define-variables.outputs.CLIENT_CONTAINER }} npm i
           mkdir -p ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/server/node_modules
 
