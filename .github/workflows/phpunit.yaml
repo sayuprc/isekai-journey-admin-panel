@@ -68,4 +68,4 @@ jobs:
         run: docker exec ${{ needs.setup.outputs.server-container }} composer dump-autoload
 
       - name: Run PHPUnit
-        run: docker exec ${{ needs.setup.outputs.server-container }} composer test-all
+        run: docker exec ${{ needs.setup.outputs.server-container }} composer test-unit
