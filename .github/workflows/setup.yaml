@@ -3,14 +3,14 @@ name: setup
 on:
   workflow_call:
     outputs:
-      path-docker-cache:
-        value: ${{ jobs.setup.outputs.path-docker-cache }}
-      key-docker-cache:
-        value: ${{ jobs.setup.outputs.key-docker-cache }}
-      docker-cache:
-        value: ${{ jobs.setup.outputs.docker-cache }}
-      container:
-        value: ${{ jobs.setup.outputs.container }}
+      path-server-docker-cache:
+        value: ${{ jobs.setup.outputs.path-server-docker-cache }}
+      key-server-docker-cache:
+        value: ${{ jobs.setup.outputs.key-server-docker-cache }}
+      server-docker-cache:
+        value: ${{ jobs.setup.outputs.server-docker-cache }}
+      server-container:
+        value: ${{ jobs.setup.outputs.server-container }}
       path-grpc-cache:
         value: ${{ jobs.setup.outputs.path-grpc-cache }}
       key-grpc-cache:
@@ -43,10 +43,10 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      path-docker-cache: ${{ steps.define-variables.outputs.PATH_DOCKER_CACHE }}
-      key-docker-cache: ${{ steps.define-variables.outputs.KEY_DOCKER_CACHE }}
-      docker-cache: ${{ steps.define-variables.outputs.DOCKER_CACHE }}
-      container: ${{ steps.define-variables.outputs.CONTAINER }}
+      path-server-docker-cache: ${{ steps.define-variables.outputs.PATH_SERVER_DOCKER_CACHE }}
+      key-server-docker-cache: ${{ steps.define-variables.outputs.KEY_SERVER_DOCKER_CACHE }}
+      server-docker-cache: ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
+      server-container: ${{ steps.define-variables.outputs.SERVER_CONTAINER }}
       path-grpc-cache: ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
       key-grpc-cache: ${{ steps.define-variables.outputs.KEY_GRPC_CACHE }}
       grpc-cache: ${{ steps.define-variables.outputs.GRPC_CACHE }}
@@ -72,15 +72,15 @@ jobs:
         run: |
           ROOT_CACHE="/tmp/cache"
           # Docker 関連
-          PATH_DOCKER_CACHE="${ROOT_CACHE}/docker"
-          HASH_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile') }}"
-          KEY_DOCKER_CACHE="docker-${HASH_DOCKERFILE}"
-          DOCKER_CACHE="${PATH_DOCKER_CACHE}/${HASH_DOCKERFILE}.tar.gz"
-          CONTAINER="isekai-journey-admin-panel-php-1"
-          echo "PATH_DOCKER_CACHE=${PATH_DOCKER_CACHE}" >> $GITHUB_OUTPUT
-          echo "KEY_DOCKER_CACHE=${KEY_DOCKER_CACHE}" >> $GITHUB_OUTPUT
-          echo "DOCKER_CACHE=${DOCKER_CACHE}" >> $GITHUB_OUTPUT
-          echo "CONTAINER=${CONTAINER}" >> $GITHUB_OUTPUT
+          PATH_SERVER_DOCKER_CACHE="${ROOT_CACHE}/docker/server"
+          HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile') }}"
+          KEY_SERVER_DOCKER_CACHE="docker-server-${HASH_SERVER_DOCKERFILE}"
+          SERVER_DOCKER_CACHE="${PATH_SERVER_DOCKER_CACHE}/${HASH_SERVER_DOCKERFILE}.tar.gz"
+          SERVER_CONTAINER="isekai-journey-admin-panel-php-1"
+          echo "PATH_SERVER_DOCKER_CACHE=${PATH_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "KEY_SERVER_DOCKER_CACHE=${KEY_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "SERVER_DOCKER_CACHE=${SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "SERVER_CONTAINER=${SERVER_CONTAINER}" >> $GITHUB_OUTPUT
           # gRPC 関連
           PATH_GRPC_CACHE="${ROOT_CACHE}/grpc"
           HASH_GRPC_LOCK="${{ hashFiles('./src/proto/**/*.proto') }}"
@@ -114,35 +114,35 @@ jobs:
           echo "KEY_DATABASE_CACHE=${KEY_DATABASE_CACHE}" >> $GITHUB_OUTPUT
           echo "DATABASE_CACHE=${DATABASE_CACHE}" >> $GITHUB_OUTPUT
 
-      - name: Cache docker image
-        id: cache-docker-image
+      - name: Cache server docker image
+        id: cache-server-docker-image
         uses: actions/cache@v4
         with:
-          path: ${{ steps.define-variables.outputs.PATH_DOCKER_CACHE }}
-          key: ${{ steps.define-variables.outputs.KEY_DOCKER_CACHE }}
+          path: ${{ steps.define-variables.outputs.PATH_SERVER_DOCKER_CACHE }}
+          key: ${{ steps.define-variables.outputs.KEY_SERVER_DOCKER_CACHE }}
 
       - name: Login to Docker Hub
-        if: steps.cache-docker-image.outputs.cache-hit != 'true'
+        if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Build image
-        if: steps.cache-docker-image.outputs.cache-hit != 'true'
+      - name: Build server image
+        if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
         run: |
           docker build -t isekai-journey-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php \
           --build-arg UID=`id -u` \
           --build-arg GID=`id -g` \
           --build-arg USERNAME=`id -un` \
           --build-arg GROUPNAME=`id -gn`
-          mkdir -p ${{ steps.define-variables.outputs.PATH_DOCKER_CACHE }}
-          docker save isekai-journey-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.DOCKER_CACHE }}
+          mkdir -p ${{ steps.define-variables.outputs.PATH_SERVER_DOCKER_CACHE }}
+          docker save isekai-journey-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
 
-      - name: Load image
-        if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: gunzip -c ${{ steps.define-variables.outputs.DOCKER_CACHE }} | docker load
+      - name: Load server image
+        if: steps.cache-server-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }} | docker load
 
       - name: Copy .env
         run: |
@@ -162,7 +162,7 @@ jobs:
       - name: Composer install
         if: steps.cache-composer.outputs.cache-hit != 'true'
         run: |
-          docker exec ${{ steps.define-variables.outputs.CONTAINER }} composer install -n --prefer-dist
+          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} composer install -n --prefer-dist
           mkdir -p ${{ steps.define-variables.outputs.PATH_VENDOR_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.VENDOR_CACHE }} src/server/vendor
 
@@ -180,7 +180,7 @@ jobs:
       - name: npm install
         if: steps.cache-npm.outputs.cache-hit != 'true'
         run: |
-          docker exec ${{ steps.define-variables.outputs.CONTAINER }} npm i
+          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} npm i
           mkdir -p ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/server/node_modules
 
@@ -194,7 +194,7 @@ jobs:
       - name: Generate code
         if: steps.cache-grpc.outputs.cache-hit != 'true'
         run: |
-          docker exec ${{ steps.define-variables.outputs.CONTAINER }} ./gen-stub.sh
+          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} ./gen-stub.sh
           mkdir -p ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.GRPC_CACHE }} src/server/Generated
 
@@ -209,6 +209,6 @@ jobs:
         if: steps.cache-database.outputs.cache-hit != 'true'
         run: |
           touch src/server/database/database.sqlite
-          docker exec ${{ steps.define-variables.outputs.CONTAINER }} php artisan migrate --env=testing
+          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} php artisan migrate --env=testing
           mkdir -p ${{ steps.define-variables.outputs.PATH_DATABASE_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.DATABASE_CACHE }} src/server/database/database.sqlite
