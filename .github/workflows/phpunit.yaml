@@ -24,15 +24,15 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Cache docker image
-        id: cache-docker-image
+        id: cache-server-docker-image
         uses: actions/cache@v4
         with:
-          path: ${{ needs.setup.outputs.docker-cache-path }}
-          key: ${{ needs.setup.outputs.docker-cache-key }}
+          path: ${{ needs.setup.outputs.path-server-docker-cache }}
+          key: ${{ needs.setup.outputs.key-server-docker-cache }}
 
       - name: Load image
-        if: steps.cache-docker-image.outputs.cache-hit == 'true'
-        run: gunzip -c ${{ needs.setup.outputs.docker-cache }} | docker load
+        if: steps.cache-server-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ needs.setup.outputs.server-docker-cache }} | docker load
 
       - name: Run Container
         run: docker compose up -d php
@@ -41,30 +41,19 @@ jobs:
         id: cache-composer
         uses: actions/cache@v4
         with:
-          path: ${{ needs.setup.outputs.vendor-cache-path }}
-          key: ${{ needs.setup.outputs.composer-cache-key }}
+          path: ${{ needs.setup.outputs.path-vendor-cache }}
+          key: ${{ needs.setup.outputs.key-composer-cache }}
 
       - name: Move vendor
         if: steps.cache-composer.outputs.cache-hit == 'true'
         run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
 
-      - name: Cache npm
-        id: cache-npm
-        uses: actions/cache@v4
-        with:
-          path: ${{ needs.setup.outputs.npm-cache-path }}
-          key: ${{ needs.setup.outputs.npm-cache-key }}
-
-      - name: Move npm
-        if: steps.cache-npm.outputs.cache-hit == 'true'
-        run: tar -xzf ${{ needs.setup.outputs.npm-cache }}
-
       - name: Cache database
         id: cache-database
         uses: actions/cache@v4
         with:
-          path: ${{ needs.setup.outputs.database-cache-path }}
-          key: ${{ needs.setup.outputs.database-cache-key }}
+          path: ${{ needs.setup.outputs.path-database-cache }}
+          key: ${{ needs.setup.outputs.key-database-cache }}
 
       - name: Move database
         if: steps.cache-database.outputs.cache-hit == 'true'
@@ -72,14 +61,11 @@ jobs:
 
       - name: Setup env
         run: |
-          cp src/.env.testing.example src/.env.testing
-          docker exec ${{ needs.setup.outputs.container }} php artisan key:generate --env=testing
-
-      - name: Build
-        run: docker exec ${{ needs.setup.outputs.container }} npm run build
+          cp src/server/.env.testing.example src/server/.env.testing
+          docker exec ${{ needs.setup.outputs.server-container }} php artisan key:generate --env=testing
 
       - name: Dump autoload
-        run: docker exec ${{ needs.setup.outputs.container }} composer dump-autoload
+        run: docker exec ${{ needs.setup.outputs.server-container }} composer dump-autoload
 
       - name: Run PHPUnit
-        run: docker exec ${{ needs.setup.outputs.container }} composer test-all
+        run: docker exec ${{ needs.setup.outputs.server-container }} composer test-unit
