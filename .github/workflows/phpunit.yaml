@@ -72,7 +72,7 @@ jobs:
 
       - name: Setup env
         run: |
-          cp src/.env.testing.example src/.env.testing
+          cp src/server/.env.testing.example src/server/.env.testing
           docker exec ${{ needs.setup.outputs.container }} php artisan key:generate --env=testing
 
       - name: Build
