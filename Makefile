@@ -36,7 +36,7 @@ down: ## Delete the container
 
 .PHONY: php
 php: ## Enter php container
-	docker exec ${SERVER_CONTAINER} bash
+	docker exec -it ${SERVER_CONTAINER} bash
 
 .PHONY: composer-install
 composer-install: ## Install composer packages
@@ -117,7 +117,7 @@ generate-grpc-stub: ## Generate gRPC Stub files
 
 .PHONY: node
 node: ## Enter node container
-	docker exec ${CLIENT_CONTAINER} bash
+	docker exec -it ${CLIENT_CONTAINER} bash
 
 .PHONY: npm-install
 npm-install: ## Install npm packages
