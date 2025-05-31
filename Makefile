@@ -33,7 +33,7 @@ down: ## Delete the container
 
 .PHONY: php
 php: ## Enter php container
-	docker compose exec php bash
+	docker exec isekai-journey-admin-php bash
 
 .PHONY: composer-install
 composer-install: ## Install composer packages
@@ -41,67 +41,67 @@ composer-install: ## Install composer packages
 
 .PHONY: phpstan
 phpstan: ## Run PHPStan
-	docker compose exec php composer phpstan
+	docker exec isekai-journey-admin-php composer phpstan
 
 .PHONY: phpstan-clear-cache
 phpstan-clear-cache: ## Clear PHPStan cache
-	docker compose exec php composer phpstan-clear-cache
+	docker exec isekai-journey-admin-php composer phpstan-clear-cache
 
 .PHONY: arkitect
 arkitect: ## Run arkitect
-	docker compose exec php composer arkitect
+	docker exec isekai-journey-admin-php composer arkitect
 
 .PHONY: ecs
 ecs: ## Run ecs
-	docker compose exec php composer ecs
+	docker exec isekai-journey-admin-php composer ecs
 
 .PHONY: ecs-fix
 ecs-fix: ## Run ecs fix
-	docker compose exec php composer ecs-fix
+	docker exec isekai-journey-admin-php composer ecs-fix
 
 .PHONY: test-all
 test-all: ## Run all tests
-	docker compose exec php composer test-all
+	docker exec isekai-journey-admin-php composer test-all
 
 .PHONY: test-unit
 test-unit: ## Run PHPUnit
-	docker compose exec php composer test-unit
+	docker exec isekai-journey-admin-php composer test-unit
 
 .PHONY: test-feature
 test-feature: ## Run PHPUnit
-	docker compose exec php composer test-feature
+	docker exec isekai-journey-admin-php composer test-feature
 
 .PHONY: coverage
 coverage: ## Export coverage
-	docker compose exec php composer coverage
+	docker exec isekai-journey-admin-php composer coverage
 
 .PHONY: infection
 infection: ## Run infection
-	docker compose exec php composer infection
+	docker exec isekai-journey-admin-php composer infection
 
 .PHONY: ide-gen
 ide-gen: ## Generate ide helper file
-	docker compose exec php composer ide-gen
+	docker exec isekai-journey-admin-php composer ide-gen
 
 .PHONY: ide-model
 ide-model: ## Write ide helper to model files
-	docker compose exec php composer ide-model
+	docker exec isekai-journey-admin-php composer ide-model
 
 .PHONY: ide-meta
 ide-meta: ## Generate ide helper meta file
-	docker compose exec php composer ide-meta
+	docker exec isekai-journey-admin-php composer ide-meta
 
 .PHONY: migrate
 migrate: ## Migrate database
-	docker compose exec php php artisan migrate
+	docker exec isekai-journey-admin-php php artisan migrate
 
 .PHONY: migrate-test
 migrate-test: ## Migrate database for test db
-	docker compose exec php php artisan migrate --env=testing
+	docker exec isekai-journey-admin-php php artisan migrate --env=testing
 
 .PHONY: tinker
 tinker: ## Run tinker
-	docker compose exec php php artisan tinker
+	docker exec isekai-journey-admin-php php artisan tinker
 
 .PHONY: copy-root-ca
 copy-root-ca: ## Copy local rootCA.pem
@@ -110,11 +110,11 @@ copy-root-ca: ## Copy local rootCA.pem
 
 .PHONY: generate-grpc-stub
 generate-grpc-stub: ## Generate gRPC Stub files
-	docker compose exec php ./gen-stub.sh
+	docker exec isekai-journey-admin-php ./gen-stub.sh
 
 .PHONY: node
 node: ## Enter node container
-	docker compose exec node bash
+	docker exec isekai-journey-admin-node bash
 
 .PHONY: npm-install
 npm-install: ## Install npm packages
