@@ -1,0 +1,26 @@
+name: バグレポート
+description: 意図しない挙動が発生した場合
+
+title: "[Bug]: "
+
+labels:
+  - "bug"
+
+projects:
+  - "sayuprc/isekai-journey"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: バグの内容
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 再現手順
+    validations:
+      required: true
