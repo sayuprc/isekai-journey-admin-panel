@@ -1,0 +1,17 @@
+name: その他
+description: 上記に当てはまらない場合
+
+title: "[Other]: "
+
+projects:
+  - "sayuprc/isekai-journey"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: 内容
+    validations:
+      required: true
