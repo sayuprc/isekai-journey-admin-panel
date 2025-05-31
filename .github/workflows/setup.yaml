@@ -79,7 +79,7 @@ jobs:
           HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile') }}"
           KEY_SERVER_DOCKER_CACHE="docker-server-${HASH_SERVER_DOCKERFILE}"
           SERVER_DOCKER_CACHE="${PATH_SERVER_DOCKER_CACHE}/${HASH_SERVER_DOCKERFILE}.tar.gz"
-          SERVER_CONTAINER="isekai-journey-admin-panel-php-1"
+          SERVER_CONTAINER="isekai-journey-admin-php"
           echo "PATH_SERVER_DOCKER_CACHE=${PATH_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_SERVER_DOCKER_CACHE=${KEY_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "SERVER_DOCKER_CACHE=${SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
@@ -89,7 +89,7 @@ jobs:
           HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile') }}"
           KEY_CLIENT_DOCKER_CACHE="docker-client-${HASH_CLIENT_DOCKERFILE}"
           CLIENT_DOCKER_CACHE="${PATH_CLIENT_DOCKER_CACHE}/${HASH_CLIENT_DOCKERFILE}.tar.gz"
-          CLIENT_CONTAINER="isekai-journey-admin-panel-php-1"
+          CLIENT_CONTAINER="isekai-journey-admin-php"
           echo "PATH_CLIENT_DOCKER_CACHE=${PATH_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
