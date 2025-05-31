@@ -1,4 +1,4 @@
-name: setup
+name: setup server
 
 on:
   workflow_call:
@@ -25,8 +25,8 @@ on:
         value: ${{ jobs.setup.outputs.database-cache }}
 
 jobs:
-  setup:
-    name: Setup
+  setup-server:
+    name: Setup server
 
     runs-on: ubuntu-latest
 
