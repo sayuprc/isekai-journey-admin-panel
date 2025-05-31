@@ -55,7 +55,7 @@ jobs:
           ROOT_CACHE="/tmp/cache"
           # Docker 関連(Server)
           PATH_SERVER_DOCKER_CACHE="${ROOT_CACHE}/docker/server"
-          HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile') }}"
+          HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile', './docker/php/Dockerfile.ci') }}"
           KEY_SERVER_DOCKER_CACHE="docker-server-${HASH_SERVER_DOCKERFILE}"
           SERVER_DOCKER_CACHE="${PATH_SERVER_DOCKER_CACHE}/${HASH_SERVER_DOCKERFILE}.tar.gz"
           SERVER_CONTAINER="isekai-journey-admin-php"
