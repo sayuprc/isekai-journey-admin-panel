@@ -25,7 +25,7 @@ on:
         value: ${{ jobs.setup.outputs.database-cache }}
 
 jobs:
-  setup-server:
+  setup:
     name: Setup server
 
     runs-on: ubuntu-latest

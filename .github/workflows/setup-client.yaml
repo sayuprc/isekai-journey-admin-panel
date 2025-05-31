@@ -19,7 +19,7 @@ on:
         value: ${{ jobs.setup.outputs.npm-cache }}
 
 jobs:
-  setup-client:
+  setup:
     name: Setup client
 
     runs-on: ubuntu-latest
