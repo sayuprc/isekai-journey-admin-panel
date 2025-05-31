@@ -19,12 +19,6 @@ on:
         value: ${{ jobs.setup.outputs.client-docker-cache }}
       client-container:
         value: ${{ jobs.setup.outputs.client-container }}
-      path-grpc-cache:
-        value: ${{ jobs.setup.outputs.path-grpc-cache }}
-      key-grpc-cache:
-        value: ${{ jobs.setup.outputs.key-grpc-cache }}
-      grpc-cache:
-        value: ${{ jobs.setup.outputs.grpc-cache }}
       path-vendor-cache:
         value: ${{ jobs.setup.outputs.path-vendor-cache }}
       key-composer-cache:
@@ -59,9 +53,6 @@ jobs:
       key-client-docker-cache: ${{ steps.define-variables.outputs.KEY_CLIENT_DOCKER_CACHE }}
       client-docker-cache: ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
       client-container: ${{ steps.define-variables.outputs.CLIENT_CONTAINER }}
-      path-grpc-cache: ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
-      key-grpc-cache: ${{ steps.define-variables.outputs.KEY_GRPC_CACHE }}
-      grpc-cache: ${{ steps.define-variables.outputs.GRPC_CACHE }}
       path-vendor-cache: ${{ steps.define-variables.outputs.PATH_VENDOR_CACHE }}
       key-composer-cache: ${{ steps.define-variables.outputs.KEY_COMPOSER_CACHE }}
       vendor-cache: ${{ steps.define-variables.outputs.VENDOR_CACHE }}
@@ -103,14 +94,6 @@ jobs:
           echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "CLIENT_CONTAINER=${CLIENT_CONTAINER}" >> $GITHUB_OUTPUT
-          # gRPC 関連
-          PATH_GRPC_CACHE="${ROOT_CACHE}/grpc"
-          HASH_GRPC_LOCK="${{ hashFiles('./src/proto/**/*.proto') }}"
-          KEY_GRPC_CACHE="grpc-${HASH_GRPC_LOCK}"
-          GRPC_CACHE="${PATH_GRPC_CACHE}/${KEY_GRPC_CACHE}.tar.gz"
-          echo "PATH_GRPC_CACHE=${PATH_GRPC_CACHE}" >> $GITHUB_OUTPUT
-          echo "KEY_GRPC_CACHE=${KEY_GRPC_CACHE}" >> $GITHUB_OUTPUT
-          echo "GRPC_CACHE=${GRPC_CACHE}" >> $GITHUB_OUTPUT
           # Composer 関連
           PATH_VENDOR_CACHE="${ROOT_CACHE}/vendor"
           HASH_COMPOSER_LOCK="${{ hashFiles('./src/server/composer.lock') }}"
@@ -224,19 +207,15 @@ jobs:
           mkdir -p ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
           tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/server/node_modules
 
-      - name: Cache gRPC
-        id: cache-grpc
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
-          key: ${{ steps.define-variables.outputs.KEY_GRPC_CACHE }}
 
-      - name: Generate code
-        if: steps.cache-grpc.outputs.cache-hit != 'true'
+      - name: Check Generate code has diff
         run: |
           docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} ./gen-stub.sh
-          mkdir -p ${{ steps.define-variables.outputs.PATH_GRPC_CACHE }}
-          tar -czf ${{ steps.define-variables.outputs.GRPC_CACHE }} src/server/Generated
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "自動生成コードに差分があります"
+            git status
+            exit 1
+          fi
 
       - name: Cache database
         id: cache-database
