@@ -48,17 +48,6 @@ jobs:
         if: steps.cache-composer.outputs.cache-hit == 'true'
         run: tar -xzf ${{ needs.setup.outputs.vendor-cache }}
 
-      - name: Cache gRPC
-        id: cache-grpc
-        uses: actions/cache@v4
-        with:
-          path: ${{ needs.setup.outputs.path-grpc-cache }}
-          key: ${{ needs.setup.outputs.key-grpc-cache }}
-
-      - name: Move generate code
-        if: steps.cache-grpc.outputs.cache-hit == 'true'
-        run: tar -xzf ${{ needs.setup.outputs.grpc-cache }}
-
       - name: Dump autoload
         run: docker exec ${{ needs.setup.outputs.server-container }} composer dump-autoload
 

@@ -1,4 +1,4 @@
-FROM php:8.4-fpm as grpc-build
+FROM php:8.4-fpm AS grpc-build
 
 ARG PROTOC_VERSION="27.3"
 ARG GRPC_VERSION="v1.65.5"
@@ -12,7 +12,9 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && curl -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -o protoc.zip \
-  && unzip -q protoc.zip bin/protoc -d /usr/local/ \
+  && unzip -q protoc.zip -d /usr/local/protoc \
+  && cp -p /usr/local/protoc/bin/protoc /usr/local/bin/ \
+  && cp -pr /usr/local/protoc/include /usr/local/protoc-include \
   && cd /var/local \
   && git clone -b ${GRPC_VERSION} https://github.com/grpc/grpc --depth=1 \
   && cd /var/local/grpc \
@@ -23,7 +25,7 @@ RUN apt-get update \
   && make protoc grpc_php_plugin \
   && cp -p /var/local/grpc/cmake/build/grpc_php_plugin /usr/local/bin/ \
   && cd /var/local \
-  && rm -rf grpc
+  && rm -rf grpc protoc protoc.zip
 
 FROM php:8.4-fpm
 
@@ -31,13 +33,11 @@ COPY certs/rootCA.pem /usr/share/ca-certificates/
 
 RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && update-ca-certificates \
-  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
   && apt-get update \
   && apt-get install -y \
     git \
     libpq-dev \
     unzip \
-    nodejs \
     zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
@@ -48,6 +48,7 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=grpc-build /usr/local/bin/protoc /usr/local/bin/protoc
+COPY --from=grpc-build /usr/local/protoc-include /usr/local/include
 COPY --from=grpc-build /usr/local/bin/grpc_php_plugin /usr/local/bin/grpc_php_plugin
 
 ARG UID=1000
