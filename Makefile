@@ -123,6 +123,35 @@ node: ## Enter node container
 npm-install: ## Install npm packages
 	docker compose run --rm node npm i
 
+.PHONY: format
+format: ## Run ESLint with --fix and stylelint with --fix
+	make lint-fix
+	make style-fix
+
+.PHONY: lint
+lint: ## Run ESLint
+	docker exec ${CLIENT_CONTAINER} npm run lint
+
+.PHONY: lint-fix
+lint-fix: ## Run ESLint with --fix
+	docker exec ${CLIENT_CONTAINER} npm run lint:fix
+
+.PHONY: style
+style: ## Run stylelint
+	docker exec ${CLIENT_CONTAINER} npm run style
+
+.PHONY: style-fix
+style-fix: ## Run stylelint with --fix
+	docker exec ${CLIENT_CONTAINER} npm run style:fix
+
+.PHONY: tcm
+tcm: ## Run tcm
+	docker exec ${CLIENT_CONTAINER} npm run tcm
+
+.PHONY: tcm-watch
+tcm-watch: ## Run tcm with --watch
+	docker exec ${CLIENT_CONTAINER} npm run tcm:watch
+
 .PHONY: help
 help: ## Display a list of targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

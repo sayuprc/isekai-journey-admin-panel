@@ -86,10 +86,10 @@ jobs:
           echo "SERVER_CONTAINER=${SERVER_CONTAINER}" >> $GITHUB_OUTPUT
           # Docker 関連(Client)
           PATH_CLIENT_DOCKER_CACHE="${ROOT_CACHE}/docker/client"
-          HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile') }}"
+          HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile', './docker/node/Dockerfile.ci') }}"
           KEY_CLIENT_DOCKER_CACHE="docker-client-${HASH_CLIENT_DOCKERFILE}"
           CLIENT_DOCKER_CACHE="${PATH_CLIENT_DOCKER_CACHE}/${HASH_CLIENT_DOCKERFILE}.tar.gz"
-          CLIENT_CONTAINER="isekai-journey-admin-php"
+          CLIENT_CONTAINER="isekai-journey-admin-node"
           echo "PATH_CLIENT_DOCKER_CACHE=${PATH_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
@@ -173,7 +173,7 @@ jobs:
           cp src/server/.env.testing.example src/server/.env.testing
 
       - name: Run Container
-        run: docker compose up -d php
+        run: docker compose up -d php node
 
       - name: Cache composer
         id: cache-composer
@@ -205,8 +205,7 @@ jobs:
         run: |
           docker exec ${{ steps.define-variables.outputs.CLIENT_CONTAINER }} npm i
           mkdir -p ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
-          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/server/node_modules
-
+          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/client/node_modules
 
       - name: Check Generate code has diff
         run: |

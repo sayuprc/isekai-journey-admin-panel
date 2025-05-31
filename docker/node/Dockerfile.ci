@@ -1,5 +1,7 @@
 FROM ghcr.io/sayuprc/isekai-journey-admin-node:22
 
+USER root
+
 WORKDIR /app/src
 
-USER node
+CMD ["bash"]

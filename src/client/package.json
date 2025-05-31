@@ -6,9 +6,32 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "style": "stylelint '**/*.{css,astro}'",
+    "style:fix": "stylelint '**/*.{css,astro}' --fix",
+    "tcm": "tcm -p 'src/styles/*.module.css' .",
+    "tcm:watch": "tcm -w -p 'src/styles/*.module.css' ."
   },
   "dependencies": {
     "astro": "^5.8.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@stylistic/eslint-plugin": "^4.4.0",
+    "@stylistic/stylelint-plugin": "^3.1.2",
+    "@typescript-eslint/parser": "^8.33.0",
+    "eslint": "^9.28.0",
+    "eslint-plugin-astro": "^1.3.1",
+    "eslint-plugin-import": "^2.31.0",
+    "postcss-html": "^1.8.0",
+    "stylelint": "^16.20.0",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-recess-order": "^6.0.0",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-order": "^7.0.0",
+    "typed-css-modules": "^0.9.1",
+    "typescript-eslint": "^8.33.0"
   }
 }
