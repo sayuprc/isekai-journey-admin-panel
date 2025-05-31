@@ -1,0 +1,107 @@
+name: setup client
+
+on:
+  workflow_call:
+    outputs:
+      path-client-docker-cache:
+        value: ${{ jobs.setup.outputs.path-client-docker-cache }}
+      key-client-docker-cache:
+        value: ${{ jobs.setup.outputs.key-client-docker-cache }}
+      client-docker-cache:
+        value: ${{ jobs.setup.outputs.client-docker-cache }}
+      client-container:
+        value: ${{ jobs.setup.outputs.client-container }}
+      path-npm-cache:
+        value: ${{ jobs.setup.outputs.path-npm-cache }}
+      key-npm-cache:
+        value: ${{ jobs.setup.outputs.key-npm-cache }}
+      npm-cache:
+        value: ${{ jobs.setup.outputs.npm-cache }}
+
+jobs:
+  setup:
+    name: Setup client
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      path-client-docker-cache: ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+      key-client-docker-cache: ${{ steps.define-variables.outputs.KEY_CLIENT_DOCKER_CACHE }}
+      client-docker-cache: ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
+      client-container: ${{ steps.define-variables.outputs.CLIENT_CONTAINER }}
+      path-npm-cache: ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
+      key-npm-cache: ${{ steps.define-variables.outputs.KEY_NPM_CACHE }}
+      npm-cache: ${{ steps.define-variables.outputs.NPM_CACHE }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+
+      - name: Define variables
+        id: define-variables
+        run: |
+          ROOT_CACHE="/tmp/cache"
+          # Docker 関連
+          PATH_CLIENT_DOCKER_CACHE="${ROOT_CACHE}/docker/client"
+          HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile', './docker/node/Dockerfile.ci') }}"
+          KEY_CLIENT_DOCKER_CACHE="docker-client-${HASH_CLIENT_DOCKERFILE}"
+          CLIENT_DOCKER_CACHE="${PATH_CLIENT_DOCKER_CACHE}/${HASH_CLIENT_DOCKERFILE}.tar.gz"
+          CLIENT_CONTAINER="isekai-journey-admin-node"
+          echo "PATH_CLIENT_DOCKER_CACHE=${PATH_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
+          echo "CLIENT_CONTAINER=${CLIENT_CONTAINER}" >> $GITHUB_OUTPUT
+          # npm 関連
+          PATH_NPM_CACHE="${ROOT_CACHE}/npm"
+          HASH_NPM_LOCK="${{ hashFiles('./src/client/package-lock.json') }}"
+          KEY_NPM_CACHE="npm-${HASH_NPM_LOCK}"
+          NPM_CACHE="${PATH_NPM_CACHE}/${KEY_NPM_CACHE}.tar.gz"
+          echo "PATH_NPM_CACHE=${PATH_NPM_CACHE}" >> $GITHUB_OUTPUT
+          echo "KEY_NPM_CACHE=${KEY_NPM_CACHE}" >> $GITHUB_OUTPUT
+          echo "NPM_CACHE=${NPM_CACHE}" >> $GITHUB_OUTPUT
+
+      - name: Cache client docker image
+        id: cache-client-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+          key: ${{ steps.define-variables.outputs.KEY_CLIENT_DOCKER_CACHE }}
+
+      - name: Login to Docker Hub
+        if: steps.cache-client-docker-image.outputs.cache-hit != 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Build client image
+        if: steps.cache-client-docker-image.outputs.cache-hit != 'true'
+        run: |
+          docker build -t isekai-journey-admin-node:22 -f ./docker/node/Dockerfile.ci ./docker/node
+          mkdir -p ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
+          docker save isekai-journey-admin-node:22 | gzip > ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
+
+      - name: Load client image
+        if: steps.cache-client-docker-image.outputs.cache-hit == 'true'
+        run: gunzip -c ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }} | docker load
+
+      - name: Run Container
+        run: docker compose up -d node
+
+      - name: Cache npm
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
+          key: ${{ steps.define-variables.outputs.KEY_NPM_CACHE }}
+
+      - name: Npm install
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: |
+          docker exec ${{ steps.define-variables.outputs.CLIENT_CONTAINER }} npm i
+          mkdir -p ${{ steps.define-variables.outputs.PATH_NPM_CACHE }}
+          tar -czf ${{ steps.define-variables.outputs.NPM_CACHE }} src/client/node_modules

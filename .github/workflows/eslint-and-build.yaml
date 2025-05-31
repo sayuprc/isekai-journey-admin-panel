@@ -8,7 +8,7 @@ on:
 
 jobs:
   setup:
-    uses: ./.github/workflows/setup.yaml
+    uses: ./.github/workflows/setup-client.yaml
 
   analyse:
     needs: setup
