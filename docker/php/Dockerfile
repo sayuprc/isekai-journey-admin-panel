@@ -13,6 +13,8 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && curl -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip -o protoc.zip \
   && unzip -q protoc.zip -d /usr/local/protoc \
+  && cp -p /usr/local/protoc/bin/protoc /usr/local/bin/ \
+  && cp -pr /usr/local/protoc/include /usr/local/protoc-include \
   && cd /var/local \
   && git clone -b ${GRPC_VERSION} https://github.com/grpc/grpc --depth=1 \
   && cd /var/local/grpc \
@@ -22,7 +24,8 @@ RUN apt-get update \
   && cmake ../.. \
   && make protoc grpc_php_plugin \
   && cp -p /var/local/grpc/cmake/build/grpc_php_plugin /usr/local/bin/ \
-  && cd /var/local
+  && cd /var/local \
+  && rm -rf grpc protoc protoc.zip
 
 FROM php:8.4-fpm
 
@@ -44,11 +47,9 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && docker-php-ext-install pgsql pdo_pgsql
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-COPY --from=grpc-build /usr/local/protoc/bin/protoc /usr/local/bin/protoc
-COPY --from=grpc-build /usr/local/protoc/include /usr/local/include
+COPY --from=grpc-build /usr/local/bin/protoc /usr/local/bin/protoc
+COPY --from=grpc-build /usr/local/protoc-include /usr/local/include
 COPY --from=grpc-build /usr/local/bin/grpc_php_plugin /usr/local/bin/grpc_php_plugin
-COPY --from=grpc-build /var/local/grpc/include /usr/local/include
-COPY --from=grpc-build /var/local/grpc /usr/local/grpc
 
 ARG UID=1000
 ARG GID=1000
