@@ -27,8 +27,5 @@ export default {
     'selector-class-pattern': [
       '^[a-z][a-zA-Z0-9-]+$',
     ],
-    'max-line-length': [
-      120,
-    ],
   },
 };
