@@ -8,7 +8,7 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 
 class CreatorFactory implements CreatorFactoryInterface
 {

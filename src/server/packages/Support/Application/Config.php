@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Support\Application\Config;
+namespace Support\Application;
 
 use Exception;
-use Support\Config\ConfigInterface;
+use Support\Contracts\ConfigInterface;
 
 class Config implements ConfigInterface
 {

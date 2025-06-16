@@ -27,8 +27,8 @@ use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongTypeId;
+use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Uuid\UuidGeneratorInterface;
 
 class SongFactory implements SongFactoryInterface
 {

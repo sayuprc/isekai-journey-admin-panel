@@ -8,7 +8,7 @@ use Creator\Infrastructures\Factories\CreatorFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class CreatorFactoryTest extends TestCase

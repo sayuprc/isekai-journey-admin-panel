@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Mapper;
+namespace Support\Contracts;
 
 interface MapperInterface
 {

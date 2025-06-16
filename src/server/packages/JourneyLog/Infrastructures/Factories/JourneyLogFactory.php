@@ -19,8 +19,8 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
+use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Uuid\UuidGeneratorInterface;
 
 class JourneyLogFactory implements JourneyLogFactoryInterface
 {

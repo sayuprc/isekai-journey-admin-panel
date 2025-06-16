@@ -11,7 +11,7 @@ use JourneyLog\Infrastructures\Factories\JourneyLogFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class JourneyLogFactoryTest extends TestCase

@@ -8,7 +8,7 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Support\Config\ConfigInterface;
+use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
 class FileCreatorRepository implements CreatorRepositoryInterface

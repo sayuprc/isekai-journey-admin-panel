@@ -16,7 +16,7 @@ use Song\Domain\Models\Archives\NonLink\NonLinkArchive;
 use Song\Domain\Models\Archives\Twitter\TwitterArchive;
 use Song\Domain\Models\Archives\YouTube\YouTubeArchive;
 use Song\Infrastructures\Factories\SongFactory;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class SongFactoryTest extends TestCase

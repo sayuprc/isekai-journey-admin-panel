@@ -8,8 +8,8 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
+use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Uuid\UuidGeneratorInterface;
 
 class SongTypeFactory implements SongTypeFactoryInterface
 {

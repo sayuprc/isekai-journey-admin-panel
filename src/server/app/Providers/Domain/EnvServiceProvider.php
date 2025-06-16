@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Support\ServiceProvider;
-use Support\Application\Config\Config;
-use Support\Mapper\MapperInterface;
+use Support\Application\Config;
+use Support\Contracts\MapperInterface;
 
 abstract class EnvServiceProvider extends ServiceProvider
 {

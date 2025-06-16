@@ -8,7 +8,7 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use Support\Config\ConfigInterface;
+use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
 class FileSongTypeRepository implements SongTypeRepositoryInterface

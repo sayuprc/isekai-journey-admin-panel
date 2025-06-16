@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Config;
+namespace Support\Contracts;
 
 interface ConfigInterface
 {
