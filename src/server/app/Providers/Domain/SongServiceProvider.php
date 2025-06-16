@@ -10,10 +10,10 @@ use Song\Application\Interactors\ListInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
+use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\SongFactoryInterface;
-use Song\Domain\Repositories\SongRepositoryInterface;
-use Song\Infrastructures\Factories\SongFactory;
-use Song\Infrastructures\Repositories\FileSongRepository;
+use Song\Domain\Models\SongRepositoryInterface;
+use Song\Infrastructures\SongFactory;
 
 class SongServiceProvider extends EnvServiceProvider
 {

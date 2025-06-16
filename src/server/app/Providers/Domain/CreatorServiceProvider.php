@@ -20,10 +20,10 @@ use Creator\Application\UseCase\Edit\EditInputData;
 use Creator\Application\UseCase\Edit\EditUseCaseInterface;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
+use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\Infrastructures\Factories\CreatorFactory;
-use Creator\Infrastructures\Repositories\FileCreatorRepository;
+use Creator\Domain\Models\CreatorRepositoryInterface;
+use Creator\Infrastructures\CreatorFactory;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {

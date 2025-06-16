@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Creator\Infrastructures\Factories;
+namespace Creator\Infrastructures;
 
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;

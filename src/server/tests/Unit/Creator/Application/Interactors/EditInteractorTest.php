@@ -11,7 +11,7 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Mockery;
 use Mockery\MockInterface;

@@ -10,7 +10,7 @@ use JourneyLogLinkType\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
-use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

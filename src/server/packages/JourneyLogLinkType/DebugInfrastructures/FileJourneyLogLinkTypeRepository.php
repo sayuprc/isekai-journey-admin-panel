@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JourneyLogLinkType\Infrastructures\Repositories;
+namespace JourneyLogLinkType\DebugInfrastructures;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
-use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLog\Infrastructures\Factories;
+namespace Tests\Unit\JourneyLog\Infrastructures;
 
 use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 use JourneyLog\Domain\Dtos\ReconstituteJourneyLogLinkData;
-use JourneyLog\Infrastructures\Factories\JourneyLogFactory;
+use JourneyLog\Infrastructures\JourneyLogFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

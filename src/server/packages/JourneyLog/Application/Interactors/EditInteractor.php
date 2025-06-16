@@ -7,7 +7,7 @@ namespace JourneyLog\Application\Interactors;
 use JourneyLog\Application\UseCase\Edit\EditInputData;
 use JourneyLog\Application\UseCase\Edit\EditUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
 class EditInteractor implements EditUseCaseInterface
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\JourneyLogLinkType\Infrastructures\Factories;
+namespace Tests\Unit\JourneyLogLinkType\Infrastructures;
 
-use JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory;
+use JourneyLogLinkType\Infrastructures\JourneyLogLinkTypeFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

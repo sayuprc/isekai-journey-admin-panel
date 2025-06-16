@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\Infrastructures\Factories;
+namespace JourneyLog\Infrastructures;
 
 use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;

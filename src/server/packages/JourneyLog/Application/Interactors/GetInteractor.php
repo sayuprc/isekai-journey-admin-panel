@@ -8,7 +8,7 @@ use JourneyLog\Application\UseCase\Get\GetInputData;
 use JourneyLog\Application\UseCase\Get\GetOutputData;
 use JourneyLog\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogId;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

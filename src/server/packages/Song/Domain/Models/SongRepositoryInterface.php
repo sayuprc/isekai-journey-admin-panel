@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Repositories;
-
-use Song\Domain\Models\Song;
+namespace Song\Domain\Models;
 
 interface SongRepositoryInterface
 {

@@ -6,7 +6,7 @@ namespace JourneyLog\Application\Interactors;
 
 use JourneyLog\Application\UseCase\List\ListOutputData;
 use JourneyLog\Application\UseCase\List\ListUseCaseInterface;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {

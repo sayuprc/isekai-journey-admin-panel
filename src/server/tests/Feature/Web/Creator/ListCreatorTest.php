@@ -9,7 +9,7 @@ use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;

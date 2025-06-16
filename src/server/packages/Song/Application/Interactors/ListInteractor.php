@@ -6,7 +6,7 @@ namespace Song\Application\Interactors;
 
 use Song\Application\UseCase\List\ListOutputData;
 use Song\Application\UseCase\List\ListUseCaseInterface;
-use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Domain\Models\SongRepositoryInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {

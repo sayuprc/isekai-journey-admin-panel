@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Song\Infrastructures\Factories;
+namespace Tests\Unit\Song\Infrastructures;
 
 use DateType\ImmutableDate;
 use Mockery;
@@ -15,7 +15,7 @@ use Song\Domain\Dtos\CreateYouTubeArchiveData;
 use Song\Domain\Models\Archives\NonLink\NonLinkArchive;
 use Song\Domain\Models\Archives\Twitter\TwitterArchive;
 use Song\Domain\Models\Archives\YouTube\YouTubeArchive;
-use Song\Infrastructures\Factories\SongFactory;
+use Song\Infrastructures\SongFactory;
 use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 

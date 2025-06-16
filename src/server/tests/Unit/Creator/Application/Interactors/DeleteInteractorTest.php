@@ -8,7 +8,7 @@ use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
 use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

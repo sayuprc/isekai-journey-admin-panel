@@ -7,7 +7,7 @@ namespace Creator\Application\Interactors;
 use Creator\Application\UseCase\Edit\EditInputData;
 use Creator\Application\UseCase\Edit\EditUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use ResultType\Err;
 use ResultType\Ok;
