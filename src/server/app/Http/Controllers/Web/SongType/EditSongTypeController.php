@@ -8,11 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\SongType\SongTypePresenter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use SongType\Application\UseCase\Edit\EditInputData;
+use SongType\Application\UseCase\Edit\EditUseCaseInterface;
+use SongType\Application\UseCase\Get\GetInputData;
+use SongType\Application\UseCase\Get\GetUseCaseInterface;
 use SongType\Route\SongTypeRouteMap;
-use SongType\UseCases\Edit\EditInputData;
-use SongType\UseCases\Edit\EditUseCaseInterface;
-use SongType\UseCases\Get\GetInputData;
-use SongType\UseCases\Get\GetUseCaseInterface;
 
 class EditSongTypeController extends Controller
 {

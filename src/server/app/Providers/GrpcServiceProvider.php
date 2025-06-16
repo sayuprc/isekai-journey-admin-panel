@@ -9,7 +9,7 @@ use Generated\IsekaiJourney\JourneyLogLinkType\JourneyLogLinkTypeServiceClient;
 use Generated\IsekaiJourney\Song\SongServiceClient;
 use Grpc\ChannelCredentials;
 use Illuminate\Support\ServiceProvider;
-use Support\Application\Config\Config;
+use Support\Application\Config;
 
 class GrpcServiceProvider extends ServiceProvider
 {

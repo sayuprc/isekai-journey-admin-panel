@@ -6,11 +6,11 @@ namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Creator\CreatorPresenter;
+use Creator\Application\UseCase\Edit\EditInputData;
+use Creator\Application\UseCase\Edit\EditUseCaseInterface;
+use Creator\Application\UseCase\Get\GetInputData;
+use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Route\CreatorRouteMap;
-use Creator\UseCases\Edit\EditInputData;
-use Creator\UseCases\Edit\EditUseCaseInterface;
-use Creator\UseCases\Get\GetInputData;
-use Creator\UseCases\Get\GetUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 

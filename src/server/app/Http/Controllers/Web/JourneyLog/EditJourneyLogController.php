@@ -10,12 +10,12 @@ use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLog\Application\UseCase\Edit\EditInputData;
+use JourneyLog\Application\UseCase\Edit\EditUseCaseInterface;
+use JourneyLog\Application\UseCase\Get\GetInputData;
+use JourneyLog\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLog\Route\JourneyLogRouteMap;
-use JourneyLog\UseCases\Edit\EditInputData;
-use JourneyLog\UseCases\Edit\EditUseCaseInterface;
-use JourneyLog\UseCases\Get\GetInputData;
-use JourneyLog\UseCases\Get\GetUseCaseInterface;
-use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\List\ListUseCaseInterface;
 
 class EditJourneyLogController extends Controller
 {

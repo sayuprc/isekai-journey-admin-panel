@@ -9,5 +9,5 @@ enum JourneyLogComponent: string implements ComponentMap
     use Accessor;
 
     case Domain = 'JourneyLog\Domain\*';
-    case UseCase = 'JourneyLog\UseCases\*';
+    case UseCase = 'JourneyLog\Application\UseCase\*';
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Dtos;
 
-use DateTimeInterface;
+use DateType\ImmutableDate;
 
 class CreateYouTubeArchiveData
 {
@@ -15,7 +15,7 @@ class CreateYouTubeArchiveData
         public readonly string $archiveName,
         public readonly string $videoUrl,
         public readonly string $thumbnailUrl,
-        public readonly DateTimeInterface $archivedOn,
+        public readonly ImmutableDate $archivedOn,
         public readonly int $orderNo,
     ) {
     }

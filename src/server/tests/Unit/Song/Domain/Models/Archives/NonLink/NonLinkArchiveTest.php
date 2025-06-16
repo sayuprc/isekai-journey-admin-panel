@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Domain\Models\Archives\NonLink;
 
-use DateTime;
+use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Archives\Archive;
 use Song\Domain\Models\Archives\ArchivedOn;
@@ -20,7 +20,7 @@ class NonLinkArchiveTest extends TestCase
     {
         $instance = new NonLinkArchive(
             new ArchiveId($this->generateUuid()),
-            new ArchivedOn(new DateTime()),
+            new ArchivedOn(new ImmutableDate()),
             new OrderNo(1)
         );
 

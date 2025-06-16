@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
+use Creator\Application\UseCase\Delete\DeleteInputData;
+use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Route\CreatorRouteMap;
-use Creator\UseCases\Delete\DeleteInputData;
-use Creator\UseCases\Delete\DeleteUseCaseInterface;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 

@@ -6,8 +6,8 @@ namespace App\Http\Presenters\Web\JourneyLog;
 
 use App\Http\ViewModels\Web\JourneyLog\JourneyLogLinkView;
 use App\Http\ViewModels\Web\JourneyLog\JourneyLogView;
+use JourneyLog\Application\UseCase\Get\GetOutputData;
 use JourneyLog\Domain\Models\JourneyLogLink\JourneyLogLink;
-use JourneyLog\UseCases\Get\GetOutputData;
 
 class JourneyLogPresenter
 {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
+use Creator\Application\UseCase\Create\CreateInputData;
+use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Route\CreatorRouteMap;
-use Creator\UseCases\Create\CreateInputData;
-use Creator\UseCases\Create\CreateUseCaseInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 

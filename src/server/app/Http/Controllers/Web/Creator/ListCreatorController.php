@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Creator\CreatorListPresenter;
-use Creator\UseCases\List\ListUseCaseInterface;
+use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Illuminate\Contracts\View\View;
 
 class ListCreatorController extends Controller

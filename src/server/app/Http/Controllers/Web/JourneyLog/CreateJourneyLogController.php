@@ -9,10 +9,10 @@ use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLog\Application\UseCase\Create\CreateInputData;
+use JourneyLog\Application\UseCase\Create\CreateUseCaseInterface;
 use JourneyLog\Route\JourneyLogRouteMap;
-use JourneyLog\UseCases\Create\CreateInputData;
-use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\List\ListUseCaseInterface;
 
 class CreateJourneyLogController extends Controller
 {

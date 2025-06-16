@@ -6,7 +6,7 @@ namespace Tests\Unit\Support\Application\Uuid;
 
 use PHPUnit\Framework\Attributes\Test;
 use Support\Application\Uuid\UuidGenerator;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class UuidGeneratorTest extends TestCase

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\JourneyLogLinkType;
 
 use App\Http\ViewModels\Web\JourneyLogLink\JourneyLogLinkTypeView;
-use JourneyLogLinkType\UseCases\Get\GetOutputData;
+use JourneyLogLinkType\Application\UseCase\Get\GetOutputData;
 
 class JourneyLogLinkTypePresenter
 {

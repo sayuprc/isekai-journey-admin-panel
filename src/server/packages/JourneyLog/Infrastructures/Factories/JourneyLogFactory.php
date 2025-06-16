@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Infrastructures\Factories;
 
-use DateTimeInterface;
+use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 use JourneyLog\Domain\Dtos\ReconstituteJourneyLogLinkData;
 use JourneyLog\Domain\Models\FromOn;
@@ -19,8 +19,8 @@ use JourneyLog\Domain\Models\Story;
 use JourneyLog\Domain\Models\ToOn;
 use JourneyLog\Domain\Models\Url;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
+use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Uuid\UuidGeneratorInterface;
 
 class JourneyLogFactory implements JourneyLogFactoryInterface
 {
@@ -34,8 +34,8 @@ class JourneyLogFactory implements JourneyLogFactoryInterface
      */
     public function create(
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog {
@@ -55,8 +55,8 @@ class JourneyLogFactory implements JourneyLogFactoryInterface
     public function createForUpdate(
         string $journeyLogId,
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog {
@@ -95,8 +95,8 @@ class JourneyLogFactory implements JourneyLogFactoryInterface
     public function reconstitute(
         string $journeyLogId,
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog {

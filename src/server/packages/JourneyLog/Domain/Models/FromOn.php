@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Models;
 
-use Support\Domain\ValueObjects\DateTime\DateValueObject;
+use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
 
-class FromOn extends DateValueObject
+class FromOn extends ImmutableDateValueObject
 {
 }

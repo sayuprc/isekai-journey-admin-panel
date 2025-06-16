@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\SongType;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use SongType\Application\UseCase\Delete\DeleteInputData;
+use SongType\Application\UseCase\Delete\DeleteUseCaseInterface;
 use SongType\Route\SongTypeRouteMap;
-use SongType\UseCases\Delete\DeleteInputData;
-use SongType\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteSongTypeController extends Controller
 {

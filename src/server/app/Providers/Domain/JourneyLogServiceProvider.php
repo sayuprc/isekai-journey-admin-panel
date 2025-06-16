@@ -7,23 +7,23 @@ namespace App\Providers\Domain;
 use App\Http\Requests\Web\JourneyLog\CreateRequest;
 use App\Http\Requests\Web\JourneyLog\DeleteRequest;
 use App\Http\Requests\Web\JourneyLog\EditRequest;
-use JourneyLog\Application\Create\CreateInteractor;
-use JourneyLog\Application\Delete\DeleteInteractor;
-use JourneyLog\Application\Edit\EditInteractor;
-use JourneyLog\Application\Get\GetInteractor;
-use JourneyLog\Application\List\ListInteractor;
+use JourneyLog\Application\Interactors\CreateInteractor;
+use JourneyLog\Application\Interactors\DeleteInteractor;
+use JourneyLog\Application\Interactors\EditInteractor;
+use JourneyLog\Application\Interactors\GetInteractor;
+use JourneyLog\Application\Interactors\ListInteractor;
+use JourneyLog\Application\UseCase\Create\CreateInputData;
+use JourneyLog\Application\UseCase\Create\CreateUseCaseInterface;
+use JourneyLog\Application\UseCase\Delete\DeleteInputData;
+use JourneyLog\Application\UseCase\Delete\DeleteUseCaseInterface;
+use JourneyLog\Application\UseCase\Edit\EditInputData;
+use JourneyLog\Application\UseCase\Edit\EditUseCaseInterface;
+use JourneyLog\Application\UseCase\Get\GetUseCaseInterface;
+use JourneyLog\Application\UseCase\List\ListUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
 use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\Factories\JourneyLogFactory;
 use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
-use JourneyLog\UseCases\Create\CreateInputData;
-use JourneyLog\UseCases\Create\CreateUseCaseInterface;
-use JourneyLog\UseCases\Delete\DeleteInputData;
-use JourneyLog\UseCases\Delete\DeleteUseCaseInterface;
-use JourneyLog\UseCases\Edit\EditInputData;
-use JourneyLog\UseCases\Edit\EditUseCaseInterface;
-use JourneyLog\UseCases\Get\GetUseCaseInterface;
-use JourneyLog\UseCases\List\ListUseCaseInterface;
 
 class JourneyLogServiceProvider extends EnvServiceProvider
 {

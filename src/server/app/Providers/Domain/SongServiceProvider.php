@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use App\Http\Requests\Web\Song\CreateRequest;
-use Song\Application\Create\CreateInteractor;
-use Song\Application\List\ListInteractor;
+use Song\Application\Interactors\CreateInteractor;
+use Song\Application\Interactors\ListInteractor;
+use Song\Application\UseCase\Create\CreateInputData;
+use Song\Application\UseCase\Create\CreateUseCaseInterface;
+use Song\Application\UseCase\List\ListUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Repositories\SongRepositoryInterface;
 use Song\Infrastructures\Factories\SongFactory;
 use Song\Infrastructures\Repositories\FileSongRepository;
-use Song\UseCases\Create\CreateInputData;
-use Song\UseCases\Create\CreateUseCaseInterface;
-use Song\UseCases\List\ListUseCaseInterface;
 
 class SongServiceProvider extends EnvServiceProvider
 {

@@ -8,8 +8,8 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeName;
+use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\Uuid\UuidGeneratorInterface;
 
 class JourneyLogLinkTypeFactory implements JourneyLogLinkTypeFactoryInterface
 {

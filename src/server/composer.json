@@ -5,14 +5,16 @@
     "keywords": ["isekaijoucho"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-grpc": "*",
         "cuyz/valinor": "^1.14",
         "grpc/grpc": "^1.57",
         "jeroennoten/laravel-adminlte": "^3.15",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.10"
+        "laravel/tinker": "^2.10",
+        "sayuprc/date-type": "^0.2.0",
+        "sayuprc/result-type": "^0.1.1"
     },
     "require-dev": {
         "askdkc/breezejp": "^2.3",

@@ -7,14 +7,14 @@ namespace App\Http\Controllers\Web\Song;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Creator\CreatorListPresenter;
 use App\Http\Presenters\Web\SongType\SongTypeListPresenter;
-use Creator\UseCases\List\ListUseCaseInterface as CreatorListUseCaseInterface;
+use Creator\Application\UseCase\List\ListUseCaseInterface as CreatorListUseCaseInterface;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Song\Application\UseCase\Create\CreateInputData;
+use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Route\SongRouteMap;
-use Song\UseCases\Create\CreateInputData;
-use Song\UseCases\Create\CreateUseCaseInterface;
-use SongType\UseCases\List\ListUseCaseInterface as SongTypeListUseCaseInterface;
+use SongType\Application\UseCase\List\ListUseCaseInterface as SongTypeListUseCaseInterface;
 
 class CreateSongController extends Controller
 {

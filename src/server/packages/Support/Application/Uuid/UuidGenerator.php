@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Support\Application\Uuid;
 
 use Str;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 
 class UuidGenerator implements UuidGeneratorInterface
 {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Infrastructures\Factories;
 
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Safe\DateTimeImmutable;
 use Song\Domain\Dtos\CreateCreatorData;
 use Song\Domain\Dtos\CreateNonLinkArchiveData;
 use Song\Domain\Dtos\CreateTwitterArchiveData;
@@ -16,7 +16,7 @@ use Song\Domain\Models\Archives\NonLink\NonLinkArchive;
 use Song\Domain\Models\Archives\Twitter\TwitterArchive;
 use Song\Domain\Models\Archives\YouTube\YouTubeArchive;
 use Song\Infrastructures\Factories\SongFactory;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class SongFactoryTest extends TestCase
@@ -60,17 +60,17 @@ class SongFactoryTest extends TestCase
                     'YouTube',
                     'https://example.com',
                     'https://example.com/thumbnail.jpg',
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     1,
                 ),
                 new CreateTwitterArchiveData(
                     'Tweet',
                     'https://example.com',
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     2
                 ),
                 new CreateNonLinkArchiveData(
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     3
                 ),
             ],

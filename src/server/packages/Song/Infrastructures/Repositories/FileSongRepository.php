@@ -6,7 +6,7 @@ namespace Song\Infrastructures\Repositories;
 
 use Song\Domain\Models\Song;
 use Song\Domain\Repositories\SongRepositoryInterface;
-use Support\Config\ConfigInterface;
+use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
 class FileSongRepository implements SongRepositoryInterface

@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\JourneyLogLinkType;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use JourneyLogLinkType\Application\UseCase\Delete\DeleteInputData;
+use JourneyLogLinkType\Application\UseCase\Delete\DeleteUseCaseInterface;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
-use JourneyLogLinkType\UseCases\Delete\DeleteInputData;
-use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;
 
 class DeleteJourneyLogLinkTypeController extends Controller
 {

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Web\Song;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\Song\SongListPresenter;
 use Illuminate\Contracts\View\View;
-use Song\UseCases\List\ListUseCaseInterface;
+use Song\Application\UseCase\List\ListUseCaseInterface;
 
 class ListSongController extends Controller
 {

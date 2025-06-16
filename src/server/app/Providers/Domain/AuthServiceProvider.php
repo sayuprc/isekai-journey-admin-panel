@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use App\Http\Requests\Web\Auth\LoginRequest;
-use Auth\Application\Login\LoginInteractor;
-use Auth\UseCases\Login\LoginInputData;
-use Auth\UseCases\Login\LoginUseCaseInterface;
+use Auth\Application\Interactors\LoginInteractor;
+use Auth\Application\UseCase\Login\LoginInputData;
+use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 
 class AuthServiceProvider extends EnvServiceProvider
 {

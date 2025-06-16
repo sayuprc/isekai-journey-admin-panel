@@ -7,23 +7,23 @@ namespace App\Providers\Domain;
 use App\Http\Requests\Web\JourneyLogLinkType\CreateRequest;
 use App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest;
 use App\Http\Requests\Web\JourneyLogLinkType\EditRequest;
-use JourneyLogLinkType\Application\Create\CreateInteractor;
-use JourneyLogLinkType\Application\Delete\DeleteInteractor;
-use JourneyLogLinkType\Application\Edit\EditInteractor;
-use JourneyLogLinkType\Application\Get\GetInteractor;
-use JourneyLogLinkType\Application\List\ListInteractor;
+use JourneyLogLinkType\Application\Interactors\CreateInteractor;
+use JourneyLogLinkType\Application\Interactors\DeleteInteractor;
+use JourneyLogLinkType\Application\Interactors\EditInteractor;
+use JourneyLogLinkType\Application\Interactors\GetInteractor;
+use JourneyLogLinkType\Application\Interactors\ListInteractor;
+use JourneyLogLinkType\Application\UseCase\Create\CreateInputData;
+use JourneyLogLinkType\Application\UseCase\Create\CreateUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\Delete\DeleteInputData;
+use JourneyLogLinkType\Application\UseCase\Delete\DeleteUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\Edit\EditInputData;
+use JourneyLogLinkType\Application\UseCase\Edit\EditUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\Get\GetUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\List\ListUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
 use JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory;
 use JourneyLogLinkType\Infrastructures\Repositories\FileJourneyLogLinkTypeRepository;
-use JourneyLogLinkType\UseCases\Create\CreateInputData;
-use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
-use JourneyLogLinkType\UseCases\Delete\DeleteInputData;
-use JourneyLogLinkType\UseCases\Delete\DeleteUseCaseInterface;
-use JourneyLogLinkType\UseCases\Edit\EditInputData;
-use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
-use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
-use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
 
 class JourneyLogLinkTypeServiceProvider extends EnvServiceProvider
 {

@@ -8,7 +8,7 @@ use JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class JourneyLogLinkTypeFactoryTest extends TestCase

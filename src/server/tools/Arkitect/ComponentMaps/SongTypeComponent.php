@@ -9,5 +9,5 @@ enum SongTypeComponent: string implements ComponentMap
     use Accessor;
 
     case Domain = 'SongType\Domain\*';
-    case UseCase = 'SongType\UseCases\*';
+    case UseCase = 'SongType\Application\UseCase\*';
 }

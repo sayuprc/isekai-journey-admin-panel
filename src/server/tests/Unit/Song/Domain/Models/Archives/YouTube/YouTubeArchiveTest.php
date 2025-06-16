@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Domain\Models\Archives\YouTube;
 
-use DateTime;
+use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Archives\Archive;
 use Song\Domain\Models\Archives\ArchivedOn;
@@ -26,7 +26,7 @@ class YouTubeArchiveTest extends TestCase
             new ArchiveName('アーカイブ'),
             new VideoUrl('https://example.com'),
             new ThumbnailUrl('https://example.com'),
-            new ArchivedOn(new DateTime()),
+            new ArchivedOn(new ImmutableDate()),
             new OrderNo(1)
         );
 

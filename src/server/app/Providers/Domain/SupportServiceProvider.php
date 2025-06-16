@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Support\Application\Config\Config;
-use Support\Application\Mapper\Mapper;
+use Support\Application\Config;
+use Support\Application\Mapper;
 use Support\Application\Uuid\DummyUuidGenerator;
 use Support\Application\Uuid\UuidGenerator;
-use Support\Config\ConfigInterface;
-use Support\Mapper\MapperInterface;
-use Support\Uuid\UuidGeneratorInterface;
+use Support\Contracts\ConfigInterface;
+use Support\Contracts\MapperInterface;
+use Support\Contracts\UuidGeneratorInterface;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
