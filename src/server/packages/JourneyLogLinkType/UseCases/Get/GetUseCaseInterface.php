@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\UseCases\Get;
 
-use Support\ResultType\Result;
+use ResultType\Result;
 
 interface GetUseCaseInterface
 {

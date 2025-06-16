@@ -9,9 +9,9 @@ use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\UseCases\Get\GetInputData;
 use Creator\UseCases\Get\GetOutputData;
 use Creator\UseCases\Get\GetUseCaseInterface;
-use Support\ResultType\Err;
-use Support\ResultType\Ok;
-use Support\ResultType\Result;
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {

@@ -24,8 +24,8 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Result;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\ResultType\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase

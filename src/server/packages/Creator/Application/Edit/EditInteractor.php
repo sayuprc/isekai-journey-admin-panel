@@ -9,9 +9,9 @@ use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Creator\UseCases\Edit\EditInputData;
 use Creator\UseCases\Edit\EditUseCaseInterface;
-use Support\ResultType\Err;
-use Support\ResultType\Ok;
-use Support\ResultType\Result;
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
 
 class EditInteractor implements EditUseCaseInterface
 {

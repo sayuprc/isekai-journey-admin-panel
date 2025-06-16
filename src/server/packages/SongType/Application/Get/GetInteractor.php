@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace SongType\Application\Get;
 
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\UseCases\Get\GetInputData;
 use SongType\UseCases\Get\GetOutputData;
 use SongType\UseCases\Get\GetUseCaseInterface;
-use Support\ResultType\Err;
-use Support\ResultType\Ok;
-use Support\ResultType\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {

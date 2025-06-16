@@ -7,6 +7,7 @@ namespace Tests\Unit\SongType\Application\Get;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Result;
 use SongType\Application\Get\GetInteractor;
 use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
@@ -16,7 +17,6 @@ use SongType\UseCases\Get\GetInputData;
 use SongType\UseCases\Get\GetOutputData;
 use SongType\UseCases\Get\GetUseCaseInterface;
 use Support\Domain\ValueObjects\OrderNo;
-use Support\ResultType\Result;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase

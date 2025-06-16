@@ -12,7 +12,8 @@
         "jeroennoten/laravel-adminlte": "^3.15",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.10"
+        "laravel/tinker": "^2.10",
+        "sayuprc/result-type": "^0.1.1"
     },
     "require-dev": {
         "askdkc/breezejp": "^2.3",

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace SongType\Application\Create;
 
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
 use SongType\UseCases\Create\CreateInputData;
 use SongType\UseCases\Create\CreateUseCaseInterface;
-use Support\ResultType\Err;
-use Support\ResultType\Ok;
-use Support\ResultType\Result;
 
 class CreateInteractor implements CreateUseCaseInterface
 {

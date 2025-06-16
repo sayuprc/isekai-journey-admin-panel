@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "842fb6e1546e6af55dd24cad68fa3fc9",
+    "content-hash": "5f3538cd1b7ecbff176c65a2f8f70d10",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -3569,6 +3569,51 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "sayuprc/result-type",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sayuprc/result-type.git",
+                "reference": "ebf749ba075de6770c298b0241aefffdf8354361"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sayuprc/result-type/zipball/ebf749ba075de6770c298b0241aefffdf8354361",
+                "reference": "ebf749ba075de6770c298b0241aefffdf8354361",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^12.1",
+                "symplify/easy-coding-standard": "^12.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ResultType\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "sayuprc"
+                }
+            ],
+            "description": "Library for handling result types in PHP",
+            "support": {
+                "issues": "https://github.com/sayuprc/result-type/issues",
+                "source": "https://github.com/sayuprc/result-type/tree/0.1.1"
+            },
+            "time": "2025-04-19T11:19:18+00:00"
         },
         {
             "name": "symfony/clock",

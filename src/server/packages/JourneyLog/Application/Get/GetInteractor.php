@@ -9,9 +9,9 @@ use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
 use JourneyLog\UseCases\Get\GetInputData;
 use JourneyLog\UseCases\Get\GetOutputData;
 use JourneyLog\UseCases\Get\GetUseCaseInterface;
-use Support\ResultType\Err;
-use Support\ResultType\Ok;
-use Support\ResultType\Result;
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
 
 class GetInteractor implements GetUseCaseInterface
 {
