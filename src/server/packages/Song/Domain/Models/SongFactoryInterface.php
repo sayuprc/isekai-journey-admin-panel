@@ -5,18 +5,14 @@ declare(strict_types=1);
 namespace Song\Domain\Models;
 
 use Song\Domain\Dtos\CreateCreatorData;
-use Song\Domain\Dtos\CreateNonLinkArchiveData;
-use Song\Domain\Dtos\CreateTwitterArchiveData;
-use Song\Domain\Dtos\CreateYouTubeArchiveData;
 
 interface SongFactoryInterface
 {
     /**
-     * @param positive-int                                                                      $orderNo
-     * @param array<CreateCreatorData>                                                          $lyricists
-     * @param array<CreateCreatorData>                                                          $composers
-     * @param array<CreateCreatorData>                                                          $arrangers
-     * @param array<CreateNonLinkArchiveData|CreateTwitterArchiveData|CreateYouTubeArchiveData> $archives
+     * @param positive-int             $orderNo
+     * @param array<CreateCreatorData> $lyricists
+     * @param array<CreateCreatorData> $composers
+     * @param array<CreateCreatorData> $arrangers
      */
     public function create(
         string $title,
@@ -26,6 +22,5 @@ interface SongFactoryInterface
         array $lyricists,
         array $composers,
         array $arrangers,
-        array $archives,
     ): Song;
 }

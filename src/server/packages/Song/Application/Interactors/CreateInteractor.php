@@ -27,7 +27,6 @@ class CreateInteractor implements CreateUseCaseInterface
             $inputData->lyricists,
             $inputData->composers,
             $inputData->arrangers,
-            $inputData->archives,
         );
 
         $this->repository->insert($song);
