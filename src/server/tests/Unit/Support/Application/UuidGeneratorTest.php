@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Application\Uuid;
+namespace Tests\Unit\Support\Application;
 
 use PHPUnit\Framework\Attributes\Test;
-use Support\Application\Uuid\UuidGenerator;
+use Support\Application\UuidGenerator;
 use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 

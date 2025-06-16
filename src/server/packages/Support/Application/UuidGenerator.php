@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Support\Application\Uuid;
+namespace Support\Application;
 
-use Str;
+use Illuminate\Support\Str;
 use Support\Contracts\UuidGeneratorInterface;
 
 class UuidGenerator implements UuidGeneratorInterface
