@@ -5,25 +5,31 @@ declare(strict_types=1);
 use Tools\Arkitect\ComponentMaps\CreatorComponent;
 use Tools\Arkitect\ComponentMaps\JourneyLogComponent;
 use Tools\Arkitect\ComponentMaps\JourneyLogLinkTypeComponent;
+use Tools\Arkitect\ComponentMaps\LibraryComponent;
 use Tools\Arkitect\ComponentMaps\SongComponent;
 use Tools\Arkitect\ComponentMaps\SongTypeComponent;
 use Tools\Arkitect\ComponentMaps\SupportComponent;
 use Tools\Arkitect\Define;
 
 return [
+    new Define(LibraryComponent::DateType),
+    new Define(LibraryComponent::ResultType),
+
     new Define(
         JourneyLogComponent::Domain,
         [
             JourneyLogComponent::Domain,
             JourneyLogLinkTypeComponent::Domain,
             SupportComponent::Domain,
+            LibraryComponent::DateType,
         ]
     ),
     new Define(
         JourneyLogComponent::UseCase,
         [
             JourneyLogComponent::Domain,
-            SupportComponent::ResultType,
+            LibraryComponent::DateType,
+            LibraryComponent::ResultType,
         ]
     ),
 
@@ -38,7 +44,7 @@ return [
         JourneyLogLinkTypeComponent::UseCase,
         [
             JourneyLogLinkTypeComponent::Domain,
-            SupportComponent::ResultType,
+            LibraryComponent::ResultType,
         ]
     ),
 
@@ -49,6 +55,7 @@ return [
             SongTypeComponent::Domain,
             CreatorComponent::Domain,
             SupportComponent::Domain,
+            LibraryComponent::DateType,
         ]
     ),
     new Define(
@@ -65,12 +72,11 @@ return [
             SupportComponent::Domain,
         ]
     ),
-
     new Define(
         SongTypeComponent::UseCase,
         [
             SongTypeComponent::Domain,
-            SupportComponent::ResultType,
+            LibraryComponent::ResultType,
         ]
     ),
 
@@ -85,10 +91,15 @@ return [
         CreatorComponent::UseCase,
         [
             CreatorComponent::Domain,
-            SupportComponent::ResultType,
+            LibraryComponent::ResultType,
         ]
     ),
 
-    new Define(SupportComponent::Domain),
-    new Define(SupportComponent::ResultType),
+    new Define(
+        SupportComponent::Domain,
+        [
+            SupportComponent::Domain,
+            LibraryComponent::DateType,
+        ]
+    ),
 ];
