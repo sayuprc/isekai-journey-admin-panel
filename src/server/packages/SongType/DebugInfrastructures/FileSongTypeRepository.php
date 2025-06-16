@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SongType\Infrastructures\Repositories;
+namespace SongType\DebugInfrastructures;
 
 use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;

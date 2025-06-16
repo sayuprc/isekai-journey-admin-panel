@@ -16,7 +16,7 @@ use Song\Domain\Models\Archives\NonLink\NonLinkArchive;
 use Song\Domain\Models\Archives\Twitter\TwitterArchive;
 use Song\Domain\Models\Archives\YouTube\YouTubeArchive;
 use Song\Domain\Models\Song;
-use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Domain\Models\SongRepositoryInterface;
 use Song\Route\SongRouteMap;
 use Tests\TestCase;
 

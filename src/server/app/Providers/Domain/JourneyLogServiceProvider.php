@@ -20,10 +20,10 @@ use JourneyLog\Application\UseCase\Edit\EditInputData;
 use JourneyLog\Application\UseCase\Edit\EditUseCaseInterface;
 use JourneyLog\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLog\Application\UseCase\List\ListUseCaseInterface;
+use JourneyLog\DebugInfrastructures\FileJourneyLogRepository;
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 use JourneyLog\Infrastructures\JourneyLogFactory;
-use JourneyLog\Infrastructures\Repositories\FileJourneyLogRepository;
 
 class JourneyLogServiceProvider extends EnvServiceProvider
 {

@@ -9,7 +9,7 @@ use Auth\Route\AuthRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLog\Domain\Models\JourneyLogId;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 use JourneyLog\Route\JourneyLogRouteMap;
 use Mockery;
 use Mockery\MockInterface;

@@ -20,9 +20,9 @@ use SongType\Application\UseCase\Edit\EditInputData;
 use SongType\Application\UseCase\Edit\EditUseCaseInterface;
 use SongType\Application\UseCase\Get\GetUseCaseInterface;
 use SongType\Application\UseCase\List\ListUseCaseInterface;
+use SongType\DebugInfrastructures\FileSongTypeRepository;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use SongType\Infrastructures\Repositories\FileSongTypeRepository;
 use SongType\Infrastructures\SongTypeFactory;
 
 class SongTypeServiceProvider extends EnvServiceProvider

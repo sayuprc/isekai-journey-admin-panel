@@ -10,7 +10,7 @@ use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

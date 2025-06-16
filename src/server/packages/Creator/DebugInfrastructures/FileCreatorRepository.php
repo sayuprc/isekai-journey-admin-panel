@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Creator\Infrastructures\Repositories;
+namespace Creator\DebugInfrastructures;
 
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 

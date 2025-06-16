@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JourneyLogLinkType\Domain\Repositories;
-
-use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
-use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
+namespace JourneyLogLinkType\Domain\Models;
 
 interface JourneyLogLinkTypeRepositoryInterface
 {

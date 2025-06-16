@@ -7,7 +7,7 @@ namespace Song\Application\Interactors;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
-use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Domain\Models\SongRepositoryInterface;
 
 class CreateInteractor implements CreateUseCaseInterface
 {

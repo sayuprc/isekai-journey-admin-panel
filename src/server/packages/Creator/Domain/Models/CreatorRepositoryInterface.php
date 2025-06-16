@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Creator\Domain\Repositories;
-
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
+namespace Creator\Domain\Models;
 
 interface CreatorRepositoryInterface
 {

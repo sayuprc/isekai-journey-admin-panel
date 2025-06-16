@@ -8,7 +8,7 @@ use JourneyLogLinkType\Application\Interactors\DeleteInteractor;
 use JourneyLogLinkType\Application\UseCase\Delete\DeleteInputData;
 use JourneyLogLinkType\Application\UseCase\Delete\DeleteUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
-use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
+use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;

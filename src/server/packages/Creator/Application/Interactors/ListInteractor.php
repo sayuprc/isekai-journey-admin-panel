@@ -6,7 +6,7 @@ namespace Creator\Application\Interactors;
 
 use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 
 class ListInteractor implements ListUseCaseInterface
 {

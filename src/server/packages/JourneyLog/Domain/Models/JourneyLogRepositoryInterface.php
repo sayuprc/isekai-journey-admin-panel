@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JourneyLog\Domain\Repositories;
-
-use JourneyLog\Domain\Models\JourneyLog;
-use JourneyLog\Domain\Models\JourneyLogId;
+namespace JourneyLog\Domain\Models;
 
 interface JourneyLogRepositoryInterface
 {

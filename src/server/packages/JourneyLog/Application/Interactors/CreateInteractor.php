@@ -7,7 +7,7 @@ namespace JourneyLog\Application\Interactors;
 use JourneyLog\Application\UseCase\Create\CreateInputData;
 use JourneyLog\Application\UseCase\Create\CreateUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
 class CreateInteractor implements CreateUseCaseInterface
 {

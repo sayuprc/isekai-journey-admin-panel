@@ -7,7 +7,7 @@ namespace Tests\Feature\Web\Creator;
 use App\Models\User;
 use Auth\Route\AuthRouteMap;
 use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Repositories\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;

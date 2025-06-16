@@ -7,7 +7,7 @@ namespace JourneyLog\Application\Interactors;
 use JourneyLog\Application\UseCase\Delete\DeleteInputData;
 use JourneyLog\Application\UseCase\Delete\DeleteUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogId;
-use JourneyLog\Domain\Repositories\JourneyLogRepositoryInterface;
+use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
 class DeleteInteractor implements DeleteUseCaseInterface
 {

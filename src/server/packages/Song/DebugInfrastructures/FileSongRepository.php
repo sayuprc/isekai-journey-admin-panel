@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Song\Infrastructures\Repositories;
+namespace Song\DebugInfrastructures;
 
 use Song\Domain\Models\Song;
-use Song\Domain\Repositories\SongRepositoryInterface;
+use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
