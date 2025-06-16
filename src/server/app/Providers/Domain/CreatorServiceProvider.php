@@ -40,21 +40,18 @@ class CreatorServiceProvider extends EnvServiceProvider
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(CreateRequest::class);
-            assert($request instanceof CreateRequest);
 
             return $this->getMapper()->map(CreateInputData::class, $request->validated());
         });
 
         $this->app->bind(EditInputData::class, function (): EditInputData {
             $request = $this->app->make(EditRequest::class);
-            assert($request instanceof EditRequest);
 
             return $this->getMapper()->map(EditInputData::class, $request->validated());
         });
 
         $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
             $request = $this->app->make(DeleteRequest::class);
-            assert($request instanceof DeleteRequest);
 
             return $this->getMapper()->map(DeleteInputData::class, $request->validated());
         });

@@ -17,7 +17,6 @@ class AuthServiceProvider extends EnvServiceProvider
 
         $this->app->bind(LoginInputData::class, function (): LoginInputData {
             $request = $this->app->make(LoginRequest::class);
-            assert($request instanceof LoginRequest);
 
             return $this->getMapper()->map(LoginInputData::class, $request->validated());
         });
