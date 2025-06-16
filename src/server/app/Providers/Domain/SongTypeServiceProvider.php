@@ -7,23 +7,23 @@ namespace App\Providers\Domain;
 use App\Http\Requests\Web\SongType\CreateRequest;
 use App\Http\Requests\Web\SongType\DeleteRequest;
 use App\Http\Requests\Web\SongType\EditRequest;
-use SongType\Application\Create\CreateInteractor;
-use SongType\Application\Delete\DeleteInteractor;
-use SongType\Application\Edit\EditInteractor;
-use SongType\Application\Get\GetInteractor;
-use SongType\Application\List\ListInteractor;
+use SongType\Application\Interactors\CreateInteractor;
+use SongType\Application\Interactors\DeleteInteractor;
+use SongType\Application\Interactors\EditInteractor;
+use SongType\Application\Interactors\GetInteractor;
+use SongType\Application\Interactors\ListInteractor;
+use SongType\Application\UseCase\Create\CreateInputData;
+use SongType\Application\UseCase\Create\CreateUseCaseInterface;
+use SongType\Application\UseCase\Delete\DeleteInputData;
+use SongType\Application\UseCase\Delete\DeleteUseCaseInterface;
+use SongType\Application\UseCase\Edit\EditInputData;
+use SongType\Application\UseCase\Edit\EditUseCaseInterface;
+use SongType\Application\UseCase\Get\GetUseCaseInterface;
+use SongType\Application\UseCase\List\ListUseCaseInterface;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Infrastructures\Factories\SongTypeFactory;
 use SongType\Infrastructures\Repositories\FileSongTypeRepository;
-use SongType\UseCases\Create\CreateInputData;
-use SongType\UseCases\Create\CreateUseCaseInterface;
-use SongType\UseCases\Delete\DeleteInputData;
-use SongType\UseCases\Delete\DeleteUseCaseInterface;
-use SongType\UseCases\Edit\EditInputData;
-use SongType\UseCases\Edit\EditUseCaseInterface;
-use SongType\UseCases\Get\GetUseCaseInterface;
-use SongType\UseCases\List\ListUseCaseInterface;
 
 class SongTypeServiceProvider extends EnvServiceProvider
 {

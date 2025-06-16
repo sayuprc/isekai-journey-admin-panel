@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Web\JourneyLogLinkType;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypeListPresenter;
 use Illuminate\Contracts\View\View;
-use JourneyLogLinkType\UseCases\List\ListUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\List\ListUseCaseInterface;
 
 class ListJourneyLogLinkTypeController extends Controller
 {

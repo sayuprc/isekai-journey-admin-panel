@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\Creator;
 
 use App\Http\ViewModels\Web\Creator\CreatorListView;
+use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Domain\Models\Creator;
-use Creator\UseCases\List\ListOutputData;
 
 class CreatorListPresenter
 {

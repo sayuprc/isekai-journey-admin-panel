@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Web\SongType;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use SongType\Application\UseCase\Create\CreateInputData;
+use SongType\Application\UseCase\Create\CreateUseCaseInterface;
 use SongType\Route\SongTypeRouteMap;
-use SongType\UseCases\Create\CreateInputData;
-use SongType\UseCases\Create\CreateUseCaseInterface;
 
 class CreateSongTypeController extends Controller
 {

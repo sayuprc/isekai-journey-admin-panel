@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLogLinkType\Application\UseCase\Create\CreateInputData;
+use JourneyLogLinkType\Application\UseCase\Create\CreateUseCaseInterface;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
-use JourneyLogLinkType\UseCases\Create\CreateInputData;
-use JourneyLogLinkType\UseCases\Create\CreateUseCaseInterface;
 
 class CreateJourneyLogLinkTypeController extends Controller
 {

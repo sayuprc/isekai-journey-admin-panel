@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\Creator;
 
 use App\Http\ViewModels\Web\Creator\CreatorView;
-use Creator\UseCases\Get\GetOutputData;
+use Creator\Application\UseCase\Get\GetOutputData;
 
 class CreatorPresenter
 {

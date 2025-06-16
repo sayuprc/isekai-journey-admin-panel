@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\SongType;
 
 use App\Http\ViewModels\Web\SongType\SongTypeView;
-use SongType\UseCases\Get\GetOutputData;
+use SongType\Application\UseCase\Get\GetOutputData;
 
 class SongTypePresenter
 {

@@ -7,23 +7,23 @@ namespace App\Providers\Domain;
 use App\Http\Requests\Web\Creator\CreateRequest;
 use App\Http\Requests\Web\Creator\DeleteRequest;
 use App\Http\Requests\Web\Creator\EditRequest;
-use Creator\Application\Create\CreateInteractor;
-use Creator\Application\Delete\DeleteInteractor;
-use Creator\Application\Edit\EditInteractor;
-use Creator\Application\Get\GetInteractor;
-use Creator\Application\List\ListInteractor;
+use Creator\Application\Interactors\CreateInteractor;
+use Creator\Application\Interactors\DeleteInteractor;
+use Creator\Application\Interactors\EditInteractor;
+use Creator\Application\Interactors\GetInteractor;
+use Creator\Application\Interactors\ListInteractor;
+use Creator\Application\UseCase\Create\CreateInputData;
+use Creator\Application\UseCase\Create\CreateUseCaseInterface;
+use Creator\Application\UseCase\Delete\DeleteInputData;
+use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
+use Creator\Application\UseCase\Edit\EditInputData;
+use Creator\Application\UseCase\Edit\EditUseCaseInterface;
+use Creator\Application\UseCase\Get\GetUseCaseInterface;
+use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
 use Creator\Infrastructures\Factories\CreatorFactory;
 use Creator\Infrastructures\Repositories\FileCreatorRepository;
-use Creator\UseCases\Create\CreateInputData;
-use Creator\UseCases\Create\CreateUseCaseInterface;
-use Creator\UseCases\Delete\DeleteInputData;
-use Creator\UseCases\Delete\DeleteUseCaseInterface;
-use Creator\UseCases\Edit\EditInputData;
-use Creator\UseCases\Edit\EditUseCaseInterface;
-use Creator\UseCases\Get\GetUseCaseInterface;
-use Creator\UseCases\List\ListUseCaseInterface;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {

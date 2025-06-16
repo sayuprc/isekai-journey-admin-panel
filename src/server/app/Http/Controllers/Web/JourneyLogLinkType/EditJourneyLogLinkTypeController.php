@@ -9,11 +9,11 @@ use App\Http\Presenters\Web\JourneyLogLinkType\JourneyLogLinkTypePresenter;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use JourneyLogLinkType\Application\UseCase\Edit\EditInputData;
+use JourneyLogLinkType\Application\UseCase\Edit\EditUseCaseInterface;
+use JourneyLogLinkType\Application\UseCase\Get\GetInputData;
+use JourneyLogLinkType\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
-use JourneyLogLinkType\UseCases\Edit\EditInputData;
-use JourneyLogLinkType\UseCases\Edit\EditUseCaseInterface;
-use JourneyLogLinkType\UseCases\Get\GetInputData;
-use JourneyLogLinkType\UseCases\Get\GetUseCaseInterface;
 
 class EditJourneyLogLinkTypeController extends Controller
 {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use Auth\Application\UseCase\Login\LoginInputData;
+use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\Route\AuthRouteMap;
-use Auth\UseCases\Login\LoginInputData;
-use Auth\UseCases\Login\LoginUseCaseInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;

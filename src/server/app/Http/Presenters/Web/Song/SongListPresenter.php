@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Web\Song;
 
 use App\Http\ViewModels\Web\Song\SongListView;
+use Song\Application\UseCase\List\ListOutputData;
 use Song\Domain\Models\Song;
-use Song\UseCases\List\ListOutputData;
 
 class SongListPresenter
 {
