@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Song\Application\Interactors;
 
 use Creator\Domain\Models\CreatorId;
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,6 +16,7 @@ use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\ReleasedOn;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -67,6 +69,7 @@ class ListInteractorTest extends TestCase
                     new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Title('楽曲A'),
                     new Description('楽曲Aの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-12')),
                     new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
                     new OrderNo(1),
                     [
@@ -92,6 +95,7 @@ class ListInteractorTest extends TestCase
                     new SongId('00000000-0000-0000-0000-000000000000'),
                     new Title('楽曲B'),
                     new Description('楽曲Bの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-19')),
                     new SongTypeId('11111111-1111-1111-1111-111111111111'),
                     new OrderNo(2),
                     [
@@ -117,6 +121,7 @@ class ListInteractorTest extends TestCase
                     new SongId('66666666-6666-6666-6666-666666666666'),
                     new Title('楽曲C'),
                     new Description('楽曲Cの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-26')),
                     new SongTypeId('77777777-7777-7777-7777-777777777777'),
                     new OrderNo(3),
                     [
@@ -150,6 +155,7 @@ class ListInteractorTest extends TestCase
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->songs[0]->songId->value);
         $this->assertSame('楽曲A', $response->songs[0]->title->value);
         $this->assertSame('楽曲Aの説明', $response->songs[0]->description->value);
+        $this->assertSame('2019-12-12', $response->songs[0]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB', $response->songs[0]->songTypeId->value);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->songs[0]->lyricists[0]->creatorId->value);
@@ -165,6 +171,7 @@ class ListInteractorTest extends TestCase
         $this->assertSame('00000000-0000-0000-0000-000000000000', $response->songs[1]->songId->value);
         $this->assertSame('楽曲B', $response->songs[1]->title->value);
         $this->assertSame('楽曲Bの説明', $response->songs[1]->description->value);
+        $this->assertSame('2019-12-19', $response->songs[1]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('11111111-1111-1111-1111-111111111111', $response->songs[1]->songTypeId->value);
         $this->assertCount(1, $response->songs[1]->lyricists);
         $this->assertSame('22222222-2222-2222-2222-222222222222', $response->songs[1]->lyricists[0]->creatorId->value);
@@ -180,6 +187,7 @@ class ListInteractorTest extends TestCase
         $this->assertSame('66666666-6666-6666-6666-666666666666', $response->songs[2]->songId->value);
         $this->assertSame('楽曲C', $response->songs[2]->title->value);
         $this->assertSame('楽曲Cの説明', $response->songs[2]->description->value);
+        $this->assertSame('2019-12-26', $response->songs[2]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('77777777-7777-7777-7777-777777777777', $response->songs[2]->songTypeId->value);
         $this->assertCount(1, $response->songs[2]->lyricists);
         $this->assertSame('88888888-8888-8888-8888-888888888888', $response->songs[2]->lyricists[0]->creatorId->value);

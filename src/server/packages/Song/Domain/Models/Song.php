@@ -21,6 +21,7 @@ class Song
         public readonly SongId $songId,
         public readonly Title $title,
         public readonly Description $description,
+        public readonly ReleasedOn $releasedOn,
         public readonly SongTypeId $songTypeId,
         public readonly OrderNo $orderNo,
         public readonly array $lyricists,

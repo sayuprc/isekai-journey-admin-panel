@@ -25,6 +25,10 @@ class CreateRequest extends FormRequest
                 'required',
                 'string',
             ],
+            'released_on' => [
+                'required',
+                'date_format:Y-m-d',
+            ],
             'song_type_id' => [
                 'required',
                 'string',

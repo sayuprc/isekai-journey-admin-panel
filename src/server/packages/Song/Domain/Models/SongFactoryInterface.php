@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Models;
 
+use DateType\ImmutableDate;
 use Song\Domain\Dtos\CreateCreatorData;
 
 interface SongFactoryInterface
@@ -17,6 +18,7 @@ interface SongFactoryInterface
     public function create(
         string $title,
         string $description,
+        ImmutableDate $releasedOn,
         string $songTypeId,
         int $orderNo,
         array $lyricists,

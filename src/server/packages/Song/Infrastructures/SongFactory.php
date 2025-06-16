@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Song\Infrastructures;
 
 use Creator\Domain\Models\CreatorId;
+use DateType\ImmutableDate;
 use Song\Domain\Dtos\CreateCreatorData;
 use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\ReleasedOn;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
@@ -33,6 +35,7 @@ class SongFactory implements SongFactoryInterface
     public function create(
         string $title,
         string $description,
+        ImmutableDate $releasedOn,
         string $songTypeId,
         int $orderNo,
         array $lyricists,
@@ -43,6 +46,7 @@ class SongFactory implements SongFactoryInterface
             new SongId($this->uuid->generate()),
             new Title($title),
             new Description($description),
+            new ReleasedOn($releasedOn),
             new SongTypeId($songTypeId),
             new OrderNo($orderNo),
             array_map(

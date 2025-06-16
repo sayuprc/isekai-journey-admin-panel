@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Song\Application\Interactors;
 
 use Creator\Domain\Models\CreatorId;
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,6 +17,7 @@ use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\ReleasedOn;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
@@ -56,6 +58,7 @@ class CreateInteractorTest extends TestCase
             ->with(
                 'title',
                 'description',
+                Mockery::on(fn (ImmutableDate $arg) => $arg->format('Y-m-d') === '2019-12-12'),
                 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
                 1,
                 Mockery::on(
@@ -82,6 +85,7 @@ class CreateInteractorTest extends TestCase
                     new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Title('title'),
                     new Description('description'),
+                    new ReleasedOn(new ImmutableDate('2019-12-12')),
                     new SongTypeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                     new OrderNo(1),
                     [
@@ -111,6 +115,7 @@ class CreateInteractorTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->title->value === 'title'
                     && $arg->description->value === 'description'
+                    && $arg->releasedOn->value->format('Y-m-d') === '2019-12-12'
                     && $arg->songTypeId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                     && $arg->orderNo->value === 1
                     && count($arg->lyricists) === 1
@@ -128,6 +133,7 @@ class CreateInteractorTest extends TestCase
         $this->interactor->handle(new CreateInputData(
             'title',
             'description',
+            new ImmutableDate('2019-12-12'),
             'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
             1,
             [

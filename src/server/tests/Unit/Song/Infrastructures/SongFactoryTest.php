@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Infrastructures;
 
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,6 +38,7 @@ class SongFactoryTest extends TestCase
         $song = $this->factory->create(
             'title',
             'description',
+            new ImmutableDate('2019-12-12'),
             'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
             1,
             [
@@ -53,6 +55,7 @@ class SongFactoryTest extends TestCase
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $song->songId->value);
         $this->assertSame('title', $song->title->value);
         $this->assertSame('description', $song->description->value);
+        $this->assertSame('2019-12-12', $song->releasedOn->value->format('Y-m-d'));
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->songTypeId->value);
         $this->assertSame(1, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
