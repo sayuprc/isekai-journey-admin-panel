@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Song\Application\Interactors;
 
 use Creator\Domain\Models\CreatorId;
-use DateTime;
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -103,7 +103,7 @@ class ListInteractorTest extends TestCase
                             new ArchiveName('MV'),
                             new VideoUrl('https://example.com'),
                             new ThumbnailUrl('https://example.com'),
-                            new ArchivedOn(new DateTime('2019-12-09')),
+                            new ArchivedOn(new ImmutableDate('2019-12-09')),
                             new OrderNo(1),
                         ),
                         new YouTubeArchive(
@@ -111,7 +111,7 @@ class ListInteractorTest extends TestCase
                             new ArchiveName('LIVE'),
                             new VideoUrl('https://example.com'),
                             new ThumbnailUrl('https://example.com'),
-                            new ArchivedOn(new DateTime('2019-12-10')),
+                            new ArchivedOn(new ImmutableDate('2019-12-10')),
                             new OrderNo(2),
                         ),
                     ],
@@ -145,7 +145,7 @@ class ListInteractorTest extends TestCase
                             new ArchiveId('55555555-5555-5555-5555-555555555555'),
                             new ArchiveName('Tweet'),
                             new PostUrl('https://example.com'),
-                            new ArchivedOn(new DateTime('2019-12-11')),
+                            new ArchivedOn(new ImmutableDate('2019-12-11')),
                             new OrderNo(1),
                         ),
                     ],
@@ -177,7 +177,7 @@ class ListInteractorTest extends TestCase
                     [
                         new NonLinkArchive(
                             new ArchiveId('12121212-1212-1212-1212-121212121212'),
-                            new ArchivedOn(new DateTime('2019-12-12')),
+                            new ArchivedOn(new ImmutableDate('2019-12-12')),
                             new OrderNo(1),
                         ),
                     ],

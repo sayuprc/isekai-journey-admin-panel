@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Application\UseCase\Edit;
 
-use DateTimeInterface;
+use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 
 class EditInputData
@@ -16,8 +16,8 @@ class EditInputData
     public function __construct(
         public readonly string $journeyLogId,
         public readonly string $story,
-        public readonly DateTimeInterface $fromOn,
-        public readonly DateTimeInterface $toOn,
+        public readonly ImmutableDate $fromOn,
+        public readonly ImmutableDate $toOn,
         public readonly int $orderNo,
         public readonly array $journeyLogLinks,
     ) {

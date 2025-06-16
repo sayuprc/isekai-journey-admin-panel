@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Song\Application\Interactors;
 
 use Creator\Domain\Models\CreatorId;
+use DateType\ImmutableDate;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Safe\DateTimeImmutable;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
@@ -138,19 +138,19 @@ class CreateInteractorTest extends TestCase
                             new ArchiveName('YouTube'),
                             new VideoUrl('https://example.com'),
                             new ThumbnailUrl('https://example.com/thumbnail.jpg'),
-                            new ArchivedOn(new DateTimeImmutable('2024-08-07')),
+                            new ArchivedOn(new ImmutableDate('2024-08-07')),
                             new OrderNo(1),
                         ),
                         new TwitterArchive(
                             new ArchiveId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                             new ArchiveName('Twitter'),
                             new PostUrl('https://example.com'),
-                            new ArchivedOn(new DateTimeImmutable('2024-08-07')),
+                            new ArchivedOn(new ImmutableDate('2024-08-07')),
                             new OrderNo(2),
                         ),
                         new NonLinkArchive(
                             new ArchiveId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                            new ArchivedOn(new DateTimeImmutable('2024-08-07')),
+                            new ArchivedOn(new ImmutableDate('2024-08-07')),
                             new OrderNo(3),
                         ),
                     ]
@@ -214,17 +214,17 @@ class CreateInteractorTest extends TestCase
                     'YouTube',
                     'https://example.com',
                     'https://example.com/thumbnail.jpg',
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     1,
                 ),
                 new CreateTwitterArchiveData(
                     'Tweet',
                     'https://example.com',
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     2
                 ),
                 new CreateNonLinkArchiveData(
-                    new DateTimeImmutable('2024-08-07'),
+                    new ImmutableDate('2024-08-07'),
                     3
                 ),
             ],

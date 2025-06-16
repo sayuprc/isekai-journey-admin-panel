@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f3538cd1b7ecbff176c65a2f8f70d10",
+    "content-hash": "f6163f137e59e9c39df810131eca64f9",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -3569,6 +3569,51 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "sayuprc/date-type",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sayuprc/date-type.git",
+                "reference": "5aba8b4e86a6b97f873f89cbbd96aee6a971815b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sayuprc/date-type/zipball/5aba8b4e86a6b97f873f89cbbd96aee6a971815b",
+                "reference": "5aba8b4e86a6b97f873f89cbbd96aee6a971815b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^12.1",
+                "symplify/easy-coding-standard": "^12.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DateType\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "sayuprc"
+                }
+            ],
+            "description": "A simple Date type",
+            "support": {
+                "issues": "https://github.com/sayuprc/date-type/issues",
+                "source": "https://github.com/sayuprc/date-type/tree/0.2.0"
+            },
+            "time": "2025-04-27T14:57:36+00:00"
         },
         {
             "name": "sayuprc/result-type",

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLog\Application\Interactors;
 
-use DateTimeImmutable;
-use DateTimeInterface;
+use DateType\ImmutableDate;
 use JourneyLog\Application\Interactors\EditInteractor;
 use JourneyLog\Application\UseCase\Edit\EditInputData;
 use JourneyLog\Application\UseCase\Edit\EditUseCaseInterface;
@@ -60,15 +59,15 @@ class EditInteractorTest extends TestCase
             ->with(
                 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
                 'story',
-                Mockery::on(fn (DateTimeInterface $arg): bool => $arg->format('Y-m-d') === '2019-12-08'),
-                Mockery::on(fn (DateTimeInterface $arg): bool => $arg->format('Y-m-d') === '2019-12-09'),
+                Mockery::on(fn (ImmutableDate $arg): bool => $arg->format('Y-m-d') === '2019-12-08'),
+                Mockery::on(fn (ImmutableDate $arg): bool => $arg->format('Y-m-d') === '2019-12-09'),
                 1,
                 [],
             )
             ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
-                new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
+                new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
                 new OrderNo(1),
                 []
             ))
@@ -88,8 +87,8 @@ class EditInteractorTest extends TestCase
         $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             [],
         ));
@@ -102,8 +101,8 @@ class EditInteractorTest extends TestCase
             ->with(
                 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
                 'story',
-                Mockery::on(fn (DateTimeInterface $arg): bool => $arg->format('Y-m-d') === '2019-12-08'),
-                Mockery::on(fn (DateTimeInterface $arg): bool => $arg->format('Y-m-d') === '2019-12-09'),
+                Mockery::on(fn (ImmutableDate $arg): bool => $arg->format('Y-m-d') === '2019-12-08'),
+                Mockery::on(fn (ImmutableDate $arg): bool => $arg->format('Y-m-d') === '2019-12-09'),
                 1,
                 Mockery::on(
                     fn (array $args): bool => count($args) === 2
@@ -122,7 +121,7 @@ class EditInteractorTest extends TestCase
             ->andReturn(new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
-                new Period(new FromOn(new DateTimeImmutable('2019-12-08')), new ToOn(new DateTimeImmutable('2019-12-09'))),
+                new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
                 new OrderNo(1),
                 [
                     new JourneyLogLink(
@@ -167,8 +166,8 @@ class EditInteractorTest extends TestCase
         $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             [
                 new CreateJourneyLogLinkData(

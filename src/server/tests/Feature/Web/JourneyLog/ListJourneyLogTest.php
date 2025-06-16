@@ -6,7 +6,7 @@ namespace Tests\Feature\Web\JourneyLog;
 
 use App\Models\User;
 use Auth\Route\AuthRouteMap;
-use DateTimeImmutable;
+use DateType\ImmutableDate;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use JourneyLog\Domain\Models\FromOn;
@@ -67,14 +67,14 @@ class ListJourneyLogTest extends TestCase
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡 A'),
-                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
+                    new Period(new FromOn(new ImmutableDate()), new ToOn(new ImmutableDate())),
                     new OrderNo(1),
                     [],
                 ),
                 new JourneyLog(
                     new JourneyLogId($uuid),
                     new Story('軌跡 B'),
-                    new Period(new FromOn(new DateTimeImmutable()), new ToOn(new DateTimeImmutable())),
+                    new Period(new FromOn(new ImmutableDate()), new ToOn(new ImmutableDate())),
                     new OrderNo(2),
                     [
                         new JourneyLogLink(

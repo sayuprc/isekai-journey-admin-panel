@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLog\Infrastructures\Factories;
 
-use DateTimeImmutable;
+use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 use JourneyLog\Domain\Dtos\ReconstituteJourneyLogLinkData;
 use JourneyLog\Infrastructures\Factories\JourneyLogFactory;
@@ -38,8 +38,8 @@ class JourneyLogFactoryTest extends TestCase
 
         $journeyLog = $this->factory->create(
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             []
         );
@@ -61,8 +61,8 @@ class JourneyLogFactoryTest extends TestCase
 
         $journeyLog = $this->factory->create(
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             [
                 new CreateJourneyLogLinkData(
@@ -104,8 +104,8 @@ class JourneyLogFactoryTest extends TestCase
         $journeyLog = $this->factory->createForUpdate(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             []
         );
@@ -128,8 +128,8 @@ class JourneyLogFactoryTest extends TestCase
         $journeyLog = $this->factory->createForUpdate(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             [
                 new CreateJourneyLogLinkData(
@@ -171,8 +171,8 @@ class JourneyLogFactoryTest extends TestCase
         $journeyLog = $this->factory->reconstitute(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             []
         );
@@ -191,8 +191,8 @@ class JourneyLogFactoryTest extends TestCase
         $journeyLog = $this->factory->reconstitute(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'story',
-            new DateTimeImmutable('2019-12-08'),
-            new DateTimeImmutable('2019-12-09'),
+            new ImmutableDate('2019-12-08'),
+            new ImmutableDate('2019-12-09'),
             1,
             [
                 new ReconstituteJourneyLogLinkData(

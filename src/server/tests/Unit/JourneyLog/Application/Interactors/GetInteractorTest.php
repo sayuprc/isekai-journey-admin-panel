@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLog\Application\Interactors;
 
-use DateTime;
+use DateType\ImmutableDate;
 use JourneyLog\Application\Interactors\GetInteractor;
 use JourneyLog\Application\UseCase\Get\GetInputData;
 use JourneyLog\Application\UseCase\Get\GetOutputData;
@@ -57,7 +57,7 @@ class GetInteractorTest extends TestCase
             ->andReturn(new JourneyLog(
                 new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                 new Story('ストーリー'),
-                new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-08'))),
                 new OrderNo(1),
                 []
             ))
@@ -93,7 +93,7 @@ class GetInteractorTest extends TestCase
             ->andReturn(new JourneyLog(
                 new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                 new Story('ストーリー'),
-                new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-08'))),
                 new OrderNo(1),
                 [
                     new JourneyLogLink(

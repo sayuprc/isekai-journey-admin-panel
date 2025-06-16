@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Models;
 
-use DateTimeInterface;
+use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 use JourneyLog\Domain\Dtos\ReconstituteJourneyLogLinkData;
 
@@ -16,8 +16,8 @@ interface JourneyLogFactoryInterface
      */
     public function create(
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog;
@@ -29,8 +29,8 @@ interface JourneyLogFactoryInterface
     public function createForUpdate(
         string $journeyLogId,
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog;
@@ -42,8 +42,8 @@ interface JourneyLogFactoryInterface
     public function reconstitute(
         string $journeyLogId,
         string $story,
-        DateTimeInterface $fromOn,
-        DateTimeInterface $toOn,
+        ImmutableDate $fromOn,
+        ImmutableDate $toOn,
         int $orderNo,
         array $journeyLogLinks
     ): JourneyLog;

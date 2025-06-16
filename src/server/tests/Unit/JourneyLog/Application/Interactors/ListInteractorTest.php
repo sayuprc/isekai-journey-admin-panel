@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLog\Application\Interactors;
 
-use DateTime;
+use DateType\ImmutableDate;
 use JourneyLog\Application\Interactors\ListInteractor;
 use JourneyLog\Application\UseCase\List\ListOutputData;
 use JourneyLog\Application\UseCase\List\ListUseCaseInterface;
@@ -69,14 +69,14 @@ class ListInteractorTest extends TestCase
                 new JourneyLog(
                     new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Story('ストーリー1'),
-                    new Period(new FromOn(new DateTime('2019-12-08')), new ToOn(new DateTime('2019-12-08'))),
+                    new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-08'))),
                     new OrderNo(1),
                     []
                 ),
                 new JourneyLog(
                     new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                     new Story('ストーリー2'),
-                    new Period(new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09'))),
+                    new Period(new FromOn(new ImmutableDate('2019-12-09')), new ToOn(new ImmutableDate('2019-12-09'))),
                     new OrderNo(2),
                     [
                         new JourneyLogLink(

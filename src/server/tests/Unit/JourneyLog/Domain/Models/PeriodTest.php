@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\JourneyLog\Domain\Models;
 
-use DateTime;
+use DateType\ImmutableDate;
 use JourneyLog\Domain\Models\FromOn;
 use JourneyLog\Domain\Models\Period;
 use JourneyLog\Domain\Models\ToOn;
@@ -28,9 +28,9 @@ class PeriodTest extends TestCase
     public static function provideProperlyStoresValue(): array
     {
         return [
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-09'))],
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-10'))],
-            [new FromOn(new DateTime('2019-12-09')), new ToOn(new DateTime('2019-12-11'))],
+            [new FromOn(new ImmutableDate('2019-12-09')), new ToOn(new ImmutableDate('2019-12-09'))],
+            [new FromOn(new ImmutableDate('2019-12-09')), new ToOn(new ImmutableDate('2019-12-10'))],
+            [new FromOn(new ImmutableDate('2019-12-09')), new ToOn(new ImmutableDate('2019-12-11'))],
         ];
     }
 
@@ -38,8 +38,8 @@ class PeriodTest extends TestCase
     public function isSingleDay(): void
     {
         $instance = new Period(
-            new FromOn(new DateTime('2019-12-09')),
-            new ToOn(new DateTime('2019-12-09'))
+            new FromOn(new ImmutableDate('2019-12-09')),
+            new ToOn(new ImmutableDate('2019-12-09'))
         );
 
         $this->assertTrue($instance->isSingleDay());
@@ -49,8 +49,8 @@ class PeriodTest extends TestCase
     public function isNotSingleDay(): void
     {
         $instance = new Period(
-            new FromOn(new DateTime('2019-12-09')),
-            new ToOn(new DateTime('2019-12-10'))
+            new FromOn(new ImmutableDate('2019-12-09')),
+            new ToOn(new ImmutableDate('2019-12-10'))
         );
 
         $this->assertFalse($instance->isSingleDay());
@@ -63,8 +63,8 @@ class PeriodTest extends TestCase
         $this->expectExceptionMessage('fromOn needs to be before toOn');
 
         new Period(
-            new FromOn(new DateTime('2019-12-09')),
-            new ToOn(new DateTime('2019-12-08')),
+            new FromOn(new ImmutableDate('2019-12-09')),
+            new ToOn(new ImmutableDate('2019-12-08')),
         );
     }
 }
