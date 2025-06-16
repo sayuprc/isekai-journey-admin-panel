@@ -110,6 +110,8 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer::class,
         \PhpCsFixer\Fixer\Whitespace\TypeDeclarationSpacesFixer::class,
         \PhpCsFixer\Fixer\Whitespace\TypesSpacesFixer::class,
+
+        \PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\LanguageConstructSpacingSniff::class,
     ])
     ->withConfiguredRule(\PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer::class, [
         'ensure_single_space' => true,
