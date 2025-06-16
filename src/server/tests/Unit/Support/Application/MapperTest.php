@@ -110,10 +110,7 @@ class MapperTest extends TestCase
 
     private function getMapper(): Mapper
     {
-        $mapper = $this->app->get(Mapper::class);
-        assert($mapper instanceof MapperInterface);
-
-        return $mapper;
+        return $this->app->get(Mapper::class);
     }
 }
 

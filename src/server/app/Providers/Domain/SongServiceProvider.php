@@ -27,7 +27,6 @@ class SongServiceProvider extends EnvServiceProvider
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(CreateRequest::class);
-            assert($request instanceof CreateRequest);
 
             return $this->getMapper()->map(CreateInputData::class, $request->validated());
         });
