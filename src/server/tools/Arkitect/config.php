@@ -62,6 +62,7 @@ return [
         SongComponent::UseCase,
         [
             SongComponent::Domain,
+            LibraryComponent::DateType,
         ]
     ),
 

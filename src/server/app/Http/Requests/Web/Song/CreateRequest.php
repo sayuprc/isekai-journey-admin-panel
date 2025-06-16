@@ -6,7 +6,6 @@ namespace App\Http\Requests\Web\Song;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
-use Song\Domain\Models\Archives\ArchiveType;
 
 class CreateRequest extends FormRequest
 {
@@ -25,6 +24,10 @@ class CreateRequest extends FormRequest
             'description' => [
                 'required',
                 'string',
+            ],
+            'released_on' => [
+                'required',
+                'date_format:Y-m-d',
             ],
             'song_type_id' => [
                 'required',
@@ -55,34 +58,6 @@ class CreateRequest extends FormRequest
                 'string',
             ],
             'arrangers.*.order_no' => [
-                'required',
-                'numeric',
-            ],
-            'archives.*.archive_type' => [
-                'required',
-                new Enum(ArchiveType::class),
-            ],
-            'archives.*.archive_name' => [
-                'required_if:archive_type,' . ArchiveType::YouTube->value . ',' . ArchiveType::Twitter->value,
-                'string',
-            ],
-            'archives.*.video_url' => [
-                'required_if:archive_type,' . ArchiveType::YouTube->value,
-                'string',
-            ],
-            'archives.*.thumbnail_url' => [
-                'required_if:archive_type,' . ArchiveType::YouTube->value,
-                'string',
-            ],
-            'archives.*.post_url' => [
-                'required_if:archive_type,' . ArchiveType::Twitter->value,
-                'string',
-            ],
-            'archives.*.archived_on' => [
-                'required',
-                'date_format:Y-m-d',
-            ],
-            'archives.*.order_no' => [
                 'required',
                 'numeric',
             ],

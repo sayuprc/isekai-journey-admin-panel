@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Models\Archives;
+namespace Song\Domain\Models;
 
 use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
 
-class ArchivedOn extends ImmutableDateValueObject
+class ReleasedOn extends ImmutableDateValueObject
 {
 }

@@ -12,19 +12,11 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\ListInteractor;
 use Song\Application\UseCase\List\ListOutputData;
 use Song\Application\UseCase\List\ListUseCaseInterface;
-use Song\Domain\Models\Archives\ArchivedOn;
-use Song\Domain\Models\Archives\ArchiveId;
-use Song\Domain\Models\Archives\ArchiveName;
-use Song\Domain\Models\Archives\NonLink\NonLinkArchive;
-use Song\Domain\Models\Archives\Twitter\PostUrl;
-use Song\Domain\Models\Archives\Twitter\TwitterArchive;
-use Song\Domain\Models\Archives\YouTube\ThumbnailUrl;
-use Song\Domain\Models\Archives\YouTube\VideoUrl;
-use Song\Domain\Models\Archives\YouTube\YouTubeArchive;
 use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\ReleasedOn;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -77,6 +69,7 @@ class ListInteractorTest extends TestCase
                     new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Title('楽曲A'),
                     new Description('楽曲Aの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-12')),
                     new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
                     new OrderNo(1),
                     [
@@ -97,29 +90,12 @@ class ListInteractorTest extends TestCase
                             new OrderNo(1)
                         ),
                     ],
-                    [
-                        new YouTubeArchive(
-                            new ArchiveId('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'),
-                            new ArchiveName('MV'),
-                            new VideoUrl('https://example.com'),
-                            new ThumbnailUrl('https://example.com'),
-                            new ArchivedOn(new ImmutableDate('2019-12-09')),
-                            new OrderNo(1),
-                        ),
-                        new YouTubeArchive(
-                            new ArchiveId('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'),
-                            new ArchiveName('LIVE'),
-                            new VideoUrl('https://example.com'),
-                            new ThumbnailUrl('https://example.com'),
-                            new ArchivedOn(new ImmutableDate('2019-12-10')),
-                            new OrderNo(2),
-                        ),
-                    ],
                 ),
                 new Song(
                     new SongId('00000000-0000-0000-0000-000000000000'),
                     new Title('楽曲B'),
                     new Description('楽曲Bの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-19')),
                     new SongTypeId('11111111-1111-1111-1111-111111111111'),
                     new OrderNo(2),
                     [
@@ -140,20 +116,12 @@ class ListInteractorTest extends TestCase
                             new OrderNo(1)
                         ),
                     ],
-                    [
-                        new TwitterArchive(
-                            new ArchiveId('55555555-5555-5555-5555-555555555555'),
-                            new ArchiveName('Tweet'),
-                            new PostUrl('https://example.com'),
-                            new ArchivedOn(new ImmutableDate('2019-12-11')),
-                            new OrderNo(1),
-                        ),
-                    ],
                 ),
                 new Song(
                     new SongId('66666666-6666-6666-6666-666666666666'),
                     new Title('楽曲C'),
                     new Description('楽曲Cの説明'),
+                    new ReleasedOn(new ImmutableDate('2019-12-26')),
                     new SongTypeId('77777777-7777-7777-7777-777777777777'),
                     new OrderNo(3),
                     [
@@ -174,13 +142,6 @@ class ListInteractorTest extends TestCase
                             new OrderNo(1)
                         ),
                     ],
-                    [
-                        new NonLinkArchive(
-                            new ArchiveId('12121212-1212-1212-1212-121212121212'),
-                            new ArchivedOn(new ImmutableDate('2019-12-12')),
-                            new OrderNo(1),
-                        ),
-                    ],
                 ),
             ])
             ->once();
@@ -194,6 +155,7 @@ class ListInteractorTest extends TestCase
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->songs[0]->songId->value);
         $this->assertSame('楽曲A', $response->songs[0]->title->value);
         $this->assertSame('楽曲Aの説明', $response->songs[0]->description->value);
+        $this->assertSame('2019-12-12', $response->songs[0]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB', $response->songs[0]->songTypeId->value);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->songs[0]->lyricists[0]->creatorId->value);
@@ -204,28 +166,12 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[0]->arrangers);
         $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $response->songs[0]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[0]->arrangers[0]->orderNo->value);
-        $this->assertCount(2, $response->songs[0]->archives);
-        $youTubeArchive1 = $response->songs[0]->archives[0];
-        $this->assertInstanceOf(YouTubeArchive::class, $youTubeArchive1);
-        $this->assertSame('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', $youTubeArchive1->archiveId->value);
-        $this->assertSame('MV', $youTubeArchive1->archiveName->value);
-        $this->assertSame('https://example.com', $youTubeArchive1->videoUrl->value);
-        $this->assertSame('https://example.com', $youTubeArchive1->thumbnailUrl->value);
-        $this->assertSame('2019-12-09', $youTubeArchive1->archivedOn->value->format('Y-m-d'));
-        $this->assertSame(1, $youTubeArchive1->orderNo->value);
-        $youTubeArchive2 = $response->songs[0]->archives[1];
-        $this->assertInstanceOf(YouTubeArchive::class, $youTubeArchive2);
-        $this->assertSame('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', $youTubeArchive2->archiveId->value);
-        $this->assertSame('LIVE', $youTubeArchive2->archiveName->value);
-        $this->assertSame('https://example.com', $youTubeArchive2->videoUrl->value);
-        $this->assertSame('https://example.com', $youTubeArchive2->thumbnailUrl->value);
-        $this->assertSame('2019-12-10', $youTubeArchive2->archivedOn->value->format('Y-m-d'));
-        $this->assertSame(2, $youTubeArchive2->orderNo->value);
         $this->assertSame(1, $response->songs[0]->orderNo->value);
 
         $this->assertSame('00000000-0000-0000-0000-000000000000', $response->songs[1]->songId->value);
         $this->assertSame('楽曲B', $response->songs[1]->title->value);
         $this->assertSame('楽曲Bの説明', $response->songs[1]->description->value);
+        $this->assertSame('2019-12-19', $response->songs[1]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('11111111-1111-1111-1111-111111111111', $response->songs[1]->songTypeId->value);
         $this->assertCount(1, $response->songs[1]->lyricists);
         $this->assertSame('22222222-2222-2222-2222-222222222222', $response->songs[1]->lyricists[0]->creatorId->value);
@@ -236,19 +182,12 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[1]->arrangers);
         $this->assertSame('44444444-4444-4444-4444-444444444444', $response->songs[1]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[1]->arrangers[0]->orderNo->value);
-        $this->assertCount(1, $response->songs[1]->archives);
-        $twitterArchive = $response->songs[1]->archives[0];
-        $this->assertInstanceOf(TwitterArchive::class, $twitterArchive);
-        $this->assertSame('55555555-5555-5555-5555-555555555555', $twitterArchive->archiveId->value);
-        $this->assertSame('Tweet', $twitterArchive->archiveName->value);
-        $this->assertSame('https://example.com', $twitterArchive->postUrl->value);
-        $this->assertSame('2019-12-11', $twitterArchive->archivedOn->value->format('Y-m-d'));
-        $this->assertSame(1, $twitterArchive->orderNo->value);
         $this->assertSame(2, $response->songs[1]->orderNo->value);
 
         $this->assertSame('66666666-6666-6666-6666-666666666666', $response->songs[2]->songId->value);
         $this->assertSame('楽曲C', $response->songs[2]->title->value);
         $this->assertSame('楽曲Cの説明', $response->songs[2]->description->value);
+        $this->assertSame('2019-12-26', $response->songs[2]->releasedOn->value->format('Y-m-d'));
         $this->assertSame('77777777-7777-7777-7777-777777777777', $response->songs[2]->songTypeId->value);
         $this->assertCount(1, $response->songs[2]->lyricists);
         $this->assertSame('88888888-8888-8888-8888-888888888888', $response->songs[2]->lyricists[0]->creatorId->value);
@@ -259,12 +198,6 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[2]->arrangers);
         $this->assertSame('10101010-1010-1010-1010-101010101010', $response->songs[2]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[2]->arrangers[0]->orderNo->value);
-        $this->assertCount(1, $response->songs[2]->archives);
-        $nonLinkArchive = $response->songs[2]->archives[0];
-        $this->assertInstanceOf(NonLinkArchive::class, $nonLinkArchive);
-        $this->assertSame('12121212-1212-1212-1212-121212121212', $nonLinkArchive->archiveId->value);
-        $this->assertSame('2019-12-12', $nonLinkArchive->archivedOn->value->format('Y-m-d'));
-        $this->assertSame(1, $twitterArchive->orderNo->value);
         $this->assertSame(3, $response->songs[2]->orderNo->value);
     }
 }
