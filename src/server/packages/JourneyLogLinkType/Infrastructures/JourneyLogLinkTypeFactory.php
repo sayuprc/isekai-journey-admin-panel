@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JourneyLogLinkType\Infrastructures\Factories;
+namespace JourneyLogLinkType\Infrastructures;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;

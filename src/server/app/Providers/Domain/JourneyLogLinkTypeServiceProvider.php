@@ -22,7 +22,7 @@ use JourneyLogLinkType\Application\UseCase\Get\GetUseCaseInterface;
 use JourneyLogLinkType\Application\UseCase\List\ListUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Repositories\JourneyLogLinkTypeRepositoryInterface;
-use JourneyLogLinkType\Infrastructures\Factories\JourneyLogLinkTypeFactory;
+use JourneyLogLinkType\Infrastructures\JourneyLogLinkTypeFactory;
 use JourneyLogLinkType\Infrastructures\Repositories\FileJourneyLogLinkTypeRepository;
 
 class JourneyLogLinkTypeServiceProvider extends EnvServiceProvider

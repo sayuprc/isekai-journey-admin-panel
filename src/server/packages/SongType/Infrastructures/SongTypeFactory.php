@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SongType\Infrastructures\Factories;
+namespace SongType\Infrastructures;
 
 use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeFactoryInterface;

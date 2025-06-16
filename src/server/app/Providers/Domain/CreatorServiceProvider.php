@@ -22,7 +22,7 @@ use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Repositories\CreatorRepositoryInterface;
-use Creator\Infrastructures\Factories\CreatorFactory;
+use Creator\Infrastructures\CreatorFactory;
 use Creator\Infrastructures\Repositories\FileCreatorRepository;
 
 class CreatorServiceProvider extends EnvServiceProvider

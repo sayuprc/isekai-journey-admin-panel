@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Infrastructures\Factories;
+namespace Song\Infrastructures;
 
 use Creator\Domain\Models\CreatorId;
 use Song\Domain\Dtos\CreateCreatorData;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Creator\Infrastructures\Factories;
+namespace Tests\Unit\Creator\Infrastructures;
 
-use Creator\Infrastructures\Factories\CreatorFactory;
+use Creator\Infrastructures\CreatorFactory;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
