@@ -5,7 +5,7 @@
     "keywords": ["isekaijoucho"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-grpc": "*",
         "cuyz/valinor": "^1.14",
         "grpc/grpc": "^1.57",
