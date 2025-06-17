@@ -46,7 +46,7 @@ jobs:
           HASH_CLIENT_DOCKERFILE="${{ hashFiles('./docker/node/Dockerfile', './docker/node/Dockerfile.ci') }}"
           KEY_CLIENT_DOCKER_CACHE="docker-client-${HASH_CLIENT_DOCKERFILE}"
           CLIENT_DOCKER_CACHE="${PATH_CLIENT_DOCKER_CACHE}/${HASH_CLIENT_DOCKERFILE}.tar.gz"
-          CLIENT_CONTAINER="isekai-journey-admin-node"
+          CLIENT_CONTAINER="isekai-terrarium-admin-node"
           echo "PATH_CLIENT_DOCKER_CACHE=${PATH_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_CLIENT_DOCKER_CACHE=${KEY_CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "CLIENT_DOCKER_CACHE=${CLIENT_DOCKER_CACHE}" >> $GITHUB_OUTPUT
@@ -76,9 +76,9 @@ jobs:
       - name: Build client image
         if: steps.cache-client-docker-image.outputs.cache-hit != 'true'
         run: |
-          docker build -t isekai-journey-admin-node:22 -f ./docker/node/Dockerfile.ci ./docker/node
+          docker build -t isekai-terrarium-admin-node:22 -f ./docker/node/Dockerfile.ci ./docker/node
           mkdir -p ${{ steps.define-variables.outputs.PATH_CLIENT_DOCKER_CACHE }}
-          docker save isekai-journey-admin-node:22 | gzip > ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
+          docker save isekai-terrarium-admin-node:22 | gzip > ${{ steps.define-variables.outputs.CLIENT_DOCKER_CACHE }}
 
       - name: Load client image
         if: steps.cache-client-docker-image.outputs.cache-hit == 'true'

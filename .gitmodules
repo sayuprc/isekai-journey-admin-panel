@@ -1,4 +1,4 @@
-[submodule "src/proto"]
-	path = src/proto
-	url = git@github.com:sayuprc/isekai-journey-proto.git
+[submodule "src/contracts"]
+	path = src/contracts
+	url = git@github.com:sayuprc/isekai-terrarium-contracts.git
 	branch = main

@@ -1,4 +1,4 @@
-FROM ghcr.io/sayuprc/isekai-journey-admin-php:8.4
+FROM ghcr.io/sayuprc/isekai-terrarium-admin-php:8.4
 
 USER root
 

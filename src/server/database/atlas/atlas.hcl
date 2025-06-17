@@ -27,11 +27,11 @@ variable "db_password" {
 env "local" {
   src = var.schemas
 
-  url = "postgres://${var.db_user}:${var.db_password}@db:5432/isekai_journey_admin?search_path=public&sslmode=disable"
+  url = "postgres://${var.db_user}:${var.db_password}@db:5432/isekai_terrarium_admin?search_path=public&sslmode=disable"
 }
 
 env "testing" {
   src = var.schemas
 
-  url = "postgres://${var.db_user}:${var.db_password}@test-db:5432/isekai_journey_admin?search_path=public&sslmode=disable"
+  url = "postgres://${var.db_user}:${var.db_password}@test-db:5432/isekai_terrarium_admin?search_path=public&sslmode=disable"
 }
