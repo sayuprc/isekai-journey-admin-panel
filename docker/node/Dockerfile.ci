@@ -1,4 +1,4 @@
-FROM ghcr.io/sayuprc/isekai-journey-admin-node:22
+FROM ghcr.io/sayuprc/isekai-terrarium-admin-node:22
 
 USER root
 

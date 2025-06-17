@@ -7,24 +7,24 @@ USERNAME := $(shell id -u -n)
 GID := $(shell id -g)
 GROUPNAME := $(shell id -g -n)
 
-SERVER_CONTAINER := isekai-journey-admin-php
-CLIENT_CONTAINER := isekai-journey-admin-node
+SERVER_CONTAINER := isekai-terrarium-admin-php
+CLIENT_CONTAINER := isekai-terrarium-admin-node
 
 PROTOC_VERSION := "27.3"
 GRPC_VERSION := "v1.65.5"
 
 .PHONY: build
 build: ## Build docker image for develop environment
-	docker build -t isekai-journey-admin-web:1.25 ./docker/nginx
-	docker build -t isekai-journey-admin-php:8.4 ./docker/php \
+	docker build -t isekai-terrarium-admin-web:1.25 ./docker/nginx
+	docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
 		--build-arg GROUPNAME=${GROUPNAME} \
 		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
 		--build-arg GRPC_VERSION=${GRPC_VERSION}
-	docker build -t isekai-journey-admin-node:22 ./docker/node
-	docker build -t isekai-journey-admin-db:16 ./docker/postgresql
+	docker build -t isekai-terrarium-admin-node:22 ./docker/node
+	docker build -t isekai-terrarium-admin-db:16 ./docker/postgresql
 
 .PHONY: up
 up: ## Start the container

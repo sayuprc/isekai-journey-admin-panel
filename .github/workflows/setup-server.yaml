@@ -55,7 +55,7 @@ jobs:
           HASH_SERVER_DOCKERFILE="${{ hashFiles('./docker/php/Dockerfile', './docker/php/Dockerfile.ci') }}"
           KEY_SERVER_DOCKER_CACHE="docker-server-${HASH_SERVER_DOCKERFILE}"
           SERVER_DOCKER_CACHE="${PATH_SERVER_DOCKER_CACHE}/${HASH_SERVER_DOCKERFILE}.tar.gz"
-          SERVER_CONTAINER="isekai-journey-admin-php"
+          SERVER_CONTAINER="isekai-terrarium-admin-php"
           echo "PATH_SERVER_DOCKER_CACHE=${PATH_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_SERVER_DOCKER_CACHE=${KEY_SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
           echo "SERVER_DOCKER_CACHE=${SERVER_DOCKER_CACHE}" >> $GITHUB_OUTPUT
@@ -93,13 +93,13 @@ jobs:
       - name: Build server image
         if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
         run: |
-          docker build -t isekai-journey-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php \
+          docker build -t isekai-terrarium-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php \
           --build-arg UID=`id -u` \
           --build-arg GID=`id -g` \
           --build-arg USERNAME=`id -un` \
           --build-arg GROUPNAME=`id -gn`
           mkdir -p ${{ steps.define-variables.outputs.PATH_SERVER_DOCKER_CACHE }}
-          docker save isekai-journey-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
+          docker save isekai-terrarium-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
 
       - name: Load server image
         if: steps.cache-server-docker-image.outputs.cache-hit == 'true'
