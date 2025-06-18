@@ -12,6 +12,7 @@ CLIENT_CONTAINER := isekai-terrarium-admin-node
 
 .PHONY: build
 build: ## Build docker image for develop environment
+	docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx
 	docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
@@ -98,6 +99,17 @@ migrate-test: ## Migrate database for test db
 .PHONY: tinker
 tinker: ## Run tinker
 	docker exec ${SERVER_CONTAINER} php artisan tinker
+
+.PHONY: mkcert
+mkcert: ## create certs
+	mkcert \
+		--key-file docker/nginx/certs/server.key \
+		--cert-file docker/nginx/certs/server.crt \
+		localhost \
+		127.0.0.1 \
+		local.admin.terrarium.isekaijoucho.fan \
+		local.api.terrarium.isekaijoucho.fan \
+		local.terrarium.isekaijoucho.fan
 
 .PHONY: copy-root-ca
 copy-root-ca: ## Copy local rootCA.pem
