@@ -12,7 +12,6 @@ CLIENT_CONTAINER := isekai-terrarium-admin-node
 
 .PHONY: build
 build: ## Build docker image for develop environment
-	docker build -t isekai-terrarium-admin-web:1.25 ./docker/nginx
 	docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \

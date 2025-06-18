@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM dunglas/frankenphp:php8.4
 
 COPY certs/rootCA.pem /usr/share/ca-certificates/
 
@@ -11,8 +11,8 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && curl -sSf https://atlasgo.sh | sh \
-  && pecl install xdebug \
-  && docker-php-ext-enable xdebug
+  && install-php-extensions \
+    xdebug
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -22,8 +22,12 @@ ARG USERNAME=user
 ARG GROUPNAME=user
 
 RUN groupadd -g $GID $GROUPNAME \
-  && useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
+  && useradd -m -s /bin/bash -u $UID -g $GID $USERNAME \
+  && setcap -r /usr/local/bin/frankenphp \
+  && chown -R ${USERNAME}:${USERNAME} /data/caddy && chown -R ${USERNAME}:${USERNAME} /config/caddy
 
 USER $USERNAME
+
+ENV SERVER_NAME=:80
 
 WORKDIR /var/www/html
