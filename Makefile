@@ -10,21 +10,15 @@ GROUPNAME := $(shell id -g -n)
 SERVER_CONTAINER := isekai-terrarium-admin-php
 CLIENT_CONTAINER := isekai-terrarium-admin-node
 
-PROTOC_VERSION := "27.3"
-GRPC_VERSION := "v1.65.5"
-
 .PHONY: build
 build: ## Build docker image for develop environment
-	docker build -t isekai-terrarium-admin-web:1.25 ./docker/nginx
+	docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx
 	docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
-		--build-arg GROUPNAME=${GROUPNAME} \
-		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
-		--build-arg GRPC_VERSION=${GRPC_VERSION}
+		--build-arg GROUPNAME=${GROUPNAME}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
-	docker build -t isekai-terrarium-admin-db:16 ./docker/postgresql
 
 .PHONY: up
 up: ## Start the container
@@ -106,14 +100,21 @@ migrate-test: ## Migrate database for test db
 tinker: ## Run tinker
 	docker exec ${SERVER_CONTAINER} php artisan tinker
 
+.PHONY: mkcert
+mkcert: ## create certs
+	mkcert \
+		--key-file docker/nginx/certs/server.key \
+		--cert-file docker/nginx/certs/server.crt \
+		localhost \
+		127.0.0.1 \
+		local.admin.terrarium.isekaijoucho.fan \
+		local.api.terrarium.isekaijoucho.fan \
+		local.terrarium.isekaijoucho.fan
+
 .PHONY: copy-root-ca
 copy-root-ca: ## Copy local rootCA.pem
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/node/certs/
-
-.PHONY: generate-grpc-stub
-generate-grpc-stub: ## Generate gRPC Stub files
-	docker exec ${SERVER_CONTAINER} ./gen-stub.sh
 
 .PHONY: node
 node: ## Enter node container

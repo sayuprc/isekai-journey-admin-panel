@@ -2,14 +2,6 @@ FROM ghcr.io/sayuprc/isekai-terrarium-admin-php:8.4
 
 USER root
 
-ARG UID=1000
-ARG GID=1000
-ARG USERNAME=user
-ARG GROUPNAME=user
-
-RUN groupadd -g $GID $GROUPNAME \
-  && useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
-
-USER $USERNAME
+ENV SERVER_NAME=:80
 
 WORKDIR /var/www/html

@@ -19,8 +19,6 @@ on:
        value: ${{ jobs.setup.outputs.path-database-cache }}
       key-database-cache:
         value: ${{ jobs.setup.outputs.key-database-cache }}
-      database-cache:
-        value: ${{ jobs.setup.outputs.database-cache }}
 
 jobs:
   setup:
@@ -37,7 +35,6 @@ jobs:
       key-composer-cache: ${{ steps.define-variables.outputs.KEY_COMPOSER_CACHE }}
       path-database-cache: ${{ steps.define-variables.outputs.PATH_DATABASE_CACHE }}
       key-database-cache: ${{ steps.define-variables.outputs.KEY_DATABASE_CACHE }}
-      database-cache: ${{ steps.define-variables.outputs.DATABASE_CACHE }}
 
     steps:
       - name: Checkout the code
@@ -67,13 +64,11 @@ jobs:
           echo "PATH_VENDOR=${PATH_VENDOR}" >> $GITHUB_OUTPUT
           echo "KEY_COMPOSER_CACHE=${KEY_COMPOSER_CACHE}" >> $GITHUB_OUTPUT
           # テスト用 DB 関連
-          PATH_DATABASE_CACHE="${ROOT_CACHE}/db"
+          PATH_DATABASE_CACHE="./src/server/database/database.sqlite"
           HASH_DATABASE="${{ hashFiles('./src/server/database/migrations/*.php') }}"
           KEY_DATABASE_CACHE="database-${HASH_DATABASE}"
-          DATABASE_CACHE="${PATH_DATABASE_CACHE}/${KEY_DATABASE_CACHE}.tar.gz"
           echo "PATH_DATABASE_CACHE=${PATH_DATABASE_CACHE}" >> $GITHUB_OUTPUT
           echo "KEY_DATABASE_CACHE=${KEY_DATABASE_CACHE}" >> $GITHUB_OUTPUT
-          echo "DATABASE_CACHE=${DATABASE_CACHE}" >> $GITHUB_OUTPUT
 
       - name: Cache server docker image
         id: cache-server-docker-image
@@ -88,16 +83,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN  }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build server image
         if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
         run: |
-          docker build -t isekai-terrarium-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php \
-          --build-arg UID=`id -u` \
-          --build-arg GID=`id -g` \
-          --build-arg USERNAME=`id -un` \
-          --build-arg GROUPNAME=`id -gn`
+          docker build -t isekai-terrarium-admin-php:8.4 -f ./docker/php/Dockerfile.ci ./docker/php
           mkdir -p ${{ steps.define-variables.outputs.PATH_SERVER_DOCKER_CACHE }}
           docker save isekai-terrarium-admin-php:8.4 | gzip > ${{ steps.define-variables.outputs.SERVER_DOCKER_CACHE }}
 
@@ -124,15 +115,6 @@ jobs:
         if: steps.cache-composer.outputs.cache-hit != 'true'
         run: docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} composer install -n --prefer-dist
 
-      - name: Check Generate code has diff
-        run: |
-          docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} ./gen-stub.sh
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "自動生成コードに差分があります"
-            git status
-            exit 1
-          fi
-
       - name: Cache database
         id: cache-database
         uses: actions/cache@v4
@@ -143,7 +125,5 @@ jobs:
       - name: Migrate
         if: steps.cache-database.outputs.cache-hit != 'true'
         run: |
-          touch src/server/database/database.sqlite
+          touch ${{ steps.define-variables.outputs.PATH_DATABASE_CACHE }}
           docker exec ${{ steps.define-variables.outputs.SERVER_CONTAINER }} php artisan migrate --env=testing
-          mkdir -p ${{ steps.define-variables.outputs.PATH_DATABASE_CACHE }}
-          tar -czf ${{ steps.define-variables.outputs.DATABASE_CACHE }} src/server/database/database.sqlite
