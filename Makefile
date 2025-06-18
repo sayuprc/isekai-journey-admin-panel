@@ -10,9 +10,6 @@ GROUPNAME := $(shell id -g -n)
 SERVER_CONTAINER := isekai-terrarium-admin-php
 CLIENT_CONTAINER := isekai-terrarium-admin-node
 
-PROTOC_VERSION := "27.3"
-GRPC_VERSION := "v1.65.5"
-
 .PHONY: build
 build: ## Build docker image for develop environment
 	docker build -t isekai-terrarium-admin-web:1.25 ./docker/nginx
@@ -20,9 +17,7 @@ build: ## Build docker image for develop environment
 		--build-arg UID=${UID} \
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
-		--build-arg GROUPNAME=${GROUPNAME} \
-		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
-		--build-arg GRPC_VERSION=${GRPC_VERSION}
+		--build-arg GROUPNAME=${GROUPNAME}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
 
 .PHONY: up
@@ -109,10 +104,6 @@ tinker: ## Run tinker
 copy-root-ca: ## Copy local rootCA.pem
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/node/certs/
-
-.PHONY: generate-grpc-stub
-generate-grpc-stub: ## Generate gRPC Stub files
-	docker exec ${SERVER_CONTAINER} ./gen-stub.sh
 
 .PHONY: node
 node: ## Enter node container

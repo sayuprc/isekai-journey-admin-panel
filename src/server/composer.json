@@ -6,9 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "ext-grpc": "*",
         "cuyz/valinor": "^1.14",
-        "grpc/grpc": "^1.57",
         "jeroennoten/laravel-adminlte": "^3.15",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -35,7 +33,6 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Generated\\": "Generated/",
             "Auth\\": "packages/Auth/",
             "JourneyLog\\": "packages/JourneyLog/",
             "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
