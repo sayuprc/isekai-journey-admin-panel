@@ -51,10 +51,6 @@ jobs:
           path: ${{ needs.setup.outputs.path-database-cache }}
           key: ${{ needs.setup.outputs.key-database-cache }}
 
-      - name: Move database
-        if: steps.cache-database.outputs.cache-hit == 'true'
-        run: tar -xzf ${{ needs.setup.outputs.database-cache }}
-
       - name: Setup env
         run: |
           cp src/server/.env.testing.example src/server/.env.testing

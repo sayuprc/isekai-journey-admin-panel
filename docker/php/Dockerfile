@@ -36,15 +36,13 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && apt-get update \
   && apt-get install -y \
     git \
-    libpq-dev \
     unzip \
     zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && curl -sSf https://atlasgo.sh | sh \
   && pecl install xdebug protobuf grpc \
-  && docker-php-ext-enable xdebug protobuf grpc \
-  && docker-php-ext-install pgsql pdo_pgsql
+  && docker-php-ext-enable xdebug protobuf grpc
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=grpc-build /usr/local/bin/protoc /usr/local/bin/protoc

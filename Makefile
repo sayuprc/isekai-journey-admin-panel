@@ -24,7 +24,6 @@ build: ## Build docker image for develop environment
 		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
 		--build-arg GRPC_VERSION=${GRPC_VERSION}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
-	docker build -t isekai-terrarium-admin-db:16 ./docker/postgresql
 
 .PHONY: up
 up: ## Start the container
