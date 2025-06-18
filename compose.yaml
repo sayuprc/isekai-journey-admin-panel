@@ -25,7 +25,7 @@ services:
       - local.api.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/server:/var/www/html
-      - ./src/proto:/var/www/proto
+      - ./src/contracts:/var/www/contracts
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
   node:
@@ -41,4 +41,4 @@ services:
       - local.api.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/client:/app/src
-      - ./src/proto:/app/proto
+      - ./src/contracts:/app/contracts
