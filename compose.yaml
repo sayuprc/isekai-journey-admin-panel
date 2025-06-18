@@ -21,8 +21,6 @@ services:
       TZ: Asia/Tokyo
     ports:
       - 8080:80
-    extra_hosts:
-      - local.api.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/server:/var/www/html
       - ./src/contracts:/var/www/contracts
@@ -37,8 +35,6 @@ services:
     tty: true
     ports:
       - 4321:4321
-    extra_hosts:
-      - local.api.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/client:/app/src
       - ./src/contracts:/app/contracts
