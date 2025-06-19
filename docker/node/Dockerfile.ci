@@ -1,7 +1,0 @@
-FROM ghcr.io/sayuprc/isekai-terrarium-admin-node:22
-
-USER root
-
-WORKDIR /app/src
-
-CMD ["bash"]

@@ -1,0 +1,238 @@
+name: Server CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+env:
+  SERVER_DOCKER_PATH: /tmp/cache/docker/server
+  SERVER_DOCKER_KEY_PREFIX: docker-server-
+  SERVER_IMAGE: isekai-terrarium-admin-php:8.4
+
+  SERVER_CONTAINER: isekai-terrarium-admin-php
+
+  VENDOR_PATH: ./src/server/vendor
+  VENDOR_KEY_PREFIX: composer-
+
+  DATABASE_PATH: ./src/server/database/database.sqlite
+  DATABASE_KEY_PREFIX: database-
+
+jobs:
+  setup:
+    name: Setup server
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      vendor-key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+
+      - name: Define variables
+        id: define-variables
+        run: |
+          # Composer 関連
+          echo "VENDOR_KEY=${{ env.VENDOR_KEY_PREFIX }}${{ hashFiles('./src/server/composer.lock') }}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Cache server docker image
+        id: cache-base-server-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.SERVER_DOCKER_PATH }}
+          key: ${{ env.SERVER_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/php/Dockerfile') }}
+
+      - name: Build server image
+        if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
+        run: |
+          touch ./docker/php/certs/rootCA.pem
+          docker build -t ${{ env.SERVER_IMAGE }} ./docker/php \
+            --build-arg UID=`id -u` \
+            --build-arg GID=`id -g` \
+            --build-arg USERNAME=`id -u -n` \
+            --build-arg GROUPNAME=`id -g -n`
+          docker tag `docker images ${{ env.SERVER_IMAGE }} -q` ghcr.io/sayuprc/${{ env.SERVER_IMAGE }}
+          docker push ghcr.io/sayuprc/${{ env.SERVER_IMAGE }}
+          mkdir -p ${{ env.SERVER_DOCKER_PATH }}
+
+      - name: Copy .env
+        run: |
+          cp src/server/.env.example src/server/.env
+          cp src/server/.env.testing.example src/server/.env.testing
+
+      - name: Run Container
+        run: docker compose -f ./docker/compose.ci.yaml up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
+
+      - name: Composer install
+        if: steps.cache-composer.outputs.cache-hit != 'true'
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer install -n --prefer-dist
+
+  arkitect:
+    needs: setup
+
+    name: Arkitect
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Run Container
+        run: docker compose -f ./docker/compose.ci.yaml up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ needs.setup.outputs.vendor-key }}
+
+      - name: Check Layer
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer arkitect
+
+  ecs:
+    needs: setup
+
+    name: EasyCodingStandard
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Run Container
+        run: docker compose -f ./docker/compose.ci.yaml up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ needs.setup.outputs.vendor-key }}
+
+      - name: Run ecs
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer ecs
+
+  phpstan:
+    needs: setup
+
+    name: PHPStan
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Run Container
+        run: docker compose -f ./docker/compose.ci.yaml up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ needs.setup.outputs.vendor-key }}
+
+      - name: Run PHPStan
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer phpstan
+
+  phpunit:
+    needs: setup
+
+    name: PHPUnit
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Run Container
+        run: docker compose -f ./docker/compose.ci.yaml up -d php
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ needs.setup.outputs.vendor-key }}
+
+      - name: Setup env
+        run: |
+          cp src/server/.env.testing.example src/server/.env.testing
+          docker exec ${{ env.SERVER_CONTAINER }} php artisan key:generate --env=testing
+
+      - name: Cache database
+        id: cache-database
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DATABASE_PATH }}
+          key: ${{ env.DATABASE_KEY_PREFIX }}${{ hashFiles('./src/server/database/migrations/*.php') }}
+
+      - name: Migrate
+        if: steps.cache-database.outputs.cache-hit != 'true'
+        run: |
+          touch ${{ env.DATABASE_PATH }}
+          docker exec ${{ env.SERVER_CONTAINER }} php artisan migrate --env=testing
+
+      - name: Run PHPUnit
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer test-unit

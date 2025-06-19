@@ -24,7 +24,8 @@ ARG GROUPNAME=user
 RUN groupadd -g $GID $GROUPNAME \
   && useradd -m -s /bin/bash -u $UID -g $GID $USERNAME \
   && setcap -r /usr/local/bin/frankenphp \
-  && chown -R ${USERNAME}:${USERNAME} /data/caddy && chown -R ${USERNAME}:${USERNAME} /config/caddy
+  && chown -R ${USERNAME}:${GROUPNAME} /data/caddy \
+  && chown -R ${USERNAME}:${GROUPNAME} /config/caddy
 
 USER $USERNAME
 

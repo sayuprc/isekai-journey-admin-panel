@@ -1,7 +1,0 @@
-FROM ghcr.io/sayuprc/isekai-terrarium-admin-php:8.4
-
-USER root
-
-ENV SERVER_NAME=:80
-
-WORKDIR /var/www/html
