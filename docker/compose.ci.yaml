@@ -1,0 +1,13 @@
+services:
+  php:
+    image: ghcr.io/sayuprc/isekai-terrarium-admin-php:8.4
+    container_name: isekai-terrarium-admin-php
+    environment:
+      LANG: ja_JP.UTF-8
+      TZ: Asia/Tokyo
+    ports:
+      - 8080:80
+    volumes:
+      - ../src/server:/var/www/html
+      - ../src/contracts:/var/www/contracts
+      - ./php/php.ini:/usr/local/etc/php/php.ini
