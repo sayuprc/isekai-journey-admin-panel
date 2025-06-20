@@ -1,0 +1,56 @@
+name: Client CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+env:
+  WORKING_DIR: ./src/client
+
+jobs:
+  check:
+    name: Client CI (Node ${{ matrix.node-versions }})
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-versions: ["22"]
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-versions }}
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.WORKING_DIR }}/node_modules
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm i
+
+      - name: Run ESLint
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm run lint
+
+      - name: Run Stylelint
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm run style
+
+      # - name: Run Build
+      #   working-directory: ${{ env.WORKING_DIR }}
+      #   run: npm run build
