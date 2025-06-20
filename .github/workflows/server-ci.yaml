@@ -49,7 +49,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Cache server docker image
-        id: cache-base-server-docker-image
+        id: cache-server-docker-image
         uses: actions/cache@v4
         with:
           path: ${{ env.SERVER_DOCKER_PATH }}
