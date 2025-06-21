@@ -15,7 +15,10 @@
     "tcm:watch": "tcm -w -p 'src/styles/*.module.css' ."
   },
   "dependencies": {
-    "astro": "^5.10.0"
+    "@tailwindcss/vite": "^4.1.10",
+    "astro": "^5.10.0",
+    "daisyui": "^5.0.43",
+    "tailwindcss": "^4.1.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
