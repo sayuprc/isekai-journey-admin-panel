@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { type SongType } from '../../schemas/SongType';
+
+export const prerender = false;
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.params;
+
+// TODO id を使って API を叩く
+
+const songType: SongType = {
+  songTypeId: id!,
+  songTypeName: 'hoge',
+  orderNo: 1,
+};
+---
+
+<Layout pageTitle="楽曲種別詳細">
+  <div>
+    <div>
+      <form id="form" data-song-type-id={songType.songTypeId}>
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+          <legend class="fieldset-legend">楽曲種別詳細</legend>
+
+          <label class="label">楽曲種別名</label>
+          <input type="text" class="input" value={songType.songTypeName} />
+
+          <label class="label">表示順</label>
+          <input type="number" class="input" required min="1" value={songType.orderNo} />
+
+          <div class="flex justify-between gap-2">
+            <button class="btn btn-error mt-4">削除</button>
+            <button class="btn btn-neutral mt-4">更新</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // TODO API ができたら処理を書く
+    const form = document.getElementById('form');
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
+
+    // const songTypeId = document.getElementById('form')?.dataset.songTypeId;
+  </script>
+</Layout>
