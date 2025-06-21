@@ -43,7 +43,8 @@
             "Song\\": "packages/Song/",
             "SongType\\": "packages/SongType/",
             "Creator\\": "packages/Creator/",
-            "Tools\\": "tools/"
+            "Tools\\": "tools/",
+            "OpenAPI\\Client\\" : "Generated/lib/"
         }
     },
     "autoload-dev": {
