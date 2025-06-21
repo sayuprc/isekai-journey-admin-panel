@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { type SongType } from '../../schemas/SongType';
+
+// API ができ次第本物の値にする
+const songTypes = [
+  {
+    songTypeId: '1',
+    songTypeName: 'オリジナル',
+    orderNo: 1,
+  },
+  {
+    songTypeId: '2',
+    songTypeName: 'カバー',
+    orderNo: 2,
+  },
+  {
+    songTypeId: '3',
+    songTypeName: 'ユニット',
+    orderNo: 3,
+  },
+  {
+    songTypeId: '4',
+    songTypeName: 'コラボ',
+    orderNo: 4,
+  },
+] as SongType[];
+---
+
+<Layout pageTitle="楽曲種別一覧">
+  <div class="h-full overflow-x-auto">
+    <table class="table table-pin-rows table-zebra">
+      <thead>
+        <tr>
+          <th>楽曲種別名</th>
+          <th>表示順</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          songTypes.map((songType) => {
+            return (
+              <tr>
+                <td>{songType.songTypeName}</td>
+                <td>{songType.orderNo}</td>
+                <td>
+                  <a href={`/song-types/${songType.songTypeId}`}>編集</a>
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</Layout>
