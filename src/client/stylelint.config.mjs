@@ -27,5 +27,12 @@ export default {
     'selector-class-pattern': [
       '^[a-z][a-zA-Z0-9-]+$',
     ],
+    'at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: ['plugin'],
+      },
+    ],
+    'import-notation': 'string',
   },
 };
