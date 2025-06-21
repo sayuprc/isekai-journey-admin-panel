@@ -18,6 +18,11 @@ build: ## Build docker image for develop environment
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
 		--build-arg GROUPNAME=${GROUPNAME}
+	docker build -t openapi-generator:latest ./docker/openapi-generator \
+		--build-arg UID=${UID} \
+		--build-arg GID=${GID} \
+		--build-arg USERNAME=${USERNAME} \
+		--build-arg GROUPNAME=${GROUPNAME}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
 
 .PHONY: up
@@ -99,6 +104,15 @@ migrate-test: ## Migrate database for test db
 .PHONY: tinker
 tinker: ## Run tinker
 	docker exec ${SERVER_CONTAINER} php artisan tinker
+
+.PHONY: openapi-generate
+openapi-generate: ## Generate code from OpenAPI
+	rm -rf ./src/server/Generated
+	docker run --rm -u ${UID}:${GID} -v ".:/local" openapi-generator generate \
+    -i /local/src/contracts/generated/oas/openapi.yaml \
+    -g php \
+    -t /local/src/server/tools/open-api-generator/templates \
+    -o /local/src/server/Generated
 
 .PHONY: mkcert
 mkcert: ## create certs
