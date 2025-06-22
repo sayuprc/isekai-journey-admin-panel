@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Web\SongType;
+namespace Tests\Feature\Api\SongType;
 
-use App\Models\User;
-use Auth\Route\AuthRouteMap;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -21,31 +17,15 @@ use Tests\TestCase;
 
 class ListSongTypeTest extends TestCase
 {
-    use DatabaseTransactions;
-
-    private User $user;
-
     private MockInterface&SongTypeRepositoryInterface $repository;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create([
-            'user_id' => Str::uuid()->toString(),
-        ]);
-
         $this->repository = Mockery::mock(SongTypeRepositoryInterface::class);
 
         $this->app->bind(SongTypeRepositoryInterface::class, fn (): SongTypeRepositoryInterface => $this->repository);
-    }
-
-    #[Test]
-    public function notLoggedIn(): void
-    {
-        $this->get(route(SongTypeRouteMap::List))
-            ->assertStatus(302)
-            ->assertRedirect(route(AuthRouteMap::ShowLoginForm));
     }
 
     #[Test]
@@ -68,20 +48,22 @@ class ListSongTypeTest extends TestCase
             ])
             ->once();
 
-        $response = $this->actingAs($this->user)
-            ->get(route(SongTypeRouteMap::List))
+        $this->get(route(SongTypeRouteMap::List))
             ->assertStatus(200)
-            ->assertViewIs('songTypes.list.index');
-
-        $data = $response->getOriginalContent()->getData();
-
-        $this->assertSame([
-            '名前',
-            '表示順',
-            '',
-        ], $data['heads']);
-
-        $this->assertCount(2, $data['songTypes']);
+            ->assertJson([
+                'songTypes' => [
+                    [
+                        'songTypeId' => $uuid,
+                        'songTypeName' => '楽曲種別1',
+                        'orderNo' => 1,
+                    ],
+                    [
+                        'songTypeId' => $uuid,
+                        'songTypeName' => '楽曲種別2',
+                        'orderNo' => 2,
+                    ],
+                ],
+            ]);
     }
 
     #[Test]
@@ -91,19 +73,8 @@ class ListSongTypeTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $response = $this->actingAs($this->user)
-            ->get(route(SongTypeRouteMap::List))
+        $this->get(route(SongTypeRouteMap::List))
             ->assertStatus(200)
-            ->assertViewIs('songTypes.list.index');
-
-        $data = $response->getOriginalContent()->getData();
-
-        $this->assertSame([
-            '名前',
-            '表示順',
-            '',
-        ], $data['heads']);
-
-        $this->assertCount(0, $data['songTypes']);
+            ->assertJson(['songTypes' => []]);
     }
 }

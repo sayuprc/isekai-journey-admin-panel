@@ -70,7 +70,7 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_type_id' => null,
+        'song_type_id' => 'uuid',
         'song_type_name' => null,
         'order_no' => 'int32'
     ];
@@ -333,7 +333,7 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets song_type_id
      *
-     * @param string $song_type_id song_type_id
+     * @param string $song_type_id 楽曲種別ID
      *
      * @return self
      */
@@ -360,7 +360,7 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets song_type_name
      *
-     * @param string $song_type_name song_type_name
+     * @param string $song_type_name 楽曲種別名
      *
      * @return self
      */
@@ -392,7 +392,7 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets order_no
      *
-     * @param int $order_no order_no
+     * @param int $order_no 表示順
      *
      * @return self
      */

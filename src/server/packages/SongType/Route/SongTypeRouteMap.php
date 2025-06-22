@@ -6,7 +6,7 @@ namespace SongType\Route;
 
 enum SongTypeRouteMap: string
 {
-    case List = 'song-types.index';
+    case List = 'song-types';
     case ShowCreateForm = 'song-types.create.index';
     case Create = 'song-types.create.handle';
     case ShowEditForm = 'song-types.edit.index';

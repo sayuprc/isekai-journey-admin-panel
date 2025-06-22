@@ -11,6 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** @description 楽曲種別一覧取得API */
         get: operations["listSongTypes"];
         put?: never;
         post?: never;
@@ -24,12 +25,22 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ListSongTypeResponse: {
+            songTypes: components["schemas"]["SongType"][];
+        };
         SongType: {
-            songTypeId: string;
+            /** @description 楽曲種別ID */
+            songTypeId: components["schemas"]["uuid"];
+            /** @description 楽曲種別名 */
             songTypeName: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 表示順
+             */
             orderNo: number;
         };
+        /** Format: uuid */
+        uuid: string;
     };
     responses: never;
     parameters: never;
@@ -54,7 +65,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SongType"][];
+                    "application/json": components["schemas"]["ListSongTypeResponse"];
                 };
             };
         };

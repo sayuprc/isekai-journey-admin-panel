@@ -32,9 +32,12 @@ services:
     environment:
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
+      NODE_EXTRA_CA_CERTS: /usr/share/ca-certificates/rootCA.pem
     tty: true
     ports:
       - 4321:4321
+    extra_hosts:
+      - local.admin.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/client:/app/src
       - ./src/contracts:/app/contracts
