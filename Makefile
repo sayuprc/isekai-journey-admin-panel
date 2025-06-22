@@ -104,6 +104,8 @@ tinker: ## Run tinker
 openapi-generate: ## Generate code from OpenAPI
 	rm -rf ./src/server/Generated
 	docker exec ${SERVER_CONTAINER} composer openapi-generate
+	rm -rf ./src/client/src/generated
+	docker exec ${CLIENT_CONTAINER} npm run generate:api
 
 .PHONY: mkcert
 mkcert: ## create certs
