@@ -90,9 +90,6 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/create', [CreateSongTypeController::class, 'handle'])
             ->name(SongTypeRouteMap::Create);
 
-        Route::get('/{songTypeId}', [EditSongTypeController::class, 'index'])
-            ->whereUuid('songTypeId')
-            ->name(SongTypeRouteMap::ShowEditForm);
         Route::post('/edit', [EditSongTypeController::class, 'handle'])
             ->name(SongTypeRouteMap::Edit);
 
