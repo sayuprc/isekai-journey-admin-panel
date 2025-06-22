@@ -20,6 +20,14 @@ const defaultRules = {
       allow: 'single-line',
     },
   ],
+  '@stylistic/brace-style': [
+    'error',
+    '1tbs',
+  ],
+  '@typescript-eslint/consistent-type-imports': [
+    'error',
+    { fixStyle: 'separate-type-imports' },
+  ],
 };
 
 export default [
