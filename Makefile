@@ -18,11 +18,6 @@ build: ## Build docker image for develop environment
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
 		--build-arg GROUPNAME=${GROUPNAME}
-	docker build -t openapi-generator:latest ./docker/openapi-generator \
-		--build-arg UID=${UID} \
-		--build-arg GID=${GID} \
-		--build-arg USERNAME=${USERNAME} \
-		--build-arg GROUPNAME=${GROUPNAME}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
 
 .PHONY: up
