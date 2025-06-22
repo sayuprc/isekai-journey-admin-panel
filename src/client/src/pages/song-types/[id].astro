@@ -1,6 +1,7 @@
 ---
+import createClient from 'openapi-fetch';
+import { type paths } from '../../generated/schema';
 import Layout from '../../layouts/Layout.astro';
-import { type SongType } from '../../schemas/SongType';
 
 export const prerender = false;
 
@@ -10,27 +11,38 @@ interface Props {
 
 const { id } = Astro.params;
 
-// TODO id を使って API を叩く
+if (typeof id !== 'string') {
+  // TODO ちゃんとしたハンドリングをする
+  throw new Error('Invalid URL');
+}
 
-const songType: SongType = {
-  songTypeId: id!,
-  songTypeName: 'hoge',
-  orderNo: 1,
-};
+const client = createClient<paths>({ baseUrl: import.meta.env.API_URL });
+
+const { data, response } = await client.GET('/song-types/{songTypeId}', {
+  params: {
+    path: { songTypeId: id },
+  },
+});
+
+if (data == null) {
+  console.debug(response)
+  // TODO ちゃんとしたハンドリングをする
+  throw new Error();
+}
 ---
 
 <Layout pageTitle="楽曲種別詳細">
   <div>
     <div>
-      <form id="form" data-song-type-id={songType.songTypeId}>
+      <form id="form" data-song-type-id={data.songType.songTypeId}>
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
           <legend class="fieldset-legend">楽曲種別詳細</legend>
 
           <label class="label">楽曲種別名</label>
-          <input type="text" class="input" value={songType.songTypeName} />
+          <input type="text" class="input" value={data.songType.songTypeName} />
 
           <label class="label">表示順</label>
-          <input type="number" class="input" required min="1" value={songType.orderNo} />
+          <input type="number" class="input" required min="1" value={data.songType.orderNo} />
 
           <div class="flex justify-between gap-2">
             <button class="btn btn-error mt-4">削除</button>
