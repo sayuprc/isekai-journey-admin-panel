@@ -18,11 +18,6 @@ build: ## Build docker image for develop environment
 		--build-arg GID=${GID} \
 		--build-arg USERNAME=${USERNAME} \
 		--build-arg GROUPNAME=${GROUPNAME}
-	docker build -t openapi-generator:latest ./docker/openapi-generator \
-		--build-arg UID=${UID} \
-		--build-arg GID=${GID} \
-		--build-arg USERNAME=${USERNAME} \
-		--build-arg GROUPNAME=${GROUPNAME}
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
 
 .PHONY: up
@@ -108,11 +103,9 @@ tinker: ## Run tinker
 .PHONY: openapi-generate
 openapi-generate: ## Generate code from OpenAPI
 	rm -rf ./src/server/Generated
-	docker run --rm -u ${UID}:${GID} -v ".:/local" openapi-generator generate \
-    -i /local/src/contracts/generated/oas/openapi.yaml \
-    -g php \
-    -t /local/src/server/tools/open-api-generator/templates \
-    -o /local/src/server/Generated
+	docker exec ${SERVER_CONTAINER} composer openapi-generate
+	rm -rf ./src/client/src/generated
+	docker exec ${CLIENT_CONTAINER} npm run generate:api
 
 .PHONY: mkcert
 mkcert: ## create certs
