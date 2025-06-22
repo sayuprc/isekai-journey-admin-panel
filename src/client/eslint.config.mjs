@@ -40,6 +40,7 @@ export default [
     ignores: [
       '.astro/**',
       'dist/**',
+      'src/generated/**',
     ],
   },
   {
