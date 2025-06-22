@@ -171,7 +171,7 @@ tcm-watch: ## Run tcm with --watch
 
 .PHONY: prism
 prism: ## Run prism mock
-	docker exec ${CLIENT_CONTAINER} npm run prism
+	docker exec -it ${CLIENT_CONTAINER} npm run prism
 
 .PHONY: help
 help: ## Display a list of targets
