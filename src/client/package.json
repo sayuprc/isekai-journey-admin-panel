@@ -13,7 +13,8 @@
     "style:fix": "stylelint '**/*.{css,astro}' --fix",
     "tcm": "tcm -p 'src/styles/*.module.css' .",
     "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
-    "generate:api": "openapi-typescript ../contracts/generated/oas/openapi.yaml -o ./src/generated/schema.d.ts"
+    "generate:api": "openapi-typescript ../contracts/generated/oas/openapi.yaml -o ./src/generated/schema.d.ts",
+    "prism": "prism mock ../contracts/generated/oas/openapi.yaml"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@stoplight/prism-cli": "^5.14.2",
     "@stylistic/eslint-plugin": "^4.4.1",
     "@stylistic/stylelint-plugin": "^3.1.2",
     "@typescript-eslint/parser": "^8.34.1",

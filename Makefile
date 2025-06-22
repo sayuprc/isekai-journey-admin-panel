@@ -169,6 +169,10 @@ tcm: ## Run tcm
 tcm-watch: ## Run tcm with --watch
 	docker exec ${CLIENT_CONTAINER} npm run tcm:watch
 
+.PHONY: prism
+prism: ## Run prism mock
+	docker exec ${CLIENT_CONTAINER} npm run prism
+
 .PHONY: help
 help: ## Display a list of targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
