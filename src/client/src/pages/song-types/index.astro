@@ -1,30 +1,15 @@
 ---
+import createClient from 'openapi-fetch';
+import { type paths } from '../../generated/schema';
 import Layout from '../../layouts/Layout.astro';
-import { type SongType } from '../../schemas/SongType';
 
-// TODO API ができ次第本物の値にする
-const songTypes = [
-  {
-    songTypeId: '1',
-    songTypeName: 'オリジナル',
-    orderNo: 1,
-  },
-  {
-    songTypeId: '2',
-    songTypeName: 'カバー',
-    orderNo: 2,
-  },
-  {
-    songTypeId: '3',
-    songTypeName: 'ユニット',
-    orderNo: 3,
-  },
-  {
-    songTypeId: '4',
-    songTypeName: 'コラボ',
-    orderNo: 4,
-  },
-] as SongType[];
+const client = createClient<paths>({ baseUrl: import.meta.env.API_URL });
+
+const { data } = await client.GET('/song-types');
+
+if (data == null) {
+  throw new Error();
+}
 ---
 
 <Layout pageTitle="楽曲種別一覧">
@@ -39,7 +24,7 @@ const songTypes = [
       </thead>
       <tbody>
         {
-          songTypes.map((songType) => {
+          data.songTypes.map((songType) => {
             return (
               <tr>
                 <td>{songType.songTypeName}</td>
