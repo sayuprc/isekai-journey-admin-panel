@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\SongType\GetSongTypeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,5 +15,6 @@ Route::get('/user', function (Request $request) {
 Route::middleware('api')->group(function () {
     Route::prefix('song-types')->group(function () {
         Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
+        Route::get('/{songTypeId}', [GetSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Get);
     });
 });
