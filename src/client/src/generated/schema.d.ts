@@ -21,10 +21,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/song-types/{songTypeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 楽曲種別取得API */
+        get: operations["getSongType"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        GetSongTypeResponse: {
+            songType: components["schemas"]["SongType"];
+        };
         ListSongTypeResponse: {
             songTypes: components["schemas"]["SongType"][];
         };
@@ -67,6 +87,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ListSongTypeResponse"];
                 };
+            };
+        };
+    };
+    getSongType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                songTypeId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetSongTypeResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
