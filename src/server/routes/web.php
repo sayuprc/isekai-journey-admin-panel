@@ -20,7 +20,6 @@ use App\Http\Controllers\Web\Song\ListSongController;
 use App\Http\Controllers\Web\SongType\CreateSongTypeController;
 use App\Http\Controllers\Web\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Web\SongType\EditSongTypeController;
-use App\Http\Controllers\Web\SongType\ListSongTypeController;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Support\Facades\Route;
@@ -86,9 +85,6 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('song-types')->group(function (): void {
-        Route::get('/', [ListSongTypeController::class, 'index'])
-            ->name(SongTypeRouteMap::List);
-
         Route::get('/create', [CreateSongTypeController::class, 'index'])
             ->name(SongTypeRouteMap::ShowCreateForm);
         Route::post('/create', [CreateSongTypeController::class, 'handle'])
