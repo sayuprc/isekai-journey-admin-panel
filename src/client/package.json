@@ -17,6 +17,7 @@
     "prism": "prism mock ../contracts/generated/oas/openapi.yaml"
   },
   "dependencies": {
+    "@astrojs/solid-js": "^5.1.0",
     "@tailwindcss/vite": "^4.1.10",
     "astro": "^5.10.0",
     "daisyui": "^5.0.43",
