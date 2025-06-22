@@ -45,8 +45,7 @@
             "Song\\": "packages/Song/",
             "SongType\\": "packages/SongType/",
             "Creator\\": "packages/Creator/",
-            "Tools\\": "tools/",
-            "OpenAPI\\Client\\" : "Generated/lib/"
+            "Tools\\": "tools/"
         }
     },
     "autoload-dev": {
@@ -82,7 +81,8 @@
         "infection": "infection --threads=4",
         "ide-gen": "php artisan ide-helper:generate",
         "ide-model": "php artisan ide-helper:models -W",
-        "ide-meta": "php artisan ide-helper:meta"
+        "ide-meta": "php artisan ide-helper:meta",
+        "openapi-generate": "jane-openapi generate --config-file=tools/jane/config.php"
     },
     "extra": {
         "laravel": {

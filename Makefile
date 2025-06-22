@@ -108,11 +108,7 @@ tinker: ## Run tinker
 .PHONY: openapi-generate
 openapi-generate: ## Generate code from OpenAPI
 	rm -rf ./src/server/Generated
-	docker run --rm -u ${UID}:${GID} -v ".:/local" openapi-generator generate \
-    -i /local/src/contracts/generated/oas/openapi.yaml \
-    -g php \
-    -t /local/src/server/tools/open-api-generator/templates \
-    -o /local/src/server/Generated
+	docker exec ${SERVER_CONTAINER} composer openapi-generate
 
 .PHONY: mkcert
 mkcert: ## create certs
