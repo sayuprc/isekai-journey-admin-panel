@@ -45,6 +45,7 @@ jobs:
         run: npm i
 
       - name: Check generate code has diff
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           npm run generate:api
           if [ -n "$(git status --porcelain)" ]; then
