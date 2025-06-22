@@ -43,6 +43,15 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: npm i
 
+      - name: Check generate code has diff
+        run: |
+          npm run generate:api
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "自動生成コードに差分があります"
+            git status
+            exit 1
+          fi
+
       - name: Run ESLint
         working-directory: ${{ env.WORKING_DIR }}
         run: npm run lint
