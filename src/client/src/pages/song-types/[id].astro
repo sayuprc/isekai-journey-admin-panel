@@ -18,14 +18,13 @@ if (typeof id !== 'string') {
 
 const client = createClient<paths>({ baseUrl: import.meta.env.API_URL });
 
-const { data, response } = await client.GET('/song-types/{songTypeId}', {
+const { data } = await client.GET('/song-types/{songTypeId}', {
   params: {
     path: { songTypeId: id },
   },
 });
 
 if (data == null) {
-  console.debug(response)
   // TODO ちゃんとしたハンドリングをする
   throw new Error();
 }
