@@ -14,7 +14,8 @@ export interface paths {
         /** @description 楽曲種別一覧取得API */
         get: operations["listSongTypes"];
         put?: never;
-        post?: never;
+        /** @description 楽曲種別作成API */
+        post: operations["createSongType"];
         delete?: never;
         options?: never;
         head?: never;
@@ -42,6 +43,18 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateSongTypeRequest: {
+            /** @description 楽曲種別名 */
+            songTypeName: string;
+            /**
+             * Format: int32
+             * @description 表示順
+             */
+            orderNo: number;
+        };
+        CreateSongTypeResponse: {
+            songType: components["schemas"]["SongType"];
+        };
         GetSongTypeResponse: {
             songType: components["schemas"]["SongType"];
         };
@@ -86,6 +99,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListSongTypeResponse"];
+                };
+            };
+        };
+    };
+    createSongType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSongTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateSongTypeResponse"];
                 };
             };
         };

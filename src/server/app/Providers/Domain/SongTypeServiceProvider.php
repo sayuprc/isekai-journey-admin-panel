@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\SongType\CreateRequest;
 use App\Http\Requests\Web\SongType\DeleteRequest;
 use App\Http\Requests\Web\SongType\EditRequest;
+use Illuminate\Http\Request;
 use SongType\Application\Interactors\CreateInteractor;
 use SongType\Application\Interactors\DeleteInteractor;
 use SongType\Application\Interactors\EditInteractor;
@@ -40,9 +40,9 @@ class SongTypeServiceProvider extends EnvServiceProvider
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
-            $request = $this->app->make(CreateRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(CreateInputData::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->all());
         });
 
         $this->app->bind(EditInputData::class, function (): EditInputData {

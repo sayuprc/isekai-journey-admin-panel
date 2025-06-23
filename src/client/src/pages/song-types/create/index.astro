@@ -1,34 +1,10 @@
 ---
+import { Form } from '../../../components/song-type/SongTypeCreateForm';
 import Layout from '../../../layouts/Layout.astro';
 
 export const prerender = false;
 ---
 
 <Layout pageTitle="楽曲種別作成">
-  <div>
-    <div>
-      <form id="form">
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend class="fieldset-legend">楽曲種別作成</legend>
-
-          <label class="label">楽曲種別名</label>
-          <input type="text" class="input" />
-
-          <label class="label">表示順</label>
-          <input type="number" class="input" required min="1" />
-
-          <button class="btn btn-neutral mt-4">作成</button>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    // TODO API ができたら処理を書く
-    const form = document.getElementById('form');
-
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
-  </script>
+  <Form client:load />
 </Layout>
