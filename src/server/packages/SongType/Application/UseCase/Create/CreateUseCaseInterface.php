@@ -9,7 +9,7 @@ use ResultType\Result;
 interface CreateUseCaseInterface
 {
     /**
-     * @return Result<null, string>
+     * @return Result<CreateOutputData, string>
      */
     public function handle(CreateInputData $inputData): Result;
 }

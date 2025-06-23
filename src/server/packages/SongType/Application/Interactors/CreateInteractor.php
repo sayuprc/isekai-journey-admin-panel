@@ -8,6 +8,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use SongType\Application\UseCase\Create\CreateInputData;
+use SongType\Application\UseCase\Create\CreateOutputData;
 use SongType\Application\UseCase\Create\CreateUseCaseInterface;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
@@ -22,9 +23,6 @@ class CreateInteractor implements CreateUseCaseInterface
     ) {
     }
 
-    /**
-     * @return Result<null, string>
-     */
     public function handle(CreateInputData $inputData): Result
     {
         $songType = $this->factory->create($inputData->songTypeName, $inputData->orderNo);
@@ -35,6 +33,6 @@ class CreateInteractor implements CreateUseCaseInterface
 
         $this->repository->insert($songType);
 
-        return new Ok(null);
+        return new Ok(new CreateOutputData($songType));
     }
 }
