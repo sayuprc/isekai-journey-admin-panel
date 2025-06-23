@@ -1,7 +1,6 @@
 ---
-import createClient from 'openapi-fetch';
-import type { paths } from '../../generated/schema';
 import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
 
 export const prerender = false;
 
@@ -15,8 +14,6 @@ if (typeof id !== 'string') {
   // TODO ちゃんとしたハンドリングをする
   throw new Error('Invalid URL');
 }
-
-const client = createClient<paths>({ baseUrl: import.meta.env.API_URL });
 
 const { data } = await client.GET('/song-types/{songTypeId}', {
   params: {

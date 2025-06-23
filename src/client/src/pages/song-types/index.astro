@@ -1,9 +1,6 @@
 ---
-import createClient from 'openapi-fetch';
-import type { paths } from '../../generated/schema';
 import Layout from '../../layouts/Layout.astro';
-
-const client = createClient<paths>({ baseUrl: import.meta.env.API_URL });
+import { client } from '../../utils/client';
 
 const { data } = await client.GET('/song-types');
 
