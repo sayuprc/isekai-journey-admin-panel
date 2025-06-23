@@ -4,7 +4,7 @@ import { client } from '../../utils/client';
 
 const { data } = await client.GET('/song-types');
 
-if (data == null) {
+if (!data) {
   throw new Error();
 }
 ---

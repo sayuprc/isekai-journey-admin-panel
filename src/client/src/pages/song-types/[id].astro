@@ -21,7 +21,7 @@ const { data } = await client.GET('/song-types/{songTypeId}', {
   },
 });
 
-if (data == null) {
+if (!data) {
   // TODO ちゃんとしたハンドリングをする
   throw new Error();
 }
