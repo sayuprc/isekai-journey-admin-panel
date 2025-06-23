@@ -36,6 +36,7 @@ services:
     tty: true
     ports:
       - 4321:4321
+      - 4010:4010
     extra_hosts:
       - local.admin.terrarium.isekaijoucho.fan:host-gateway
     volumes:
