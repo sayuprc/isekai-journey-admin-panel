@@ -9,8 +9,8 @@ use Creator\Application\UseCase\Edit\EditUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
-use ResultType\Err;
-use ResultType\Ok;
+use ResultType\Eager\Err;
+use ResultType\Eager\Ok;
 use ResultType\Result;
 
 class EditInteractor implements EditUseCaseInterface

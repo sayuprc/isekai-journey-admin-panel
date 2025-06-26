@@ -9,8 +9,8 @@ use Creator\Application\UseCase\Get\GetOutputData;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
+use ResultType\Eager\Err;
+use ResultType\Eager\Ok;
 use ResultType\Result;
 
 class GetInteractor implements GetUseCaseInterface
