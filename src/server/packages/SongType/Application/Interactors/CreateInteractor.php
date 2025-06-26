@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SongType\Application\Interactors;
 
-use ResultType\Err;
-use ResultType\Ok;
+use ResultType\Eager\Err;
+use ResultType\Eager\Ok;
 use ResultType\Result;
 use SongType\Application\UseCase\Create\CreateInputData;
 use SongType\Application\UseCase\Create\CreateOutputData;
