@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ea52ddb49ad09167d746d488faf2c3f",
+    "content-hash": "b89baa55ce82a4a8a2b621895d5f126a",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -4267,16 +4267,16 @@
         },
         {
             "name": "sayuprc/result-type",
-            "version": "0.3.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sayuprc/result-type.git",
-                "reference": "ef2cf0fa99bf60f5a93312ef4b01065d747756a6"
+                "reference": "a8f5df1a368eb261e9385bb118af1842415a043f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sayuprc/result-type/zipball/ef2cf0fa99bf60f5a93312ef4b01065d747756a6",
-                "reference": "ef2cf0fa99bf60f5a93312ef4b01065d747756a6",
+                "url": "https://api.github.com/repos/sayuprc/result-type/zipball/a8f5df1a368eb261e9385bb118af1842415a043f",
+                "reference": "a8f5df1a368eb261e9385bb118af1842415a043f",
                 "shasum": ""
             },
             "require": {
@@ -4306,9 +4306,9 @@
             "description": "Library for handling result types in PHP",
             "support": {
                 "issues": "https://github.com/sayuprc/result-type/issues",
-                "source": "https://github.com/sayuprc/result-type/tree/0.3.0"
+                "source": "https://github.com/sayuprc/result-type/tree/0.4.0"
             },
-            "time": "2025-06-26T12:19:39+00:00"
+            "time": "2025-06-28T10:48:29+00:00"
         },
         {
             "name": "symfony/clock",
