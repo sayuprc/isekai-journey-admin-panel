@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\SongType\DeleteRequest;
 use Illuminate\Http\Request;
 use SongType\Application\Interactors\CreateInteractor;
 use SongType\Application\Interactors\DeleteInteractor;
@@ -13,7 +12,6 @@ use SongType\Application\Interactors\ListInteractor;
 use SongType\Application\Interactors\UpdateInteractor;
 use SongType\Application\UseCase\Create\CreateInputData;
 use SongType\Application\UseCase\Create\CreateUseCaseInterface;
-use SongType\Application\UseCase\Delete\DeleteInputData;
 use SongType\Application\UseCase\Delete\DeleteUseCaseInterface;
 use SongType\Application\UseCase\Get\GetUseCaseInterface;
 use SongType\Application\UseCase\List\ListUseCaseInterface;
@@ -54,12 +52,6 @@ class SongTypeServiceProvider extends EnvServiceProvider
                     ...$request->all(),
                 ]
             );
-        });
-
-        $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
-            $request = $this->app->make(DeleteRequest::class);
-
-            return $this->getMapper()->map(DeleteInputData::class, $request->validated());
         });
     }
 }
