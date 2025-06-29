@@ -1,6 +1,6 @@
 <?php
 /**
- * ListSongTypeResponse
+ * ErrorResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * ListSongTypeResponse Class Doc Comment
+ * ErrorResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class ErrorResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       *
       * @var string
       */
-    protected static $openAPIModelName = 'ListSongTypeResponse';
+    protected static $openAPIModelName = 'ErrorResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,7 +57,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_types' => '\OpenAPI\Client\Model\SongType[]'
+        'message' => 'string'
     ];
 
     /**
@@ -68,7 +68,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_types' => null
+        'message' => null
     ];
 
     /**
@@ -77,7 +77,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_types' => false
+        'message' => false
     ];
 
     /**
@@ -166,7 +166,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_types' => 'songTypes'
+        'message' => 'message'
     ];
 
     /**
@@ -175,7 +175,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $setters = [
-        'song_types' => 'setSongTypes'
+        'message' => 'setMessage'
     ];
 
     /**
@@ -184,7 +184,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $getters = [
-        'song_types' => 'getSongTypes'
+        'message' => 'getMessage'
     ];
 
     /**
@@ -244,7 +244,7 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_types', $data ?? [], null);
+        $this->setIfExists('message', $data ?? [], null);
     }
 
     /**
@@ -274,8 +274,8 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
     {
         $invalidProperties = [];
 
-        if ($this->container['song_types'] === null) {
-            $invalidProperties[] = "'song_types' can't be null";
+        if ($this->container['message'] === null) {
+            $invalidProperties[] = "'message' can't be null";
         }
         return $invalidProperties;
     }
@@ -293,28 +293,28 @@ class ListSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializ
 
 
     /**
-     * Gets song_types
+     * Gets message
      *
-     * @return \OpenAPI\Client\Model\SongType[]
+     * @return string
      */
-    public function getSongTypes()
+    public function getMessage()
     {
-        return $this->container['song_types'];
+        return $this->container['message'];
     }
 
     /**
-     * Sets song_types
+     * Sets message
      *
-     * @param \OpenAPI\Client\Model\SongType[] $song_types song_types
+     * @param string $message message
      *
      * @return self
      */
-    public function setSongTypes($song_types)
+    public function setMessage($message)
     {
-        if (is_null($song_types)) {
-            throw new \InvalidArgumentException('non-nullable song_types cannot be null');
+        if (is_null($message)) {
+            throw new \InvalidArgumentException('non-nullable message cannot be null');
         }
-        $this->container['song_types'] = $song_types;
+        $this->container['message'] = $message;
 
         return $this;
     }

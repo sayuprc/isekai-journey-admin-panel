@@ -12,10 +12,10 @@ export interface paths {
             cookie?: never;
         };
         /** @description 楽曲種別一覧取得API */
-        get: operations["listSongTypes"];
+        get: operations["SongTypeService_listSongTypes"];
         put?: never;
         /** @description 楽曲種別作成API */
-        post: operations["createSongType"];
+        post: operations["SongTypeService_createSongType"];
         delete?: never;
         options?: never;
         head?: never;
@@ -30,7 +30,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description 楽曲種別取得API */
-        get: operations["getSongType"];
+        get: operations["SongTypeService_getSongType"];
         put?: never;
         post?: never;
         delete?: never;
@@ -55,15 +55,20 @@ export interface components {
         CreateSongTypeResponse: {
             songType: components["schemas"]["SongType"];
         };
+        ErrorResponse: {
+            message: string;
+        };
         GetSongTypeResponse: {
             songType: components["schemas"]["SongType"];
         };
-        ListSongTypeResponse: {
+        /** Format: uuid */
+        "Lib.uuid": string;
+        ListSongTypesResponse: {
             songTypes: components["schemas"]["SongType"][];
         };
         SongType: {
             /** @description 楽曲種別ID */
-            songTypeId: components["schemas"]["uuid"];
+            songTypeId: components["schemas"]["Lib.uuid"];
             /** @description 楽曲種別名 */
             songTypeName: string;
             /**
@@ -72,8 +77,10 @@ export interface components {
              */
             orderNo: number;
         };
-        /** Format: uuid */
-        uuid: string;
+        ValidationError: {
+            field: string;
+            message: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -83,7 +90,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    listSongTypes: {
+    SongTypeService_listSongTypes: {
         parameters: {
             query?: never;
             header?: never;
@@ -98,12 +105,33 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListSongTypeResponse"];
+                    "application/json": components["schemas"]["ListSongTypesResponse"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
-    createSongType: {
+    SongTypeService_createSongType: {
         parameters: {
             query?: never;
             header?: never;
@@ -125,14 +153,53 @@ export interface operations {
                     "application/json": components["schemas"]["CreateSongTypeResponse"];
                 };
             };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
-    getSongType: {
+    SongTypeService_getSongType: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                songTypeId: components["schemas"]["uuid"];
+                songTypeId: components["schemas"]["Lib.uuid"];
             };
             cookie?: never;
         };
@@ -149,6 +216,38 @@ export interface operations {
             };
             /** @description The server cannot find the requested resource. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
                 headers: {
                     [name: string]: unknown;
                 };

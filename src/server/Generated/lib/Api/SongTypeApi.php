@@ -74,13 +74,13 @@ class SongTypeApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'createSongType' => [
+        'songTypeServiceCreateSongType' => [
             'application/json',
         ],
-        'getSongType' => [
+        'songTypeServiceGetSongType' => [
             'application/json',
         ],
-        'listSongTypes' => [
+        'songTypeServiceListSongTypes' => [
             'application/json',
         ],
     ];
@@ -132,34 +132,34 @@ class SongTypeApi
     }
 
     /**
-     * Operation createSongType
+     * Operation songTypeServiceCreateSongType
      *
      * @param  \OpenAPI\Client\Model\CreateSongTypeRequest $create_song_type_request create_song_type_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceCreateSongType'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\CreateSongTypeResponse
+     * @return \OpenAPI\Client\Model\CreateSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
      */
-    public function createSongType($create_song_type_request, string $contentType = self::contentTypes['createSongType'][0])
+    public function songTypeServiceCreateSongType($create_song_type_request, string $contentType = self::contentTypes['songTypeServiceCreateSongType'][0])
     {
-        list($response) = $this->createSongTypeWithHttpInfo($create_song_type_request, $contentType);
+        list($response) = $this->songTypeServiceCreateSongTypeWithHttpInfo($create_song_type_request, $contentType);
         return $response;
     }
 
     /**
-     * Operation createSongTypeWithHttpInfo
+     * Operation songTypeServiceCreateSongTypeWithHttpInfo
      *
      * @param  \OpenAPI\Client\Model\CreateSongTypeRequest $create_song_type_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceCreateSongType'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\CreateSongTypeResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\CreateSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createSongTypeWithHttpInfo($create_song_type_request, string $contentType = self::contentTypes['createSongType'][0])
+    public function songTypeServiceCreateSongTypeWithHttpInfo($create_song_type_request, string $contentType = self::contentTypes['songTypeServiceCreateSongType'][0])
     {
-        $request = $this->createSongTypeRequest($create_song_type_request, $contentType);
+        $request = $this->songTypeServiceCreateSongTypeRequest($create_song_type_request, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -188,6 +188,18 @@ class SongTypeApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\CreateSongTypeResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
                         $request,
                         $response,
                     );
@@ -223,6 +235,22 @@ class SongTypeApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -231,17 +259,17 @@ class SongTypeApi
     }
 
     /**
-     * Operation createSongTypeAsync
+     * Operation songTypeServiceCreateSongTypeAsync
      *
      * @param  \OpenAPI\Client\Model\CreateSongTypeRequest $create_song_type_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceCreateSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createSongTypeAsync($create_song_type_request, string $contentType = self::contentTypes['createSongType'][0])
+    public function songTypeServiceCreateSongTypeAsync($create_song_type_request, string $contentType = self::contentTypes['songTypeServiceCreateSongType'][0])
     {
-        return $this->createSongTypeAsyncWithHttpInfo($create_song_type_request, $contentType)
+        return $this->songTypeServiceCreateSongTypeAsyncWithHttpInfo($create_song_type_request, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -250,18 +278,18 @@ class SongTypeApi
     }
 
     /**
-     * Operation createSongTypeAsyncWithHttpInfo
+     * Operation songTypeServiceCreateSongTypeAsyncWithHttpInfo
      *
      * @param  \OpenAPI\Client\Model\CreateSongTypeRequest $create_song_type_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceCreateSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createSongTypeAsyncWithHttpInfo($create_song_type_request, string $contentType = self::contentTypes['createSongType'][0])
+    public function songTypeServiceCreateSongTypeAsyncWithHttpInfo($create_song_type_request, string $contentType = self::contentTypes['songTypeServiceCreateSongType'][0])
     {
         $returnType = '\OpenAPI\Client\Model\CreateSongTypeResponse';
-        $request = $this->createSongTypeRequest($create_song_type_request, $contentType);
+        $request = $this->songTypeServiceCreateSongTypeRequest($create_song_type_request, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -300,21 +328,21 @@ class SongTypeApi
     }
 
     /**
-     * Create request for operation 'createSongType'
+     * Create request for operation 'songTypeServiceCreateSongType'
      *
      * @param  \OpenAPI\Client\Model\CreateSongTypeRequest $create_song_type_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceCreateSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createSongTypeRequest($create_song_type_request, string $contentType = self::contentTypes['createSongType'][0])
+    public function songTypeServiceCreateSongTypeRequest($create_song_type_request, string $contentType = self::contentTypes['songTypeServiceCreateSongType'][0])
     {
 
         // verify the required parameter 'create_song_type_request' is set
         if ($create_song_type_request === null || (is_array($create_song_type_request) && count($create_song_type_request) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $create_song_type_request when calling createSongType'
+                'Missing the required parameter $create_song_type_request when calling songTypeServiceCreateSongType'
             );
         }
 
@@ -391,34 +419,34 @@ class SongTypeApi
     }
 
     /**
-     * Operation getSongType
+     * Operation songTypeServiceGetSongType
      *
      * @param  string $song_type_id song_type_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceGetSongType'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\GetSongTypeResponse
+     * @return \OpenAPI\Client\Model\GetSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
      */
-    public function getSongType($song_type_id, string $contentType = self::contentTypes['getSongType'][0])
+    public function songTypeServiceGetSongType($song_type_id, string $contentType = self::contentTypes['songTypeServiceGetSongType'][0])
     {
-        list($response) = $this->getSongTypeWithHttpInfo($song_type_id, $contentType);
+        list($response) = $this->songTypeServiceGetSongTypeWithHttpInfo($song_type_id, $contentType);
         return $response;
     }
 
     /**
-     * Operation getSongTypeWithHttpInfo
+     * Operation songTypeServiceGetSongTypeWithHttpInfo
      *
      * @param  string $song_type_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceGetSongType'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\GetSongTypeResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\GetSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getSongTypeWithHttpInfo($song_type_id, string $contentType = self::contentTypes['getSongType'][0])
+    public function songTypeServiceGetSongTypeWithHttpInfo($song_type_id, string $contentType = self::contentTypes['songTypeServiceGetSongType'][0])
     {
-        $request = $this->getSongTypeRequest($song_type_id, $contentType);
+        $request = $this->songTypeServiceGetSongTypeRequest($song_type_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -447,6 +475,18 @@ class SongTypeApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\GetSongTypeResponse',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
                         $request,
                         $response,
                     );
@@ -482,6 +522,22 @@ class SongTypeApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -490,17 +546,17 @@ class SongTypeApi
     }
 
     /**
-     * Operation getSongTypeAsync
+     * Operation songTypeServiceGetSongTypeAsync
      *
      * @param  string $song_type_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceGetSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getSongTypeAsync($song_type_id, string $contentType = self::contentTypes['getSongType'][0])
+    public function songTypeServiceGetSongTypeAsync($song_type_id, string $contentType = self::contentTypes['songTypeServiceGetSongType'][0])
     {
-        return $this->getSongTypeAsyncWithHttpInfo($song_type_id, $contentType)
+        return $this->songTypeServiceGetSongTypeAsyncWithHttpInfo($song_type_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -509,18 +565,18 @@ class SongTypeApi
     }
 
     /**
-     * Operation getSongTypeAsyncWithHttpInfo
+     * Operation songTypeServiceGetSongTypeAsyncWithHttpInfo
      *
      * @param  string $song_type_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceGetSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getSongTypeAsyncWithHttpInfo($song_type_id, string $contentType = self::contentTypes['getSongType'][0])
+    public function songTypeServiceGetSongTypeAsyncWithHttpInfo($song_type_id, string $contentType = self::contentTypes['songTypeServiceGetSongType'][0])
     {
         $returnType = '\OpenAPI\Client\Model\GetSongTypeResponse';
-        $request = $this->getSongTypeRequest($song_type_id, $contentType);
+        $request = $this->songTypeServiceGetSongTypeRequest($song_type_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -559,21 +615,21 @@ class SongTypeApi
     }
 
     /**
-     * Create request for operation 'getSongType'
+     * Create request for operation 'songTypeServiceGetSongType'
      *
      * @param  string $song_type_id (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getSongType'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceGetSongType'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getSongTypeRequest($song_type_id, string $contentType = self::contentTypes['getSongType'][0])
+    public function songTypeServiceGetSongTypeRequest($song_type_id, string $contentType = self::contentTypes['songTypeServiceGetSongType'][0])
     {
 
         // verify the required parameter 'song_type_id' is set
         if ($song_type_id === null || (is_array($song_type_id) && count($song_type_id) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $song_type_id when calling getSongType'
+                'Missing the required parameter $song_type_id when calling songTypeServiceGetSongType'
             );
         }
 
@@ -651,32 +707,32 @@ class SongTypeApi
     }
 
     /**
-     * Operation listSongTypes
+     * Operation songTypeServiceListSongTypes
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSongTypes'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceListSongTypes'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\ListSongTypeResponse
+     * @return \OpenAPI\Client\Model\ListSongTypesResponse
      */
-    public function listSongTypes(string $contentType = self::contentTypes['listSongTypes'][0])
+    public function songTypeServiceListSongTypes(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
-        list($response) = $this->listSongTypesWithHttpInfo($contentType);
+        list($response) = $this->songTypeServiceListSongTypesWithHttpInfo($contentType);
         return $response;
     }
 
     /**
-     * Operation listSongTypesWithHttpInfo
+     * Operation songTypeServiceListSongTypesWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSongTypes'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceListSongTypes'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\ListSongTypeResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\ListSongTypesResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listSongTypesWithHttpInfo(string $contentType = self::contentTypes['listSongTypes'][0])
+    public function songTypeServiceListSongTypesWithHttpInfo(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
-        $request = $this->listSongTypesRequest($contentType);
+        $request = $this->songTypeServiceListSongTypesRequest($contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -704,7 +760,7 @@ class SongTypeApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\ListSongTypeResponse',
+                        '\OpenAPI\Client\Model\ListSongTypesResponse',
                         $request,
                         $response,
                     );
@@ -726,7 +782,7 @@ class SongTypeApi
             }
 
             return $this->handleResponseWithDataType(
-                '\OpenAPI\Client\Model\ListSongTypeResponse',
+                '\OpenAPI\Client\Model\ListSongTypesResponse',
                 $request,
                 $response,
             );
@@ -735,7 +791,7 @@ class SongTypeApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\ListSongTypeResponse',
+                        '\OpenAPI\Client\Model\ListSongTypesResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -748,16 +804,16 @@ class SongTypeApi
     }
 
     /**
-     * Operation listSongTypesAsync
+     * Operation songTypeServiceListSongTypesAsync
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSongTypes'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceListSongTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listSongTypesAsync(string $contentType = self::contentTypes['listSongTypes'][0])
+    public function songTypeServiceListSongTypesAsync(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
-        return $this->listSongTypesAsyncWithHttpInfo($contentType)
+        return $this->songTypeServiceListSongTypesAsyncWithHttpInfo($contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -766,17 +822,17 @@ class SongTypeApi
     }
 
     /**
-     * Operation listSongTypesAsyncWithHttpInfo
+     * Operation songTypeServiceListSongTypesAsyncWithHttpInfo
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSongTypes'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceListSongTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listSongTypesAsyncWithHttpInfo(string $contentType = self::contentTypes['listSongTypes'][0])
+    public function songTypeServiceListSongTypesAsyncWithHttpInfo(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\ListSongTypeResponse';
-        $request = $this->listSongTypesRequest($contentType);
+        $returnType = '\OpenAPI\Client\Model\ListSongTypesResponse';
+        $request = $this->songTypeServiceListSongTypesRequest($contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -815,14 +871,14 @@ class SongTypeApi
     }
 
     /**
-     * Create request for operation 'listSongTypes'
+     * Create request for operation 'songTypeServiceListSongTypes'
      *
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSongTypes'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceListSongTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listSongTypesRequest(string $contentType = self::contentTypes['listSongTypes'][0])
+    public function songTypeServiceListSongTypesRequest(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
 
 
