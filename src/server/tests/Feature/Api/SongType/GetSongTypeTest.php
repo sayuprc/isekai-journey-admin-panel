@@ -17,6 +17,7 @@ use Tests\TestCase;
 
 class GetSongTypeTest extends TestCase
 {
+    // TODO モックやめる
     private MockInterface&SongTypeRepositoryInterface $repository;
 
     public function setUp(): void
