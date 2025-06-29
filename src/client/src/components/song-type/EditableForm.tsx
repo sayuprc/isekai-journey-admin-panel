@@ -65,7 +65,7 @@ export const EditableForm = (props: Props) => {
 
     const songTypeId = props.data?.songType.songTypeId ?? '';
 
-    const { data, error, response } = await client.DELETE('/song-types/{songTypeId}', {
+    const { error, response } = await client.DELETE('/song-types/{songTypeId}', {
       params: {
         path: {
           songTypeId: songTypeId,
@@ -78,9 +78,6 @@ export const EditableForm = (props: Props) => {
       // TODO わかりやすい表示にする
       const errorAs = error as components['schemas']['ValidationError'];
       alert(`エラー ${errorAs.field}: ${errorAs.message}`);
-    } else if (!data) {
-      // TODO エラーハンドリング
-      throw new Error();
     } else {
       setFlash('削除しました');
       window.location.href = `/song-types`;
