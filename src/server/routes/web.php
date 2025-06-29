@@ -18,7 +18,6 @@ use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController
 use App\Http\Controllers\Web\Song\CreateSongController;
 use App\Http\Controllers\Web\Song\ListSongController;
 use App\Http\Controllers\Web\SongType\DeleteSongTypeController;
-use App\Http\Controllers\Web\SongType\EditSongTypeController;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Support\Facades\Route;
@@ -84,9 +83,6 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('song-types')->group(function (): void {
-        Route::post('/edit', [EditSongTypeController::class, 'handle'])
-            ->name(SongTypeRouteMap::Edit);
-
         Route::delete('/', [DeleteSongTypeController::class, 'handle'])
             ->name(SongTypeRouteMap::Delete);
     });

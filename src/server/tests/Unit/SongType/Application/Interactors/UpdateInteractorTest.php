@@ -7,9 +7,9 @@ namespace Tests\Unit\SongType\Application\Interactors;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use SongType\Application\Interactors\EditInteractor;
-use SongType\Application\UseCase\Edit\EditInputData;
-use SongType\Application\UseCase\Edit\EditUseCaseInterface;
+use SongType\Application\Interactors\UpdateInteractor;
+use SongType\Application\UseCase\Update\UpdateInputData;
+use SongType\Application\UseCase\Update\UpdateUseCaseInterface;
 use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeId;
@@ -19,7 +19,7 @@ use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
-class EditInteractorTest extends TestCase
+class UpdateInteractorTest extends TestCase
 {
     private MockInterface&SongTypeRepositoryInterface $repository;
 
@@ -27,7 +27,7 @@ class EditInteractorTest extends TestCase
 
     private MockInterface&SongTypeNameDuplicateCheckService $service;
 
-    private EditInteractor $interactor;
+    private UpdateInteractor $interactor;
 
     protected function setUp(): void
     {
@@ -37,13 +37,13 @@ class EditInteractorTest extends TestCase
         $this->factory = Mockery::mock(SongTypeFactoryInterface::class);
         $this->service = Mockery::mock(SongTypeNameDuplicateCheckService::class);
 
-        $this->interactor = new EditInteractor($this->repository, $this->factory, $this->service);
+        $this->interactor = new UpdateInteractor($this->repository, $this->factory, $this->service);
     }
 
     #[Test]
     public function isImplementsSpecificInterface(): void
     {
-        $this->assertInstanceOf(EditUseCaseInterface::class, $this->interactor);
+        $this->assertInstanceOf(UpdateUseCaseInterface::class, $this->interactor);
     }
 
     #[Test]
@@ -74,7 +74,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
+        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
 
         $this->assertTrue($result->isOk());
     }
@@ -99,7 +99,7 @@ class EditInteractorTest extends TestCase
             ->andReturnTrue()
             ->once();
 
-        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
+        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));
 
         $this->assertTrue($result->isErr());
     }

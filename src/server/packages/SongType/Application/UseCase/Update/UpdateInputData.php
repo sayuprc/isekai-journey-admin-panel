@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SongType\Application\UseCase\Edit;
+namespace SongType\Application\UseCase\Update;
 
-class EditInputData
+class UpdateInputData
 {
     /**
      * @param positive-int $orderNo

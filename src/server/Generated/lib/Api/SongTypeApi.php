@@ -83,6 +83,9 @@ class SongTypeApi
         'songTypeServiceListSongTypes' => [
             'application/json',
         ],
+        'songTypeServiceUpdateSongType' => [
+            'application/json',
+        ],
     ];
 
     /**
@@ -940,6 +943,327 @@ class SongTypeApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation songTypeServiceUpdateSongType
+     *
+     * @param  string $song_type_id song_type_id (required)
+     * @param  \OpenAPI\Client\Model\UpdateSongTypeRequest $update_song_type_request update_song_type_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceUpdateSongType'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\UpdateSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function songTypeServiceUpdateSongType($song_type_id, $update_song_type_request, string $contentType = self::contentTypes['songTypeServiceUpdateSongType'][0])
+    {
+        list($response) = $this->songTypeServiceUpdateSongTypeWithHttpInfo($song_type_id, $update_song_type_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation songTypeServiceUpdateSongTypeWithHttpInfo
+     *
+     * @param  string $song_type_id (required)
+     * @param  \OpenAPI\Client\Model\UpdateSongTypeRequest $update_song_type_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceUpdateSongType'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\UpdateSongTypeResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function songTypeServiceUpdateSongTypeWithHttpInfo($song_type_id, $update_song_type_request, string $contentType = self::contentTypes['songTypeServiceUpdateSongType'][0])
+    {
+        $request = $this->songTypeServiceUpdateSongTypeRequest($song_type_id, $update_song_type_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\UpdateSongTypeResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\UpdateSongTypeResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\UpdateSongTypeResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation songTypeServiceUpdateSongTypeAsync
+     *
+     * @param  string $song_type_id (required)
+     * @param  \OpenAPI\Client\Model\UpdateSongTypeRequest $update_song_type_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceUpdateSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function songTypeServiceUpdateSongTypeAsync($song_type_id, $update_song_type_request, string $contentType = self::contentTypes['songTypeServiceUpdateSongType'][0])
+    {
+        return $this->songTypeServiceUpdateSongTypeAsyncWithHttpInfo($song_type_id, $update_song_type_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation songTypeServiceUpdateSongTypeAsyncWithHttpInfo
+     *
+     * @param  string $song_type_id (required)
+     * @param  \OpenAPI\Client\Model\UpdateSongTypeRequest $update_song_type_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceUpdateSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function songTypeServiceUpdateSongTypeAsyncWithHttpInfo($song_type_id, $update_song_type_request, string $contentType = self::contentTypes['songTypeServiceUpdateSongType'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\UpdateSongTypeResponse';
+        $request = $this->songTypeServiceUpdateSongTypeRequest($song_type_id, $update_song_type_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'songTypeServiceUpdateSongType'
+     *
+     * @param  string $song_type_id (required)
+     * @param  \OpenAPI\Client\Model\UpdateSongTypeRequest $update_song_type_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceUpdateSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function songTypeServiceUpdateSongTypeRequest($song_type_id, $update_song_type_request, string $contentType = self::contentTypes['songTypeServiceUpdateSongType'][0])
+    {
+
+        // verify the required parameter 'song_type_id' is set
+        if ($song_type_id === null || (is_array($song_type_id) && count($song_type_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $song_type_id when calling songTypeServiceUpdateSongType'
+            );
+        }
+
+        // verify the required parameter 'update_song_type_request' is set
+        if ($update_song_type_request === null || (is_array($update_song_type_request) && count($update_song_type_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $update_song_type_request when calling songTypeServiceUpdateSongType'
+            );
+        }
+
+
+        $resourcePath = '/song-types/{songTypeId}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($song_type_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'songTypeId' . '}',
+                ObjectSerializer::toPathValue($song_type_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($update_song_type_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($update_song_type_request));
+            } else {
+                $httpBody = $update_song_type_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

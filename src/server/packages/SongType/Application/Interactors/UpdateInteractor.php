@@ -7,13 +7,14 @@ namespace SongType\Application\Interactors;
 use ResultType\Eager\Err;
 use ResultType\Eager\Ok;
 use ResultType\Result;
-use SongType\Application\UseCase\Edit\EditInputData;
-use SongType\Application\UseCase\Edit\EditUseCaseInterface;
+use SongType\Application\UseCase\Update\UpdateInputData;
+use SongType\Application\UseCase\Update\UpdateOutputData;
+use SongType\Application\UseCase\Update\UpdateUseCaseInterface;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
 
-class EditInteractor implements EditUseCaseInterface
+class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(
         private readonly SongTypeRepositoryInterface $repository,
@@ -22,10 +23,7 @@ class EditInteractor implements EditUseCaseInterface
     ) {
     }
 
-    /**
-     * @return Result<null, string>
-     */
-    public function handle(EditInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): Result
     {
         $songType = $this->factory->reconstitute($inputData->songTypeId, $inputData->songTypeName, $inputData->orderNo);
 
@@ -35,6 +33,6 @@ class EditInteractor implements EditUseCaseInterface
 
         $this->repository->update($songType);
 
-        return new Ok(null);
+        return new Ok(new UpdateOutputData($songType));
     }
 }
