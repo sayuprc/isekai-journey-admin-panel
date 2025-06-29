@@ -1,10 +1,10 @@
 ---
-import { Form } from '../../../components/song-type/SongTypeCreateForm';
+import { CreateForm } from '../../../components/song-type/CreateForm';
 import Layout from '../../../layouts/Layout.astro';
 
 export const prerender = false;
 ---
 
 <Layout pageTitle="楽曲種別作成">
-  <Form client:load />
+  <CreateForm client:load />
 </Layout>
