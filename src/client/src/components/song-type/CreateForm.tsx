@@ -43,7 +43,7 @@ export const CreateForm = () => {
         <input type="text" class="input" name="songTypeName" />
 
         <label class="label">表示順</label>
-        <input type="number" class="input" name="orderNo" required />
+        <input type="number" class="input" name="orderNo" required min="1" />
 
         <button class="btn btn-neutral mt-4">作成</button>
       </fieldset>
