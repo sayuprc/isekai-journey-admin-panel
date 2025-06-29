@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\SongType;
 
-use OpenAPI\Client\Model\ListSongTypeResponse;
-use OpenAPI\Client\Model\SongType as OpenApiSongType;
+use Illuminate\Http\JsonResponse;
+use OpenAPI\Client\Model\ListSongTypesResponse;
 use SongType\Application\UseCase\List\ListOutputData;
 use SongType\Domain\Models\SongType;
 
 class SongTypeListPresenter
 {
-    public function present(ListOutputData $outputData): ListSongTypeResponse
+    public function __construct(private readonly Converter $converter)
     {
-        return new ListSongTypeResponse()
-            ->setSongTypes(
-                array_map(
-                    fn (SongType $songType) => new OpenApiSongType()
-                        ->setSongTypeId($songType->songTypeId->value)
-                        ->setSongTypeName($songType->songTypeName->value)
-                        ->setOrderNo($songType->orderNo->value),
-                    $outputData->songTypes
-                )
-            );
+    }
+
+    public function present(ListOutputData $outputData): JsonResponse
+    {
+        return response()->json(
+            new ListSongTypesResponse()
+                ->setSongTypes(
+                    array_map(
+                        fn (SongType $songType) => $this->converter->toOpenApiSongType($songType),
+                        $outputData->songTypes
+                    )
+                ),
+            200
+        );
     }
 }
