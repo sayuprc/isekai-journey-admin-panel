@@ -9,7 +9,7 @@ use OpenAPI\Client\Model\ListSongTypesResponse;
 use SongType\Application\UseCase\List\ListOutputData;
 use SongType\Domain\Models\SongType;
 
-class SongTypeListPresenter
+class ListPresenter
 {
     public function __construct(private readonly Converter $converter)
     {
