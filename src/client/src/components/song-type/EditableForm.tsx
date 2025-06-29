@@ -21,7 +21,12 @@ export const EditableForm = (props: Props) => {
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
 
-    const songTypeId = props.data?.songType.songTypeId ?? '';
+    const songTypeId = props.data?.songType.songTypeId;
+
+    if (!songTypeId) {
+      alert('更新対象の楽曲種別IDを取得できませんでした');
+      return;
+    }
 
     const { data, error, response } = await client.PUT('/song-types/{songTypeId}', {
       params: {
@@ -63,7 +68,12 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
-    const songTypeId = props.data?.songType.songTypeId ?? '';
+    const songTypeId = props.data?.songType.songTypeId;
+
+    if (!songTypeId) {
+      alert('削除対象の楽曲種別IDを取得できませんでした');
+      return;
+    }
 
     const { error, response } = await client.DELETE('/song-types/{songTypeId}', {
       params: {
