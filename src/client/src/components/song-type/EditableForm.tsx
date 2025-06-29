@@ -1,4 +1,4 @@
-import { createEffect, Show } from 'solid-js';
+import { onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { setFlash } from '../Flash';
 
@@ -14,7 +14,7 @@ export const EditableForm = (props: Props) => {
     // TODO 実装する
   };
 
-  createEffect(() => {
+  onMount(() => {
     if (props.status === 404) {
       setFlash('データがない');
       window.location.href = '/song-types';
