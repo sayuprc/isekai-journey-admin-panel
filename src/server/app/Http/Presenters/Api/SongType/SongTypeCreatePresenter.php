@@ -4,19 +4,40 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\SongType;
 
+use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\CreateSongTypeResponse;
-use OpenAPI\Client\Model\SongType;
+use OpenAPI\Client\Model\ErrorResponse;
+use ResultType\Result;
 use SongType\Application\UseCase\Create\CreateOutputData;
 
 class SongTypeCreatePresenter
 {
-    public function present(CreateOutputData $outputData): CreateSongTypeResponse
+    public function __construct(private readonly Converter $converter)
     {
-        return new CreateSongTypeResponse()
-            ->setSongType(
-                new SongType()->setSongTypeId($outputData->songType->songTypeId->value)
-                    ->setSongTypeName($outputData->songType->songTypeName->value)
-                    ->setOrderNo($outputData->songType->orderNo->value)
-            );
+    }
+
+    /**
+     * @param Result<CreateOutputData, string> $result
+     */
+    public function present(Result $result): JsonResponse
+    {
+        [$data, $status] = $result->match(
+            function (CreateOutputData $outputData) {
+                $songType = $outputData->songType;
+
+                return [
+                    new CreateSongTypeResponse()->setSongType($this->converter->toOpenApiSongType($songType)),
+                    200,
+                ];
+            },
+            function (string $message) {
+                return [
+                    new ErrorResponse()->setMessage($message),
+                    400,
+                ];
+            }
+        );
+
+        return response()->json($data, $status);
     }
 }

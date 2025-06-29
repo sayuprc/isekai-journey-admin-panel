@@ -1,4 +1,5 @@
 ---
+import { EditableForm } from '../../components/song-type/EditableForm';
 import Layout from '../../layouts/Layout.astro';
 import { client } from '../../utils/client';
 
@@ -12,51 +13,18 @@ const { id } = Astro.params;
 
 if (typeof id !== 'string') {
   // TODO ちゃんとしたハンドリングをする
-  throw new Error('Invalid URL');
+  throw new Error('URL が不正');
 }
 
-const { data } = await client.GET('/song-types/{songTypeId}', {
+const { data, response } = await client.GET('/song-types/{songTypeId}', {
   params: {
     path: { songTypeId: id },
   },
 });
-
-if (!data) {
-  // TODO ちゃんとしたハンドリングをする
-  throw new Error();
-}
 ---
 
 <Layout pageTitle="楽曲種別詳細">
   <div>
-    <div>
-      <form id="form" data-song-type-id={data.songType.songTypeId}>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend class="fieldset-legend">楽曲種別詳細</legend>
-
-          <label class="label">楽曲種別名</label>
-          <input type="text" class="input" value={data.songType.songTypeName} />
-
-          <label class="label">表示順</label>
-          <input type="number" class="input" required min="1" value={data.songType.orderNo} />
-
-          <div class="flex justify-between gap-2">
-            <button class="btn btn-error mt-4">削除</button>
-            <button class="btn btn-neutral mt-4">更新</button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
+    <EditableForm data={data} status={response.status} client:load />
   </div>
-
-  <script>
-    // TODO API ができたら処理を書く
-    const form = document.getElementById('form');
-
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
-
-    // const songTypeId = document.getElementById('form')?.dataset.songTypeId;
-  </script>
 </Layout>
