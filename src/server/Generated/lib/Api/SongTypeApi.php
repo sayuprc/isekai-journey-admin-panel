@@ -77,6 +77,9 @@ class SongTypeApi
         'songTypeServiceCreateSongType' => [
             'application/json',
         ],
+        'songTypeServiceDeleteSongType' => [
+            'application/json',
+        ],
         'songTypeServiceGetSongType' => [
             'application/json',
         ],
@@ -415,6 +418,224 @@ class SongTypeApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation songTypeServiceDeleteSongType
+     *
+     * @param  string $song_type_id song_type_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceDeleteSongType'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    public function songTypeServiceDeleteSongType($song_type_id, string $contentType = self::contentTypes['songTypeServiceDeleteSongType'][0])
+    {
+        $this->songTypeServiceDeleteSongTypeWithHttpInfo($song_type_id, $contentType);
+    }
+
+    /**
+     * Operation songTypeServiceDeleteSongTypeWithHttpInfo
+     *
+     * @param  string $song_type_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceDeleteSongType'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function songTypeServiceDeleteSongTypeWithHttpInfo($song_type_id, string $contentType = self::contentTypes['songTypeServiceDeleteSongType'][0])
+    {
+        $request = $this->songTypeServiceDeleteSongTypeRequest($song_type_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            return [null, $statusCode, $response->getHeaders()];
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation songTypeServiceDeleteSongTypeAsync
+     *
+     * @param  string $song_type_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceDeleteSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function songTypeServiceDeleteSongTypeAsync($song_type_id, string $contentType = self::contentTypes['songTypeServiceDeleteSongType'][0])
+    {
+        return $this->songTypeServiceDeleteSongTypeAsyncWithHttpInfo($song_type_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation songTypeServiceDeleteSongTypeAsyncWithHttpInfo
+     *
+     * @param  string $song_type_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceDeleteSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function songTypeServiceDeleteSongTypeAsyncWithHttpInfo($song_type_id, string $contentType = self::contentTypes['songTypeServiceDeleteSongType'][0])
+    {
+        $returnType = '';
+        $request = $this->songTypeServiceDeleteSongTypeRequest($song_type_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'songTypeServiceDeleteSongType'
+     *
+     * @param  string $song_type_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songTypeServiceDeleteSongType'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function songTypeServiceDeleteSongTypeRequest($song_type_id, string $contentType = self::contentTypes['songTypeServiceDeleteSongType'][0])
+    {
+
+        // verify the required parameter 'song_type_id' is set
+        if ($song_type_id === null || (is_array($song_type_id) && count($song_type_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $song_type_id when calling songTypeServiceDeleteSongType'
+            );
+        }
+
+
+        $resourcePath = '/song-types/{songTypeId}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($song_type_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'songTypeId' . '}',
+                ObjectSerializer::toPathValue($song_type_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'DELETE',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody
