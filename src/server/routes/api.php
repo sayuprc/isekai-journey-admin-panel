@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
 use App\Http\Controllers\Api\SongType\GetSongTypeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
+use App\Http\Controllers\Api\SongType\UpdateSongTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use SongType\Route\SongTypeRouteMap;
@@ -18,6 +19,7 @@ Route::middleware('api')->group(function () {
         // TODO ログインが必要
         Route::post('/', [CreateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Create);
         Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
+        Route::put('/{songTypeId}', [UpdateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Update);
         Route::get('/{songTypeId}', [GetSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Get);
     });
 });
