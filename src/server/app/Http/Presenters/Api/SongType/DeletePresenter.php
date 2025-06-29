@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\SongType;
 
 use Illuminate\Http\JsonResponse;
 
-class SongTypeDeletePresenter
+class DeletePresenter
 {
     public function present(): JsonResponse
     {

@@ -10,7 +10,7 @@ use OpenAPI\Client\Model\ErrorResponse;
 use ResultType\Result;
 use SongType\Application\UseCase\Create\CreateOutputData;
 
-class SongTypeCreatePresenter
+class CreatePresenter
 {
     public function __construct(private readonly Converter $converter)
     {
