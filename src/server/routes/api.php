@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
+use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Api\SongType\GetSongTypeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Controllers\Api\SongType\UpdateSongTypeController;
@@ -20,6 +21,7 @@ Route::middleware('api')->group(function () {
         Route::post('/', [CreateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Create);
         Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
         Route::put('/{songTypeId}', [UpdateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Update);
+        Route::delete('/{songTypeId}', [DeleteSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Delete);
         Route::get('/{songTypeId}', [GetSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Get);
     });
 });

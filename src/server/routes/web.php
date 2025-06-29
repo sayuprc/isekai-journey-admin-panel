@@ -17,14 +17,12 @@ use App\Http\Controllers\Web\JourneyLogLinkType\EditJourneyLogLinkTypeController
 use App\Http\Controllers\Web\JourneyLogLinkType\ListJourneyLogLinkTypeController;
 use App\Http\Controllers\Web\Song\CreateSongController;
 use App\Http\Controllers\Web\Song\ListSongController;
-use App\Http\Controllers\Web\SongType\DeleteSongTypeController;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Support\Facades\Route;
 use JourneyLog\Route\JourneyLogRouteMap;
 use JourneyLogLinkType\Route\JourneyLogLinkTypeRouteMap;
 use Song\Route\SongRouteMap;
-use SongType\Route\SongTypeRouteMap;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [LoginController::class, 'showLoginForm'])
@@ -80,11 +78,6 @@ Route::middleware('auth')->group(function (): void {
             ->name(SongRouteMap::ShowCreateForm);
         Route::post('/create', [CreateSongController::class, 'handle'])
             ->name(SongRouteMap::Create);
-    });
-
-    Route::prefix('song-types')->group(function (): void {
-        Route::delete('/', [DeleteSongTypeController::class, 'handle'])
-            ->name(SongTypeRouteMap::Delete);
     });
 
     Route::prefix('creators')->group(function (): void {

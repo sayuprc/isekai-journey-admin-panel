@@ -10,5 +10,5 @@ enum SongTypeRouteMap: string
     case Get = 'song-types.show';
     case Create = 'song-types.create';
     case Update = 'song-types.update';
-    case Delete = 'song-types.delete.handle';
+    case Delete = 'song-types.delete';
 }
