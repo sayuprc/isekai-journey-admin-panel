@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\SongType;
 
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\ErrorResponse;
-use OpenAPI\Client\Model\GetSongTypeResponse;
+use OpenAPI\Client\Model\SongTypeGetResponse;
 use ResultType\Result;
 use SongType\Application\UseCase\Get\GetOutputData;
 
@@ -26,7 +26,7 @@ class GetPresenter
                 $songType = $outputData->songType;
 
                 return [
-                    new GetSongTypeResponse()->setSongType($this->converter->toOpenApiSongType($songType)),
+                    new SongTypeGetResponse()->setSongType($this->converter->toOpenApiSongType($songType)),
                     200,
                 ];
             },

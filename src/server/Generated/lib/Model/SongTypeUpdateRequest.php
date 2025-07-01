@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateSongTypeRequest
+ * SongTypeUpdateRequest
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * CreateSongTypeRequest Class Doc Comment
+ * SongTypeUpdateRequest Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class CreateSongTypeRequest implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongTypeUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class CreateSongTypeRequest implements ModelInterface, ArrayAccess, \JsonSeriali
       *
       * @var string
       */
-    protected static $openAPIModelName = 'CreateSongTypeRequest';
+    protected static $openAPIModelName = 'SongTypeUpdateRequest';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -334,7 +334,7 @@ class CreateSongTypeRequest implements ModelInterface, ArrayAccess, \JsonSeriali
         }
 
         if ((mb_strlen($song_type_name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $song_type_name when calling CreateSongTypeRequest., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid length for $song_type_name when calling SongTypeUpdateRequest., must be bigger than or equal to 1.');
         }
 
         $this->container['song_type_name'] = $song_type_name;
@@ -366,7 +366,7 @@ class CreateSongTypeRequest implements ModelInterface, ArrayAccess, \JsonSeriali
         }
 
         if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling CreateSongTypeRequest., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for $order_no when calling SongTypeUpdateRequest., must be bigger than or equal to 1.');
         }
 
         $this->container['order_no'] = $order_no;
