@@ -6,7 +6,7 @@ namespace Creator\Route;
 
 enum CreatorRouteMap: string
 {
-    case List = 'creators.index';
+    case List = 'creators';
     case ShowCreateForm = 'creators.create.index';
     case Create = 'creators.create.handle';
     case ShowEditForm = 'creators.edit.index';
