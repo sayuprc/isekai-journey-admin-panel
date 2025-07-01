@@ -1,6 +1,6 @@
 <?php
 /**
- * ListSongTypesResponse
+ * SongTypeCreateRequest
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * ListSongTypesResponse Class Doc Comment
+ * SongTypeCreateRequest Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongTypeCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
       *
       * @var string
       */
-    protected static $openAPIModelName = 'ListSongTypesResponse';
+    protected static $openAPIModelName = 'SongTypeCreateRequest';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,7 +57,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_types' => '\OpenAPI\Client\Model\SongType[]'
+        'song_type_name' => 'string',
+        'order_no' => 'int'
     ];
 
     /**
@@ -68,7 +69,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_types' => null
+        'song_type_name' => null,
+        'order_no' => 'int32'
     ];
 
     /**
@@ -77,7 +79,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_types' => false
+        'song_type_name' => false,
+        'order_no' => false
     ];
 
     /**
@@ -166,7 +169,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_types' => 'songTypes'
+        'song_type_name' => 'songTypeName',
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -175,7 +179,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $setters = [
-        'song_types' => 'setSongTypes'
+        'song_type_name' => 'setSongTypeName',
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -184,7 +189,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $getters = [
-        'song_types' => 'getSongTypes'
+        'song_type_name' => 'getSongTypeName',
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -244,7 +250,8 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_types', $data ?? [], null);
+        $this->setIfExists('song_type_name', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -274,9 +281,20 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
     {
         $invalidProperties = [];
 
-        if ($this->container['song_types'] === null) {
-            $invalidProperties[] = "'song_types' can't be null";
+        if ($this->container['song_type_name'] === null) {
+            $invalidProperties[] = "'song_type_name' can't be null";
         }
+        if ((mb_strlen($this->container['song_type_name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'song_type_name', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         return $invalidProperties;
     }
 
@@ -293,28 +311,65 @@ class ListSongTypesResponse implements ModelInterface, ArrayAccess, \JsonSeriali
 
 
     /**
-     * Gets song_types
+     * Gets song_type_name
      *
-     * @return \OpenAPI\Client\Model\SongType[]
+     * @return string
      */
-    public function getSongTypes()
+    public function getSongTypeName()
     {
-        return $this->container['song_types'];
+        return $this->container['song_type_name'];
     }
 
     /**
-     * Sets song_types
+     * Sets song_type_name
      *
-     * @param \OpenAPI\Client\Model\SongType[] $song_types song_types
+     * @param string $song_type_name 楽曲種別名
      *
      * @return self
      */
-    public function setSongTypes($song_types)
+    public function setSongTypeName($song_type_name)
     {
-        if (is_null($song_types)) {
-            throw new \InvalidArgumentException('non-nullable song_types cannot be null');
+        if (is_null($song_type_name)) {
+            throw new \InvalidArgumentException('non-nullable song_type_name cannot be null');
         }
-        $this->container['song_types'] = $song_types;
+
+        if ((mb_strlen($song_type_name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $song_type_name when calling SongTypeCreateRequest., must be bigger than or equal to 1.');
+        }
+
+        $this->container['song_type_name'] = $song_type_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling SongTypeCreateRequest., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

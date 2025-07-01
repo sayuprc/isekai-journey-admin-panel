@@ -45,32 +45,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        CreateSongTypeRequest: {
-            /** @description 楽曲種別名 */
-            songTypeName: string;
-            /**
-             * Format: int32
-             * @description 表示順
-             */
-            orderNo: number;
-        };
-        CreateSongTypeResponse: {
-            songType: components["schemas"]["SongType"];
-        };
         ErrorResponse: {
             message: string;
         };
-        GetSongTypeResponse: {
-            songType: components["schemas"]["SongType"];
-        };
-        /** Format: uuid */
-        "Lib.uuid": string;
-        ListSongTypesResponse: {
-            songTypes: components["schemas"]["SongType"][];
-        };
         SongType: {
             /** @description 楽曲種別ID */
-            songTypeId: components["schemas"]["Lib.uuid"];
+            songTypeId: components["schemas"]["uuid"];
             /** @description 楽曲種別名 */
             songTypeName: string;
             /**
@@ -79,7 +59,7 @@ export interface components {
              */
             orderNo: number;
         };
-        UpdateSongTypeRequest: {
+        SongTypeCreateRequest: {
             /** @description 楽曲種別名 */
             songTypeName: string;
             /**
@@ -88,13 +68,33 @@ export interface components {
              */
             orderNo: number;
         };
-        UpdateSongTypeResponse: {
+        SongTypeCreateResponse: {
+            songType: components["schemas"]["SongType"];
+        };
+        SongTypeGetResponse: {
+            songType: components["schemas"]["SongType"];
+        };
+        SongTypeListResponse: {
+            songTypes: components["schemas"]["SongType"][];
+        };
+        SongTypeUpdateRequest: {
+            /** @description 楽曲種別名 */
+            songTypeName: string;
+            /**
+             * Format: int32
+             * @description 表示順
+             */
+            orderNo: number;
+        };
+        SongTypeUpdateResponse: {
             songType: components["schemas"]["SongType"];
         };
         ValidationError: {
             field: string;
             message: string;
         };
+        /** Format: uuid */
+        uuid: string;
     };
     responses: never;
     parameters: never;
@@ -119,7 +119,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListSongTypesResponse"];
+                    "application/json": components["schemas"]["SongTypeListResponse"];
                 };
             };
             /** @description Server error */
@@ -154,7 +154,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateSongTypeRequest"];
+                "application/json": components["schemas"]["SongTypeCreateRequest"];
             };
         };
         responses: {
@@ -164,7 +164,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CreateSongTypeResponse"];
+                    "application/json": components["schemas"]["SongTypeCreateResponse"];
                 };
             };
             /** @description The server could not understand the request due to invalid syntax. */
@@ -213,7 +213,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                songTypeId: components["schemas"]["Lib.uuid"];
+                songTypeId: components["schemas"]["uuid"];
             };
             cookie?: never;
         };
@@ -225,7 +225,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GetSongTypeResponse"];
+                    "application/json": components["schemas"]["SongTypeGetResponse"];
                 };
             };
             /** @description The server cannot find the requested resource. */
@@ -274,13 +274,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                songTypeId: components["schemas"]["Lib.uuid"];
+                songTypeId: components["schemas"]["uuid"];
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateSongTypeRequest"];
+                "application/json": components["schemas"]["SongTypeUpdateRequest"];
             };
         };
         responses: {
@@ -290,7 +290,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UpdateSongTypeResponse"];
+                    "application/json": components["schemas"]["SongTypeUpdateResponse"];
                 };
             };
             /** @description The server could not understand the request due to invalid syntax. */
@@ -348,7 +348,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                songTypeId: components["schemas"]["Lib.uuid"];
+                songTypeId: components["schemas"]["uuid"];
             };
             cookie?: never;
         };

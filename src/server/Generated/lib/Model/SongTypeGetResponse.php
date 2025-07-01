@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateSongTypeResponse
+ * SongTypeGetResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * CreateSongTypeResponse Class Doc Comment
+ * SongTypeGetResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class CreateSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongTypeGetResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class CreateSongTypeResponse implements ModelInterface, ArrayAccess, \JsonSerial
       *
       * @var string
       */
-    protected static $openAPIModelName = 'CreateSongTypeResponse';
+    protected static $openAPIModelName = 'SongTypeGetResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
