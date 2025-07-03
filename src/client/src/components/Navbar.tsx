@@ -1,6 +1,6 @@
 export const Navbar = () => {
   return (
-    <div class="navbar bg-neutral-content text-base-content">
+    <nav class="navbar bg-neutral-content text-base-content" aria-label="Site navigation">
       <div class="flex-1">ヰ世界のテラリウム</div>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
@@ -8,6 +8,6 @@ export const Navbar = () => {
           <li><a href="/creators">クリエイター一覧</a></li>
         </ul>
       </div>
-    </div>
+    </nav>
   );
 };
