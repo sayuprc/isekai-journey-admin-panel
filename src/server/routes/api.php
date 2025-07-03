@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
 use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
@@ -20,6 +21,7 @@ Route::get('/user', function (Request $request) {
 Route::middleware('api')->group(function () {
     Route::prefix('creators')->group(function () {
         Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
+        Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
     });
 
     Route::prefix('song-types')->group(function () {

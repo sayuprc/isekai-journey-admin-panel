@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/creators/{creatorId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description クリエイター取得API */
+        get: operations["CreatorService_getCreator"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/song-types": {
         parameters: {
             query?: never;
@@ -67,6 +84,9 @@ export interface components {
             creatorId: components["schemas"]["uuid"];
             /** @description クリエイター名 */
             creatorName: string;
+        };
+        CreatorGetResponse: {
+            creator: components["schemas"]["Creator"];
         };
         CreatorListResponse: {
             creators: components["schemas"]["Creator"][];
@@ -146,6 +166,67 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreatorListResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CreatorService_getCreator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                creatorId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatorGetResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
             /** @description Server error */
