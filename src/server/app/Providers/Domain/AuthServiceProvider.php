@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\Auth\LoginRequest;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Application\UseCase\Login\LoginUseCaseInterface;
+use Illuminate\Http\Request;
 
 class AuthServiceProvider extends EnvServiceProvider
 {
@@ -16,9 +16,9 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
 
         $this->app->bind(LoginInputData::class, function (): LoginInputData {
-            $request = $this->app->make(LoginRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(LoginInputData::class, $request->validated());
+            return $this->getMapper()->map(LoginInputData::class, $request->all());
         });
     }
 }
