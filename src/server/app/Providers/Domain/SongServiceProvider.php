@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\Song\CreateRequest;
+use Illuminate\Http\Request;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\Interactors\ListInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -26,9 +26,9 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
-            $request = $this->app->make(CreateRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(CreateInputData::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->all());
         });
     }
 }

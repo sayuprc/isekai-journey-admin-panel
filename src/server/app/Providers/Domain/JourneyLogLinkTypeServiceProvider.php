@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\JourneyLogLinkType\CreateRequest;
-use App\Http\Requests\Web\JourneyLogLinkType\DeleteRequest;
-use App\Http\Requests\Web\JourneyLogLinkType\EditRequest;
+use Illuminate\Http\Request;
 use JourneyLogLinkType\Application\Interactors\CreateInteractor;
 use JourneyLogLinkType\Application\Interactors\DeleteInteractor;
 use JourneyLogLinkType\Application\Interactors\EditInteractor;
@@ -39,21 +37,21 @@ class JourneyLogLinkTypeServiceProvider extends EnvServiceProvider
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
-            $request = $this->app->make(CreateRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(CreateInputData::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->all());
         });
 
         $this->app->bind(EditInputData::class, function (): EditInputData {
-            $request = $this->app->make(EditRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(EditInputData::class, $request->validated());
+            return $this->getMapper()->map(EditInputData::class, $request->all());
         });
 
         $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
-            $request = $this->app->make(DeleteRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(DeleteInputData::class, $request->validated());
+            return $this->getMapper()->map(DeleteInputData::class, $request->all());
         });
     }
 }

@@ -6,6 +6,5 @@ namespace Auth\Route;
 
 enum AuthRouteMap: string
 {
-    case ShowLoginForm = 'login';
-    case Login = 'login.handle';
+    case Login = 'login';
 }
