@@ -10,6 +10,7 @@ const navItems = [
     title: 'クリエイター',
     links: [
       { href: '/creators', label: '一覧' },
+      { href: '/creators/create', label: '作成' },
     ],
   },
 ];
