@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\Creator\CreateCreatorController;
+use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
@@ -25,6 +26,7 @@ Route::middleware('api')->group(function () {
         Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
         Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
         Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
+        Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
         Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
     });
 

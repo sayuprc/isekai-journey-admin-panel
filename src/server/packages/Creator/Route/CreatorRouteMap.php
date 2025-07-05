@@ -10,5 +10,5 @@ enum CreatorRouteMap: string
     case Get = 'creators.show';
     case Create = 'creators.create';
     case Update = 'creators.update';
-    case Delete = 'creators.delete.handle';
+    case Delete = 'creators.delete';
 }
