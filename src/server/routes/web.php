@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Web\Auth\LoginController;
-use App\Http\Controllers\Web\Creator\CreateCreatorController;
 use App\Http\Controllers\Web\Creator\DeleteCreatorController;
 use App\Http\Controllers\Web\Creator\EditCreatorController;
 use App\Http\Controllers\Web\JourneyLog\CreateJourneyLogController;
@@ -80,11 +79,6 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('creators')->group(function (): void {
-        Route::get('/create', [CreateCreatorController::class, 'index'])
-            ->name(CreatorRouteMap::ShowCreateForm);
-        Route::post('/create', [CreateCreatorController::class, 'handle'])
-            ->name(CreatorRouteMap::Create);
-
         Route::get('/{creatorId}', [EditCreatorController::class, 'index'])
             ->whereUuid('creatorId')
             ->name(CreatorRouteMap::ShowEditForm);
