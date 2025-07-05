@@ -31,7 +31,8 @@ export interface paths {
         };
         /** @description クリエイター取得API */
         get: operations["CreatorService_getCreator"];
-        put?: never;
+        /** @description クリエイター更新API */
+        put: operations["CreatorService_updateCreator"];
         post?: never;
         delete?: never;
         options?: never;
@@ -98,6 +99,13 @@ export interface components {
         };
         CreatorListResponse: {
             creators: components["schemas"]["Creator"][];
+        };
+        CreatorUpdateRequest: {
+            /** @description クリエイター名 */
+            creatorName: string;
+        };
+        CreatorUpdateResponse: {
+            creator: components["schemas"]["Creator"];
         };
         ErrorResponse: {
             message: string;
@@ -280,6 +288,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreatorGetResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CreatorService_updateCreator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                creatorId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatorUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatorUpdateResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description The server cannot find the requested resource. */
