@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Creator\Application\UseCase\Edit;
+namespace Creator\Application\UseCase\Update;
 
-class EditInputData
+class UpdateInputData
 {
     public function __construct(
         public readonly string $creatorId,

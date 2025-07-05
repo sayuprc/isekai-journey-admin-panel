@@ -1,5 +1,6 @@
 import { onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
+import { client } from '../../utils/client';
 import { setFlash } from '../Flash';
 
 interface Props {
@@ -15,7 +16,46 @@ export const EditableForm = (props: Props) => {
   const handleUpdate = async (e: Event) => {
     e.preventDefault();
 
-    // TODO 実装する
+    const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const creatorId = props.data?.creator.creatorId;
+
+    if (!creatorId) {
+      alert('更新対象のクリエイターIDを取得できませんでした');
+      return;
+    }
+
+    const { data, error, response } = await client.PUT('/creators/{creatorId}', {
+      params: {
+        path: {
+          creatorId: creatorId,
+        },
+      },
+      body: {
+        creatorName: formData.get('creatorName')?.toString() ?? '',
+      },
+    });
+
+    // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
+    if (response.status === 400) {
+      // TODO わかりやすい表示にする
+      const errorAs = error as components['schemas']['ErrorResponse'];
+      alert(`リクエストが不正 ${errorAs.message}`);
+    } else if (response.status === 404) {
+      setFlash('データがありません');
+      window.location.href = `/creators`;
+    } else if (response.status === 422) {
+      // TODO わかりやすい表示にする
+      const errorAs = error as components['schemas']['ValidationError'];
+      alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+    } else if (!data) {
+      // TODO エラーハンドリング
+      throw new Error();
+    } else {
+      setFlash('更新しました');
+      window.location.href = `/creators`;
+    }
   };
 
   const handleDelete = async (e: Event) => {
