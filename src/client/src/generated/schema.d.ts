@@ -14,7 +14,8 @@ export interface paths {
         /** @description クリエイター一覧取得API */
         get: operations["CreatorService_listCreators"];
         put?: never;
-        post?: never;
+        /** @description クリエイター作成API */
+        post: operations["CreatorService_createCreator"];
         delete?: never;
         options?: never;
         head?: never;
@@ -84,6 +85,13 @@ export interface components {
             creatorId: components["schemas"]["uuid"];
             /** @description クリエイター名 */
             creatorName: string;
+        };
+        CreatorCreateRequest: {
+            /** @description クリエイター名 */
+            creatorName: string;
+        };
+        CreatorCreateResponse: {
+            creator: components["schemas"]["Creator"];
         };
         CreatorGetResponse: {
             creator: components["schemas"]["Creator"];
@@ -166,6 +174,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreatorListResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CreatorService_createCreator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatorCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatorCreateResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
             /** @description Server error */
