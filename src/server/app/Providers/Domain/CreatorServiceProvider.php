@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\Creator\DeleteRequest;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\Interactors\GetInteractor;
@@ -12,7 +11,6 @@ use Creator\Application\Interactors\ListInteractor;
 use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
-use Creator\Application\UseCase\Delete\DeleteInputData;
 use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
@@ -53,12 +51,6 @@ class CreatorServiceProvider extends EnvServiceProvider
                     ...$request->all(),
                 ]
             );
-        });
-
-        $this->app->bind(DeleteInputData::class, function (): DeleteInputData {
-            $request = $this->app->make(DeleteRequest::class);
-
-            return $this->getMapper()->map(DeleteInputData::class, $request->validated());
         });
     }
 }
