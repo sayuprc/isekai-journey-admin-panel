@@ -1,5 +1,5 @@
 ---
-import { Navbar } from '../components/Navbar';
+import { Sidebar } from '../components/Sidebar';
 import '../styles/app.css';
 
 interface Props {
@@ -27,7 +27,11 @@ const title = generateTitle(pageTitle);
     <title>{title}</title>
   </head>
   <body>
-    <Navbar />
-    <slot />
+    <div class="flex min-h-screen">
+      <Sidebar />
+      <main class="flex-1">
+        <slot />
+      </main>
+    </div>
   </body>
 </html>
