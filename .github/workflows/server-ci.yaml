@@ -248,4 +248,4 @@ jobs:
           docker exec ${{ env.SERVER_CONTAINER }} php artisan migrate --env=testing
 
       - name: Run PHPUnit
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer test-unit
+        run: docker exec ${{ env.SERVER_CONTAINER }} composer test-all
