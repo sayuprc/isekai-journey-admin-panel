@@ -11,7 +11,6 @@ return ECSConfig::configure()
         __DIR__ . '/bootstrap',
         __DIR__ . '/config',
         __DIR__ . '/database',
-        __DIR__ . '/lang',
         __DIR__ . '/packages',
         __DIR__ . '/public',
         __DIR__ . '/routes',
