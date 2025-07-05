@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
-use Creator\Application\Interactors\EditInteractor;
-use Creator\Application\UseCase\Edit\EditInputData;
-use Creator\Application\UseCase\Edit\EditUseCaseInterface;
+use Creator\Application\Interactors\UpdateInteractor;
+use Creator\Application\UseCase\Update\UpdateInputData;
+use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
@@ -18,7 +18,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class EditInteractorTest extends TestCase
+class UpdateInteractorTest extends TestCase
 {
     private CreatorRepositoryInterface&MockInterface $repository;
 
@@ -26,7 +26,7 @@ class EditInteractorTest extends TestCase
 
     private CreatorNameDuplicateCheckService&MockInterface $service;
 
-    private EditInteractor $interactor;
+    private UpdateInteractor $interactor;
 
     protected function setUp(): void
     {
@@ -36,13 +36,13 @@ class EditInteractorTest extends TestCase
         $this->factory = Mockery::mock(CreatorFactoryInterface::class);
         $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
 
-        $this->interactor = new EditInteractor($this->repository, $this->factory, $this->service);
+        $this->interactor = new UpdateInteractor($this->repository, $this->factory, $this->service);
     }
 
     #[Test]
     public function isImplementsSpecificInterface(): void
     {
-        $this->assertInstanceOf(EditUseCaseInterface::class, $this->interactor);
+        $this->assertInstanceOf(UpdateUseCaseInterface::class, $this->interactor);
     }
 
     #[Test]
@@ -68,7 +68,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
 
         $this->assertTrue($result->isOk());
     }
@@ -89,7 +89,7 @@ class EditInteractorTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $result = $this->interactor->handle(new EditInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
 
         $this->assertTrue($result->isErr());
     }

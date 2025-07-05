@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Creator\Application\Interactors;
 
-use Creator\Application\UseCase\Edit\EditInputData;
-use Creator\Application\UseCase\Edit\EditUseCaseInterface;
+use Creator\Application\UseCase\Update\UpdateInputData;
+use Creator\Application\UseCase\Update\UpdateOutputData;
+use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
@@ -13,7 +14,7 @@ use ResultType\Eager\Err;
 use ResultType\Eager\Ok;
 use ResultType\Result;
 
-class EditInteractor implements EditUseCaseInterface
+class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(
         private readonly CreatorRepositoryInterface $repository,
@@ -22,10 +23,7 @@ class EditInteractor implements EditUseCaseInterface
     ) {
     }
 
-    /**
-     * @return Result<null, string>
-     */
-    public function handle(EditInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): Result
     {
         $creator = $this->factory->reconstitute($inputData->creatorId, $inputData->creatorName);
 
@@ -35,6 +33,6 @@ class EditInteractor implements EditUseCaseInterface
 
         $this->repository->update($creator);
 
-        return new Ok(null);
+        return new Ok(new UpdateOutputData($creator));
     }
 }

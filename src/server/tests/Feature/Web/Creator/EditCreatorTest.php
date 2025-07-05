@@ -115,7 +115,7 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(CreatorRouteMap::Edit), [
+            ->post(route(CreatorRouteMap::Update), [
                 'creator_id' => $uuid,
                 'creator_name' => 'クリエイター名',
             ])
@@ -138,7 +138,7 @@ class EditCreatorTest extends TestCase
             ->once();
 
         $this->actingAs($this->user)
-            ->post(route(CreatorRouteMap::Edit), [
+            ->post(route(CreatorRouteMap::Update), [
                 'creator_id' => $uuid,
                 'creator_name' => 'クリエイター名',
             ])
@@ -152,7 +152,7 @@ class EditCreatorTest extends TestCase
     public function emptyParameters(): void
     {
         $this->actingAs($this->user)
-            ->post(route(CreatorRouteMap::Edit), [
+            ->post(route(CreatorRouteMap::Update), [
                 'creator_id' => '',
                 'creator_name' => '',
             ])

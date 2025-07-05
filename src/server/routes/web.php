@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Creator\DeleteCreatorController;
-use App\Http\Controllers\Web\Creator\EditCreatorController;
 use App\Http\Controllers\Web\JourneyLog\CreateJourneyLogController;
 use App\Http\Controllers\Web\JourneyLog\DeleteJourneyLogController;
 use App\Http\Controllers\Web\JourneyLog\EditJourneyLogController;
@@ -79,12 +78,6 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('creators')->group(function (): void {
-        Route::get('/{creatorId}', [EditCreatorController::class, 'index'])
-            ->whereUuid('creatorId')
-            ->name(CreatorRouteMap::ShowEditForm);
-        Route::post('/edit', [EditCreatorController::class, 'handle'])
-            ->name(CreatorRouteMap::Edit);
-
         Route::delete('/', [DeleteCreatorController::class, 'handle'])
             ->name(CreatorRouteMap::Delete);
     });
