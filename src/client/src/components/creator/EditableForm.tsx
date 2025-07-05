@@ -22,7 +22,7 @@ export const EditableForm = (props: Props) => {
     const creatorId = props.data?.creator.creatorId;
 
     if (!creatorId) {
-      alert('更新対象の楽曲種別IDを取得できませんでした');
+      alert('更新対象のクリエイターIDを取得できませんでした');
       return;
     }
 
