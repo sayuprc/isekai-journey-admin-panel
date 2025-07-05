@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use App\Http\Requests\Web\Creator\CreateRequest;
 use App\Http\Requests\Web\Creator\DeleteRequest;
 use App\Http\Requests\Web\Creator\EditRequest;
 use Creator\Application\Interactors\CreateInteractor;
@@ -24,6 +23,7 @@ use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Infrastructures\CreatorFactory;
+use Illuminate\Http\Request;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {
@@ -39,9 +39,9 @@ class CreatorServiceProvider extends EnvServiceProvider
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
-            $request = $this->app->make(CreateRequest::class);
+            $request = $this->app->make(Request::class);
 
-            return $this->getMapper()->map(CreateInputData::class, $request->validated());
+            return $this->getMapper()->map(CreateInputData::class, $request->all());
         });
 
         $this->app->bind(EditInputData::class, function (): EditInputData {

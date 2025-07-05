@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
@@ -20,6 +21,7 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('api')->group(function () {
     Route::prefix('creators')->group(function () {
+        Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
         Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
         Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
     });

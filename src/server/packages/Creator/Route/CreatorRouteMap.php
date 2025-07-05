@@ -8,8 +8,7 @@ enum CreatorRouteMap: string
 {
     case List = 'creators';
     case Get = 'creators.show';
-    case ShowCreateForm = 'creators.create.index';
-    case Create = 'creators.create.handle';
+    case Create = 'creators.create';
     case ShowEditForm = 'creators.edit.index';
     case Edit = 'creators.edit.handle';
     case Delete = 'creators.delete.handle';

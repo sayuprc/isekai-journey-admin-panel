@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Creator\Application\Interactors;
 
 use Creator\Application\UseCase\Create\CreateInputData;
+use Creator\Application\UseCase\Create\CreateOutputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
@@ -22,9 +23,6 @@ class CreateInteractor implements CreateUseCaseInterface
     ) {
     }
 
-    /**
-     * @return Result<null, string>
-     */
     public function handle(CreateInputData $inputData): Result
     {
         $creator = $this->factory->create($inputData->creatorName);
@@ -35,6 +33,6 @@ class CreateInteractor implements CreateUseCaseInterface
 
         $this->repository->insert($creator);
 
-        return new Ok(null);
+        return new Ok(new CreateOutputData($creator));
     }
 }
