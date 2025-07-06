@@ -70,7 +70,7 @@ trait FileRepositoryTransaction
 
     private function getDirectoryName(): string
     {
-        return self::FILE_DIR . '/' . new ReflectionClass($this)->getName() . '/' . $this->name();
+        return str_replace('\\', '/', self::FILE_DIR . '/' . new ReflectionClass($this)->getName() . '/' . $this->name());
     }
 
     private function factory(string $repository, int|string $key, mixed $value): void
