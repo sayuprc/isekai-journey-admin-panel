@@ -4,36 +4,29 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Creator;
 
+use Creator\DebugInfrastructures\FileCreatorRepository;
+use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorRepositoryInterface;
+use Creator\Domain\Models\CreatorName;
 use Creator\Route\CreatorRouteMap;
-use Mockery;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class DeleteCreatorTest extends TestCase
 {
-    // TODO モックやめる
-    private CreatorRepositoryInterface&MockInterface $repository;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
-
-        $this->app->bind(CreatorRepositoryInterface::class, fn (): CreatorRepositoryInterface => $this->repository);
-    }
+    use FileRepositoryTransaction;
 
     #[Test]
     public function canDelete(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->repository->shouldReceive('delete')
-            ->with(Mockery::on(fn (CreatorId $arg) => $arg->value === $uuid))
-            ->once();
+        $this->factory(
+            FileCreatorRepository::class,
+            $uuid,
+            new Creator(new CreatorId($uuid), new CreatorName('クリエイター'))
+        );
 
         $this->delete(route(CreatorRouteMap::Delete, $uuid))
             ->assertStatus(204);
