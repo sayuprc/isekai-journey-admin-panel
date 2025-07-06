@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\User\Application\Interactors;
 
+use Closure;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Contracts\TransactionInterface;
 use Tests\TestCase;
 use User\Application\Interactors\CreateInteractor;
 use User\Application\UseCase\Create\CreateInputData;
@@ -20,6 +22,8 @@ use User\Domain\Models\UserRepositoryInterface;
 
 class CreateInteractorTest extends TestCase
 {
+    private MockInterface&TransactionInterface $transaction;
+
     private MockInterface&UserRepositoryInterface $repository;
 
     private MockInterface&UserFactoryInterface $factory;
@@ -28,6 +32,7 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
+        $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(UserRepositoryInterface::class);
         $this->factory = Mockery::mock(UserFactoryInterface::class);
     }
@@ -41,6 +46,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->repository->shouldReceive('findByEmail')
             ->with(Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'))
             ->andReturnNull()
@@ -77,6 +87,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfEmailAlreadyExists(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->repository->shouldReceive('findByEmail')
             ->with(Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'))
             ->andReturn(
@@ -95,6 +110,6 @@ class CreateInteractorTest extends TestCase
 
     private function getInstance(): CreateInteractor
     {
-        return new CreateInteractor($this->repository, $this->factory);
+        return new CreateInteractor($this->transaction, $this->repository, $this->factory);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Closure;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
@@ -16,10 +17,13 @@ use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Contracts\TransactionInterface;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
+    private MockInterface&TransactionInterface $transaction;
+
     private CreatorRepositoryInterface&MockInterface $repository;
 
     private CreatorFactoryInterface&MockInterface $factory;
@@ -32,11 +36,12 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
+        $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->factory = Mockery::mock(CreatorFactoryInterface::class);
         $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
 
-        $this->interactor = new CreateInteractor($this->repository, $this->factory, $this->service);
+        $this->interactor = new CreateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
     }
 
     #[Test]
@@ -48,6 +53,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
             ->andReturn(new Creator(
@@ -76,6 +86,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
             ->andReturn(new Creator(

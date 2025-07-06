@@ -9,7 +9,9 @@ use Support\Application\Mapper;
 use Support\Application\UuidGenerator;
 use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
+use Support\Contracts\TransactionInterface;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\DebugInfrastructures\NopTransaction;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
@@ -18,5 +20,6 @@ class SupportServiceProvider extends EnvServiceProvider
         $this->app->bind(ConfigInterface::class, Config::class);
         $this->app->bind(MapperInterface::class, Mapper::class);
         $this->app->bind(UuidGeneratorInterface::class, UuidGenerator::class);
+        $this->app->bind(TransactionInterface::class, NopTransaction::class);
     }
 }

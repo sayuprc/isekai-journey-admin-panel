@@ -13,10 +13,12 @@ use SongType\Application\UseCase\Create\CreateUseCaseInterface;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
+use Support\Contracts\TransactionInterface;
 
 class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
+        private readonly TransactionInterface $transaction,
         private readonly SongTypeRepositoryInterface $repository,
         private readonly SongTypeFactoryInterface $factory,
         private readonly SongTypeNameDuplicateCheckService $service,
@@ -25,14 +27,16 @@ class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
-        $songType = $this->factory->create($inputData->songTypeName, $inputData->orderNo);
+        return $this->transaction->scope(function () use ($inputData): Result {
+            $songType = $this->factory->create($inputData->songTypeName, $inputData->orderNo);
 
-        if ($this->service->exists($songType->songTypeName)) {
-            return new Err("Song type already exists: {$inputData->songTypeName}");
-        }
+            if ($this->service->exists($songType->songTypeName)) {
+                return new Err("Song type already exists: {$inputData->songTypeName}");
+            }
 
-        $this->repository->insert($songType);
+            $this->repository->insert($songType);
 
-        return new Ok(new CreateOutputData($songType));
+            return new Ok(new CreateOutputData($songType));
+        });
     }
 }

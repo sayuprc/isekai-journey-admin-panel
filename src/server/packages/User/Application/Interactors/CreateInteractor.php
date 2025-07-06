@@ -7,6 +7,7 @@ namespace User\Application\Interactors;
 use ResultType\Eager\Err;
 use ResultType\Eager\Ok;
 use ResultType\Result;
+use Support\Contracts\TransactionInterface;
 use User\Application\UseCase\Create\CreateInputData;
 use User\Application\UseCase\Create\CreateOutputData;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
@@ -17,6 +18,7 @@ use User\Domain\Models\UserRepositoryInterface;
 class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
+        private readonly TransactionInterface $transaction,
         private readonly UserRepositoryInterface $repository,
         private readonly UserFactoryInterface $factory,
     ) {
@@ -24,14 +26,16 @@ class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
-        if (! is_null($this->repository->findByEmail(new Email($inputData->email)))) {
-            return new Err("User already exists: {$inputData->email}");
-        }
+        return $this->transaction->scope(function () use ($inputData): Result {
+            if (! is_null($this->repository->findByEmail(new Email($inputData->email)))) {
+                return new Err("User already exists: {$inputData->email}");
+            }
 
-        $user = $this->factory->create($inputData->email, $inputData->plainPassword);
+            $user = $this->factory->create($inputData->email, $inputData->plainPassword);
 
-        $this->repository->insert($user);
+            $this->repository->insert($user);
 
-        return new Ok(new CreateOutputData($user));
+            return new Ok(new CreateOutputData($user));
+        });
     }
 }

@@ -13,10 +13,12 @@ use SongType\Application\UseCase\Update\UpdateUseCaseInterface;
 use SongType\Domain\Models\SongTypeFactoryInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
+use Support\Contracts\TransactionInterface;
 
 class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(
+        private readonly TransactionInterface $transaction,
         private readonly SongTypeRepositoryInterface $repository,
         private readonly SongTypeFactoryInterface $factory,
         private readonly SongTypeNameDuplicateCheckService $service,
@@ -25,14 +27,16 @@ class UpdateInteractor implements UpdateUseCaseInterface
 
     public function handle(UpdateInputData $inputData): Result
     {
-        $songType = $this->factory->reconstitute($inputData->songTypeId, $inputData->songTypeName, $inputData->orderNo);
+        return $this->transaction->scope(function () use ($inputData): Result {
+            $songType = $this->factory->reconstitute($inputData->songTypeId, $inputData->songTypeName, $inputData->orderNo);
 
-        if ($this->service->existsForUpdate($songType->songTypeId, $songType->songTypeName)) {
-            return new Err("Song type already exists: {$inputData->songTypeId}");
-        }
+            if ($this->service->existsForUpdate($songType->songTypeId, $songType->songTypeName)) {
+                return new Err("Song type already exists: {$inputData->songTypeId}");
+            }
 
-        $this->repository->update($songType);
+            $this->repository->update($songType);
 
-        return new Ok(new UpdateOutputData($songType));
+            return new Ok(new UpdateOutputData($songType));
+        });
     }
 }
