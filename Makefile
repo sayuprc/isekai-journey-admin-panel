@@ -69,6 +69,10 @@ test-all: ## Run all tests
 test-unit: ## Run PHPUnit
 	docker exec ${SERVER_CONTAINER} composer test-unit
 
+.PHONY: test-integration
+test-integration: ## Run PHPUnit
+	docker exec ${SERVER_CONTAINER} composer test-integration
+
 .PHONY: test-feature
 test-feature: ## Run PHPUnit
 	docker exec ${SERVER_CONTAINER} composer test-feature
