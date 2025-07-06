@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace User\DebugInfrastructures;
+
+use Support\Contracts\ConfigInterface;
+use Support\Repository\FileStore;
+use User\Domain\Models\Email;
+use User\Domain\Models\User;
+use User\Domain\Models\UserRepositoryInterface;
+
+class FileUserRepository implements UserRepositoryInterface
+{
+    private const string FILE_NAME = 'users.dat';
+
+    private readonly string $filePath;
+
+    /**
+     * @param FileStore<User> $store
+     */
+    public function __construct(
+        private readonly FileStore $store,
+        private readonly ConfigInterface $config,
+    ) {
+        $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
+    }
+
+    public function findByEmail(Email $email): ?User
+    {
+        foreach ($this->store->getAll($this->filePath) as $user) {
+            if ($user->email->value === $email->value) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    public function insert(User $user): void
+    {
+        $this->store->put($this->filePath, $user->userId->value, $user);
+    }
+}
