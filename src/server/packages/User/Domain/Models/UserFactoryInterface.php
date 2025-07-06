@@ -6,4 +6,5 @@ namespace User\Domain\Models;
 
 interface UserFactoryInterface
 {
+    public function create(string $email, string $plainPassword): User;
 }

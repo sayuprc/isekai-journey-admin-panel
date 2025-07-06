@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace User\Infrastructures;
+
+use Illuminate\Support\Facades\Hash;
+use User\Domain\Services\HasherInterface;
+
+class Hasher implements HasherInterface
+{
+    public function hash(string $plainPassword): string
+    {
+        return Hash::make($plainPassword);
+    }
+}
