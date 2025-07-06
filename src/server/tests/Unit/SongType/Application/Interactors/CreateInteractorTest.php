@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\SongType\Application\Interactors;
 
+use Closure;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,11 +17,14 @@ use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
+use Support\Contracts\TransactionInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
+    private MockInterface&TransactionInterface $transaction;
+
     private MockInterface&SongTypeRepositoryInterface $repository;
 
     private MockInterface&SongTypeFactoryInterface $factory;
@@ -33,11 +37,12 @@ class CreateInteractorTest extends TestCase
     {
         parent::setUp();
 
+        $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(SongTypeRepositoryInterface::class);
         $this->factory = Mockery::mock(SongTypeFactoryInterface::class);
         $this->service = Mockery::mock(SongTypeNameDuplicateCheckService::class);
 
-        $this->interactor = new CreateInteractor($this->repository, $this->factory, $this->service);
+        $this->interactor = new CreateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
     }
 
     #[Test]
@@ -49,6 +54,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->factory->shouldReceive('create')
             ->with('楽曲種別', 1)
             ->andReturn(new SongType(
@@ -79,6 +89,11 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
+        $this->transaction->shouldReceive('scope')
+            ->with(Mockery::on(fn (Closure $_) => true))
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
         $this->factory->shouldReceive('create')
             ->with('楽曲種別', 1)
             ->andReturn(new SongType(

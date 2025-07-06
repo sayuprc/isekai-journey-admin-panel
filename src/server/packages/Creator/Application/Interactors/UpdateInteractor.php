@@ -13,10 +13,12 @@ use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use ResultType\Eager\Err;
 use ResultType\Eager\Ok;
 use ResultType\Result;
+use Support\Contracts\TransactionInterface;
 
 class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(
+        private readonly TransactionInterface $transaction,
         private readonly CreatorRepositoryInterface $repository,
         private readonly CreatorFactoryInterface $factory,
         private readonly CreatorNameDuplicateCheckService $service,
@@ -25,14 +27,16 @@ class UpdateInteractor implements UpdateUseCaseInterface
 
     public function handle(UpdateInputData $inputData): Result
     {
-        $creator = $this->factory->reconstitute($inputData->creatorId, $inputData->creatorName);
+        return $this->transaction->scope(function () use ($inputData): Result {
+            $creator = $this->factory->reconstitute($inputData->creatorId, $inputData->creatorName);
 
-        if ($this->service->exists($creator->creatorName)) {
-            return new Err("Creator name already exists: {$inputData->creatorName}");
-        }
+            if ($this->service->exists($creator->creatorName)) {
+                return new Err("Creator name already exists: {$inputData->creatorName}");
+            }
 
-        $this->repository->update($creator);
+            $this->repository->update($creator);
 
-        return new Ok(new UpdateOutputData($creator));
+            return new Ok(new UpdateOutputData($creator));
+        });
     }
 }
