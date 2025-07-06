@@ -4,59 +4,39 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\SongType;
 
-use Mockery;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use SongType\DebugInfrastructures\FileSongTypeRepository;
 use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
-use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Route\SongTypeRouteMap;
+use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class UpdateSongTypeTest extends TestCase
 {
-    // TODO モックをやめる
-    private MockInterface&SongTypeRepositoryInterface $repository;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->repository = Mockery::mock(SongTypeRepositoryInterface::class);
-
-        $this->app->bind(SongTypeRepositoryInterface::class, fn (): SongTypeRepositoryInterface => $this->repository);
-    }
+    use FileRepositoryTransaction;
 
     #[Test]
     public function canUpdate(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (SongTypeName $arg): bool => $arg->value === '楽曲種別'))
-            ->andReturnNull()
-            ->once();
-
-        $this->repository->shouldReceive('update')
-            ->with(
-                Mockery::on(
-                    fn (SongType $arg): bool => $arg->songTypeId->value === $uuid
-                        && $arg->songTypeName->value === '楽曲種別'
-                        && $arg->orderNo->value === 1
-                )
-            )
-            ->andReturn(new SongTypeId($uuid))
-            ->once();
+        $this->factory(
+            FileSongTypeRepository::class,
+            $uuid,
+            new SongType(new SongTypeId($uuid), new SongTypeName('オリジナル'), new OrderNo(2))
+        );
 
         $this->putJson(route(SongTypeRouteMap::Update, $uuid), [
-            'songTypeName' => '楽曲種別',
+            'songTypeName' => 'カバー',
             'orderNo' => 1,
         ])->assertStatus(200)
             ->assertJson([
                 'songType' => [
                     'songTypeId' => $uuid,
-                    'songTypeName' => '楽曲種別',
+                    'songTypeName' => 'カバー',
                     'orderNo' => 1,
                 ],
             ]);
