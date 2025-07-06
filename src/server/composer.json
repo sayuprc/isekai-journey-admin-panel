@@ -73,6 +73,7 @@
         "ecs-fix": "vendor/bin/ecs check --fix --ansi --no-progress-bar",
         "test-all": "paratest",
         "test-unit": "paratest tests/Unit",
+        "test-integration": "paratest tests/Integration",
         "test-feature": "paratest tests/Feature",
         "coverage": "php artisan test --env=testing --coverage-html=\"reports/coverage\"",
         "infection": "infection --threads=4",
