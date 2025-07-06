@@ -54,7 +54,7 @@ class CreateInteractorTest extends TestCase
                 new User(
                     new UserId($uuid),
                     new Email('example@example.com'),
-                    new HashedPassword('hashedpassowrd')
+                    new HashedPassword('hashedpassword')
                 )
             )
             ->once();
