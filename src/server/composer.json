@@ -34,7 +34,6 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Auth\\": "packages/Auth/",
             "JourneyLog\\": "packages/JourneyLog/",
             "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
             "Support\\": "packages/Support/",
