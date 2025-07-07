@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Support\Application\Clock;
 use Support\Application\Config;
 use Support\Application\Mapper;
 use Support\Application\UuidGenerator;
+use Support\Contracts\ClockInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
@@ -21,5 +23,6 @@ class SupportServiceProvider extends EnvServiceProvider
         $this->app->bind(MapperInterface::class, Mapper::class);
         $this->app->bind(UuidGeneratorInterface::class, UuidGenerator::class);
         $this->app->bind(TransactionInterface::class, NopTransaction::class);
+        $this->app->bind(ClockInterface::class, Clock::class);
     }
 }
