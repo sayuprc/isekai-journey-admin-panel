@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use User\Application\Interactors\CreateInteractor;
+use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
+use User\Application\UseCase\Login\LoginUseCaseInterface;
 use User\DebugInfrastructures\FileCredentialRepository;
 use User\DebugInfrastructures\FileUserRepository;
 use User\Domain\Models\Credential\AccessTokenFactoryInterface;
@@ -37,5 +39,6 @@ class UserServiceProvider extends EnvServiceProvider
         $this->app->bind(CredentialRepositoryInterface::class, FileCredentialRepository::class);
 
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
+        $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
     }
 }
