@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 認証API */
+        post: operations["AuthenticateService_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/creators": {
         parameters: {
             query?: never;
@@ -111,6 +128,15 @@ export interface components {
         ErrorResponse: {
             message: string;
         };
+        LoginRequest: {
+            email: components["schemas"]["email"];
+            /** Format: password */
+            password: string;
+        };
+        LoginResponse: {
+            accessToken: string;
+            refreshToken: string;
+        };
         SongType: {
             /** @description 楽曲種別ID */
             songTypeId: components["schemas"]["uuid"];
@@ -156,6 +182,8 @@ export interface components {
             field: string;
             message: string;
         };
+        /** Format: email */
+        email: string;
         /** Format: uuid */
         uuid: string;
     };
@@ -167,6 +195,76 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AuthenticateService_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     CreatorService_listCreators: {
         parameters: {
             query?: never;
