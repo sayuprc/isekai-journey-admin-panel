@@ -12,16 +12,22 @@ use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Api\SongType\GetSongTypeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Controllers\Api\SongType\UpdateSongTypeController;
+use App\Http\Controllers\Api\User\LoginController;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use SongType\Route\SongTypeRouteMap;
+use User\Route\UserRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 Route::middleware('api')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('/login', [LoginController::class, 'handle'])->name(UserRouteMap::Login);
+    });
+
     Route::prefix('creators')->group(function () {
         Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
         Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
