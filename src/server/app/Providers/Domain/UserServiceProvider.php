@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Illuminate\Support\Facades\Auth;
 use User\Application\Interactors\CreateInteractor;
 use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
@@ -18,6 +19,7 @@ use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
 use User\Domain\Services\HasherInterface;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
+use User\Infrastructures\Auth\AuthUserProvider;
 use User\Infrastructures\Credential\AccessTokenFactory;
 use User\Infrastructures\Credential\CredentialFactory;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
@@ -40,5 +42,10 @@ class UserServiceProvider extends EnvServiceProvider
 
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
+    }
+
+    public function boot(): void
+    {
+        Auth::provider('custom', fn () => $this->app->make(AuthUserProvider::class));
     }
 }
