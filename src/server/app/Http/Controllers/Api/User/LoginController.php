@@ -28,11 +28,11 @@ class LoginController extends Controller
             'password' => $request->string('password')->toString(),
         ];
 
-        if (! $this->authManager->attempt($credentials)) {
+        if (! $this->authManager->guard()->attempt($credentials)) {
             return response()->json(status: 401);
         }
 
-        if (is_null($user = $this->authManager->user()) || ! is_string($identifier = $user->getAuthIdentifier())) {
+        if (is_null($user = $this->authManager->guard()->user()) || ! is_string($identifier = $user->getAuthIdentifier())) {
             return response()->json(status: 500);
         }
 
