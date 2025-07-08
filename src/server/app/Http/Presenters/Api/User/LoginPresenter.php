@@ -11,9 +11,11 @@ use User\Application\UseCase\Login\LoginOutputData;
 
 class LoginPresenter
 {
-    private const int ACCESS_TOKEN_COOKIE_TTL = 60 * 60 * 24;
+    // 60 分
+    private const int ACCESS_TOKEN_COOKIE_TTL = 60;
 
-    private const int REFRESH_TOKEN_COOKIE_TTL = 60 * 60 * 24 * 7;
+    // 7 日
+    private const int REFRESH_TOKEN_COOKIE_TTL = 60 * 24 * 7;
 
     /**
      * @param Result<LoginOutputData, string> $result
