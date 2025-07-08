@@ -32,10 +32,10 @@ class LoginController extends Controller
             return response()->json(status: 401);
         }
 
-        if (is_null($user = $this->authManager->user())) {
+        if (is_null($user = $this->authManager->user()) || ! is_string($identifier = $user->getAuthIdentifier())) {
             return response()->json(status: 500);
         }
 
-        return $this->presenter->present($this->interactor->handle(new LoginInputData($user->getAuthIdentifier())));
+        return $this->presenter->present($this->interactor->handle(new LoginInputData($identifier)));
     }
 }

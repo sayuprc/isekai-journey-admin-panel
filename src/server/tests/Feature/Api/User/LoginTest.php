@@ -34,10 +34,8 @@ class LoginTest extends TestCase
             'email' => 'example@example.com',
             'password' => 'password',
         ])->assertStatus(200)
-            ->assertJsonStructure([
-                'accessToken',
-                'refreshToken',
-            ]);
+            ->assertCookie('access_token')
+            ->assertCookie('refresh_token');
     }
 
     #[Test]

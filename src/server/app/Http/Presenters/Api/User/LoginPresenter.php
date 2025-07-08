@@ -5,25 +5,47 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\User;
 
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\LoginResponse;
 use ResultType\Result;
+use Symfony\Component\HttpFoundation\Cookie;
 use User\Application\UseCase\Login\LoginOutputData;
 
 class LoginPresenter
 {
+    private const int ACCESS_TOKEN_COOKIE_TTL = 60 * 60 * 24;
+
+    private const int REFRESH_TOKEN_COOKIE_TTL = 60 * 60 * 24 * 7;
+
     /**
      * @param Result<LoginOutputData, string> $result
      */
     public function present(Result $result): JsonResponse
     {
-        $data = $result->map(function (LoginOutputData $outputData) {
-            $credential = $outputData->credential;
+        $credential = $result->unwrap()->credential;
 
-            return new LoginResponse()
-                ->setAccessToken($credential->accessToken->jwt->value)
-                ->setRefreshToken($credential->refreshToken->token->value);
-        })->unwrap();
+        $accessToken = $credential->accessToken;
+        $refreshToken = $credential->refreshToken;
 
-        return response()->json($data, 200);
+        return response()
+            ->json(status: 200)
+            ->cookie($this->createCookie('access_token', $accessToken->jwt->value, self::ACCESS_TOKEN_COOKIE_TTL))
+            ->cookie($this->createCookie('refresh_token', $refreshToken->token->value, self::REFRESH_TOKEN_COOKIE_TTL));
+    }
+
+    /**
+     * @param non-empty-string $name
+     */
+    private function createCookie(string $name, string $value, int $minutes): Cookie
+    {
+        return cookie(
+            name: $name,
+            value: $value,
+            minutes: $minutes,
+            path: '/',
+            domain: null,
+            secure: true,
+            httpOnly: true,
+            raw: false,
+            sameSite: 'Strict'
+        );
     }
 }
