@@ -114,4 +114,9 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    'jwt' => [
+        'alg' => env('AUTH_JWT_ALG', 'HS256'),
+        'key' => env('AUTH_JWT_KEY'),
+    ],
 ];
