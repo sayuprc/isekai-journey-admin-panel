@@ -11,6 +11,7 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
+use Support\Application\Config;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
@@ -22,17 +23,13 @@ trait FileRepositoryTransaction
     {
         parent::setUp();
 
-        $config = Mockery::mock(ConfigInterface::class);
+        $config = Mockery::mock(Config::class)->makePartial();
 
         $directory = $this->getDirectoryName();
 
         $config->shouldReceive('getString')
             ->with('debug.file.path')
             ->andReturn($directory);
-
-        $config->shouldReceive('getString')
-            ->with('openapi.path')
-            ->andReturn(config()->string('openapi.path'));
 
         $this->app->bind(ConfigInterface::class, fn () => $config);
 

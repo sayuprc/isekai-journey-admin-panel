@@ -64,9 +64,13 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'driver' => 'custom',
         ],
+
+        // 'users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => env('AUTH_MODEL', User::class),
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -114,4 +118,9 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    'jwt' => [
+        'alg' => env('AUTH_JWT_ALG', 'HS256'),
+        'key' => env('AUTH_JWT_KEY'),
+    ],
 ];

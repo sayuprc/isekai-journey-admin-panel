@@ -13,4 +13,9 @@ class Hasher implements HasherInterface
     {
         return Hash::make($plainPassword);
     }
+
+    public function check(string $plainPassword, string $hashedPassword): bool
+    {
+        return Hash::check($plainPassword, $hashedPassword);
+    }
 }

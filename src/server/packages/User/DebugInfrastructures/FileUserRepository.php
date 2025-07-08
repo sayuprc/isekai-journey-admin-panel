@@ -8,6 +8,7 @@ use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 use User\Domain\Models\Email;
 use User\Domain\Models\User;
+use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
 
 class FileUserRepository implements UserRepositoryInterface
@@ -24,6 +25,17 @@ class FileUserRepository implements UserRepositoryInterface
         private readonly ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
+    }
+
+    public function find(UserId $userId): ?User
+    {
+        foreach ($this->store->getAll($this->filePath) as $user) {
+            if ($user->userId->value === $userId->value) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 
     public function findByEmail(Email $email): ?User
