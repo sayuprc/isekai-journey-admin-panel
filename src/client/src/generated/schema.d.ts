@@ -133,10 +133,6 @@ export interface components {
             /** Format: password */
             password: string;
         };
-        LoginResponse: {
-            accessToken: string;
-            refreshToken: string;
-        };
         SongType: {
             /** @description 楽曲種別ID */
             songTypeId: components["schemas"]["uuid"];
@@ -211,11 +207,10 @@ export interface operations {
             /** @description The request has succeeded. */
             200: {
                 headers: {
+                    "Set-Cookie": string;
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["LoginResponse"];
-                };
+                content?: never;
             };
             /** @description The server could not understand the request due to invalid syntax. */
             400: {
