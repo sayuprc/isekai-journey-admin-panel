@@ -19,12 +19,14 @@ use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
 use User\Domain\Services\HasherInterface;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
+use User\Domain\Services\RandomTokenGeneratorInterface;
 use User\Infrastructures\Auth\AuthUserProvider;
 use User\Infrastructures\Credential\AccessTokenFactory;
 use User\Infrastructures\Credential\CredentialFactory;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 use User\Infrastructures\Credential\RefreshTokenFactory;
 use User\Infrastructures\Hasher;
+use User\Infrastructures\RandomTokenGenerator;
 use User\Infrastructures\UserFactory;
 
 class UserServiceProvider extends EnvServiceProvider
@@ -37,6 +39,7 @@ class UserServiceProvider extends EnvServiceProvider
         $this->app->bind(JwtHandlerInterface::class, JwtHandler::class);
         $this->app->bind(AccessTokenFactoryInterface::class, AccessTokenFactory::class);
         $this->app->bind(RefreshTokenFactoryInterface::class, RefreshTokenFactory::class);
+        $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
         $this->app->bind(CredentialFactoryInterface::class, CredentialFactory::class);
         $this->app->bind(CredentialRepositoryInterface::class, FileCredentialRepository::class);
 

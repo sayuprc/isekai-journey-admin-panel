@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace User\Infrastructures\Credential;
 
 use Support\Contracts\ClockInterface;
-use Support\Contracts\UuidGeneratorInterface;
 use User\Domain\Models\Credential\ExpiredAt;
 use User\Domain\Models\Credential\IsEnabled;
 use User\Domain\Models\Credential\RefreshToken;
 use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
 use User\Domain\Models\Credential\TokenValue;
+use User\Domain\Services\RandomTokenGeneratorInterface;
 
 class RefreshTokenFactory implements RefreshTokenFactoryInterface
 {
@@ -18,7 +18,7 @@ class RefreshTokenFactory implements RefreshTokenFactoryInterface
 
     public function __construct(
         private readonly ClockInterface $clock,
-        private readonly UuidGeneratorInterface $generator,
+        private readonly RandomTokenGeneratorInterface $generator,
     ) {
     }
 
