@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace User\Infrastructures\Credential\Jwt;
 
+use Firebase\JWT\ExpiredException as LibExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
 use User\Domain\Services\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\Exceptions\ExpiredException;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 
 class JwtHandler implements JwtHandlerInterface
@@ -36,6 +38,12 @@ class JwtHandler implements JwtHandlerInterface
     {
         JWT::$timestamp = $this->clock->now()->getTimestamp();
 
-        return $this->mapper->map(AccessTokenPayload::class, JWT::decode($jwt, new Key($this->key, $this->alg)));
+        try {
+            $decoded = JWT::decode($jwt, new Key($this->key, $this->alg));
+        } catch (LibExpiredException $e) {
+            throw new ExpiredException(previous: $e);
+        }
+
+        return $this->mapper->map(AccessTokenPayload::class, $decoded);
     }
 }

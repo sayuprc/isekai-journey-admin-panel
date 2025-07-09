@@ -14,6 +14,7 @@ use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
 use Tests\TestCase;
 use User\Domain\Services\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\Exceptions\ExpiredException;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase
@@ -115,6 +116,39 @@ class JwtHandlerTest extends TestCase
         $this->assertSame($afterAHour->getTimestamp(), $payload->exp);
         $this->assertSame($now->getTimestamp(), $payload->nbf);
         $this->assertSame('jti', $payload->jti);
+    }
+
+    #[Test]
+    public function throwExceptionWhenExpireToken(): void
+    {
+        $this->expectException(ExpiredException::class);
+
+        $this->config->shouldReceive('getString')
+            ->with('auth.jwt.alg')
+            ->andReturn('HS256')
+            ->once();
+
+        $this->config->shouldReceive('getString')
+            ->with('auth.jwt.key')
+            ->andReturn('key')
+            ->once();
+
+        $handler = $this->getInstance();
+
+        $jwt = $handler->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: 0,
+            exp: 180,
+            nbf: 0,
+            jti: 'jti'
+        ));
+
+        $this->clock->shouldReceive('now')
+            ->with()
+            ->andReturn(new DateTimeImmutable())
+            ->once();
+
+        $handler->decode($jwt);
     }
 
     private function getInstance(): JwtHandler

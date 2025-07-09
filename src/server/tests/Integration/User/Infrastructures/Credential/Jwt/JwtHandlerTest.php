@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use User\Domain\Services\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\Exceptions\ExpiredException;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase
@@ -58,6 +59,22 @@ class JwtHandlerTest extends TestCase
         $this->assertSame($afterAHour->getTimestamp(), $payload->exp);
         $this->assertSame($now->getTimestamp(), $payload->nbf);
         $this->assertSame('jti', $payload->jti);
+    }
+
+    #[Test]
+    public function throwExceptionWhenExpireToken(): void
+    {
+        $this->expectException(ExpiredException::class);
+
+        $jwt = $this->getInstance()->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: 0,
+            exp: 180,
+            nbf: 0,
+            jti: 'jti'
+        ));
+
+        $this->getInstance()->decode($jwt);
     }
 
     private function getInstance(): JwtHandler
