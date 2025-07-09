@@ -6,8 +6,8 @@ namespace User\Infrastructures\Credential\Jwt;
 
 use Firebase\JWT\JWT;
 use Support\Contracts\ConfigInterface;
+use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
-use User\Domain\Services\Jwt\Payload;
 
 class JwtHandler implements JwtHandlerInterface
 {
@@ -21,7 +21,7 @@ class JwtHandler implements JwtHandlerInterface
         $this->key = $config->getString('auth.jwt.key');
     }
 
-    public function generate(Payload $payload): string
+    public function generate(AccessTokenPayload $payload): string
     {
         return JWT::encode($payload->toArray(), $this->key, $this->alg);
     }

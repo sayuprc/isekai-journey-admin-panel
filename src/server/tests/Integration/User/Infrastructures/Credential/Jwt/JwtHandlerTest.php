@@ -6,7 +6,7 @@ namespace Tests\Integration\User\Infrastructures\Credential\Jwt;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use User\Infrastructures\Credential\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase

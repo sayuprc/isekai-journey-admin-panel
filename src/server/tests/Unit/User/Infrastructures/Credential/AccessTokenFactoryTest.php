@@ -11,9 +11,9 @@ use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\ConfigInterface;
 use Tests\TestCase;
+use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 use User\Infrastructures\Credential\AccessTokenFactory;
-use User\Infrastructures\Credential\Jwt\AccessTokenPayload;
 
 class AccessTokenFactoryTest extends TestCase
 {

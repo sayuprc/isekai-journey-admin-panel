@@ -9,8 +9,8 @@ use Support\Contracts\ConfigInterface;
 use User\Domain\Models\Credential\AccessToken;
 use User\Domain\Models\Credential\AccessTokenFactoryInterface;
 use User\Domain\Models\Credential\Jwt;
+use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
-use User\Infrastructures\Credential\Jwt\AccessTokenPayload;
 
 class AccessTokenFactory implements AccessTokenFactoryInterface
 {

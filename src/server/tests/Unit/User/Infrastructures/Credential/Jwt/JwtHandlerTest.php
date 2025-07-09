@@ -9,7 +9,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ConfigInterface;
 use Tests\TestCase;
-use User\Infrastructures\Credential\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase
