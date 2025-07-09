@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\User\Infrastructures\Credential\Jwt;
 
+use Carbon\CarbonImmutable;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use User\Domain\Services\Jwt\AccessTokenPayload;
@@ -32,6 +34,30 @@ class JwtHandlerTest extends TestCase
             'nbf' => 180,
             'jti' => 'jti',
         ], $payload);
+    }
+
+    #[Test]
+    public function decodeJwtSuccessfully(): void
+    {
+        CarbonImmutable::setTestNow($now = new DateTimeImmutable());
+
+        $afterAHour = $now->modify('+1 hours');
+
+        $jwt = $this->getInstance()->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: $now->getTimestamp(),
+            exp: $afterAHour->getTimestamp(),
+            nbf: $now->getTimestamp(),
+            jti: 'jti'
+        ));
+
+        $payload = $this->getInstance()->decode($jwt);
+
+        $this->assertSame('iss', $payload->iss);
+        $this->assertSame($now->getTimestamp(), $payload->iat);
+        $this->assertSame($afterAHour->getTimestamp(), $payload->exp);
+        $this->assertSame($now->getTimestamp(), $payload->nbf);
+        $this->assertSame('jti', $payload->jti);
     }
 
     private function getInstance(): JwtHandler

@@ -7,4 +7,6 @@ namespace User\Domain\Services\Jwt;
 interface JwtHandlerInterface
 {
     public function generate(AccessTokenPayload $payload): string;
+
+    public function decode(string $jwt): AccessTokenPayload;
 }
