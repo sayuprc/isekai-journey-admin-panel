@@ -27,6 +27,7 @@ class LoginInteractorTest extends TestCase
         $credentials = $this->getAll(FileCredentialRepository::class);
         $this->assertCount(1, $credentials);
         $this->assertSame($userId, $credentials[array_key_first($credentials)]->userId->value);
+        $this->assertTrue($credentials[array_key_first($credentials)]->isEnabled());
     }
 
     private function getInstance(): LoginInteractor

@@ -13,6 +13,12 @@ class Credential
         public readonly UserId $userId,
         public readonly AccessToken $accessToken,
         public readonly RefreshToken $refreshToken,
+        private readonly IsEnabled $isEnabled,
     ) {
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->isEnabled->value;
     }
 }

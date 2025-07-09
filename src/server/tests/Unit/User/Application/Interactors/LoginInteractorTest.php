@@ -60,7 +60,8 @@ class LoginInteractorTest extends TestCase
                 new CredentialId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                 new UserId($userId),
                 new AccessToken(new Jwt('jwt')),
-                new RefreshToken(new TokenValue('token'), new ExpiredAt($now), new IsEnabled(true))
+                new RefreshToken(new TokenValue('token'), new ExpiredAt($now)),
+                new IsEnabled(true)
             ))
             ->once();
 
@@ -72,7 +73,7 @@ class LoginInteractorTest extends TestCase
                         && $arg->accessToken->jwt->value === 'jwt'
                         && $arg->refreshToken->token->value === 'token'
                         && $arg->refreshToken->expiredAt->value->format('Y-m-d H:i:s') === $now->format('Y-m-d H:i:s')
-                        && $arg->refreshToken->isEnabled->value === true
+                        && $arg->isEnabled()
                 )
             )
             ->once();
