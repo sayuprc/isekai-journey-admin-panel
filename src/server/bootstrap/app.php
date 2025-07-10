@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->appendToGroup('api', [
             OpenApiValidator::class,
+        ]);
+
+        $middleware->alias([
+            'api.auth' => Authenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

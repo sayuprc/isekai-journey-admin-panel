@@ -6,5 +6,7 @@ namespace User\Domain\Models\Credential;
 
 interface CredentialRepositoryInterface
 {
+    public function findActive(CredentialId $credentialId): ?Credential;
+
     public function insert(Credential $credential): void;
 }

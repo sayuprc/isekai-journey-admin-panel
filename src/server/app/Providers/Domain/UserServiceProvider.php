@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Support\Facades\Auth;
+use User\Application\Interactors\AuthenticateInteractor;
 use User\Application\Interactors\CreateInteractor;
 use User\Application\Interactors\LoginInteractor;
+use User\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
 use User\Application\UseCase\Login\LoginUseCaseInterface;
 use User\DebugInfrastructures\FileCredentialRepository;
@@ -45,6 +47,7 @@ class UserServiceProvider extends EnvServiceProvider
 
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
+        $this->app->bind(AuthenticateUseCaseInterface::class, AuthenticateInteractor::class);
     }
 
     public function boot(): void
