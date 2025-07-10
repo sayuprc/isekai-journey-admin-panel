@@ -58,7 +58,7 @@ class AuthenticateInteractorTest extends TestCase
     {
         $credentialId = $this->generateUuid();
 
-        $this->jwtHandler->shouldReceive('decode')
+        $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
             ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
             ->once();
@@ -91,7 +91,7 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenExpireToken(): void
     {
-        $this->jwtHandler->shouldReceive('decode')
+        $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
             ->andThrow(new ExpiredException())
             ->once();
@@ -106,7 +106,7 @@ class AuthenticateInteractorTest extends TestCase
     {
         $credentialId = $this->generateUuid();
 
-        $this->jwtHandler->shouldReceive('decode')
+        $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
             ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
             ->once();
@@ -126,7 +126,7 @@ class AuthenticateInteractorTest extends TestCase
     {
         $credentialId = $this->generateUuid();
 
-        $this->jwtHandler->shouldReceive('decode')
+        $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
             ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
             ->once();

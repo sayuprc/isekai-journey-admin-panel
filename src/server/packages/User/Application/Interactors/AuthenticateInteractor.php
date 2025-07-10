@@ -28,7 +28,7 @@ class AuthenticateInteractor implements AuthenticateUseCaseInterface
     public function handle(AuthenticateInputData $inputData): Result
     {
         try {
-            $payload = $this->jwtHandler->decode($inputData->accessToken);
+            $payload = $this->jwtHandler->verify($inputData->accessToken);
         } catch (ExpiredException $e) {
             return new Err('JWTの有効期限が切れている');
         }

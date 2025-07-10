@@ -9,15 +9,15 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
-use Support\Contracts\ConfigInterface;
 use Tests\TestCase;
 use User\Domain\Services\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\JwtConfigInterface;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 use User\Infrastructures\Credential\AccessTokenFactory;
 
 class AccessTokenFactoryTest extends TestCase
 {
-    private ConfigInterface&MockInterface $config;
+    private JwtConfigInterface&MockInterface $config;
 
     private ClockInterface&MockInterface $clock;
 
@@ -27,7 +27,7 @@ class AccessTokenFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->config = Mockery::mock(ConfigInterface::class);
+        $this->config = Mockery::mock(JwtConfigInterface::class);
         $this->clock = Mockery::mock(ClockInterface::class);
         $this->jwt = Mockery::mock(JwtHandlerInterface::class);
     }
@@ -40,8 +40,8 @@ class AccessTokenFactoryTest extends TestCase
             ->andReturn($now = new DateTimeImmutable())
             ->once();
 
-        $this->config->shouldReceive('getString')
-            ->with('app.url')
+        $this->config->shouldReceive('issuer')
+            ->with()
             ->andReturn('https://example.com')
             ->once();
 

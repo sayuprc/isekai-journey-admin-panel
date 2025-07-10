@@ -15,6 +15,7 @@ use Support\Contracts\MapperInterface;
 use Tests\TestCase;
 use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Domain\Services\Jwt\Exceptions\ExpiredException;
+use User\Domain\Services\Jwt\JwtConfigInterface;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase
@@ -22,6 +23,8 @@ class JwtHandlerTest extends TestCase
     private ClockInterface&MockInterface $clock;
 
     private MapperInterface&MockInterface $mapper;
+
+    private JwtConfigInterface&MockInterface $jwtConfig;
 
     private ConfigInterface&MockInterface $config;
 
@@ -31,6 +34,7 @@ class JwtHandlerTest extends TestCase
 
         $this->clock = Mockery::mock(ClockInterface::class);
         $this->mapper = Mockery::mock(MapperInterface::class);
+        $this->jwtConfig = Mockery::mock(JwtConfigInterface::class);
         $this->config = Mockery::mock(ConfigInterface::class);
     }
 
@@ -68,7 +72,7 @@ class JwtHandlerTest extends TestCase
     }
 
     #[Test]
-    public function decodeJwtSuccessfully(): void
+    public function verifyJwtSuccessfully(): void
     {
         $now = new DateTimeImmutable();
         $afterAHour = $now->modify('+1 hours');
@@ -109,7 +113,12 @@ class JwtHandlerTest extends TestCase
             ))
             ->once();
 
-        $payload = $handler->decode($jwt);
+        $this->jwtConfig->shouldReceive('issuer')
+            ->with()
+            ->andReturn('iss')
+            ->once();
+
+        $payload = $handler->verify($jwt);
 
         $this->assertSame('iss', $payload->iss);
         $this->assertSame($now->getTimestamp(), $payload->iat);
@@ -148,11 +157,11 @@ class JwtHandlerTest extends TestCase
             ->andReturn(new DateTimeImmutable())
             ->once();
 
-        $handler->decode($jwt);
+        $handler->verify($jwt);
     }
 
     private function getInstance(): JwtHandler
     {
-        return new JwtHandler($this->clock, $this->mapper, $this->config);
+        return new JwtHandler($this->clock, $this->mapper, $this->jwtConfig, $this->config);
     }
 }

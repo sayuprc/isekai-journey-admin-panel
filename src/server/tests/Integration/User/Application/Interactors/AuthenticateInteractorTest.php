@@ -22,6 +22,8 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function canAuthenticate(): void
     {
+        config()->set('auth.jwt.key', 'key');
+
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $credential = $this->app->make(CredentialFactory::class)->create($user->userId->value);
 
@@ -36,6 +38,8 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenExpireToken(): void
     {
+        config()->set('auth.jwt.key', 'key');
+
         $now = now()->toImmutable();
         CarbonImmutable::setTestNow($now->modify('-3 hours'));
 
@@ -55,6 +59,8 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenCredentialNotFound(): void
     {
+        config()->set('auth.jwt.key', 'key');
+
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $credential = $this->app->make(CredentialFactory::class)->create($user->userId->value);
 
@@ -66,6 +72,8 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenUserNotFound(): void
     {
+        config()->set('auth.jwt.key', 'key');
+
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $credential = $this->app->make(CredentialFactory::class)->create($user->userId->value);
 

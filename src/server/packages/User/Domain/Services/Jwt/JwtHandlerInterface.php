@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace User\Domain\Services\Jwt;
 
 use User\Domain\Services\Jwt\Exceptions\ExpiredException;
+use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
 
 interface JwtHandlerInterface
 {
@@ -12,6 +13,7 @@ interface JwtHandlerInterface
 
     /**
      * @throws ExpiredException
+     * @throws InvalidIssuerException
      */
-    public function decode(string $jwt): AccessTokenPayload;
+    public function verify(string $jwt): AccessTokenPayload;
 }
