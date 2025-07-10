@@ -37,6 +37,6 @@ class FileCredentialRepository implements CredentialRepositoryInterface
 
     public function insert(Credential $credential): void
     {
-        $this->store->put($this->filePath, $credential->userId->value, $credential);
+        $this->store->put($this->filePath, $credential->credentialId->value, $credential);
     }
 }
