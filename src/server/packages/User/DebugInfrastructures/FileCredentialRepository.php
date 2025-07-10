@@ -7,6 +7,7 @@ namespace User\DebugInfrastructures;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 use User\Domain\Models\Credential\Credential;
+use User\Domain\Models\Credential\CredentialId;
 use User\Domain\Models\Credential\CredentialRepositoryInterface;
 
 class FileCredentialRepository implements CredentialRepositoryInterface
@@ -25,8 +26,17 @@ class FileCredentialRepository implements CredentialRepositoryInterface
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }
 
+    public function findActive(CredentialId $credentialId): ?Credential
+    {
+        $found = $this->store->get($this->filePath, $credentialId->value);
+
+        return is_null($found) || ! $found->isEnabled()
+            ? null
+            : $found;
+    }
+
     public function insert(Credential $credential): void
     {
-        $this->store->put($this->filePath, $credential->userId->value, $credential);
+        $this->store->put($this->filePath, $credential->credentialId->value, $credential);
     }
 }

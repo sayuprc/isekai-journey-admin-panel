@@ -13,7 +13,6 @@ use Tests\TestCase;
 use User\Domain\Models\Credential\AccessToken;
 use User\Domain\Models\Credential\AccessTokenFactoryInterface;
 use User\Domain\Models\Credential\ExpiredAt;
-use User\Domain\Models\Credential\IsEnabled;
 use User\Domain\Models\Credential\Jwt;
 use User\Domain\Models\Credential\RefreshToken;
 use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
@@ -58,7 +57,6 @@ class CredentialFactoryTest extends TestCase
                 new RefreshToken(
                     new TokenValue('token'),
                     new ExpiredAt($now = new DateTimeImmutable()),
-                    new IsEnabled(true)
                 )
             )
             ->once();
@@ -70,7 +68,7 @@ class CredentialFactoryTest extends TestCase
         $this->assertSame('jwt', $credential->accessToken->jwt->value);
         $this->assertSame('token', $credential->refreshToken->token->value);
         $this->assertSame($now->format('Y-m-d H:i:s'), $credential->refreshToken->expiredAt->value->format('Y-m-d H:i:s'));
-        $this->assertTrue($credential->refreshToken->isEnabled->value);
+        $this->assertTrue($credential->isEnabled());
     }
 
     private function getInstance(): CredentialFactory

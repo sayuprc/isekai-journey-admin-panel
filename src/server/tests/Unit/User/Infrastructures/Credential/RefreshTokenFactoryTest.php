@@ -44,7 +44,6 @@ class RefreshTokenFactoryTest extends TestCase
 
         $this->assertSame('aaaaaaaaaa', $refreshToken->token->value);
         $this->assertSame($now->modify('+7 days')->format('Y-m-d H:i:s'), $refreshToken->expiredAt->value->format('Y-m-d H:i:s'));
-        $this->assertTrue($refreshToken->isEnabled->value);
     }
 
     private function getInstance(): RefreshTokenFactory

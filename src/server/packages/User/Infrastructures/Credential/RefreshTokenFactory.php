@@ -6,7 +6,6 @@ namespace User\Infrastructures\Credential;
 
 use Support\Contracts\ClockInterface;
 use User\Domain\Models\Credential\ExpiredAt;
-use User\Domain\Models\Credential\IsEnabled;
 use User\Domain\Models\Credential\RefreshToken;
 use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
 use User\Domain\Models\Credential\TokenValue;
@@ -27,7 +26,6 @@ class RefreshTokenFactory implements RefreshTokenFactoryInterface
         return new RefreshToken(
             new TokenValue($this->generator->generate()),
             new ExpiredAt($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
-            new IsEnabled(true),
         );
     }
 }

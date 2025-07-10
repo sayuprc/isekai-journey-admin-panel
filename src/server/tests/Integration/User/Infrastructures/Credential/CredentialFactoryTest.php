@@ -18,6 +18,7 @@ class CredentialFactoryTest extends TestCase
         $credential = $this->getInstance()->create($userId);
 
         $this->assertSame($userId, $credential->userId->value);
+        $this->assertTrue($credential->isEnabled());
     }
 
     private function getInstance(): CredentialFactory

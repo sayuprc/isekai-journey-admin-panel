@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\User\Infrastructures\Credential\Jwt;
 
+use Carbon\CarbonImmutable;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use User\Infrastructures\Credential\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\AccessTokenPayload;
+use User\Domain\Services\Jwt\Exceptions\ExpiredException;
+use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
+use User\Domain\Services\Jwt\JwtConfigInterface;
 use User\Infrastructures\Credential\Jwt\JwtHandler;
 
 class JwtHandlerTest extends TestCase
@@ -32,6 +37,72 @@ class JwtHandlerTest extends TestCase
             'nbf' => 180,
             'jti' => 'jti',
         ], $payload);
+    }
+
+    #[Test]
+    public function verifyJwtSuccessfully(): void
+    {
+        config()->set('auth.jwt.key', 'key');
+
+        CarbonImmutable::setTestNow($now = new DateTimeImmutable());
+
+        $afterAHour = $now->modify('+1 hours');
+
+        $jwt = $this->getInstance()->generate(new AccessTokenPayload(
+            iss: $iss = $this->app->make(JwtConfigInterface::class)->issuer(),
+            iat: $now->getTimestamp(),
+            exp: $afterAHour->getTimestamp(),
+            nbf: $now->getTimestamp(),
+            jti: 'jti'
+        ));
+
+        $payload = $this->getInstance()->verify($jwt);
+
+        $this->assertSame($iss, $payload->iss);
+        $this->assertSame($now->getTimestamp(), $payload->iat);
+        $this->assertSame($afterAHour->getTimestamp(), $payload->exp);
+        $this->assertSame($now->getTimestamp(), $payload->nbf);
+        $this->assertSame('jti', $payload->jti);
+    }
+
+    #[Test]
+    public function throwExceptionWhenExpireToken(): void
+    {
+        config()->set('auth.jwt.key', 'key');
+
+        $this->expectException(ExpiredException::class);
+
+        $jwt = $this->getInstance()->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: 0,
+            exp: 180,
+            nbf: 0,
+            jti: 'jti'
+        ));
+
+        $this->getInstance()->verify($jwt);
+    }
+
+    #[Test]
+    public function throwExceptionWhenInvalidIssuer(): void
+    {
+        config()->set('auth.jwt.key', 'key');
+
+        $this->expectException(InvalidIssuerException::class);
+
+        CarbonImmutable::setTestNow($now = new DateTimeImmutable());
+
+        $afterAHour = $now->modify('+1 hours');
+
+        $jwt = $this->getInstance()->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: $now->getTimestamp(),
+            exp: $afterAHour->getTimestamp(),
+            nbf: $now->getTimestamp(),
+            jti: 'jti'
+        ));
+
+        $this->getInstance()->verify($jwt);
     }
 
     private function getInstance(): JwtHandler
