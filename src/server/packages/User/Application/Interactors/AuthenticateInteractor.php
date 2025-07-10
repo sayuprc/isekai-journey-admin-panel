@@ -14,6 +14,7 @@ use User\Domain\Models\Credential\CredentialId;
 use User\Domain\Models\Credential\CredentialRepositoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
 use User\Domain\Services\Jwt\Exceptions\ExpiredException;
+use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 
 class AuthenticateInteractor implements AuthenticateUseCaseInterface
@@ -31,6 +32,8 @@ class AuthenticateInteractor implements AuthenticateUseCaseInterface
             $payload = $this->jwtHandler->verify($inputData->accessToken);
         } catch (ExpiredException $e) {
             return new Err('JWTの有効期限が切れている');
+        } catch (InvalidIssuerException $e) {
+            return new Err('不正なIssuer');
         }
 
         $foundCredential = $this->credentialRepository->findActive(new CredentialId($payload->jti));
