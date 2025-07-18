@@ -6,7 +6,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use Support\Application\Config;
+use Support\Infrastructures\Config;
 
 class AppServiceProvider extends ServiceProvider
 {

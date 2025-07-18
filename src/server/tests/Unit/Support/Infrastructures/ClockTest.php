@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Application;
+namespace Tests\Unit\Support\Infrastructures;
 
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Application\Clock;
+use Support\Infrastructures\Clock;
 use Tests\TestCase;
 
 class ClockTest extends TestCase

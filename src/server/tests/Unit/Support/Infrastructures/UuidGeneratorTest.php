@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Application;
+namespace Tests\Unit\Support\Infrastructures;
 
 use PHPUnit\Framework\Attributes\Test;
-use Support\Application\UuidGenerator;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Infrastructures\UuidGenerator;
 use Tests\TestCase;
 
 class UuidGeneratorTest extends TestCase
