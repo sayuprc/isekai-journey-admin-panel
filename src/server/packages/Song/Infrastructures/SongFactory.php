@@ -47,15 +47,24 @@ class SongFactory implements SongFactoryInterface
             new ReleasedOn($releasedOn),
             new SongTypeId($songTypeId),
             array_map(
-                fn (CreateCreatorData $creator) => new Lyricist(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
+                fn (CreateCreatorData $creator) => new Lyricist(
+                    new CreatorId($creator->creatorId),
+                    new OrderNo($creator->orderNo)
+                ),
                 $lyricists
             ),
             array_map(
-                fn (CreateCreatorData $creator) => new Composer(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
+                fn (CreateCreatorData $creator) => new Composer(
+                    new CreatorId($creator->creatorId),
+                    new OrderNo($creator->orderNo)
+                ),
                 $composers
             ),
             array_map(
-                fn (CreateCreatorData $creator) => new Arranger(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
+                fn (CreateCreatorData $creator) => new Arranger(
+                    new CreatorId($creator->creatorId),
+                    new OrderNo($creator->orderNo)
+                ),
                 $arrangers
             ),
         );
