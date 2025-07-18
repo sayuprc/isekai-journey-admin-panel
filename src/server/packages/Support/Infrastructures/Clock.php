@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Application;
+namespace Support\Infrastructures;
 
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;

@@ -11,8 +11,8 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
-use Support\Application\Config;
 use Support\Contracts\ConfigInterface;
+use Support\Infrastructures\Config;
 use Support\Repository\FileStore;
 
 trait FileRepositoryTransaction

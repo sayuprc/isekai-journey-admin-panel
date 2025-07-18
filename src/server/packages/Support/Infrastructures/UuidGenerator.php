@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Application;
+namespace Support\Infrastructures;
 
 use Illuminate\Support\Str;
 use Support\Contracts\UuidGeneratorInterface;

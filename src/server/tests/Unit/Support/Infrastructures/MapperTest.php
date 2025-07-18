@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Application;
+namespace Tests\Unit\Support\Infrastructures;
 
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Application\Mapper;
 use Support\Contracts\MapperInterface;
+use Support\Infrastructures\Mapper;
 use Tests\TestCase;
 
 class MapperTest extends TestCase

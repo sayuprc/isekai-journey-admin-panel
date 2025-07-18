@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Application;
+namespace Support\Infrastructures;
 
 use Exception;
 use Support\Contracts\ConfigInterface;

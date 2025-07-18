@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Application;
+namespace Support\Infrastructures;
 
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;

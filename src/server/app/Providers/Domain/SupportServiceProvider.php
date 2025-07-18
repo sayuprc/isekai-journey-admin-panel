@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Support\Application\Clock;
-use Support\Application\Config;
-use Support\Application\Mapper;
-use Support\Application\UuidGenerator;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\DebugInfrastructures\NopTransaction;
+use Support\Infrastructures\Clock;
+use Support\Infrastructures\Config;
+use Support\Infrastructures\Mapper;
+use Support\Infrastructures\UuidGenerator;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
