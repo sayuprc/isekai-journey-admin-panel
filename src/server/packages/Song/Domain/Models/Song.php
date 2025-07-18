@@ -8,7 +8,6 @@ use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
 use SongType\Domain\Models\SongTypeId;
-use Support\Domain\ValueObjects\OrderNo;
 
 class Song
 {
@@ -23,7 +22,6 @@ class Song
         public readonly Description $description,
         public readonly ReleasedOn $releasedOn,
         public readonly SongTypeId $songTypeId,
-        public readonly OrderNo $orderNo,
         public readonly array $lyricists,
         public readonly array $composers,
         public readonly array $arrangers,

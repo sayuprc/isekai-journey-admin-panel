@@ -10,7 +10,6 @@ use Song\Domain\Dtos\CreateCreatorData;
 class CreateInputData
 {
     /**
-     * @param positive-int             $orderNo
      * @param array<CreateCreatorData> $lyricists
      * @param array<CreateCreatorData> $composers
      * @param array<CreateCreatorData> $arrangers
@@ -20,7 +19,6 @@ class CreateInputData
         public readonly string $description,
         public readonly ImmutableDate $releasedOn,
         public readonly string $songTypeId,
-        public readonly int $orderNo,
         public readonly array $lyricists,
         public readonly array $composers,
         public readonly array $arrangers,

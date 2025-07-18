@@ -40,7 +40,6 @@ class SongFactoryTest extends TestCase
             'description',
             new ImmutableDate('2019-12-12'),
             'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
-            1,
             [
                 new CreateCreatorData('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 1),
             ],
@@ -57,7 +56,6 @@ class SongFactoryTest extends TestCase
         $this->assertSame('description', $song->description->value);
         $this->assertSame('2019-12-12', $song->releasedOn->value->format('Y-m-d'));
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->songTypeId->value);
-        $this->assertSame(1, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', $song->lyricists[0]->creatorId->value);
         $this->assertSame(1, $song->lyricists[0]->orderNo->value);

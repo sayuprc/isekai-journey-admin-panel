@@ -27,7 +27,6 @@ class SongFactory implements SongFactoryInterface
     }
 
     /**
-     * @param positive-int             $orderNo
      * @param array<CreateCreatorData> $lyricists
      * @param array<CreateCreatorData> $composers
      * @param array<CreateCreatorData> $arrangers
@@ -37,7 +36,6 @@ class SongFactory implements SongFactoryInterface
         string $description,
         ImmutableDate $releasedOn,
         string $songTypeId,
-        int $orderNo,
         array $lyricists,
         array $composers,
         array $arrangers,
@@ -48,7 +46,6 @@ class SongFactory implements SongFactoryInterface
             new Description($description),
             new ReleasedOn($releasedOn),
             new SongTypeId($songTypeId),
-            new OrderNo($orderNo),
             array_map(
                 fn (CreateCreatorData $creator) => new Lyricist(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
                 $lyricists

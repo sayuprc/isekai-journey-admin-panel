@@ -71,7 +71,6 @@ class ListInteractorTest extends TestCase
                     new Description('楽曲Aの説明'),
                     new ReleasedOn(new ImmutableDate('2019-12-12')),
                     new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB'),
-                    new OrderNo(1),
                     [
                         new Lyricist(
                             new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
@@ -97,7 +96,6 @@ class ListInteractorTest extends TestCase
                     new Description('楽曲Bの説明'),
                     new ReleasedOn(new ImmutableDate('2019-12-19')),
                     new SongTypeId('11111111-1111-1111-1111-111111111111'),
-                    new OrderNo(2),
                     [
                         new Lyricist(
                             new CreatorId('22222222-2222-2222-2222-222222222222'),
@@ -123,7 +121,6 @@ class ListInteractorTest extends TestCase
                     new Description('楽曲Cの説明'),
                     new ReleasedOn(new ImmutableDate('2019-12-26')),
                     new SongTypeId('77777777-7777-7777-7777-777777777777'),
-                    new OrderNo(3),
                     [
                         new Lyricist(
                             new CreatorId('88888888-8888-8888-8888-888888888888'),
@@ -166,7 +163,6 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[0]->arrangers);
         $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $response->songs[0]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[0]->arrangers[0]->orderNo->value);
-        $this->assertSame(1, $response->songs[0]->orderNo->value);
 
         $this->assertSame('00000000-0000-0000-0000-000000000000', $response->songs[1]->songId->value);
         $this->assertSame('楽曲B', $response->songs[1]->title->value);
@@ -182,7 +178,6 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[1]->arrangers);
         $this->assertSame('44444444-4444-4444-4444-444444444444', $response->songs[1]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[1]->arrangers[0]->orderNo->value);
-        $this->assertSame(2, $response->songs[1]->orderNo->value);
 
         $this->assertSame('66666666-6666-6666-6666-666666666666', $response->songs[2]->songId->value);
         $this->assertSame('楽曲C', $response->songs[2]->title->value);
@@ -198,6 +193,5 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[2]->arrangers);
         $this->assertSame('10101010-1010-1010-1010-101010101010', $response->songs[2]->arrangers[0]->creatorId->value);
         $this->assertSame(1, $response->songs[2]->arrangers[0]->orderNo->value);
-        $this->assertSame(3, $response->songs[2]->orderNo->value);
     }
 }

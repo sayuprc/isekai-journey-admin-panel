@@ -60,7 +60,6 @@ class CreateInteractorTest extends TestCase
                 'description',
                 Mockery::on(fn (ImmutableDate $arg) => $arg->format('Y-m-d') === '2019-12-12'),
                 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
-                1,
                 Mockery::on(
                     fn (array $args): bool => count($args) === 1
                         && $args[0] instanceof CreateCreatorData
@@ -87,7 +86,6 @@ class CreateInteractorTest extends TestCase
                     new Description('description'),
                     new ReleasedOn(new ImmutableDate('2019-12-12')),
                     new SongTypeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new OrderNo(1),
                     [
                         new Lyricist(
                             new CreatorId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
@@ -117,7 +115,6 @@ class CreateInteractorTest extends TestCase
                     && $arg->description->value === 'description'
                     && $arg->releasedOn->value->format('Y-m-d') === '2019-12-12'
                     && $arg->songTypeId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
-                    && $arg->orderNo->value === 1
                     && count($arg->lyricists) === 1
                     && $arg->lyricists[0]->creatorId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                     && $arg->lyricists[0]->orderNo->value === 1
@@ -135,7 +132,6 @@ class CreateInteractorTest extends TestCase
             'description',
             new ImmutableDate('2019-12-12'),
             'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
-            1,
             [
                 new CreateCreatorData('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 1),
             ],
