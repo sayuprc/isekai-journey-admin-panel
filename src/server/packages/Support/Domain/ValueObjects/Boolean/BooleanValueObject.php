@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Support\Domain\ValueObjects\Boolean;
 
-abstract class BooleanValueObject
+abstract readonly class BooleanValueObject
 {
-    public function __construct(public readonly bool $value)
+    public function __construct(public bool $value)
     {
     }
 }

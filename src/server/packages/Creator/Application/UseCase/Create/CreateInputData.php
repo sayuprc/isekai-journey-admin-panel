@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Creator\Application\UseCase\Create;
 
-class CreateInputData
+readonly class CreateInputData
 {
-    public function __construct(public readonly string $creatorName)
+    public function __construct(public string $creatorName)
     {
     }
 }

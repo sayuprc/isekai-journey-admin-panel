@@ -6,7 +6,7 @@ namespace Support\Domain\ValueObjects\Date;
 
 use DateType\ImmutableDate;
 
-abstract class ImmutableDateValueObject
+abstract readonly class ImmutableDateValueObject
 {
     public function __construct(public ImmutableDate $value)
     {

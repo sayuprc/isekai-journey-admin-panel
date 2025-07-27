@@ -6,6 +6,6 @@ namespace JourneyLog\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class Url extends StringValueObject
+readonly class Url extends StringValueObject
 {
 }

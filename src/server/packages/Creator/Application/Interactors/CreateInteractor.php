@@ -15,13 +15,13 @@ use ResultType\Eager\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 
-class CreateInteractor implements CreateUseCaseInterface
+readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly TransactionInterface $transaction,
-        private readonly CreatorRepositoryInterface $repository,
-        private readonly CreatorFactoryInterface $factory,
-        private readonly CreatorNameDuplicateCheckService $service,
+        private TransactionInterface $transaction,
+        private CreatorRepositoryInterface $repository,
+        private CreatorFactoryInterface $factory,
+        private CreatorNameDuplicateCheckService $service,
     ) {
     }
 

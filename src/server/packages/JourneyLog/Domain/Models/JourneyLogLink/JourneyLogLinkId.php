@@ -6,6 +6,6 @@ namespace JourneyLog\Domain\Models\JourneyLogLink;
 
 use Support\Domain\ValueObjects\String\UuidValueObject;
 
-class JourneyLogLinkId extends UuidValueObject
+readonly class JourneyLogLinkId extends UuidValueObject
 {
 }

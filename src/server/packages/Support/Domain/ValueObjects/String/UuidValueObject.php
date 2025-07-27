@@ -6,7 +6,7 @@ namespace Support\Domain\ValueObjects\String;
 
 use Support\Domain\Exceptions\InvalidDomainException;
 
-abstract class UuidValueObject extends StringValueObject
+abstract readonly class UuidValueObject extends StringValueObject
 {
     /**
      * @throws InvalidDomainException

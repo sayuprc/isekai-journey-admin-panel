@@ -6,9 +6,9 @@ namespace Creator\Application\UseCase\Update;
 
 use Creator\Domain\Models\Creator;
 
-class UpdateOutputData
+readonly class UpdateOutputData
 {
-    public function __construct(public readonly Creator $creator)
+    public function __construct(public Creator $creator)
     {
     }
 }

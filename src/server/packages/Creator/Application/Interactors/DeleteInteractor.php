@@ -9,9 +9,9 @@ use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 
-class DeleteInteractor implements DeleteUseCaseInterface
+readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $repository)
+    public function __construct(private CreatorRepositoryInterface $repository)
     {
     }
 

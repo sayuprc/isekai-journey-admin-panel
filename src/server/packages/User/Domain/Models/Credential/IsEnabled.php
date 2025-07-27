@@ -6,6 +6,6 @@ namespace User\Domain\Models\Credential;
 
 use Support\Domain\ValueObjects\Boolean\BooleanValueObject;
 
-class IsEnabled extends BooleanValueObject
+readonly class IsEnabled extends BooleanValueObject
 {
 }

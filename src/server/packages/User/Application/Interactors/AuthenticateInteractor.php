@@ -17,12 +17,12 @@ use User\Domain\Services\Jwt\Exceptions\ExpiredException;
 use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 
-class AuthenticateInteractor implements AuthenticateUseCaseInterface
+readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
     public function __construct(
-        private readonly JwtHandlerInterface $jwtHandler,
-        private readonly CredentialRepositoryInterface $credentialRepository,
-        private readonly UserRepositoryInterface $userRepository,
+        private JwtHandlerInterface $jwtHandler,
+        private CredentialRepositoryInterface $credentialRepository,
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 

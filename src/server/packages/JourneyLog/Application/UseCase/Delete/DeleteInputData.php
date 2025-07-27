@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace JourneyLog\Application\UseCase\Delete;
 
-class DeleteInputData
+readonly class DeleteInputData
 {
-    public function __construct(public readonly string $journeyLogId)
+    public function __construct(public string $journeyLogId)
     {
     }
 }

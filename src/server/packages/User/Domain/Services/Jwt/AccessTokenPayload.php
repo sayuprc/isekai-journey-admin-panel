@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace User\Domain\Services\Jwt;
 
-class AccessTokenPayload
+readonly class AccessTokenPayload
 {
     public function __construct(
-        public readonly string $iss,
-        public readonly int $iat,
-        public readonly int $exp,
-        public readonly int $nbf,
-        public readonly string $jti,
+        public string $iss,
+        public int $iat,
+        public int $exp,
+        public int $nbf,
+        public string $jti,
     ) {
     }
 

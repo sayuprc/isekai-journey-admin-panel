@@ -6,6 +6,6 @@ namespace Support\Domain\ValueObjects;
 
 use Support\Domain\ValueObjects\Numeric\PositiveIntegerValueObject;
 
-class OrderNo extends PositiveIntegerValueObject
+readonly class OrderNo extends PositiveIntegerValueObject
 {
 }

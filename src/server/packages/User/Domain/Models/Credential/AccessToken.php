@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace User\Domain\Models\Credential;
 
-class AccessToken
+readonly class AccessToken
 {
-    public function __construct(public readonly Jwt $jwt)
+    public function __construct(public Jwt $jwt)
     {
     }
 }

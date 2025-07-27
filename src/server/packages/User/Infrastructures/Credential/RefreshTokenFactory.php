@@ -11,13 +11,13 @@ use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
 use User\Domain\Models\Credential\TokenValue;
 use User\Domain\Services\RandomTokenGeneratorInterface;
 
-class RefreshTokenFactory implements RefreshTokenFactoryInterface
+readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
 {
     private const int TTL_DAY = 7;
 
     public function __construct(
-        private readonly ClockInterface $clock,
-        private readonly RandomTokenGeneratorInterface $generator,
+        private ClockInterface $clock,
+        private RandomTokenGeneratorInterface $generator,
     ) {
     }
 

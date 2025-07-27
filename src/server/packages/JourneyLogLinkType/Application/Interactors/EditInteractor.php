@@ -9,11 +9,11 @@ use JourneyLogLinkType\Application\UseCase\Edit\EditUseCaseInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeFactoryInterface;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeRepositoryInterface;
 
-class EditInteractor implements EditUseCaseInterface
+readonly class EditInteractor implements EditUseCaseInterface
 {
     public function __construct(
-        private readonly JourneyLogLinkTypeRepositoryInterface $repository,
-        private readonly JourneyLogLinkTypeFactoryInterface $factory,
+        private JourneyLogLinkTypeRepositoryInterface $repository,
+        private JourneyLogLinkTypeFactoryInterface $factory,
     ) {
     }
 

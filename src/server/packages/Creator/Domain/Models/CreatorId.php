@@ -6,6 +6,6 @@ namespace Creator\Domain\Models;
 
 use Support\Domain\ValueObjects\String\UuidValueObject;
 
-class CreatorId extends UuidValueObject
+readonly class CreatorId extends UuidValueObject
 {
 }

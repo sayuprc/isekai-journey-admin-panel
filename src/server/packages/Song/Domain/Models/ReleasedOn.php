@@ -6,6 +6,6 @@ namespace Song\Domain\Models;
 
 use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
 
-class ReleasedOn extends ImmutableDateValueObject
+readonly class ReleasedOn extends ImmutableDateValueObject
 {
 }

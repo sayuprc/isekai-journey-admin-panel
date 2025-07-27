@@ -10,18 +10,18 @@ use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
-class FileJourneyLogRepository implements JourneyLogRepositoryInterface
+readonly class FileJourneyLogRepository implements JourneyLogRepositoryInterface
 {
     private const string FILE_NAME = 'journey-logs.dat';
 
-    private readonly string $filePath;
+    private string $filePath;
 
     /**
      * @param FileStore<JourneyLog> $store
      */
     public function __construct(
-        private readonly FileStore $store,
-        private readonly ConfigInterface $config,
+        private FileStore $store,
+        private ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }

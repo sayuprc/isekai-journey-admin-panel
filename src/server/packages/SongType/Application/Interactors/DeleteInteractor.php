@@ -9,9 +9,9 @@ use SongType\Application\UseCase\Delete\DeleteUseCaseInterface;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 
-class DeleteInteractor implements DeleteUseCaseInterface
+readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly SongTypeRepositoryInterface $repository)
+    public function __construct(private SongTypeRepositoryInterface $repository)
     {
     }
 

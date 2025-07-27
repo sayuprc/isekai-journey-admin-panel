@@ -15,12 +15,12 @@ use User\Domain\Models\Email;
 use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
 
-class CreateInteractor implements CreateUseCaseInterface
+readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly TransactionInterface $transaction,
-        private readonly UserRepositoryInterface $repository,
-        private readonly UserFactoryInterface $factory,
+        private TransactionInterface $transaction,
+        private UserRepositoryInterface $repository,
+        private UserFactoryInterface $factory,
     ) {
     }
 

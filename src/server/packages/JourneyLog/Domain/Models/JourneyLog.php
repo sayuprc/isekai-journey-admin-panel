@@ -7,17 +7,17 @@ namespace JourneyLog\Domain\Models;
 use JourneyLog\Domain\Models\JourneyLogLink\JourneyLogLink;
 use Support\Domain\ValueObjects\OrderNo;
 
-class JourneyLog
+readonly class JourneyLog
 {
     /**
      * @param JourneyLogLink[] $journeyLogLinks
      */
     public function __construct(
-        public readonly JourneyLogId $journeyLogId,
-        public readonly Story $story,
-        public readonly Period $period,
-        public readonly OrderNo $orderNo,
-        public readonly array $journeyLogLinks,
+        public JourneyLogId $journeyLogId,
+        public Story $story,
+        public Period $period,
+        public OrderNo $orderNo,
+        public array $journeyLogLinks,
     ) {
     }
 }

@@ -6,9 +6,9 @@ namespace Support\Domain\ValueObjects\Date;
 
 use DateTimeImmutable;
 
-abstract class ImmutableDateTimeValueObject
+abstract readonly class ImmutableDateTimeValueObject
 {
-    public function __construct(public readonly DateTimeImmutable $value)
+    public function __construct(public DateTimeImmutable $value)
     {
     }
 }

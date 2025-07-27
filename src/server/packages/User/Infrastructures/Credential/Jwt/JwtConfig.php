@@ -7,9 +7,9 @@ namespace User\Infrastructures\Credential\Jwt;
 use Support\Contracts\ConfigInterface;
 use User\Domain\Services\Jwt\JwtConfigInterface;
 
-class JwtConfig implements JwtConfigInterface
+readonly class JwtConfig implements JwtConfigInterface
 {
-    public function __construct(private readonly ConfigInterface $config)
+    public function __construct(private ConfigInterface $config)
     {
     }
 

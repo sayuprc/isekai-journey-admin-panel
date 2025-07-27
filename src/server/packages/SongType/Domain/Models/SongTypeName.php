@@ -6,6 +6,6 @@ namespace SongType\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class SongTypeName extends StringValueObject
+readonly class SongTypeName extends StringValueObject
 {
 }

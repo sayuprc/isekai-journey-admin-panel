@@ -28,6 +28,6 @@ class IntegerValueObjectTest extends TestCase
     }
 }
 
-class IntegerObject extends IntegerValueObject
+readonly class IntegerObject extends IntegerValueObject
 {
 }

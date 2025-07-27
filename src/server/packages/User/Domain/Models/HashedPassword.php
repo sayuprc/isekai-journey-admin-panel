@@ -6,6 +6,6 @@ namespace User\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class HashedPassword extends StringValueObject
+readonly class HashedPassword extends StringValueObject
 {
 }

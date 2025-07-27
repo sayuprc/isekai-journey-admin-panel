@@ -6,9 +6,9 @@ namespace User\Application\UseCase\Login;
 
 use User\Domain\Models\Credential\Credential;
 
-class LoginOutputData
+readonly class LoginOutputData
 {
-    public function __construct(public readonly Credential $credential)
+    public function __construct(public Credential $credential)
     {
     }
 }

@@ -22,9 +22,9 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 
-class JourneyLogFactory implements JourneyLogFactoryInterface
+readonly class JourneyLogFactory implements JourneyLogFactoryInterface
 {
-    public function __construct(private readonly UuidGeneratorInterface $uuid)
+    public function __construct(private UuidGeneratorInterface $uuid)
     {
     }
 

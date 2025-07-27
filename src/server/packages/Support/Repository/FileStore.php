@@ -7,9 +7,9 @@ namespace Support\Repository;
 /**
  * @template T
  */
-class FileStore
+readonly class FileStore
 {
-    public function __construct(private readonly FileSystem $file)
+    public function __construct(private FileSystem $file)
     {
     }
 

@@ -11,9 +11,9 @@ use SongType\Domain\Models\SongTypeName;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 
-class SongTypeFactory implements SongTypeFactoryInterface
+readonly class SongTypeFactory implements SongTypeFactoryInterface
 {
-    public function __construct(private readonly UuidGeneratorInterface $uuid)
+    public function __construct(private UuidGeneratorInterface $uuid)
     {
     }
 

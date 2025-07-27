@@ -11,18 +11,18 @@ use User\Domain\Models\User;
 use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
 
-class FileUserRepository implements UserRepositoryInterface
+readonly class FileUserRepository implements UserRepositoryInterface
 {
     private const string FILE_NAME = 'users.dat';
 
-    private readonly string $filePath;
+    private string $filePath;
 
     /**
      * @param FileStore<User> $store
      */
     public function __construct(
-        private readonly FileStore $store,
-        private readonly ConfigInterface $config,
+        private FileStore $store,
+        private ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }

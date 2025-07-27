@@ -6,6 +6,6 @@ namespace User\Domain\Models\Credential;
 
 use Support\Domain\ValueObjects\String\UuidValueObject;
 
-class CredentialId extends UuidValueObject
+readonly class CredentialId extends UuidValueObject
 {
 }

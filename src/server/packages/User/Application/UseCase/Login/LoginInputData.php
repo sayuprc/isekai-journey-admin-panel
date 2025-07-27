@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace User\Application\UseCase\Login;
 
-class LoginInputData
+readonly class LoginInputData
 {
-    public function __construct(public readonly string $userId)
+    public function __construct(public string $userId)
     {
     }
 }

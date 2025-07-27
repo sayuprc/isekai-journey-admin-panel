@@ -6,12 +6,12 @@ namespace SongType\Domain\Models;
 
 use Support\Domain\ValueObjects\OrderNo;
 
-class SongType
+readonly class SongType
 {
     public function __construct(
-        public readonly SongTypeId $songTypeId,
-        public readonly SongTypeName $songTypeName,
-        public readonly OrderNo $orderNo,
+        public SongTypeId $songTypeId,
+        public SongTypeName $songTypeName,
+        public OrderNo $orderNo,
     ) {
     }
 }

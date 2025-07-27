@@ -6,7 +6,7 @@ namespace User\Infrastructures;
 
 use User\Domain\Services\RandomTokenGeneratorInterface;
 
-class RandomTokenGenerator implements RandomTokenGeneratorInterface
+readonly class RandomTokenGenerator implements RandomTokenGeneratorInterface
 {
     private const int LENGTH = 64;
 

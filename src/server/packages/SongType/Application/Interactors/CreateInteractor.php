@@ -15,13 +15,13 @@ use SongType\Domain\Models\SongTypeRepositoryInterface;
 use SongType\Domain\Services\SongTypeNameDuplicateCheckService;
 use Support\Contracts\TransactionInterface;
 
-class CreateInteractor implements CreateUseCaseInterface
+readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly TransactionInterface $transaction,
-        private readonly SongTypeRepositoryInterface $repository,
-        private readonly SongTypeFactoryInterface $factory,
-        private readonly SongTypeNameDuplicateCheckService $service,
+        private TransactionInterface $transaction,
+        private SongTypeRepositoryInterface $repository,
+        private SongTypeFactoryInterface $factory,
+        private SongTypeNameDuplicateCheckService $service,
     ) {
     }
 

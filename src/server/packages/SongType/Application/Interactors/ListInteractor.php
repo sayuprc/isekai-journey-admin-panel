@@ -8,9 +8,9 @@ use SongType\Application\UseCase\List\ListOutputData;
 use SongType\Application\UseCase\List\ListUseCaseInterface;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 
-class ListInteractor implements ListUseCaseInterface
+readonly class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly SongTypeRepositoryInterface $repository)
+    public function __construct(private SongTypeRepositoryInterface $repository)
     {
     }
 

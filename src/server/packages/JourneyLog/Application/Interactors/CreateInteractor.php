@@ -9,11 +9,11 @@ use JourneyLog\Application\UseCase\Create\CreateUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogFactoryInterface;
 use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
-class CreateInteractor implements CreateUseCaseInterface
+readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly JourneyLogRepositoryInterface $repository,
-        private readonly JourneyLogFactoryInterface $factory,
+        private JourneyLogRepositoryInterface $repository,
+        private JourneyLogFactoryInterface $factory,
     ) {
     }
 

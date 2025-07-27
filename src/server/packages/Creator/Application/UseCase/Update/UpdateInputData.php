@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Creator\Application\UseCase\Update;
 
-class UpdateInputData
+readonly class UpdateInputData
 {
     public function __construct(
-        public readonly string $creatorId,
-        public readonly string $creatorName,
+        public string $creatorId,
+        public string $creatorName,
     ) {
     }
 }

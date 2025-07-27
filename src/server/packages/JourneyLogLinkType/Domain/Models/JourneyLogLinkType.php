@@ -6,12 +6,12 @@ namespace JourneyLogLinkType\Domain\Models;
 
 use Support\Domain\ValueObjects\OrderNo;
 
-class JourneyLogLinkType
+readonly class JourneyLogLinkType
 {
     public function __construct(
-        public readonly JourneyLogLinkTypeId $journeyLogLinkTypeId,
-        public readonly JourneyLogLinkTypeName $journeyLogLinkTypeName,
-        public readonly OrderNo $orderNo,
+        public JourneyLogLinkTypeId $journeyLogLinkTypeId,
+        public JourneyLogLinkTypeName $journeyLogLinkTypeName,
+        public OrderNo $orderNo,
     ) {
     }
 }

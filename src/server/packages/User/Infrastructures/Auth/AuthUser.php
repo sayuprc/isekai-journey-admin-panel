@@ -7,7 +7,7 @@ namespace User\Infrastructures\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use User\Domain\Models\User;
 
-class AuthUser extends User implements Authenticatable
+readonly class AuthUser extends User implements Authenticatable
 {
     public function getAuthIdentifierName()
     {

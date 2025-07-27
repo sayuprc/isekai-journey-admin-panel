@@ -20,9 +20,9 @@ use SongType\Domain\Models\SongTypeId;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 
-class SongFactory implements SongFactoryInterface
+readonly class SongFactory implements SongFactoryInterface
 {
-    public function __construct(private readonly UuidGeneratorInterface $uuid)
+    public function __construct(private UuidGeneratorInterface $uuid)
     {
     }
 

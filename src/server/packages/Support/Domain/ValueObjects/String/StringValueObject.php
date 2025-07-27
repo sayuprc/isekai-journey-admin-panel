@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Support\Domain\ValueObjects\String;
 
-abstract class StringValueObject
+abstract readonly class StringValueObject
 {
-    public function __construct(public readonly string $value)
+    public function __construct(public string $value)
     {
     }
 }

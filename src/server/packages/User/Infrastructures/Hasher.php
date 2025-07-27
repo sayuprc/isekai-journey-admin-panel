@@ -7,7 +7,7 @@ namespace User\Infrastructures;
 use Illuminate\Support\Facades\Hash;
 use User\Domain\Services\HasherInterface;
 
-class Hasher implements HasherInterface
+readonly class Hasher implements HasherInterface
 {
     public function hash(string $plainPassword): string
     {

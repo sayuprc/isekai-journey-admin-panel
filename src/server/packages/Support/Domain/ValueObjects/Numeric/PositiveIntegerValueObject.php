@@ -6,7 +6,7 @@ namespace Support\Domain\ValueObjects\Numeric;
 
 use Support\Domain\Exceptions\InvalidDomainException;
 
-abstract class PositiveIntegerValueObject extends IntegerValueObject
+abstract readonly class PositiveIntegerValueObject extends IntegerValueObject
 {
     /**
      * @param positive-int $value

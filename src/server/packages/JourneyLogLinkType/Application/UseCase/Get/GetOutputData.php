@@ -6,9 +6,9 @@ namespace JourneyLogLinkType\Application\UseCase\Get;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 
-class GetOutputData
+readonly class GetOutputData
 {
-    public function __construct(public readonly JourneyLogLinkType $journeyLogLinkType)
+    public function __construct(public JourneyLogLinkType $journeyLogLinkType)
     {
     }
 }

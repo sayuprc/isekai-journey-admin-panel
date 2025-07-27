@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Creator\Application\UseCase\Delete;
 
-class DeleteInputData
+readonly class DeleteInputData
 {
-    public function __construct(public readonly string $creatorId)
+    public function __construct(public string $creatorId)
     {
     }
 }

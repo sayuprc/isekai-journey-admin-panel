@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SongType\Application\UseCase\Get;
 
-class GetInputData
+readonly class GetInputData
 {
-    public function __construct(public readonly string $songTypeId)
+    public function __construct(public string $songTypeId)
     {
     }
 }

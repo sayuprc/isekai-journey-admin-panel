@@ -8,7 +8,7 @@ use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use Support\Contracts\ClockInterface;
 
-class Clock implements ClockInterface
+readonly class Clock implements ClockInterface
 {
     public function now(): DateTimeImmutable
     {

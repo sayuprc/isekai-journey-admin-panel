@@ -6,12 +6,12 @@ namespace Song\Application\UseCase\List;
 
 use Song\Domain\Models\Song;
 
-class ListOutputData
+readonly class ListOutputData
 {
     /**
      * @param Song[] $songs
      */
-    public function __construct(public readonly array $songs)
+    public function __construct(public array $songs)
     {
     }
 }

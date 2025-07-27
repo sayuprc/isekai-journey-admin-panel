@@ -6,6 +6,6 @@ namespace User\Domain\Models;
 
 use Support\Domain\ValueObjects\String\UuidValueObject;
 
-class UserId extends UuidValueObject
+readonly class UserId extends UuidValueObject
 {
 }

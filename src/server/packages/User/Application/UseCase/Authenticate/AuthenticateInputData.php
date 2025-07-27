@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace User\Application\UseCase\Authenticate;
 
-class AuthenticateInputData
+readonly class AuthenticateInputData
 {
-    public function __construct(public readonly string $accessToken)
+    public function __construct(public string $accessToken)
     {
     }
 }

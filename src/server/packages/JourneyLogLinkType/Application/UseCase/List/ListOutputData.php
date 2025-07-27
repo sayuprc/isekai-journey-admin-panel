@@ -6,12 +6,12 @@ namespace JourneyLogLinkType\Application\UseCase\List;
 
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 
-class ListOutputData
+readonly class ListOutputData
 {
     /**
      * @param JourneyLogLinkType[] $journeyLogLinkTypes
      */
-    public function __construct(public readonly array $journeyLogLinkTypes)
+    public function __construct(public array $journeyLogLinkTypes)
     {
     }
 }

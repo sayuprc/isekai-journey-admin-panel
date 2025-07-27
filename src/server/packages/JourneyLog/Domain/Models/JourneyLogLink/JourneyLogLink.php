@@ -8,14 +8,14 @@ use JourneyLog\Domain\Models\Url;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 
-class JourneyLogLink
+readonly class JourneyLogLink
 {
     public function __construct(
-        public readonly JourneyLogLinkId $journeyLogLinkId,
-        public readonly JourneyLogLinkName $journeyLogLinkName,
-        public readonly Url $url,
-        public readonly OrderNo $orderNo,
-        public readonly JourneyLogLinkTypeId $journeyLogLinkTypeId,
+        public JourneyLogLinkId $journeyLogLinkId,
+        public JourneyLogLinkName $journeyLogLinkName,
+        public Url $url,
+        public OrderNo $orderNo,
+        public JourneyLogLinkTypeId $journeyLogLinkTypeId,
     ) {
     }
 }
