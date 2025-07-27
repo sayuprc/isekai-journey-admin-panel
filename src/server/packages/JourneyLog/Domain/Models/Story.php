@@ -7,7 +7,7 @@ namespace JourneyLog\Domain\Models;
 use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class Story extends StringValueObject
+readonly class Story extends StringValueObject
 {
     private const int MIN_LENGTH = 1;
 

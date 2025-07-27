@@ -8,9 +8,9 @@ use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
 use Support\Contracts\MapperInterface;
 
-class Mapper implements MapperInterface
+readonly class Mapper implements MapperInterface
 {
-    public function __construct(private readonly MapperBuilder $builder)
+    public function __construct(private MapperBuilder $builder)
     {
     }
 

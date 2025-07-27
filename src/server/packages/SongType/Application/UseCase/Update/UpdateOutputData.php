@@ -6,9 +6,9 @@ namespace SongType\Application\UseCase\Update;
 
 use SongType\Domain\Models\SongType;
 
-class UpdateOutputData
+readonly class UpdateOutputData
 {
-    public function __construct(public readonly SongType $songType)
+    public function __construct(public SongType $songType)
     {
     }
 }

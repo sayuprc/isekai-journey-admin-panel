@@ -11,18 +11,18 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
-class FileCreatorRepository implements CreatorRepositoryInterface
+readonly class FileCreatorRepository implements CreatorRepositoryInterface
 {
     private const string FILE_NAME = 'creators.dat';
 
-    private readonly string $filePath;
+    private string $filePath;
 
     /**
      * @param FileStore<Creator> $store
      */
     public function __construct(
-        private readonly FileStore $store,
-        private readonly ConfigInterface $config,
+        private FileStore $store,
+        private ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }

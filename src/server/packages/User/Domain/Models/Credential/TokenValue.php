@@ -6,6 +6,6 @@ namespace User\Domain\Models\Credential;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class TokenValue extends StringValueObject
+readonly class TokenValue extends StringValueObject
 {
 }

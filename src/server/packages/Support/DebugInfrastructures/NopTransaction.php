@@ -7,7 +7,7 @@ namespace Support\DebugInfrastructures;
 use Closure;
 use Support\Contracts\TransactionInterface;
 
-class NopTransaction implements TransactionInterface
+readonly class NopTransaction implements TransactionInterface
 {
     public function scope(Closure $callback): mixed
     {

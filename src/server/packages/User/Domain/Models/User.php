@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace User\Domain\Models;
 
-class User
+readonly class User
 {
     public function __construct(
-        public readonly UserId $userId,
-        public readonly Email $email,
-        public readonly HashedPassword $hashedPassword,
+        public UserId $userId,
+        public Email $email,
+        public HashedPassword $hashedPassword,
     ) {
     }
 }

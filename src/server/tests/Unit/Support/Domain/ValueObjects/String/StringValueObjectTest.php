@@ -27,6 +27,6 @@ class StringValueObjectTest extends TestCase
     }
 }
 
-class StringObject extends StringValueObject
+readonly class StringObject extends StringValueObject
 {
 }

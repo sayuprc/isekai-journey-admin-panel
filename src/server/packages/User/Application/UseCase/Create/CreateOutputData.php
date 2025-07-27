@@ -6,9 +6,9 @@ namespace User\Application\UseCase\Create;
 
 use User\Domain\Models\User;
 
-class CreateOutputData
+readonly class CreateOutputData
 {
-    public function __construct(public readonly User $user)
+    public function __construct(public User $user)
     {
     }
 }

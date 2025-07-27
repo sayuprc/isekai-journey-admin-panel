@@ -7,19 +7,19 @@ namespace JourneyLog\Application\UseCase\Edit;
 use DateType\ImmutableDate;
 use JourneyLog\Domain\Dtos\CreateJourneyLogLinkData;
 
-class EditInputData
+readonly class EditInputData
 {
     /**
      * @param positive-int                    $orderNo
      * @param array<CreateJourneyLogLinkData> $journeyLogLinks
      */
     public function __construct(
-        public readonly string $journeyLogId,
-        public readonly string $story,
-        public readonly ImmutableDate $fromOn,
-        public readonly ImmutableDate $toOn,
-        public readonly int $orderNo,
-        public readonly array $journeyLogLinks,
+        public string $journeyLogId,
+        public string $story,
+        public ImmutableDate $fromOn,
+        public ImmutableDate $toOn,
+        public int $orderNo,
+        public array $journeyLogLinks,
     ) {
     }
 }

@@ -6,9 +6,9 @@ namespace SongType\Application\UseCase\Create;
 
 use SongType\Domain\Models\SongType;
 
-class CreateOutputData
+readonly class CreateOutputData
 {
-    public function __construct(public readonly SongType $songType)
+    public function __construct(public SongType $songType)
     {
     }
 }

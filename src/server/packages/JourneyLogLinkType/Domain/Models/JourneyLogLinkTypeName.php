@@ -7,7 +7,7 @@ namespace JourneyLogLinkType\Domain\Models;
 use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class JourneyLogLinkTypeName extends StringValueObject
+readonly class JourneyLogLinkTypeName extends StringValueObject
 {
     private const int MIN_LENGTH = 1;
 

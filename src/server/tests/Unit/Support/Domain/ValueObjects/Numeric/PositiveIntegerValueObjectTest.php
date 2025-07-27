@@ -36,6 +36,6 @@ class PositiveIntegerValueObjectTest extends TestCase
     }
 }
 
-class PositiveIntegerObject extends PositiveIntegerValueObject
+readonly class PositiveIntegerObject extends PositiveIntegerValueObject
 {
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace User\Application\UseCase\Create;
 
-class CreateInputData
+readonly class CreateInputData
 {
     public function __construct(
-        public readonly string $email,
-        public readonly string $plainPassword,
+        public string $email,
+        public string $plainPassword,
     ) {
     }
 }

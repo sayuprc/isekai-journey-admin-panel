@@ -10,7 +10,7 @@ use Song\Domain\Models\Creators\Lyricist;
 use SongType\Domain\Models\SongTypeId;
 use Support\Domain\ValueObjects\OrderNo;
 
-class Song
+readonly class Song
 {
     /**
      * @param array<Lyricist> $lyricists
@@ -18,15 +18,15 @@ class Song
      * @param array<Arranger> $arrangers
      */
     public function __construct(
-        public readonly SongId $songId,
-        public readonly Title $title,
-        public readonly Description $description,
-        public readonly ReleasedOn $releasedOn,
-        public readonly SongTypeId $songTypeId,
-        public readonly OrderNo $orderNo,
-        public readonly array $lyricists,
-        public readonly array $composers,
-        public readonly array $arrangers,
+        public SongId $songId,
+        public Title $title,
+        public Description $description,
+        public ReleasedOn $releasedOn,
+        public SongTypeId $songTypeId,
+        public OrderNo $orderNo,
+        public array $lyricists,
+        public array $composers,
+        public array $arrangers,
     ) {
     }
 }

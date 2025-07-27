@@ -82,6 +82,7 @@ class EditInteractorTest extends TestCase
                     && $arg->orderNo->value === 1
                     && count($arg->journeyLogLinks) === 0
             ))
+            ->andReturn(new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
         $this->interactor->handle(new EditInputData(
@@ -161,6 +162,7 @@ class EditInteractorTest extends TestCase
                     && $arg->journeyLogLinks[1]->orderNo->value === 2
                     && $arg->journeyLogLinks[1]->journeyLogLinkTypeId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
             ))
+            ->andReturn(new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
         $this->interactor->handle(new EditInputData(

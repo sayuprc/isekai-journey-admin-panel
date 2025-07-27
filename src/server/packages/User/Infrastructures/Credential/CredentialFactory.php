@@ -13,12 +13,12 @@ use User\Domain\Models\Credential\IsEnabled;
 use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
 use User\Domain\Models\UserId;
 
-class CredentialFactory implements CredentialFactoryInterface
+readonly class CredentialFactory implements CredentialFactoryInterface
 {
     public function __construct(
-        private readonly UuidGeneratorInterface $uuid,
-        private readonly AccessTokenFactoryInterface $accessTokenFactory,
-        private readonly RefreshTokenFactoryInterface $refreshTokenFactory,
+        private UuidGeneratorInterface $uuid,
+        private AccessTokenFactoryInterface $accessTokenFactory,
+        private RefreshTokenFactoryInterface $refreshTokenFactory,
     ) {
     }
 

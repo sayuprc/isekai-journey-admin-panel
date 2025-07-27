@@ -48,6 +48,6 @@ class UuidValueObjectTest extends TestCase
     }
 }
 
-class Uuid extends UuidValueObject
+readonly class Uuid extends UuidValueObject
 {
 }

@@ -13,9 +13,9 @@ use ResultType\Eager\Err;
 use ResultType\Eager\Ok;
 use ResultType\Result;
 
-class GetInteractor implements GetUseCaseInterface
+readonly class GetInteractor implements GetUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogLinkTypeRepositoryInterface $repository)
+    public function __construct(private JourneyLogLinkTypeRepositoryInterface $repository)
     {
     }
 

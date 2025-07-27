@@ -8,9 +8,9 @@ use JourneyLog\Application\UseCase\List\ListOutputData;
 use JourneyLog\Application\UseCase\List\ListUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
-class ListInteractor implements ListUseCaseInterface
+readonly class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogRepositoryInterface $repository)
+    public function __construct(private JourneyLogRepositoryInterface $repository)
     {
     }
 

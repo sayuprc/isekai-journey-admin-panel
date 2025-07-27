@@ -82,6 +82,7 @@ class UpdateInteractorTest extends TestCase
                     && $arg->songTypeName->value === '楽曲種別'
                     && $arg->orderNo->value === 1
             ))
+            ->andReturn(new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
         $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));

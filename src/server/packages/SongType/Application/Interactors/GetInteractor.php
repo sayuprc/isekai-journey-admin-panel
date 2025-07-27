@@ -13,9 +13,9 @@ use SongType\Application\UseCase\Get\GetUseCaseInterface;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 
-class GetInteractor implements GetUseCaseInterface
+readonly class GetInteractor implements GetUseCaseInterface
 {
-    public function __construct(private readonly SongTypeRepositoryInterface $repository)
+    public function __construct(private SongTypeRepositoryInterface $repository)
     {
     }
 

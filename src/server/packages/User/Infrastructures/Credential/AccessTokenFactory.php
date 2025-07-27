@@ -12,14 +12,14 @@ use User\Domain\Services\Jwt\AccessTokenPayload;
 use User\Domain\Services\Jwt\JwtConfigInterface;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 
-class AccessTokenFactory implements AccessTokenFactoryInterface
+readonly class AccessTokenFactory implements AccessTokenFactoryInterface
 {
     private const int TTL_HOUR = 1;
 
     public function __construct(
-        private readonly JwtConfigInterface $config,
-        private readonly ClockInterface $clock,
-        private readonly JwtHandlerInterface $jwt,
+        private JwtConfigInterface $config,
+        private ClockInterface $clock,
+        private JwtHandlerInterface $jwt,
     ) {
     }
 

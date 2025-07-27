@@ -6,6 +6,6 @@ namespace User\Domain\Models\Credential;
 
 use Support\Domain\ValueObjects\Date\ImmutableDateTimeValueObject;
 
-class ExpiredAt extends ImmutableDateTimeValueObject
+readonly class ExpiredAt extends ImmutableDateTimeValueObject
 {
 }

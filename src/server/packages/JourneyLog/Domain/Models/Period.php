@@ -6,14 +6,14 @@ namespace JourneyLog\Domain\Models;
 
 use Support\Domain\Exceptions\InvalidDomainException;
 
-class Period
+readonly class Period
 {
     /**
      * @throws InvalidDomainException
      */
     public function __construct(
-        public readonly FromOn $fromOn,
-        public readonly ToOn $toOn
+        public FromOn $fromOn,
+        public ToOn $toOn
     ) {
         if ($this->toOn->value < $this->fromOn->value) {
             throw new InvalidDomainException('fromOn needs to be before toOn');

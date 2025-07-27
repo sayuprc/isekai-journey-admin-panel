@@ -9,11 +9,11 @@ use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 
-class CreateInteractor implements CreateUseCaseInterface
+readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
-        private readonly SongRepositoryInterface $repository,
-        private readonly SongFactoryInterface $factory,
+        private SongRepositoryInterface $repository,
+        private SongFactoryInterface $factory,
     ) {
     }
 

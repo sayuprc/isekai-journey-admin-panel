@@ -6,14 +6,14 @@ namespace User\Domain\Models\Credential;
 
 use User\Domain\Models\UserId;
 
-class Credential
+readonly class Credential
 {
     public function __construct(
-        public readonly CredentialId $credentialId,
-        public readonly UserId $userId,
-        public readonly AccessToken $accessToken,
-        public readonly RefreshToken $refreshToken,
-        private readonly IsEnabled $isEnabled,
+        public CredentialId $credentialId,
+        public UserId $userId,
+        public AccessToken $accessToken,
+        public RefreshToken $refreshToken,
+        private IsEnabled $isEnabled,
     ) {
     }
 

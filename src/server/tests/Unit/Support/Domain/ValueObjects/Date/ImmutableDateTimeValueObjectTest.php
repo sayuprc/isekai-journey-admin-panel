@@ -27,6 +27,6 @@ class ImmutableDateTimeValueObjectTest extends TestCase
     }
 }
 
-class ImmutableDateTime extends ImmutableDateTimeValueObject
+readonly class ImmutableDateTime extends ImmutableDateTimeValueObject
 {
 }

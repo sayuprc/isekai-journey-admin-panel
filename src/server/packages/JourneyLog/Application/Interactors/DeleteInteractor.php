@@ -9,9 +9,9 @@ use JourneyLog\Application\UseCase\Delete\DeleteUseCaseInterface;
 use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 
-class DeleteInteractor implements DeleteUseCaseInterface
+readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
-    public function __construct(private readonly JourneyLogRepositoryInterface $repository)
+    public function __construct(private JourneyLogRepositoryInterface $repository)
     {
     }
 

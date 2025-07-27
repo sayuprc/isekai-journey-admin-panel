@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace JourneyLogLinkType\Application\UseCase\Edit;
 
-class EditInputData
+readonly class EditInputData
 {
     /**
      * @param positive-int $orderNo
      */
     public function __construct(
-        public readonly string $journeyLogLinkTypeId,
-        public readonly string $journeyLogLinkTypeName,
-        public readonly int $orderNo,
+        public string $journeyLogLinkTypeId,
+        public string $journeyLogLinkTypeName,
+        public int $orderNo,
     ) {
     }
 }

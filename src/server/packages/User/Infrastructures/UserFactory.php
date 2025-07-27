@@ -12,11 +12,11 @@ use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserId;
 use User\Domain\Services\HasherInterface;
 
-class UserFactory implements UserFactoryInterface
+readonly class UserFactory implements UserFactoryInterface
 {
     public function __construct(
-        private readonly UuidGeneratorInterface $generator,
-        private readonly HasherInterface $hasher,
+        private UuidGeneratorInterface $generator,
+        private HasherInterface $hasher,
     ) {
     }
 

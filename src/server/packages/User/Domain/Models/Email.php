@@ -6,6 +6,6 @@ namespace User\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class Email extends StringValueObject
+readonly class Email extends StringValueObject
 {
 }

@@ -27,6 +27,6 @@ class BooleanValueObjectTest extends TestCase
     }
 }
 
-class BooleanObject extends BooleanValueObject
+readonly class BooleanObject extends BooleanValueObject
 {
 }

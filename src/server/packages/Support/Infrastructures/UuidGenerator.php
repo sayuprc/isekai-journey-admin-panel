@@ -7,7 +7,7 @@ namespace Support\Infrastructures;
 use Illuminate\Support\Str;
 use Support\Contracts\UuidGeneratorInterface;
 
-class UuidGenerator implements UuidGeneratorInterface
+readonly class UuidGenerator implements UuidGeneratorInterface
 {
     public function generate(): string
     {

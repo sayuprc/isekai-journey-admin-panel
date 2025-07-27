@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace JourneyLog\Domain\Dtos;
 
-class ReconstituteJourneyLogLinkData
+readonly class ReconstituteJourneyLogLinkData
 {
     /**
      * @param positive-int $orderNo
      */
     public function __construct(
-        public readonly string $journeyLogLinkId,
-        public readonly string $journeyLogLinkName,
-        public readonly string $url,
-        public readonly int $orderNo,
-        public readonly string $journeyLogLinkTypeId
+        public string $journeyLogLinkId,
+        public string $journeyLogLinkName,
+        public string $url,
+        public int $orderNo,
+        public string $journeyLogLinkTypeId
     ) {
     }
 }

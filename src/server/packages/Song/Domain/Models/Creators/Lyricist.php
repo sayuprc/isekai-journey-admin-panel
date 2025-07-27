@@ -7,11 +7,11 @@ namespace Song\Domain\Models\Creators;
 use Creator\Domain\Models\CreatorId;
 use Support\Domain\ValueObjects\OrderNo;
 
-class Lyricist
+readonly class Lyricist
 {
     public function __construct(
-        public readonly CreatorId $creatorId,
-        public readonly OrderNo $orderNo,
+        public CreatorId $creatorId,
+        public OrderNo $orderNo,
     ) {
     }
 }

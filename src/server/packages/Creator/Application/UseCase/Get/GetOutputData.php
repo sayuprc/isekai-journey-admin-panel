@@ -6,9 +6,9 @@ namespace Creator\Application\UseCase\Get;
 
 use Creator\Domain\Models\Creator;
 
-class GetOutputData
+readonly class GetOutputData
 {
-    public function __construct(public readonly Creator $creator)
+    public function __construct(public Creator $creator)
     {
     }
 }

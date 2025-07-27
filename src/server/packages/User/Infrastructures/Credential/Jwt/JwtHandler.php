@@ -16,16 +16,16 @@ use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
 use User\Domain\Services\Jwt\JwtConfigInterface;
 use User\Domain\Services\Jwt\JwtHandlerInterface;
 
-class JwtHandler implements JwtHandlerInterface
+readonly class JwtHandler implements JwtHandlerInterface
 {
-    private readonly string $alg;
+    private string $alg;
 
-    private readonly string $key;
+    private string $key;
 
     public function __construct(
-        private readonly ClockInterface $clock,
-        private readonly MapperInterface $mapper,
-        private readonly JwtConfigInterface $jwtConfig,
+        private ClockInterface $clock,
+        private MapperInterface $mapper,
+        private JwtConfigInterface $jwtConfig,
         ConfigInterface $config,
     ) {
         $this->alg = $config->getString('auth.jwt.alg');

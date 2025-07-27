@@ -8,9 +8,9 @@ use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 
-class ListInteractor implements ListUseCaseInterface
+readonly class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private readonly CreatorRepositoryInterface $repository)
+    public function __construct(private CreatorRepositoryInterface $repository)
     {
     }
 

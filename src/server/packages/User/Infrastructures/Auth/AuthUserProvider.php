@@ -12,11 +12,11 @@ use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
 use User\Domain\Services\HasherInterface;
 
-class AuthUserProvider implements UserProvider
+readonly class AuthUserProvider implements UserProvider
 {
     public function __construct(
-        private readonly UserRepositoryInterface $repository,
-        private readonly HasherInterface $hasher,
+        private UserRepositoryInterface $repository,
+        private HasherInterface $hasher,
     ) {
     }
 

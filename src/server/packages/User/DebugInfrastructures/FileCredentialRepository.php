@@ -10,18 +10,18 @@ use User\Domain\Models\Credential\Credential;
 use User\Domain\Models\Credential\CredentialId;
 use User\Domain\Models\Credential\CredentialRepositoryInterface;
 
-class FileCredentialRepository implements CredentialRepositoryInterface
+readonly class FileCredentialRepository implements CredentialRepositoryInterface
 {
     private const string FILE_NAME = 'credentials.dat';
 
-    private readonly string $filePath;
+    private string $filePath;
 
     /**
      * @param FileStore<Credential> $store
      */
     public function __construct(
-        private readonly FileStore $store,
-        private readonly ConfigInterface $config,
+        private FileStore $store,
+        private ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }

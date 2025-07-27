@@ -30,6 +30,6 @@ class ImmutableDateValueObjectTest extends TestCase
     }
 }
 
-class Date extends ImmutableDateValueObject
+readonly class Date extends ImmutableDateValueObject
 {
 }

@@ -7,7 +7,7 @@ namespace Song\Application\UseCase\Create;
 use DateType\ImmutableDate;
 use Song\Domain\Dtos\CreateCreatorData;
 
-class CreateInputData
+readonly class CreateInputData
 {
     /**
      * @param positive-int             $orderNo
@@ -16,14 +16,14 @@ class CreateInputData
      * @param array<CreateCreatorData> $arrangers
      */
     public function __construct(
-        public readonly string $title,
-        public readonly string $description,
-        public readonly ImmutableDate $releasedOn,
-        public readonly string $songTypeId,
-        public readonly int $orderNo,
-        public readonly array $lyricists,
-        public readonly array $composers,
-        public readonly array $arrangers,
+        public string $title,
+        public string $description,
+        public ImmutableDate $releasedOn,
+        public string $songTypeId,
+        public int $orderNo,
+        public array $lyricists,
+        public array $composers,
+        public array $arrangers,
     ) {
     }
 }

@@ -6,6 +6,6 @@ namespace Song\Domain\Models;
 
 use Support\Domain\ValueObjects\String\UuidValueObject;
 
-class SongId extends UuidValueObject
+readonly class SongId extends UuidValueObject
 {
 }

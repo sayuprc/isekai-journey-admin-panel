@@ -9,18 +9,18 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Repository\FileStore;
 
-class FileSongRepository implements SongRepositoryInterface
+readonly class FileSongRepository implements SongRepositoryInterface
 {
     private const string FILE_NAME = 'songs.dat';
 
-    private readonly string $filePath;
+    private string $filePath;
 
     /**
      * @param FileStore<Song> $store
      */
     public function __construct(
-        private readonly FileStore $store,
-        private readonly ConfigInterface $config,
+        private FileStore $store,
+        private ConfigInterface $config,
     ) {
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }

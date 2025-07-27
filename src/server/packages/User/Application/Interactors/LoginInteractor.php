@@ -13,12 +13,12 @@ use User\Application\UseCase\Login\LoginUseCaseInterface;
 use User\Domain\Models\Credential\CredentialFactoryInterface;
 use User\Domain\Models\Credential\CredentialRepositoryInterface;
 
-class LoginInteractor implements LoginUseCaseInterface
+readonly class LoginInteractor implements LoginUseCaseInterface
 {
     public function __construct(
-        private readonly TransactionInterface $transaction,
-        private readonly CredentialFactoryInterface $factory,
-        private readonly CredentialRepositoryInterface $repository,
+        private TransactionInterface $transaction,
+        private CredentialFactoryInterface $factory,
+        private CredentialRepositoryInterface $repository,
     ) {
     }
 

@@ -6,6 +6,6 @@ namespace Creator\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-class CreatorName extends StringValueObject
+readonly class CreatorName extends StringValueObject
 {
 }

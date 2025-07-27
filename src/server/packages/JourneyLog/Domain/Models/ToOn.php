@@ -6,6 +6,6 @@ namespace JourneyLog\Domain\Models;
 
 use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
 
-class ToOn extends ImmutableDateValueObject
+readonly class ToOn extends ImmutableDateValueObject
 {
 }

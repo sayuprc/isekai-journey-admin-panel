@@ -10,9 +10,9 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Support\Contracts\UuidGeneratorInterface;
 
-class CreatorFactory implements CreatorFactoryInterface
+readonly class CreatorFactory implements CreatorFactoryInterface
 {
-    public function __construct(private readonly UuidGeneratorInterface $uuid)
+    public function __construct(private UuidGeneratorInterface $uuid)
     {
     }
 
