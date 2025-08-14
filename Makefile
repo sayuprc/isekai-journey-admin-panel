@@ -89,18 +89,6 @@ infection: ## Run infection
 metrics: ## Run metrics
 	docker exec ${SERVER_CONTAINER} composer metrics
 
-.PHONY: ide-gen
-ide-gen: ## Generate ide helper file
-	docker exec ${SERVER_CONTAINER} composer ide-gen
-
-.PHONY: ide-model
-ide-model: ## Write ide helper to model files
-	docker exec ${SERVER_CONTAINER} composer ide-model
-
-.PHONY: ide-meta
-ide-meta: ## Generate ide helper meta file
-	docker exec ${SERVER_CONTAINER} composer ide-meta
-
 .PHONY: migrate
 migrate: ## Migrate database
 	@docker exec ${SERVER_CONTAINER} bash -c "cd database/atlas; ./apply.sh"
