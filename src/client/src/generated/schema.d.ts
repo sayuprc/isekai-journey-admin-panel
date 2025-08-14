@@ -99,6 +99,10 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @example {
+         *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
+         *       "creatorName": "ヰ世界情緒"
+         *     } */
         Creator: {
             /** @description クリエイターID */
             creatorId: components["schemas"]["uuid"];
@@ -133,6 +137,11 @@ export interface components {
             /** Format: password */
             password: string;
         };
+        /** @example {
+         *       "songTypeId": "5e8211d4-2952-407c-ba7b-18c3fe0da6e0",
+         *       "songTypeName": "オリジナル",
+         *       "orderNo": 1
+         *     } */
         SongType: {
             /** @description 楽曲種別ID */
             songTypeId: components["schemas"]["uuid"];
