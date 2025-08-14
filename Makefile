@@ -85,6 +85,10 @@ coverage: ## Export coverage
 infection: ## Run infection
 	docker exec ${SERVER_CONTAINER} composer infection
 
+.PHONY: metrics
+metrics: ## Run metrics
+	docker exec ${SERVER_CONTAINER} composer metrics
+
 .PHONY: ide-gen
 ide-gen: ## Generate ide helper file
 	docker exec ${SERVER_CONTAINER} composer ide-gen
