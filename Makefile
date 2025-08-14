@@ -103,11 +103,7 @@ ide-meta: ## Generate ide helper meta file
 
 .PHONY: migrate
 migrate: ## Migrate database
-	docker exec ${SERVER_CONTAINER} php artisan migrate
-
-.PHONY: migrate-test
-migrate-test: ## Migrate database for test db
-	docker exec ${SERVER_CONTAINER} php artisan migrate --env=testing
+	@docker exec ${SERVER_CONTAINER} bash -c "cd database/atlas; ./apply.sh"
 
 .PHONY: tinker
 tinker: ## Run tinker

@@ -1,10 +1,14 @@
-table "creators" {
+table "users" {
   schema = schema.main
-  column "creator_id" {
+  column "user_id" {
     null = false
     type = blob
   }
-  column "creator_name" {
+  column "email" {
+    null = false
+    type = text
+  }
+  column "password" {
     null = false
     type = text
   }
@@ -18,6 +22,11 @@ table "creators" {
   }
 
   primary_key {
-    columns = [column.creator_id]
+    columns = [column.user_id]
+  }
+
+  index "users_email_unique" {
+    unique = true
+    columns = [column.email]
   }
 }
