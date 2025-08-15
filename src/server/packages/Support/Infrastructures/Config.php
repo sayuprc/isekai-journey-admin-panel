@@ -12,9 +12,9 @@ class Config implements ConfigInterface
     /**
      * @throws Exception
      */
-    public function getString(string $key, ?string $default = null): string
+    public function getString(string $key): string
     {
-        $value = $this->get($key, $default);
+        $value = $this->get($key);
 
         if (! is_string($value)) {
             throw new Exception(sprintf('Config value for key "%s" is not a string', $key));

@@ -6,5 +6,5 @@ namespace Support\Contracts;
 
 interface ConfigInterface
 {
-    public function getString(string $key, ?string $default = null): string;
+    public function getString(string $key): string;
 }
