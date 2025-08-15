@@ -9,7 +9,7 @@ use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileSongTypeRepository implements SongTypeRepositoryInterface
 {

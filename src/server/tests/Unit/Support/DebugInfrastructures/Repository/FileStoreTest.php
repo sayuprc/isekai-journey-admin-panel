@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Repository;
+namespace Tests\Unit\Support\DebugInfrastructures\Repository;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Repository\FileStore;
-use Support\Repository\FileSystem;
+use Support\DebugInfrastructures\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileSystem;
 use Tests\Support\TestFile;
 use Tests\TestCase;
 
