@@ -65,7 +65,7 @@ class SQLiteConnector
 
         $foreignKeys = $foreignKeyConstraints ? 1 : 0;
 
-        $pdo->prepare("pragma foreign_keys = {$foreignKeys}")->execute();
+        $pdo->prepare('pragma foreign_keys = ?')->execute([$foreignKeys]);
     }
 
     private function configureBusyTimeout(EmonkakPDO $pdo, ?int $busyTimeout): void
@@ -74,7 +74,7 @@ class SQLiteConnector
             return;
         }
 
-        $pdo->prepare("pragma busy_timeout = {$busyTimeout}")->execute();
+        $pdo->prepare('pragma busy_timeout = ?')->execute([$busyTimeout]);
     }
 
     private function configureJournalMode(EmonkakPDO $pdo, ?string $journalMode): void
@@ -83,7 +83,7 @@ class SQLiteConnector
             return;
         }
 
-        $pdo->prepare("pragma journal_mode = {$journalMode}")->execute();
+        $pdo->prepare('pragma journal_mode = ?')->execute([$journalMode]);
     }
 
     private function configureSynchronous(EmonkakPDO $pdo, ?string $synchronous): void
@@ -92,6 +92,6 @@ class SQLiteConnector
             return;
         }
 
-        $pdo->prepare("pragma synchronous = {$synchronous}")->execute();
+        $pdo->prepare('pragma synchronous = ?')->execute([$synchronous]);
     }
 }
