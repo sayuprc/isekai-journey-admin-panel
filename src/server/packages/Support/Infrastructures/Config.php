@@ -40,7 +40,7 @@ class Config implements ConfigInterface
     /**
      * @throws Exception
      */
-    public function getNullableInt(string $key, ?int $default = null): ?int
+    public function getNullableInteger(string $key, ?int $default = null): ?int
     {
         $value = $this->get($key, $default);
 
@@ -54,7 +54,7 @@ class Config implements ConfigInterface
     /**
      * @throws Exception
      */
-    public function getNullableBool(string $key, ?bool $default = null): ?bool
+    public function getNullableBoolean(string $key, ?bool $default = null): ?bool
     {
         $value = $this->get($key, $default);
 

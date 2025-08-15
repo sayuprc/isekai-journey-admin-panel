@@ -10,7 +10,7 @@ interface ConfigInterface
 
     public function getNullableString(string $key, ?string $default = null): ?string;
 
-    public function getNullableInt(string $key, ?int $default = null): ?int;
+    public function getNullableInteger(string $key, ?int $default = null): ?int;
 
-    public function getNullableBool(string $key, ?bool $default = null): ?bool;
+    public function getNullableBoolean(string $key, ?bool $default = null): ?bool;
 }
