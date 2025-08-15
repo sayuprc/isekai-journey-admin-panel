@@ -11,7 +11,7 @@ use Support\Contracts\TransactionInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\DebugInfrastructures\NopTransaction;
 use Support\Infrastructures\Clock;
-use Support\Infrastructures\Config;
+use Support\Infrastructures\Config\Config;
 use Support\Infrastructures\Mapper;
 use Support\Infrastructures\UuidGenerator;
 
