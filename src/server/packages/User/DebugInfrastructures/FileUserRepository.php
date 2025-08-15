@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace User\DebugInfrastructures;
 
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 use User\Domain\Models\Email;
 use User\Domain\Models\User;
 use User\Domain\Models\UserId;

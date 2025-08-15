@@ -12,8 +12,8 @@ use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
 use Support\Contracts\ConfigInterface;
+use Support\DebugInfrastructures\Repository\FileStore;
 use Support\Infrastructures\Config\Config;
-use Support\Repository\FileStore;
 
 trait FileRepositoryTransaction
 {

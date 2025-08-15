@@ -9,7 +9,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileCreatorRepository implements CreatorRepositoryInterface
 {

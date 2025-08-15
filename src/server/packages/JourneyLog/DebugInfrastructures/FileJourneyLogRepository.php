@@ -8,7 +8,7 @@ use JourneyLog\Domain\Models\JourneyLog;
 use JourneyLog\Domain\Models\JourneyLogId;
 use JourneyLog\Domain\Models\JourneyLogRepositoryInterface;
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileJourneyLogRepository implements JourneyLogRepositoryInterface
 {

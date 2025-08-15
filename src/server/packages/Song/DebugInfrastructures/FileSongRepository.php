@@ -7,7 +7,7 @@ namespace Song\DebugInfrastructures;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileSongRepository implements SongRepositoryInterface
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace User\DebugInfrastructures;
 
 use Support\Contracts\ConfigInterface;
-use Support\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\FileStore;
 use User\Domain\Models\Credential\Credential;
 use User\Domain\Models\Credential\CredentialId;
 use User\Domain\Models\Credential\CredentialRepositoryInterface;

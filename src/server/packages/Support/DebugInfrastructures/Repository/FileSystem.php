@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Repository;
+namespace Support\DebugInfrastructures\Repository;
 
 readonly class FileSystem
 {
