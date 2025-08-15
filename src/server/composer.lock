@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd957d6c48587f7788a94b9bc35a6ff6",
+    "content-hash": "8686a6daf828135fd1daa098950e1272",
     "packages": [
         {
             "name": "brick/math",
@@ -662,6 +662,146 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
+        },
+        {
+            "name": "emonkak/database",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/emonkak/php-database.git",
+                "reference": "75e9b024a53a48ead88b321ccdfdb9c02a72a7eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/emonkak/php-database/zipball/75e9b024a53a48ead88b321ccdfdb9c02a72a7eb",
+                "reference": "75e9b024a53a48ead88b321ccdfdb9c02a72a7eb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.56.1",
+                "php-coveralls/php-coveralls": "^2.7",
+                "phpunit/phpunit": "^10.5.20",
+                "vimeo/psalm": "^5.24.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Emonkak\\Database\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shota Nozaki",
+                    "email": "emonkak@gmail.com"
+                }
+            ],
+            "description": "A database abstraction interface as a subset of PDO",
+            "support": {
+                "issues": "https://github.com/emonkak/php-database/issues",
+                "source": "https://github.com/emonkak/php-database/tree/v2.0.0"
+            },
+            "time": "2024-05-14T11:47:55+00:00"
+        },
+        {
+            "name": "emonkak/enumerable",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/emonkak/php-enumerable.git",
+                "reference": "e4c2dabf033000a4a24ad783a03b2f21f899ecf3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/emonkak/php-enumerable/zipball/e4c2dabf033000a4a24ad783a03b2f21f899ecf3",
+                "reference": "e4c2dabf033000a4a24ad783a03b2f21f899ecf3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.56.1",
+                "phpunit/phpunit": "^10.5.20",
+                "vimeo/psalm": "^5.24.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Emonkak\\Enumerable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shota Nozaki",
+                    "email": "emonkak@gmail.com"
+                }
+            ],
+            "description": "An implementation of LINQ to Objects for PHP",
+            "support": {
+                "issues": "https://github.com/emonkak/php-enumerable/issues",
+                "source": "https://github.com/emonkak/php-enumerable/tree/v2.0.0"
+            },
+            "time": "2024-05-16T05:58:00+00:00"
+        },
+        {
+            "name": "emonkak/orm",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/emonkak/php-orm.git",
+                "reference": "7cd70eac85e339f713c890a994543ff102f0e9f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/emonkak/php-orm/zipball/7cd70eac85e339f713c890a994543ff102f0e9f1",
+                "reference": "7cd70eac85e339f713c890a994543ff102f0e9f1",
+                "shasum": ""
+            },
+            "require": {
+                "emonkak/database": "^2.0",
+                "emonkak/enumerable": "^2.0",
+                "php": ">=8.1",
+                "psr/simple-cache": "^1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.56.1",
+                "phpunit/phpunit": "^10.5.20",
+                "vimeo/psalm": "^5.24.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Emonkak\\Orm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shota Nozaki",
+                    "email": "emonkak@gmail.com"
+                }
+            ],
+            "description": "A strict typed Object-Relational Mapper",
+            "support": {
+                "issues": "https://github.com/emonkak/php-orm/issues",
+                "source": "https://github.com/emonkak/php-orm/tree/v5.0.0"
+            },
+            "time": "2024-05-16T06:54:30+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -3680,25 +3820,25 @@
         },
         {
             "name": "psr/simple-cache",
-            "version": "3.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/simple-cache.git",
-                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865"
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865",
-                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.0"
+                "php": ">=5.3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -3713,7 +3853,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
             "description": "Common interfaces for simple caching",
@@ -3725,9 +3865,9 @@
                 "simple-cache"
             ],
             "support": {
-                "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
+                "source": "https://github.com/php-fig/simple-cache/tree/master"
             },
-            "time": "2021-10-29T13:26:27+00:00"
+            "time": "2017-10-23T01:57:42+00:00"
         },
         {
             "name": "psy/psysh",
@@ -7136,152 +7276,6 @@
     ],
     "packages-dev": [
         {
-            "name": "barryvdh/laravel-ide-helper",
-            "version": "v3.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "8d00250cba25728373e92c1d8dcebcbf64623d29"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/8d00250cba25728373e92c1d8dcebcbf64623d29",
-                "reference": "8d00250cba25728373e92c1d8dcebcbf64623d29",
-                "shasum": ""
-            },
-            "require": {
-                "barryvdh/reflection-docblock": "^2.4",
-                "composer/class-map-generator": "^1.0",
-                "ext-json": "*",
-                "illuminate/console": "^11.15 || ^12",
-                "illuminate/database": "^11.15 || ^12",
-                "illuminate/filesystem": "^11.15 || ^12",
-                "illuminate/support": "^11.15 || ^12",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "ext-pdo_sqlite": "*",
-                "friendsofphp/php-cs-fixer": "^3",
-                "illuminate/config": "^11.15 || ^12",
-                "illuminate/view": "^11.15 || ^12",
-                "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^9.2 || ^10",
-                "phpunit/phpunit": "^10.5 || ^11.5.3",
-                "spatie/phpunit-snapshot-assertions": "^4 || ^5",
-                "vimeo/psalm": "^5.4",
-                "vlucas/phpdotenv": "^5"
-            },
-            "suggest": {
-                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9|^10|^11)."
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Barryvdh\\LaravelIdeHelper\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Barry vd. Heuvel",
-                    "email": "barryvdh@gmail.com"
-                }
-            ],
-            "description": "Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.",
-            "keywords": [
-                "autocomplete",
-                "codeintel",
-                "dev",
-                "helper",
-                "ide",
-                "laravel",
-                "netbeans",
-                "phpdoc",
-                "phpstorm",
-                "sublime"
-            ],
-            "support": {
-                "issues": "https://github.com/barryvdh/laravel-ide-helper/issues",
-                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v3.6.0"
-            },
-            "funding": [
-                {
-                    "url": "https://fruitcake.nl",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/barryvdh",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-07-17T20:11:57+00:00"
-        },
-        {
-            "name": "barryvdh/reflection-docblock",
-            "version": "v2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barryvdh/ReflectionDocBlock.git",
-                "reference": "d103774cbe7e94ddee7e4870f97f727b43fe7201"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/ReflectionDocBlock/zipball/d103774cbe7e94ddee7e4870f97f727b43fe7201",
-                "reference": "d103774cbe7e94ddee7e4870f97f727b43fe7201",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5.14|^9"
-            },
-            "suggest": {
-                "dflydev/markdown": "~1.0",
-                "erusev/parsedown": "~1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Barryvdh": [
-                        "src/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mike van Riel",
-                    "email": "mike.vanriel@naenius.com"
-                }
-            ],
-            "support": {
-                "source": "https://github.com/barryvdh/ReflectionDocBlock/tree/v2.4.0"
-            },
-            "time": "2025-07-17T06:07:30+00:00"
-        },
-        {
             "name": "brianium/paratest",
             "version": "v7.8.4",
             "source": {
@@ -7461,79 +7455,6 @@
                 }
             ],
             "time": "2024-02-09T13:06:12+00:00"
-        },
-        {
-            "name": "composer/class-map-generator",
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/composer/class-map-generator.git",
-                "reference": "134b705ddb0025d397d8318a75825fe3c9d1da34"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/134b705ddb0025d397d8318a75825fe3c9d1da34",
-                "reference": "134b705ddb0025d397d8318a75825fe3c9d1da34",
-                "shasum": ""
-            },
-            "require": {
-                "composer/pcre": "^2.1 || ^3.1",
-                "php": "^7.2 || ^8.0",
-                "symfony/finder": "^4.4 || ^5.3 || ^6 || ^7"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.12 || ^2",
-                "phpstan/phpstan-deprecation-rules": "^1 || ^2",
-                "phpstan/phpstan-phpunit": "^1 || ^2",
-                "phpstan/phpstan-strict-rules": "^1.1 || ^2",
-                "phpunit/phpunit": "^8",
-                "symfony/filesystem": "^5.4 || ^6"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Composer\\ClassMapGenerator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "https://seld.be"
-                }
-            ],
-            "description": "Utilities to scan PHP code and generate class maps.",
-            "keywords": [
-                "classmap"
-            ],
-            "support": {
-                "issues": "https://github.com/composer/class-map-generator/issues",
-                "source": "https://github.com/composer/class-map-generator/tree/1.6.1"
-            },
-            "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/composer",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-03-24T13:50:44+00:00"
         },
         {
             "name": "composer/pcre",

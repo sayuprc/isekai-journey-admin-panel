@@ -18,7 +18,7 @@ env:
   VENDOR_PATH: ./src/server/vendor
   VENDOR_KEY_PREFIX: composer-
 
-  DATABASE_PATH: ./src/server/database/database.sqlite
+  DATABASE_PATH: ./src/server/database/isekai_terrarium.sqlite
   DATABASE_KEY_PREFIX: database-
 
 jobs:
@@ -71,9 +71,7 @@ jobs:
           mkdir -p ${{ env.SERVER_DOCKER_PATH }}
 
       - name: Copy .env
-        run: |
-          cp src/server/.env.example src/server/.env
-          cp src/server/.env.testing.example src/server/.env.testing
+        run: cp src/server/.env.example src/server/.env
 
       - name: Run Container
         run: docker compose -f ./docker/compose.ci.yaml up -d php
@@ -234,21 +232,21 @@ jobs:
 
       - name: Setup env
         run: |
-          cp src/server/.env.testing.example src/server/.env.testing
-          docker exec ${{ env.SERVER_CONTAINER }} php artisan key:generate --env=testing
+          cp src/server/.env.example src/server/.env
+          docker exec ${{ env.SERVER_CONTAINER }} php artisan key:generate
 
       - name: Cache database
         id: cache-database
         uses: actions/cache@v4
         with:
           path: ${{ env.DATABASE_PATH }}
-          key: ${{ env.DATABASE_KEY_PREFIX }}${{ hashFiles('./src/server/database/migrations/*.php') }}
+          key: ${{ env.DATABASE_KEY_PREFIX }}${{ hashFiles('./src/server/database/atlas/schemas/*.hcl') }}
 
       - name: Migrate
         if: steps.cache-database.outputs.cache-hit != 'true'
         run: |
           touch ${{ env.DATABASE_PATH }}
-          docker exec ${{ env.SERVER_CONTAINER }} php artisan migrate --env=testing
+          docker exec ${{ env.SERVER_CONTAINER }} bash -c "cd database/atlas; atlas schema apply --env "local" --var db_name=$(basename ${{ env.DATABASE_PATH }}) --auto-approve"
 
       - name: Run PHPUnit
         run: docker exec ${{ env.SERVER_CONTAINER }} composer test-all

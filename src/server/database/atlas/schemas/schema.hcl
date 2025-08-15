@@ -1,3 +1,3 @@
-schema "public" {
-  comment = "standard public schema"
+schema "main" {
+  comment = "standard main schema"
 }

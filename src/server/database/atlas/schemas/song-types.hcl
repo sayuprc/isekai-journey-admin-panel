@@ -1,10 +1,10 @@
-table "creators" {
+table "song_types" {
   schema = schema.main
-  column "creator_id" {
+  column "song_type_id" {
     null = false
     type = blob
   }
-  column "creator_name" {
+  column "song_type_name" {
     null = false
     type = text
   }
@@ -18,6 +18,6 @@ table "creators" {
   }
 
   primary_key {
-    columns = [column.creator_id]
+    columns = [column.song_type_id]
   }
 }
