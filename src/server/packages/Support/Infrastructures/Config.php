@@ -45,7 +45,7 @@ class Config implements ConfigInterface
         $value = $this->get($key, $default);
 
         if (! is_null($value) && ! is_int($value)) {
-            throw new Exception(sprintf('Config value for key "%s" is not a int or null', $key));
+            throw new Exception(sprintf('Config value for key "%s" is not an integer or null', $key));
         }
 
         return $value;
@@ -59,7 +59,7 @@ class Config implements ConfigInterface
         $value = $this->get($key, $default);
 
         if (! is_null($value) && ! is_bool($value)) {
-            throw new Exception(sprintf('Config value for key "%s" is not a bool or null', $key));
+            throw new Exception(sprintf('Config value for key "%s" is not a boolean or null', $key));
         }
 
         return $value;
