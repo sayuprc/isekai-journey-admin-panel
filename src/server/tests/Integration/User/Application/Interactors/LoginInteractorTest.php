@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\User\Application\Interactors;
 
+use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Login\LoginInputData;
-use User\DebugInfrastructures\FileCredentialRepository;
-use User\Domain\Models\Credential\Credential;
+use User\DebugInfrastructures\FileRefreshTokenRepository;
+use User\Domain\Models\Credential\RefreshToken\RefreshToken;
 
 class LoginInteractorTest extends TestCase
 {
@@ -19,15 +20,19 @@ class LoginInteractorTest extends TestCase
     #[Test]
     public function canLogin(): void
     {
+        CarbonImmutable::setTestNow('2019-12-02 12:34:29');
+
+        $now = new CarbonImmutable();
+
         $userId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->getInstance()->handle(new LoginInputData($userId));
 
-        /** @var array<Credential> $credentials */
-        $credentials = $this->getAll(FileCredentialRepository::class);
-        $this->assertCount(1, $credentials);
-        $this->assertSame($userId, $credentials[array_key_first($credentials)]->userId->value);
-        $this->assertTrue($credentials[array_key_first($credentials)]->isEnabled());
+        /** @var array<RefreshToken> */
+        $refreshTokens = $this->getAll(FileRefreshTokenRepository::class);
+        $this->assertCount(1, $refreshTokens);
+        $this->assertSame($userId, $refreshTokens[array_key_first($refreshTokens)]->userId->value);
+        $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isEnabled($now));
     }
 
     private function getInstance(): LoginInteractor

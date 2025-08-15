@@ -22,15 +22,24 @@ class LoginPresenter
      */
     public function present(Result $result): JsonResponse
     {
-        $credential = $result->unwrap()->credential;
-
-        $accessToken = $credential->accessToken;
-        $refreshToken = $credential->refreshToken;
+        $output = $result->unwrap();
 
         return response()
             ->json(status: 200)
-            ->cookie($this->createCookie('access_token', $accessToken->jwt->value, self::ACCESS_TOKEN_COOKIE_TTL))
-            ->cookie($this->createCookie('refresh_token', $refreshToken->token->value, self::REFRESH_TOKEN_COOKIE_TTL));
+            ->cookie(
+                $this->createCookie(
+                    'access_token',
+                    $output->accessToken->jwt->value,
+                    self::ACCESS_TOKEN_COOKIE_TTL
+                )
+            )
+            ->cookie(
+                $this->createCookie(
+                    'refresh_token',
+                    $output->refreshToken->token->value,
+                    self::REFRESH_TOKEN_COOKIE_TTL
+                )
+            );
     }
 
     /**

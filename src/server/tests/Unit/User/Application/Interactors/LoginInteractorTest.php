@@ -13,33 +13,36 @@ use Support\Contracts\TransactionInterface;
 use Tests\TestCase;
 use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Login\LoginInputData;
-use User\Domain\Models\Credential\AccessToken;
-use User\Domain\Models\Credential\Credential;
-use User\Domain\Models\Credential\CredentialFactoryInterface;
-use User\Domain\Models\Credential\CredentialId;
-use User\Domain\Models\Credential\CredentialRepositoryInterface;
-use User\Domain\Models\Credential\ExpiredAt;
-use User\Domain\Models\Credential\IsEnabled;
-use User\Domain\Models\Credential\Jwt;
-use User\Domain\Models\Credential\RefreshToken;
-use User\Domain\Models\Credential\TokenValue;
+use User\Domain\Models\Credential\AccessToken\AccessToken;
+use User\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
+use User\Domain\Models\Credential\AccessToken\Jwt;
+use User\Domain\Models\Credential\RefreshToken\ExpiredAt;
+use User\Domain\Models\Credential\RefreshToken\IsUsed;
+use User\Domain\Models\Credential\RefreshToken\RefreshToken;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenId;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
+use User\Domain\Models\Credential\RefreshToken\TokenValue;
 use User\Domain\Models\UserId;
 
 class LoginInteractorTest extends TestCase
 {
     private readonly MockInterface&TransactionInterface $transaction;
 
-    private readonly CredentialFactoryInterface&MockInterface $factory;
+    private readonly MockInterface&RefreshTokenFactoryInterface $refreshTokenFactory;
 
-    private readonly CredentialRepositoryInterface&MockInterface $repository;
+    private readonly MockInterface&RefreshTokenRepositoryInterface $refreshTokenRepository;
+
+    private readonly AccessTokenFactoryInterface&MockInterface $accessTokenFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
-        $this->factory = Mockery::mock(CredentialFactoryInterface::class);
-        $this->repository = Mockery::mock(CredentialRepositoryInterface::class);
+        $this->refreshTokenFactory = Mockery::mock(RefreshTokenFactoryInterface::class);
+        $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
+        $this->accessTokenFactory = Mockery::mock(AccessTokenFactoryInterface::class);
     }
 
     #[Test]
@@ -54,26 +57,29 @@ class LoginInteractorTest extends TestCase
 
         $now = new DateTimeImmutable();
 
-        $this->factory->shouldReceive('create')
+        $this->refreshTokenFactory->shouldReceive('create')
             ->with($userId)
-            ->andReturnUsing(fn () => new Credential(
-                new CredentialId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+            ->andReturnUsing(fn () => new RefreshToken(
+                new RefreshTokenId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                 new UserId($userId),
-                new AccessToken(new Jwt('jwt')),
-                new RefreshToken(new TokenValue('token'), new ExpiredAt($now)),
-                new IsEnabled(true)
+                new TokenValue('token'),
+                new ExpiredAt($now->modify('+ 7 days')),
+                new IsUsed(false)
             ))
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->accessTokenFactory->shouldReceive('create')
+            ->with('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
+            ->andReturn(new AccessToken(new Jwt('jwt')))
+            ->once();
+
+        $this->refreshTokenRepository->shouldReceive('insert')
             ->with(
                 Mockery::on(
-                    fn (Credential $arg) => $arg->credentialId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    fn (RefreshToken $arg) => $arg->refreshTokenId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                         && $arg->userId->value === $userId
-                        && $arg->accessToken->jwt->value === 'jwt'
-                        && $arg->refreshToken->token->value === 'token'
-                        && $arg->refreshToken->expiredAt->value->format('Y-m-d H:i:s') === $now->format('Y-m-d H:i:s')
-                        && $arg->isEnabled()
+                        && $arg->token->value === 'token'
+                        && $arg->isEnabled($now)
                 )
             )
             ->once();
@@ -83,6 +89,11 @@ class LoginInteractorTest extends TestCase
 
     private function getInstance(): LoginInteractor
     {
-        return new LoginInteractor($this->transaction, $this->factory, $this->repository);
+        return new LoginInteractor(
+            $this->transaction,
+            $this->refreshTokenFactory,
+            $this->refreshTokenRepository,
+            $this->accessTokenFactory,
+        );
     }
 }

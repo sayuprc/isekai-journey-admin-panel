@@ -11,26 +11,24 @@ use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
 use User\Application\UseCase\Login\LoginUseCaseInterface;
-use User\DebugInfrastructures\FileCredentialRepository;
+use User\DebugInfrastructures\FileRefreshTokenRepository;
 use User\DebugInfrastructures\FileUserRepository;
-use User\Domain\Models\Credential\AccessTokenFactoryInterface;
-use User\Domain\Models\Credential\CredentialFactoryInterface;
-use User\Domain\Models\Credential\CredentialRepositoryInterface;
-use User\Domain\Models\Credential\RefreshTokenFactoryInterface;
+use User\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
+use User\Domain\Services\Credential\AccessToken\JwtConfigInterface;
+use User\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
+use User\Domain\Services\Credential\RefreshToken\RandomTokenGeneratorInterface;
 use User\Domain\Services\HasherInterface;
-use User\Domain\Services\Jwt\JwtConfigInterface;
-use User\Domain\Services\Jwt\JwtHandlerInterface;
-use User\Domain\Services\RandomTokenGeneratorInterface;
 use User\Infrastructures\Auth\AuthUserProvider;
-use User\Infrastructures\Credential\AccessTokenFactory;
-use User\Infrastructures\Credential\CredentialFactory;
-use User\Infrastructures\Credential\Jwt\JwtConfig;
-use User\Infrastructures\Credential\Jwt\JwtHandler;
-use User\Infrastructures\Credential\RefreshTokenFactory;
+use User\Infrastructures\Credential\AccessToken\AccessTokenFactory;
+use User\Infrastructures\Credential\AccessToken\JwtConfig;
+use User\Infrastructures\Credential\AccessToken\JwtHandler;
+use User\Infrastructures\Credential\RefreshToken\RandomTokenGenerator;
+use User\Infrastructures\Credential\RefreshToken\RefreshTokenFactory;
 use User\Infrastructures\Hasher;
-use User\Infrastructures\RandomTokenGenerator;
 use User\Infrastructures\UserFactory;
 
 class UserServiceProvider extends EnvServiceProvider
@@ -45,8 +43,7 @@ class UserServiceProvider extends EnvServiceProvider
         $this->app->bind(AccessTokenFactoryInterface::class, AccessTokenFactory::class);
         $this->app->bind(RefreshTokenFactoryInterface::class, RefreshTokenFactory::class);
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
-        $this->app->bind(CredentialFactoryInterface::class, CredentialFactory::class);
-        $this->app->bind(CredentialRepositoryInterface::class, FileCredentialRepository::class);
+        $this->app->bind(RefreshTokenRepositoryInterface::class, FileRefreshTokenRepository::class);
 
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
