@@ -12,29 +12,26 @@ use Tests\TestCase;
 use User\Application\Interactors\AuthenticateInteractor;
 use User\Application\UseCase\Authenticate\AuthenticateInputData;
 use User\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
-use User\Domain\Models\Credential\AccessToken;
-use User\Domain\Models\Credential\Credential;
-use User\Domain\Models\Credential\CredentialId;
-use User\Domain\Models\Credential\CredentialRepositoryInterface;
-use User\Domain\Models\Credential\ExpiredAt;
-use User\Domain\Models\Credential\IsEnabled;
-use User\Domain\Models\Credential\Jwt;
-use User\Domain\Models\Credential\RefreshToken;
-use User\Domain\Models\Credential\TokenValue;
+use User\Domain\Models\Credential\RefreshToken\ExpiredAt;
+use User\Domain\Models\Credential\RefreshToken\IsUsed;
+use User\Domain\Models\Credential\RefreshToken\RefreshToken;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenId;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
+use User\Domain\Models\Credential\RefreshToken\TokenValue;
 use User\Domain\Models\Email;
 use User\Domain\Models\HashedPassword;
 use User\Domain\Models\User;
 use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
-use User\Domain\Services\Jwt\AccessTokenPayload;
-use User\Domain\Services\Jwt\Exceptions\ExpiredException;
-use User\Domain\Services\Jwt\JwtHandlerInterface;
+use User\Domain\Services\Credential\AccessToken\AccessTokenPayload;
+use User\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
+use User\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
 
 class AuthenticateInteractorTest extends TestCase
 {
     private JwtHandlerInterface&MockInterface $jwtHandler;
 
-    private CredentialRepositoryInterface&MockInterface $credentialRepository;
+    private MockInterface&RefreshTokenRepositoryInterface $refreshTokenRepository;
 
     private MockInterface&UserRepositoryInterface $userRepository;
 
@@ -43,7 +40,7 @@ class AuthenticateInteractorTest extends TestCase
         parent::setUp();
 
         $this->jwtHandler = Mockery::mock(JwtHandlerInterface::class);
-        $this->credentialRepository = Mockery::mock(CredentialRepositoryInterface::class);
+        $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
         $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
     }
 
@@ -56,24 +53,24 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function canAuthenticate(): void
     {
-        $credentialId = $this->generateUuid();
+        $refreshTokenId = $this->generateUuid();
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
         $userId = $this->generateUuid();
 
-        $this->credentialRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (CredentialId $arg) => $arg->value === $credentialId))
+        $this->refreshTokenRepository->shouldReceive('findActive')
+            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
             ->andReturn(
-                new Credential(
-                    new CredentialId($credentialId),
+                new RefreshToken(
+                    new RefreshTokenId($refreshTokenId),
                     new UserId($userId),
-                    new AccessToken(new Jwt('')),
-                    new RefreshToken(new TokenValue(''), new ExpiredAt(new DateTimeImmutable())),
-                    new IsEnabled(true)
+                    new TokenValue('token'),
+                    new ExpiredAt(new DateTimeImmutable()),
+                    new IsUsed(false)
                 )
             )
             ->once();
@@ -104,15 +101,15 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenCredentialNotFound(): void
     {
-        $credentialId = $this->generateUuid();
+        $refreshTokenId = $this->generateUuid();
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
-        $this->credentialRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (CredentialId $arg) => $arg->value === $credentialId))
+        $this->refreshTokenRepository->shouldReceive('findActive')
+            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
             ->andReturnNull()
             ->once();
 
@@ -124,24 +121,24 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenUserNotFound(): void
     {
-        $credentialId = $this->generateUuid();
+        $refreshTokenId = $this->generateUuid();
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $credentialId))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
         $userId = $this->generateUuid();
 
-        $this->credentialRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (CredentialId $arg) => $arg->value === $credentialId))
+        $this->refreshTokenRepository->shouldReceive('findActive')
+            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
             ->andReturn(
-                new Credential(
-                    new CredentialId($credentialId),
+                new RefreshToken(
+                    new RefreshTokenId($refreshTokenId),
                     new UserId($userId),
-                    new AccessToken(new Jwt('')),
-                    new RefreshToken(new TokenValue(''), new ExpiredAt(new DateTimeImmutable())),
-                    new IsEnabled(true)
+                    new TokenValue('token'),
+                    new ExpiredAt(new DateTimeImmutable()),
+                    new IsUsed(false)
                 )
             )
             ->once();
@@ -158,6 +155,6 @@ class AuthenticateInteractorTest extends TestCase
 
     private function getInstance(): AuthenticateInteractor
     {
-        return new AuthenticateInteractor($this->jwtHandler, $this->credentialRepository, $this->userRepository);
+        return new AuthenticateInteractor($this->jwtHandler, $this->refreshTokenRepository, $this->userRepository);
     }
 }

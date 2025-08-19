@@ -10,26 +10,29 @@ use Support\Contracts\TransactionInterface;
 use User\Application\UseCase\Login\LoginInputData;
 use User\Application\UseCase\Login\LoginOutputData;
 use User\Application\UseCase\Login\LoginUseCaseInterface;
-use User\Domain\Models\Credential\CredentialFactoryInterface;
-use User\Domain\Models\Credential\CredentialRepositoryInterface;
+use User\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 
 readonly class LoginInteractor implements LoginUseCaseInterface
 {
     public function __construct(
         private TransactionInterface $transaction,
-        private CredentialFactoryInterface $factory,
-        private CredentialRepositoryInterface $repository,
+        private RefreshTokenFactoryInterface $refreshTokenFactory,
+        private RefreshTokenRepositoryInterface $refreshTokenRepository,
+        private AccessTokenFactoryInterface $accessTokenFactory,
     ) {
     }
 
     public function handle(LoginInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
-            $credential = $this->factory->create($inputData->userId);
+            $refreshToken = $this->refreshTokenFactory->create($inputData->userId);
+            $accessToken = $this->accessTokenFactory->create($refreshToken->refreshTokenId->value);
 
-            $this->repository->insert($credential);
+            $this->refreshTokenRepository->insert($refreshToken);
 
-            return new Ok(new LoginOutputData($credential));
+            return new Ok(new LoginOutputData($accessToken, $refreshToken));
         });
     }
 }

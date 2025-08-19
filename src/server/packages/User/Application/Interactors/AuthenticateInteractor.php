@@ -10,18 +10,18 @@ use ResultType\Result;
 use User\Application\UseCase\Authenticate\AuthenticateInputData;
 use User\Application\UseCase\Authenticate\AuthenticateOutputData;
 use User\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
-use User\Domain\Models\Credential\CredentialId;
-use User\Domain\Models\Credential\CredentialRepositoryInterface;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenId;
+use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
-use User\Domain\Services\Jwt\Exceptions\ExpiredException;
-use User\Domain\Services\Jwt\Exceptions\InvalidIssuerException;
-use User\Domain\Services\Jwt\JwtHandlerInterface;
+use User\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
+use User\Domain\Services\Credential\AccessToken\Exceptions\InvalidIssuerException;
+use User\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
 
 readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
     public function __construct(
         private JwtHandlerInterface $jwtHandler,
-        private CredentialRepositoryInterface $credentialRepository,
+        private RefreshTokenRepositoryInterface $refreshTokenRepository,
         private UserRepositoryInterface $userRepository,
     ) {
     }
@@ -36,16 +36,16 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
             return new Err('不正なIssuer');
         }
 
-        $foundCredential = $this->credentialRepository->findActive(new CredentialId($payload->jti));
+        $foundRefreshToken = $this->refreshTokenRepository->findActive(new RefreshTokenId($payload->jti));
 
-        if (is_null($foundCredential)) {
-            return new Err(sprintf('Credentialが見つからない [credentialId: %s]', $payload->jti));
+        if (is_null($foundRefreshToken)) {
+            return new Err(sprintf('リフレッシュトークンが見つからない [refreshTokenId: %s]', $payload->jti));
         }
 
-        $foundUser = $this->userRepository->find($foundCredential->userId);
+        $foundUser = $this->userRepository->find($foundRefreshToken->userId);
 
         if (is_null($foundUser)) {
-            return new Err(sprintf('ユーザーが見つからない [userId: %s]', $foundCredential->userId->value));
+            return new Err(sprintf('ユーザーが見つからない [userId: %s]', $foundRefreshToken->userId->value));
         }
 
         return new Ok(new AuthenticateOutputData());
