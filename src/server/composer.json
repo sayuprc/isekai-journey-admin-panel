@@ -79,7 +79,6 @@
         "test-feature": "paratest tests/Feature",
         "coverage": "php artisan test --env=testing --coverage-html=\"reports/coverage\"",
         "infection": "infection --threads=4",
-        "openapi-generate": "jane-openapi generate --config-file=tools/jane/config.php",
         "metrics": "phpmetrics --config=phpmetrics.json"
     },
     "extra": {
