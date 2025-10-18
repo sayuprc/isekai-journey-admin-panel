@@ -8,7 +8,7 @@ use Emonkak\Database\PDO as EmonkakPDO;
 use Emonkak\Database\PDOConnector;
 use Emonkak\Database\PDOInterface;
 use PDO;
-use Support\Path\Path;
+use Support\Infrastructures\Path;
 
 class SQLiteConnector
 {
@@ -23,8 +23,10 @@ class SQLiteConnector
 
     private ?PDOInterface $pdo = null;
 
-    public function __construct(private readonly SQLiteConfig $config)
-    {
+    public function __construct(
+        private readonly Path $path,
+        private readonly SQLiteConfig $config,
+    ) {
     }
 
     public function connect(): PDOInterface
@@ -40,7 +42,7 @@ class SQLiteConnector
     {
         $database = $this->config->path;
 
-        $path = realpath($database) ?: realpath(Path::base($database));
+        $path = realpath($database) ?: realpath($this->path->base($database));
 
         $pdo = new PDOConnector(dsn: "sqlite:{$path}", options: $this->options)->getPdo();
 
