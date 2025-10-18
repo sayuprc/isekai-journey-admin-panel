@@ -1,0 +1,7 @@
+parameters:
+  paths:
+    - app
+    - bootstrap
+    - packages
+
+  level: 10

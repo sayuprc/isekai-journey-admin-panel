@@ -12,6 +12,7 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && rm -rf /var/lib/apt/lists/* \
   && curl -sSf https://atlasgo.sh | sh \
   && install-php-extensions \
+    intl \
     xdebug
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer

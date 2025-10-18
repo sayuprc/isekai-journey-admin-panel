@@ -1,0 +1,68 @@
+{
+    "name": "sayuprc/isekai-terrarium-admin-panel",
+    "type": "project",
+    "require": {
+        "cuyz/valinor": "^2.2",
+        "emonkak/orm": "^5.0",
+        "firebase/php-jwt": "^6.11",
+        "league/openapi-psr7-validator": "^0.22.0",
+        "nyholm/psr7": "^1.8",
+        "ramsey/uuid": "^4.9",
+        "sayuprc/date-type": "^0.2.0",
+        "sayuprc/result-type": "^0.4.0",
+        "symfony/psr-http-message-bridge": "^7.3",
+        "tempest/framework": "^2.0"
+    },
+    "require-dev": {
+        "brianium/paratest": "^7.14",
+        "infection/infection": "^0.31.7",
+        "phparkitect/phparkitect": "^0.6.0",
+        "phpmetrics/phpmetrics": "^2.9",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.3.10",
+        "symfony/var-dumper": "^7.3.3",
+        "symplify/easy-coding-standard": "^12.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@php ./vendor/bin/tempest install framework -f",
+            "@php ./tempest discovery:generate --no-interaction",
+            "@php ./tempest key:generate"
+        ],
+        "post-autoload-dump": [
+            "@php ./vendor/bin/tempest discovery:generate --no-interaction"
+        ],
+        "phpstan": "phpstan analyse --memory-limit=-1 --no-progress",
+        "phpstan-clear-cache": "phpstan clear-result-cache",
+        "arkitect": "phparkitect check",
+        "ecs": "ecs check --ansi --no-progress-bar",
+        "ecs-fix": "ecs check --fix --ansi --no-progress-bar",
+        "test-all": "paratest",
+        "test-unit": "paratest tests/Unit",
+        "test-integration": "paratest tests/Integration",
+        "test-feature": "paratest tests/Feature",
+        "coverage": "phpunit --env=testing --coverage-html=\"reports/coverage\"",
+        "infection": "infection --threads=4",
+        "metrics": "phpmetrics --config=phpmetrics.json"
+    },
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "php-http/discovery": true
+        }
+    }
+}

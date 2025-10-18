@@ -1,0 +1,16 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "app",
+            "packages"
+        ]
+    },
+    "logs": {
+        "text": "reports/infection.log",
+        "html": "reports/infection.html"
+    },
+    "mutators": {
+        "@default": true
+    }
+}
