@@ -6,7 +6,7 @@ namespace Song\DebugInfrastructures;
 
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileSongRepository implements SongRepositoryInterface
@@ -20,7 +20,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;
     }

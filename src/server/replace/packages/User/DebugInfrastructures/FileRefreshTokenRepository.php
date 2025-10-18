@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace User\DebugInfrastructures;
 
 use Support\Contracts\ClockInterface;
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 use User\Domain\Models\Credential\RefreshToken\RefreshToken;
 use User\Domain\Models\Credential\RefreshToken\RefreshTokenId;
@@ -22,7 +22,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
         private ClockInterface $clock,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;

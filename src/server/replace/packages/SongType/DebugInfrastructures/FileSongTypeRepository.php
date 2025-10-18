@@ -8,7 +8,7 @@ use SongType\Domain\Models\SongType;
 use SongType\Domain\Models\SongTypeId;
 use SongType\Domain\Models\SongTypeName;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileSongTypeRepository implements SongTypeRepositoryInterface
@@ -22,7 +22,7 @@ readonly class FileSongTypeRepository implements SongTypeRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;
     }

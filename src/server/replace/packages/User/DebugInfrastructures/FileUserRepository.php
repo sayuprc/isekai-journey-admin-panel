@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace User\DebugInfrastructures;
 
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 use User\Domain\Models\Email;
 use User\Domain\Models\User;
@@ -22,7 +22,7 @@ readonly class FileUserRepository implements UserRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;
     }

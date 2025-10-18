@@ -8,7 +8,7 @@ use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileCreatorRepository implements CreatorRepositoryInterface
@@ -22,7 +22,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;
     }

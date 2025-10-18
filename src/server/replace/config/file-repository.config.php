@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 
-return new FileRepositoryonfig(
+return new FileRepositoryConfig(
     filePath: __DIR__ . '/../storage/app',
 );

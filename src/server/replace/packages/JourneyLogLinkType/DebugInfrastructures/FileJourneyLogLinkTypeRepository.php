@@ -7,7 +7,7 @@ namespace JourneyLogLinkType\DebugInfrastructures;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeId;
 use JourneyLogLinkType\Domain\Models\JourneyLogLinkTypeRepositoryInterface;
-use Support\DebugInfrastructures\Repository\FileRepositoryonfig;
+use Support\DebugInfrastructures\Repository\FileRepositoryConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRepositoryInterface
@@ -21,7 +21,7 @@ readonly class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRep
      */
     public function __construct(
         private FileStore $store,
-        FileRepositoryonfig $config,
+        FileRepositoryConfig $config,
     ) {
         $this->filePath = $config->filePath . '/' . self::FILE_NAME;
     }
