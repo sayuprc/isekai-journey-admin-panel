@@ -1,7 +1,6 @@
 parameters:
   paths:
     - app
-    - config
     - packages
 
   level: 10
