@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Song\Domain\Dtos;
+
+readonly class CreateCreatorData
+{
+    /**
+     * @param positive-int $orderNo
+     */
+    public function __construct(
+        public string $creatorId,
+        public int $orderNo,
+    ) {
+    }
+}

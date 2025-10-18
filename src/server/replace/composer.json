@@ -25,7 +25,16 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "JourneyLog\\": "packages/JourneyLog/",
+            "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
+            "Support\\": "packages/Support/",
+            "Song\\": "packages/Song/",
+            "SongType\\": "packages/SongType/",
+            "Creator\\": "packages/Creator/",
+            "User\\": "packages/User/",
+            "Tools\\": "tools/",
+            "OpenAPI\\Client\\": "Generated/lib/"
         }
     },
     "autoload-dev": {
