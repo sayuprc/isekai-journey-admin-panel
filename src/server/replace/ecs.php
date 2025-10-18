@@ -8,15 +8,13 @@ use Symplify\EasyCodingStandard\ValueObject\Option;
 return ECSConfig::configure()
     ->withPaths([
         __DIR__ . '/app',
-        __DIR__ . '/bootstrap',
         __DIR__ . '/config',
         __DIR__ . '/database',
         __DIR__ . '/packages',
         __DIR__ . '/public',
-        __DIR__ . '/routes',
         __DIR__ . '/tests',
         __DIR__ . '/tools',
-        __DIR__ . '/artisan',
+        __DIR__ . '/tempest',
     ])
     ->withRootFiles()
     ->withSpacing(Option::INDENTATION_SPACES, PHP_EOL)
@@ -165,14 +163,7 @@ return ECSConfig::configure()
     ->withSkip([
         __DIR__ . '/Generated',
 
-        __DIR__ . '/bootstrap/cache',
-
-        __DIR__ . '/baseline.php',
-
         \PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer::class => [
             __DIR__ . '/ecs.php',
-            __DIR__ . '/bootstrap/providers.php',
-            __DIR__ . '/app/Providers/EnvProviders',
-            __DIR__ . '/app/Providers/WebRequestServiceProvider.php',
         ],
     ]);
