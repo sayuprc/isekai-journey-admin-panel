@@ -2,6 +2,7 @@
     "name": "sayuprc/isekai-terrarium-admin-panel",
     "type": "project",
     "require": {
+        "cakephp/chronos": "^3.2",
         "cuyz/valinor": "^2.2",
         "emonkak/orm": "^5.0",
         "firebase/php-jwt": "^6.11",
@@ -16,6 +17,7 @@
     "require-dev": {
         "brianium/paratest": "^7.14",
         "infection/infection": "^0.31.7",
+        "mockery/mockery": "^1.6",
         "phparkitect/phparkitect": "^0.6.0",
         "phpmetrics/phpmetrics": "^2.9",
         "phpstan/phpstan": "^2.1",
