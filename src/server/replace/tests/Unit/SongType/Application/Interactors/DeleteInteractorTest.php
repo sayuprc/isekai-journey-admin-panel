@@ -36,7 +36,7 @@ class DeleteInteractorTest extends TestCase
     }
 
     #[Test]
-    public function deleteJourneyLog(): void
+    public function deleteSongType(): void
     {
         $this->repository->shouldReceive('delete')
             ->with(Mockery::on(fn (SongTypeId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))

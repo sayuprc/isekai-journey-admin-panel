@@ -52,7 +52,7 @@ class UpdateInteractorTest extends TestCase
     }
 
     #[Test]
-    public function editCreator(): void
+    public function editSongType(): void
     {
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
