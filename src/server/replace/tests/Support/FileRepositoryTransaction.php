@@ -39,7 +39,6 @@ trait FileRepositoryTransaction
 
     private function deleteRecursive(string $directory): void
     {
-        // return;
         /** @var SplFileInfo $file */
         foreach (
             new RecursiveIteratorIterator(
