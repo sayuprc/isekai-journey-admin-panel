@@ -7,12 +7,11 @@ namespace App\Initializers;
 use Support\Contracts\MapperInterface;
 use Support\Infrastructures\Mapper;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class MapperInterfaceInitializer implements Initializer
+readonly class MapperInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): MapperInterface
     {
-        return $container->get(Mapper::class);
+        return $this->resolve($container->get(Mapper::class));
     }
 }

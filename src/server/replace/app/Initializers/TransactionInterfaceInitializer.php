@@ -7,12 +7,11 @@ namespace App\Initializers;
 use Support\Contracts\TransactionInterface;
 use Support\DebugInfrastructures\NopTransaction;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class TransactionInterfaceInitializer implements Initializer
+readonly class TransactionInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): TransactionInterface
     {
-        return new NopTransaction();
+        return $this->resolve($container->get(NopTransaction::class));
     }
 }
