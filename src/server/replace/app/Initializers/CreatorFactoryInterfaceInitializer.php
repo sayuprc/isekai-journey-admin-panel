@@ -7,12 +7,11 @@ namespace App\Initializers;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Infrastructures\CreatorFactory;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class CreatorFactoryInterfaceInitializer implements Initializer
+readonly class CreatorFactoryInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): CreatorFactoryInterface
     {
-        return $container->get(CreatorFactory::class);
+        return $this->resolve($container->get(CreatorFactory::class));
     }
 }

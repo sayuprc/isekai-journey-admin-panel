@@ -7,12 +7,11 @@ namespace App\Initializers;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class CreatorRepositoryInterfaceInitializer implements Initializer
+readonly class CreatorRepositoryInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): CreatorRepositoryInterface
     {
-        return $container->get(FileCreatorRepository::class);
+        return $this->resolve($container->get(FileCreatorRepository::class));
     }
 }

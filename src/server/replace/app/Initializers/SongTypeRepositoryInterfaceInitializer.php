@@ -7,12 +7,11 @@ namespace App\Initializers;
 use SongType\DebugInfrastructures\FileSongTypeRepository;
 use SongType\Domain\Models\SongTypeRepositoryInterface;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class SongTypeRepositoryInterfaceInitializer implements Initializer
+readonly class SongTypeRepositoryInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): SongTypeRepositoryInterface
     {
-        return $container->get(FileSongTypeRepository::class);
+        return $this->resolve($container->get(FileSongTypeRepository::class));
     }
 }

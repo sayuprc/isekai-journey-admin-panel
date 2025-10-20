@@ -7,12 +7,11 @@ namespace App\Initializers;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Infrastructures\UuidGenerator;
 use Tempest\Container\Container;
-use Tempest\Container\Initializer;
 
-readonly class UuidGeneratorInterfaceInitializer implements Initializer
+readonly class UuidGeneratorInterfaceInitializer extends Initializer
 {
     public function initialize(Container $container): UuidGeneratorInterface
     {
-        return new UuidGenerator();
+        return $this->resolve($container->get(UuidGenerator::class));
     }
 }
