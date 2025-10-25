@@ -42,7 +42,7 @@ readonly class LoginPresenter
                     $this->createCookie(
                         'refresh_token',
                         $output->refreshToken->token->value,
-                        $this->clock->now()->modify('+' . self::REFRESH_TOKEN_COOKIE_TTL . 'days'),
+                        $this->clock->now()->modify('+' . self::REFRESH_TOKEN_COOKIE_TTL . 'minutes'),
                     )
                 ),
             fn (): JsonResponse => new JsonResponse(status: 401),
