@@ -23,11 +23,20 @@ use User\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use User\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use User\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use User\Domain\Models\Credential\RefreshToken\TokenValue;
+use User\Domain\Models\Email;
+use User\Domain\Models\HashedPassword;
+use User\Domain\Models\User;
 use User\Domain\Models\UserId;
+use User\Domain\Models\UserRepositoryInterface;
+use User\Domain\Services\HasherInterface;
 
 class LoginInteractorTest extends TestCase
 {
     private readonly MockInterface&TransactionInterface $transaction;
+
+    private readonly MockInterface&UserRepositoryInterface $userRepository;
+
+    private HasherInterface&MockInterface $hasher;
 
     private readonly MockInterface&RefreshTokenFactoryInterface $refreshTokenFactory;
 
@@ -40,6 +49,8 @@ class LoginInteractorTest extends TestCase
         parent::setUp();
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
+        $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
+        $this->hasher = Mockery::mock(HasherInterface::class);
         $this->refreshTokenFactory = Mockery::mock(RefreshTokenFactoryInterface::class);
         $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
         $this->accessTokenFactory = Mockery::mock(AccessTokenFactoryInterface::class);
@@ -49,10 +60,22 @@ class LoginInteractorTest extends TestCase
     public function canLogin(): void
     {
         $userId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $email = 'example@example.com';
+        $password = 'password';
 
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
+        $this->userRepository->shouldReceive('findByEmail')
+            ->with($this->equalTo(new Email($email)))
+            ->andReturn(new User(new UserId($userId), new Email($email), new HashedPassword('hashedPassword')))
+            ->once();
+
+        $this->hasher->shouldReceive('check')
+            ->with($password, 'hashedPassword')
+            ->andReturnTrue()
             ->once();
 
         $now = new DateTimeImmutable();
@@ -84,13 +107,15 @@ class LoginInteractorTest extends TestCase
             )
             ->once();
 
-        $this->getInstance()->handle(new LoginInputData($userId));
+        $this->getInstance()->handle(new LoginInputData($email, $password));
     }
 
     private function getInstance(): LoginInteractor
     {
         return new LoginInteractor(
             $this->transaction,
+            $this->userRepository,
+            $this->hasher,
             $this->refreshTokenFactory,
             $this->refreshTokenRepository,
             $this->accessTokenFactory,

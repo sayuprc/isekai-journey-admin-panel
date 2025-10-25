@@ -31,6 +31,8 @@ readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
         return new RefreshToken(
             new RefreshTokenId($this->uuid->generate()),
             new UserId($userId),
+            // TODO ハッシュ化するとより安全になる
+            // このメソッドではオブジェクトと平文を返すのがよさそう？
             new TokenValue($this->randomToken->generate()),
             new ExpiredAt($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
             new IsUsed(false),

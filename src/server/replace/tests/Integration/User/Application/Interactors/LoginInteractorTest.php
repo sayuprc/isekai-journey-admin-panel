@@ -11,7 +11,9 @@ use Tests\TestCase;
 use User\Application\Interactors\LoginInteractor;
 use User\Application\UseCase\Login\LoginInputData;
 use User\DebugInfrastructures\FileRefreshTokenRepository;
+use User\DebugInfrastructures\FileUserRepository;
 use User\Domain\Models\Credential\RefreshToken\RefreshToken;
+use User\Infrastructures\UserFactory;
 
 class LoginInteractorTest extends TestCase
 {
@@ -24,14 +26,19 @@ class LoginInteractorTest extends TestCase
 
         $now = new Chronos();
 
-        $userId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $email = 'user@example.com';
+        $password = 'plain password';
 
-        $this->getInstance()->handle(new LoginInputData($userId));
+        $user = $this->container->get(UserFactory::class)->create($email, $password);
+        $this->factory(FileUserRepository::class, $user->userId->value, $user);
+
+        $result = $this->getInstance()->handle(new LoginInputData($email, $password));
+
+        $this->assertTrue($result->isOk());
 
         /** @var array<RefreshToken> */
         $refreshTokens = $this->getAll(FileRefreshTokenRepository::class);
         $this->assertCount(1, $refreshTokens);
-        $this->assertSame($userId, $refreshTokens[array_key_first($refreshTokens)]->userId->value);
         $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isEnabled($now));
     }
 
