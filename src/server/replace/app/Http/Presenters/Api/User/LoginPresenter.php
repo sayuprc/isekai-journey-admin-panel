@@ -49,12 +49,12 @@ readonly class LoginPresenter
         );
     }
 
-    private function createCookie(string $name, string $value, DateTimeInterface $minutes): Cookie
+    private function createCookie(string $name, string $value, DateTimeInterface $expiresAt): Cookie
     {
         return new Cookie(
             key: $name,
             value: $value,
-            expiresAt: $minutes->getTimestamp(),
+            expiresAt: $expiresAt->getTimestamp(),
             secure: true,
             httpOnly: true,
             sameSite: SameSite::STRICT
