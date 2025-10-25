@@ -36,7 +36,7 @@ class LoginInteractorTest extends TestCase
 
     private readonly MockInterface&UserRepositoryInterface $userRepository;
 
-    private HasherInterface&MockInterface $hasher;
+    private readonly HasherInterface&MockInterface $hasher;
 
     private readonly MockInterface&RefreshTokenFactoryInterface $refreshTokenFactory;
 
