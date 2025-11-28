@@ -43,6 +43,7 @@
             "SongType\\": "packages/SongType/",
             "Creator\\": "packages/Creator/",
             "User\\": "packages/User/",
+            "Performer\\": "packages/Performer/",
             "Tools\\": "tools/",
             "OpenAPI\\Client\\": "Generated/lib/"
         }
