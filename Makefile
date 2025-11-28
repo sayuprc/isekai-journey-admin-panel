@@ -11,7 +11,7 @@ SERVER_CONTAINER := isekai-terrarium-admin-php
 CLIENT_CONTAINER := isekai-terrarium-admin-node
 
 .PHONY: build
-build: ## Build docker image for develop environment
+build: ## 開発環境用の Docker イメージをビルド
 	docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx
 	docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 		--build-arg UID=${UID} \
@@ -26,79 +26,79 @@ build: ## Build docker image for develop environment
 	docker build -t isekai-terrarium-admin-node:22 ./docker/node
 
 .PHONY: up
-up: ## Start the container
+up: ## コンテナを起動
 	docker compose up -d
 
 .PHONY: down
-down: ## Delete the container
+down: ## コンテナを削除
 	docker compose down
 
 .PHONY: php
-php: ## Enter php container
+php: ## PHP コンテナに入る
 	docker exec -it ${SERVER_CONTAINER} bash
 
 .PHONY: composer-install
-composer-install: ## Install composer packages
+composer-install: ## Composer パッケージをインストール
 	docker compose run --rm php composer install
 
 .PHONY: phpstan
-phpstan: ## Run PHPStan
+phpstan: ## PHPStan を実行
 	docker exec ${SERVER_CONTAINER} composer phpstan
 
 .PHONY: phpstan-clear-cache
-phpstan-clear-cache: ## Clear PHPStan cache
+phpstan-clear-cache: ## PHPStan のキャッシュをクリア
 	docker exec ${SERVER_CONTAINER} composer phpstan-clear-cache
 
 .PHONY: arkitect
-arkitect: ## Run arkitect
+arkitect: ## arkitect を実行
 	docker exec ${SERVER_CONTAINER} composer arkitect
 
 .PHONY: ecs
-ecs: ## Run ecs
+ecs: ## ECS を実行
 	docker exec ${SERVER_CONTAINER} composer ecs
 
 .PHONY: ecs-fix
-ecs-fix: ## Run ecs fix
+ecs-fix: ## ECS を実行して修正
 	docker exec ${SERVER_CONTAINER} composer ecs-fix
 
 .PHONY: test-all
-test-all: ## Run all tests
+test-all: ## すべてのテストを実行
 	docker exec ${SERVER_CONTAINER} composer test-all
 
 .PHONY: test-unit
-test-unit: ## Run PHPUnit
+test-unit: ## ユニットテストを実行
 	docker exec ${SERVER_CONTAINER} composer test-unit
 
 .PHONY: test-integration
-test-integration: ## Run PHPUnit
+test-integration: ## 統合テストを実行
 	docker exec ${SERVER_CONTAINER} composer test-integration
 
 .PHONY: test-feature
-test-feature: ## Run PHPUnit
+test-feature: ## フィーチャーテストを実行
 	docker exec ${SERVER_CONTAINER} composer test-feature
 
 .PHONY: coverage
-coverage: ## Export coverage
+coverage: ## カバレッジをエクスポート
 	docker exec ${SERVER_CONTAINER} composer coverage
 
 .PHONY: infection
-infection: ## Run infection
+infection: ## infection を実行
 	docker exec ${SERVER_CONTAINER} composer infection
 
 .PHONY: metrics
-metrics: ## Run metrics
+metrics: ## メトリクスを実行
 	docker exec ${SERVER_CONTAINER} composer metrics
 
 .PHONY: migrate
-migrate: ## Migrate database
+migrate: ## データベースのマイグレーション
 	@docker exec ${SERVER_CONTAINER} bash -c "cd database/atlas; ./apply.sh"
 
 .PHONY: tinker
-tinker: ## Run tinker
+tinker: ## tinker を実行
 	docker exec ${SERVER_CONTAINER} php artisan tinker
 
 .PHONY: openapi-generate
-openapi-generate: ## Generate code from OpenAPI
+openapi-generate: ## OpenAPI からコードを生成
 	rm -rf ./src/server/Generated
 	docker run --rm -u ${UID}:${GID} -v ".:/local" openapi-generator generate \
 		-i /local/src/contracts/generated/oas/openapi.yaml \
@@ -109,7 +109,7 @@ openapi-generate: ## Generate code from OpenAPI
 	docker exec ${CLIENT_CONTAINER} npm run generate:api
 
 .PHONY: mkcert
-mkcert: ## create certs
+mkcert: ## 証明書を作成
 	mkcert \
 		--key-file docker/nginx/certs/server.key \
 		--cert-file docker/nginx/certs/server.crt \
@@ -120,51 +120,51 @@ mkcert: ## create certs
 		local.terrarium.isekaijoucho.fan
 
 .PHONY: copy-root-ca
-copy-root-ca: ## Copy local rootCA.pem
+copy-root-ca: ## ローカルの rootCA.pem をコピー
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/php/certs/
 	cp $$(mkcert -CAROOT)/rootCA.pem docker/node/certs/
 
 .PHONY: node
-node: ## Enter node container
+node: ## Node コンテナに入る
 	docker exec -it ${CLIENT_CONTAINER} bash
 
 .PHONY: npm-install
-npm-install: ## Install npm packages
+npm-install: ## npm パッケージをインストール
 	docker compose run --rm node npm i
 
 .PHONY: format
-format: ## Run ESLint with --fix and stylelint with --fix
+format: ## ESLint と stylelint を --fix オプションで実行
 	make lint-fix
 	make style-fix
 
 .PHONY: lint
-lint: ## Run ESLint
+lint: ## ESLint を実行
 	docker exec ${CLIENT_CONTAINER} npm run lint
 
 .PHONY: lint-fix
-lint-fix: ## Run ESLint with --fix
+lint-fix: ## ESLint を --fix オプションで実行
 	docker exec ${CLIENT_CONTAINER} npm run lint:fix
 
 .PHONY: style
-style: ## Run stylelint
+style: ## stylelint を実行
 	docker exec ${CLIENT_CONTAINER} npm run style
 
 .PHONY: style-fix
-style-fix: ## Run stylelint with --fix
+style-fix: ## stylelint を --fix オプションで実行
 	docker exec ${CLIENT_CONTAINER} npm run style:fix
 
 .PHONY: tcm
-tcm: ## Run tcm
+tcm: ## tcm を実行
 	docker exec ${CLIENT_CONTAINER} npm run tcm
 
 .PHONY: tcm-watch
-tcm-watch: ## Run tcm with --watch
+tcm-watch: ## tcm を --watch オプションで実行
 	docker exec ${CLIENT_CONTAINER} npm run tcm:watch
 
 .PHONY: prism
-prism: ## Run prism mock
+prism: ## prism モックを実行
 	docker exec -it ${CLIENT_CONTAINER} npm run prism
 
 .PHONY: help
-help: ## Display a list of targets
+help: ## ターゲットの一覧を表示
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
