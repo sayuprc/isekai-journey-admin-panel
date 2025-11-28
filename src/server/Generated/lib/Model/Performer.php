@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginRequest
+ * Performer
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginRequest Class Doc Comment
+ * Performer Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
+class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginRequest';
+    protected static $openAPIModelName = 'Performer';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'email' => 'string',
-        'password' => 'string'
+        'performer_id' => 'string',
+        'performer_name' => 'string',
+        'order_no' => 'int'
     ];
 
     /**
@@ -69,8 +70,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'email' => 'email',
-        'password' => 'password'
+        'performer_id' => 'uuid',
+        'performer_name' => null,
+        'order_no' => 'int32'
     ];
 
     /**
@@ -79,8 +81,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'email' => false,
-        'password' => false
+        'performer_id' => false,
+        'performer_name' => false,
+        'order_no' => false
     ];
 
     /**
@@ -169,8 +172,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'email' => 'email',
-        'password' => 'password'
+        'performer_id' => 'performerId',
+        'performer_name' => 'performerName',
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -179,8 +183,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'email' => 'setEmail',
-        'password' => 'setPassword'
+        'performer_id' => 'setPerformerId',
+        'performer_name' => 'setPerformerName',
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -189,8 +194,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'email' => 'getEmail',
-        'password' => 'getPassword'
+        'performer_id' => 'getPerformerId',
+        'performer_name' => 'getPerformerName',
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -250,8 +256,9 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('email', $data ?? [], null);
-        $this->setIfExists('password', $data ?? [], null);
+        $this->setIfExists('performer_id', $data ?? [], null);
+        $this->setIfExists('performer_name', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -281,12 +288,23 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['email'] === null) {
-            $invalidProperties[] = "'email' can't be null";
+        if ($this->container['performer_id'] === null) {
+            $invalidProperties[] = "'performer_id' can't be null";
         }
-        if ($this->container['password'] === null) {
-            $invalidProperties[] = "'password' can't be null";
+        if ($this->container['performer_name'] === null) {
+            $invalidProperties[] = "'performer_name' can't be null";
         }
+        if ((mb_strlen($this->container['performer_name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'performer_name', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         return $invalidProperties;
     }
 
@@ -303,55 +321,92 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets email
+     * Gets performer_id
      *
      * @return string
      */
-    public function getEmail()
+    public function getPerformerId()
     {
-        return $this->container['email'];
+        return $this->container['performer_id'];
     }
 
     /**
-     * Sets email
+     * Sets performer_id
      *
-     * @param string $email メールアドレス
+     * @param string $performer_id パフォーマーID
      *
      * @return self
      */
-    public function setEmail($email)
+    public function setPerformerId($performer_id)
     {
-        if (is_null($email)) {
-            throw new \InvalidArgumentException('non-nullable email cannot be null');
+        if (is_null($performer_id)) {
+            throw new \InvalidArgumentException('non-nullable performer_id cannot be null');
         }
-        $this->container['email'] = $email;
+        $this->container['performer_id'] = $performer_id;
 
         return $this;
     }
 
     /**
-     * Gets password
+     * Gets performer_name
      *
      * @return string
      */
-    public function getPassword()
+    public function getPerformerName()
     {
-        return $this->container['password'];
+        return $this->container['performer_name'];
     }
 
     /**
-     * Sets password
+     * Sets performer_name
      *
-     * @param string $password password
+     * @param string $performer_name パフォーマー名
      *
      * @return self
      */
-    public function setPassword($password)
+    public function setPerformerName($performer_name)
     {
-        if (is_null($password)) {
-            throw new \InvalidArgumentException('non-nullable password cannot be null');
+        if (is_null($performer_name)) {
+            throw new \InvalidArgumentException('non-nullable performer_name cannot be null');
         }
-        $this->container['password'] = $password;
+
+        if ((mb_strlen($performer_name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $performer_name when calling Performer., must be bigger than or equal to 1.');
+        }
+
+        $this->container['performer_name'] = $performer_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling Performer., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }
