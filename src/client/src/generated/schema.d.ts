@@ -65,7 +65,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** @description パフォーマー一覧取得API */
+        get: operations["PerformerService_listPerformers"];
         put?: never;
         /** @description パフォーマー作成API */
         post: operations["PerformerService_createPerformer"];
@@ -166,6 +167,9 @@ export interface components {
         };
         PerformerCreateResponse: {
             performer: components["schemas"]["Performer"];
+        };
+        PerformerListResponse: {
+            performers: components["schemas"]["Performer"][];
         };
         /** @example {
          *       "songTypeId": "5e8211d4-2952-407c-ba7b-18c3fe0da6e0",
@@ -579,6 +583,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_listPerformers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerListResponse"];
                 };
             };
             /** @description Server error */
