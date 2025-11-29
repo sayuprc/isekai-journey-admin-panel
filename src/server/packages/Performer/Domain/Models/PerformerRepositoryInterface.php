@@ -6,4 +6,7 @@ namespace Performer\Domain\Models;
 
 interface PerformerRepositoryInterface
 {
+    public function findByName(PerformerName $performerName): ?Performer;
+
+    public function insert(Performer $performer): void;
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
+use App\Http\Controllers\Api\Performer\CreatePerformerController;
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
 use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Api\SongType\GetSongTypeController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Api\User\LoginController;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Performer\Route\PerformerRouteMap;
 use SongType\Route\SongTypeRouteMap;
 use User\Route\UserRouteMap;
 
@@ -34,6 +36,10 @@ Route::middleware('api')->group(function () {
         Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
         Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
         Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
+    });
+
+    Route::prefix('performers')->group(function () {
+        Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
     });
 
     Route::prefix('song-types')->group(function () {

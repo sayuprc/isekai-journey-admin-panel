@@ -8,6 +8,7 @@ return [
     App\Providers\Domain\CreatorServiceProvider::class,
     App\Providers\Domain\JourneyLogLinkTypeServiceProvider::class,
     App\Providers\Domain\JourneyLogServiceProvider::class,
+    App\Providers\Domain\PerformerServiceProvider::class,
     App\Providers\Domain\SongServiceProvider::class,
     App\Providers\Domain\SongTypeServiceProvider::class,
     App\Providers\Domain\SupportServiceProvider::class,
