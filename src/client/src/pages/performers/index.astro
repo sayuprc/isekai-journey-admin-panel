@@ -1,0 +1,42 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+const { data } = await client.GET('/performers');
+
+if (!data) {
+  throw new Error();
+}
+---
+
+<Layout pageTitle="パフォーマー一覧">
+  <FlashMessage client:only="solid-js" />
+  <!-- TODO コンポーネント化する -->
+  <div class="h-full overflow-x-auto">
+    <table class="table table-pin-rows table-zebra">
+      <thead>
+        <tr>
+          <th>パフォーマー名</th>
+          <th>表示順</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          data.performers.map((performer) => {
+            return (
+              <tr>
+                <td>{performer.performerName}</td>
+                <td>{performer.orderNo}</td>
+                <td>
+                  <a href={`/performers/${performer.performerId}`}>編集</a>
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</Layout>
