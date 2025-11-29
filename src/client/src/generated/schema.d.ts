@@ -65,10 +65,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description パフォーマー一覧取得API */
+        /** @description 共演者一覧取得API */
         get: operations["PerformerService_listPerformers"];
         put?: never;
-        /** @description パフォーマー作成API */
+        /** @description 共演者作成API */
         post: operations["PerformerService_createPerformer"];
         delete?: never;
         options?: never;
@@ -224,10 +224,10 @@ export interface components {
         orderNo: number;
         /**
          * Format: uuid
-         * @description パフォーマーID
+         * @description 共演者ID
          */
         performerId: string;
-        /** @description パフォーマー名 */
+        /** @description 共演者名 */
         performerName: string;
         /**
          * Format: uuid

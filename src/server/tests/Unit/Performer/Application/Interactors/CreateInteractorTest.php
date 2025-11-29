@@ -60,27 +60,27 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->factory->shouldReceive('create')
-            ->with('パフォーマー', 1)
+            ->with('共演者', 1)
             ->andReturn(new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('パフォーマー'),
+                new PerformerName('共演者'),
                 new OrderNo(1),
             ))
             ->once();
 
         $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === 'パフォーマー'))
+            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者'))
             ->andreturn(false)
             ->once();
 
         $this->repository->shouldReceive('insert')
             ->with(Mockery::on(
                 fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->performerName->value === 'パフォーマー'
+                    && $arg->performerName->value === '共演者'
             ))
             ->once();
 
-        $result = $this->interactor->handle(new CreateInputData('パフォーマー', 1));
+        $result = $this->interactor->handle(new CreateInputData('共演者', 1));
 
         $this->assertTrue($result->isOk());
     }
@@ -94,20 +94,20 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->factory->shouldReceive('create')
-            ->with('パフォーマー', 1)
+            ->with('共演者', 1)
             ->andReturn(new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('パフォーマー'),
+                new PerformerName('共演者'),
                 new OrderNo(1),
             ))
             ->once();
 
         $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === 'パフォーマー'))
+            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者'))
             ->andreturn(true)
             ->once();
 
-        $result = $this->interactor->handle(new CreateInputData('パフォーマー', 1));
+        $result = $this->interactor->handle(new CreateInputData('共演者', 1));
 
         $this->assertTrue($result->isErr());
     }
