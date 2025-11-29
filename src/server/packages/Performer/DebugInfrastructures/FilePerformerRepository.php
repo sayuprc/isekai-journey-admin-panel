@@ -26,6 +26,11 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
     }
 
+    public function all(): array
+    {
+        return array_values($this->store->getAll($this->filePath));
+    }
+
     public function findByName(PerformerName $performerName): ?Performer
     {
         foreach ($this->store->getAll($this->filePath) as $performer) {
