@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
 use App\Http\Controllers\Api\Performer\CreatePerformerController;
+use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\SongType\CreateSongTypeController;
 use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
 use App\Http\Controllers\Api\SongType\GetSongTypeController;
@@ -40,6 +41,7 @@ Route::middleware('api')->group(function () {
 
     Route::prefix('performers')->group(function () {
         Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
+        Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
     });
 
     Route::prefix('song-types')->group(function () {
