@@ -333,7 +333,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets performer_id
      *
-     * @param string $performer_id パフォーマーID
+     * @param string $performer_id 共演者ID
      *
      * @return self
      */
@@ -360,7 +360,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets performer_name
      *
-     * @param string $performer_name パフォーマー名
+     * @param string $performer_name 共演者名
      *
      * @return self
      */

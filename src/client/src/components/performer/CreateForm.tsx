@@ -37,9 +37,9 @@ export const CreateForm = () => {
   return (
     <form onsubmit={handleSubmit}>
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend class="fieldset-legend">パフォーマー作成</legend>
+        <legend class="fieldset-legend">共演者作成</legend>
 
-        <label class="label">パフォーマー名</label>
+        <label class="label">共演者名</label>
         <input type="text" class="input" name="performerName" />
 
         <label class="label">表示順</label>

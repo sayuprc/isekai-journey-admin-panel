@@ -33,10 +33,10 @@ class PerformerFactoryTest extends TestCase
             ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
-        $performer = $this->factory->create('パフォーマー', 1);
+        $performer = $this->factory->create('共演者', 1);
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
-        $this->assertSame('パフォーマー', $performer->performerName->value);
+        $this->assertSame('共演者', $performer->performerName->value);
         $this->assertSame(1, $performer->orderNo->value);
     }
 }

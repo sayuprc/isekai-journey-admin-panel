@@ -59,12 +59,12 @@ class ListInteractorTest extends TestCase
             ->andReturn([
                 new Performer(
                     new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new PerformerName('パフォーマーA'),
+                    new PerformerName('共演者A'),
                     new OrderNo(1),
                 ),
                 new Performer(
                     new PerformerId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new PerformerName('パフォーマーB'),
+                    new PerformerName('共演者B'),
                     new OrderNo(2),
                 ),
             ])
@@ -77,10 +77,10 @@ class ListInteractorTest extends TestCase
         $this->assertCount(2, $response->performers);
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->performers[0]->performerId->value);
-        $this->assertSame('パフォーマーA', $response->performers[0]->performerName->value);
+        $this->assertSame('共演者A', $response->performers[0]->performerName->value);
         $this->assertSame(1, $response->performers[0]->orderNo->value);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->performers[1]->performerId->value);
-        $this->assertSame('パフォーマーB', $response->performers[1]->performerName->value);
+        $this->assertSame('共演者B', $response->performers[1]->performerName->value);
         $this->assertSame(2, $response->performers[1]->orderNo->value);
     }
 }

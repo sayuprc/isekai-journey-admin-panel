@@ -14,6 +14,6 @@ class PerformerNameTest extends TestCase
     #[Test]
     public function isInstanceOfStringValueObject(): void
     {
-        $this->assertInstanceOf(StringValueObject::class, new PerformerName('パフォーマー'));
+        $this->assertInstanceOf(StringValueObject::class, new PerformerName('共演者'));
     }
 }

@@ -323,7 +323,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets performer_name
      *
-     * @param string $performer_name パフォーマー名
+     * @param string $performer_name 共演者名
      *
      * @return self
      */
