@@ -136,10 +136,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @example {
+        /**
+         * @example {
          *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
          *       "creatorName": "ヰ世界情緒"
-         *     } */
+         *     }
+         */
         Creator: {
             creatorId: components["schemas"]["creatorId"];
             creatorName: components["schemas"]["creatorName"];
@@ -170,11 +172,13 @@ export interface components {
             /** Format: password */
             password: string;
         };
-        /** @example {
+        /**
+         * @example {
          *       "performerId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
          *       "performerName": "ヰ世界情緒",
          *       "orderNo": 1
-         *     } */
+         *     }
+         */
         Performer: {
             performerId: components["schemas"]["performerId"];
             performerName: components["schemas"]["performerName"];
@@ -200,11 +204,13 @@ export interface components {
         PerformerUpdateResponse: {
             performer: components["schemas"]["Performer"];
         };
-        /** @example {
+        /**
+         * @example {
          *       "songTypeId": "5e8211d4-2952-407c-ba7b-18c3fe0da6e0",
          *       "songTypeName": "オリジナル",
          *       "orderNo": 1
-         *     } */
+         *     }
+         */
         SongType: {
             songTypeId: components["schemas"]["songTypeId"];
             songTypeName: components["schemas"]["songTypeName"];
@@ -598,7 +604,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description There is no content to send for this request, but the headers may be useful.  */
+            /** @description There is no content to send for this request, but the headers may be useful. */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -887,7 +893,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description There is no content to send for this request, but the headers may be useful.  */
+            /** @description There is no content to send for this request, but the headers may be useful. */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -1176,7 +1182,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description There is no content to send for this request, but the headers may be useful.  */
+            /** @description There is no content to send for this request, but the headers may be useful. */
             204: {
                 headers: {
                     [name: string]: unknown;
