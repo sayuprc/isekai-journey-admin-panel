@@ -6,6 +6,7 @@ use Tools\Arkitect\ComponentMaps\CreatorComponent;
 use Tools\Arkitect\ComponentMaps\JourneyLogComponent;
 use Tools\Arkitect\ComponentMaps\JourneyLogLinkTypeComponent;
 use Tools\Arkitect\ComponentMaps\LibraryComponent;
+use Tools\Arkitect\ComponentMaps\PerformerComponent;
 use Tools\Arkitect\ComponentMaps\SongComponent;
 use Tools\Arkitect\ComponentMaps\SongTypeComponent;
 use Tools\Arkitect\ComponentMaps\SupportComponent;
@@ -92,6 +93,21 @@ return [
         CreatorComponent::UseCase,
         [
             CreatorComponent::Domain,
+            LibraryComponent::ResultType,
+        ]
+    ),
+
+    new Define(
+        PerformerComponent::Domain,
+        [
+            PerformerComponent::Domain,
+            SupportComponent::Domain,
+        ]
+    ),
+    new Define(
+        PerformerComponent::UseCase,
+        [
+            PerformerComponent::Domain,
             LibraryComponent::ResultType,
         ]
     ),
