@@ -59,4 +59,9 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
 
         return $performer->performerId;
     }
+
+    public function delete(PerformerId $performerId): void
+    {
+        $this->store->unset($this->filePath, $performerId->value);
+    }
 }

@@ -61,7 +61,35 @@ export const EditableForm = (props: Props) => {
 
   const handleDelete = async (e: Event) => {
     e.preventDefault();
-    // TODO 実装する
+
+    if (!window.confirm('削除します。よろしいですか？')) {
+      return;
+    }
+
+    const performerId = props.data?.performer.performerId;
+
+    if (!performerId) {
+      alert('削除対象の共演者IDを取得できませんでした');
+      return;
+    }
+
+    const { error, response } = await client.DELETE('/performers/{performerId}', {
+      params: {
+        path: {
+          performerId: performerId,
+        },
+      },
+    });
+
+    // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
+    if (response.status === 422) {
+      // TODO わかりやすい表示にする
+      const errorAs = error as components['schemas']['ValidationError'];
+      alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+    } else {
+      setFlash('削除しました');
+      window.location.href = `/performers`;
+    }
   };
 
   onMount(() => {

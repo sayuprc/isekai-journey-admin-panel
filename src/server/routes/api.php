@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
 use App\Http\Controllers\Api\Performer\CreatePerformerController;
+use App\Http\Controllers\Api\Performer\DeletePerformerController;
 use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
@@ -45,6 +46,7 @@ Route::middleware('api')->group(function () {
         Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
         Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
         Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
+        Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
         Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
     });
 
