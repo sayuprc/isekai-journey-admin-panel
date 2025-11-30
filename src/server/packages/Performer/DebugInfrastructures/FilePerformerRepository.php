@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performer\DebugInfrastructures;
 
 use Performer\Domain\Models\Performer;
+use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Support\Contracts\ConfigInterface;
@@ -31,6 +32,11 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return array_values($this->store->getAll($this->filePath));
     }
 
+    public function find(PerformerId $performerId): ?Performer
+    {
+        return $this->store->get($this->filePath, $performerId->value);
+    }
+
     public function findByName(PerformerName $performerName): ?Performer
     {
         foreach ($this->store->getAll($this->filePath) as $performer) {
@@ -45,5 +51,12 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
     public function insert(Performer $performer): void
     {
         $this->store->put($this->filePath, $performer->performerId->value, $performer);
+    }
+
+    public function update(Performer $performer): PerformerId
+    {
+        $this->store->put($this->filePath, $performer->performerId->value, $performer);
+
+        return $performer->performerId;
     }
 }

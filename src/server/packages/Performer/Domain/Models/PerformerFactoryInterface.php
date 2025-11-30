@@ -10,4 +10,9 @@ interface PerformerFactoryInterface
      * @param positive-int $orderNo
      */
     public function create(string $performerName, int $orderNo): Performer;
+
+    /**
+     * @param positive-int $orderNo
+     */
+    public function reconstitute(string $performerId, string $performerName, int $orderNo): Performer;
 }
