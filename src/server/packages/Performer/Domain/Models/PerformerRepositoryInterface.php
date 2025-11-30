@@ -18,4 +18,6 @@ interface PerformerRepositoryInterface
     public function insert(Performer $performer): void;
 
     public function update(Performer $performer): PerformerId;
+
+    public function delete(PerformerId $performerId): void;
 }
