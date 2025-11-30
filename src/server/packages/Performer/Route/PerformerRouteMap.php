@@ -10,4 +10,5 @@ enum PerformerRouteMap: string
     case Get = 'performers.show';
     case Create = 'performers.create';
     case Update = 'performers.update';
+    case Delete = 'performers.delete';
 }
