@@ -88,7 +88,8 @@ export interface paths {
         /** @description 共演者更新API */
         put: operations["PerformerService_updatePerformer"];
         post?: never;
-        delete?: never;
+        /** @description 共演者削除API */
+        delete: operations["PerformerService_deletePerformer"];
         options?: never;
         head?: never;
         patch?: never;
@@ -842,6 +843,56 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_deletePerformer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                performerId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description There is no content to send for this request, but the headers may be useful.  */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Client error */
             422: {
