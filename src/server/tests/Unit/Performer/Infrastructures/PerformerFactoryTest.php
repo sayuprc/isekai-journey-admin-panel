@@ -39,4 +39,14 @@ class PerformerFactoryTest extends TestCase
         $this->assertSame('共演者', $performer->performerName->value);
         $this->assertSame(1, $performer->orderNo->value);
     }
+
+    #[Test]
+    public function reconstitute(): void
+    {
+        $performer = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1);
+
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
+        $this->assertSame('共演者', $performer->performerName->value);
+        $this->assertSame(1, $performer->orderNo->value);
+    }
 }

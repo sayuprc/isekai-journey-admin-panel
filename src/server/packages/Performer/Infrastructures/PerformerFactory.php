@@ -25,4 +25,13 @@ readonly class PerformerFactory implements PerformerFactoryInterface
             new OrderNo($orderNo),
         );
     }
+
+    public function reconstitute(string $performerId, string $performerName, int $orderNo): Performer
+    {
+        return new Performer(
+            new PerformerId($performerId),
+            new PerformerName($performerName),
+            new OrderNo($orderNo),
+        );
+    }
 }

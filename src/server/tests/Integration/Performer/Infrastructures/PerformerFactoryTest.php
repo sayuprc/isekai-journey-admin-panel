@@ -13,9 +13,19 @@ class PerformerFactoryTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $creator = $this->getInstance()->create('ヰ世界情緒', 1);
+        $performer = $this->getInstance()->create('ヰ世界情緒', 1);
 
-        $this->assertSame('ヰ世界情緒', $creator->performerName->value);
+        $this->assertSame('ヰ世界情緒', $performer->performerName->value);
+    }
+
+    #[Test]
+    public function reconstitute(): void
+    {
+        $performer = $this->getInstance()->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
+
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
+        $this->assertSame('ヰ世界情緒', $performer->performerName->value);
+        $this->assertSame(1, $performer->orderNo->value);
     }
 
     private function getInstance(): PerformerFactory
