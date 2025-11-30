@@ -58,6 +58,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/performers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共演者一覧取得API */
+        get: operations["PerformerService_listPerformers"];
+        put?: never;
+        /** @description 共演者作成API */
+        post: operations["PerformerService_createPerformer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/performers/{performerId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共演者取得API */
+        get: operations["PerformerService_getPerformer"];
+        /** @description 共演者更新API */
+        put: operations["PerformerService_updatePerformer"];
+        post?: never;
+        /** @description 共演者削除API */
+        delete: operations["PerformerService_deletePerformer"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/song-types": {
         parameters: {
             query?: never;
@@ -104,14 +141,11 @@ export interface components {
          *       "creatorName": "ヰ世界情緒"
          *     } */
         Creator: {
-            /** @description クリエイターID */
-            creatorId: components["schemas"]["uuid"];
-            /** @description クリエイター名 */
-            creatorName: string;
+            creatorId: components["schemas"]["creatorId"];
+            creatorName: components["schemas"]["creatorName"];
         };
         CreatorCreateRequest: {
-            /** @description クリエイター名 */
-            creatorName: string;
+            creatorName: components["schemas"]["creatorName"];
         };
         CreatorCreateResponse: {
             creator: components["schemas"]["Creator"];
@@ -123,8 +157,7 @@ export interface components {
             creators: components["schemas"]["Creator"][];
         };
         CreatorUpdateRequest: {
-            /** @description クリエイター名 */
-            creatorName: string;
+            creatorName: components["schemas"]["creatorName"];
         };
         CreatorUpdateResponse: {
             creator: components["schemas"]["Creator"];
@@ -138,29 +171,48 @@ export interface components {
             password: string;
         };
         /** @example {
+         *       "performerId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
+         *       "performerName": "ヰ世界情緒",
+         *       "orderNo": 1
+         *     } */
+        Performer: {
+            performerId: components["schemas"]["performerId"];
+            performerName: components["schemas"]["performerName"];
+            orderNo: components["schemas"]["orderNo"];
+        };
+        PerformerCreateRequest: {
+            performerName: components["schemas"]["performerName"];
+            orderNo: components["schemas"]["orderNo"];
+        };
+        PerformerCreateResponse: {
+            performer: components["schemas"]["Performer"];
+        };
+        PerformerGetResponse: {
+            performer: components["schemas"]["Performer"];
+        };
+        PerformerListResponse: {
+            performers: components["schemas"]["Performer"][];
+        };
+        PerformerUpdateRequest: {
+            performerName: components["schemas"]["performerName"];
+            orderNo: components["schemas"]["orderNo"];
+        };
+        PerformerUpdateResponse: {
+            performer: components["schemas"]["Performer"];
+        };
+        /** @example {
          *       "songTypeId": "5e8211d4-2952-407c-ba7b-18c3fe0da6e0",
          *       "songTypeName": "オリジナル",
          *       "orderNo": 1
          *     } */
         SongType: {
-            /** @description 楽曲種別ID */
-            songTypeId: components["schemas"]["uuid"];
-            /** @description 楽曲種別名 */
-            songTypeName: string;
-            /**
-             * Format: int32
-             * @description 表示順
-             */
-            orderNo: number;
+            songTypeId: components["schemas"]["songTypeId"];
+            songTypeName: components["schemas"]["songTypeName"];
+            orderNo: components["schemas"]["orderNo"];
         };
         SongTypeCreateRequest: {
-            /** @description 楽曲種別名 */
-            songTypeName: string;
-            /**
-             * Format: int32
-             * @description 表示順
-             */
-            orderNo: number;
+            songTypeName: components["schemas"]["songTypeName"];
+            orderNo: components["schemas"]["orderNo"];
         };
         SongTypeCreateResponse: {
             songType: components["schemas"]["SongType"];
@@ -172,13 +224,8 @@ export interface components {
             songTypes: components["schemas"]["SongType"][];
         };
         SongTypeUpdateRequest: {
-            /** @description 楽曲種別名 */
-            songTypeName: string;
-            /**
-             * Format: int32
-             * @description 表示順
-             */
-            orderNo: number;
+            songTypeName: components["schemas"]["songTypeName"];
+            orderNo: components["schemas"]["orderNo"];
         };
         SongTypeUpdateResponse: {
             songType: components["schemas"]["SongType"];
@@ -187,9 +234,41 @@ export interface components {
             field: string;
             message: string;
         };
-        /** Format: email */
+        /**
+         * Format: uuid
+         * @description クリエイターID
+         */
+        creatorId: string;
+        /** @description クリエイター名 */
+        creatorName: string;
+        /**
+         * Format: email
+         * @description メールアドレス
+         */
         email: string;
-        /** Format: uuid */
+        /**
+         * Format: int32
+         * @description 表示順
+         */
+        orderNo: number;
+        /**
+         * Format: uuid
+         * @description 共演者ID
+         */
+        performerId: string;
+        /** @description 共演者名 */
+        performerName: string;
+        /**
+         * Format: uuid
+         * @description 楽曲種別ID
+         */
+        songTypeId: string;
+        /** @description 楽曲種別名 */
+        songTypeName: string;
+        /**
+         * Format: uuid
+         * @description UUID v4
+         */
         uuid: string;
     };
     responses: never;
@@ -514,6 +593,295 @@ export interface operations {
             header?: never;
             path: {
                 creatorId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description There is no content to send for this request, but the headers may be useful.  */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_listPerformers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerListResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_createPerformer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PerformerCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerCreateResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_getPerformer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                performerId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerGetResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_updatePerformer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                performerId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PerformerUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerUpdateResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_deletePerformer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                performerId: components["schemas"]["uuid"];
             };
             cookie?: never;
         };

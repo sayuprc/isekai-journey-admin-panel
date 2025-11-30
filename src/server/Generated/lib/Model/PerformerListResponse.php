@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginRequest
+ * PerformerListResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginRequest Class Doc Comment
+ * PerformerListResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
+class PerformerListResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginRequest';
+    protected static $openAPIModelName = 'PerformerListResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'email' => 'string',
-        'password' => 'string'
+        'performers' => '\OpenAPI\Client\Model\Performer[]'
     ];
 
     /**
@@ -69,8 +68,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'email' => 'email',
-        'password' => 'password'
+        'performers' => null
     ];
 
     /**
@@ -79,8 +77,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'email' => false,
-        'password' => false
+        'performers' => false
     ];
 
     /**
@@ -169,8 +166,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'email' => 'email',
-        'password' => 'password'
+        'performers' => 'performers'
     ];
 
     /**
@@ -179,8 +175,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'email' => 'setEmail',
-        'password' => 'setPassword'
+        'performers' => 'setPerformers'
     ];
 
     /**
@@ -189,8 +184,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'email' => 'getEmail',
-        'password' => 'getPassword'
+        'performers' => 'getPerformers'
     ];
 
     /**
@@ -250,8 +244,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('email', $data ?? [], null);
-        $this->setIfExists('password', $data ?? [], null);
+        $this->setIfExists('performers', $data ?? [], null);
     }
 
     /**
@@ -281,11 +274,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['email'] === null) {
-            $invalidProperties[] = "'email' can't be null";
-        }
-        if ($this->container['password'] === null) {
-            $invalidProperties[] = "'password' can't be null";
+        if ($this->container['performers'] === null) {
+            $invalidProperties[] = "'performers' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +293,28 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets email
+     * Gets performers
      *
-     * @return string
+     * @return \OpenAPI\Client\Model\Performer[]
      */
-    public function getEmail()
+    public function getPerformers()
     {
-        return $this->container['email'];
+        return $this->container['performers'];
     }
 
     /**
-     * Sets email
+     * Sets performers
      *
-     * @param string $email メールアドレス
+     * @param \OpenAPI\Client\Model\Performer[] $performers performers
      *
      * @return self
      */
-    public function setEmail($email)
+    public function setPerformers($performers)
     {
-        if (is_null($email)) {
-            throw new \InvalidArgumentException('non-nullable email cannot be null');
+        if (is_null($performers)) {
+            throw new \InvalidArgumentException('non-nullable performers cannot be null');
         }
-        $this->container['email'] = $email;
-
-        return $this;
-    }
-
-    /**
-     * Gets password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->container['password'];
-    }
-
-    /**
-     * Sets password
-     *
-     * @param string $password password
-     *
-     * @return self
-     */
-    public function setPassword($password)
-    {
-        if (is_null($password)) {
-            throw new \InvalidArgumentException('non-nullable password cannot be null');
-        }
-        $this->container['password'] = $password;
+        $this->container['performers'] = $performers;
 
         return $this;
     }

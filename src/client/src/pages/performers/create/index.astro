@@ -1,0 +1,10 @@
+---
+import { CreateForm } from '../../../components/performer/CreateForm';
+import Layout from '../../../layouts/Layout.astro';
+
+export const prerender = false;
+---
+
+<Layout pageTitle="共演者作成">
+  <CreateForm client:load />
+</Layout>

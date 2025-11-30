@@ -13,6 +13,13 @@ const navItems = [
       { href: '/creators/create', label: '作成' },
     ],
   },
+  {
+    title: '共演者',
+    links: [
+      { href: '/performers', label: '一覧' },
+      { href: '/performers/create', label: '作成' },
+    ],
+  },
 ];
 
 export const Sidebar = () => {
