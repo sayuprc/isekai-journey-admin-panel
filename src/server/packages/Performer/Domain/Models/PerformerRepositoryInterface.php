@@ -15,9 +15,7 @@ interface PerformerRepositoryInterface
 
     public function findByName(PerformerName $performerName): ?Performer;
 
-    public function insert(Performer $performer): void;
-
-    public function update(Performer $performer): PerformerId;
+    public function save(Performer $performer): Performer;
 
     public function delete(PerformerId $performerId): void;
 }

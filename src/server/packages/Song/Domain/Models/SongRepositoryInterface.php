@@ -11,5 +11,5 @@ interface SongRepositoryInterface
      */
     public function all(): array;
 
-    public function insert(Song $song): void;
+    public function save(Song $song): Song;
 }
