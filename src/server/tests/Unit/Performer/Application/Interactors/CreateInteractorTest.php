@@ -61,7 +61,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('共演者', 1)
-            ->andReturn(new Performer(
+            ->andReturn($performer = new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new PerformerName('共演者'),
                 new OrderNo(1),
@@ -73,11 +73,12 @@ class CreateInteractorTest extends TestCase
             ->andreturn(false)
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->performerName->value === '共演者'
             ))
+            ->andReturn($performer)
             ->once();
 
         $result = $this->interactor->handle(new CreateInputData('共演者', 1));

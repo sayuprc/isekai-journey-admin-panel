@@ -48,16 +48,11 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return null;
     }
 
-    public function insert(Performer $performer): void
-    {
-        $this->store->put($this->filePath, $performer->performerId->value, $performer);
-    }
-
-    public function update(Performer $performer): PerformerId
+    public function save(Performer $performer): Performer
     {
         $this->store->put($this->filePath, $performer->performerId->value, $performer);
 
-        return $performer->performerId;
+        return $performer;
     }
 
     public function delete(PerformerId $performerId): void

@@ -8,5 +8,5 @@ interface RefreshTokenRepositoryInterface
 {
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken;
 
-    public function insert(RefreshToken $refreshToken): void;
+    public function save(RefreshToken $refreshToken): RefreshToken;
 }

@@ -61,7 +61,7 @@ class CreateInteractorTest extends TestCase
         $this->factory->shouldReceive('create')
             ->with('example@example.com', 'plainpassword')
             ->andReturn(
-                new User(
+                $user = new User(
                     new UserId($uuid),
                     new Email('example@example.com'),
                     new HashedPassword('hashedpassword')
@@ -69,7 +69,7 @@ class CreateInteractorTest extends TestCase
             )
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(
                 Mockery::on(
                     fn (User $arg) => $arg->userId->value === $uuid
@@ -77,6 +77,7 @@ class CreateInteractorTest extends TestCase
                         && $arg->hashedPassword->value !== 'plainpassword'
                 )
             )
+            ->andReturn($user)
             ->once();
 
         $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));

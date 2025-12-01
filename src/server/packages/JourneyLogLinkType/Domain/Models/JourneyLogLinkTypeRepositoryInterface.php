@@ -13,9 +13,7 @@ interface JourneyLogLinkTypeRepositoryInterface
 
     public function find(JourneyLogLinkTypeId $journeyLogLinkTypeId): ?JourneyLogLinkType;
 
-    public function insert(JourneyLogLinkType $journeyLogLinkType): void;
-
-    public function update(JourneyLogLinkType $journeyLogLinkType): void;
+    public function save(JourneyLogLinkType $journeyLogLinkType): JourneyLogLinkType;
 
     public function delete(JourneyLogLinkTypeId $journeyLogLinkTypeId): void;
 }

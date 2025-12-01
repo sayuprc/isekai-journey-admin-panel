@@ -61,7 +61,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)
-            ->andReturn(new Performer(
+            ->andReturn($performer = new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new PerformerName('共演者2'),
                 new OrderNo(2)
@@ -76,13 +76,13 @@ class UpdateInteractorTest extends TestCase
             ->andReturn(false)
             ->once();
 
-        $this->repository->shouldReceive('update')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->performerName->value === '共演者2'
                     && $arg->orderNo->value === 2
             ))
-            ->andReturn(new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn($performer)
             ->once();
 
         $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2));

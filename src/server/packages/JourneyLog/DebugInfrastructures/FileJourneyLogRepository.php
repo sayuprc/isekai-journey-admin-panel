@@ -39,16 +39,11 @@ readonly class FileJourneyLogRepository implements JourneyLogRepositoryInterface
         return $this->store->get($this->filePath, $journeyLogId->value);
     }
 
-    public function insert(JourneyLog $journeyLog): void
-    {
-        $this->store->put($this->filePath, $journeyLog->journeyLogId->value, $journeyLog);
-    }
-
-    public function update(JourneyLog $journeyLog): JourneyLogId
+    public function save(JourneyLog $journeyLog): JourneyLog
     {
         $this->store->put($this->filePath, $journeyLog->journeyLogId->value, $journeyLog);
 
-        return $journeyLog->journeyLogId;
+        return $journeyLog;
     }
 
     public function delete(JourneyLogId $journeyLogId): void

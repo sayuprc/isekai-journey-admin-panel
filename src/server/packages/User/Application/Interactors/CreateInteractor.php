@@ -33,7 +33,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 
             $user = $this->factory->create($inputData->email, $inputData->plainPassword);
 
-            $this->repository->insert($user);
+            $this->repository->save($user);
 
             return new Ok(new CreateOutputData($user));
         });

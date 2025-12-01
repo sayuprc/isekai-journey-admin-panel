@@ -34,7 +34,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
                 return new Err("Performer name already exists: {$inputData->performerName}");
             }
 
-            $this->repository->update($performer);
+            $this->repository->save($performer);
 
             return new Ok(new UpdateOutputData($performer));
         });

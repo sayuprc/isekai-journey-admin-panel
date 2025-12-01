@@ -34,7 +34,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
                 return new Err("Performer name already exists: {$inputData->performerName}");
             }
 
-            $this->repository->insert($performer);
+            $this->repository->save($performer);
 
             return new Ok(new CreateOutputData($performer));
         });

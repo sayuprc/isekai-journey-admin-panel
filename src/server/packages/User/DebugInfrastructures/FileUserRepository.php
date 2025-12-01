@@ -49,8 +49,10 @@ readonly class FileUserRepository implements UserRepositoryInterface
         return null;
     }
 
-    public function insert(User $user): void
+    public function save(User $user): User
     {
         $this->store->put($this->filePath, $user->userId->value, $user);
+
+        return $user;
     }
 }

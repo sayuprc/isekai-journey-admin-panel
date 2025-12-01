@@ -64,7 +64,7 @@ class EditInteractorTest extends TestCase
                 1,
                 [],
             )
-            ->andReturn(new JourneyLog(
+            ->andReturn($journeyLog = new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
@@ -73,7 +73,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->repository->shouldReceive('update')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -82,7 +82,7 @@ class EditInteractorTest extends TestCase
                     && $arg->orderNo->value === 1
                     && count($arg->journeyLogLinks) === 0
             ))
-            ->andReturn(new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn($journeyLog)
             ->once();
 
         $this->interactor->handle(new EditInputData(
@@ -119,7 +119,7 @@ class EditInteractorTest extends TestCase
                         && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                 ),
             )
-            ->andReturn(new JourneyLog(
+            ->andReturn($journeyLog = new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
@@ -143,7 +143,7 @@ class EditInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->repository->shouldReceive('update')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -162,7 +162,7 @@ class EditInteractorTest extends TestCase
                     && $arg->journeyLogLinks[1]->orderNo->value === 2
                     && $arg->journeyLogLinks[1]->journeyLogLinkTypeId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
             ))
-            ->andReturn(new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn($journeyLog)
             ->once();
 
         $this->interactor->handle(new EditInputData(

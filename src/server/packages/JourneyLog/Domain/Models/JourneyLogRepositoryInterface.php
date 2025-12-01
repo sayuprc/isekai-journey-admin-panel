@@ -13,9 +13,7 @@ interface JourneyLogRepositoryInterface
 
     public function find(JourneyLogId $journeyLogId): ?JourneyLog;
 
-    public function insert(JourneyLog $journeyLog): void;
-
-    public function update(JourneyLog $journeyLog): JourneyLogId;
+    public function save(JourneyLog $journeyLog): JourneyLog;
 
     public function delete(JourneyLogId $journeyLogId): void;
 }

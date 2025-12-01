@@ -63,7 +63,7 @@ class CreateInteractorTest extends TestCase
                 1,
                 [],
             )
-            ->andReturn(new JourneyLog(
+            ->andReturn($journeyLog = new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
@@ -72,7 +72,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -81,6 +81,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->orderNo->value === 1
                     && count($arg->journeyLogLinks) === 0
             ))
+            ->andReturn($journeyLog)
             ->once();
 
         $this->interactor->handle(new CreateInputData(
@@ -115,7 +116,7 @@ class CreateInteractorTest extends TestCase
                         && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                 ),
             )
-            ->andReturn(new JourneyLog(
+            ->andReturn($journeyLog = new JourneyLog(
                 new JourneyLogId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new Story('story'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
@@ -139,7 +140,7 @@ class CreateInteractorTest extends TestCase
             ))
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (JourneyLog $arg): bool => $arg->journeyLogId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->story->value === 'story'
@@ -158,6 +159,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->journeyLogLinks[1]->orderNo->value === 2
                     && $arg->journeyLogLinks[1]->journeyLogLinkTypeId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
             ))
+            ->andReturn($journeyLog)
             ->once();
 
         $this->interactor->handle(new CreateInputData(

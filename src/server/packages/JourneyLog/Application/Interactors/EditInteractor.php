@@ -28,6 +28,6 @@ readonly class EditInteractor implements EditUseCaseInterface
             $inputData->journeyLogLinks,
         );
 
-        $this->repository->update($journeyLog);
+        $this->repository->save($journeyLog);
     }
 }

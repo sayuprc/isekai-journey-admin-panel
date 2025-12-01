@@ -51,16 +51,11 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         return null;
     }
 
-    public function insert(Creator $creator): void
-    {
-        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
-    }
-
-    public function update(Creator $creator): CreatorId
+    public function save(Creator $creator): Creator
     {
         $this->store->put($this->filePath, $creator->creatorId->value, $creator);
 
-        return $creator->creatorId;
+        return $creator;
     }
 
     public function delete(CreatorId $creatorId): void

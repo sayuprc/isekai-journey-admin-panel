@@ -15,9 +15,7 @@ interface CreatorRepositoryInterface
 
     public function findByName(CreatorName $creatorName): ?Creator;
 
-    public function insert(Creator $creator): void;
-
-    public function update(Creator $creator): CreatorId;
+    public function save(Creator $creator): Creator;
 
     public function delete(CreatorId $creatorId): void;
 }

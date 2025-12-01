@@ -34,7 +34,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
                 return new Err("Creator name already exists: {$inputData->creatorName}");
             }
 
-            $this->repository->update($creator);
+            $this->repository->save($creator);
 
             return new Ok(new UpdateOutputData($creator));
         });
