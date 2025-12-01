@@ -59,7 +59,7 @@ class LoginInteractorTest extends TestCase
 
         $this->refreshTokenFactory->shouldReceive('create')
             ->with($userId)
-            ->andReturnUsing(fn () => new RefreshToken(
+            ->andReturn($refreshToken = new RefreshToken(
                 new RefreshTokenId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                 new UserId($userId),
                 new TokenValue('token'),
@@ -73,7 +73,7 @@ class LoginInteractorTest extends TestCase
             ->andReturn(new AccessToken(new Jwt('jwt')))
             ->once();
 
-        $this->refreshTokenRepository->shouldReceive('insert')
+        $this->refreshTokenRepository->shouldReceive('save')
             ->with(
                 Mockery::on(
                     fn (RefreshToken $arg) => $arg->refreshTokenId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
@@ -82,6 +82,7 @@ class LoginInteractorTest extends TestCase
                         && $arg->isEnabled($now)
                 )
             )
+            ->andReturn($refreshToken)
             ->once();
 
         $this->getInstance()->handle(new LoginInputData($userId));

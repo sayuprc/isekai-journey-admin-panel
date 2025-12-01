@@ -81,7 +81,7 @@ class CreateInteractorTest extends TestCase
                 ),
             )
             ->andReturn(
-                new Song(
+                $song = new Song(
                     new SongId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                     new Title('title'),
                     new Description('description'),
@@ -110,7 +110,7 @@ class CreateInteractorTest extends TestCase
             )
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Song $arg): bool => $arg->songId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->title->value === 'title'
@@ -128,6 +128,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->arrangers[0]->creatorId->value === 'EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'
                     && $arg->arrangers[0]->orderNo->value === 1
             ))
+            ->andReturn($song)
             ->once();
 
         $this->interactor->handle(new CreateInputData(

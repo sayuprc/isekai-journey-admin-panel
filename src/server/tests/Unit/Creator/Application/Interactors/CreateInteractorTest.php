@@ -60,7 +60,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
-            ->andReturn(new Creator(
+            ->andReturn($creator = new Creator(
                 new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new CreatorName('クリエイター')
             ))
@@ -71,11 +71,12 @@ class CreateInteractorTest extends TestCase
             ->andreturn(false)
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->creatorName->value === 'クリエイター'
             ))
+            ->andReturn($creator)
             ->once();
 
         $result = $this->interactor->handle(new CreateInputData('クリエイター'));

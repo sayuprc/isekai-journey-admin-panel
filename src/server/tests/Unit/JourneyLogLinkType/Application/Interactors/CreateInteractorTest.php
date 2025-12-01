@@ -47,19 +47,20 @@ class CreateInteractorTest extends TestCase
     {
         $this->factory->shouldReceive('create')
             ->with('リンク', 1)
-            ->andReturn(new JourneyLogLinkType(
+            ->andReturn($journeyLogLinkType = new JourneyLogLinkType(
                 new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new JourneyLogLinkTypeName('リンク'),
                 new OrderNo(1),
             ))
             ->once();
 
-        $this->repository->shouldReceive('insert')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->journeyLogLinkTypeName->value === 'リンク'
                     && $arg->orderNo->value === 1
             ))
+            ->andReturn($journeyLogLinkType)
             ->once();
 
         $this->interactor->handle(new CreateInputData(

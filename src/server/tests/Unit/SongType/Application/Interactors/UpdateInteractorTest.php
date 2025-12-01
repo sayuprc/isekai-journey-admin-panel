@@ -61,7 +61,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1)
-            ->andReturn(new SongType(
+            ->andReturn($songType = new SongType(
                 new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new SongTypeName('楽曲種別'),
                 new OrderNo(1),
@@ -76,13 +76,13 @@ class UpdateInteractorTest extends TestCase
             ->andReturnFalse()
             ->once();
 
-        $this->repository->shouldReceive('update')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (SongType $arg): bool => $arg->songTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->songTypeName->value === '楽曲種別'
                     && $arg->orderNo->value === 1
             ))
-            ->andReturn(new SongTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn($songType)
             ->once();
 
         $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '楽曲種別', 1));

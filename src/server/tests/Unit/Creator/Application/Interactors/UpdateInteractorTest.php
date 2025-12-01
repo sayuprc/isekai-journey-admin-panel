@@ -60,7 +60,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')
-            ->andReturn(new Creator(
+            ->andReturn($creator = new Creator(
                 new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new CreatorName('クリエイター')
             ))
@@ -71,12 +71,12 @@ class UpdateInteractorTest extends TestCase
             ->andReturn(false)
             ->once();
 
-        $this->repository->shouldReceive('update')
+        $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->creatorName->value === 'クリエイター'
             ))
-            ->andReturn(new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->andReturn($creator)
             ->once();
 
         $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
