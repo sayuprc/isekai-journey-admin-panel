@@ -34,7 +34,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
                 return new Err("Song type already exists: {$inputData->songTypeName}");
             }
 
-            $this->repository->insert($songType);
+            $this->repository->save($songType);
 
             return new Ok(new CreateOutputData($songType));
         });

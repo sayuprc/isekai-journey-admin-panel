@@ -30,6 +30,6 @@ readonly class CreateInteractor implements CreateUseCaseInterface
             $inputData->arrangers,
         );
 
-        $this->repository->insert($song);
+        $this->repository->save($song);
     }
 }

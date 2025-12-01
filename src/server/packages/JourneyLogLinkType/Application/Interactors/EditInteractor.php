@@ -25,6 +25,6 @@ readonly class EditInteractor implements EditUseCaseInterface
             $inputData->orderNo,
         );
 
-        $this->repository->update($journeyLogLinkType);
+        $this->repository->save($journeyLogLinkType);
     }
 }

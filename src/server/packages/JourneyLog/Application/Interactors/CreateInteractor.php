@@ -27,6 +27,6 @@ readonly class CreateInteractor implements CreateUseCaseInterface
             $inputData->journeyLogLinks
         );
 
-        $this->repository->insert($journeyLog);
+        $this->repository->save($journeyLog);
     }
 }

@@ -34,7 +34,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
                 return new Err("Song type already exists: {$inputData->songTypeId}");
             }
 
-            $this->repository->update($songType);
+            $this->repository->save($songType);
 
             return new Ok(new UpdateOutputData($songType));
         });
