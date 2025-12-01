@@ -37,8 +37,10 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
             : $found;
     }
 
-    public function insert(RefreshToken $refreshToken): void
+    public function save(RefreshToken $refreshToken): RefreshToken
     {
         $this->store->put($this->filePath, $refreshToken->refreshTokenId->value, $refreshToken);
+
+        return $refreshToken;
     }
 }

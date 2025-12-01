@@ -39,14 +39,11 @@ readonly class FileJourneyLogLinkTypeRepository implements JourneyLogLinkTypeRep
         return $this->store->get($this->filePath, $journeyLogLinkTypeId->value);
     }
 
-    public function insert(JourneyLogLinkType $journeyLogLinkType): void
+    public function save(JourneyLogLinkType $journeyLogLinkType): JourneyLogLinkType
     {
         $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
-    }
 
-    public function update(JourneyLogLinkType $journeyLogLinkType): void
-    {
-        $this->store->put($this->filePath, $journeyLogLinkType->journeyLogLinkTypeId->value, $journeyLogLinkType);
+        return $journeyLogLinkType;
     }
 
     public function delete(JourneyLogLinkTypeId $journeyLogLinkTypeId): void

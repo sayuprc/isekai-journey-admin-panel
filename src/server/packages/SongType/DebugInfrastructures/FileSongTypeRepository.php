@@ -51,16 +51,11 @@ readonly class FileSongTypeRepository implements SongTypeRepositoryInterface
         return null;
     }
 
-    public function insert(SongType $songType): void
-    {
-        $this->store->put($this->filePath, $songType->songTypeId->value, $songType);
-    }
-
-    public function update(SongType $songType): SongTypeId
+    public function save(SongType $songType): SongType
     {
         $this->store->put($this->filePath, $songType->songTypeId->value, $songType);
 
-        return $songType->songTypeId;
+        return $songType;
     }
 
     public function delete(SongTypeId $songTypeId): void
