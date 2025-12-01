@@ -3,7 +3,6 @@ const navItems = [
     title: '楽曲種別',
     links: [
       { href: '/song-types', label: '一覧' },
-      { href: '/song-types/create', label: '作成' },
     ],
   },
   {

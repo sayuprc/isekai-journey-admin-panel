@@ -105,28 +105,8 @@ export interface paths {
         /** @description 楽曲種別一覧取得API */
         get: operations["SongTypeService_listSongTypes"];
         put?: never;
-        /** @description 楽曲種別作成API */
-        post: operations["SongTypeService_createSongType"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/song-types/{songTypeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description 楽曲種別取得API */
-        get: operations["SongTypeService_getSongType"];
-        /** @description 楽曲種別更新API */
-        put: operations["SongTypeService_updateSongType"];
         post?: never;
-        /** @description 楽曲種別削除API */
-        delete: operations["SongTypeService_deleteSongType"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -206,36 +186,22 @@ export interface components {
         };
         /**
          * @example {
-         *       "songTypeId": "5e8211d4-2952-407c-ba7b-18c3fe0da6e0",
-         *       "songTypeName": "オリジナル",
-         *       "orderNo": 1
+         *       "songTypeName": "オリジナル曲",
+         *       "songTypeValue": 1
          *     }
          */
         SongType: {
-            songTypeId: components["schemas"]["songTypeId"];
             songTypeName: components["schemas"]["songTypeName"];
-            orderNo: components["schemas"]["orderNo"];
-        };
-        SongTypeCreateRequest: {
-            songTypeName: components["schemas"]["songTypeName"];
-            orderNo: components["schemas"]["orderNo"];
-        };
-        SongTypeCreateResponse: {
-            songType: components["schemas"]["SongType"];
-        };
-        SongTypeGetResponse: {
-            songType: components["schemas"]["SongType"];
+            songTypeValue: components["schemas"]["SongTypeValue"];
         };
         SongTypeListResponse: {
             songTypes: components["schemas"]["SongType"][];
         };
-        SongTypeUpdateRequest: {
-            songTypeName: components["schemas"]["songTypeName"];
-            orderNo: components["schemas"]["orderNo"];
-        };
-        SongTypeUpdateResponse: {
-            songType: components["schemas"]["SongType"];
-        };
+        /**
+         * @description 楽曲種別の値
+         * @enum {number}
+         */
+        SongTypeValue: 1 | 2 | 3 | 4 | 5 | 6;
         ValidationError: {
             field: string;
             message: string;
@@ -264,11 +230,6 @@ export interface components {
         performerId: string;
         /** @description 共演者名 */
         performerName: string;
-        /**
-         * Format: uuid
-         * @description 楽曲種別ID
-         */
-        songTypeId: string;
         /** @description 楽曲種別名 */
         songTypeName: string;
         /**
@@ -948,254 +909,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SongTypeListResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Server error */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SongTypeService_createSongType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SongTypeCreateRequest"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SongTypeCreateResponse"];
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Client error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Server error */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SongTypeService_getSongType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                songTypeId: components["schemas"]["uuid"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SongTypeGetResponse"];
-                };
-            };
-            /** @description The server cannot find the requested resource. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Client error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Server error */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SongTypeService_updateSongType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                songTypeId: components["schemas"]["uuid"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SongTypeUpdateRequest"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SongTypeUpdateResponse"];
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The server cannot find the requested resource. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Client error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Server error */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SongTypeService_deleteSongType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                songTypeId: components["schemas"]["uuid"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description There is no content to send for this request, but the headers may be useful. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Client error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
             /** @description Server error */

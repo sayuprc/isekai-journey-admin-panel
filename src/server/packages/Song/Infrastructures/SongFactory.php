@@ -16,7 +16,7 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
-use SongType\Domain\Models\SongTypeId;
+use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -36,7 +36,7 @@ readonly class SongFactory implements SongFactoryInterface
         string $title,
         string $description,
         ImmutableDate $releasedOn,
-        string $songTypeId,
+        int $songType,
         int $orderNo,
         array $lyricists,
         array $composers,
@@ -47,7 +47,7 @@ readonly class SongFactory implements SongFactoryInterface
             new Title($title),
             new Description($description),
             new ReleasedOn($releasedOn),
-            new SongTypeId($songTypeId),
+            SongType::from($songType),
             new OrderNo($orderNo),
             array_map(
                 fn (CreateCreatorData $creator) => new Lyricist(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),

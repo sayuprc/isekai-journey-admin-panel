@@ -7,7 +7,7 @@ namespace Song\Domain\Models;
 use Song\Domain\Models\Creators\Arranger;
 use Song\Domain\Models\Creators\Composer;
 use Song\Domain\Models\Creators\Lyricist;
-use SongType\Domain\Models\SongTypeId;
+use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 
 readonly class Song
@@ -22,7 +22,7 @@ readonly class Song
         public Title $title,
         public Description $description,
         public ReleasedOn $releasedOn,
-        public SongTypeId $songTypeId,
+        public SongType $songType,
         public OrderNo $orderNo,
         public array $lyricists,
         public array $composers,

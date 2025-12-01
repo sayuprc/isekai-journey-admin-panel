@@ -19,7 +19,7 @@ interface SongFactoryInterface
         string $title,
         string $description,
         ImmutableDate $releasedOn,
-        string $songTypeId,
+        int $songType,
         int $orderNo,
         array $lyricists,
         array $composers,

@@ -18,8 +18,6 @@ if (!data) {
       <thead>
         <tr>
           <th>楽曲種別名</th>
-          <th>表示順</th>
-          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -28,10 +26,6 @@ if (!data) {
             return (
               <tr>
                 <td>{songType.songTypeName}</td>
-                <td>{songType.orderNo}</td>
-                <td>
-                  <a href={`/song-types/${songType.songTypeId}`}>編集</a>
-                </td>
               </tr>
             );
           })

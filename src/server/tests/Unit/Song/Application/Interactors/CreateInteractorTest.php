@@ -23,7 +23,7 @@ use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Title;
-use SongType\Domain\Models\SongTypeId;
+use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
@@ -59,7 +59,7 @@ class CreateInteractorTest extends TestCase
                 'title',
                 'description',
                 Mockery::on(fn (ImmutableDate $arg) => $arg->format('Y-m-d') === '2019-12-12'),
-                'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
+                SongType::Original->value,
                 1,
                 Mockery::on(
                     fn (array $args): bool => count($args) === 1
@@ -86,7 +86,7 @@ class CreateInteractorTest extends TestCase
                     new Title('title'),
                     new Description('description'),
                     new ReleasedOn(new ImmutableDate('2019-12-12')),
-                    new SongTypeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+                    SongType::Original,
                     new OrderNo(1),
                     [
                         new Lyricist(
@@ -116,7 +116,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->title->value === 'title'
                     && $arg->description->value === 'description'
                     && $arg->releasedOn->value->format('Y-m-d') === '2019-12-12'
-                    && $arg->songTypeId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg->songType === SongType::Original
                     && $arg->orderNo->value === 1
                     && count($arg->lyricists) === 1
                     && $arg->lyricists[0]->creatorId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
@@ -135,7 +135,7 @@ class CreateInteractorTest extends TestCase
             'title',
             'description',
             new ImmutableDate('2019-12-12'),
-            'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
+            SongType::Original->value,
             1,
             [
                 new CreateCreatorData('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 1),

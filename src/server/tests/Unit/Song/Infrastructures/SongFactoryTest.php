@@ -10,6 +10,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Dtos\CreateCreatorData;
 use Song\Infrastructures\SongFactory;
+use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
@@ -39,7 +40,7 @@ class SongFactoryTest extends TestCase
             'title',
             'description',
             new ImmutableDate('2019-12-12'),
-            'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
+            SongType::Original->value,
             1,
             [
                 new CreateCreatorData('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 1),
@@ -56,7 +57,7 @@ class SongFactoryTest extends TestCase
         $this->assertSame('title', $song->title->value);
         $this->assertSame('description', $song->description->value);
         $this->assertSame('2019-12-12', $song->releasedOn->value->format('Y-m-d'));
-        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->songTypeId->value);
+        $this->assertSame(SongType::Original, $song->songType);
         $this->assertSame(1, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', $song->lyricists[0]->creatorId->value);
