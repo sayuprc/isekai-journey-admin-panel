@@ -19,7 +19,7 @@ readonly class CreateInputData
         public string $title,
         public string $description,
         public ImmutableDate $releasedOn,
-        public string $songTypeId,
+        public int $songType,
         public int $orderNo,
         public array $lyricists,
         public array $composers,

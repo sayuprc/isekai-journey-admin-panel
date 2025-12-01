@@ -12,11 +12,7 @@ use App\Http\Controllers\Api\Performer\DeletePerformerController;
 use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
-use App\Http\Controllers\Api\SongType\CreateSongTypeController;
-use App\Http\Controllers\Api\SongType\DeleteSongTypeController;
-use App\Http\Controllers\Api\SongType\GetSongTypeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
-use App\Http\Controllers\Api\SongType\UpdateSongTypeController;
 use App\Http\Controllers\Api\User\LoginController;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
@@ -52,10 +48,6 @@ Route::middleware('api')->group(function () {
 
     Route::prefix('song-types')->group(function () {
         // TODO ログインが必要
-        Route::post('/', [CreateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Create);
         Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
-        Route::put('/{songTypeId}', [UpdateSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Update);
-        Route::delete('/{songTypeId}', [DeleteSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Delete);
-        Route::get('/{songTypeId}', [GetSongTypeController::class, 'handle'])->name(SongTypeRouteMap::Get);
     });
 });

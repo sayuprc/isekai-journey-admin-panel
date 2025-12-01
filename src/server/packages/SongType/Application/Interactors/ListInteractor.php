@@ -6,16 +6,12 @@ namespace SongType\Application\Interactors;
 
 use SongType\Application\UseCase\List\ListOutputData;
 use SongType\Application\UseCase\List\ListUseCaseInterface;
-use SongType\Domain\Models\SongTypeRepositoryInterface;
+use SongType\Domain\Models\SongType;
 
 readonly class ListInteractor implements ListUseCaseInterface
 {
-    public function __construct(private SongTypeRepositoryInterface $repository)
-    {
-    }
-
     public function handle(): ListOutputData
     {
-        return new ListOutputData($this->repository->all());
+        return new ListOutputData(SongType::cases());
     }
 }
