@@ -28,6 +28,7 @@
 
 namespace OpenAPI\Client;
 
+use BackedEnum;
 use GuzzleHttp\Psr7\Utils;
 use OpenAPI\Client\Model\ModelInterface;
 
@@ -78,6 +79,10 @@ class ObjectSerializer
                 $data[$property] = self::sanitizeForSerialization($value);
             }
             return $data;
+        }
+
+        if ($data instanceof BackedEnum) {
+            return $data->value;
         }
 
         if (is_object($data)) {
