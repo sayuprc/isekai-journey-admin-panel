@@ -74,6 +74,7 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocAddMissingParamAnnotationFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer::class,
+        \PhpCsFixer\Fixer\Phpdoc\PhpdocArrayTypeFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocInlineTagNormalizerFixer::class,
         \PhpCsFixer\Fixer\Phpdoc\PhpdocOrderByValueFixer::class,
