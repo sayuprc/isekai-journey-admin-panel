@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Song\Application\UseCase\Create;
 
-use DateType\ImmutableDate;
 use Song\Domain\Dtos\CreateCreatorData;
 
 readonly class CreateInputData
@@ -18,7 +17,6 @@ readonly class CreateInputData
     public function __construct(
         public string $title,
         public string $description,
-        public ImmutableDate $releasedOn,
         public int $songType,
         public int $orderNo,
         public array $lyricists,

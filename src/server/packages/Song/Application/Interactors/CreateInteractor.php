@@ -22,7 +22,6 @@ readonly class CreateInteractor implements CreateUseCaseInterface
         $song = $this->factory->create(
             $inputData->title,
             $inputData->description,
-            $inputData->releasedOn,
             $inputData->songType,
             $inputData->orderNo,
             $inputData->lyricists,
