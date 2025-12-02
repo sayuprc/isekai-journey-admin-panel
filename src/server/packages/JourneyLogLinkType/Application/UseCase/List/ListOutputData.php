@@ -9,7 +9,7 @@ use JourneyLogLinkType\Domain\Models\JourneyLogLinkType;
 readonly class ListOutputData
 {
     /**
-     * @param JourneyLogLinkType[] $journeyLogLinkTypes
+     * @param array<JourneyLogLinkType> $journeyLogLinkTypes
      */
     public function __construct(public array $journeyLogLinkTypes)
     {
