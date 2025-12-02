@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23c8a53230d6359d45efc4ddb9b76223",
+    "content-hash": "b2316e6f0f3c23bf24b5adacec39bb32",
     "packages": [
         {
             "name": "brick/math",
@@ -8985,38 +8985,38 @@
         },
         {
             "name": "phparkitect/phparkitect",
-            "version": "0.6.0",
+            "version": "0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phparkitect/arkitect.git",
-                "reference": "e7a9b6af7ea6409fff6c6e426e7272b17c4ffbed"
+                "reference": "f6e11f5581f0772c2c4532cda263409965f441af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phparkitect/arkitect/zipball/e7a9b6af7ea6409fff6c6e426e7272b17c4ffbed",
-                "reference": "e7a9b6af7ea6409fff6c6e426e7272b17c4ffbed",
+                "url": "https://api.github.com/repos/phparkitect/arkitect/zipball/f6e11f5581f0772c2c4532cda263409965f441af",
+                "reference": "f6e11f5581f0772c2c4532cda263409965f441af",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "nikic/php-parser": "~5",
-                "ondram/ci-detector": "^4.1",
+                "ondram/ci-detector": "^4.2",
                 "php": "^7.4|^8",
                 "phpstan/phpdoc-parser": "^1.2|^2.0",
-                "symfony/console": "^3.0|^4.0|^5.0|^6.0|^7.0",
-                "symfony/event-dispatcher": "^3.0|^4.0|^5.0|^6.0|^7.0",
-                "symfony/finder": "^3.0|^4.0|^5.0|^6.0|^7.0",
-                "symfony/polyfill-php80": "^1.20",
+                "symfony/console": "^3.0|^4.0|^5.0|^6.0|^7.0|^8.0",
+                "symfony/event-dispatcher": "^3.0|^4.0|^5.0|^6.0|^7.0|^8.0",
+                "symfony/finder": "^3.0|^4.0|^5.0|^6.0|^7.0|^8.0",
+                "symfony/polyfill-php80": "^1.33",
                 "webmozart/assert": "^1.9"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.75",
+                "friendsofphp/php-cs-fixer": "^3.90",
                 "mikey179/vfsstream": "^1.6",
                 "phpspec/prophecy": "^1.10",
-                "phpspec/prophecy-phpunit": "^2.3",
+                "phpspec/prophecy-phpunit": "^2.4",
                 "phpunit/phpunit": "^7.5|^9.0|^10.0",
                 "roave/security-advisories": "dev-master",
-                "symfony/var-dumper": "^3.0|^4.0|^5.0|^6.0|^7.0"
+                "symfony/var-dumper": "^3.0|^4.0|^5.0|^6.0|^7.0|^8.0"
             },
             "bin": [
                 "bin-stub/phparkitect"
@@ -9052,7 +9052,7 @@
             "description": "Enforce architectural constraints in your PHP applications",
             "support": {
                 "issues": "https://github.com/phparkitect/arkitect/issues",
-                "source": "https://github.com/phparkitect/arkitect/tree/0.6.0"
+                "source": "https://github.com/phparkitect/arkitect/tree/0.7.0"
             },
             "funding": [
                 {
@@ -9064,7 +9064,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-09T12:00:13+00:00"
+            "time": "2025-12-02T09:53:25+00:00"
         },
         {
             "name": "phpmetrics/phpmetrics",
