@@ -10,7 +10,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class JourneyLog
 {
     /**
-     * @param JourneyLogLink[] $journeyLogLinks
+     * @param array<JourneyLogLink> $journeyLogLinks
      */
     public function __construct(
         public JourneyLogId $journeyLogId,

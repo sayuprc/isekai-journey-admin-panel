@@ -9,7 +9,7 @@ use Song\Domain\Models\Song;
 readonly class ListOutputData
 {
     /**
-     * @param Song[] $songs
+     * @param array<Song> $songs
      */
     public function __construct(public array $songs)
     {

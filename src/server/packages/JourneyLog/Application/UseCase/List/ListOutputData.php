@@ -9,7 +9,7 @@ use JourneyLog\Domain\Models\JourneyLog;
 readonly class ListOutputData
 {
     /**
-     * @param JourneyLog[] $journeyLogs
+     * @param array<JourneyLog> $journeyLogs
      */
     public function __construct(public array $journeyLogs)
     {
