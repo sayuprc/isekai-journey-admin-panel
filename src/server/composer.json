@@ -16,7 +16,7 @@
         "nyholm/psr7": "^1.8",
         "sayuprc/date-type": "^0.2.0",
         "sayuprc/result-type": "^0.4.0",
-        "symfony/psr-http-message-bridge": "^7.3"
+        "symfony/psr-http-message-bridge": "^8.0"
     },
     "require-dev": {
         "brianium/paratest": "^7.8",
