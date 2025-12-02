@@ -22,7 +22,6 @@ readonly class Mapper implements MapperInterface
 
         return $this->builder
             ->allowSuperfluousKeys()
-            ->enableFlexibleCasting()
             ->supportDateFormats('Y-m-d')
             ->mapper()
             ->map($signature, Source::json($json)->camelCaseKeys());
