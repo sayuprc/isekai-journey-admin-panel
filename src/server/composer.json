@@ -21,7 +21,7 @@
     "require-dev": {
         "brianium/paratest": "^7.8",
         "fakerphp/faker": "^1.24",
-        "infection/infection": "^0.29",
+        "infection/infection": "^0.31",
         "larastan/larastan": "^3.0",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
