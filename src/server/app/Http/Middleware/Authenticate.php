@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
+use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use User\Application\UseCase\Authenticate\AuthenticateInputData;
-use User\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 
 class Authenticate
 {

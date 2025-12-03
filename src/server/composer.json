@@ -43,6 +43,7 @@
             "Creator\\": "packages/Creator/",
             "User\\": "packages/User/",
             "Performer\\": "packages/Performer/",
+            "Auth\\": "packages/Auth/",
             "Tools\\": "tools/",
             "OpenAPI\\Client\\": "Generated/lib/"
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\DatabaseServiceProvider::class,
+    App\Providers\Domain\AuthServiceProvider::class,
     App\Providers\Domain\CreatorServiceProvider::class,
     App\Providers\Domain\JourneyLogLinkTypeServiceProvider::class,
     App\Providers\Domain\JourneyLogServiceProvider::class,

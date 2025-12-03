@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
@@ -13,13 +14,12 @@ use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
-use App\Http\Controllers\Api\User\LoginController;
+use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
 use SongType\Route\SongTypeRouteMap;
-use User\Route\UserRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,7 +27,7 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('api')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::post('/login', [LoginController::class, 'handle'])->name(UserRouteMap::Login);
+        Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
     });
 
     Route::prefix('creators')->group(function () {
