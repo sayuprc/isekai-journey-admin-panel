@@ -186,13 +186,13 @@ export interface components {
         };
         /**
          * @example {
-         *       "songTypeName": "オリジナル曲",
-         *       "songTypeValue": 1
+         *       "name": "オリジナル曲",
+         *       "value": 1
          *     }
          */
         SongType: {
-            songTypeName: components["schemas"]["songTypeName"];
-            songTypeValue: components["schemas"]["SongTypeValue"];
+            name: components["schemas"]["songTypeName"];
+            value: components["schemas"]["SongTypeValue"];
         };
         SongTypeListResponse: {
             songTypes: components["schemas"]["SongType"][];

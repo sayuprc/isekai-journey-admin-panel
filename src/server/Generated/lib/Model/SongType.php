@@ -57,8 +57,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_type_name' => 'string',
-        'song_type_value' => '\OpenAPI\Client\Model\SongTypeValue'
+        'name' => 'string',
+        'value' => '\OpenAPI\Client\Model\SongTypeValue'
     ];
 
     /**
@@ -69,8 +69,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_type_name' => null,
-        'song_type_value' => null
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_type_name' => false,
-        'song_type_value' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_type_name' => 'songTypeName',
-        'song_type_value' => 'songTypeValue'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -179,8 +179,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'song_type_name' => 'setSongTypeName',
-        'song_type_value' => 'setSongTypeValue'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -189,8 +189,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'song_type_name' => 'getSongTypeName',
-        'song_type_value' => 'getSongTypeValue'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -250,8 +250,8 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_type_name', $data ?? [], null);
-        $this->setIfExists('song_type_value', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -281,15 +281,15 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['song_type_name'] === null) {
-            $invalidProperties[] = "'song_type_name' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['song_type_name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'song_type_name', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['song_type_value'] === null) {
-            $invalidProperties[] = "'song_type_value' can't be null";
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
         }
         return $invalidProperties;
     }
@@ -307,60 +307,60 @@ class SongType implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets song_type_name
+     * Gets name
      *
      * @return string
      */
-    public function getSongTypeName()
+    public function getName()
     {
-        return $this->container['song_type_name'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets song_type_name
+     * Sets name
      *
-     * @param string $song_type_name 楽曲種別名
+     * @param string $name 楽曲種別名
      *
      * @return self
      */
-    public function setSongTypeName($song_type_name)
+    public function setName($name)
     {
-        if (is_null($song_type_name)) {
-            throw new \InvalidArgumentException('non-nullable song_type_name cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
 
-        if ((mb_strlen($song_type_name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $song_type_name when calling SongType., must be bigger than or equal to 1.');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling SongType., must be bigger than or equal to 1.');
         }
 
-        $this->container['song_type_name'] = $song_type_name;
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets song_type_value
+     * Gets value
      *
      * @return \OpenAPI\Client\Model\SongTypeValue
      */
-    public function getSongTypeValue()
+    public function getValue()
     {
-        return $this->container['song_type_value'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets song_type_value
+     * Sets value
      *
-     * @param \OpenAPI\Client\Model\SongTypeValue $song_type_value song_type_value
+     * @param \OpenAPI\Client\Model\SongTypeValue $value value
      *
      * @return self
      */
-    public function setSongTypeValue($song_type_value)
+    public function setValue($value)
     {
-        if (is_null($song_type_value)) {
-            throw new \InvalidArgumentException('non-nullable song_type_value cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-        $this->container['song_type_value'] = $song_type_value;
+        $this->container['value'] = $value;
 
         return $this;
     }

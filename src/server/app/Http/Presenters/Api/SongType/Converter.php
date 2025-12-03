@@ -13,7 +13,7 @@ class Converter
     public function toOpenApiSongType(SongType $songType): OpenApiSongType
     {
         return new OpenApiSongType()
-            ->setSongTypeName($songType->getName())
-            ->setSongTypeValue(SongTypeValue::from($songType->value));
+            ->setName($songType->getName())
+            ->setValue(SongTypeValue::from($songType->value));
     }
 }
