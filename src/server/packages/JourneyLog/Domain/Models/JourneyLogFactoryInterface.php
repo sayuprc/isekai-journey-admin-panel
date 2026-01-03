@@ -19,7 +19,7 @@ interface JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog;
 
     /**
@@ -32,7 +32,7 @@ interface JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog;
 
     /**
@@ -45,6 +45,6 @@ interface JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog;
 }

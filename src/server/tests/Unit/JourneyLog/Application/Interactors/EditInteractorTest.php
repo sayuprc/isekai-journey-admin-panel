@@ -69,7 +69,7 @@ class EditInteractorTest extends TestCase
                 new Story('story'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-09'))),
                 new OrderNo(1),
-                []
+                [],
             ))
             ->once();
 
@@ -80,7 +80,7 @@ class EditInteractorTest extends TestCase
                     && $arg->period->fromOn->value->format('Y-m-d') === '2019-12-08'
                     && $arg->period->toOn->value->format('Y-m-d') === '2019-12-09'
                     && $arg->orderNo->value === 1
-                    && count($arg->journeyLogLinks) === 0
+                    && count($arg->journeyLogLinks) === 0,
             ))
             ->andReturn($journeyLog)
             ->once();
@@ -116,7 +116,7 @@ class EditInteractorTest extends TestCase
                         && $args[1]->journeyLogLinkName === 'リンク2'
                         && $args[1]->url === 'https://example.com/2'
                         && $args[1]->orderNo === 2
-                        && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                        && $args[1]->journeyLogLinkTypeId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC',
                 ),
             )
             ->andReturn($journeyLog = new JourneyLog(
@@ -130,14 +130,14 @@ class EditInteractorTest extends TestCase
                         new JourneyLogLinkName('リンク1'),
                         new Url('https://example.com/1'),
                         new OrderNo(1),
-                        new JourneyLogLinkTypeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
+                        new JourneyLogLinkTypeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
                     ),
                     new JourneyLogLink(
                         new JourneyLogLinkId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                         new JourneyLogLinkName('リンク2'),
                         new Url('https://example.com/2'),
                         new OrderNo(2),
-                        new JourneyLogLinkTypeId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC')
+                        new JourneyLogLinkTypeId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
                     ),
                 ],
             ))
@@ -160,7 +160,7 @@ class EditInteractorTest extends TestCase
                     && $arg->journeyLogLinks[1]->journeyLogLinkName->value === 'リンク2'
                     && $arg->journeyLogLinks[1]->url->value === 'https://example.com/2'
                     && $arg->journeyLogLinks[1]->orderNo->value === 2
-                    && $arg->journeyLogLinks[1]->journeyLogLinkTypeId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                    && $arg->journeyLogLinks[1]->journeyLogLinkTypeId->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC',
             ))
             ->andReturn($journeyLog)
             ->once();

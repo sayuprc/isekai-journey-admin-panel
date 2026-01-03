@@ -35,7 +35,7 @@ class UpdatePresenter
                     new ErrorResponse()->setMessage($message),
                     400,
                 ];
-            }
+            },
         );
 
         return response()->json($data, $status);

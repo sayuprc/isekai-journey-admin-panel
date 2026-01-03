@@ -25,7 +25,7 @@ readonly class JourneyLogLinkTypeFactory implements JourneyLogLinkTypeFactoryInt
         return new JourneyLogLinkType(
             new JourneyLogLinkTypeId($this->uuid->generate()),
             new JourneyLogLinkTypeName($journeyLogLinkTypeName),
-            new OrderNo($orderNo)
+            new OrderNo($orderNo),
         );
     }
 
@@ -37,7 +37,7 @@ readonly class JourneyLogLinkTypeFactory implements JourneyLogLinkTypeFactoryInt
         return new JourneyLogLinkType(
             new JourneyLogLinkTypeId($journeyLogLinkTypeId),
             new JourneyLogLinkTypeName($journeyLogLinkTypeName),
-            new OrderNo($orderNo)
+            new OrderNo($orderNo),
         );
     }
 }

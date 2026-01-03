@@ -39,7 +39,7 @@ class PeriodTest extends TestCase
     {
         $instance = new Period(
             new FromOn(new ImmutableDate('2019-12-09')),
-            new ToOn(new ImmutableDate('2019-12-09'))
+            new ToOn(new ImmutableDate('2019-12-09')),
         );
 
         $this->assertTrue($instance->isSingleDay());
@@ -50,7 +50,7 @@ class PeriodTest extends TestCase
     {
         $instance = new Period(
             new FromOn(new ImmutableDate('2019-12-09')),
-            new ToOn(new ImmutableDate('2019-12-10'))
+            new ToOn(new ImmutableDate('2019-12-10')),
         );
 
         $this->assertFalse($instance->isSingleDay());

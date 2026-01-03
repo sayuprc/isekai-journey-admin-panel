@@ -14,7 +14,7 @@ class UpdateCreatorController extends Controller
 {
     public function __construct(
         private readonly UpdateUseCaseInterface $interactor,
-        private readonly UpdatePresenter $presenter
+        private readonly UpdatePresenter $presenter,
     ) {
     }
 

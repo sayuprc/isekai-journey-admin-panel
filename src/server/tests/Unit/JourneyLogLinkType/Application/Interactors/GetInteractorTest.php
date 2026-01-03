@@ -47,7 +47,7 @@ class GetInteractorTest extends TestCase
             ->andReturn(new JourneyLogLinkType(
                 new JourneyLogLinkTypeId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new JourneyLogLinkTypeName('リンク'),
-                new OrderNo(1)
+                new OrderNo(1),
             ))
             ->once();
 

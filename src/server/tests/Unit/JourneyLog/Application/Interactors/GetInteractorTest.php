@@ -59,7 +59,7 @@ class GetInteractorTest extends TestCase
                 new Story('ストーリー'),
                 new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-08'))),
                 new OrderNo(1),
-                []
+                [],
             ))
             ->once();
 
@@ -88,7 +88,7 @@ class GetInteractorTest extends TestCase
         $this->repository->shouldReceive('find')
             ->with(Mockery::on(
                 fn ($arg) => $arg instanceof JourneyLogId
-                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
             ))
             ->andReturn(new JourneyLog(
                 new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
@@ -101,9 +101,9 @@ class GetInteractorTest extends TestCase
                         new JourneyLogLinkName('リンク'),
                         new Url('https://example.com'),
                         new OrderNo(1),
-                        new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
+                        new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'),
                     ),
-                ]
+                ],
             ))
             ->once();
 

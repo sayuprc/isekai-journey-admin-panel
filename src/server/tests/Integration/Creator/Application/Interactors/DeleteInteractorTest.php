@@ -26,7 +26,7 @@ class DeleteInteractorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター'))
+            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
         );
 
         $this->getInstance()->handle(new DeleteInputData($uuid));

@@ -25,7 +25,7 @@ readonly class UserFactory implements UserFactoryInterface
         return new User(
             new UserId($this->generator->generate()),
             new Email($email),
-            new HashedPassword($this->hasher->hash($plainPassword))
+            new HashedPassword($this->hasher->hash($plainPassword)),
         );
     }
 }

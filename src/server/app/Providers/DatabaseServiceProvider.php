@@ -21,7 +21,7 @@ class DatabaseServiceProvider extends ServiceProvider
 
         $this->app->bind(
             PDOInterface::class,
-            fn (Container $container): PDOInterface => $container->make(SQLiteConnector::class)->connect()
+            fn (Container $container): PDOInterface => $container->make(SQLiteConnector::class)->connect(),
         );
     }
 

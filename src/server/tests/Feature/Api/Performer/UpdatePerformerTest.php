@@ -26,7 +26,7 @@ class UpdatePerformerTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1)),
         );
 
         $this->putJson(route(PerformerRouteMap::Update, $uuid), [

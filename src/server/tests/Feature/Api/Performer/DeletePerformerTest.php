@@ -26,7 +26,7 @@ class DeletePerformerTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1)),
         );
 
         $this->delete(route(PerformerRouteMap::Delete, $uuid))

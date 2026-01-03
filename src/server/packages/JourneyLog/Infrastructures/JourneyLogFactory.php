@@ -37,7 +37,7 @@ readonly class JourneyLogFactory implements JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog {
         return new JourneyLog(
             new JourneyLogId($this->uuid->generate()),
@@ -58,7 +58,7 @@ readonly class JourneyLogFactory implements JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog {
         return new JourneyLog(
             new JourneyLogId($journeyLogId),
@@ -98,7 +98,7 @@ readonly class JourneyLogFactory implements JourneyLogFactoryInterface
         ImmutableDate $fromOn,
         ImmutableDate $toOn,
         int $orderNo,
-        array $journeyLogLinks
+        array $journeyLogLinks,
     ): JourneyLog {
         return new JourneyLog(
             new JourneyLogId($journeyLogId),

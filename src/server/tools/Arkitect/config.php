@@ -23,7 +23,7 @@ return [
             JourneyLogLinkTypeComponent::Domain,
             SupportComponent::Domain,
             LibraryComponent::DateType,
-        ]
+        ],
     ),
     new Define(
         JourneyLogComponent::UseCase,
@@ -31,7 +31,7 @@ return [
             JourneyLogComponent::Domain,
             LibraryComponent::DateType,
             LibraryComponent::ResultType,
-        ]
+        ],
     ),
 
     new Define(
@@ -39,14 +39,14 @@ return [
         [
             JourneyLogLinkTypeComponent::Domain,
             SupportComponent::Domain,
-        ]
+        ],
     ),
     new Define(
         JourneyLogLinkTypeComponent::UseCase,
         [
             JourneyLogLinkTypeComponent::Domain,
             LibraryComponent::ResultType,
-        ]
+        ],
     ),
 
     new Define(
@@ -57,14 +57,14 @@ return [
             CreatorComponent::Domain,
             SupportComponent::Domain,
             LibraryComponent::DateType,
-        ]
+        ],
     ),
     new Define(
         SongComponent::UseCase,
         [
             SongComponent::Domain,
             LibraryComponent::DateType,
-        ]
+        ],
     ),
 
     new Define(
@@ -72,14 +72,14 @@ return [
         [
             SongTypeComponent::Domain,
             SupportComponent::Domain,
-        ]
+        ],
     ),
     new Define(
         SongTypeComponent::UseCase,
         [
             SongTypeComponent::Domain,
             LibraryComponent::ResultType,
-        ]
+        ],
     ),
 
     new Define(
@@ -87,14 +87,14 @@ return [
         [
             CreatorComponent::Domain,
             SupportComponent::Domain,
-        ]
+        ],
     ),
     new Define(
         CreatorComponent::UseCase,
         [
             CreatorComponent::Domain,
             LibraryComponent::ResultType,
-        ]
+        ],
     ),
 
     new Define(
@@ -102,14 +102,14 @@ return [
         [
             PerformerComponent::Domain,
             SupportComponent::Domain,
-        ]
+        ],
     ),
     new Define(
         PerformerComponent::UseCase,
         [
             PerformerComponent::Domain,
             LibraryComponent::ResultType,
-        ]
+        ],
     ),
 
     new Define(
@@ -117,6 +117,6 @@ return [
         [
             SupportComponent::Domain,
             LibraryComponent::DateType,
-        ]
+        ],
     ),
 ];

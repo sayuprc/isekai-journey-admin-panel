@@ -72,19 +72,19 @@ class ListInteractorTest extends TestCase
                     [
                         new Lyricist(
                             new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Composer(
                             new CreatorId('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Arranger(
                             new CreatorId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                 ),
@@ -97,19 +97,19 @@ class ListInteractorTest extends TestCase
                     [
                         new Lyricist(
                             new CreatorId('22222222-2222-2222-2222-222222222222'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Composer(
                             new CreatorId('33333333-3333-3333-3333-333333333333'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Arranger(
                             new CreatorId('44444444-4444-4444-4444-444444444444'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                 ),
@@ -122,19 +122,19 @@ class ListInteractorTest extends TestCase
                     [
                         new Lyricist(
                             new CreatorId('88888888-8888-8888-8888-888888888888'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Composer(
                             new CreatorId('99999999-9999-9999-9999-999999999999'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                     [
                         new Arranger(
                             new CreatorId('10101010-1010-1010-1010-101010101010'),
-                            new OrderNo(1)
+                            new OrderNo(1),
                         ),
                     ],
                 ),

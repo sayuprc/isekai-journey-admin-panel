@@ -31,7 +31,7 @@ class FileStoreTest extends TestCase
                     'id' => 1,
                     'name' => 'getAll value',
                 ],
-            ])
+            ]),
         );
     }
 
@@ -44,7 +44,7 @@ class FileStoreTest extends TestCase
 
                 $this->assertEmpty($actual);
             },
-            '/tmp/get-all-nonexistent.dat'
+            '/tmp/get-all-nonexistent.dat',
         );
     }
 
@@ -58,7 +58,7 @@ class FileStoreTest extends TestCase
                 $this->assertEmpty($actual);
             },
             '/tmp/getAllEmpty.dat',
-            serialize([])
+            serialize([]),
         );
     }
 
@@ -77,7 +77,7 @@ class FileStoreTest extends TestCase
                     'id' => 1,
                     'name' => 'getAll value',
                 ],
-            ])
+            ]),
         );
     }
 
@@ -90,7 +90,7 @@ class FileStoreTest extends TestCase
 
                 $this->assertNull($actual);
             },
-            '/tmp/get-nonexistent.dat'
+            '/tmp/get-nonexistent.dat',
         );
     }
 
@@ -109,7 +109,7 @@ class FileStoreTest extends TestCase
                     'id' => 1,
                     'name' => 'getAll value',
                 ],
-            ])
+            ]),
         );
     }
 
@@ -123,7 +123,7 @@ class FileStoreTest extends TestCase
                 $this->assertNull($actual);
             },
             '/tmp/get.dat',
-            serialize([])
+            serialize([]),
         );
     }
 
@@ -146,7 +146,7 @@ class FileStoreTest extends TestCase
                 }
             },
             '/tmp/put.dat',
-            serialize([])
+            serialize([]),
         );
     }
 
@@ -213,7 +213,7 @@ class FileStoreTest extends TestCase
                     'id' => 2,
                     'name' => 'fuga',
                 ],
-            ])
+            ]),
         );
     }
 

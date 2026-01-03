@@ -40,7 +40,7 @@ class CreateInteractorTest extends TestCase
         $this->factory(
             FileUserRepository::class,
             $uuid,
-            new User(new UserId($uuid), new Email('example@example.com'), new HashedPassword('hashed'))
+            new User(new UserId($uuid), new Email('example@example.com'), new HashedPassword('hashed')),
         );
 
         $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));

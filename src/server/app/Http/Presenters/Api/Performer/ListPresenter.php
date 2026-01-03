@@ -22,10 +22,10 @@ class ListPresenter
                 ->setPerformers(
                     array_map(
                         fn (Performer $performer) => $this->converter->toOpenApiPerformer($performer),
-                        $outputData->performers
-                    )
+                        $outputData->performers,
+                    ),
                 ),
-            200
+            200,
         );
     }
 }

@@ -11,7 +11,7 @@ use Tools\Arkitect\Define;
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(
         __DIR__ . '/app',
-        __DIR__ . '/packages'
+        __DIR__ . '/packages',
     );
 
     $components = array_reduce(
@@ -27,7 +27,7 @@ return static function (Config $config): void {
                 ? $component->shouldOnlyDependOnComponents(...$define->dependencies())
                 : $component->shouldNotDependOnAnyComponent();
         },
-        Architecture::withComponents()
+        Architecture::withComponents(),
     );
 
     $config->add($classSet, ...$components->rules());

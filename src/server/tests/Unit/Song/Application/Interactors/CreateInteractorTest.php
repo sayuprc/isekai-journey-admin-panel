@@ -62,19 +62,19 @@ class CreateInteractorTest extends TestCase
                     fn (array $args): bool => count($args) === 1
                         && $args[0] instanceof CreateCreatorData
                         && $args[0]->creatorId === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
-                        && $args[0]->orderNo === 1
+                        && $args[0]->orderNo === 1,
                 ),
                 Mockery::on(
                     fn (array $args): bool => count($args) === 1
                         && $args[0] instanceof CreateCreatorData
                         && $args[0]->creatorId === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'
-                        && $args[0]->orderNo === 1
+                        && $args[0]->orderNo === 1,
                 ),
                 Mockery::on(
                     fn (array $args): bool => count($args) === 1
                         && $args[0] instanceof CreateCreatorData
                         && $args[0]->creatorId === 'EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'
-                        && $args[0]->orderNo === 1
+                        && $args[0]->orderNo === 1,
                 ),
             )
             ->andReturn(
@@ -102,7 +102,7 @@ class CreateInteractorTest extends TestCase
                             new OrderNo(1),
                         ),
                     ],
-                )
+                ),
             )
             ->once();
 
@@ -121,7 +121,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->composers[0]->orderNo->value === 1
                     && count($arg->arrangers) === 1
                     && $arg->arrangers[0]->creatorId->value === 'EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE'
-                    && $arg->arrangers[0]->orderNo->value === 1
+                    && $arg->arrangers[0]->orderNo->value === 1,
             ))
             ->andReturn($song)
             ->once();

@@ -58,11 +58,11 @@ class ListInteractorTest extends TestCase
             ->andReturn([
                 new Creator(
                     new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new CreatorName('クリエイターA')
+                    new CreatorName('クリエイターA'),
                 ),
                 new Creator(
                     new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new CreatorName('クリエイターB')
+                    new CreatorName('クリエイターB'),
                 ),
             ])
             ->once();

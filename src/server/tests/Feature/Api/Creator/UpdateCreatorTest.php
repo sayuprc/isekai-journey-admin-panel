@@ -25,7 +25,7 @@ class UpdateCreatorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター'))
+            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
         );
 
         $this->putJson(route(CreatorRouteMap::Update, $uuid), [

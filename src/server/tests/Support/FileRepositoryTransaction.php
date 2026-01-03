@@ -52,9 +52,9 @@ trait FileRepositoryTransaction
             new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator(
                     $directory,
-                    FilesystemIterator::SKIP_DOTS | FilesystemIterator::CURRENT_AS_FILEINFO
+                    FilesystemIterator::SKIP_DOTS | FilesystemIterator::CURRENT_AS_FILEINFO,
                 ),
-                RecursiveIteratorIterator::LEAVES_ONLY
+                RecursiveIteratorIterator::LEAVES_ONLY,
             ) as $file
         ) {
             unlink($file->getRealPath());

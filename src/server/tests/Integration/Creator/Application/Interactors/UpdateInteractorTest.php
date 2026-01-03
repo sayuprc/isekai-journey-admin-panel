@@ -26,7 +26,7 @@ class UpdateInteractorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター'))
+            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));
@@ -47,7 +47,7 @@ class UpdateInteractorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒'))
+            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒')),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));

@@ -33,7 +33,7 @@ class CreateCommandTest extends TestCase
         $this->factory(
             FileUserRepository::class,
             $uuid,
-            new User(new UserId($uuid), new Email('example@example.com'), new HashedPassword('plain'))
+            new User(new UserId($uuid), new Email('example@example.com'), new HashedPassword('plain')),
         );
 
         $this->artisan('user:create example@example.com plain')

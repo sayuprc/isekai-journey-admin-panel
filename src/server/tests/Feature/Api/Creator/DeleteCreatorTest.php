@@ -25,7 +25,7 @@ class DeleteCreatorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター'))
+            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
         );
 
         $this->delete(route(CreatorRouteMap::Delete, $uuid))

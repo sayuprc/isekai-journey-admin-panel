@@ -49,7 +49,7 @@ class PerformerServiceProvider extends EnvServiceProvider
                 [
                     'performerId' => $request->route('performerId'),
                     ...$request->all(),
-                ]
+                ],
             );
         });
     }

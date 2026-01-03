@@ -14,7 +14,7 @@ class CreatePerformerController extends Controller
 {
     public function __construct(
         private readonly CreateUseCaseInterface $interactor,
-        private readonly CreatePresenter $presenter
+        private readonly CreatePresenter $presenter,
     ) {
     }
 
