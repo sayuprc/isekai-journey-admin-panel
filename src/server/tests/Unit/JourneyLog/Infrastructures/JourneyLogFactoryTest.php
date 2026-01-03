@@ -41,7 +41,7 @@ class JourneyLogFactoryTest extends TestCase
             new ImmutableDate('2019-12-08'),
             new ImmutableDate('2019-12-09'),
             1,
-            []
+            [],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);
@@ -77,7 +77,7 @@ class JourneyLogFactoryTest extends TestCase
                     2,
                     'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC',
                 ),
-            ]
+            ],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);
@@ -107,7 +107,7 @@ class JourneyLogFactoryTest extends TestCase
             new ImmutableDate('2019-12-08'),
             new ImmutableDate('2019-12-09'),
             1,
-            []
+            [],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);
@@ -144,7 +144,7 @@ class JourneyLogFactoryTest extends TestCase
                     2,
                     'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC',
                 ),
-            ]
+            ],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);
@@ -174,7 +174,7 @@ class JourneyLogFactoryTest extends TestCase
             new ImmutableDate('2019-12-08'),
             new ImmutableDate('2019-12-09'),
             1,
-            []
+            [],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);
@@ -209,7 +209,7 @@ class JourneyLogFactoryTest extends TestCase
                     2,
                     'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC',
                 ),
-            ]
+            ],
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $journeyLog->journeyLogId->value);

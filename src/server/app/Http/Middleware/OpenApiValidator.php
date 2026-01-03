@@ -60,7 +60,7 @@ class OpenApiValidator
         try {
             $this->builder->getResponseValidator()->validate(
                 new OperationAddress($request->getPathInfo(), strtolower($request->getMethod())),
-                $psrResponse
+                $psrResponse,
             );
         } catch (ValidationFailed $e) {
             $this->logger->error('レスポンスバリデーションエラー', [

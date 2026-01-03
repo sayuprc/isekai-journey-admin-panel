@@ -30,15 +30,15 @@ class LoginPresenter
                 $this->createCookie(
                     'access_token',
                     $output->accessToken->jwt->value,
-                    self::ACCESS_TOKEN_COOKIE_TTL
-                )
+                    self::ACCESS_TOKEN_COOKIE_TTL,
+                ),
             )
             ->cookie(
                 $this->createCookie(
                     'refresh_token',
                     $output->refreshToken->token->value,
-                    self::REFRESH_TOKEN_COOKIE_TTL
-                )
+                    self::REFRESH_TOKEN_COOKIE_TTL,
+                ),
             );
     }
 
@@ -56,7 +56,7 @@ class LoginPresenter
             secure: true,
             httpOnly: true,
             raw: false,
-            sameSite: 'Strict'
+            sameSite: 'Strict',
         );
     }
 }

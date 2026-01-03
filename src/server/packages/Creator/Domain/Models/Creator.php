@@ -8,7 +8,7 @@ readonly class Creator
 {
     public function __construct(
         public CreatorId $creatorId,
-        public CreatorName $creatorName
+        public CreatorName $creatorName,
     ) {
     }
 }

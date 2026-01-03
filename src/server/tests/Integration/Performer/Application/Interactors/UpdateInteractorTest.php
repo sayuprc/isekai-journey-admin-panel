@@ -27,7 +27,7 @@ class UpdateInteractorTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1)),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒', 2));
@@ -49,7 +49,7 @@ class UpdateInteractorTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData($this->generateUuid(), 'ヰ世界情緒', 2));

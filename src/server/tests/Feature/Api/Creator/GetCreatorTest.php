@@ -25,7 +25,7 @@ class GetCreatorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒'))
+            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒')),
         );
 
         $this->get(route(CreatorRouteMap::Get, $uuid))

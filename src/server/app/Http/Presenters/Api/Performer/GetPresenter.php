@@ -33,7 +33,7 @@ class GetPresenter
                     new ErrorResponse()->setMessage($message),
                     404,
                 ];
-            }
+            },
         );
 
         return response()->json($data, $status);

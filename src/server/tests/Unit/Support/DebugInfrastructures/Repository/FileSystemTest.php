@@ -20,7 +20,7 @@ class FileSystemTest extends TestCase
             function (string $path) {
                 $this->assertTrue(new FileSystem()->exists($path));
             },
-            '/tmp/exists.txt'
+            '/tmp/exists.txt',
         );
     }
 
@@ -31,7 +31,7 @@ class FileSystemTest extends TestCase
             function (string $path) {
                 $this->assertFalse(new FileSystem()->exists($path));
             },
-            '/tmp/nonexistent.txt'
+            '/tmp/nonexistent.txt',
         );
     }
 
@@ -45,7 +45,7 @@ class FileSystemTest extends TestCase
                 $this->assertSame($content, file_get_contents($path));
             },
             '/tmp/put.txt',
-            'put value'
+            'put value',
         );
     }
 
@@ -57,7 +57,7 @@ class FileSystemTest extends TestCase
                 $this->assertSame($content, new FileSystem()->get($path));
             },
             '/tmp/get.txt',
-            'get value'
+            'get value',
         );
     }
 }

@@ -62,7 +62,7 @@ class CreateInteractorTest extends TestCase
             ->with('クリエイター')
             ->andReturn($creator = new Creator(
                 new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター')
+                new CreatorName('クリエイター'),
             ))
             ->once();
 
@@ -74,7 +74,7 @@ class CreateInteractorTest extends TestCase
         $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->creatorName->value === 'クリエイター'
+                    && $arg->creatorName->value === 'クリエイター',
             ))
             ->andReturn($creator)
             ->once();
@@ -96,7 +96,7 @@ class CreateInteractorTest extends TestCase
             ->with('クリエイター')
             ->andReturn(new Creator(
                 new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター')
+                new CreatorName('クリエイター'),
             ))
             ->once();
 

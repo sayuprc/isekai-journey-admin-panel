@@ -13,7 +13,7 @@ readonly class Period
      */
     public function __construct(
         public FromOn $fromOn,
-        public ToOn $toOn
+        public ToOn $toOn,
     ) {
         if ($this->toOn->value < $this->fromOn->value) {
             throw new InvalidDomainException('fromOn needs to be before toOn');

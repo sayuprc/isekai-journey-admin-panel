@@ -22,10 +22,10 @@ class ListPresenter
                 ->setCreators(
                     array_map(
                         fn (Creator $creator) => $this->converter->toOpenApiCreator($creator),
-                        $outputData->creators
-                    )
+                        $outputData->creators,
+                    ),
                 ),
-            200
+            200,
         );
     }
 }

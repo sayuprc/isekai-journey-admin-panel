@@ -25,7 +25,7 @@ class LoginTest extends TestCase
         $user = new User(
             new UserId($this->generateUuid()),
             new Email('example@example.com'),
-            new HashedPassword(Hash::make('password'))
+            new HashedPassword(Hash::make('password')),
         );
 
         $this->factory(FileUserRepository::class, $user->userId->value, $user);
@@ -53,7 +53,7 @@ class LoginTest extends TestCase
         $user = new User(
             new UserId($this->generateUuid()),
             new Email('example@example.com'),
-            new HashedPassword(Hash::make('password'))
+            new HashedPassword(Hash::make('password')),
         );
 
         $this->factory(FileUserRepository::class, $user->userId->value, $user);

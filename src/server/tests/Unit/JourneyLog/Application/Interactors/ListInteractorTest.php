@@ -71,7 +71,7 @@ class ListInteractorTest extends TestCase
                     new Story('ストーリー1'),
                     new Period(new FromOn(new ImmutableDate('2019-12-08')), new ToOn(new ImmutableDate('2019-12-08'))),
                     new OrderNo(1),
-                    []
+                    [],
                 ),
                 new JourneyLog(
                     new JourneyLogId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
@@ -84,9 +84,9 @@ class ListInteractorTest extends TestCase
                             new JourneyLogLinkName('リンク'),
                             new Url('https://example.com'),
                             new OrderNo(1),
-                            new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD')
+                            new JourneyLogLinkTypeId('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD'),
                         ),
-                    ]
+                    ],
                 ),
             ])
             ->once();

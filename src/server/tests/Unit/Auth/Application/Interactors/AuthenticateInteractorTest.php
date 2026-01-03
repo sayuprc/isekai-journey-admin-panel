@@ -70,8 +70,8 @@ class AuthenticateInteractorTest extends TestCase
                     new UserId($userId),
                     new TokenValue('token'),
                     new ExpiredAt(new DateTimeImmutable()),
-                    new IsUsed(false)
-                )
+                    new IsUsed(false),
+                ),
             )
             ->once();
 
@@ -138,8 +138,8 @@ class AuthenticateInteractorTest extends TestCase
                     new UserId($userId),
                     new TokenValue('token'),
                     new ExpiredAt(new DateTimeImmutable()),
-                    new IsUsed(false)
-                )
+                    new IsUsed(false),
+                ),
             )
             ->once();
 

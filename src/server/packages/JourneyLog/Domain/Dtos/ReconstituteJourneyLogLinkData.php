@@ -14,7 +14,7 @@ readonly class ReconstituteJourneyLogLinkData
         public string $journeyLogLinkName,
         public string $url,
         public int $orderNo,
-        public string $journeyLogLinkTypeId
+        public string $journeyLogLinkTypeId,
     ) {
     }
 }

@@ -58,7 +58,7 @@ class EditInteractorTest extends TestCase
             ->with(Mockery::on(
                 fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->journeyLogLinkTypeName->value === 'リンク'
-                    && $arg->orderNo->value === 1
+                    && $arg->orderNo->value === 1,
             ))
             ->andReturn($journeyLogLinkType)
             ->once();
@@ -66,7 +66,7 @@ class EditInteractorTest extends TestCase
         $this->interactor->handle(new EditInputData(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             'リンク',
-            1
+            1,
         ));
     }
 }

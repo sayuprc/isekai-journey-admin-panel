@@ -47,15 +47,15 @@ readonly class SongFactory implements SongFactoryInterface
             new OrderNo($orderNo),
             array_map(
                 fn (CreateCreatorData $creator) => new Lyricist(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
-                $lyricists
+                $lyricists,
             ),
             array_map(
                 fn (CreateCreatorData $creator) => new Composer(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
-                $composers
+                $composers,
             ),
             array_map(
                 fn (CreateCreatorData $creator) => new Arranger(new CreatorId($creator->creatorId), new OrderNo($creator->orderNo)),
-                $arrangers
+                $arrangers,
             ),
         );
     }

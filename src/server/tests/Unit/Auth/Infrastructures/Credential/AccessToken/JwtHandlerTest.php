@@ -56,7 +56,7 @@ class JwtHandlerTest extends TestCase
             iat: 0,
             exp: 180,
             nbf: 0,
-            jti: 'jti'
+            jti: 'jti',
         ));
 
         $elements = explode('.', $jwt);
@@ -94,7 +94,7 @@ class JwtHandlerTest extends TestCase
             iat: $now->getTimestamp(),
             exp: $afterAHour->getTimestamp(),
             nbf: $now->getTimestamp(),
-            jti: 'jti'
+            jti: 'jti',
         ));
 
         $this->clock->shouldReceive('now')
@@ -149,7 +149,7 @@ class JwtHandlerTest extends TestCase
             iat: 0,
             exp: 180,
             nbf: 0,
-            jti: 'jti'
+            jti: 'jti',
         ));
 
         $this->clock->shouldReceive('now')

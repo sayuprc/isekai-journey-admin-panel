@@ -64,14 +64,14 @@ class UpdateInteractorTest extends TestCase
             ->andReturn($performer = new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new PerformerName('共演者2'),
-                new OrderNo(2)
+                new OrderNo(2),
             ))
             ->once();
 
         $this->service->shouldReceive('existsForUpdate')
             ->with(
                 Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者2')
+                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者2'),
             )
             ->andReturn(false)
             ->once();
@@ -80,7 +80,7 @@ class UpdateInteractorTest extends TestCase
             ->with(Mockery::on(
                 fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->performerName->value === '共演者2'
-                    && $arg->orderNo->value === 2
+                    && $arg->orderNo->value === 2,
             ))
             ->andReturn($performer)
             ->once();
@@ -103,7 +103,7 @@ class UpdateInteractorTest extends TestCase
             ->andReturn(new Performer(
                 new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
                 new PerformerName('共演者2'),
-                new OrderNo(2)
+                new OrderNo(2),
             ))
             ->once();
 

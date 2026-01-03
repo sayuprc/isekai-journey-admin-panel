@@ -64,8 +64,8 @@ class CreateInteractorTest extends TestCase
                 $user = new User(
                     new UserId($uuid),
                     new Email('example@example.com'),
-                    new HashedPassword('hashedpassword')
-                )
+                    new HashedPassword('hashedpassword'),
+                ),
             )
             ->once();
 
@@ -74,8 +74,8 @@ class CreateInteractorTest extends TestCase
                 Mockery::on(
                     fn (User $arg) => $arg->userId->value === $uuid
                         && $arg->email->value === 'example@example.com'
-                        && $arg->hashedPassword->value !== 'plainpassword'
-                )
+                        && $arg->hashedPassword->value !== 'plainpassword',
+                ),
             )
             ->andReturn($user)
             ->once();
@@ -99,8 +99,8 @@ class CreateInteractorTest extends TestCase
                 new User(
                     new UserId($this->generateUuid()),
                     new Email('example@example.com'),
-                    new HashedPassword('hashedpassowrd')
-                )
+                    new HashedPassword('hashedpassowrd'),
+                ),
             )
             ->once();
 

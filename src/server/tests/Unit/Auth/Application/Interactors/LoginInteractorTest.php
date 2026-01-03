@@ -64,7 +64,7 @@ class LoginInteractorTest extends TestCase
                 new UserId($userId),
                 new TokenValue('token'),
                 new ExpiredAt($now->modify('+ 7 days')),
-                new IsUsed(false)
+                new IsUsed(false),
             ))
             ->once();
 
@@ -79,8 +79,8 @@ class LoginInteractorTest extends TestCase
                     fn (RefreshToken $arg) => $arg->refreshTokenId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                         && $arg->userId->value === $userId
                         && $arg->token->value === 'token'
-                        && $arg->isEnabled($now)
-                )
+                        && $arg->isEnabled($now),
+                ),
             )
             ->andReturn($refreshToken)
             ->once();

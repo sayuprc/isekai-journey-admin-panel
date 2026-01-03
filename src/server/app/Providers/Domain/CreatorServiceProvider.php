@@ -49,7 +49,7 @@ class CreatorServiceProvider extends EnvServiceProvider
                 [
                     'creatorId' => $request->route('creatorId'),
                     ...$request->all(),
-                ]
+                ],
             );
         });
     }

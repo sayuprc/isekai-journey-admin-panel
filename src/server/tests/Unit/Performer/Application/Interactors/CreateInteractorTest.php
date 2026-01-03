@@ -76,7 +76,7 @@ class CreateInteractorTest extends TestCase
         $this->repository->shouldReceive('save')
             ->with(Mockery::on(
                 fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->performerName->value === '共演者'
+                    && $arg->performerName->value === '共演者',
             ))
             ->andReturn($performer)
             ->once();

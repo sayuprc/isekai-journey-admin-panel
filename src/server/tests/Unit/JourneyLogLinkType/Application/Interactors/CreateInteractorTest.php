@@ -58,14 +58,14 @@ class CreateInteractorTest extends TestCase
             ->with(Mockery::on(
                 fn (JourneyLogLinkType $arg): bool => $arg->journeyLogLinkTypeId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
                     && $arg->journeyLogLinkTypeName->value === 'リンク'
-                    && $arg->orderNo->value === 1
+                    && $arg->orderNo->value === 1,
             ))
             ->andReturn($journeyLogLinkType)
             ->once();
 
         $this->interactor->handle(new CreateInputData(
             'リンク',
-            1
+            1,
         ));
     }
 }

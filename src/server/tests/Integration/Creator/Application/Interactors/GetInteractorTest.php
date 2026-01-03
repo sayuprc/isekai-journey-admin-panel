@@ -28,7 +28,7 @@ class GetInteractorTest extends TestCase
         $this->factory(
             FileCreatorRepository::class,
             $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒'))
+            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒')),
         );
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));

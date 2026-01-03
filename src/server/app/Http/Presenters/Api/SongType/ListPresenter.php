@@ -22,10 +22,10 @@ class ListPresenter
                 ->setSongTypes(
                     array_map(
                         fn (SongType $songType) => $this->converter->toOpenApiSongType($songType),
-                        $outputData->songTypes
-                    )
+                        $outputData->songTypes,
+                    ),
                 ),
-            200
+            200,
         );
     }
 }

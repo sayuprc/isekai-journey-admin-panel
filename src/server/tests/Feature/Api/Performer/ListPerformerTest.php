@@ -26,7 +26,7 @@ class ListPerformerTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
         );
 
         $this->get(route(PerformerRouteMap::List))

@@ -41,7 +41,7 @@ class CreateInteractorTest extends TestCase
         $this->factory(
             FilePerformerRepository::class,
             $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1))
+            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
         );
 
         $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒', 1));
