@@ -35,6 +35,7 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\Casing\NativeTypeDeclarationCasingFixer::class,
 
         \PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer::class,
+        \PhpCsFixer\Fixer\ClassNotation\ModifierKeywordsFixer::class,
         \PhpCsFixer\Fixer\ClassNotation\OrderedInterfacesFixer::class,
         \PhpCsFixer\Fixer\ClassNotation\OrderedTraitsFixer::class,
         \PhpCsFixer\Fixer\ClassNotation\OrderedTypesFixer::class,
@@ -47,8 +48,8 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\ControlStructure\IncludeFixer::class,
         \PhpCsFixer\Fixer\ControlStructure\NoUselessElseFixer::class,
         \PhpCsFixer\Fixer\ControlStructure\SimplifiedIfReturnFixer::class,
-        \PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer::class,
 
+        \PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer::class,
         \PhpCsFixer\Fixer\FunctionNotation\LambdaNotUsedImportFixer::class,
         \PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer::class,
 
@@ -60,6 +61,7 @@ return ECSConfig::configure()
 
         \PhpCsFixer\Fixer\NamespaceNotation\NoLeadingNamespaceWhitespaceFixer::class,
 
+        \PhpCsFixer\Fixer\Operator\NewExpressionParenthesesFixer::class,
         \PhpCsFixer\Fixer\Operator\NoUselessConcatOperatorFixer::class,
         \PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class,
         \PhpCsFixer\Fixer\Operator\ObjectOperatorWithoutWhitespaceFixer::class,
@@ -144,6 +146,21 @@ return ECSConfig::configure()
             'const',
         ],
         'sort_algorithm' => 'alpha',
+    ])
+    ->withConfiguredRule(\PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer::class, [
+        'attribute_placement' => 'standalone',
+    ])
+    ->withConfiguredRule(\PhpCsFixer\Fixer\FunctionNotation\MultilinePromotedPropertiesFixer::class, [
+        'minimum_number_of_parameters' => 2,
+    ])
+    ->withConfiguredRule(\PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer::class, [
+        'elements' => [
+            'arguments',
+            'array_destructuring',
+            'arrays',
+            'match',
+            'parameters',
+        ],
     ])
     ->withConfiguredRule(\PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer::class, [
         'tokens' => [
