@@ -7,10 +7,15 @@ namespace SongType\Domain\Models;
 enum SongType: int
 {
     case Original = 1;
+
     case Cover = 2;
+
     case Collaboration = 3;
+
     case Lineage = 4;
+
     case Derivative = 5;
+
     case Amplified = 6;
 
     public function getName(): string
