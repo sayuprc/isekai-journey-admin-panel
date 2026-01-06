@@ -9,5 +9,6 @@ enum CreatorComponent: string implements ComponentMap
     use Accessor;
 
     case Domain = 'Creator\Domain\*';
+
     case UseCase = 'Creator\Application\UseCase\*';
 }

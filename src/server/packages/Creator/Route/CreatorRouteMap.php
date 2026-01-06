@@ -7,8 +7,12 @@ namespace Creator\Route;
 enum CreatorRouteMap: string
 {
     case List = 'creators';
+
     case Get = 'creators.show';
+
     case Create = 'creators.create';
+
     case Update = 'creators.update';
+
     case Delete = 'creators.delete';
 }

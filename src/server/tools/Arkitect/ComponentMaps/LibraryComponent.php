@@ -9,5 +9,6 @@ enum LibraryComponent: string implements ComponentMap
     use Accessor;
 
     case ResultType = 'ResultType\*';
+
     case DateType = 'DateType\*';
 }
