@@ -1,0 +1,208 @@
+[env]
+SERVER_CONTAINER = "isekai-terrarium-admin-php"
+CLIENT_CONTAINER = "isekai-terrarium-admin-node"
+
+[tasks.build]
+description = "開発環境向けの Docker イメージをビルドする"
+depends = "build:*"
+
+[tasks."build:proxy"]
+description = "Nginx のイメージをビルドする"
+run = 'docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx'
+
+[tasks."build:php"]
+description = "PHP のイメージをビルドする"
+run = '''
+UID=$(id -u)
+USERNAME=$(id -u -n)
+GID=$(id -g)
+GROUPNAME=$(id -g -n)
+
+docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
+  --build-arg UID=${UID} \
+  --build-arg GID=${GID} \
+  --build-arg USERNAME=${USERNAME} \
+  --build-arg GROUPNAME=${GROUPNAME}
+'''
+
+[tasks."build:openapi-generator"]
+description = "OpenAPI Generator のイメージをビルドする"
+run = '''
+UID=$(id -u)
+USERNAME=$(id -u -n)
+GID=$(id -g)
+GROUPNAME=$(id -g -n)
+
+docker build -t openapi-generator:latest ./docker/openapi-generator \
+  --build-arg UID=${UID} \
+  --build-arg GID=${GID} \
+  --build-arg USERNAME=${USERNAME} \
+  --build-arg GROUPNAME=${GROUPNAME}
+'''
+
+[tasks."build:node"]
+description = "Node のイメージをビルドする"
+run = 'docker build -t isekai-terrarium-admin-node:22 ./docker/node'
+
+[tasks.up]
+description = "コンテナを起動する"
+run = "docker compose up -d"
+
+[tasks.down]
+description = "コンテナを削除する"
+run = "docker compose down"
+
+[tasks.php]
+description = "php コンテナの中に入る"
+run = "docker exec -it ${SERVER_CONTAINER} bash"
+
+[tasks.composer-install]
+description = "composer パッケージをインストールする"
+run = "docker compose run --rm php composer install"
+
+[tasks.phpstan]
+description = "PHPStan を実行する"
+run = "docker exec ${SERVER_CONTAINER} composer phpstan"
+
+[tasks.phpstan-clear-cache]
+description = "PHPStan のキャッシュを削除する"
+run = "docker exec ${SERVER_CONTAINER} composer phpstan-clear-cache"
+
+[tasks.arkitect]
+description = "PHPArkitect を実行する"
+run = "docker exec ${SERVER_CONTAINER} composer arkitect"
+
+[tasks.ecs]
+description = "ECS を実行する(チェックのみ)"
+run = "docker exec ${SERVER_CONTAINER} composer ecs"
+
+[tasks.ecs-fix]
+description = "ECS を実行する(自動修正あり)"
+run = "docker exec ${SERVER_CONTAINER} composer ecs-fix"
+
+[tasks.test-all]
+description = "すべてのテストを実行する"
+run = "docker exec ${SERVER_CONTAINER} composer test-all"
+
+[tasks.test-unit]
+description = "Unit テストを実行する"
+run = "docker exec ${SERVER_CONTAINER} composer test-unit"
+
+[tasks.test-integration]
+description = "Integration テストを実行する"
+run = "docker exec ${SERVER_CONTAINER} composer test-integration"
+
+[tasks.test-feature]
+description = "Feature テストを実行する"
+run = "docker exec ${SERVER_CONTAINER} composer test-feature"
+
+[tasks.coverage]
+description = "テストカバレッジを出力する"
+run = "docker exec ${SERVER_CONTAINER} composer coverage"
+
+[tasks.infection]
+description = "ミューテーションテストを実行する"
+run = "docker exec ${SERVER_CONTAINER} composer infection"
+
+[tasks.metrics]
+description = "コードメトリクスを出力する"
+run = "docker exec ${SERVER_CONTAINER} composer metrics"
+
+[tasks.migrate]
+description = "マイグレーションを実行する"
+run = "docker exec ${SERVER_CONTAINER} bash -c cd database/atlas; ./apply.sh"
+
+[tasks.tinker]
+description = "Laravel tinker を実行する"
+run = "docker exec ${SERVER_CONTAINER} php artisan tinker"
+
+[tasks.generate]
+description = "OAS からコードを生成する"
+depends = "generate:*"
+
+[tasks."generate:server"]
+description = "OAS からサーバーのコードを生成する"
+run = '''
+UID=$(id -u)
+GID=$(id -g)
+
+rm -rf ./src/server/Generated
+
+docker run --rm -u ${UID}:${GID} -v ".:/local" openapi-generator generate \
+  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -g php \
+  -t /local/src/server/tools/openapi-generator/templates \
+  -o /local/src/server/Generated
+'''
+
+[tasks."generate:client"]
+description = "OAS からクライアントのコードを生成する"
+run = '''
+rm -rf ./src/client/src/generated
+
+docker exec ${CLIENT_CONTAINER} npm run generate:api
+'''
+
+[tasks.mkcert]
+description = "自己署名証明書を作成する"
+run = '''
+mkcert \
+  --key-file docker/nginx/certs/server.key \
+  --cert-file docker/nginx/certs/server.crt \
+  localhost \
+  127.0.0.1 \
+  local.admin.terrarium.isekaijoucho.fan \
+  local.api.terrarium.isekaijoucho.fan \
+  local.terrarium.isekaijoucho.fan
+'''
+
+[tasks.copy-root-ca]
+description = "rootCA.pem をコピーする"
+run = '''
+CAROOT_PEM=$(mkcert -CAROOT)/rootCA.pem
+cp ${CAROOT_PEM} docker/php/certs/
+cp ${CAROOT_PEM} docker/node/certs/
+'''
+
+[tasks.node]
+description = "node のコンテナの中に入る"
+run = 'docker exec -it ${CLIENT_CONTAINER} bash'
+
+[tasks.npm-install]
+description = "npm のパッケージをインストールする"
+run = 'docker compose run --rm node npm i'
+
+[tasks.format]
+description = "ESLint と Stylelint を --fix オプション付きで実行する"
+depends = [
+  "lint:fix",
+  "style:fix"
+]
+
+[tasks.lint]
+description = "ESLint を実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run lint'
+
+[tasks."lint:fix"]
+description = "ESLint を --fix オプション付きで実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run lint:fix'
+
+[tasks.style]
+description = "Stylelint を実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run style'
+
+[tasks."style:fix"]
+description = "Stylelint を --fix オプション付きで実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run style:fix'
+
+[tasks.tcm]
+description = "tcm を実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run tcm'
+
+[tasks."tcm:watch"]
+description = "tcm を --watch オプション付きで実行する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run tcm:watch'
+
+[tasks.prism]
+description = "Prism のモックサーバーを起動する"
+run = 'docker exec ${CLIENT_CONTAINER} npm run prism'
