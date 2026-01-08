@@ -150,9 +150,9 @@ mkcert \
 [tasks.copy-root-ca]
 description = "rootCA.pem をコピーする"
 run = '''
-CAROOT_PEM=$(mkcert -CAROOT)/rootCA.pem
-cp ${CAROOT_PEM} docker/php/certs/
-cp ${CAROOT_PEM} docker/node/certs/
+caroot_pem=$(mkcert -CAROOT)/rootCA.pem
+cp ${caroot_pem} docker/php/certs/
+cp ${caroot_pem} docker/node/certs/
 '''
 
 [tasks.node]
