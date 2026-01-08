@@ -6,6 +6,16 @@ user_name = "$(id -un)"
 gid = "$(id -g)"
 group_name = "$(id -gn)"
 
+[tasks.setup]
+description = "環境構築をする"
+run = [
+  { task = "cert:make" },
+  { task = "cert:copy-pem" },
+  { task = "build" },
+  { tasks = ["composer:install", "npm:install"] },
+  { task = "up" },
+]
+
 [tasks.build]
 description = "開発環境向けの Docker イメージをビルドする"
 depends = "build:*"
