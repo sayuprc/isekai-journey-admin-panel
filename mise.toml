@@ -8,7 +8,7 @@ depends = "build:*"
 
 [tasks."build:proxy"]
 description = "Nginx のイメージをビルドする"
-run = 'docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx'
+run = "docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx"
 
 [tasks."build:php"]
 description = "PHP のイメージをビルドする"
@@ -42,7 +42,7 @@ docker build -t openapi-generator:latest ./docker/openapi-generator \
 
 [tasks."build:node"]
 description = "Node のイメージをビルドする"
-run = 'docker build -t isekai-terrarium-admin-node:22 ./docker/node'
+run = "docker build -t isekai-terrarium-admin-node:22 ./docker/node"
 
 [tasks.up]
 description = "コンテナを起動する"
@@ -166,43 +166,40 @@ cp ${CAROOT_PEM} docker/node/certs/
 
 [tasks.node]
 description = "node のコンテナの中に入る"
-run = 'docker exec -it ${CLIENT_CONTAINER} bash'
+run = "docker exec -it ${CLIENT_CONTAINER} bash"
 
 [tasks.npm-install]
 description = "npm のパッケージをインストールする"
-run = 'docker compose run --rm node npm i'
+run = "docker compose run --rm node npm i"
 
 [tasks.format]
 description = "ESLint と Stylelint を --fix オプション付きで実行する"
-depends = [
-  "lint:fix",
-  "style:fix"
-]
+depends = ["lint:fix", "style:fix"]
 
 [tasks.lint]
 description = "ESLint を実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run lint'
+run = "docker exec ${CLIENT_CONTAINER} npm run lint"
 
 [tasks."lint:fix"]
 description = "ESLint を --fix オプション付きで実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run lint:fix'
+run = "docker exec ${CLIENT_CONTAINER} npm run lint:fix"
 
 [tasks.style]
 description = "Stylelint を実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run style'
+run = "docker exec ${CLIENT_CONTAINER} npm run style"
 
 [tasks."style:fix"]
 description = "Stylelint を --fix オプション付きで実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run style:fix'
+run = "docker exec ${CLIENT_CONTAINER} npm run style:fix"
 
 [tasks.tcm]
 description = "tcm を実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run tcm'
+run = "docker exec ${CLIENT_CONTAINER} npm run tcm"
 
 [tasks."tcm:watch"]
 description = "tcm を --watch オプション付きで実行する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run tcm:watch'
+run = "docker exec ${CLIENT_CONTAINER} npm run tcm:watch"
 
 [tasks.prism]
 description = "Prism のモックサーバーを起動する"
-run = 'docker exec ${CLIENT_CONTAINER} npm run prism'
+run = "docker exec ${CLIENT_CONTAINER} npm run prism"
