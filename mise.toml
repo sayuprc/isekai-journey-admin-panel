@@ -56,7 +56,8 @@ run = "docker compose run --rm php composer install"
 
 [tasks.phpstan]
 description = "PHPStan を実行する"
-run = "docker exec {{vars.server_container}} composer phpstan"
+usage = 'arg "[path]" var=#true help="静的解析対象パス"'
+run = "docker exec {{vars.server_container}} composer phpstan ${usage_path}"
 
 [tasks."phpstan:clear-cache"]
 description = "PHPStan のキャッシュを削除する"
@@ -67,12 +68,14 @@ description = "PHPArkitect を実行する"
 run = "docker exec {{vars.server_container}} composer arkitect"
 
 [tasks.ecs]
-description = "ECS を実行する(チェックのみ)"
-run = "docker exec {{vars.server_container}} composer ecs"
+description = "ECS を実行し、コードフォーマットをチェックする"
+usage = 'arg "[path]" var=#true help="フォーマットチェック対象パス"'
+run = "docker exec {{vars.server_container}} composer ecs ${usage_path}"
 
 [tasks."ecs:fix"]
-description = "ECS を実行する(自動修正あり)"
-run = "docker exec {{vars.server_container}} composer ecs-fix"
+description = "ECS を実行し、フォーマットを自動修正する"
+usage = 'arg "[path]" var=#true help="フォーマット自動修正対象パス"'
+run = "docker exec {{vars.server_container}} composer ecs-fix ${usage_path}"
 
 [tasks."test:all"]
 description = "すべてのテストを実行する"
