@@ -37,7 +37,7 @@ docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
 [tasks."build:openapi-generator"]
 description = "OpenAPI Generator のイメージをビルドする"
 run = '''
-docker build -t openapi-generator:latest ./docker/openapi-generator \
+docker build -t openapi-generator:7.18.0 ./docker/openapi-generator \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
   --build-arg USERNAME={{vars.user_name}} \
@@ -132,7 +132,7 @@ description = "OAS からサーバーのコードを生成する"
 run = '''
 rm -rf ./src/server/Generated
 
-docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" openapi-generator generate \
+docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" openapi-generator:7.18.0 generate \
   -i /local/src/contracts/generated/oas/openapi.yaml \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
