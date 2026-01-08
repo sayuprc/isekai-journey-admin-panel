@@ -50,7 +50,7 @@ run = "docker compose down"
 description = "php コンテナの中に入る"
 run = "docker exec -it {{vars.server_container}} bash"
 
-[tasks.composer-install]
+[tasks."composer:install"]
 description = "composer パッケージをインストールする"
 run = "docker compose run --rm php composer install"
 
@@ -58,7 +58,7 @@ run = "docker compose run --rm php composer install"
 description = "PHPStan を実行する"
 run = "docker exec {{vars.server_container}} composer phpstan"
 
-[tasks.phpstan-clear-cache]
+[tasks."phpstan:clear-cache"]
 description = "PHPStan のキャッシュを削除する"
 run = "docker exec {{vars.server_container}} composer phpstan-clear-cache"
 
@@ -70,23 +70,23 @@ run = "docker exec {{vars.server_container}} composer arkitect"
 description = "ECS を実行する(チェックのみ)"
 run = "docker exec {{vars.server_container}} composer ecs"
 
-[tasks.ecs-fix]
+[tasks."ecs:fix"]
 description = "ECS を実行する(自動修正あり)"
 run = "docker exec {{vars.server_container}} composer ecs-fix"
 
-[tasks.test-all]
+[tasks."test:all"]
 description = "すべてのテストを実行する"
 run = "docker exec {{vars.server_container}} composer test-all"
 
-[tasks.test-unit]
+[tasks."test:unit"]
 description = "Unit テストを実行する"
 run = "docker exec {{vars.server_container}} composer test-unit"
 
-[tasks.test-integration]
+[tasks."test:integration"]
 description = "Integration テストを実行する"
 run = "docker exec {{vars.server_container}} composer test-integration"
 
-[tasks.test-feature]
+[tasks."test:feature"]
 description = "Feature テストを実行する"
 run = "docker exec {{vars.server_container}} composer test-feature"
 
@@ -134,7 +134,7 @@ rm -rf ./src/client/src/generated
 docker exec {{vars.client_container}} npm run generate:api
 '''
 
-[tasks.mkcert]
+[tasks."cert:make"]
 description = "自己署名証明書を作成する"
 run = '''
 mkcert \
@@ -147,7 +147,7 @@ mkcert \
   local.terrarium.isekaijoucho.fan
 '''
 
-[tasks.copy-root-ca]
+[tasks."cert:copy-pem"]
 description = "rootCA.pem をコピーする"
 run = '''
 caroot_pem=$(mkcert -CAROOT)/rootCA.pem
@@ -159,7 +159,7 @@ cp ${caroot_pem} docker/node/certs/
 description = "node のコンテナの中に入る"
 run = "docker exec -it {{vars.client_container}} bash"
 
-[tasks.npm-install]
+[tasks."npm:install"]
 description = "npm のパッケージをインストールする"
 run = "docker compose run --rm node npm i"
 
