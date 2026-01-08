@@ -5,7 +5,7 @@
     "keywords": ["isekaijoucho"],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "cuyz/valinor": "^2.3",
         "emonkak/orm": "^5.0",
         "firebase/php-jwt": "^6.11",

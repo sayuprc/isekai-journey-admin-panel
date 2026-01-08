@@ -11,7 +11,7 @@ on:
 env:
   SERVER_DOCKER_PATH: /tmp/cache/docker/server
   SERVER_DOCKER_KEY_PREFIX: docker-server-
-  SERVER_IMAGE: isekai-terrarium-admin-php:8.4
+  SERVER_IMAGE: isekai-terrarium-admin-php:8.5
 
   SERVER_CONTAINER: isekai-terrarium-admin-php
 

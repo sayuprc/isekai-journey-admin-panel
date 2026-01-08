@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:php8.4
+FROM dunglas/frankenphp:php8.5
 
 COPY certs/rootCA.pem /usr/share/ca-certificates/
 
