@@ -21,6 +21,10 @@ env:
   DATABASE_PATH: ./src/server/database/isekai_terrarium.sqlite
   DATABASE_KEY_PREFIX: database-
 
+  OPENAPI_GENERATOR_CLI_DOCKER_PATH: /tmp/cache/docker/openapi-generator-cli
+  OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX: docker-openapi-generator-cli-
+  OPENAPI_GENERATOR_CLI_IMAGE: openapi-generator:7.18.0
+
 jobs:
   setup:
     name: Setup server
@@ -70,6 +74,25 @@ jobs:
           docker push ghcr.io/sayuprc/${{ env.SERVER_IMAGE }}
           mkdir -p ${{ env.SERVER_DOCKER_PATH }}
 
+      - name: Cache openapi-generator-cli docker image
+        id: cache-openapi-generator-cli-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
+          key: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/openapi-generator/Dockerfile') }}
+
+      - name: Build openapi-generator-cli image
+        if: steps.cache-openapi-generator-cli-docker-image.outputs.cache-hit != 'true'
+        run: |
+          docker build -t ${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} ./docker/openapi-generator \
+            --build-arg UID=`id -u` \
+            --build-arg GID=`id -g` \
+            --build-arg USERNAME=`id -u -n` \
+            --build-arg GROUPNAME=`id -g -n`
+          docker tag `docker images ${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} -q` ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }}
+          docker push ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }}
+          mkdir -p ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
+
       - name: Copy .env
         run: cp src/server/.env.example src/server/.env
 
@@ -89,7 +112,7 @@ jobs:
 
       - name: Check generate code has diff
         run: |
-          docker run --rm -u ${UID}:${GID} -v ".:/local" ghcr.io/sayuprc/openapi-generator generate \
+          docker run --rm -u ${UID}:${GID} -v ".:/local" ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} generate \
             -i /local/src/contracts/generated/oas/openapi.yaml \
             -g php \
             -t /local/src/server/tools/openapi-generator/templates \
