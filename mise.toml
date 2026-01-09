@@ -27,7 +27,7 @@ run = "docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx"
 [tasks."build:php"]
 description = "PHP のイメージをビルドする"
 run = '''
-docker build -t isekai-terrarium-admin-php:8.4 ./docker/php \
+docker build -t isekai-terrarium-admin-php:8.5 ./docker/php \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
   --build-arg USERNAME={{vars.user_name}} \
