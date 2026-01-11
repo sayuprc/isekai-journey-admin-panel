@@ -1,4 +1,5 @@
-FROM node:22-bookworm
+ARG TAG=22
+FROM node:${TAG}-bookworm
 
 COPY certs/rootCA.pem /usr/share/ca-certificates/
 

@@ -1,10 +1,24 @@
 [vars]
+server_tag = "8.5"
+node_tag = "22"
+proxy_tag = "1.27"
+openapi_tag = "7.18.0"
 server_container = "isekai-terrarium-admin-php"
 client_container = "isekai-terrarium-admin-node"
 uid = "$(id -u)"
 user_name = "$(id -un)"
 gid = "$(id -g)"
 group_name = "$(id -gn)"
+
+[env]
+SERVER_TAG = "{{vars.server_tag}}"
+NODE_TAG = "{{vars.node_tag}}"
+PROXY_TAG = "{{vars.proxy_tag}}"
+OPENAPI_TAG = "{{vars.openapi_tag}}"
+SERVER_IMAGE = "isekai-terrarium-admin-php:{{vars.server_tag}}"
+NODE_IMAGE = "isekai-terrarium-admin-node:{{vars.node_tag}}"
+PROXY_IMAGE = "isekai-terrarium-proxy:{{vars.proxy_tag}}"
+OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
 
 [tasks.setup]
 description = "環境構築をする"
@@ -22,12 +36,13 @@ depends = "build:*"
 
 [tasks."build:proxy"]
 description = "Nginx のイメージをビルドする"
-run = "docker build -t isekai-terrarium-proxy:1.27 ./docker/nginx"
+run = "docker build -t ${PROXY_IMAGE} ./docker/nginx --build-arg TAG=${PROXY_TAG}"
 
 [tasks."build:php"]
 description = "PHP のイメージをビルドする"
 run = '''
-docker build -t isekai-terrarium-admin-php:8.5 ./docker/php \
+docker build -t ${SERVER_IMAGE} ./docker/php \
+  --build-arg TAG=${SERVER_TAG} \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
   --build-arg USERNAME={{vars.user_name}} \
@@ -37,7 +52,8 @@ docker build -t isekai-terrarium-admin-php:8.5 ./docker/php \
 [tasks."build:openapi-generator"]
 description = "OpenAPI Generator のイメージをビルドする"
 run = '''
-docker build -t openapi-generator:7.18.0 ./docker/openapi-generator \
+docker build -t ${OPENAPI_IMAGE} ./docker/openapi-generator \
+  --build-arg TAG=${OPENAPI_TAG} \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
   --build-arg USERNAME={{vars.user_name}} \
@@ -46,7 +62,7 @@ docker build -t openapi-generator:7.18.0 ./docker/openapi-generator \
 
 [tasks."build:node"]
 description = "Node のイメージをビルドする"
-run = "docker build -t isekai-terrarium-admin-node:22 ./docker/node"
+run = "docker build -t ${NODE_IMAGE} ./docker/node --build-arg TAG=${NODE_TAG}"
 
 [tasks.up]
 description = "コンテナを起動する"
@@ -132,7 +148,7 @@ description = "OAS からサーバーのコードを生成する"
 run = '''
 rm -rf ./src/server/Generated
 
-docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" openapi-generator:7.18.0 generate \
+docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
   -i /local/src/contracts/generated/oas/openapi.yaml \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
