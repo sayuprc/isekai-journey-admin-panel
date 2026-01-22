@@ -7,8 +7,8 @@ namespace Tests\Unit\Auth\Application\Interactors;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
+use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Credential\RefreshToken\IsUsed;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
@@ -70,7 +70,7 @@ class AuthenticateInteractorTest extends TestCase
                     new UserId($userId),
                     new TokenValue('token'),
                     new ExpiredAt(new DateTimeImmutable()),
-                    new IsUsed(false),
+                    ConsumptionStatus::Unused,
                 ),
             )
             ->once();
@@ -138,7 +138,7 @@ class AuthenticateInteractorTest extends TestCase
                     new UserId($userId),
                     new TokenValue('token'),
                     new ExpiredAt(new DateTimeImmutable()),
-                    new IsUsed(false),
+                    ConsumptionStatus::Unused,
                 ),
             )
             ->once();
