@@ -22,6 +22,11 @@ class LoginTest extends TestCase
     #[Test]
     public function canLogin(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         $user = new User(
             new UserId($this->generateUuid()),
             new Email('example@example.com'),

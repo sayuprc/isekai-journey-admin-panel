@@ -19,6 +19,11 @@ class JwtHandlerTest extends TestCase
     #[Test]
     public function generateJwtSuccessfully(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         $jwt = $this->getInstance()->generate(new AccessTokenPayload(
             iss: 'iss',
             iat: 0,
@@ -42,7 +47,10 @@ class JwtHandlerTest extends TestCase
     #[Test]
     public function verifyJwtSuccessfully(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         CarbonImmutable::setTestNow($now = new DateTimeImmutable());
 
@@ -68,7 +76,10 @@ class JwtHandlerTest extends TestCase
     #[Test]
     public function throwExceptionWhenExpireToken(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $this->expectException(ExpiredException::class);
 
@@ -86,7 +97,10 @@ class JwtHandlerTest extends TestCase
     #[Test]
     public function throwExceptionWhenInvalidIssuer(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $this->expectException(InvalidIssuerException::class);
 
