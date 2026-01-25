@@ -37,7 +37,7 @@ class LoginInteractorTest extends TestCase
         $refreshTokens = $this->getAll(FileRefreshTokenRepository::class);
         $this->assertCount(1, $refreshTokens);
         $this->assertSame($userId, $refreshTokens[array_key_first($refreshTokens)]->userId->value);
-        $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isEnabled($now));
+        $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isAvailable($now));
     }
 
     private function getInstance(): LoginInteractor

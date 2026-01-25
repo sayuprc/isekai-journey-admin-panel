@@ -60,7 +60,7 @@ class RefreshTokenFactoryTest extends TestCase
         $expiredAtProp = new ReflectionProperty($refreshToken, 'expiredAt');
         $expiredAtProp->setAccessible(true);
         $this->assertSame($now->modify('+7 days')->format('Y-m-d H:i:s'), $expiredAtProp->getValue($refreshToken)->value->format('Y-m-d H:i:s'));
-        $this->assertTrue($refreshToken->isEnabled($now));
+        $this->assertTrue($refreshToken->isAvailable($now));
     }
 
     private function getInstance(): RefreshTokenFactory
