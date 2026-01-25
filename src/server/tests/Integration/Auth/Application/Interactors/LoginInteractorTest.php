@@ -20,6 +20,11 @@ class LoginInteractorTest extends TestCase
     #[Test]
     public function canLogin(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         CarbonImmutable::setTestNow('2019-12-02 12:34:29');
 
         $now = new CarbonImmutable();

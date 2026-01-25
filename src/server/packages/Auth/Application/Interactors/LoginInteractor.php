@@ -10,7 +10,7 @@ use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use ResultType\Eager\Ok;
+use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 

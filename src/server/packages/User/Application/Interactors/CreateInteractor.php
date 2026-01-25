@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace User\Application\Interactors;
 
-use ResultType\Eager\Err;
-use ResultType\Eager\Ok;
+use ResultType\Err;
+use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 use User\Application\UseCase\Create\CreateInputData;

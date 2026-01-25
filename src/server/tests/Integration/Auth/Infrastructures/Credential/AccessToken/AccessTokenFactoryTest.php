@@ -14,6 +14,11 @@ class AccessTokenFactoryTest extends TestCase
     #[Test]
     public function createSuccessfully(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         CarbonImmutable::setTestNow('2019-12-09 12:30:20');
 
         $now = new CarbonImmutable();

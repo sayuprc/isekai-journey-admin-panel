@@ -9,8 +9,8 @@ use Performer\Application\UseCase\Get\GetOutputData;
 use Performer\Application\UseCase\Get\GetUseCaseInterface;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use ResultType\Eager\Err;
-use ResultType\Eager\Ok;
+use ResultType\Err;
+use ResultType\Ok;
 use ResultType\Result;
 
 readonly class GetInteractor implements GetUseCaseInterface

@@ -48,7 +48,7 @@ class JwtHandlerTest extends TestCase
 
         $this->config->shouldReceive('getString')
             ->with('auth.jwt.key')
-            ->andReturn('key')
+            ->andReturn(str_repeat('k', 256))
             ->once();
 
         $jwt = $this->getInstance()->generate(new AccessTokenPayload(
@@ -84,7 +84,7 @@ class JwtHandlerTest extends TestCase
 
         $this->config->shouldReceive('getString')
             ->with('auth.jwt.key')
-            ->andReturn('key')
+            ->andReturn(str_repeat('k', 256))
             ->once();
 
         $handler = $this->getInstance();
@@ -139,7 +139,7 @@ class JwtHandlerTest extends TestCase
 
         $this->config->shouldReceive('getString')
             ->with('auth.jwt.key')
-            ->andReturn('key')
+            ->andReturn(str_repeat('k', 256))
             ->once();
 
         $handler = $this->getInstance();

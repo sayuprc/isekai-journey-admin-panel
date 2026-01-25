@@ -23,7 +23,10 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function canAuthenticate(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
@@ -40,7 +43,10 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenExpireToken(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $now = now()->toImmutable();
         CarbonImmutable::setTestNow($now->modify('-3 hours'));
@@ -62,7 +68,10 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenCredentialNotFound(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
@@ -76,7 +85,10 @@ class AuthenticateInteractorTest extends TestCase
     #[Test]
     public function unauthenticatedWhenUserNotFound(): void
     {
-        config()->set('auth.jwt.key', 'key');
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
 
         $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);

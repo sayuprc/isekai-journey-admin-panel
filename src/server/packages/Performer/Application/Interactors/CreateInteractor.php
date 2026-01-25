@@ -10,8 +10,8 @@ use Performer\Application\UseCase\Create\CreateUseCaseInterface;
 use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
-use ResultType\Eager\Err;
-use ResultType\Eager\Ok;
+use ResultType\Err;
+use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 
