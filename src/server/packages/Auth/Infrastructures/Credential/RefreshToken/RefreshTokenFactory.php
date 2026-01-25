@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Credential\RefreshToken;
 
+use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Credential\RefreshToken\IsUsed;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
@@ -33,7 +33,7 @@ readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
             new UserId($userId),
             new TokenValue($this->randomToken->generate()),
             new ExpiredAt($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
-            new IsUsed(false),
+            ConsumptionStatus::Unused,
         );
     }
 }

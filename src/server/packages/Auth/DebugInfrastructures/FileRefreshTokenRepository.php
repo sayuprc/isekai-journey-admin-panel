@@ -32,7 +32,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
     {
         $found = $this->store->get($this->filePath, $refreshTokenId->value);
 
-        return is_null($found) || ! $found->isEnabled($this->clock->now())
+        return is_null($found) || ! $found->isAvailable($this->clock->now())
             ? null
             : $found;
     }

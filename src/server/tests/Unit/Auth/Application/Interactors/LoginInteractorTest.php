@@ -9,8 +9,8 @@ use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Domain\Models\Credential\AccessToken\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Credential\AccessToken\Jwt;
+use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Credential\RefreshToken\IsUsed;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
@@ -64,7 +64,7 @@ class LoginInteractorTest extends TestCase
                 new UserId($userId),
                 new TokenValue('token'),
                 new ExpiredAt($now->modify('+ 7 days')),
-                new IsUsed(false),
+                ConsumptionStatus::Unused,
             ))
             ->once();
 
@@ -79,7 +79,7 @@ class LoginInteractorTest extends TestCase
                     fn (RefreshToken $arg) => $arg->refreshTokenId->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                         && $arg->userId->value === $userId
                         && $arg->token->value === 'token'
-                        && $arg->isEnabled($now),
+                        && $arg->isAvailable($now),
                 ),
             )
             ->andReturn($refreshToken)

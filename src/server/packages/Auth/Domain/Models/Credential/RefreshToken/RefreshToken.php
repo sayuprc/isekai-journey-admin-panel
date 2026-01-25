@@ -14,12 +14,12 @@ readonly class RefreshToken
         public UserId $userId,
         public TokenValue $token,
         private ExpiredAt $expiredAt,
-        private IsUsed $isUsed,
+        private ConsumptionStatus $status,
     ) {
     }
 
-    public function isEnabled(DateTimeInterface $now): bool
+    public function isAvailable(DateTimeInterface $now): bool
     {
-        return ! $this->isUsed->value && ! $this->expiredAt->isPast($now);
+        return $this->status->isAvailable() && ! $this->expiredAt->isPast($now);
     }
 }
