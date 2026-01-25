@@ -6,7 +6,6 @@ namespace Tests\Unit\Support\Domain\ValueObjects\Numeric;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\Numeric\PositiveIntegerValueObject;
 use Tests\TestCase;
 
@@ -15,16 +14,20 @@ class PositiveIntegerValueObjectTest extends TestCase
     #[Test]
     public function properlyStoresValue(): void
     {
-        $this->assertSame(1, new PositiveIntegerObject(1)->value);
+        $result = PositiveIntegerObject::create(1);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame(1, $result->unwrap()->value);
     }
 
+    #[Test]
     #[DataProvider('provideThrowExceptionWhenInvalidValue')]
     public function throwExceptionWhenInvalidValue(int $value): void
     {
-        $this->expectException(InvalidDomainException::class);
-        $this->expectExceptionMessage('Value must be a positive integer');
+        $result = PositiveIntegerObject::create($value);
 
-        new PositiveIntegerObject($value);
+        $this->assertTrue($result->isErr());
+        $this->assertSame('正の整数ではありません: ' . $value, $result->unwrapErr()->message);
     }
 
     public static function provideThrowExceptionWhenInvalidValue(): array

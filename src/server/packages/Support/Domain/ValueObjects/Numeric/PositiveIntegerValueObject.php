@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Support\Domain\ValueObjects\Numeric;
 
-use Support\Domain\Exceptions\InvalidDomainException;
+use Override;
 
 abstract readonly class PositiveIntegerValueObject extends IntegerValueObject
 {
-    /**
-     * @param positive-int $value
-     *
-     * @throws InvalidDomainException
-     */
-    public function __construct(int $value)
+    #[Override]
+    protected static function isValid(int $value): bool
     {
-        // @phpstan-ignore smallerOrEqual.alwaysFalse
-        if ($value <= 0) {
-            throw new InvalidDomainException('Value must be a positive integer');
-        }
-        parent::__construct($value);
+        return 0 < $value;
+    }
+
+    #[Override]
+    protected static function getMessage(int $value): string
+    {
+        return "正の整数ではありません: {$value}";
     }
 }

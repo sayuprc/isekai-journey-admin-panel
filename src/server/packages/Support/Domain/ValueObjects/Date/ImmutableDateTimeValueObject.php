@@ -5,10 +5,43 @@ declare(strict_types=1);
 namespace Support\Domain\ValueObjects\Date;
 
 use DateTimeImmutable;
+use ResultType\Err;
+use ResultType\Ok;
+use ResultType\Result;
+use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Validation\ValidationError;
 
 abstract readonly class ImmutableDateTimeValueObject
 {
-    public function __construct(public DateTimeImmutable $value)
+    /**
+     * @throws InvalidDomainException
+     */
+    final protected function __construct(public DateTimeImmutable $value)
     {
+        if (! static::isValid($this->value)) {
+            throw new InvalidDomainException(static::getMessage($this->value));
+        }
+    }
+
+    /**
+     * @return Result<static, ValidationError>
+     */
+    public static function create(DateTimeImmutable $value): Result
+    {
+        if (! static::isValid($value)) {
+            return new Err(new ValidationError(static::getMessage($value)));
+        }
+
+        return new Ok(new static($value));
+    }
+
+    protected static function isValid(DateTimeImmutable $value): bool
+    {
+        return true;
+    }
+
+    protected static function getMessage(DateTimeImmutable $value): string
+    {
+        return "日時が不正です: {$value->format('Y-m-d H:i:s')}";
     }
 }
