@@ -12,8 +12,8 @@ use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
 use Auth\Domain\Services\Credential\AccessToken\Exceptions\InvalidIssuerException;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
-use ResultType\Eager\Err;
-use ResultType\Eager\Ok;
+use ResultType\Err;
+use ResultType\Ok;
 use ResultType\Result;
 use User\Domain\Models\UserRepositoryInterface;
 
