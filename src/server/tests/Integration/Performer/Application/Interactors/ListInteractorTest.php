@@ -7,16 +7,14 @@ namespace Tests\Integration\Performer\Application\Interactors;
 use Performer\Application\Interactors\ListInteractor;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\DebugInfrastructures\FilePerformerRepository;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -33,11 +31,8 @@ class ListInteractorTest extends TestCase
     public function nonEmptyPerformers(): void
     {
         $uuid = $this->generateUuid();
-        $this->factory(
-            FilePerformerRepository::class,
-            $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
-        );
+
+        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $response = $this->getInstance()->handle();
 

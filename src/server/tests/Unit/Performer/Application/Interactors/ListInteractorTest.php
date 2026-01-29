@@ -9,16 +9,15 @@ use Mockery\MockInterface;
 use Performer\Application\Interactors\ListInteractor;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Application\UseCase\List\ListUseCaseInterface;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&PerformerRepositoryInterface $repository;
 
     private ListInteractor $interactor;
@@ -57,16 +56,8 @@ class ListInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('all')
             ->andReturn([
-                new Performer(
-                    new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new PerformerName('共演者A'),
-                    new OrderNo(1),
-                ),
-                new Performer(
-                    new PerformerId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new PerformerName('共演者B'),
-                    new OrderNo(2),
-                ),
+                $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者A', 1),
+                $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '共演者B', 2),
             ])
             ->once();
 

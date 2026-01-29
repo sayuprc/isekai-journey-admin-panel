@@ -8,11 +8,8 @@ use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Models\Credential\RefreshToken\TokenValue;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
@@ -20,15 +17,15 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
-use User\Domain\Models\Email;
-use User\Domain\Models\HashedPassword;
-use User\Domain\Models\User;
 use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
 
 class AuthenticateInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private JwtHandlerInterface&MockInterface $jwtHandler;
 
     private MockInterface&RefreshTokenRepositoryInterface $refreshTokenRepository;
@@ -65,11 +62,11 @@ class AuthenticateInteractorTest extends TestCase
         $this->refreshTokenRepository->shouldReceive('findActive')
             ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
             ->andReturn(
-                new RefreshToken(
-                    new RefreshTokenId($refreshTokenId),
-                    new UserId($userId),
-                    new TokenValue('token'),
-                    new ExpiredAt(new DateTimeImmutable()),
+                $this->createRefreshToken(
+                    $refreshTokenId,
+                    $userId,
+                    'token',
+                    new DateTimeImmutable(),
                     ConsumptionStatus::Unused,
                 ),
             )
@@ -77,7 +74,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->userRepository->shouldReceive('find')
             ->with(Mockery::on(fn (UserId $arg) => $arg->value === $userId))
-            ->andReturn(new User(new UserId($userId), new Email('example@example.com'), new HashedPassword('')))
+            ->andReturn($this->createUser($userId, 'example@example.com', ''))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
@@ -133,11 +130,11 @@ class AuthenticateInteractorTest extends TestCase
         $this->refreshTokenRepository->shouldReceive('findActive')
             ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
             ->andReturn(
-                new RefreshToken(
-                    new RefreshTokenId($refreshTokenId),
-                    new UserId($userId),
-                    new TokenValue('token'),
-                    new ExpiredAt(new DateTimeImmutable()),
+                $this->createRefreshToken(
+                    $refreshTokenId,
+                    $userId,
+                    'token',
+                    new DateTimeImmutable(),
                     ConsumptionStatus::Unused,
                 ),
             )

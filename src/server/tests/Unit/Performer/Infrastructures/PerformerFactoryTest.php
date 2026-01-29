@@ -33,7 +33,11 @@ class PerformerFactoryTest extends TestCase
             ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
-        $performer = $this->factory->create('共演者', 1);
+        $result = $this->factory->create('共演者', 1);
+
+        $this->assertTrue($result->isOk());
+
+        $performer = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
         $this->assertSame('共演者', $performer->performerName->value);
@@ -43,7 +47,11 @@ class PerformerFactoryTest extends TestCase
     #[Test]
     public function reconstitute(): void
     {
-        $performer = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1);
+        $result = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1);
+
+        $this->assertTrue($result->isOk());
+
+        $performer = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
         $this->assertSame('共演者', $performer->performerName->value);

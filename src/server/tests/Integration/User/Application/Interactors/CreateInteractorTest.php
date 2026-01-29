@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Tests\Integration\User\Application\Interactors;
 
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 use User\Application\Interactors\CreateInteractor;
 use User\Application\UseCase\Create\CreateInputData;
 use User\DebugInfrastructures\FileUserRepository;
-use User\Domain\Models\Email;
-use User\Domain\Models\HashedPassword;
 use User\Domain\Models\User;
-use User\Domain\Models\UserId;
 
 class CreateInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -37,11 +36,8 @@ class CreateInteractorTest extends TestCase
     public function createFailsIfEmailAlreadyExists(): void
     {
         $uuid = $this->generateUuid();
-        $this->factory(
-            FileUserRepository::class,
-            $uuid,
-            new User(new UserId($uuid), new Email('example@example.com'), new HashedPassword('hashed')),
-        );
+
+        $this->factory(FileUserRepository::class, $uuid, $this->createUser($uuid, 'example@example.com', 'hashed'));
 
         $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));
 

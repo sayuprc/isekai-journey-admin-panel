@@ -12,17 +12,19 @@ use Performer\Application\UseCase\Create\CreateInputData;
 use Performer\Application\UseCase\Create\CreateUseCaseInterface;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerFactoryInterface;
-use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&TransactionInterface $transaction;
 
     private MockInterface&PerformerRepositoryInterface $repository;
@@ -61,11 +63,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('共演者', 1)
-            ->andReturn($performer = new Performer(
-                new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('共演者'),
-                new OrderNo(1),
-            ))
+            ->andReturn(new Ok($performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1)))
             ->once();
 
         $this->service->shouldReceive('exists')
@@ -74,10 +72,12 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(Mockery::on(
-                fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->performerName->value === '共演者',
-            ))
+            ->with(
+                Mockery::on(
+                    fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                        && $arg->performerName->value === '共演者',
+                ),
+            )
             ->andReturn($performer)
             ->once();
 
@@ -96,11 +96,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('共演者', 1)
-            ->andReturn(new Performer(
-                new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('共演者'),
-                new OrderNo(1),
-            ))
+            ->andReturn(new Ok($this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1)))
             ->once();
 
         $this->service->shouldReceive('exists')

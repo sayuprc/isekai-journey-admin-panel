@@ -38,7 +38,11 @@ class UserFactoryTest extends TestCase
             ->andReturn('hashed')
             ->once();
 
-        $user = $this->getInstance()->create('example@example.com', 'plain');
+        $result = $this->getInstance()->create('example@example.com', 'plain');
+
+        $this->assertTrue($result->isOk());
+
+        $user = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->userId->value);
         $this->assertSame('example@example.com', $user->email->value);

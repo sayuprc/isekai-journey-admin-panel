@@ -52,7 +52,11 @@ class RefreshTokenFactoryTest extends TestCase
             ->andReturn('aaaaaaaaaa')
             ->once();
 
-        $refreshToken = $this->getInstance()->create($userId);
+        $result = $this->getInstance()->create($userId);
+
+        $this->assertTrue($result->isOk());
+
+        $refreshToken = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $refreshToken->refreshTokenId->value);
         $this->assertSame($userId, $refreshToken->userId->value);

@@ -7,17 +7,17 @@ namespace Tests\Unit\Creator\Application\Interactors;
 use Creator\Application\Interactors\ListInteractor;
 use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private CreatorRepositoryInterface&MockInterface $repository;
 
     private ListInteractor $interactor;
@@ -56,14 +56,8 @@ class ListInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('all')
             ->andReturn([
-                new Creator(
-                    new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                    new CreatorName('クリエイターA'),
-                ),
-                new Creator(
-                    new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                    new CreatorName('クリエイターB'),
-                ),
+                $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイターA'),
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイターB'),
             ])
             ->once();
 

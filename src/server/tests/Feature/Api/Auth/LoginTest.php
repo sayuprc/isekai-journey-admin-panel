@@ -7,16 +7,14 @@ namespace Tests\Feature\Api\Auth;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 use User\DebugInfrastructures\FileUserRepository;
-use User\Domain\Models\Email;
-use User\Domain\Models\HashedPassword;
-use User\Domain\Models\User;
-use User\Domain\Models\UserId;
 
 class LoginTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -27,11 +25,7 @@ class LoginTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = new User(
-            new UserId($this->generateUuid()),
-            new Email('example@example.com'),
-            new HashedPassword(Hash::make('password')),
-        );
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
         $this->factory(FileUserRepository::class, $user->userId->value, $user);
 
@@ -55,11 +49,7 @@ class LoginTest extends TestCase
     #[Test]
     public function invalidCredentials(): void
     {
-        $user = new User(
-            new UserId($this->generateUuid()),
-            new Email('example@example.com'),
-            new HashedPassword(Hash::make('password')),
-        );
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
         $this->factory(FileUserRepository::class, $user->userId->value, $user);
 

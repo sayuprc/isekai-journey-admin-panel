@@ -10,18 +10,21 @@ use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class UpdateInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&TransactionInterface $transaction;
 
     private CreatorRepositoryInterface&MockInterface $repository;
@@ -60,10 +63,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')
-            ->andReturn($creator = new Creator(
-                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター'),
-            ))
+            ->andReturn(new Ok($creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
             ->once();
 
         $this->service->shouldReceive('exists')
@@ -72,10 +72,12 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(Mockery::on(
-                fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->creatorName->value === 'クリエイター',
-            ))
+            ->with(
+                Mockery::on(
+                    fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
+                        && $arg->creatorName->value === 'クリエイター',
+                ),
+            )
             ->andReturn($creator)
             ->once();
 
@@ -94,10 +96,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')
-            ->andReturn(new Creator(
-                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター'),
-            ))
+            ->andReturn(new Ok($this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
             ->once();
 
         $this->service->shouldReceive('exists')
