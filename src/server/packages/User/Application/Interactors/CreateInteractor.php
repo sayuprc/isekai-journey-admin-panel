@@ -11,7 +11,7 @@ use Support\Contracts\TransactionInterface;
 use User\Application\UseCase\Create\CreateInputData;
 use User\Application\UseCase\Create\CreateOutputData;
 use User\Application\UseCase\Create\CreateUseCaseInterface;
-use User\Domain\Models\Email;
+use User\Domain\Models\User;
 use User\Domain\Models\UserFactoryInterface;
 use User\Domain\Models\UserRepositoryInterface;
 
@@ -26,16 +26,19 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            if (! is_null($this->repository->findByEmail(new Email($inputData->email)))) {
-                return new Err("User already exists: {$inputData->email}");
-            }
+        return $this->factory->create($inputData->email, $inputData->plainPassword)
+            // TODO エラーハンドリング強化
+            ->mapErr(fn (): string => '')
+            ->andThen(function (User $user): Result {
+                return $this->transaction->scope(function () use ($user): Result {
+                    if (! is_null($this->repository->findByEmail($user->email))) {
+                        return new Err("User already exists: {$user->email->value}");
+                    }
 
-            $user = $this->factory->create($inputData->email, $inputData->plainPassword);
+                    $this->repository->save($user);
 
-            $this->repository->save($user);
-
-            return new Ok(new CreateOutputData($user));
-        });
+                    return new Ok(new CreateOutputData($user));
+                });
+            });
     }
 }

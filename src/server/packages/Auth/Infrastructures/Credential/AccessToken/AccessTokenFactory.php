@@ -10,7 +10,9 @@ use Auth\Domain\Models\Credential\AccessToken\Jwt;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
+use ResultType\Result;
 use Support\Contracts\ClockInterface;
+use Support\Domain\Validation\ValidationError;
 
 readonly class AccessTokenFactory implements AccessTokenFactoryInterface
 {
@@ -23,7 +25,7 @@ readonly class AccessTokenFactory implements AccessTokenFactoryInterface
     ) {
     }
 
-    public function create(string $refreshTokenId): AccessToken
+    public function create(string $refreshTokenId): Result
     {
         $now = $this->clock->now();
 
@@ -35,6 +37,8 @@ readonly class AccessTokenFactory implements AccessTokenFactoryInterface
             jti: $refreshTokenId,
         );
 
-        return new AccessToken(new Jwt($this->jwt->generate($payload)));
+        return Jwt::create($this->jwt->generate($payload))
+            ->map(fn (Jwt $jwt): AccessToken => new AccessToken($jwt))
+            ->mapErr(fn (ValidationError $error): array => [$error]);
     }
 }

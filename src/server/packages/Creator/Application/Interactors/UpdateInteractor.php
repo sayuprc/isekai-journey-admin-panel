@@ -7,6 +7,7 @@ namespace Creator\Application\Interactors;
 use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\Application\UseCase\Update\UpdateOutputData;
 use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
+use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
@@ -27,16 +28,18 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
 
     public function handle(UpdateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $creator = $this->factory->reconstitute($inputData->creatorId, $inputData->creatorName);
+        return $this->factory->reconstitute($inputData->creatorId, $inputData->creatorName)
+            ->mapErr(fn (): string => '')
+            ->andThen(function (Creator $creator): Result {
+                return $this->transaction->scope(function () use ($creator): Result {
+                    if ($this->service->exists($creator->creatorName)) {
+                        return new Err("Creator name already exists: {$creator->creatorName->value}");
+                    }
 
-            if ($this->service->exists($creator->creatorName)) {
-                return new Err("Creator name already exists: {$inputData->creatorName}");
-            }
+                    $this->repository->save($creator);
 
-            $this->repository->save($creator);
-
-            return new Ok(new UpdateOutputData($creator));
-        });
+                    return new Ok(new UpdateOutputData($creator));
+                });
+            });
     }
 }

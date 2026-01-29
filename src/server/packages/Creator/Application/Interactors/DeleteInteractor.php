@@ -17,6 +17,7 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->repository->delete(new CreatorId($inputData->creatorId));
+        CreatorId::create($inputData->creatorId)
+            ->map(fn (CreatorId $creatorId) => $this->repository->delete($creatorId));
     }
 }
