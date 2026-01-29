@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Domain\Services;
 
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class CreatorNameDuplicateCheckServiceTest extends TestCase
 {
+    use EntityFactory;
+
     private CreatorRepositoryInterface&MockInterface $repository;
 
     private CreatorNameDuplicateCheckService $service;
@@ -34,10 +35,10 @@ class CreatorNameDuplicateCheckServiceTest extends TestCase
     {
         $this->repository->shouldReceive('findByName')
             ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andReturn(new Creator(new CreatorId($this->generateUuid()), new CreatorName('クリエイター')))
+            ->andReturn($this->createCreator($this->generateUuid(), 'クリエイター'))
             ->once();
 
-        $this->assertTrue($this->service->exists(new CreatorName('クリエイター')));
+        $this->assertTrue($this->service->exists(CreatorName::create('クリエイター')->unwrap()));
     }
 
     #[Test]
@@ -48,6 +49,6 @@ class CreatorNameDuplicateCheckServiceTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->assertFalse($this->service->exists(new CreatorName('クリエイター')));
+        $this->assertFalse($this->service->exists(CreatorName::create('クリエイター')->unwrap()));
     }
 }

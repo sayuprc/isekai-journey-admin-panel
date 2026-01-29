@@ -17,12 +17,15 @@ use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class UpdateInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&TransactionInterface $transaction;
 
     private MockInterface&PerformerRepositoryInterface $repository;
@@ -61,11 +64,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)
-            ->andReturn($performer = new Performer(
-                new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('共演者2'),
-                new OrderNo(2),
-            ))
+            ->andReturn(new Ok($performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)))
             ->once();
 
         $this->service->shouldReceive('existsForUpdate')
@@ -100,11 +99,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('reconstitute')
             ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)
-            ->andReturn(new Performer(
-                new PerformerId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new PerformerName('共演者2'),
-                new OrderNo(2),
-            ))
+            ->andReturn(new Ok($this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)))
             ->once();
 
         $this->service->shouldReceive('existsForUpdate')

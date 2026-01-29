@@ -12,15 +12,16 @@ use Performer\Application\UseCase\Get\GetOutputData;
 use Performer\Application\UseCase\Get\GetUseCaseInterface;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Result;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&PerformerRepositoryInterface $repository;
 
     private GetInteractor $interactor;
@@ -45,11 +46,7 @@ class GetInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('find')
             ->with(Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
-            ->andReturn(new Performer(
-                new PerformerId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                new PerformerName('共演者名'),
-                new OrderNo(1),
-            ))
+            ->andReturn($this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '共演者名', 1))
             ->once();
 
         $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));

@@ -21,7 +21,11 @@ class RefreshTokenFactoryTest extends TestCase
 
         $userId = $this->generateUuid();
 
-        $refreshToken = $this->getInstance()->create($userId);
+        $result = $this->getInstance()->create($userId);
+
+        $this->assertTrue($result->isOk());
+
+        $refreshToken = $result->unwrap();
 
         $expiredAtProp = new ReflectionProperty($refreshToken, 'expiredAt');
         $expiredAtProp->setAccessible(true);

@@ -9,16 +9,15 @@ use Performer\Application\UseCase\Get\GetInputData;
 use Performer\Application\UseCase\Get\GetOutputData;
 use Performer\DebugInfrastructures\FilePerformerRepository;
 use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Result;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -26,11 +25,7 @@ class GetInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FilePerformerRepository::class,
-            $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
-        );
+        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 
@@ -52,7 +47,6 @@ class GetInteractorTest extends TestCase
     {
         $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
-        $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isErr());
 
         $this->assertSame('Performer not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->unwrapErr());

@@ -8,14 +8,14 @@ use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class UpdateInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -23,11 +23,7 @@ class UpdateInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileCreatorRepository::class,
-            $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
-        );
+        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));
 
@@ -44,11 +40,7 @@ class UpdateInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileCreatorRepository::class,
-            $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒')),
-        );
+        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'ヰ世界情緒'));
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));
 

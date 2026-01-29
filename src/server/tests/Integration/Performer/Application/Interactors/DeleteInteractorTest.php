@@ -8,15 +8,14 @@ use Performer\Application\Interactors\DeleteInteractor;
 use Performer\Application\UseCase\Delete\DeleteInputData;
 use Performer\DebugInfrastructures\FilePerformerRepository;
 use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class DeleteInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -24,11 +23,7 @@ class DeleteInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FilePerformerRepository::class,
-            $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('共演者'), new OrderNo(1)),
-        );
+        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, '共演者', 1));
 
         $this->getInstance()->handle(new DeleteInputData($uuid));
 

@@ -6,27 +6,25 @@ namespace Tests\Unit\Auth\Application\Interactors;
 
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
-use Auth\Domain\Models\Credential\AccessToken\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
-use Auth\Domain\Models\Credential\AccessToken\Jwt;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Models\Credential\RefreshToken\TokenValue;
 use Closure;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
-use User\Domain\Models\UserId;
 
 class LoginInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private readonly MockInterface&TransactionInterface $transaction;
 
     private readonly MockInterface&RefreshTokenFactoryInterface $refreshTokenFactory;
@@ -59,18 +57,22 @@ class LoginInteractorTest extends TestCase
 
         $this->refreshTokenFactory->shouldReceive('create')
             ->with($userId)
-            ->andReturn($refreshToken = new RefreshToken(
-                new RefreshTokenId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                new UserId($userId),
-                new TokenValue('token'),
-                new ExpiredAt($now->modify('+ 7 days')),
-                ConsumptionStatus::Unused,
-            ))
+            ->andReturn(
+                new Ok(
+                    $refreshToken = $this->createRefreshToken(
+                        'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
+                        $userId,
+                        'token',
+                        $now->modify('+ 7 days'),
+                        ConsumptionStatus::Unused,
+                    ),
+                ),
+            )
             ->once();
 
         $this->accessTokenFactory->shouldReceive('create')
             ->with('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
-            ->andReturn(new AccessToken(new Jwt('jwt')))
+            ->andReturn(new Ok($this->createAccessToken('jwt')))
             ->once();
 
         $this->refreshTokenRepository->shouldReceive('save')

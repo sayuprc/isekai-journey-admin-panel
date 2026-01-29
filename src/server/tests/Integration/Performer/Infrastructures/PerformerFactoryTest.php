@@ -13,7 +13,11 @@ class PerformerFactoryTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $performer = $this->getInstance()->create('ヰ世界情緒', 1);
+        $result = $this->getInstance()->create('ヰ世界情緒', 1);
+
+        $this->assertTrue($result->isOk());
+
+        $performer = $result->unwrap();
 
         $this->assertSame('ヰ世界情緒', $performer->performerName->value);
     }
@@ -21,7 +25,11 @@ class PerformerFactoryTest extends TestCase
     #[Test]
     public function reconstitute(): void
     {
-        $performer = $this->getInstance()->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
+        $result = $this->getInstance()->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
+
+        $this->assertTrue($result->isOk());
+
+        $performer = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
         $this->assertSame('ヰ世界情緒', $performer->performerName->value);

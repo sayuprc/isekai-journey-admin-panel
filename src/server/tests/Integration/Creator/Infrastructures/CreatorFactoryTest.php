@@ -13,7 +13,11 @@ class CreatorFactoryTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $creator = $this->getInstance()->create('ヰ世界情緒');
+        $result = $this->getInstance()->create('ヰ世界情緒');
+
+        $this->assertTrue($result->isOk());
+
+        $creator = $result->unwrap();
 
         $this->assertSame('ヰ世界情緒', $creator->creatorName->value);
     }
@@ -21,7 +25,11 @@ class CreatorFactoryTest extends TestCase
     #[Test]
     public function reconstitute(): void
     {
-        $creator = $this->getInstance()->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒');
+        $result = $this->getInstance()->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒');
+
+        $this->assertTrue($result->isOk());
+
+        $creator = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
         $this->assertSame('ヰ世界情緒', $creator->creatorName->value);

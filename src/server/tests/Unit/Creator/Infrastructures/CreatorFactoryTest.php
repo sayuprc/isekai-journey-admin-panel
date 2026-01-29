@@ -33,7 +33,11 @@ class CreatorFactoryTest extends TestCase
             ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
-        $creator = $this->factory->create('クリエイター');
+        $result = $this->factory->create('クリエイター');
+
+        $this->assertTrue($result->isOk());
+
+        $creator = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
         $this->assertSame('クリエイター', $creator->creatorName->value);
@@ -42,7 +46,11 @@ class CreatorFactoryTest extends TestCase
     #[Test]
     public function reconstitute(): void
     {
-        $creator = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター');
+        $result = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター');
+
+        $this->assertTrue($result->isOk());
+
+        $creator = $result->unwrap();
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
         $this->assertSame('クリエイター', $creator->creatorName->value);
