@@ -7,6 +7,7 @@ namespace Performer\Application\Interactors;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateOutputData;
 use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
+use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
@@ -27,16 +28,19 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
 
     public function handle(UpdateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $performer = $this->factory->reconstitute($inputData->performerId, $inputData->performerName, $inputData->orderNo);
+        return $this->factory->reconstitute($inputData->performerId, $inputData->performerName, $inputData->orderNo)
+            // TODO
+            ->mapErr(fn (): string => '')
+            ->andThen(function (Performer $performer): Result {
+                return $this->transaction->scope(function () use ($performer): Result {
+                    if ($this->service->existsForUpdate($performer->performerId, $performer->performerName)) {
+                        return new Err("Performer name already exists: {$performer->performerName->value}");
+                    }
 
-            if ($this->service->existsForUpdate($performer->performerId, $performer->performerName)) {
-                return new Err("Performer name already exists: {$inputData->performerName}");
-            }
+                    $this->repository->save($performer);
 
-            $this->repository->save($performer);
-
-            return new Ok(new UpdateOutputData($performer));
-        });
+                    return new Ok(new UpdateOutputData($performer));
+                });
+            });
     }
 }

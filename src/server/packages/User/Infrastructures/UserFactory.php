@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace User\Infrastructures;
 
+use ResultType\Result;
 use Support\Contracts\UuidGeneratorInterface;
 use User\Domain\Models\Email;
 use User\Domain\Models\HashedPassword;
@@ -20,12 +21,13 @@ readonly class UserFactory implements UserFactoryInterface
     ) {
     }
 
-    public function create(string $email, string $plainPassword): User
+    public function create(string $email, string $plainPassword): Result
     {
-        return new User(
-            new UserId($this->generator->generate()),
-            new Email($email),
-            new HashedPassword($this->hasher->hash($plainPassword)),
-        );
+        return Result::collect3(
+            UserId::create($this->generator->generate()),
+            Email::create($email),
+            HashedPassword::create($this->hasher->hash($plainPassword)),
+        )->map(fn (array $values): User => new User(...$values))
+            ->mapErr(fn (array $values): array => array_filter($values, fn ($item) => ! is_null($item)));
     }
 }

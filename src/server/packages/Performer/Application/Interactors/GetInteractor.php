@@ -24,10 +24,15 @@ readonly class GetInteractor implements GetUseCaseInterface
      */
     public function handle(GetInputData $inputData): Result
     {
-        if (is_null($found = $this->repository->find(new PerformerId($inputData->performerId)))) {
-            return new Err("Performer not found: {$inputData->performerId}");
-        }
+        return PerformerId::create($inputData->performerId)
+            // TODO エラーハンドリング強化
+            ->mapErr(fn (): string => '')
+            ->andThen(function (PerformerId $performerId): Result {
+                if (is_null($found = $this->repository->find($performerId))) {
+                    return new Err("Performer not found: {$performerId->value}");
+                }
 
-        return new Ok(new GetOutputData($found));
+                return new Ok(new GetOutputData($found));
+            });
     }
 }

@@ -36,18 +36,23 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
             return new Err('不正なIssuer');
         }
 
-        $foundRefreshToken = $this->refreshTokenRepository->findActive(new RefreshTokenId($payload->jti));
+        return RefreshTokenId::create($payload->jti)
+            // TODO エラーハンドリング強化
+            ->mapErr(fn (): string => '')
+            ->andThen(function (RefreshTokenId $refreshTokenId): Result {
+                $foundRefreshToken = $this->refreshTokenRepository->findActive($refreshTokenId);
 
-        if (is_null($foundRefreshToken)) {
-            return new Err(sprintf('リフレッシュトークンが見つからない [refreshTokenId: %s]', $payload->jti));
-        }
+                if (is_null($foundRefreshToken)) {
+                    return new Err(sprintf('リフレッシュトークンが見つからない [refreshTokenId: %s]', $refreshTokenId->value));
+                }
 
-        $foundUser = $this->userRepository->find($foundRefreshToken->userId);
+                $foundUser = $this->userRepository->find($foundRefreshToken->userId);
 
-        if (is_null($foundUser)) {
-            return new Err(sprintf('ユーザーが見つからない [userId: %s]', $foundRefreshToken->userId->value));
-        }
+                if (is_null($foundUser)) {
+                    return new Err(sprintf('ユーザーが見つからない [userId: %s]', $foundRefreshToken->userId->value));
+                }
 
-        return new Ok(new AuthenticateOutputData());
+                return new Ok(new AuthenticateOutputData());
+            });
     }
 }

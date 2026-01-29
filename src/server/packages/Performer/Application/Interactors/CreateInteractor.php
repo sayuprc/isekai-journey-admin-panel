@@ -7,6 +7,7 @@ namespace Performer\Application\Interactors;
 use Performer\Application\UseCase\Create\CreateInputData;
 use Performer\Application\UseCase\Create\CreateOutputData;
 use Performer\Application\UseCase\Create\CreateUseCaseInterface;
+use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
@@ -27,16 +28,19 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $performer = $this->factory->create($inputData->performerName, $inputData->orderNo);
+        return $this->factory->create($inputData->performerName, $inputData->orderNo)
+            // TODO エラーハンドリング強化
+            ->mapErr(fn (): string => '')
+            ->andThen(function (Performer $performer): Result {
+                return $this->transaction->scope(function () use ($performer): Result {
+                    if ($this->service->exists($performer->performerName)) {
+                        return new Err("Performer name already exists: {$performer->performerName->value}");
+                    }
 
-            if ($this->service->exists($performer->performerName)) {
-                return new Err("Performer name already exists: {$inputData->performerName}");
-            }
+                    $this->repository->save($performer);
 
-            $this->repository->save($performer);
-
-            return new Ok(new CreateOutputData($performer));
-        });
+                    return new Ok(new CreateOutputData($performer));
+                });
+            });
     }
 }
