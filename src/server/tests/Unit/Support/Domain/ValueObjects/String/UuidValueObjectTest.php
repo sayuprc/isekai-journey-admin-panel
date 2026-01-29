@@ -6,7 +6,6 @@ namespace Tests\Unit\Support\Domain\ValueObjects\String;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
@@ -16,7 +15,10 @@ class UuidValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(string $value): void
     {
-        $this->assertSame($value, new Uuid($value)->value);
+        $result = Uuid::create($value);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($value, $result->unwrap()->value);
     }
 
     public static function provideProperlyStoresValue(): array
@@ -31,10 +33,10 @@ class UuidValueObjectTest extends TestCase
     #[DataProvider('provideThrowExceptionWhenInvalidFormat')]
     public function throwExceptionWhenInvalidFormat(string $value): void
     {
-        $this->expectException(InvalidDomainException::class);
-        $this->expectExceptionMessage('Value format is invalid');
+        $result = Uuid::create($value);
 
-        new Uuid($value);
+        $this->assertTrue($result->isErr());
+        $this->assertSame('形式が不正です: ' . $value, $result->unwrapErr()->message);
     }
 
     public static function provideThrowExceptionWhenInvalidFormat(): array

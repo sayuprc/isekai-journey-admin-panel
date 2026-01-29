@@ -25,7 +25,11 @@ readonly class AuthUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return $this->toAuthUser($this->repository->find(new UserId($identifier)));
+        return UserId::create($identifier)
+            ->match(
+                fn (UserId $userId): ?AuthUser => $this->toAuthUser($this->repository->find($userId)),
+                fn () => null,
+            );
     }
 
     public function retrieveByToken($identifier, $token)
@@ -42,7 +46,11 @@ readonly class AuthUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        return $this->toAuthUser($this->repository->findByEmail(new Email($credentials['email'])));
+        return Email::create($credentials['email'])
+            ->match(
+                fn (Email $email): ?AuthUser => $this->toAuthUser($this->repository->findByEmail($email)),
+                fn () => null,
+            );
     }
 
     /**

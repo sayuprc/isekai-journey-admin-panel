@@ -19,15 +19,17 @@ readonly class GetInteractor implements GetUseCaseInterface
     {
     }
 
-    /**
-     * @return Result<GetOutputData, string>
-     */
     public function handle(GetInputData $inputData): Result
     {
-        if (is_null($found = $this->repository->find(new CreatorId($inputData->creatorId)))) {
-            return new Err("Creator not found: {$inputData->creatorId}");
-        }
+        return CreatorId::create($inputData->creatorId)
+            // TODO 後で書く
+            ->mapErr(fn (): string => '')
+            ->andThen(function (CreatorId $creatorId): Result {
+                if (is_null($found = $this->repository->find($creatorId))) {
+                    return new Err("Creator not found: {$creatorId->value}");
+                }
 
-        return new Ok(new GetOutputData($found));
+                return new Ok(new GetOutputData($found));
+            });
     }
 }

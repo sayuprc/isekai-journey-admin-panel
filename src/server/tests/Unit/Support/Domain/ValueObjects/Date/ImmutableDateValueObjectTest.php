@@ -16,7 +16,10 @@ class ImmutableDateValueObjectTest extends TestCase
     #[DataProvider('provideTimeIsZero')]
     public function timeIsZero(ImmutableDate $value): void
     {
-        $this->assertSame($value->format('Y-m-d 00:00:00.000000'), new Date($value)->value->format('Y-m-d H:i:s.u'));
+        $result = Date::create($value);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($value->format('Y-m-d 00:00:00.000000'), $result->unwrap()->value->format('Y-m-d H:i:s.u'));
     }
 
     public static function provideTimeIsZero(): array

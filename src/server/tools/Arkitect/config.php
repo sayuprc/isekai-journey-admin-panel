@@ -33,6 +33,7 @@ return [
         [
             CreatorComponent::Domain,
             SupportComponent::Domain,
+            LibraryComponent::ResultType,
         ],
     ),
     new Define(
@@ -48,6 +49,7 @@ return [
         [
             PerformerComponent::Domain,
             SupportComponent::Domain,
+            LibraryComponent::ResultType,
         ],
     ),
     new Define(
@@ -63,6 +65,7 @@ return [
         [
             SupportComponent::Domain,
             LibraryComponent::DateType,
+            LibraryComponent::ResultType,
         ],
     ),
 ];

@@ -16,7 +16,10 @@ class ImmutableDateTimeValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(DateTimeImmutable $value): void
     {
-        $this->assertSame($value->format('Y-m-d H:i:s'), new ImmutableDateTime($value)->value->format('Y-m-d H:i:s'));
+        $result = ImmutableDateTime::create($value);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($value->format('Y-m-d H:i:s'), $result->unwrap()->value->format('Y-m-d H:i:s'));
     }
 
     public static function provideProperlyStoresValue(): array

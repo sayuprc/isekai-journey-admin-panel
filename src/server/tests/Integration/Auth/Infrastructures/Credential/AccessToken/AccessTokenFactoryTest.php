@@ -23,7 +23,11 @@ class AccessTokenFactoryTest extends TestCase
 
         $now = new CarbonImmutable();
 
-        $accessToken = $this->getInstance()->create('id');
+        $result = $this->getInstance()->create('id');
+
+        $this->assertTrue($result->isOk());
+
+        $accessToken = $result->unwrap();
 
         $elements = explode('.', $accessToken->jwt->value);
 

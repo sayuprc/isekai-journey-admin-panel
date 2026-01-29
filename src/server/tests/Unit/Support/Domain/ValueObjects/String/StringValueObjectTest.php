@@ -15,7 +15,10 @@ class StringValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(string $value): void
     {
-        $this->assertSame($value, new StringObject($value)->value);
+        $result = StringObject::create($value);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($value, $result->unwrap()->value);
     }
 
     public static function provideProperlyStoresValue(): array

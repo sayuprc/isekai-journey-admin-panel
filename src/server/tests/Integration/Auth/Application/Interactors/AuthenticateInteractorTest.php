@@ -28,9 +28,9 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
-        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
-        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value);
+        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
+        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
         $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
         $this->factory(FileUserRepository::class, $user->userId->value, $user);
@@ -51,9 +51,9 @@ class AuthenticateInteractorTest extends TestCase
         $now = now()->toImmutable();
         CarbonImmutable::setTestNow($now->modify('-3 hours'));
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
-        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
-        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value);
+        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
+        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
         CarbonImmutable::setTestNow($now);
 
@@ -73,9 +73,9 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
-        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
-        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value);
+        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
+        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
 
@@ -90,9 +90,9 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password');
-        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value);
-        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value);
+        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
+        $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
         $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
 

@@ -7,6 +7,7 @@ namespace Creator\Application\Interactors;
 use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Application\UseCase\Create\CreateOutputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
+use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
@@ -27,16 +28,19 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $creator = $this->factory->create($inputData->creatorName);
+        return $this->factory->create($inputData->creatorName)
+            // TODO エラーハンドリング強化
+            ->mapErr(fn (): string => '')
+            ->andThen(function (Creator $creator): Result {
+                return $this->transaction->scope(function () use ($creator): Result {
+                    if ($this->service->exists($creator->creatorName)) {
+                        return new Err("Creator name already exists: {$creator->creatorName->value}");
+                    }
 
-            if ($this->service->exists($creator->creatorName)) {
-                return new Err("Creator name already exists: {$inputData->creatorName}");
-            }
+                    $this->repository->save($creator);
 
-            $this->repository->save($creator);
-
-            return new Ok(new CreateOutputData($creator));
-        });
+                    return new Ok(new CreateOutputData($creator));
+                });
+            });
     }
 }

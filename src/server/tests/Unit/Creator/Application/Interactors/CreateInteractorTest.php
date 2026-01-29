@@ -10,18 +10,21 @@ use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorNameDuplicateCheckService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private MockInterface&TransactionInterface $transaction;
 
     private CreatorRepositoryInterface&MockInterface $repository;
@@ -60,10 +63,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
-            ->andReturn($creator = new Creator(
-                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター'),
-            ))
+            ->andReturn(new Ok($creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
             ->once();
 
         $this->service->shouldReceive('exists')
@@ -94,10 +94,7 @@ class CreateInteractorTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->with('クリエイター')
-            ->andReturn(new Creator(
-                new CreatorId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                new CreatorName('クリエイター'),
-            ))
+            ->andReturn(new Ok($this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
             ->once();
 
         $this->service->shouldReceive('exists')

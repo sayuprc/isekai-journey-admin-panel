@@ -8,14 +8,14 @@ use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class DeleteInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -23,11 +23,7 @@ class DeleteInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileCreatorRepository::class,
-            $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('クリエイター')),
-        );
+        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
 
         $this->getInstance()->handle(new DeleteInputData($uuid));
 

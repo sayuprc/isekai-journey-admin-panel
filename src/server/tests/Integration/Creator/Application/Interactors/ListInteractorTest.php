@@ -7,15 +7,14 @@ namespace Tests\Integration\Creator\Application\Interactors;
 use Creator\Application\Interactors\ListInteractor;
 use Creator\Application\UseCase\List\ListOutputData;
 use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -32,15 +31,10 @@ class ListInteractorTest extends TestCase
     public function nonEmptyCreators(): void
     {
         $uuid = $this->generateUuid();
-        $this->factory(
-            FileCreatorRepository::class,
-            $uuid,
-            new Creator(new CreatorId($uuid), new CreatorName('ヰ世界情緒')),
-        );
+
+        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'ヰ世界情緒'));
 
         $response = $this->getInstance()->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(1, $response->creators);
 

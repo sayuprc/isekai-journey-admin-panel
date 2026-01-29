@@ -13,7 +13,11 @@ class UserFactoryTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $user = $this->getInstance()->create('example@example.com', 'plain');
+        $userResult = $this->getInstance()->create('example@example.com', 'plain');
+
+        $this->assertTrue($userResult->isOk());
+
+        $user = $userResult->unwrap();
 
         $this->assertSame('example@example.com', $user->email->value);
         $this->assertNotSame('plain', $user->hashedPassword->value);

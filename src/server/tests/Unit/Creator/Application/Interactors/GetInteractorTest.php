@@ -10,16 +10,17 @@ use Creator\Application\UseCase\Get\GetOutputData;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Result;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class GetInteractorTest extends TestCase
 {
+    use EntityFactory;
+
     private CreatorRepositoryInterface&MockInterface $repository;
 
     private GetInteractor $interactor;
@@ -44,15 +45,11 @@ class GetInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('find')
             ->with(Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'))
-            ->andReturn(new Creator(
-                new CreatorId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-                new CreatorName('クリエイター名'),
-            ))
+            ->andReturn($this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイター名'))
             ->once();
 
         $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
-        $this->assertInstanceOf(Result::class, $result);
         $this->assertTrue($result->isOk());
 
         $response = $result->unwrap();
@@ -74,7 +71,6 @@ class GetInteractorTest extends TestCase
 
         $result = $this->interactor->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
-        $this->assertInstanceOf(Result::class, $result);
         $this->assertFalse($result->isOk());
 
         $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->unwrapErr());

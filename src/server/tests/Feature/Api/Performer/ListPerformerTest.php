@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Performer;
 
 use Performer\DebugInfrastructures\FilePerformerRepository;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ValueObjects\OrderNo;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class ListPerformerTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -23,11 +21,7 @@ class ListPerformerTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FilePerformerRepository::class,
-            $uuid,
-            new Performer(new PerformerId($uuid), new PerformerName('ヰ世界情緒'), new OrderNo(1)),
-        );
+        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $this->get(route(PerformerRouteMap::List))
             ->assertStatus(200)
