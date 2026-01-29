@@ -11,12 +11,13 @@ use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
+use ResultType\Ok;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 use User\Domain\Models\UserId;
@@ -54,7 +55,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
+            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
             ->once();
 
         $userId = $this->generateUuid();
@@ -87,7 +88,7 @@ class AuthenticateInteractorTest extends TestCase
     {
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andThrow(new ExpiredException())
+            ->andReturn(new Err(''))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
@@ -102,7 +103,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
+            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
             ->once();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
@@ -122,7 +123,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
+            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
             ->once();
 
         $userId = $this->generateUuid();

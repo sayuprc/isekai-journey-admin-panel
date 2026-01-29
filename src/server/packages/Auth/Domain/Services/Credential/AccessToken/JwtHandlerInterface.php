@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Services\Credential\AccessToken;
 
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\InvalidIssuerException;
+use ResultType\Result;
 
 interface JwtHandlerInterface
 {
     public function generate(AccessTokenPayload $payload): string;
 
     /**
-     * @throws ExpiredException
-     * @throws InvalidIssuerException
+     * @return Result<AccessTokenPayload, string>
      */
-    public function verify(string $jwt): AccessTokenPayload;
+    public function verify(string $jwt): Result;
 }

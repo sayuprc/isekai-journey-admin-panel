@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth\Infrastructures\Credential\AccessToken;
 
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\InvalidIssuerException;
 use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
 use Auth\Infrastructures\Credential\AccessToken\JwtHandler;
 use Carbon\CarbonImmutable;
@@ -64,7 +62,11 @@ class JwtHandlerTest extends TestCase
             jti: 'jti',
         ));
 
-        $payload = $this->getInstance()->verify($jwt);
+        $result = $this->getInstance()->verify($jwt);
+
+        $this->assertTrue($result->isOk());
+
+        $payload = $result->unwrap();
 
         $this->assertSame($iss, $payload->iss);
         $this->assertSame($now->getTimestamp(), $payload->iat);
@@ -81,8 +83,6 @@ class JwtHandlerTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $this->expectException(ExpiredException::class);
-
         $jwt = $this->getInstance()->generate(new AccessTokenPayload(
             iss: 'iss',
             iat: 0,
@@ -91,7 +91,9 @@ class JwtHandlerTest extends TestCase
             jti: 'jti',
         ));
 
-        $this->getInstance()->verify($jwt);
+        $result = $this->getInstance()->verify($jwt);
+
+        $this->assertFalse($result->isOk());
     }
 
     #[Test]
@@ -101,8 +103,6 @@ class JwtHandlerTest extends TestCase
             'auth.jwt.alg' => 'HS256',
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
-
-        $this->expectException(InvalidIssuerException::class);
 
         CarbonImmutable::setTestNow($now = new DateTimeImmutable());
 
@@ -116,7 +116,9 @@ class JwtHandlerTest extends TestCase
             jti: 'jti',
         ));
 
-        $this->getInstance()->verify($jwt);
+        $result = $this->getInstance()->verify($jwt);
+
+        $this->assertFalse($result->isOk());
     }
 
     private function getInstance(): JwtHandler
