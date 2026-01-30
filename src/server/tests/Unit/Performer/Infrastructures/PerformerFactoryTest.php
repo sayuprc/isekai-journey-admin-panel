@@ -4,57 +4,31 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Infrastructures;
 
-use Mockery;
-use Mockery\MockInterface;
+use Performer\Domain\Models\PerformerId;
+use Performer\Domain\Models\PerformerName;
 use Performer\Infrastructures\PerformerFactory;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
 class PerformerFactoryTest extends TestCase
 {
-    private MockInterface&UuidGeneratorInterface $uuid;
-
-    private PerformerFactory $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->uuid = Mockery::mock(UuidGeneratorInterface::class);
-
-        $this->factory = new PerformerFactory($this->uuid);
-    }
-
     #[Test]
     public function create(): void
     {
-        $this->uuid->shouldReceive('generate')
-            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
-            ->once();
-
-        $result = $this->factory->create('共演者', 1);
-
-        $this->assertTrue($result->isOk());
-
-        $performer = $result->unwrap();
+        $performer = $this->getInstance()->create(
+            PerformerId::create('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')->unwrap(),
+            PerformerName::create('共演者')->unwrap(),
+            OrderNo::create(1)->unwrap(),
+        );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
         $this->assertSame('共演者', $performer->performerName->value);
         $this->assertSame(1, $performer->orderNo->value);
     }
 
-    #[Test]
-    public function reconstitute(): void
+    private function getInstance(): PerformerFactory
     {
-        $result = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1);
-
-        $this->assertTrue($result->isOk());
-
-        $performer = $result->unwrap();
-
-        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $performer->performerId->value);
-        $this->assertSame('共演者', $performer->performerName->value);
-        $this->assertSame(1, $performer->orderNo->value);
+        return new PerformerFactory();
     }
 }
