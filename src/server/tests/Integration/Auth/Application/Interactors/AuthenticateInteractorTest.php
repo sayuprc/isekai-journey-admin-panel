@@ -11,13 +11,14 @@ use Auth\Infrastructures\Credential\AccessToken\AccessTokenFactory;
 use Auth\Infrastructures\Credential\RefreshToken\RefreshTokenFactory;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 use User\DebugInfrastructures\FileUserRepository;
-use User\Infrastructures\UserFactory;
 
 class AuthenticateInteractorTest extends TestCase
 {
+    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -28,7 +29,7 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
         $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
@@ -51,7 +52,7 @@ class AuthenticateInteractorTest extends TestCase
         $now = now()->toImmutable();
         CarbonImmutable::setTestNow($now->modify('-3 hours'));
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
         $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
@@ -73,7 +74,7 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
         $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
@@ -90,7 +91,7 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->app->make(UserFactory::class)->create('example@example.com', 'password')->unwrap();
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'password');
         $refreshToken = $this->app->make(RefreshTokenFactory::class)->create($user->userId->value)->unwrap();
         $accessToken = $this->app->make(AccessTokenFactory::class)->create($refreshToken->refreshTokenId->value)->unwrap();
 
