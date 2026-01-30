@@ -34,6 +34,11 @@ abstract readonly class StringValueObject
         return new Ok(new static($value));
     }
 
+    public static function reconstruct(string $value): static
+    {
+        return new static($value);
+    }
+
     protected static function isValid(string $value): bool
     {
         return true;
