@@ -1,0 +1,40 @@
+[tasks."ci:composer:install"]
+description = "CI環境でcomposerパッケージをインストールする"
+run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
+
+[tasks."ci:generate:server"]
+description = "CI環境でOASからサーバーのコードを生成する"
+run = '''
+docker run --rm -u $(id -u):$(id -g) -v ".:/local" ghcr.io/sayuprc/${OPENAPI_GENERATOR_CLI_IMAGE} generate \
+  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -g php \
+  -t /local/src/server/tools/openapi-generator/templates \
+  -o /local/src/server/Generated
+'''
+
+[tasks."ci:npm:install"]
+description = "CI環境でnpmパッケージをインストールする"
+run = "npm ci"
+dir = "src/client"
+
+[tasks."ci:generate:client"]
+description = "CI環境でOASからクライアントのコードを生成する"
+run = "npm run generate:api"
+dir = "src/client"
+
+[tasks."ci:lint"]
+description = "CI環境でESLintを実行する"
+run = "npm run lint"
+dir = "src/client"
+
+[tasks."ci:style"]
+description = "CI環境でStylelintを実行する"
+run = "npm run style"
+dir = "src/client"
+
+[tasks."ci:migrate"]
+description = "CI環境でマイグレーションを実行する"
+run = '''
+touch ${DATABASE_PATH}
+docker exec {{vars.server_container}} bash -c "cd database/atlas; atlas schema apply --env local --var db_name=$(basename ${DATABASE_PATH}) --auto-approve"
+'''
