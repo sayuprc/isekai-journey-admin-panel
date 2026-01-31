@@ -38,6 +38,9 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v2
 
+      - name: Setup mise config
+        run: cp mise.ci.toml mise.local.toml
+
       - name: Cache node modules
         id: cache-node-modules
         uses: actions/cache@v4
