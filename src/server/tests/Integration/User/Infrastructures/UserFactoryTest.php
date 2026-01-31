@@ -6,6 +6,9 @@ namespace Tests\Integration\User\Infrastructures;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use User\Domain\Models\Email;
+use User\Domain\Models\PlainPassword;
+use User\Domain\Models\UserId;
 use User\Infrastructures\UserFactory;
 
 class UserFactoryTest extends TestCase
@@ -13,12 +16,13 @@ class UserFactoryTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $userResult = $this->getInstance()->create('example@example.com', 'plain');
+        $user = $this->getInstance()->create(
+            UserId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+            Email::reconstruct('example@example.com'),
+            PlainPassword::reconstruct('plain'),
+        );
 
-        $this->assertTrue($userResult->isOk());
-
-        $user = $userResult->unwrap();
-
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->userId->value);
         $this->assertSame('example@example.com', $user->email->value);
         $this->assertNotSame('plain', $user->hashedPassword->value);
     }

@@ -34,6 +34,11 @@ abstract readonly class IntegerValueObject
         return new Ok(new static($value));
     }
 
+    public static function reconstruct(int $value): static
+    {
+        return new static($value);
+    }
+
     protected static function isValid(int $value): bool
     {
         return true;

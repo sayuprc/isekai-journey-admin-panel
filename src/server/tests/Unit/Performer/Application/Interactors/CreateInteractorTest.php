@@ -9,15 +9,16 @@ use Mockery;
 use Mockery\MockInterface;
 use Performer\Application\Interactors\CreateInteractor;
 use Performer\Application\UseCase\Create\CreateInputData;
-use Performer\Application\UseCase\Create\CreateUseCaseInterface;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerFactoryInterface;
+use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerNameDuplicateCheckService;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -33,7 +34,7 @@ class CreateInteractorTest extends TestCase
 
     private MockInterface&PerformerNameDuplicateCheckService $service;
 
-    private CreateInteractor $interactor;
+    private MockInterface&UuidGeneratorInterface $generator;
 
     protected function setUp(): void
     {
@@ -43,27 +44,28 @@ class CreateInteractorTest extends TestCase
         $this->repository = Mockery::mock(PerformerRepositoryInterface::class);
         $this->factory = Mockery::mock(PerformerFactoryInterface::class);
         $this->service = Mockery::mock(PerformerNameDuplicateCheckService::class);
-
-        $this->interactor = new CreateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
-    }
-
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(CreateUseCaseInterface::class, $this->interactor);
+        $this->generator = Mockery::mock(UuidGeneratorInterface::class);
     }
 
     #[Test]
     public function create(): void
     {
+        $this->generator->shouldReceive('generate')
+            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->once();
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
         $this->factory->shouldReceive('create')
-            ->with('共演者', 1)
-            ->andReturn(new Ok($performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1)))
+            ->with(
+                Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者'),
+                Mockery::on(fn (OrderNo $arg): bool => $arg->value === 1),
+            )
+            ->andReturn($performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1))
             ->once();
 
         $this->service->shouldReceive('exists')
@@ -81,7 +83,7 @@ class CreateInteractorTest extends TestCase
             ->andReturn($performer)
             ->once();
 
-        $result = $this->interactor->handle(new CreateInputData('共演者', 1));
+        $result = $this->getInstance()->handle(new CreateInputData('共演者', 1));
 
         $this->assertTrue($result->isOk());
     }
@@ -89,14 +91,22 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
+        $this->generator->shouldReceive('generate')
+            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->once();
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
         $this->factory->shouldReceive('create')
-            ->with('共演者', 1)
-            ->andReturn(new Ok($this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1)))
+            ->with(
+                Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者'),
+                Mockery::on(fn (OrderNo $arg): bool => $arg->value === 1),
+            )
+            ->andReturn($this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者', 1))
             ->once();
 
         $this->service->shouldReceive('exists')
@@ -104,8 +114,19 @@ class CreateInteractorTest extends TestCase
             ->andreturn(true)
             ->once();
 
-        $result = $this->interactor->handle(new CreateInputData('共演者', 1));
+        $result = $this->getInstance()->handle(new CreateInputData('共演者', 1));
 
         $this->assertTrue($result->isErr());
+    }
+
+    private function getInstance(): CreateInteractor
+    {
+        return new CreateInteractor(
+            $this->transaction,
+            $this->repository,
+            $this->factory,
+            $this->service,
+            $this->generator,
+        );
     }
 }

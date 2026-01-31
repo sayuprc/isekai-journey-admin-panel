@@ -4,55 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Infrastructures;
 
+use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorName;
 use Creator\Infrastructures\CreatorFactory;
-use Mockery;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 
 class CreatorFactoryTest extends TestCase
 {
-    private MockInterface&UuidGeneratorInterface $uuid;
-
-    private CreatorFactory $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->uuid = Mockery::mock(UuidGeneratorInterface::class);
-
-        $this->factory = new CreatorFactory($this->uuid);
-    }
-
     #[Test]
     public function create(): void
     {
-        $this->uuid->shouldReceive('generate')
-            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
-            ->once();
-
-        $result = $this->factory->create('クリエイター');
-
-        $this->assertTrue($result->isOk());
-
-        $creator = $result->unwrap();
+        $creator = $this->getInstance()->create(
+            CreatorId::create('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')->unwrap(),
+            CreatorName::create('クリエイター')->unwrap(),
+        );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
         $this->assertSame('クリエイター', $creator->creatorName->value);
     }
 
-    #[Test]
-    public function reconstitute(): void
+    private function getInstance(): CreatorFactory
     {
-        $result = $this->factory->reconstitute('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター');
-
-        $this->assertTrue($result->isOk());
-
-        $creator = $result->unwrap();
-
-        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
-        $this->assertSame('クリエイター', $creator->creatorName->value);
+        return new CreatorFactory();
     }
 }

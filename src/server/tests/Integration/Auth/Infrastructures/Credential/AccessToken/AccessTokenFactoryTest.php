@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Infrastructures\Credential\AccessToken;
 
+use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
 use Auth\Infrastructures\Credential\AccessToken\AccessTokenFactory;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,17 +24,21 @@ class AccessTokenFactoryTest extends TestCase
 
         $now = new CarbonImmutable();
 
-        $result = $this->getInstance()->create('id');
-
-        $this->assertTrue($result->isOk());
-
-        $accessToken = $result->unwrap();
+        $accessToken = $this->getInstance()->create(
+            new AccessTokenPayload(
+                'issuer',
+                $now->getTimestamp(),
+                $now->modify('+1 hours')->getTimestamp(),
+                $now->getTimestamp(),
+                'id',
+            ),
+        );
 
         $elements = explode('.', $accessToken->jwt->value);
 
         $payload = json_decode(base64_decode($elements[1]));
 
-        $this->assertSame(config('app.url'), $payload->iss);
+        $this->assertSame('issuer', $payload->iss);
         $this->assertSame($now->getTimestamp(), $payload->iat);
         $this->assertSame($now->modify('+1 hours')->getTimestamp(), $payload->exp);
         $this->assertSame($now->getTimestamp(), $payload->nbf);

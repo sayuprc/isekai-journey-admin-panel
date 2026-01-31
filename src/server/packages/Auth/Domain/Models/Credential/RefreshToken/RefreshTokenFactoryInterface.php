@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Models\Credential\RefreshToken;
 
-use ResultType\Result;
-use Support\Domain\Validation\ValidationError;
+use User\Domain\Models\UserId;
 
 interface RefreshTokenFactoryInterface
 {
-    /**
-     * @return Result<RefreshToken, array<ValidationError>>
-     */
-    public function create(string $userId): Result;
+    public function create(
+        RefreshTokenId $refreshTokenId,
+        UserId $userId,
+        TokenValue $token,
+        ExpiredAt $expiredAt,
+        ConsumptionStatus $status,
+    ): RefreshToken;
 }
