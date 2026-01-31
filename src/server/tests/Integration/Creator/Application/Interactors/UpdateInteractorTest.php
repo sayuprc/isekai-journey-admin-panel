@@ -21,35 +21,44 @@ class UpdateInteractorTest extends TestCase
     #[Test]
     public function canUpdate(): void
     {
-        $uuid = $this->generateUuid();
+        $creatorId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
+        $beforeName = 'クリエイター';
+        $afterName = 'ヰ世界情緒';
 
-        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));
+        $this->factory(FileCreatorRepository::class, $creatorId, $this->createCreator($creatorId, $beforeName));
+
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $afterName));
 
         $this->assertTrue($result->isOk());
 
         /** @var array<Creator> $creators */
         $creators = $this->getAll(FileCreatorRepository::class);
         $this->assertCount(1, $creators);
-        $this->assertSame('ヰ世界情緒', $creators[$uuid]->creatorName->value);
+        $this->assertSame($afterName, $creators[$creatorId]->creatorName->value);
     }
 
     #[Test]
     public function updateFailsIfNameAlreadyExists(): void
     {
-        $uuid = $this->generateUuid();
+        $targetId = $this->generateUuid();
+        $otherId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'ヰ世界情緒'));
+        $beforeName = 'クリエイター';
+        $afterName = 'ヰ世界情緒';
 
-        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒'));
+        $this->factory(FileCreatorRepository::class, $targetId, $this->createCreator($targetId, $beforeName));
+        $this->factory(FileCreatorRepository::class, $otherId, $this->createCreator($otherId, $afterName));
+
+        $result = $this->getInstance()->handle(new UpdateInputData($targetId, $afterName));
 
         $this->assertTrue($result->isErr());
 
         /** @var array<Creator> $creators */
         $creators = $this->getAll(FileCreatorRepository::class);
-        $this->assertCount(1, $creators);
-        $this->assertSame('ヰ世界情緒', $creators[$uuid]->creatorName->value);
+        $this->assertCount(2, $creators);
+        $this->assertSame($afterName, $creators[$otherId]->creatorName->value);
+        $this->assertSame($beforeName, $creators[$targetId]->creatorName->value);
     }
 
     private function getInstance(): UpdateInteractor
