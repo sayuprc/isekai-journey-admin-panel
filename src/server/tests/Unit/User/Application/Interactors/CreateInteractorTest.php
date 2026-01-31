@@ -8,18 +8,16 @@ use Closure;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
-use Support\Contracts\UuidGeneratorInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 use User\Application\Interactors\CreateInteractor;
 use User\Application\UseCase\Create\CreateInputData;
-use User\Domain\Models\Email;
-use User\Domain\Models\PlainPassword;
 use User\Domain\Models\User;
-use User\Domain\Models\UserFactoryInterface;
-use User\Domain\Models\UserId;
 use User\Domain\Models\UserRepositoryInterface;
+use User\Domain\Services\UserIntegrityService;
 
 class CreateInteractorTest extends TestCase
 {
@@ -29,9 +27,7 @@ class CreateInteractorTest extends TestCase
 
     private MockInterface&UserRepositoryInterface $repository;
 
-    private MockInterface&UserFactoryInterface $factory;
-
-    private MockInterface&UuidGeneratorInterface $generator;
+    private MockInterface&UserIntegrityService $service;
 
     protected function setUp(): void
     {
@@ -39,48 +35,35 @@ class CreateInteractorTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(UserRepositoryInterface::class);
-        $this->factory = Mockery::mock(UserFactoryInterface::class);
-        $this->generator = Mockery::mock(UuidGeneratorInterface::class);
+        $this->service = Mockery::mock(UserIntegrityService::class);
     }
 
     #[Test]
     public function canCreate(): void
     {
-        $this->generator->shouldReceive('generate')
-            ->andReturn($uuid = $this->generateUuid())
-            ->once();
+        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $email = 'example@example.com';
+        $password = 'plain';
 
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (UserId $arg) => $arg->value === $uuid),
-                Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'),
-                Mockery::on(fn (PlainPassword $arg) => $arg->value === 'plainpassword'),
-            )
-            ->andReturn($user = $this->createUser($uuid, 'example@example.com', 'hashedpassword'))
-            ->once();
-
-        $this->repository->shouldReceive('findByEmail')
-            ->with(Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'))
-            ->andReturnNull()
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($email, $password)
+            ->andReturn(new Ok($user = $this->createUser($uuid, $email, $password)))
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(
-                Mockery::on(
-                    fn (User $arg) => $arg->userId->value === $uuid
-                        && $arg->email->value === 'example@example.com'
-                        && $arg->hashedPassword->value !== 'plainpassword',
-                ),
+            ->withArgs(
+                fn (User $arg): bool => $arg->userId->value === $uuid
+                    && $arg->email->value === $email,
             )
             ->andReturn($user)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));
+        $result = $this->getInstance()->handle(new CreateInputData($email, $password));
 
         $this->assertTrue($result->isOk());
     }
@@ -88,30 +71,20 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfEmailAlreadyExists(): void
     {
-        $this->generator->shouldReceive('generate')
-            ->andReturn($uuid = $this->generateUuid())
-            ->once();
+        $email = 'example@example.com';
+        $password = 'plain';
 
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (UserId $arg) => $arg->value === $uuid),
-                Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'),
-                Mockery::on(fn (PlainPassword $arg) => $arg->value === 'plainpassword'),
-            )
-            ->andReturn($user = $this->createUser($uuid, 'example@example.com', 'hashedpassword'))
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($email, $password)
+            ->andReturn(new Err(''))
             ->once();
 
-        $this->repository->shouldReceive('findByEmail')
-            ->with(Mockery::on(fn (Email $arg) => $arg->value === 'example@example.com'))
-            ->andReturn($user)
-            ->once();
-
-        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));
+        $result = $this->getInstance()->handle(new CreateInputData($email, $password));
 
         $this->assertTrue($result->isErr());
     }
@@ -121,8 +94,7 @@ class CreateInteractorTest extends TestCase
         return new CreateInteractor(
             $this->transaction,
             $this->repository,
-            $this->factory,
-            $this->generator,
+            $this->service,
         );
     }
 }
