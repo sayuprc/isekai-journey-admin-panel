@@ -8,16 +8,14 @@ use Closure;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use Creator\Domain\Services\CreatorNameDuplicateCheckService;
+use Creator\Domain\Services\CreatorIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
-use Support\Contracts\UuidGeneratorInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -29,11 +27,7 @@ class CreateInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
-    private CreatorFactoryInterface&MockInterface $factory;
-
-    private CreatorNameDuplicateCheckService&MockInterface $service;
-
-    private MockInterface&UuidGeneratorInterface $generator;
+    private CreatorIntegrityService&MockInterface $service;
 
     protected function setUp(): void
     {
@@ -41,45 +35,34 @@ class CreateInteractorTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->factory = Mockery::mock(CreatorFactoryInterface::class);
-        $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
-        $this->generator = Mockery::mock(UuidGeneratorInterface::class);
+        $this->service = Mockery::mock(CreatorIntegrityService::class);
     }
 
     #[Test]
     public function create(): void
     {
-        $this->generator->shouldReceive('generate')
-            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
-            ->once();
+        $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $creatorName = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'),
-            )
-            ->andReturn($creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'))
-            ->once();
-
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andreturn(false)
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($creatorName)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $creatorName)))
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(Mockery::on(
-                fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->creatorName->value === 'クリエイター',
-            ))
+            ->withArgs(
+                fn (Creator $arg): bool => $arg->creatorId->value === $creatorId
+                    && $arg->creatorName->value === $creatorName,
+            )
             ->andReturn($creator)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('クリエイター'));
+        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
 
         $this->assertTrue($result->isOk());
     }
@@ -87,29 +70,19 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
-        $this->generator->shouldReceive('generate')
-            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
-            ->once();
+        $creatorName = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'),
-            )
-            ->andReturn($this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'))
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($creatorName)
+            ->andReturn(new Err(''))
             ->once();
 
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andreturn(true)
-            ->once();
-
-        $result = $this->getInstance()->handle(new CreateInputData('クリエイター'));
+        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
 
         $this->assertTrue($result->isErr());
     }
@@ -119,9 +92,7 @@ class CreateInteractorTest extends TestCase
         return new CreateInteractor(
             $this->transaction,
             $this->repository,
-            $this->factory,
             $this->service,
-            $this->generator,
         );
     }
 }

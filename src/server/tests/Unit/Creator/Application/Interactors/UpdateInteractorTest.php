@@ -8,14 +8,13 @@ use Closure;
 use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use Creator\Domain\Services\CreatorNameDuplicateCheckService;
+use Creator\Domain\Services\CreatorIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
+use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -28,9 +27,7 @@ class UpdateInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
-    private CreatorFactoryInterface&MockInterface $factory;
-
-    private CreatorNameDuplicateCheckService&MockInterface $service;
+    private CreatorIntegrityService&MockInterface $service;
 
     protected function setUp(): void
     {
@@ -38,42 +35,34 @@ class UpdateInteractorTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->factory = Mockery::mock(CreatorFactoryInterface::class);
-        $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
+        $this->service = Mockery::mock(CreatorIntegrityService::class);
     }
 
     #[Test]
     public function editCreator(): void
     {
+        $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $creatorName = 'クリエイター';
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'),
-            )
-            ->andReturn($creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'))
-            ->once();
-
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andReturn(false)
+        $this->service->shouldReceive('prepareForUpdate')
+            ->with($creatorId, $creatorName)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $creatorName)))
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(
-                Mockery::on(
-                    fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                        && $arg->creatorName->value === 'クリエイター',
-                ),
+            ->withArgs(
+                fn (Creator $arg): bool => $arg->creatorId->value === $creatorId
+                    && $arg->creatorName->value === $creatorName,
             )
             ->andReturn($creator)
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $creatorName));
 
         $this->assertTrue($result->isOk());
     }
@@ -81,31 +70,30 @@ class UpdateInteractorTest extends TestCase
     #[Test]
     public function editFailsIfNameAlreadyExists(): void
     {
+        $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $creatorName = 'クリエイター';
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'),
-            )
-            ->andReturn($this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'))
+        $this->service->shouldReceive('prepareForUpdate')
+            ->with($creatorId, $creatorName)
+            ->andReturn(new Err(''))
             ->once();
 
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andReturn(true)
-            ->once();
-
-        $result = $this->getInstance()->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター'));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $creatorName));
 
         $this->assertTrue($result->isErr());
     }
 
     private function getInstance(): UpdateInteractor
     {
-        return new UpdateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
+        return new UpdateInteractor(
+            $this->transaction,
+            $this->repository,
+            $this->service,
+        );
     }
 }
