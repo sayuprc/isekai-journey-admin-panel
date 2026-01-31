@@ -29,32 +29,32 @@ trait EntityFactory
     protected function createCreator(string $creatorId, string $creatorName): Creator
     {
         return new Creator(
-            CreatorId::create($creatorId)->unwrap(),
-            CreatorName::create($creatorName)->unwrap(),
+            CreatorId::reconstruct($creatorId),
+            CreatorName::reconstruct($creatorName),
         );
     }
 
     protected function createPerformer(string $performerId, string $performerName, int $orderNo): Performer
     {
         return new Performer(
-            PerformerId::create($performerId)->unwrap(),
-            PerformerName::create($performerName)->unwrap(),
-            OrderNo::create($orderNo)->unwrap(),
+            PerformerId::reconstruct($performerId),
+            PerformerName::reconstruct($performerName),
+            OrderNo::reconstruct($orderNo),
         );
     }
 
     protected function createUser(string $userId, string $email, string $hashedPassword): User
     {
         return new User(
-            UserId::create($userId)->unwrap(),
-            Email::create($email)->unwrap(),
-            HashedPassword::create($hashedPassword)->unwrap(),
+            UserId::reconstruct($userId),
+            Email::reconstruct($email),
+            HashedPassword::reconstruct($hashedPassword),
         );
     }
 
     protected function createAccessToken(string $jwt): AccessToken
     {
-        return new AccessToken(Jwt::create($jwt)->unwrap());
+        return new AccessToken(Jwt::reconstruct($jwt));
     }
 
     protected function createRefreshToken(
@@ -65,10 +65,10 @@ trait EntityFactory
         ConsumptionStatus $status,
     ): RefreshToken {
         return new RefreshToken(
-            RefreshTokenId::create($refreshTokenId)->unwrap(),
-            UserId::create($userId)->unwrap(),
-            TokenValue::create($tokenValue)->unwrap(),
-            ExpiredAt::create($expiredAt)->unwrap(),
+            RefreshTokenId::reconstruct($refreshTokenId),
+            UserId::reconstruct($userId),
+            TokenValue::reconstruct($tokenValue),
+            ExpiredAt::reconstruct($expiredAt),
             $status,
         );
     }
