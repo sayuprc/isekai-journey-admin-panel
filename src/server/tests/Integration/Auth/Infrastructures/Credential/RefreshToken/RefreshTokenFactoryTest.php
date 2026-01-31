@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Infrastructures\Credential\RefreshToken;
 
+use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
+use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
+use Auth\Domain\Models\Credential\RefreshToken\TokenValue;
 use Auth\Infrastructures\Credential\RefreshToken\RefreshTokenFactory;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
 use Tests\TestCase;
+use User\Domain\Models\UserId;
 
 class RefreshTokenFactoryTest extends TestCase
 {
@@ -19,13 +24,13 @@ class RefreshTokenFactoryTest extends TestCase
 
         $now = new CarbonImmutable();
 
-        $userId = $this->generateUuid();
-
-        $result = $this->getInstance()->create($userId);
-
-        $this->assertTrue($result->isOk());
-
-        $refreshToken = $result->unwrap();
+        $refreshToken = $this->getInstance()->create(
+            RefreshTokenId::reconstruct($this->generateUuid()),
+            UserId::reconstruct($this->generateUuid()),
+            TokenValue::reconstruct('token'),
+            ExpiredAt::reconstruct($now->modify('+7 days')),
+            ConsumptionStatus::Unused,
+        );
 
         $expiredAtProp = new ReflectionProperty($refreshToken, 'expiredAt');
         $expiredAtProp->setAccessible(true);

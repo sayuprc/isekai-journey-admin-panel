@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Models\Credential\AccessToken;
 
-use ResultType\Result;
-use Support\Domain\Validation\ValidationError;
+use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
 
 interface AccessTokenFactoryInterface
 {
-    /**
-     * @return Result<AccessToken, array<ValidationError>>
-     */
-    public function create(string $refreshTokenId): Result;
+    public function create(AccessTokenPayload $payload): AccessToken;
 }
