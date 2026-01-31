@@ -1,4 +1,5 @@
-FROM openapitools/openapi-generator-cli:v7.18.0
+ARG TAG=7.18.0
+FROM openapitools/openapi-generator-cli:v${TAG}
 
 ARG UID=1000
 ARG GID=1000
