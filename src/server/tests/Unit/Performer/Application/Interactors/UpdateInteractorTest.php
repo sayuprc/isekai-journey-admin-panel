@@ -9,14 +9,11 @@ use Mockery;
 use Mockery\MockInterface;
 use Performer\Application\Interactors\UpdateInteractor;
 use Performer\Application\UseCase\Update\UpdateInputData;
-use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
 use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerFactoryInterface;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use Performer\Domain\Services\PerformerNameDuplicateCheckService;
+use Performer\Domain\Services\PerformerIntegrityService;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
 use Tests\Support\Domain\EntityFactory;
@@ -30,11 +27,7 @@ class UpdateInteractorTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
-    private MockInterface&PerformerFactoryInterface $factory;
-
-    private MockInterface&PerformerNameDuplicateCheckService $service;
-
-    private UpdateInteractor $interactor;
+    private MockInterface&PerformerIntegrityService $service;
 
     protected function setUp(): void
     {
@@ -42,49 +35,36 @@ class UpdateInteractorTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(PerformerRepositoryInterface::class);
-        $this->factory = Mockery::mock(PerformerFactoryInterface::class);
-        $this->service = Mockery::mock(PerformerNameDuplicateCheckService::class);
-
-        $this->interactor = new UpdateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
-    }
-
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(UpdateUseCaseInterface::class, $this->interactor);
+        $this->service = Mockery::mock(PerformerIntegrityService::class);
     }
 
     #[Test]
     public function editPerformer(): void
     {
+        $performerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $performerName = '共演者';
+        $orderNo = 1;
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('reconstitute')
-            ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)
-            ->andReturn(new Ok($performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)))
-            ->once();
-
-        $this->service->shouldReceive('existsForUpdate')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者2'),
-            )
-            ->andReturn(false)
+        $this->service->shouldReceive('prepareForUpdate')
+            ->with($performerId, $performerName, $orderNo)
+            ->andReturn(new Ok($performer = $this->createPerformer($performerId, $performerName, $orderNo)))
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(Mockery::on(
-                fn (Performer $arg): bool => $arg->performerId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->performerName->value === '共演者2'
-                    && $arg->orderNo->value === 2,
-            ))
+            ->withArgs(
+                fn (Performer $arg): bool => $arg->performerId->value === $performerId
+                    && $arg->performerName->value === $performerName
+                    && $arg->orderNo->value === $orderNo,
+            )
             ->andReturn($performer)
             ->once();
 
-        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2));
+        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $performerName, $orderNo));
 
         $this->assertTrue($result->isOk());
     }
@@ -92,26 +72,31 @@ class UpdateInteractorTest extends TestCase
     #[Test]
     public function editFailsIfNameAlreadyExists(): void
     {
+        $performerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $performerName = '共演者';
+        $orderNo = 1;
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('reconstitute')
-            ->with('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)
-            ->andReturn(new Ok($this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2)))
+        $this->service->shouldReceive('prepareForUpdate')
+            ->with($performerId, $performerName, $orderNo)
+            ->andReturn(new Err(''))
             ->once();
 
-        $this->service->shouldReceive('existsForUpdate')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === '共演者2'),
-            )
-            ->andReturn(true)
-            ->once();
-
-        $result = $this->interactor->handle(new UpdateInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '共演者2', 2));
+        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $performerName, $orderNo));
 
         $this->assertTrue($result->isErr());
+    }
+
+    private function getInstance(): UpdateInteractor
+    {
+        return new UpdateInteractor(
+            $this->transaction,
+            $this->repository,
+            $this->service,
+        );
     }
 }

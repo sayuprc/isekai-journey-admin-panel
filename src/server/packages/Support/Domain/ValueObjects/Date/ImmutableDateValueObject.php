@@ -35,6 +35,11 @@ abstract readonly class ImmutableDateValueObject
         return new Ok(new static($value));
     }
 
+    public static function reconstruct(ImmutableDate $value): static
+    {
+        return new static($value);
+    }
+
     protected static function isValid(ImmutableDate $value): bool
     {
         return true;

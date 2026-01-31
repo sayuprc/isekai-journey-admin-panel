@@ -7,15 +7,13 @@ namespace Tests\Unit\Creator\Application\Interactors;
 use Closure;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
-use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use Creator\Domain\Services\CreatorNameDuplicateCheckService;
+use Creator\Domain\Services\CreatorIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use ResultType\Err;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
 use Tests\Support\Domain\EntityFactory;
@@ -29,11 +27,7 @@ class CreateInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
-    private CreatorFactoryInterface&MockInterface $factory;
-
-    private CreatorNameDuplicateCheckService&MockInterface $service;
-
-    private CreateInteractor $interactor;
+    private CreatorIntegrityService&MockInterface $service;
 
     protected function setUp(): void
     {
@@ -41,45 +35,34 @@ class CreateInteractorTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
-        $this->factory = Mockery::mock(CreatorFactoryInterface::class);
-        $this->service = Mockery::mock(CreatorNameDuplicateCheckService::class);
-
-        $this->interactor = new CreateInteractor($this->transaction, $this->repository, $this->factory, $this->service);
-    }
-
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(CreateUseCaseInterface::class, $this->interactor);
+        $this->service = Mockery::mock(CreatorIntegrityService::class);
     }
 
     #[Test]
     public function create(): void
     {
+        $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $creatorName = 'クリエイター';
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with('クリエイター')
-            ->andReturn(new Ok($creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
-            ->once();
-
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andreturn(false)
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($creatorName)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $creatorName)))
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->with(Mockery::on(
-                fn (Creator $arg): bool => $arg->creatorId->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'
-                    && $arg->creatorName->value === 'クリエイター',
-            ))
+            ->withArgs(
+                fn (Creator $arg): bool => $arg->creatorId->value === $creatorId
+                    && $arg->creatorName->value === $creatorName,
+            )
             ->andReturn($creator)
             ->once();
 
-        $result = $this->interactor->handle(new CreateInputData('クリエイター'));
+        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
 
         $this->assertTrue($result->isOk());
     }
@@ -87,23 +70,29 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
+        $creatorName = 'クリエイター';
+
         $this->transaction->shouldReceive('scope')
             ->with(Mockery::on(fn (Closure $_) => true))
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->with('クリエイター')
-            ->andReturn(new Ok($this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイター')))
+        $this->service->shouldReceive('prepareForCreate')
+            ->with($creatorName)
+            ->andReturn(new Err(''))
             ->once();
 
-        $this->service->shouldReceive('exists')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === 'クリエイター'))
-            ->andreturn(true)
-            ->once();
-
-        $result = $this->interactor->handle(new CreateInputData('クリエイター'));
+        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
 
         $this->assertTrue($result->isErr());
+    }
+
+    private function getInstance(): CreateInteractor
+    {
+        return new CreateInteractor(
+            $this->transaction,
+            $this->repository,
+            $this->service,
+        );
     }
 }

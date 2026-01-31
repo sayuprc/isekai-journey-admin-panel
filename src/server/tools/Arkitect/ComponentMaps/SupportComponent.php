@@ -9,4 +9,6 @@ enum SupportComponent: string implements ComponentMap
     use Accessor;
 
     case Domain = 'Support\Domain\*';
+
+    case Contracts = 'Support\Contracts\*';
 }

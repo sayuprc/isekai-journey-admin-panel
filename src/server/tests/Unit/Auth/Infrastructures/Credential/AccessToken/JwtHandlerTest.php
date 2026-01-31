@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Auth\Infrastructures\Credential\AccessToken;
 
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\Exceptions\ExpiredException;
 use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
 use Auth\Infrastructures\Credential\AccessToken\JwtHandler;
 use DateTimeImmutable;
@@ -118,7 +117,11 @@ class JwtHandlerTest extends TestCase
             ->andReturn('iss')
             ->once();
 
-        $payload = $handler->verify($jwt);
+        $result = $handler->verify($jwt);
+
+        $this->assertTrue($result->isOk());
+
+        $payload = $result->unwrap();
 
         $this->assertSame('iss', $payload->iss);
         $this->assertSame($now->getTimestamp(), $payload->iat);
@@ -130,8 +133,6 @@ class JwtHandlerTest extends TestCase
     #[Test]
     public function throwExceptionWhenExpireToken(): void
     {
-        $this->expectException(ExpiredException::class);
-
         $this->config->shouldReceive('getString')
             ->with('auth.jwt.alg')
             ->andReturn('HS256')
@@ -157,7 +158,9 @@ class JwtHandlerTest extends TestCase
             ->andReturn(new DateTimeImmutable())
             ->once();
 
-        $handler->verify($jwt);
+        $result = $handler->verify($jwt);
+
+        $this->assertFalse($result->isOk());
     }
 
     private function getInstance(): JwtHandler

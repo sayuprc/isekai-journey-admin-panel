@@ -7,10 +7,8 @@ namespace Performer\Application\Interactors;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateOutputData;
 use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use Performer\Domain\Services\PerformerNameDuplicateCheckService;
+use Performer\Domain\Services\PerformerIntegrityService;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -21,26 +19,24 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
     public function __construct(
         private TransactionInterface $transaction,
         private PerformerRepositoryInterface $repository,
-        private PerformerFactoryInterface $factory,
-        private PerformerNameDuplicateCheckService $service,
+        private PerformerIntegrityService $service,
     ) {
     }
 
     public function handle(UpdateInputData $inputData): Result
     {
-        return $this->factory->reconstitute($inputData->performerId, $inputData->performerName, $inputData->orderNo)
-            // TODO
-            ->mapErr(fn (): string => '')
-            ->andThen(function (Performer $performer): Result {
-                return $this->transaction->scope(function () use ($performer): Result {
-                    if ($this->service->existsForUpdate($performer->performerId, $performer->performerName)) {
-                        return new Err("Performer name already exists: {$performer->performerName->value}");
-                    }
+        return $this->transaction->scope(function () use ($inputData): Result {
+            $result = $this->service->prepareForUpdate($inputData->performerId, $inputData->performerName, $inputData->orderNo);
 
-                    $this->repository->save($performer);
+            if ($result->isErr()) {
+                return new Err($result->unwrapErr());
+            }
 
-                    return new Ok(new UpdateOutputData($performer));
-                });
-            });
+            $performer = $result->unwrap();
+
+            $this->repository->save($performer);
+
+            return new Ok(new UpdateOutputData($performer));
+        });
     }
 }

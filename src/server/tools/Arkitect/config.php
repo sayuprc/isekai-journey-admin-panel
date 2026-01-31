@@ -33,6 +33,7 @@ return [
         [
             CreatorComponent::Domain,
             SupportComponent::Domain,
+            SupportComponent::Contracts,
             LibraryComponent::ResultType,
         ],
     ),
@@ -49,6 +50,7 @@ return [
         [
             PerformerComponent::Domain,
             SupportComponent::Domain,
+            SupportComponent::Contracts,
             LibraryComponent::ResultType,
         ],
     ),
@@ -68,4 +70,5 @@ return [
             LibraryComponent::ResultType,
         ],
     ),
+    new Define(SupportComponent::Contracts),
 ];

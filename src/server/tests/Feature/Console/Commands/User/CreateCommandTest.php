@@ -31,7 +31,7 @@ class CreateCommandTest extends TestCase
         $this->factory(FileUserRepository::class, $uuid, $this->createUser($uuid, 'example@example.com', 'plain'));
 
         $this->artisan('user:create example@example.com plain')
-            ->expectsOutput('User already exists: example@example.com')
+            ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')
             ->assertFailed();
     }
 }

@@ -5,64 +5,58 @@ declare(strict_types=1);
 namespace Tests\Unit\Auth\Infrastructures\Credential\AccessToken;
 
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
 use Auth\Infrastructures\Credential\AccessToken\AccessTokenFactory;
-use DateTimeImmutable;
+use Carbon\Carbon;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\ClockInterface;
 use Tests\TestCase;
 
 class AccessTokenFactoryTest extends TestCase
 {
-    private JwtConfigInterface&MockInterface $config;
-
-    private ClockInterface&MockInterface $clock;
-
     private JwtHandlerInterface&MockInterface $jwt;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->config = Mockery::mock(JwtConfigInterface::class);
-        $this->clock = Mockery::mock(ClockInterface::class);
         $this->jwt = Mockery::mock(JwtHandlerInterface::class);
     }
 
     #[Test]
     public function createSuccessfully(): void
     {
-        $this->clock->shouldReceive('now')
-            ->with()
-            ->andReturn($now = new DateTimeImmutable())
-            ->once();
+        Carbon::setTestNow('2019-12-09 10:30:00');
 
-        $this->config->shouldReceive('issuer')
-            ->with()
-            ->andReturn('https://example.com')
-            ->once();
+        $now = now()->toDateTimeImmutable();
+
+        $payload = new AccessTokenPayload(
+            iss: 'issuer',
+            iat: $now->getTimestamp(),
+            exp: $now->modify('+1 hours')->getTimestamp(),
+            nbf: $now->getTimestamp(),
+            jti: 'id',
+        );
 
         $this->jwt->shouldReceive('generate')
-            ->with(Mockery::on(function (AccessTokenPayload $arg) use ($now) {
+            ->withArgs(function (AccessTokenPayload $arg) use ($now): bool {
                 $payload = $arg->toArray();
 
-                return $payload['iss'] === 'https://example.com'
+                return $payload['iss'] === 'issuer'
                     && $payload['iat'] === $now->getTimestamp()
                     && $payload['exp'] === $now->modify('+1 hours')->getTimestamp()
                     && $payload['nbf'] === $now->getTimestamp()
                     && $payload['jti'] === 'id';
-            }))
+            })
             ->andReturn('jwt')
             ->once();
 
-        $this->getInstance()->create('id');
+        $this->getInstance()->create($payload);
     }
 
     private function getInstance(): AccessTokenFactory
     {
-        return new AccessTokenFactory($this->config, $this->clock, $this->jwt);
+        return new AccessTokenFactory($this->jwt);
     }
 }

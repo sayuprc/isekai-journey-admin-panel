@@ -9,6 +9,9 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
+use User\Domain\Models\Email;
+use User\Domain\Models\PlainPassword;
+use User\Domain\Models\UserId;
 use User\Domain\Services\HasherInterface;
 use User\Infrastructures\UserFactory;
 
@@ -29,20 +32,16 @@ class UserFactoryTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $this->generator->shouldReceive('generate')
-            ->andReturn('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
-            ->once();
-
         $this->hasher->shouldReceive('hash')
             ->with('plain')
             ->andReturn('hashed')
             ->once();
 
-        $result = $this->getInstance()->create('example@example.com', 'plain');
-
-        $this->assertTrue($result->isOk());
-
-        $user = $result->unwrap();
+        $user = $this->getInstance()->create(
+            UserId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+            Email::reconstruct('example@example.com'),
+            PlainPassword::reconstruct('plain'),
+        );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->userId->value);
         $this->assertSame('example@example.com', $user->email->value);
@@ -51,6 +50,6 @@ class UserFactoryTest extends TestCase
 
     private function getInstance(): UserFactory
     {
-        return new UserFactory($this->generator, $this->hasher);
+        return new UserFactory($this->hasher);
     }
 }
