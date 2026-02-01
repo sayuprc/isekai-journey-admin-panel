@@ -11,9 +11,9 @@ on:
 env:
   SERVER_DOCKER_PATH: /tmp/cache/docker/server
   SERVER_DOCKER_KEY_PREFIX: docker-server-
-  # SERVER_IMAGE: isekai-terrarium-admin-php:8.5 (Managed by mise)
+  SERVER_IMAGE: isekai-terrarium-admin-php:8.5
 
-  # SERVER_CONTAINER: isekai-terrarium-admin-php (Managed by mise)
+  SERVER_CONTAINER: isekai-terrarium-admin-php
 
   VENDOR_PATH: ./src/server/vendor
   VENDOR_KEY_PREFIX: composer-
@@ -23,7 +23,7 @@ env:
 
   OPENAPI_GENERATOR_CLI_DOCKER_PATH: /tmp/cache/docker/openapi-generator-cli
   OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX: docker-openapi-generator-cli-
-  # OPENAPI_GENERATOR_CLI_IMAGE: openapi-generator:7.18.0 (Managed by mise)
+  OPENAPI_GENERATOR_CLI_IMAGE: openapi-generator:7.18.0
 
   MISE_ENV: ci
 

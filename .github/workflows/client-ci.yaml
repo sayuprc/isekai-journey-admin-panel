@@ -9,7 +9,7 @@ on:
       - dev
 
 env:
-  # WORKING_DIR: ./src/client (Managed by mise)
+  WORKING_DIR: ./src/client
   MISE_ENV: ci
 
 jobs:
