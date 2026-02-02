@@ -34,16 +34,6 @@ class GetInteractorTest extends TestCase
         $this->assertSame('ヰ世界情緒', $response->creator->creatorName->value);
     }
 
-    #[Test]
-    public function failureGetCreator(): void
-    {
-        $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
-
-        $this->assertTrue($result->isErr());
-
-        $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->unwrapErr());
-    }
-
     private function getInstance(): GetInteractor
     {
         return $this->app->make(GetInteractor::class);

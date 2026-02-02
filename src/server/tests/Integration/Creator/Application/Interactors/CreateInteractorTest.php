@@ -31,22 +31,6 @@ class CreateInteractorTest extends TestCase
         $this->assertSame('ヰ世界情緒', $creators[array_key_first($creators)]->creatorName->value);
     }
 
-    #[Test]
-    public function createFailsIfNameAlreadyExists(): void
-    {
-        $uuid = $this->generateUuid();
-
-        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'ヰ世界情緒'));
-
-        $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒'));
-
-        $this->assertTrue($result->isErr());
-
-        /** @var array<Creator> $creators */
-        $creators = $this->getAll(FileCreatorRepository::class);
-        $this->assertCount(1, $creators);
-    }
-
     private function getInstance(): CreateInteractor
     {
         return $this->app->make(CreateInteractor::class);

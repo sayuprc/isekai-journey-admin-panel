@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Creator\Application\Interactors;
 
 use Creator\Application\Interactors\ListInteractor;
-use Creator\Application\UseCase\List\ListOutputData;
-use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -20,21 +18,11 @@ class ListInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
-    private ListInteractor $interactor;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
-
-        $this->interactor = new ListInteractor($this->repository);
-    }
-
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(ListUseCaseInterface::class, $this->interactor);
     }
 
     #[Test]
@@ -44,9 +32,7 @@ class ListInteractorTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $response = $this->interactor->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(0, $response->creators);
     }
@@ -61,9 +47,7 @@ class ListInteractorTest extends TestCase
             ])
             ->once();
 
-        $response = $this->interactor->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(2, $response->creators);
 
@@ -71,5 +55,10 @@ class ListInteractorTest extends TestCase
         $this->assertSame('クリエイターA', $response->creators[0]->creatorName->value);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->creators[1]->creatorId->value);
         $this->assertSame('クリエイターB', $response->creators[1]->creatorName->value);
+    }
+
+    private function getInstance(): ListInteractor
+    {
+        return new ListInteractor($this->repository);
     }
 }

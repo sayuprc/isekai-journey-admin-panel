@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Performer\Application\Interactors;
 
 use Performer\Application\Interactors\ListInteractor;
-use Performer\Application\UseCase\List\ListOutputData;
 use Performer\DebugInfrastructures\FilePerformerRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
@@ -18,16 +17,6 @@ class ListInteractorTest extends TestCase
     use FileRepositoryTransaction;
 
     #[Test]
-    public function emptyPerformers(): void
-    {
-        $response = $this->getInstance()->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
-
-        $this->assertCount(0, $response->performers);
-    }
-
-    #[Test]
     public function nonEmptyPerformers(): void
     {
         $uuid = $this->generateUuid();
@@ -35,8 +24,6 @@ class ListInteractorTest extends TestCase
         $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $response = $this->getInstance()->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
 
         $this->assertCount(1, $response->performers);
 

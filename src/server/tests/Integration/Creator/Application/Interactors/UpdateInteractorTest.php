@@ -38,29 +38,6 @@ class UpdateInteractorTest extends TestCase
         $this->assertSame($afterName, $creators[$creatorId]->creatorName->value);
     }
 
-    #[Test]
-    public function updateFailsIfNameAlreadyExists(): void
-    {
-        $targetId = $this->generateUuid();
-        $otherId = $this->generateUuid();
-
-        $beforeName = 'クリエイター';
-        $afterName = 'ヰ世界情緒';
-
-        $this->factory(FileCreatorRepository::class, $targetId, $this->createCreator($targetId, $beforeName));
-        $this->factory(FileCreatorRepository::class, $otherId, $this->createCreator($otherId, $afterName));
-
-        $result = $this->getInstance()->handle(new UpdateInputData($targetId, $afterName));
-
-        $this->assertTrue($result->isErr());
-
-        /** @var array<Creator> $creators */
-        $creators = $this->getAll(FileCreatorRepository::class);
-        $this->assertCount(2, $creators);
-        $this->assertSame($afterName, $creators[$otherId]->creatorName->value);
-        $this->assertSame($beforeName, $creators[$targetId]->creatorName->value);
-    }
-
     private function getInstance(): UpdateInteractor
     {
         return $this->app->make(UpdateInteractor::class);

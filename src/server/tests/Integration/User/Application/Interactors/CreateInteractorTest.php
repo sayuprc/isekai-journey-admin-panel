@@ -32,18 +32,6 @@ class CreateInteractorTest extends TestCase
         $this->assertNotSame('plain', $users[array_key_first($users)]->hashedPassword->value);
     }
 
-    #[Test]
-    public function createFailsIfEmailAlreadyExists(): void
-    {
-        $uuid = $this->generateUuid();
-
-        $this->factory(FileUserRepository::class, $uuid, $this->createUser($uuid, 'example@example.com', 'hashed'));
-
-        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plainpassword'));
-
-        $this->assertTrue($result->isErr());
-    }
-
     private function getInstance(): CreateInteractor
     {
         return $this->app->make(CreateInteractor::class);

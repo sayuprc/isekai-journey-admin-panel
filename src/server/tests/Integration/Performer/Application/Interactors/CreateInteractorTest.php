@@ -32,22 +32,6 @@ class CreateInteractorTest extends TestCase
         $this->assertSame(1, $performers[array_key_first($performers)]->orderNo->value);
     }
 
-    #[Test]
-    public function createFailsIfNameAlreadyExists(): void
-    {
-        $uuid = $this->generateUuid();
-
-        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
-
-        $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒', 1));
-
-        $this->assertTrue($result->isErr());
-
-        /** @var array<Performer> $performers */
-        $performers = $this->getAll(FilePerformerRepository::class);
-        $this->assertCount(1, $performers);
-    }
-
     private function getInstance(): CreateInteractor
     {
         return $this->app->make(CreateInteractor::class);

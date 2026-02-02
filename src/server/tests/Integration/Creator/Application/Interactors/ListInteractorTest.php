@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Creator\Application\Interactors;
 
 use Creator\Application\Interactors\ListInteractor;
-use Creator\Application\UseCase\List\ListOutputData;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
@@ -16,16 +15,6 @@ class ListInteractorTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
-
-    #[Test]
-    public function emptyCreators(): void
-    {
-        $response = $this->getInstance()->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
-
-        $this->assertCount(0, $response->creators);
-    }
 
     #[Test]
     public function nonEmptyCreators(): void

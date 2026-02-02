@@ -49,15 +49,15 @@ class CreatorIntegrityServiceTest extends TestCase
         $expectedCreator = $this->createCreator($uuid, $creatorName);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName),
+            ->withArgs(
+                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
+                    && $creatorNameArg->value === $creatorName,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName))
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
             ->andReturnNull()
             ->once();
 
@@ -81,9 +81,9 @@ class CreatorIntegrityServiceTest extends TestCase
         $expectedCreator = $this->createCreator($uuid, $creatorName);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName),
+            ->withArgs(
+                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
+                    && $creatorNameArg->value === $creatorName,
             )
             ->andReturn($expectedCreator)
             ->once();
@@ -91,7 +91,7 @@ class CreatorIntegrityServiceTest extends TestCase
         $existingCreator = $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $creatorName);
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName))
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
             ->andReturn($existingCreator)
             ->once();
 
@@ -110,15 +110,15 @@ class CreatorIntegrityServiceTest extends TestCase
         $expectedCreator = $this->createCreator($uuid, $creatorName);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName),
+            ->withArgs(
+                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
+                    && $creatorNameArg->value === $creatorName,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName))
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
             ->andReturnNull()
             ->once();
 
@@ -137,15 +137,15 @@ class CreatorIntegrityServiceTest extends TestCase
         $expectedCreator = $this->createCreator($uuid, $creatorName);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName),
+            ->withArgs(
+                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
+                    && $creatorNameArg->value === $creatorName,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName))
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
             ->andReturn($expectedCreator)
             ->once();
 
@@ -165,9 +165,9 @@ class CreatorIntegrityServiceTest extends TestCase
         $expectedCreator = $this->createCreator($uuid, $creatorName);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (CreatorId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName),
+            ->withArgs(
+                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
+                    && $creatorNameArg->value === $creatorName,
             )
             ->andReturn($expectedCreator)
             ->once();
@@ -175,7 +175,7 @@ class CreatorIntegrityServiceTest extends TestCase
         $otherCreator = $this->createCreator($otherUuid, $creatorName);
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (CreatorName $arg): bool => $arg->value === $creatorName))
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
             ->andReturn($otherCreator)
             ->once();
 

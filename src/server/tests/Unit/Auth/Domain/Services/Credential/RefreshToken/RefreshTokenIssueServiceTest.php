@@ -77,12 +77,18 @@ class RefreshTokenIssueServiceTest extends TestCase
         );
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (RefreshTokenId $id): bool => $id->value === $generatedUuid),
-                Mockery::on(fn (UserId $userId): bool => $userId->value === $userIdStr),
-                Mockery::on(fn (TokenValue $token): bool => $token->value === $generatedToken),
-                Mockery::on(fn (ExpiredAt $expiredAt): bool => $expiredAt->value->getTimestamp() === $expectedExpiredAt->getTimestamp()),
-                ConsumptionStatus::Unused,
+            ->withArgs(
+                fn (
+                    RefreshTokenId $id,
+                    UserId $userId,
+                    TokenValue $token,
+                    ExpiredAt $expiredAt,
+                    ConsumptionStatus $status,
+                ): bool => $id->value === $generatedUuid
+                    && $userId->value === $userIdStr
+                    && $token->value === $generatedToken
+                    && $expiredAt->value->getTimestamp() === $expectedExpiredAt->getTimestamp()
+                    && $status === ConsumptionStatus::Unused,
             )
             ->andReturn($expectedRefreshToken)
             ->once();
