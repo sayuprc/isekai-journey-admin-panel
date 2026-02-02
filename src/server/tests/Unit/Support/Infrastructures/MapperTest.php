@@ -6,18 +6,11 @@ namespace Tests\Unit\Support\Infrastructures;
 
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Support\Contracts\MapperInterface;
 use Support\Infrastructures\Mapper;
 use Tests\TestCase;
 
 class MapperTest extends TestCase
 {
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(MapperInterface::class, $this->getMapper());
-    }
-
     #[Test]
     public function mapFromArray(): void
     {

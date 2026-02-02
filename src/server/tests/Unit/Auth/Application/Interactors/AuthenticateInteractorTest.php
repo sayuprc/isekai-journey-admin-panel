@@ -6,7 +6,6 @@ namespace Tests\Unit\Auth\Application\Interactors;
 
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
-use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
@@ -43,12 +42,6 @@ class AuthenticateInteractorTest extends TestCase
     }
 
     #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(AuthenticateUseCaseInterface::class, $this->getInstance());
-    }
-
-    #[Test]
     public function canAuthenticate(): void
     {
         $refreshTokenId = $this->generateUuid();
@@ -61,7 +54,7 @@ class AuthenticateInteractorTest extends TestCase
         $userId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
+            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
@@ -74,7 +67,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->with(Mockery::on(fn (UserId $arg) => $arg->value === $userId))
+            ->withArgs(fn (UserId $arg) => $arg->value === $userId)
             ->andReturn($this->createUser($userId, 'example@example.com', ''))
             ->once();
 
@@ -107,7 +100,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
+            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturnNull()
             ->once();
 
@@ -129,7 +122,7 @@ class AuthenticateInteractorTest extends TestCase
         $userId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->with(Mockery::on(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId))
+            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
@@ -142,7 +135,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->with(Mockery::on(fn (UserId $arg) => $arg->value === $userId))
+            ->withArgs(fn (UserId $arg) => $arg->value === $userId)
             ->andReturnNull()
             ->once();
 

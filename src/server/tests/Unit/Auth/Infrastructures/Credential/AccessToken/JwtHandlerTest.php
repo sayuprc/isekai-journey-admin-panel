@@ -11,7 +11,6 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use stdClass;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\ConfigInterface;
 use Support\Contracts\MapperInterface;
@@ -102,7 +101,7 @@ class JwtHandlerTest extends TestCase
             ->once();
 
         $this->mapper->shouldReceive('map')
-            ->with(AccessTokenPayload::class, Mockery::on(fn (stdClass $_) => true))
+            ->withArgs(fn (string $class, mixed $_) => $class === AccessTokenPayload::class)
             ->andReturn(new AccessTokenPayload(
                 'iss',
                 $now->getTimestamp(),

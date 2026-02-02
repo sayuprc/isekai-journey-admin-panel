@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\DebugInfrastructures\Repository;
+namespace Tests\Integration\Support\DebugInfrastructures\Repository;
 
 use PHPUnit\Framework\Attributes\Test;
 use Support\DebugInfrastructures\Repository\FileSystem;

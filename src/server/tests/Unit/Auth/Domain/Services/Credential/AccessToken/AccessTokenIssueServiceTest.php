@@ -55,11 +55,13 @@ class AccessTokenIssueServiceTest extends TestCase
         $expectedAccessToken = $this->createAccessToken('jwt-token');
 
         $this->factory->shouldReceive('create')
-            ->with(Mockery::on(fn (AccessTokenPayload $payload): bool => $payload->iss === $issuer
+            ->withArgs(
+                fn (AccessTokenPayload $payload): bool => $payload->iss === $issuer
                     && $payload->iat === $now->getTimestamp()
                     && $payload->exp === $now->modify('+1 hours')->getTimestamp()
                     && $payload->nbf === $now->getTimestamp()
-                    && $payload->jti === $id))
+                    && $payload->jti === $id,
+            )
             ->andReturn($expectedAccessToken)
             ->once();
 

@@ -46,7 +46,7 @@ class CreateInteractorTest extends TestCase
         $password = 'plain';
 
         $this->transaction->shouldReceive('scope')
-            ->with(Mockery::on(fn (Closure $_) => true))
+            ->withArgs(fn (Closure $_) => true)
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
@@ -75,7 +75,7 @@ class CreateInteractorTest extends TestCase
         $password = 'plain';
 
         $this->transaction->shouldReceive('scope')
-            ->with(Mockery::on(fn (Closure $_) => true))
+            ->withArgs(fn (Closure $_) => true)
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 

@@ -20,6 +20,6 @@ readonly class RefreshToken
 
     public function isAvailable(DateTimeInterface $now): bool
     {
-        return $this->status->isAvailable() && ! $this->expiredAt->isPast($now);
+        return $this->status->isAvailable() && ! $this->expiredAt->isExpired($now);
     }
 }

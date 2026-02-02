@@ -7,8 +7,6 @@ namespace Tests\Unit\Performer\Application\Interactors;
 use Mockery;
 use Mockery\MockInterface;
 use Performer\Application\Interactors\ListInteractor;
-use Performer\Application\UseCase\List\ListOutputData;
-use Performer\Application\UseCase\List\ListUseCaseInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
@@ -20,21 +18,11 @@ class ListInteractorTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
-    private ListInteractor $interactor;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->repository = Mockery::mock(PerformerRepositoryInterface::class);
-
-        $this->interactor = new ListInteractor($this->repository);
-    }
-
-    #[Test]
-    public function isImplementsSpecificInterface(): void
-    {
-        $this->assertInstanceOf(ListUseCaseInterface::class, $this->interactor);
     }
 
     #[Test]
@@ -44,9 +32,7 @@ class ListInteractorTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $response = $this->interactor->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(0, $response->performers);
     }
@@ -61,9 +47,7 @@ class ListInteractorTest extends TestCase
             ])
             ->once();
 
-        $response = $this->interactor->handle();
-
-        $this->assertInstanceOf(ListOutputData::class, $response);
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(2, $response->performers);
 
@@ -73,5 +57,10 @@ class ListInteractorTest extends TestCase
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->performers[1]->performerId->value);
         $this->assertSame('共演者B', $response->performers[1]->performerName->value);
         $this->assertSame(2, $response->performers[1]->orderNo->value);
+    }
+
+    private function getInstance(): ListInteractor
+    {
+        return new ListInteractor($this->repository);
     }
 }

@@ -9,8 +9,8 @@ use Support\Domain\ValueObjects\Date\ImmutableDateTimeValueObject;
 
 readonly class ExpiredAt extends ImmutableDateTimeValueObject
 {
-    public function isPast(DateTimeInterface $now): bool
+    public function isExpired(DateTimeInterface $now): bool
     {
-        return $this->value <= $now;
+        return $this->value < $now;
     }
 }

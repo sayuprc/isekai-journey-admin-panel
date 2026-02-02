@@ -51,16 +51,20 @@ class PerformerIntegrityServiceTest extends TestCase
         $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName),
-                Mockery::on(fn (OrderNo $arg): bool => $arg->value === $orderNo),
+            ->withArgs(
+                fn (
+                    PerformerId $performerIdArg,
+                    PerformerName $performerNameArg,
+                    OrderNo $orderNoArg,
+                ): bool => $performerIdArg->value === $uuid
+                    && $performerNameArg->value === $performerName
+                    && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName))
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturnNull()
             ->once();
 
@@ -85,10 +89,14 @@ class PerformerIntegrityServiceTest extends TestCase
         $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName),
-                Mockery::on(fn (OrderNo $arg): bool => $arg->value === $orderNo),
+            ->withArgs(
+                fn (
+                    PerformerId $performerIdArg,
+                    PerformerName $performerNameArg,
+                    OrderNo $orderNoArg,
+                ): bool => $performerIdArg->value === $uuid
+                    && $performerNameArg->value === $performerName
+                    && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
@@ -96,7 +104,7 @@ class PerformerIntegrityServiceTest extends TestCase
         $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $performerName, $orderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName))
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturn($existingPerformer)
             ->once();
 
@@ -116,16 +124,20 @@ class PerformerIntegrityServiceTest extends TestCase
         $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName),
-                Mockery::on(fn (OrderNo $arg): bool => $arg->value === $orderNo),
+            ->withArgs(
+                fn (
+                    PerformerId $performerIdArg,
+                    PerformerName $performerNameArg,
+                    OrderNo $orderNoArg,
+                ): bool => $performerIdArg->value === $uuid
+                    && $performerNameArg->value === $performerName
+                    && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName))
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturnNull()
             ->once();
 
@@ -145,16 +157,20 @@ class PerformerIntegrityServiceTest extends TestCase
         $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName),
-                Mockery::on(fn (OrderNo $arg): bool => $arg->value === $orderNo),
+            ->withArgs(
+                fn (
+                    PerformerId $performerIdArg,
+                    PerformerName $performerNameArg,
+                    OrderNo $orderNoArg,
+                ): bool => $performerIdArg->value === $uuid
+                    && $performerNameArg->value === $performerName
+                    && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName))
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturn($expectedPerformer)
             ->once();
 
@@ -175,10 +191,14 @@ class PerformerIntegrityServiceTest extends TestCase
         $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
 
         $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (PerformerId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName),
-                Mockery::on(fn (OrderNo $arg): bool => $arg->value === $orderNo),
+            ->withArgs(
+                fn (
+                    PerformerId $performerIdArg,
+                    PerformerName $performerNameArg,
+                    OrderNo $orderNoArg,
+                ): bool => $performerIdArg->value === $uuid
+                    && $performerNameArg->value === $performerName
+                    && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
@@ -186,7 +206,7 @@ class PerformerIntegrityServiceTest extends TestCase
         $otherPerformer = $this->createPerformer($otherUuid, $performerName, $orderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->with(Mockery::on(fn (PerformerName $arg): bool => $arg->value === $performerName))
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturn($otherPerformer)
             ->once();
 

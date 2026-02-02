@@ -7,7 +7,6 @@ namespace Tests\Unit\User\Infrastructures;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\UuidGeneratorInterface;
 use Tests\TestCase;
 use User\Domain\Models\Email;
 use User\Domain\Models\PlainPassword;
@@ -17,15 +16,12 @@ use User\Infrastructures\UserFactory;
 
 class UserFactoryTest extends TestCase
 {
-    private MockInterface&UuidGeneratorInterface $generator;
-
     private HasherInterface&MockInterface $hasher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->generator = Mockery::mock(UuidGeneratorInterface::class);
         $this->hasher = Mockery::mock(HasherInterface::class);
     }
 
