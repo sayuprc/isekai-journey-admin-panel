@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace User\DebugInfrastructures;
 
-use Support\Contracts\ConfigInterface;
+use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 use User\Domain\Models\Email;
 use User\Domain\Models\User;
@@ -22,9 +22,9 @@ readonly class FileUserRepository implements UserRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        private ConfigInterface $config,
+        DebugConfig $config,
     ) {
-        $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
+        $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
     public function find(UserId $userId): ?User

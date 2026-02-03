@@ -8,7 +8,6 @@ use Emonkak\Database\PDO as EmonkakPDO;
 use Emonkak\Database\PDOConnector;
 use Emonkak\Database\PDOInterface;
 use PDO;
-use Support\Contracts\ConfigInterface;
 
 class SQLiteConnector
 {
@@ -23,7 +22,7 @@ class SQLiteConnector
 
     private ?PDOInterface $pdo = null;
 
-    public function __construct(private readonly ConfigInterface $config)
+    public function __construct(private readonly SQLiteConfig $config)
     {
     }
 
@@ -38,7 +37,7 @@ class SQLiteConnector
 
     private function createConnection(): PDOInterface
     {
-        $database = $this->config->getString('database.connections.sqlite.database');
+        $database = $this->config->database;
 
         $path = realpath($database) ?: realpath(base_path($database));
 
@@ -51,10 +50,10 @@ class SQLiteConnector
 
     private function configure(EmonkakPDO $pdo): void
     {
-        $this->configureForeignKeyConstraints($pdo, $this->config->getNullableBoolean('database.connections.sqlite.foreign_key_constraints'));
-        $this->configureBusyTimeout($pdo, $this->config->getNullableInteger('database.connections.sqlite.busy_timeout'));
-        $this->configureJournalMode($pdo, $this->config->getNullableString('database.connections.sqlite.journal_mode'));
-        $this->configureSynchronous($pdo, $this->config->getNullableString('database.connections.sqlite.synchronous'));
+        $this->configureForeignKeyConstraints($pdo, $this->config->foreignKeyConstraints);
+        $this->configureBusyTimeout($pdo, $this->config->busyTimeout);
+        $this->configureJournalMode($pdo, $this->config->journalMode);
+        $this->configureSynchronous($pdo, $this->config->synchronous);
     }
 
     private function configureForeignKeyConstraints(EmonkakPDO $pdo, ?bool $foreignKeyConstraints): void

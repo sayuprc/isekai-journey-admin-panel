@@ -8,7 +8,7 @@ use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use Support\Contracts\ConfigInterface;
+use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FilePerformerRepository implements PerformerRepositoryInterface
@@ -22,9 +22,9 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
      */
     public function __construct(
         private FileStore $store,
-        private ConfigInterface $config,
+        DebugConfig $config,
     ) {
-        $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
+        $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
     public function all(): array

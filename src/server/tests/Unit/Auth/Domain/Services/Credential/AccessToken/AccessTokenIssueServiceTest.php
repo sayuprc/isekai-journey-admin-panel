@@ -7,7 +7,7 @@ namespace Tests\Unit\Auth\Domain\Services\Credential\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
+use Auth\Domain\Services\Credential\AccessToken\JwtConfig;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
@@ -22,8 +22,6 @@ class AccessTokenIssueServiceTest extends TestCase
 
     private ClockInterface&MockInterface $clock;
 
-    private JwtConfigInterface&MockInterface $jwtConfig;
-
     private AccessTokenFactoryInterface&MockInterface $factory;
 
     protected function setUp(): void
@@ -31,7 +29,6 @@ class AccessTokenIssueServiceTest extends TestCase
         parent::setUp();
 
         $this->clock = Mockery::mock(ClockInterface::class);
-        $this->jwtConfig = Mockery::mock(JwtConfigInterface::class);
         $this->factory = Mockery::mock(AccessTokenFactoryInterface::class);
     }
 
@@ -47,11 +44,6 @@ class AccessTokenIssueServiceTest extends TestCase
             ->andReturn($now)
             ->once();
 
-        $this->jwtConfig->shouldReceive('issuer')
-            ->with()
-            ->andReturn($issuer)
-            ->once();
-
         $expectedAccessToken = $this->createAccessToken('jwt-token');
 
         $this->factory->shouldReceive('create')
@@ -65,16 +57,16 @@ class AccessTokenIssueServiceTest extends TestCase
             ->andReturn($expectedAccessToken)
             ->once();
 
-        $actual = $this->getInstance()->issue($id);
+        $actual = $this->getInstance(new JwtConfig('', '', $issuer))->issue($id);
 
         $this->assertSame($expectedAccessToken, $actual);
     }
 
-    private function getInstance(): AccessTokenIssueService
+    private function getInstance(JwtConfig $config): AccessTokenIssueService
     {
         return new AccessTokenIssueService(
             $this->clock,
-            $this->jwtConfig,
+            $config,
             $this->factory,
         );
     }

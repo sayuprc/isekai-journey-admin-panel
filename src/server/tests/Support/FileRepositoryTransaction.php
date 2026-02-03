@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Tests\Support;
 
 use FilesystemIterator;
-use Mockery;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
-use Support\Contracts\ConfigInterface;
+use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
-use Support\Infrastructures\Config\Config;
 
 trait FileRepositoryTransaction
 {
@@ -23,15 +21,11 @@ trait FileRepositoryTransaction
     {
         parent::setUp();
 
-        $config = Mockery::mock(Config::class)->makePartial();
-
         $directory = $this->getDirectoryName();
 
-        $config->shouldReceive('getString')
-            ->with('debug.file.path')
-            ->andReturn($directory);
+        $config = new DebugConfig($directory);
 
-        $this->app->bind(ConfigInterface::class, fn () => $config);
+        $this->app->bind(DebugConfig::class, fn (): DebugConfig => $config);
 
         if (! file_exists($directory)) {
             mkdir($directory, 0777, true);
