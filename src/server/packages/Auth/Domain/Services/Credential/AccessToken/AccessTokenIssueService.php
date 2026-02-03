@@ -17,7 +17,7 @@ class AccessTokenIssueService
 
     public function __construct(
         private readonly ClockInterface $clock,
-        private readonly JwtConfigInterface $jwtConfig,
+        private readonly JwtConfig $config,
         private readonly AccessTokenFactoryInterface $factory,
     ) {
     }
@@ -27,7 +27,7 @@ class AccessTokenIssueService
         $now = $this->clock->now();
 
         $payload = new AccessTokenPayload(
-            iss: $this->jwtConfig->issuer(),
+            iss: $this->config->issuer,
             iat: $now->getTimestamp(),
             exp: $now->modify('+' . self::TTL_HOUR . ' hours')->getTimestamp(),
             nbf: $now->getTimestamp(),

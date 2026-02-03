@@ -15,7 +15,6 @@ use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use OpenAPI\Client\Model\ValidationError;
 use Psr\Log\LoggerInterface;
-use Support\Contracts\ConfigInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,9 +26,9 @@ class OpenApiValidator
         private readonly LoggerInterface $logger,
         private readonly ValidatorBuilder $builder,
         Psr17Factory $psr17Factory,
-        ConfigInterface $config,
+        OpenApiConfig $config,
     ) {
-        $this->builder->fromYamlFile($config->getString('openapi.path'));
+        $this->builder->fromYamlFile($config->path);
 
         $this->psrHttpFactory = new PsrHttpFactory(
             $psr17Factory,

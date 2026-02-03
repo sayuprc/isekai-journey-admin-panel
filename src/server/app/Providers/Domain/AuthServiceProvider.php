@@ -12,12 +12,11 @@ use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Services\Credential\AccessToken\JwtConfigInterface;
+use Auth\Domain\Services\Credential\AccessToken\JwtConfig;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Credential\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Infrastructures\Auth\AuthUserProvider;
 use Auth\Infrastructures\Credential\AccessToken\AccessTokenFactory;
-use Auth\Infrastructures\Credential\AccessToken\JwtConfig;
 use Auth\Infrastructures\Credential\AccessToken\JwtHandler;
 use Auth\Infrastructures\Credential\RefreshToken\RandomTokenGenerator;
 use Auth\Infrastructures\Credential\RefreshToken\RefreshTokenFactory;
@@ -28,7 +27,6 @@ class AuthServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(JwtHandlerInterface::class, JwtHandler::class);
-        $this->app->bind(JwtConfigInterface::class, JwtConfig::class);
         $this->app->bind(AccessTokenFactoryInterface::class, AccessTokenFactory::class);
         $this->app->bind(RefreshTokenFactoryInterface::class, RefreshTokenFactory::class);
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
@@ -36,6 +34,15 @@ class AuthServiceProvider extends EnvServiceProvider
 
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
         $this->app->bind(AuthenticateUseCaseInterface::class, AuthenticateInteractor::class);
+
+        $this->app->bind(
+            JwtConfig::class,
+            fn (): JwtConfig => new JwtConfig(
+                config()->string('auth.jwt.alg'),
+                config()->string('auth.jwt.key'),
+                config()->string('app.url'),
+            ),
+        );
     }
 
     public function boot(): void

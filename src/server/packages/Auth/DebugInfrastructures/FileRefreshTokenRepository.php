@@ -8,7 +8,7 @@ use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Support\Contracts\ClockInterface;
-use Support\Contracts\ConfigInterface;
+use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInterface
@@ -22,10 +22,10 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
      */
     public function __construct(
         private FileStore $store,
-        private ConfigInterface $config,
         private ClockInterface $clock,
+        DebugConfig $config,
     ) {
-        $this->filePath = $this->config->getString('debug.file.path') . '/' . self::FILE_NAME;
+        $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
