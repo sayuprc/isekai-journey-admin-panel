@@ -8,19 +8,16 @@ use Creator\Domain\Models\CreatorId;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Domain\ImmutableCollection;
 use Support\Domain\ValueObjects\OrderNo;
 
-readonly class Lyricists
+/**
+ * @extends ImmutableCollection<int, Lyricist>
+ */
+readonly class Lyricists extends ImmutableCollection
 {
     /**
-     * @param array<Lyricist> $lyricists
-     */
-    private function __construct(public array $lyricists)
-    {
-    }
-
-    /**
-     * @param array<array{creatorId: string, orderNo: int}> $items
+     * @param array<int, array{creatorId: string, orderNo: int}> $items
      *
      * @return Result<self, string>
      */
