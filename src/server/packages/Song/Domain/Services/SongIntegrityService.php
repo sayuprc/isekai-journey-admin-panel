@@ -32,9 +32,9 @@ class SongIntegrityService
     }
 
     /**
-     * @param array<creator> $arrangers
-     * @param array<creator> $composers
-     * @param array<creator> $lyricists
+     * @param array<int, creator> $arrangers
+     * @param array<int, creator> $composers
+     * @param array<int, creator> $lyricists
      *
      * @return Result<Song, string>
      */
@@ -58,9 +58,9 @@ class SongIntegrityService
     }
 
     /**
-     * @param array<creator> $arrangers
-     * @param array<creator> $composers
-     * @param array<creator> $lyricists
+     * @param array<int, creator> $arrangers
+     * @param array<int, creator> $composers
+     * @param array<int, creator> $lyricists
      *
      * @return Result<Song, string>
      */
