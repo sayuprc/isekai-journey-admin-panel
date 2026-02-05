@@ -21,6 +21,7 @@ use Performer\Domain\Models\PerformerName;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
+use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
@@ -58,6 +59,7 @@ trait EntityFactory
     protected function createSong(
         string $songId,
         string $title,
+        string $description,
         SongType $songType,
         int $orderNo,
         array $arrangers,
@@ -67,6 +69,7 @@ trait EntityFactory
         return new Song(
             SongId::reconstruct($songId),
             Title::reconstruct($title),
+            Description::reconstruct($description),
             $songType,
             OrderNo::reconstruct($orderNo),
             Arrangers::fromArray($arrangers)->unwrap(),

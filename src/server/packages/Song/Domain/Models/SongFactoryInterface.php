@@ -15,6 +15,7 @@ interface SongFactoryInterface
     public function create(
         SongId $songId,
         Title $title,
+        Description $description,
         SongType $songType,
         OrderNo $orderNo,
         Arrangers $arrangers,
