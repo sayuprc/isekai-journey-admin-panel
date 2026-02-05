@@ -57,6 +57,20 @@ class FileCreatorRepositoryTest extends TestCase
     }
 
     #[Test]
+    public function findByIds(): void
+    {
+        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
+        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ');
+
+        $this->store($creator1, $creator2);
+
+        $creators = $this->getInstance()->findByIds($creator1->creatorId, $creator2->creatorId);
+
+        $this->assertCount(2, $creators);
+        $this->assertEquals([$creator1, $creator2], $creators);
+    }
+
+    #[Test]
     public function save(): void
     {
         $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');

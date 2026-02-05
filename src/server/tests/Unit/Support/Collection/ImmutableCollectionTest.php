@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Support\Domain;
+namespace Tests\Unit\Support\Collection;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\ImmutableCollection;
+use Support\Collection\ImmutableCollection;
 use Tests\TestCase;
 
 class ImmutableCollectionTest extends TestCase
@@ -77,6 +77,16 @@ class ImmutableCollectionTest extends TestCase
         $this->expectExceptionMessage('このコレクションは不変で、要素の変更はできません');
 
         unset($collection[0]);
+    }
+
+    #[Test]
+    public function toGeneric(): void
+    {
+        $collection = new IntCollection([1, 2, 3]);
+
+        $generic = $collection->toGeneric();
+
+        $this->assertSame([1, 2, 3], $generic->toArray());
     }
 }
 

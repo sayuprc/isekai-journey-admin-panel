@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Domain;
+namespace Support\Collection;
 
 use ArrayAccess;
 use ArrayIterator;
@@ -24,7 +24,7 @@ abstract readonly class ImmutableCollection implements ArrayAccess, Countable, I
     /**
      * @param array<TKey, TValue> $items
      */
-    public function __construct(private array $items)
+    public function __construct(protected array $items)
     {
     }
 
@@ -80,5 +80,13 @@ abstract readonly class ImmutableCollection implements ArrayAccess, Countable, I
     public function offsetUnset(mixed $offset): void
     {
         throw new LogicException('このコレクションは不変で、要素の変更はできません');
+    }
+
+    /**
+     * @return GenericImmutableCollection<TKey, TValue>
+     */
+    public function toGeneric(): GenericImmutableCollection
+    {
+        return new GenericImmutableCollection($this->items);
     }
 }

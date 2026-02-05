@@ -8,7 +8,7 @@ use Creator\Domain\Models\CreatorId;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Domain\ImmutableCollection;
+use Support\Collection\ImmutableCollection;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
