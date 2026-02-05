@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Song\Domain\Services;
 
+use Creator\Domain\Models\CreatorId;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,6 +31,7 @@ class SongIntegrityService
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
         private readonly SongFactoryInterface $factory,
+        private readonly CreatorRepositoryInterface $creatorRepository,
     ) {
     }
 
@@ -48,23 +51,34 @@ class SongIntegrityService
         array $composers,
         array $lyricists,
     ): Result {
+        $result = Result::collect3(
+            Arrangers::fromArray($arrangers),
+            Composers::fromArray($composers),
+            Lyricists::fromArray($lyricists),
+        );
+
+        if ($result->isErr()) {
+            return new Err('');
+        }
+
+        $creators = $result->unwrap();
+
+        if (! $this->existsCreators(...$creators)) {
+            // CreatorId が不正
+            return new Err('');
+        }
+
         return $this->build(
             $this->generator->generate(),
             $title,
             $description,
             $songType,
             $orderNo,
-            $arrangers,
-            $composers,
-            $lyricists,
+            ...$creators,
         );
     }
 
     /**
-     * @param array<int, creator> $arrangers
-     * @param array<int, creator> $composers
-     * @param array<int, creator> $lyricists
-     *
      * @return Result<Song, string>
      */
     private function build(
@@ -73,22 +87,19 @@ class SongIntegrityService
         string $description,
         int $songType,
         int $orderNo,
-        array $arrangers,
-        array $composers,
-        array $lyricists,
+        Arrangers $arrangers,
+        Composers $composers,
+        Lyricists $lyricists,
     ): Result {
-        return Result::collect8(
+        return Result::collect5(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
             $this->toEnum($songType),
             OrderNo::create($orderNo),
-            Arrangers::fromArray($arrangers),
-            Composers::fromArray($composers),
-            Lyricists::fromArray($lyricists),
         )
             ->mapErr(fn (): string => '')
-            ->map(fn (array $values): Song => $this->factory->create(...$values));
+            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $arrangers, $composers, $lyricists]));
     }
 
     /**
@@ -103,5 +114,22 @@ class SongIntegrityService
         }
 
         return new Ok($result);
+    }
+
+    private function existsCreators(Arrangers $arrangers, Composers $composers, Lyricists $lyricists): bool
+    {
+        $creatorIds = [];
+
+        foreach ([$arrangers, $composers, $lyricists] as $items) {
+            foreach ($items as $item) {
+                if (! isset($creatorIds[$item->creatorId->value])) {
+                    $creatorIds[$item->creatorId->value] = $item->creatorId;
+                }
+            }
+        }
+
+        $founds = $this->creatorRepository->findByIds(...array_values($creatorIds));
+
+        return count($creatorIds) === count($founds);
     }
 }

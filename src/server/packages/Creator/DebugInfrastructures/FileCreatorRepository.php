@@ -51,6 +51,21 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         return null;
     }
 
+    public function findByIds(CreatorId ...$creatorIds): array
+    {
+        $founds = [];
+
+        foreach ($creatorIds as $creatorId) {
+            $found = $this->store->get($this->filePath, $creatorId->value);
+
+            if (! is_null($found)) {
+                $founds[] = $found;
+            }
+        }
+
+        return $founds;
+    }
+
     public function save(Creator $creator): Creator
     {
         $this->store->put($this->filePath, $creator->creatorId->value, $creator);
