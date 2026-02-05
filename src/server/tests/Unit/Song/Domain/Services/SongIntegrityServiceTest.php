@@ -7,6 +7,7 @@ namespace Tests\Unit\Song\Domain\Services;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\Description;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
@@ -40,6 +41,7 @@ class SongIntegrityServiceTest extends TestCase
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $songType = SongType::Original->value;
         $orderNo = 1;
+        $description = '説明';
 
         $this->generator->shouldReceive('generate')
             ->with()
@@ -49,6 +51,7 @@ class SongIntegrityServiceTest extends TestCase
         $expectedSong = $this->createSong(
             $uuid,
             $title,
+            $description,
             SongType::Original,
             $orderNo,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
@@ -61,10 +64,12 @@ class SongIntegrityServiceTest extends TestCase
                 fn (
                     SongId $songIdArg,
                     Title $titleArg,
+                    Description $descriptionArg,
                     SongType $songTypeArg,
                     OrderNo $orderNoArg,
                 ): bool => $songIdArg->value === $uuid
                     && $titleArg->value === $title
+                    && $descriptionArg->value === $description
                     && $songTypeArg->value === $songType
                     && $orderNoArg->value === $orderNo,
             )
@@ -73,6 +78,7 @@ class SongIntegrityServiceTest extends TestCase
 
         $result = $this->getInstance()->prepareForCreate(
             $title,
+            $description,
             $songType,
             $orderNo,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],

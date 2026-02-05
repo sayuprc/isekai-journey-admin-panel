@@ -15,6 +15,7 @@ readonly class Song
     public function __construct(
         public SongId $songId,
         public Title $title,
+        public Description $description,
         public SongType $songType,
         public OrderNo $orderNo,
         public Arrangers $arrangers,

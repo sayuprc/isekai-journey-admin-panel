@@ -10,6 +10,7 @@ use ResultType\Result;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
+use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
@@ -40,6 +41,7 @@ class SongIntegrityService
      */
     public function prepareForCreate(
         string $title,
+        string $description,
         int $songType,
         int $orderNo,
         array $arrangers,
@@ -49,6 +51,7 @@ class SongIntegrityService
         return $this->build(
             $this->generator->generate(),
             $title,
+            $description,
             $songType,
             $orderNo,
             $arrangers,
@@ -67,15 +70,17 @@ class SongIntegrityService
     private function build(
         string $songId,
         string $title,
+        string $description,
         int $songType,
         int $orderNo,
         array $arrangers,
         array $composers,
         array $lyricists,
     ): Result {
-        return Result::collect7(
+        return Result::collect8(
             SongId::create($songId),
             Title::create($title),
+            Description::create($description),
             $this->toEnum($songType),
             OrderNo::create($orderNo),
             Arrangers::fromArray($arrangers),
