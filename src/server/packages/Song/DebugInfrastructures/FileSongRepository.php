@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Song\DebugInfrastructures;
+
+use Song\Domain\Models\Song;
+use Song\Domain\Models\SongRepositoryInterface;
+use Support\DebugInfrastructures\Repository\DebugConfig;
+use Support\DebugInfrastructures\Repository\FileStore;
+
+readonly class FileSongRepository implements SongRepositoryInterface
+{
+    private const string FILE_NAME = 'songs.dat';
+
+    private string $filePath;
+
+    /**
+     * @param FileStore<Song> $store
+     */
+    public function __construct(
+        private FileStore $store,
+        DebugConfig $config,
+    ) {
+        $this->filePath = $config->path . '/' . self::FILE_NAME;
+    }
+
+    public function save(Song $song): Song
+    {
+        $this->store->put($this->filePath, $song->songId->value, $song);
+
+        return $song;
+    }
+}

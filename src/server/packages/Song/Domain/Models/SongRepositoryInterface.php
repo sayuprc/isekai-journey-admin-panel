@@ -6,4 +6,5 @@ namespace Song\Domain\Models;
 
 interface SongRepositoryInterface
 {
+    public function save(Song $song): Song;
 }

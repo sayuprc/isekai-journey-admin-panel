@@ -9,6 +9,9 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\Creators\Arrangers;
+use Song\Domain\Models\Creators\Composers;
+use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
@@ -54,9 +57,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             SongType::Original,
             $orderNo,
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
+            [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
+            [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
         );
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -65,14 +68,14 @@ class SongIntegrityServiceTest extends TestCase
                     CreatorId $arg1,
                     CreatorId $arg2,
                     CreatorId $arg3,
-                ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
-                    && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
-                    && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
+                ): bool => $arg1->value === $arrangerId
+                    && $arg2->value === $composerId
+                    && $arg3->value === $lyricistId,
             )
             ->andReturn([
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
-                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
-                $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
+                $this->createCreator($arrangerId, ''),
+                $this->createCreator($composerId, ''),
+                $this->createCreator($lyricistId, ''),
             ])
             ->once();
 
@@ -83,18 +86,29 @@ class SongIntegrityServiceTest extends TestCase
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                // TODO Collection のチェックもしたい
                 fn (
                     SongId $songIdArg,
                     Title $titleArg,
                     Description $descriptionArg,
                     SongType $songTypeArg,
                     OrderNo $orderNoArg,
+                    Arrangers $arrangersArg,
+                    Composers $composersArg,
+                    Lyricists $lyricistsArg,
                 ): bool => $songIdArg->value === $uuid
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
                     && $songTypeArg->value === $songType
-                    && $orderNoArg->value === $orderNo,
+                    && $orderNoArg->value === $orderNo
+                    && $arrangersArg->count() === 1
+                    && $arrangersArg[0]->creatorId->value === $arrangerId
+                    && $arrangersArg[0]->orderNo->value === 1
+                    && $composersArg->count() === 1
+                    && $composersArg[0]->creatorId->value === $composerId
+                    && $composersArg[0]->orderNo->value === 1
+                    && $lyricistsArg->count() === 1
+                    && $lyricistsArg[0]->creatorId->value === $lyricistId
+                    && $lyricistsArg[0]->orderNo->value === 1,
             )
             ->andReturn($expectedSong)
             ->once();
@@ -104,9 +118,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $songType,
             $orderNo,
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => $arrangerId, 'orderNo' => 1]],
+            [['creatorId' => $composerId, 'orderNo' => 1]],
+            [['creatorId' => $lyricistId, 'orderNo' => 1]],
         );
 
         $this->assertTrue($result->isOk());
