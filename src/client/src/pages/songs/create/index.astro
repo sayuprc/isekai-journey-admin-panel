@@ -1,0 +1,10 @@
+---
+import { CreateForm } from '../../../components/song/CreateForm';
+import Layout from '../../../layouts/Layout.astro';
+
+export const prerender = false;
+---
+
+<Layout pageTitle="楽曲作成">
+  <CreateForm client:load />
+</Layout>
