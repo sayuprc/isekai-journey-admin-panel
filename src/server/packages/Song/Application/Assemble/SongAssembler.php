@@ -22,7 +22,7 @@ class SongAssembler
             $song->songId->value,
             $song->title->value,
             $song->description->value,
-            $song->songType->name,
+            $song->songType->getName(),
             $song->songType->value,
             $song->orderNo->value,
             $song->arrangers->toGeneric()->map($this->toAssembledCreator(...))->toArray(),

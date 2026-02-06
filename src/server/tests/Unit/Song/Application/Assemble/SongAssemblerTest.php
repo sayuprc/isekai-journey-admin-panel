@@ -67,7 +67,7 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($uuid, $assembled->songId);
         $this->assertSame($title, $assembled->title);
         $this->assertSame($description, $assembled->description);
-        $this->assertSame($songType->name, $assembled->songTypeName);
+        $this->assertSame($songType->getName(), $assembled->songTypeName);
         $this->assertSame($songType->value, $assembled->songTypeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
         $this->assertCount(1, $assembled->arrangers);
