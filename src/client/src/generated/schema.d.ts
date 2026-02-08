@@ -130,6 +130,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/songs/{songId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 楽曲取得API */
+        get: operations["SongService_getSong"];
+        /** @description 楽曲更新API */
+        put: operations["SongService_updateSong"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -301,6 +319,9 @@ export interface components {
             creatorName: components["schemas"]["creatorName"];
             orderNo: components["schemas"]["orderNo"];
         };
+        SongGetResponse: {
+            song: components["schemas"]["Song"];
+        };
         SongListResponse: {
             songs: components["schemas"]["Song"][];
         };
@@ -322,6 +343,18 @@ export interface components {
          * @enum {number}
          */
         SongTypeValue: 1 | 2 | 3 | 4 | 5 | 6;
+        SongUpdateRequest: {
+            title: components["schemas"]["title"];
+            description: components["schemas"]["description"];
+            songTypeValue: components["schemas"]["SongTypeValue"];
+            orderNo: components["schemas"]["orderNo"];
+            arrangers: components["schemas"]["RequestArranger"][];
+            composers: components["schemas"]["RequestComposer"][];
+            lyricists: components["schemas"]["RequestLyricist"][];
+        };
+        SongUpdateResponse: {
+            song: components["schemas"]["Song"];
+        };
         ValidationError: {
             field: string;
             message: string;
@@ -1128,6 +1161,141 @@ export interface operations {
             };
             /** @description The server could not understand the request due to invalid syntax. */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongService_getSong: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                songId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongGetResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Client error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongService_updateSong: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                songId: components["schemas"]["uuid"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SongUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongUpdateResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
