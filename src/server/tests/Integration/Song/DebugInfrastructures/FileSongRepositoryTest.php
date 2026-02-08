@@ -18,6 +18,38 @@ class FileSongRepositoryTest extends TestCase
     use FileRepositoryTransaction;
 
     #[Test]
+    public function all(): void
+    {
+        $this->store(
+            $song1 = $this->createSong(
+                $this->generateUuid(),
+                '描き続けた君へ',
+                'オリジナル楽曲',
+                SongType::Original,
+                1,
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+            ),
+            $song2 = $this->createSong(
+                $this->generateUuid(),
+                '全部夢だった！',
+                'カバー楽曲',
+                SongType::Cover,
+                2,
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+            ),
+        );
+
+        $songs = $this->getInstance()->all();
+
+        $this->assertCount(2, $songs);
+        $this->assertEquals([$song1, $song2], $songs);
+    }
+
+    #[Test]
     public function save(): void
     {
         $song = $this->createSong(

@@ -6,5 +6,7 @@ namespace Song\Route;
 
 enum SongRouteMap: string
 {
+    case List = 'songs';
+
     case Create = 'songs.create';
 }

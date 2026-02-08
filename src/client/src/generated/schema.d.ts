@@ -119,7 +119,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** @description 楽曲一覧取得API */
+        get: operations["SongService_listSongs"];
         put?: never;
         /** @description 楽曲作成API */
         post: operations["SongService_createSong"];
@@ -299,6 +300,9 @@ export interface components {
             creatorId: components["schemas"]["creatorId"];
             creatorName: components["schemas"]["creatorName"];
             orderNo: components["schemas"]["orderNo"];
+        };
+        SongListResponse: {
+            songs: components["schemas"]["Song"][];
         };
         /**
          * @example {
@@ -1034,6 +1038,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SongTypeListResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongService_listSongs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongListResponse"];
                 };
             };
             /** @description Server error */

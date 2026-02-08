@@ -25,6 +25,11 @@ readonly class FileSongRepository implements SongRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    public function all(): array
+    {
+        return array_values($this->store->getAll($this->filePath));
+    }
+
     public function save(Song $song): Song
     {
         $this->store->put($this->filePath, $song->songId->value, $song);
