@@ -177,6 +177,126 @@ class SongIntegrityServiceTest extends TestCase
         $this->assertTrue($result->isErr());
     }
 
+    #[Test]
+    public function prepareForUpdate(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = SongType::Original->value;
+        $orderNo = 1;
+
+        $expectedSong = $this->createSong(
+            $songId,
+            $title,
+            $description,
+            SongType::Original,
+            $orderNo,
+            [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
+            [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
+            [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+        );
+
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(
+                fn (
+                    CreatorId $arg1,
+                    CreatorId $arg2,
+                    CreatorId $arg3,
+                ): bool => $arg1->value === $arrangerId
+                    && $arg2->value === $composerId
+                    && $arg3->value === $lyricistId,
+            )
+            ->andReturn([
+                $this->createCreator($arrangerId, ''),
+                $this->createCreator($composerId, ''),
+                $this->createCreator($lyricistId, ''),
+            ])
+            ->once();
+
+        $this->factory->shouldReceive('create')
+            ->withArgs(
+                fn (
+                    SongId $songIdArg,
+                    Title $titleArg,
+                    Description $descriptionArg,
+                    SongType $songTypeArg,
+                    OrderNo $orderNoArg,
+                    Arrangers $arrangersArg,
+                    Composers $composersArg,
+                    Lyricists $lyricistsArg,
+                ): bool => $songIdArg->value === $songId
+                    && $titleArg->value === $title
+                    && $descriptionArg->value === $description
+                    && $songTypeArg->value === $songType
+                    && $orderNoArg->value === $orderNo
+                    && $arrangersArg->count() === 1
+                    && $arrangersArg[0]->creatorId->value === $arrangerId
+                    && $arrangersArg[0]->orderNo->value === 1
+                    && $composersArg->count() === 1
+                    && $composersArg[0]->creatorId->value === $composerId
+                    && $composersArg[0]->orderNo->value === 1
+                    && $lyricistsArg->count() === 1
+                    && $lyricistsArg[0]->creatorId->value === $lyricistId
+                    && $lyricistsArg[0]->orderNo->value === 1,
+            )
+            ->andReturn($expectedSong)
+            ->once();
+
+        $result = $this->getInstance()->prepareForUpdate(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            [['creatorId' => $arrangerId, 'orderNo' => 1]],
+            [['creatorId' => $composerId, 'orderNo' => 1]],
+            [['creatorId' => $lyricistId, 'orderNo' => 1]],
+        );
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($expectedSong, $result->unwrap());
+    }
+
+    #[Test]
+    public function prepareForUpdateNotExistsCreator(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = SongType::Original->value;
+        $orderNo = 1;
+
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(
+                fn (
+                    CreatorId $arg1,
+                    CreatorId $arg2,
+                    CreatorId $arg3,
+                ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                    && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
+            )
+            ->andReturn([
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+            ])
+            ->once();
+
+        $result = $this->getInstance()->prepareForUpdate(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
     private function getInstance(): SongIntegrityService
     {
         return new SongIntegrityService(

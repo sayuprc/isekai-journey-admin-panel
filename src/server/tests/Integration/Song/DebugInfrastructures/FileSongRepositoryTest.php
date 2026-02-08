@@ -50,6 +50,28 @@ class FileSongRepositoryTest extends TestCase
     }
 
     #[Test]
+    public function find(): void
+    {
+        $this->store(
+            $song = $this->createSong(
+                $this->generateUuid(),
+                '描き続けた君へ',
+                'オリジナル楽曲',
+                SongType::Original,
+                1,
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+            ),
+        );
+
+        $found = $this->getInstance()->find($song->songId);
+
+        $this->assertNotNull($found);
+        $this->assertEquals($song, $found);
+    }
+
+    #[Test]
     public function save(): void
     {
         $song = $this->createSong(
