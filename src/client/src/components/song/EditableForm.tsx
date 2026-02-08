@@ -79,6 +79,30 @@ export const EditableForm = (props: Props) => {
     e.preventDefault();
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('削除します。よろしいですか？')) {
+      return;
+    }
+
+    const songId = props.data?.song.songId;
+
+    if (!songId) {
+      alert('削除対象の楽曲IDを取得できませんでした');
+      return;
+    }
+
+    await client.DELETE('/songs/{songId}', {
+      params: {
+        path: {
+          songId: songId,
+        },
+      },
+    });
+
+    setFlash('削除しました');
+    window.location.href = '/songs';
+  };
+
   const handleUpdate = async (e: Event) => {
     e.preventDefault();
 
@@ -232,7 +256,7 @@ export const EditableForm = (props: Props) => {
           <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
           <div class="flex justify-between gap-2">
-            <button type="button" class="btn btn-error mt-4">削除</button>
+            <button onClick={handleDelete} class="btn btn-error mt-4">削除</button>
             <button onClick={handleUpdate} class="btn btn-neutral mt-4">更新</button>
           </div>
         </fieldset>
