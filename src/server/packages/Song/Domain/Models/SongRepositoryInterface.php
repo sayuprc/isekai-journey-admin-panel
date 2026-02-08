@@ -14,4 +14,6 @@ interface SongRepositoryInterface
     public function find(SongId $songId): ?Song;
 
     public function save(Song $song): Song;
+
+    public function delete(SongId $songId): void;
 }

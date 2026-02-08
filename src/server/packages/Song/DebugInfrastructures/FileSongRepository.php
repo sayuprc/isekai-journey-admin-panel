@@ -42,4 +42,9 @@ readonly class FileSongRepository implements SongRepositoryInterface
 
         return $song;
     }
+
+    public function delete(SongId $songId): void
+    {
+        $this->store->unset($this->filePath, $songId->value);
+    }
 }
