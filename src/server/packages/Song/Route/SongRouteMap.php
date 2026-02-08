@@ -13,4 +13,6 @@ enum SongRouteMap: string
     case Create = 'songs.create';
 
     case Update = 'songs.update';
+
+    case Delete = 'songs.delete';
 }

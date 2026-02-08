@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
 use App\Http\Controllers\Api\Song\CreateSongController;
+use App\Http\Controllers\Api\Song\DeleteSongController;
 use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\ListSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
@@ -55,6 +56,7 @@ Route::middleware('api')->group(function () {
         Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
         Route::get('/', [ListSongController::class, 'handle'])->name(SongRouteMap::List);
         Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
+        Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
         Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
     });
 
