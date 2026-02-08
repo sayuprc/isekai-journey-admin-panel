@@ -6,6 +6,13 @@ const navItems = [
     ],
   },
   {
+    title: '楽曲',
+    links: [
+      { href: '/songs', label: '一覧' },
+      { href: '/songs/create', label: '作成' },
+    ],
+  },
+  {
     title: 'クリエイター',
     links: [
       { href: '/creators', label: '一覧' },

@@ -13,12 +13,18 @@ use App\Http\Controllers\Api\Performer\DeletePerformerController;
 use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
+use App\Http\Controllers\Api\Song\CreateSongController;
+use App\Http\Controllers\Api\Song\DeleteSongController;
+use App\Http\Controllers\Api\Song\GetSongController;
+use App\Http\Controllers\Api\Song\ListSongController;
+use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
+use Song\Route\SongRouteMap;
 use SongType\Route\SongTypeRouteMap;
 
 Route::get('/user', function (Request $request) {
@@ -44,6 +50,14 @@ Route::middleware('api')->group(function () {
         Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
         Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
         Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
+    });
+
+    Route::prefix('songs')->group(function () {
+        Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
+        Route::get('/', [ListSongController::class, 'handle'])->name(SongRouteMap::List);
+        Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
+        Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
+        Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
     });
 
     Route::prefix('song-types')->group(function () {

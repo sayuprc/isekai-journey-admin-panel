@@ -18,6 +18,14 @@ use DateTimeImmutable;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
+use Song\Domain\Models\Creators\Arrangers;
+use Song\Domain\Models\Creators\Composers;
+use Song\Domain\Models\Creators\Lyricists;
+use Song\Domain\Models\Description;
+use Song\Domain\Models\Song;
+use Song\Domain\Models\SongId;
+use Song\Domain\Models\Title;
+use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 use User\Domain\Models\Email;
 use User\Domain\Models\HashedPassword;
@@ -40,6 +48,33 @@ trait EntityFactory
             PerformerId::reconstruct($performerId),
             PerformerName::reconstruct($performerName),
             OrderNo::reconstruct($orderNo),
+        );
+    }
+
+    /**
+     * @param array<array{creatorId: string, orderNo: int}> $arrangers
+     * @param array<array{creatorId: string, orderNo: int}> $composers
+     * @param array<array{creatorId: string, orderNo: int}> $lyricists
+     */
+    protected function createSong(
+        string $songId,
+        string $title,
+        string $description,
+        SongType $songType,
+        int $orderNo,
+        array $arrangers,
+        array $composers,
+        array $lyricists,
+    ): Song {
+        return new Song(
+            SongId::reconstruct($songId),
+            Title::reconstruct($title),
+            Description::reconstruct($description),
+            $songType,
+            OrderNo::reconstruct($orderNo),
+            Arrangers::fromArray($arrangers)->unwrap(),
+            Composers::fromArray($composers)->unwrap(),
+            Lyricists::fromArray($lyricists)->unwrap(),
         );
     }
 

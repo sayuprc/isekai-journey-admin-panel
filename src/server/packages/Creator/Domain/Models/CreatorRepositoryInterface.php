@@ -15,6 +15,11 @@ interface CreatorRepositoryInterface
 
     public function findByName(CreatorName $creatorName): ?Creator;
 
+    /**
+     * @return array<Creator>
+     */
+    public function findByIds(CreatorId ...$creatorIds): array;
+
     public function save(Creator $creator): Creator;
 
     public function delete(CreatorId $creatorId): void;

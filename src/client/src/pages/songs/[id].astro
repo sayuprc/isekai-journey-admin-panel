@@ -1,0 +1,30 @@
+---
+import { EditableForm } from '../../components/song/EditableForm';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+export const prerender = false;
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  // TODO ちゃんとしたハンドリングをする
+  throw new Error('URL が不正');
+}
+
+const { data, response } = await client.GET('/songs/{songId}', {
+  params: {
+    path: { songId: id },
+  },
+});
+---
+
+<Layout pageTitle="楽曲詳細">
+  <div>
+    <EditableForm data={data} status={response.status} client:load />
+  </div>
+</Layout>

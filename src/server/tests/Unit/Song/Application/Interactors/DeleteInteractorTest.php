@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\Song\Application\Interactors;
+
+use Mockery;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
+use Song\Application\Interactors\DeleteInteractor;
+use Song\Application\UseCase\Delete\DeleteInputData;
+use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongRepositoryInterface;
+use Tests\TestCase;
+
+class DeleteInteractorTest extends TestCase
+{
+    private MockInterface&SongRepositoryInterface $repository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->repository = Mockery::mock(SongRepositoryInterface::class);
+    }
+
+    #[Test]
+    public function deleteSong(): void
+    {
+        $this->repository->shouldReceive('delete')
+            ->withArgs(fn (SongId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->once();
+
+        $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+    }
+
+    private function getInstance(): DeleteInteractor
+    {
+        return new DeleteInteractor($this->repository);
+    }
+}
