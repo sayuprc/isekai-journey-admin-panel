@@ -13,6 +13,7 @@ use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
+use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\SongFactoryInterface;
@@ -35,6 +36,18 @@ class SongServiceProvider extends EnvServiceProvider
             $request = $this->app->make(Request::class);
 
             return $this->getMapper()->map(CreateInputData::class, $request->all());
+        });
+
+        $this->app->bind(UpdateInputData::class, function (): UpdateInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(
+                UpdateInputData::class,
+                [
+                    'songId' => $request->route('songId'),
+                    ...$request->all(),
+                ],
+            );
         });
     }
 }

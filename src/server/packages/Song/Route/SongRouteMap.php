@@ -8,5 +8,9 @@ enum SongRouteMap: string
 {
     case List = 'songs';
 
+    case Get = 'songs.show';
+
     case Create = 'songs.create';
+
+    case Update = 'songs.update';
 }
