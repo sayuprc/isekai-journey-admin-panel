@@ -79,6 +79,50 @@ class SongIntegrityService
     }
 
     /**
+     * @param array<int, creator> $arrangers
+     * @param array<int, creator> $composers
+     * @param array<int, creator> $lyricists
+     *
+     * @return Result<Song, string>
+     */
+    public function prepareForUpdate(
+        string $songId,
+        string $title,
+        string $description,
+        int $songType,
+        int $orderNo,
+        array $arrangers,
+        array $composers,
+        array $lyricists,
+    ): Result {
+        $result = Result::collect3(
+            Arrangers::fromArray($arrangers),
+            Composers::fromArray($composers),
+            Lyricists::fromArray($lyricists),
+        );
+
+        if ($result->isErr()) {
+            return new Err('');
+        }
+
+        $creators = $result->unwrap();
+
+        if (! $this->existsCreators(...$creators)) {
+            // CreatorId が不正
+            return new Err('');
+        }
+
+        return $this->build(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            ...$creators,
+        );
+    }
+
+    /**
      * @return Result<Song, string>
      */
     private function build(
