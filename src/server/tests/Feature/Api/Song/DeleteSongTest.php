@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Api\Song;
+
+use PHPUnit\Framework\Attributes\Test;
+use Song\DebugInfrastructures\FileSongRepository;
+use Song\Route\SongRouteMap;
+use SongType\Domain\Models\SongType;
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\FileRepositoryTransaction;
+use Tests\TestCase;
+
+class DeleteSongTest extends TestCase
+{
+    use EntityFactory;
+    use FileRepositoryTransaction;
+
+    #[Test]
+    public function canDelete(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->factory(
+            FileSongRepository::class,
+            $uuid,
+            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
+        );
+
+        $this->delete(route(SongRouteMap::Delete, $uuid))
+            ->assertStatus(204);
+    }
+
+    #[Test]
+    public function emptyParameters(): void
+    {
+        $this->markTestSkipped('TODO 実装する');
+    }
+}

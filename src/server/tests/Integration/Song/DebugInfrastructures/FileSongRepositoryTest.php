@@ -93,6 +93,29 @@ class FileSongRepositoryTest extends TestCase
         $this->assertEquals($song, array_first($found));
     }
 
+    #[Test]
+    public function deleting(): void
+    {
+        $this->store(
+            $song = $this->createSong(
+                $this->generateUuid(),
+                '描き続けた君へ',
+                'オリジナル楽曲',
+                SongType::Original,
+                1,
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+            ),
+        );
+
+        $this->getInstance()->delete($song->songId);
+
+        $found = $this->getInstance()->find($song->songId);
+
+        $this->assertNull($found);
+    }
+
     private function store(Song ...$songs): void
     {
         array_map(

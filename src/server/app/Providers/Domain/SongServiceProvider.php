@@ -6,11 +6,13 @@ namespace App\Providers\Domain;
 
 use Illuminate\Http\Request;
 use Song\Application\Interactors\CreateInteractor;
+use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\Interactors\GetInteractor;
 use Song\Application\Interactors\ListInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
+use Song\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
@@ -31,6 +33,7 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(GetUseCaseInterface::class, GetInteractor::class);
         $this->app->bind(UpdateUseCaseInterface::class, UpdateInteractor::class);
+        $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(Request::class);
