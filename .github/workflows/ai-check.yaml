@@ -1,0 +1,20 @@
+name: AI Consistency Check
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    name: Check AI Instructions Consistency
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      - name: Check consistency
+        run: mise run ai:check
