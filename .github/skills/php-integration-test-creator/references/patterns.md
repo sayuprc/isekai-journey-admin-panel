@@ -6,6 +6,7 @@
 
 - **場所**: `src/server/tests/Integration/` に配置されます。ディレクトリ構造は対象クラスと一致させます。
 - **トレイト**: 常に `Tests\Support\FileRepositoryTransaction` と `Tests\Support\Domain\EntityFactory` を使用します。
+- **テストケース**: Unit テストがある場合、ハッピーパスのみを記述してください。
 
 ## データ準備 (シード)
 

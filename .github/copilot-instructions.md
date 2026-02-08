@@ -26,6 +26,8 @@ isekai-terrarium の管理画面プロジェクト。
   - `Application`: Interactors, UseCases, InputData, Assemblers.
   - `Domain`: Entities, Value Objects, Domain Services, Repository Interfaces.
   - `Infrastructures`: 永続化 (リポジトリ実装), 外部 API クライアント.
+- **フォーマット**:
+  - `.editorconfig`: すべてのファイルに適用します。
 
 ### 2. PHP テスト
 テストを作成する際は、以下の専用 Skill を活用してください。
