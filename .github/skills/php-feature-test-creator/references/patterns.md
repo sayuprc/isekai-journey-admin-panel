@@ -8,6 +8,7 @@
   - API: `src/server/tests/Feature/Api/`
   - Console: `src/server/tests/Feature/Console/`
 - **トレイト**: `Tests\Support\FileRepositoryTransaction` と `Tests\Support\Domain\EntityFactory` を使用します。
+- **テストケース**: 起こりうるパターンをできるだけ記述してください。
 
 ## API テスト
 
