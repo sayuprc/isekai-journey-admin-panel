@@ -9,28 +9,12 @@ on:
       - dev
 
 env:
-  SERVER_DOCKER_PATH: /tmp/cache/docker/server
-  SERVER_DOCKER_KEY_PREFIX: docker-server-
-  SERVER_IMAGE: isekai-terrarium-admin-php:8.5
-
-  SERVER_CONTAINER: isekai-terrarium-admin-php
-
-  VENDOR_PATH: ./src/server/vendor
-  VENDOR_KEY_PREFIX: composer-
-
-  DATABASE_PATH: ./src/server/database/isekai_terrarium.sqlite
-  DATABASE_KEY_PREFIX: database-
-
-  OPENAPI_GENERATOR_CLI_DOCKER_PATH: /tmp/cache/docker/openapi-generator-cli
-  OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX: docker-openapi-generator-cli-
-  OPENAPI_GENERATOR_CLI_IMAGE: openapi-generator:7.18.0
+  MISE_ENV: ci
 
 jobs:
   setup:
     name: Setup server
-
     runs-on: ubuntu-latest
-
     outputs:
       vendor-key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
 
@@ -41,11 +25,13 @@ jobs:
           ref: ${{ github.ref }}
           submodules: true
 
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
       - name: Define variables
         id: define-variables
         run: |
-          # Composer 関連
-          echo "VENDOR_KEY=${{ env.VENDOR_KEY_PREFIX }}${{ hashFiles('./src/server/composer.lock', './src/server/composer.json') }}" >> $GITHUB_OUTPUT
+          echo "VENDOR_KEY=${VENDOR_KEY_PREFIX}${{ hashFiles('./src/server/composer.lock') }}" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -63,16 +49,7 @@ jobs:
 
       - name: Build server image
         if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
-        run: |
-          touch ./docker/php/certs/rootCA.pem
-          docker build -t ${{ env.SERVER_IMAGE }} ./docker/php \
-            --build-arg UID=`id -u` \
-            --build-arg GID=`id -g` \
-            --build-arg USERNAME=`id -u -n` \
-            --build-arg GROUPNAME=`id -g -n`
-          docker tag `docker images ${{ env.SERVER_IMAGE }} -q` ghcr.io/sayuprc/${{ env.SERVER_IMAGE }}
-          docker push ghcr.io/sayuprc/${{ env.SERVER_IMAGE }}
-          mkdir -p ${{ env.SERVER_DOCKER_PATH }}
+        run: mise run build:php
 
       - name: Cache openapi-generator-cli docker image
         id: cache-openapi-generator-cli-docker-image
@@ -83,21 +60,13 @@ jobs:
 
       - name: Build openapi-generator-cli image
         if: steps.cache-openapi-generator-cli-docker-image.outputs.cache-hit != 'true'
-        run: |
-          docker build -t ${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} ./docker/openapi-generator \
-            --build-arg UID=`id -u` \
-            --build-arg GID=`id -g` \
-            --build-arg USERNAME=`id -u -n` \
-            --build-arg GROUPNAME=`id -g -n`
-          docker tag `docker images ${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} -q` ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }}
-          docker push ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }}
-          mkdir -p ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
+        run: mise run build:openapi-generator
 
       - name: Copy .env
         run: cp src/server/.env.example src/server/.env
 
       - name: Run Container
-        run: docker compose -f ./docker/compose.ci.yaml up -d php
+        run: mise run up
 
       - name: Cache composer
         id: cache-composer
@@ -108,33 +77,23 @@ jobs:
 
       - name: Composer install
         if: steps.cache-composer.outputs.cache-hit != 'true'
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer install -n --prefer-dist
+        run: mise run composer:install
 
       - name: Check generate code has diff
-        run: |
-          docker run --rm -u ${UID}:${GID} -v ".:/local" ghcr.io/sayuprc/${{ env.OPENAPI_GENERATOR_CLI_IMAGE }} generate \
-            -i /local/src/contracts/generated/oas/openapi.yaml \
-            -g php \
-            -t /local/src/server/tools/openapi-generator/templates \
-            -o /local/src/server/Generated
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "自動生成コードに差分があります"
-            git status
-            exit 1
-          fi
+        run: mise run generate:server
 
   arkitect:
     needs: setup
-
     name: Arkitect
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -144,7 +103,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Run Container
-        run: docker compose -f ./docker/compose.ci.yaml up -d php
+        run: mise run up
 
       - name: Cache composer
         id: cache-composer
@@ -154,20 +113,20 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Check Layer
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer arkitect
+        run: mise run arkitect
 
   ecs:
     needs: setup
-
     name: EasyCodingStandard
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -177,7 +136,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Run Container
-        run: docker compose -f ./docker/compose.ci.yaml up -d php
+        run: mise run up
 
       - name: Cache composer
         id: cache-composer
@@ -187,20 +146,20 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Run ecs
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer ecs
+        run: mise run ecs
 
   phpstan:
     needs: setup
-
     name: PHPStan
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -210,7 +169,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Run Container
-        run: docker compose -f ./docker/compose.ci.yaml up -d php
+        run: mise run up
 
       - name: Cache composer
         id: cache-composer
@@ -220,21 +179,21 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Run PHPStan
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer phpstan
+        run: mise run phpstan
 
   phpunit:
     needs: setup
-
     name: PHPUnit
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           submodules: true
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -244,7 +203,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Run Container
-        run: docker compose -f ./docker/compose.ci.yaml up -d php
+        run: mise run up
 
       - name: Cache composer
         id: cache-composer
@@ -254,9 +213,7 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Setup env
-        run: |
-          cp src/server/.env.example src/server/.env
-          docker exec ${{ env.SERVER_CONTAINER }} php artisan key:generate
+        run: mise run setup:env
 
       - name: Cache database
         id: cache-database
@@ -267,9 +224,7 @@ jobs:
 
       - name: Migrate
         if: steps.cache-database.outputs.cache-hit != 'true'
-        run: |
-          touch ${{ env.DATABASE_PATH }}
-          docker exec ${{ env.SERVER_CONTAINER }} bash -c "cd database/atlas; atlas schema apply --env "local" --var db_name=$(basename ${{ env.DATABASE_PATH }}) --auto-approve"
+        run: mise run migrate
 
       - name: Run PHPUnit
-        run: docker exec ${{ env.SERVER_CONTAINER }} composer test-all
+        run: mise run test:all

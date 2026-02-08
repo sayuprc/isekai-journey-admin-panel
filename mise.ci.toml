@@ -1,0 +1,110 @@
+[tools]
+node = "22"
+
+[env]
+SERVER_IMAGE = "ghcr.io/sayuprc/isekai-terrarium-admin-php:{{vars.server_tag}}"
+OPENAPI_IMAGE = "ghcr.io/sayuprc/openapi-generator:{{vars.openapi_tag}}"
+
+SERVER_DOCKER_PATH = "/tmp/cache/docker/server"
+SERVER_DOCKER_KEY_PREFIX = "docker-server-"
+
+VENDOR_PATH = "./src/server/vendor"
+VENDOR_KEY_PREFIX = "composer-"
+
+DATABASE_PATH = "./src/server/database/isekai_terrarium.sqlite"
+DATABASE_KEY_PREFIX = "database-"
+
+OPENAPI_GENERATOR_CLI_DOCKER_PATH = "/tmp/cache/docker/openapi-generator-cli"
+OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX = "docker-openapi-generator-cli-"
+
+[tasks."build:php"]
+description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
+run = '''
+touch ./docker/php/certs/rootCA.pem
+docker build -t $SERVER_IMAGE ./docker/php \
+  --build-arg TAG={{vars.server_tag}} \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  --build-arg USERNAME=$(id -u -n) \
+  --build-arg GROUPNAME=$(id -g -n)
+docker push $SERVER_IMAGE
+mkdir -p $SERVER_DOCKER_PATH
+'''
+
+[tasks."build:openapi-generator"]
+description = "CI 向けに OpenAPI Generator イメージをビルドして GHCR にプッシュする"
+run = '''
+docker build -t $OPENAPI_IMAGE ./docker/openapi-generator \
+  --build-arg TAG={{vars.openapi_tag}} \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  --build-arg USERNAME=$(id -u -n) \
+  --build-arg GROUPNAME=$(id -g -n)
+docker push $OPENAPI_IMAGE
+mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
+'''
+
+[tasks.up]
+description = "CI 環境でコンテナを起動する"
+run = "docker compose -f ./docker/compose.ci.yaml up -d php"
+
+[tasks."composer:install"]
+description = "CI 環境で composer install を実行する"
+run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
+
+[tasks."generate:server"]
+description = "CI 環境でコード生成を行い、差分をチェックする"
+run = '''
+docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
+  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -g php \
+  -t /local/src/server/tools/openapi-generator/templates \
+  -o /local/src/server/Generated
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "自動生成コードに差分があります"
+  git status
+  exit 1
+fi
+'''
+
+[tasks."setup:env"]
+description = "CI 環境の環境変数をセットアップする"
+run = '''
+cp src/server/.env.example src/server/.env
+docker exec {{vars.server_container}} php artisan key:generate
+'''
+
+[tasks.migrate]
+description = "CI 環境でマイグレーションを実行する"
+run = '''
+touch $DATABASE_PATH
+docker exec {{vars.server_container}} bash -c "cd database/atlas; atlas schema apply --env 'local' --var db_name=$(basename $DATABASE_PATH) --auto-approve"
+'''
+
+[tasks."npm:install"]
+description = "CI 環境で npm install を実行する"
+dir = "src/client"
+run = "npm i"
+
+[tasks."generate:client"]
+description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
+dir = "src/client"
+run = '''
+npm run generate:api
+if [ -n "$(git status --porcelain)" ]; then
+  echo "自動生成コードに差分があります"
+  git status
+  exit 1
+fi
+'''
+
+[tasks.lint]
+description = "CI 環境で eslint を実行する"
+dir = "src/client"
+run = "npm run lint"
+
+[tasks.style]
+description = "CI 環境で stylelint を実行する"
+dir = "src/client"
+run = "npm run style"

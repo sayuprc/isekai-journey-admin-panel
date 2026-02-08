@@ -1,6 +1,6 @@
 services:
   php:
-    image: ghcr.io/sayuprc/isekai-terrarium-admin-php:8.5
+    image: ${SERVER_IMAGE}
     container_name: isekai-terrarium-admin-php
     environment:
       LANG: ja_JP.UTF-8
