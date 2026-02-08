@@ -11,5 +11,7 @@ interface SongRepositoryInterface
      */
     public function all(): array;
 
+    public function find(SongId $songId): ?Song;
+
     public function save(Song $song): Song;
 }

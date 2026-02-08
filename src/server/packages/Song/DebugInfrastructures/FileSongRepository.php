@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\DebugInfrastructures;
 
 use Song\Domain\Models\Song;
+use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\FileStore;
@@ -28,6 +29,11 @@ readonly class FileSongRepository implements SongRepositoryInterface
     public function all(): array
     {
         return array_values($this->store->getAll($this->filePath));
+    }
+
+    public function find(SongId $songId): ?Song
+    {
+        return $this->store->get($this->filePath, $songId->value);
     }
 
     public function save(Song $song): Song
