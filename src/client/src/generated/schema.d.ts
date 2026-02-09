@@ -735,6 +735,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
             /** @description Client error */
             422: {
                 headers: {
