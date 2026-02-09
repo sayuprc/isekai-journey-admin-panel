@@ -103,6 +103,14 @@ description = "ECS を実行し、フォーマットを自動修正する"
 usage = 'arg "[path]" var=#true help="フォーマット自動修正対象パス"'
 run = "docker exec {{vars.server_container}} composer ecs-fix ${usage_path}"
 
+[tasks.test]
+description = "テストを実行する"
+usage = '''
+arg "[path]" var=#true help="テスト対象パス"
+flag "-p --parallel" help="並列実行"
+'''
+run = "docker exec {{vars.server_container}} ./vendor/bin/{% if usage.parallel %}paratest{% else %}phpunit{% endif %} ${usage_path}"
+
 [tasks."test:all"]
 description = "すべてのテストを実行する"
 run = "docker exec {{vars.server_container}} composer test-all"
