@@ -5,7 +5,7 @@ isekai-terrarium の管理画面プロジェクト。
 バックエンドはパッケージごとに分割されたヘキサゴナルアーキテクチャを採用しています。
 
 ## ディレクトリ構造
-- `src/client`: フロントエンド (Astro, React, TypeScript)
+- `src/client`: フロントエンド (Astro, SolidJS, TypeScript)
 - `src/contracts`: API 定義(TypeSpec, git submodule で別リポジトリとして管理)
 - `src/server`: バックエンド (PHP 8.5, Laravel 12, DDD/ヘキサゴナルアーキテクチャ)
 - `src/server/packages`: ドメインごとのコアロジック

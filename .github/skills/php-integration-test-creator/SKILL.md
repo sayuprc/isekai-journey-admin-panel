@@ -31,7 +31,7 @@ description: プロジェクトのインテグレーションテスト規約に�
    - コードのフォーマットは `mise run ecs:fix` で適宜フォーマット修正を実行します。
 
 5. **テストの実行**:
-  - テストが適切に作成されていることを確認するには `make test:unit` または `make test:unit -- 作成したテストのパス` を実行します。
+   - テストの実行は `mise run test:integration` または `mise run test 作成したテストのパス` を利用します。
 
 ## リファレンス
 
