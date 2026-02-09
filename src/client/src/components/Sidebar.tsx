@@ -1,29 +1,19 @@
 const navItems = [
   {
-    title: '楽曲種別',
+    title: '楽曲管理',
     links: [
-      { href: '/song-types', label: '一覧' },
+      { href: '/songs', label: '楽曲一覧' },
+      { href: '/songs/create', label: '楽曲作成' },
+      { href: '/song-types', label: '楽曲種別' },
     ],
   },
   {
-    title: '楽曲',
+    title: '人物・関係者',
     links: [
-      { href: '/songs', label: '一覧' },
-      { href: '/songs/create', label: '作成' },
-    ],
-  },
-  {
-    title: 'クリエイター',
-    links: [
-      { href: '/creators', label: '一覧' },
-      { href: '/creators/create', label: '作成' },
-    ],
-  },
-  {
-    title: '共演者',
-    links: [
-      { href: '/performers', label: '一覧' },
-      { href: '/performers/create', label: '作成' },
+      { href: '/creators', label: 'クリエイター一覧' },
+      { href: '/creators/create', label: 'クリエイター作成' },
+      { href: '/performers', label: '共演者一覧' },
+      { href: '/performers/create', label: '共演者作成' },
     ],
   },
 ];
@@ -36,8 +26,8 @@ export const Sidebar = () => {
       </div>
       {navItems.map(item => (
         <>
-          <h2>{item.title}</h2>
-          <ul class="menu">
+          <h2 class="font-bold mb-2">{item.title}</h2>
+          <ul class="menu mb-4">
             {item.links.map(link => (
               <li><a href={link.href}>{link.label}</a></li>
             ))}
