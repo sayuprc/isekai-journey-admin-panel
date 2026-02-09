@@ -81,7 +81,10 @@ export const EditableForm = (props: Props) => {
     });
 
     // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
-    if (response.status === 422) {
+    if (response.status === 400) {
+      const errorAs = error as components['schemas']['ErrorResponse'];
+      alert(errorAs.message);
+    } else if (response.status === 422) {
       // TODO わかりやすい表示にする
       const errorAs = error as components['schemas']['ValidationError'];
       alert(`エラー ${errorAs.field}: ${errorAs.message}`);
