@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\DebugInfrastructures;
 
+use Creator\Domain\Models\CreatorId;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -34,6 +35,21 @@ readonly class FileSongRepository implements SongRepositoryInterface
     public function find(SongId $songId): ?Song
     {
         return $this->store->get($this->filePath, $songId->value);
+    }
+
+    public function isCreatorUsed(CreatorId $creatorId): bool
+    {
+        foreach ($this->all() as $song) {
+            foreach ([$song->arrangers, $song->composers, $song->lyricists] as $items) {
+                foreach ($items as $item) {
+                    if ($item->creatorId->value === $creatorId->value) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public function save(Song $song): Song

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Illuminate\Http\Request;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\Interactors\DeleteInteractor;
@@ -20,6 +21,7 @@ use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
 
 class SongServiceProvider extends EnvServiceProvider
@@ -28,6 +30,7 @@ class SongServiceProvider extends EnvServiceProvider
     {
         $this->app->bind(SongRepositoryInterface::class, FileSongRepository::class);
         $this->app->bind(SongFactoryInterface::class, SongFactory::class);
+        $this->app->bind(CreatorUsageCheckerInterface::class, CreatorUsageChecker::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\DebugInfrastructures;
 
+use Creator\Domain\Models\CreatorId;
 use PHPUnit\Framework\Attributes\Test;
 use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
@@ -114,6 +115,77 @@ class FileSongRepositoryTest extends TestCase
         $found = $this->getInstance()->find($song->songId);
 
         $this->assertNull($found);
+    }
+
+    #[Test]
+    public function isCreatorUsedInArranger(): void
+    {
+        $creatorId = $this->generateUuid();
+
+        $this->store(
+            $this->createSong(
+                $this->generateUuid(),
+                '曲1',
+                '説明',
+                SongType::Original,
+                1,
+                [['creatorId' => $creatorId, 'orderNo' => 1]],
+                [],
+                [],
+            ),
+        );
+
+        $this->assertTrue($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($creatorId)));
+    }
+
+    #[Test]
+    public function isCreatorUsedInComposer(): void
+    {
+        $creatorId = $this->generateUuid();
+
+        $this->store(
+            $this->createSong(
+                $this->generateUuid(),
+                '曲2',
+                '説明',
+                SongType::Original,
+                1,
+                [],
+                [['creatorId' => $creatorId, 'orderNo' => 1]],
+                [],
+            ),
+        );
+
+        $this->assertTrue($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($creatorId)));
+    }
+
+    #[Test]
+    public function isCreatorUsedInLyricist(): void
+    {
+        $creatorId = $this->generateUuid();
+
+        $this->store(
+            $this->createSong(
+                $this->generateUuid(),
+                '曲3',
+                '説明',
+                SongType::Original,
+                1,
+                [],
+                [],
+                [['creatorId' => $creatorId, 'orderNo' => 1]],
+            ),
+        );
+
+        $this->assertTrue($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($creatorId)));
+    }
+
+    #[Test]
+    public function isCreatorUsedNotFound(): void
+    {
+        $creatorId = $this->generateUuid();
+
+        $this->assertFalse($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($creatorId)));
     }
 
     private function store(Song ...$songs): void
