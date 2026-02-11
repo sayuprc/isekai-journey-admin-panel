@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\ListSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
+use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('api')->group(function () {
+Route::middleware(OpenApiValidator::class)->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
     });
@@ -61,7 +62,6 @@ Route::middleware('api')->group(function () {
     });
 
     Route::prefix('song-types')->group(function () {
-        // TODO ログインが必要
         Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
     });
 });
