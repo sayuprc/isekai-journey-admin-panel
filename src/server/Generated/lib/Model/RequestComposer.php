@@ -35,7 +35,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * RequestComposer Class Doc Comment
  *
  * @category Class
- * @description The template for omitting properties.
+ * @description The template for picking properties.
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -58,8 +58,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'creator_id' => 'string',
-        'order_no' => 'int'
+        'creator_id' => 'string'
     ];
 
     /**
@@ -70,8 +69,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'creator_id' => 'uuid',
-        'order_no' => 'int32'
+        'creator_id' => 'uuid'
     ];
 
     /**
@@ -80,8 +78,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'creator_id' => false,
-        'order_no' => false
+        'creator_id' => false
     ];
 
     /**
@@ -170,8 +167,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'creator_id' => 'creatorId',
-        'order_no' => 'orderNo'
+        'creator_id' => 'creatorId'
     ];
 
     /**
@@ -180,8 +176,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'creator_id' => 'setCreatorId',
-        'order_no' => 'setOrderNo'
+        'creator_id' => 'setCreatorId'
     ];
 
     /**
@@ -190,8 +185,7 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'creator_id' => 'getCreatorId',
-        'order_no' => 'getOrderNo'
+        'creator_id' => 'getCreatorId'
     ];
 
     /**
@@ -252,7 +246,6 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('creator_id', $data ?? [], null);
-        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -285,13 +278,6 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['creator_id'] === null) {
             $invalidProperties[] = "'creator_id' can't be null";
         }
-        if ($this->container['order_no'] === null) {
-            $invalidProperties[] = "'order_no' can't be null";
-        }
-        if (($this->container['order_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
-        }
-
         return $invalidProperties;
     }
 
@@ -330,38 +316,6 @@ class RequestComposer implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable creator_id cannot be null');
         }
         $this->container['creator_id'] = $creator_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets order_no
-     *
-     * @return int
-     */
-    public function getOrderNo()
-    {
-        return $this->container['order_no'];
-    }
-
-    /**
-     * Sets order_no
-     *
-     * @param int $order_no 表示順
-     *
-     * @return self
-     */
-    public function setOrderNo($order_no)
-    {
-        if (is_null($order_no)) {
-            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
-        }
-
-        if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling RequestComposer., must be bigger than or equal to 1.');
-        }
-
-        $this->container['order_no'] = $order_no;
 
         return $this;
     }
