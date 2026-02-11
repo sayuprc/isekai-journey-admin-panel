@@ -9,6 +9,7 @@ use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Song\DebugInfrastructures\FileSongRepository;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class DeleteCreatorTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canDelete(): void
@@ -25,7 +27,8 @@ class DeleteCreatorTest extends TestCase
 
         $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
 
-        $this->delete(route(CreatorRouteMap::Delete, $uuid))
+        $this->withAuth()
+            ->delete(route(CreatorRouteMap::Delete, $uuid))
             ->assertStatus(204);
     }
 
@@ -47,7 +50,8 @@ class DeleteCreatorTest extends TestCase
             [],
         ));
 
-        $this->delete(route(CreatorRouteMap::Delete, $creatorId))
+        $this->withAuth()
+            ->delete(route(CreatorRouteMap::Delete, $creatorId))
             ->assertStatus(400)
             ->assertJson([
                 'message' => 'このクリエイターは楽曲に使用されているため削除できません',

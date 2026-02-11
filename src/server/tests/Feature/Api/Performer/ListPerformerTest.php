@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Performer;
 use Performer\DebugInfrastructures\FilePerformerRepository;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ class ListPerformerTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function showList(): void
@@ -23,7 +25,8 @@ class ListPerformerTest extends TestCase
 
         $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
-        $this->get(route(PerformerRouteMap::List))
+        $this->withAuth()
+            ->get(route(PerformerRouteMap::List))
             ->assertStatus(200)
             ->assertJson([
                 'performers' => [
@@ -39,7 +42,8 @@ class ListPerformerTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->get(route(PerformerRouteMap::List))
+        $this->withAuth()
+            ->get(route(PerformerRouteMap::List))
             ->assertStatus(200)
             ->assertJson(['performers' => []]);
     }

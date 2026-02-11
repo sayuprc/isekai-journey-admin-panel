@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidSecurity;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\OperationAddress;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
@@ -47,6 +48,8 @@ class OpenApiValidator
 
         try {
             $this->builder->getRequestValidator()->validate($psrRequest);
+        } catch (InvalidSecurity) {
+            return response()->json([], 401);
         } catch (ValidationFailed $e) {
             // TODO 項目ごとのバリデーションエラーを表示したい
             return $this->handleValidationFailed($e);

@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Api;
+
+use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use Auth\DebugInfrastructures\FileRefreshTokenRepository;
+use Auth\Domain\Services\Credential\AccessToken\AccessTokenIssueService;
+use Auth\Domain\Services\Credential\RefreshToken\RefreshTokenIssueService;
+use Illuminate\Support\Facades\Hash;
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\FileRepositoryTransaction;
+
+trait WithAuth
+{
+    use EntityFactory;
+    use FileRepositoryTransaction;
+
+    private function withAuth(): self
+    {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
+        $user = $this->createUser($this->generateUuid(), 'root@example.com', Hash::make('password'));
+
+        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->userId->value)->unwrap();
+
+        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
+
+        $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);
+
+        return $this->withUnencryptedCookie('access_token', $accessToken->jwt->value)
+            ->withCredentials();
+    }
+}

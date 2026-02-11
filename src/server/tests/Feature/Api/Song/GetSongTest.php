@@ -11,6 +11,7 @@ use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -19,6 +20,7 @@ class GetSongTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function found(): void
@@ -44,7 +46,8 @@ class GetSongTest extends TestCase
             ),
         );
 
-        $this->get(route(SongRouteMap::Get, $songId))
+        $this->withAuth()
+            ->get(route(SongRouteMap::Get, $songId))
             ->assertStatus(200)
             ->assertJson([
                 'song' => [
@@ -68,7 +71,8 @@ class GetSongTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(SongRouteMap::Get, $uuid))
+        $this->withAuth()
+            ->get(route(SongRouteMap::Get, $uuid))
             ->assertStatus(404);
     }
 

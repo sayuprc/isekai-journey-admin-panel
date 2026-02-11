@@ -9,6 +9,7 @@ use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class CreateSongTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canCreate(): void
@@ -27,14 +29,15 @@ class CreateSongTest extends TestCase
             $creator3 = $this->createCreator($this->generateUuid(), '作詞者'),
         );
 
-        $this->postJson(route(SongRouteMap::Create), [
-            'title' => '描き続けた君へ',
-            'description' => 'オリジナル楽曲',
-            'songTypeValue' => SongType::Original->value,
-            'arrangers' => [['creatorId' => $creator1->creatorId->value]],
-            'composers' => [['creatorId' => $creator2->creatorId->value]],
-            'lyricists' => [['creatorId' => $creator3->creatorId->value]],
-        ])->assertStatus(200)
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'songTypeValue' => SongType::Original->value,
+                'arrangers' => [['creatorId' => $creator1->creatorId->value]],
+                'composers' => [['creatorId' => $creator2->creatorId->value]],
+                'lyricists' => [['creatorId' => $creator3->creatorId->value]],
+            ])->assertStatus(200)
             ->assertJson([
                 'song' => [
                     // ID は事前にわからないのでチェックしない

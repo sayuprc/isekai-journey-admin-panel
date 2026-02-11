@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\DebugInfrastructures\FileSongRepository;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -16,6 +17,7 @@ class DeleteSongTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canDelete(): void
@@ -28,7 +30,8 @@ class DeleteSongTest extends TestCase
             $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
         );
 
-        $this->delete(route(SongRouteMap::Delete, $uuid))
+        $this->withAuth()
+            ->delete(route(SongRouteMap::Delete, $uuid))
             ->assertStatus(204);
     }
 

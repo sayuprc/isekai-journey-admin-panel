@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Creator;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ class UpdateCreatorTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canUpdate(): void
@@ -23,9 +25,10 @@ class UpdateCreatorTest extends TestCase
 
         $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
 
-        $this->putJson(route(CreatorRouteMap::Update, $uuid), [
-            'creatorName' => 'ヰ世界情緒',
-        ])->assertStatus(200)
+        $this->withAuth()
+            ->putJson(route(CreatorRouteMap::Update, $uuid), [
+                'creatorName' => 'ヰ世界情緒',
+            ])->assertStatus(200)
             ->assertJson([
                 'creator' => [
                     'creatorId' => $uuid,

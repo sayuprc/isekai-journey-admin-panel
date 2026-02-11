@@ -24,7 +24,7 @@ class Authenticate
         $accessToken = $request->cookie('access_token');
 
         if (! is_string($accessToken)) {
-            return response()->json(status: 400);
+            return response()->json(status: 401);
         }
 
         $result = $this->interactor->handle(new AuthenticateInputData($accessToken));
