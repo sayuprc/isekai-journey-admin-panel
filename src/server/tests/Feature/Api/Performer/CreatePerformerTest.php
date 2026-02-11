@@ -6,19 +6,22 @@ namespace Tests\Feature\Api\Performer;
 
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class CreatePerformerTest extends TestCase
 {
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canCreate(): void
     {
-        $this->postJson(route(PerformerRouteMap::Create), [
-            'performerName' => 'ヰ世界情緒',
-        ])->assertStatus(200)
+        $this->withAuth()
+            ->postJson(route(PerformerRouteMap::Create), [
+                'performerName' => 'ヰ世界情緒',
+            ])->assertStatus(200)
             ->assertJson([
                 'performer' => [
                     'performerName' => 'ヰ世界情緒',

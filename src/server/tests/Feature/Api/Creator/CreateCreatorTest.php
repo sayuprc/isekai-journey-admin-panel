@@ -6,19 +6,22 @@ namespace Tests\Feature\Api\Creator;
 
 use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class CreateCreatorTest extends TestCase
 {
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canCreate(): void
     {
-        $this->postJson(route(CreatorRouteMap::Create), [
-            'creatorName' => 'ヰ世界情緒',
-        ])->assertStatus(200)
+        $this->withAuth()
+            ->postJson(route(CreatorRouteMap::Create), [
+                'creatorName' => 'ヰ世界情緒',
+            ])->assertStatus(200)
             ->assertJson([
                 'creator' => [
                     'creatorName' => 'ヰ世界情緒',

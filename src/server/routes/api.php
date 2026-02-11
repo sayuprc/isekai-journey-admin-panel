@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\ListSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Creator\Route\CreatorRouteMap;
@@ -37,31 +38,33 @@ Route::middleware(OpenApiValidator::class)->group(function () {
         Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
     });
 
-    Route::prefix('creators')->group(function () {
-        Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
-        Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
-        Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
-        Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
-        Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
-    });
+    Route::middleware(Authenticate::class)->group(function () {
+        Route::prefix('creators')->group(function () {
+            Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
+            Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
+            Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
+            Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
+            Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
+        });
 
-    Route::prefix('performers')->group(function () {
-        Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
-        Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
-        Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
-        Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
-        Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
-    });
+        Route::prefix('performers')->group(function () {
+            Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
+            Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
+            Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
+            Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
+            Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
+        });
 
-    Route::prefix('songs')->group(function () {
-        Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
-        Route::get('/', [ListSongController::class, 'handle'])->name(SongRouteMap::List);
-        Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
-        Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
-        Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
-    });
+        Route::prefix('songs')->group(function () {
+            Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
+            Route::get('/', [ListSongController::class, 'handle'])->name(SongRouteMap::List);
+            Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
+            Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
+            Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
+        });
 
-    Route::prefix('song-types')->group(function () {
-        Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
+        Route::prefix('song-types')->group(function () {
+            Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
+        });
     });
 });

@@ -1,7 +1,7 @@
 ---
 import { EditableForm } from '../../components/creator/EditableForm';
 import Layout from '../../layouts/Layout.astro';
-import { client } from '../../utils/client';
+import { createClient } from '../../utils/client';
 
 export const prerender = false;
 
@@ -16,7 +16,7 @@ if (typeof id !== 'string') {
   throw new Error('URL が不正');
 }
 
-const { data, response } = await client.GET('/creators/{creatorId}', {
+const { data, response } = await createClient(Astro.request).GET('/creators/{creatorId}', {
   params: {
     path: { creatorId: id },
   },

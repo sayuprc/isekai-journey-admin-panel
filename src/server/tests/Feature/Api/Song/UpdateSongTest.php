@@ -11,6 +11,7 @@ use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -19,6 +20,7 @@ class UpdateSongTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function canUpdate(): void
@@ -44,15 +46,16 @@ class UpdateSongTest extends TestCase
             ),
         );
 
-        $this->putJson(route(SongRouteMap::Update, $songId), [
-            'title' => '描き続けた君へ',
-            'description' => 'オリジナル楽曲',
-            'songTypeValue' => SongType::Cover->value,
-            'orderNo' => 2,
-            'arrangers' => [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-            'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
-            'lyricists' => [],
-        ])->assertStatus(200)
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'songTypeValue' => SongType::Cover->value,
+                'orderNo' => 2,
+                'arrangers' => [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
+                'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
+                'lyricists' => [],
+            ])->assertStatus(200)
             ->assertJson([
                 'song' => [
                     'songId' => $songId,

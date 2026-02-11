@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Creator;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ class GetCreatorTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function found(): void
@@ -23,7 +25,8 @@ class GetCreatorTest extends TestCase
 
         $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'ヰ世界情緒'));
 
-        $this->get(route(CreatorRouteMap::Get, $uuid))
+        $this->withAuth()
+            ->get(route(CreatorRouteMap::Get, $uuid))
             ->assertStatus(200)
             ->assertJson([
                 'creator' => [
@@ -38,7 +41,8 @@ class GetCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->get(route(CreatorRouteMap::Get, $uuid))
+        $this->withAuth()
+            ->get(route(CreatorRouteMap::Get, $uuid))
             ->assertStatus(404);
     }
 }

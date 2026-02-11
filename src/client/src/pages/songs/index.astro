@@ -1,9 +1,11 @@
 ---
 import { FlashMessage } from '../../components/Flash';
 import Layout from '../../layouts/Layout.astro';
-import { client } from '../../utils/client';
+import { createClient } from '../../utils/client';
 
-const { data } = await client.GET('/songs');
+export const prerender = false;
+
+const { data } = await createClient(Astro.request).GET('/songs');
 
 if (!data) {
   throw new Error();

@@ -11,6 +11,7 @@ use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
+use Tests\Feature\Api\WithAuth;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -19,6 +20,7 @@ class ListSongTest extends TestCase
 {
     use EntityFactory;
     use FileRepositoryTransaction;
+    use WithAuth;
 
     #[Test]
     public function showList(): void
@@ -55,7 +57,8 @@ class ListSongTest extends TestCase
             ),
         );
 
-        $this->get(route(SongRouteMap::List))
+        $this->withAuth()
+            ->get(route(SongRouteMap::List))
             ->assertStatus(200)
             ->assertJson([
                 'songs' => [
@@ -92,7 +95,8 @@ class ListSongTest extends TestCase
     #[Test]
     public function showEmptyList(): void
     {
-        $this->get(route(SongRouteMap::List))
+        $this->withAuth()
+            ->get(route(SongRouteMap::List))
             ->assertStatus(200)
             ->assertJson(['songs' => []]);
     }
