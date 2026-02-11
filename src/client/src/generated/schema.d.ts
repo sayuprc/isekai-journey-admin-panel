@@ -169,6 +169,23 @@ export interface components {
          *     }
          */
         Composer: components["schemas"]["SongCreator"];
+        CookieAuth: {
+            /**
+             * @description API key authentication
+             * @enum {string}
+             */
+            type: "apiKey";
+            /**
+             * @description location of the API key
+             * @enum {string}
+             */
+            in: "cookie";
+            /**
+             * @description name of the API key
+             * @enum {string}
+             */
+            name: "access_token";
+        };
         /**
          * @example {
          *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
@@ -491,6 +508,13 @@ export interface operations {
                     "application/json": components["schemas"]["CreatorListResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Server error */
             500: {
                 headers: {
@@ -545,6 +569,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Client error */
             422: {
                 headers: {
@@ -596,6 +627,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CreatorGetResponse"];
                 };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description The server cannot find the requested resource. */
             404: {
@@ -671,6 +709,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description The server cannot find the requested resource. */
             404: {
                 headers: {
@@ -739,6 +784,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Client error */
             422: {
                 headers: {
@@ -788,6 +840,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PerformerListResponse"];
                 };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
@@ -843,6 +902,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Client error */
             422: {
                 headers: {
@@ -894,6 +960,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PerformerGetResponse"];
                 };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description The server cannot find the requested resource. */
             404: {
@@ -969,6 +1042,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description The server cannot find the requested resource. */
             404: {
                 headers: {
@@ -1028,6 +1108,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Client error */
             422: {
                 headers: {
@@ -1078,6 +1165,13 @@ export interface operations {
                     "application/json": components["schemas"]["SongTypeListResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Server error */
             500: {
                 headers: {
@@ -1118,6 +1212,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SongListResponse"];
                 };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
@@ -1173,6 +1274,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Client error */
             422: {
                 headers: {
@@ -1224,6 +1332,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SongGetResponse"];
                 };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description The server cannot find the requested resource. */
             404: {
@@ -1299,6 +1414,13 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description The server cannot find the requested resource. */
             404: {
                 headers: {
@@ -1353,6 +1475,13 @@ export interface operations {
         responses: {
             /** @description There is no content to send for this request, but the headers may be useful. */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is unauthorized. */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
