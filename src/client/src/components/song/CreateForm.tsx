@@ -9,7 +9,6 @@ type SongTypeValue = components['schemas']['SongTypeValue'];
 
 type CreatorEntry = {
   creatorId: string;
-  orderNo: number;
 };
 
 export const CreateForm = () => {
@@ -36,14 +35,14 @@ export const CreateForm = () => {
   });
 
   const addEntry = (setter: typeof setArrangers) => {
-    setter(prev => [...prev, { creatorId: '', orderNo: prev.length + 1 }]);
+    setter(prev => [...prev, { creatorId: '' }]);
   };
 
   const removeEntry = (setter: typeof setArrangers, index: number) => {
     setter(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateEntry = (setter: typeof setArrangers, index: number, field: keyof CreatorEntry, value: string | number) => {
+  const updateEntry = (setter: typeof setArrangers, index: number, field: keyof CreatorEntry, value: string) => {
     setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
@@ -58,7 +57,6 @@ export const CreateForm = () => {
         title: formData.get('title')?.toString() ?? '',
         description: formData.get('description')?.toString() ?? '',
         songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
-        orderNo: Number(formData.get('orderNo')),
         arrangers: arrangers(),
         composers: composers(),
         lyricists: lyricists(),
@@ -109,18 +107,6 @@ export const CreateForm = () => {
                 </For>
               </select>
             </div>
-            <div>
-              <label class="label text-xs">表示順</label>
-              <input
-                type="number"
-                class="input input-bordered w-20"
-                value={entry.orderNo}
-                onchange={e =>
-                  updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
-                required
-                min="1"
-              />
-            </div>
             <button
               type="button"
               class="btn btn-xs btn-error"
@@ -154,9 +140,6 @@ export const CreateForm = () => {
             {songType => <option value={songType.value}>{songType.name}</option>}
           </For>
         </select>
-
-        <label class="label">表示順</label>
-        <input type="number" class="input" name="orderNo" required min="1" />
 
         <CreatorList label="作曲者" entries={composers} setter={setComposers} />
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />

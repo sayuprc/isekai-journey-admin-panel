@@ -12,7 +12,6 @@ export const CreateForm = () => {
     const { data, error, response } = await client.POST('/performers', {
       body: {
         performerName: formData.get('performerName')?.toString() ?? '',
-        orderNo: Number(formData.get('orderNo')),
       },
     });
 
@@ -41,9 +40,6 @@ export const CreateForm = () => {
 
         <label class="label">共演者名</label>
         <input type="text" class="input" name="performerName" />
-
-        <label class="label">表示順</label>
-        <input type="number" class="input" name="orderNo" required min="1" />
 
         <button class="btn btn-neutral mt-4">作成</button>
       </fieldset>
