@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Domain\Services\Credential\RefreshToken;
 
+use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
@@ -19,7 +20,6 @@ use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
-use User\Domain\Models\UserId;
 
 class RefreshTokenIssueServiceTest extends TestCase
 {
@@ -80,7 +80,7 @@ class RefreshTokenIssueServiceTest extends TestCase
             ->withArgs(
                 fn (
                     RefreshTokenId $id,
-                    UserId $userId,
+                    AdminUserId $userId,
                     TokenValue $token,
                     ExpiredAt $expiredAt,
                     ConsumptionStatus $status,

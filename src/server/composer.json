@@ -41,7 +41,7 @@
             "Song\\": "packages/Song/",
             "SongType\\": "packages/SongType/",
             "Creator\\": "packages/Creator/",
-            "User\\": "packages/User/",
+            "AdminUser\\": "packages/AdminUser/",
             "Performer\\": "packages/Performer/",
             "Auth\\": "packages/Auth/",
             "Tools\\": "tools/",

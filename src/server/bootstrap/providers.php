@@ -11,5 +11,5 @@ return [
     App\Providers\Domain\SongServiceProvider::class,
     App\Providers\Domain\SongTypeServiceProvider::class,
     App\Providers\Domain\SupportServiceProvider::class,
-    App\Providers\Domain\UserServiceProvider::class,
+    App\Providers\Domain\AdminUserServiceProvider::class,
 ];

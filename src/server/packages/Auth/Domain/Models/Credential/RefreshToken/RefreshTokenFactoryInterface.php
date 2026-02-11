@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Models\Credential\RefreshToken;
 
-use User\Domain\Models\UserId;
+use AdminUser\Domain\Models\AdminUserId;
 
 interface RefreshTokenFactoryInterface
 {
     public function create(
         RefreshTokenId $refreshTokenId,
-        UserId $userId,
+        AdminUserId $userId,
         TokenValue $token,
         ExpiredAt $expiredAt,
         ConsumptionStatus $status,

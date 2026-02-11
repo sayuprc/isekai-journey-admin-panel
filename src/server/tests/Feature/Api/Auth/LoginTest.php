@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Auth;
 
+use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
-use User\DebugInfrastructures\FileUserRepository;
 
 class LoginTest extends TestCase
 {
@@ -27,7 +27,7 @@ class LoginTest extends TestCase
 
         $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
-        $this->factory(FileUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',
@@ -51,7 +51,7 @@ class LoginTest extends TestCase
     {
         $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
-        $this->factory(FileUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',

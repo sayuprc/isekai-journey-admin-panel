@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Auth;
 
+use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Services\HasherInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use User\Domain\Models\Email;
-use User\Domain\Models\User;
-use User\Domain\Models\UserId;
-use User\Domain\Models\UserRepositoryInterface;
-use User\Domain\Services\HasherInterface;
 
 readonly class AuthUserProvider implements UserProvider
 {
     public function __construct(
-        private UserRepositoryInterface $repository,
+        private AdminUserRepositoryInterface $repository,
         private HasherInterface $hasher,
     ) {
     }
@@ -25,9 +25,9 @@ readonly class AuthUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return UserId::create($identifier)
+        return AdminUserId::create($identifier)
             ->match(
-                fn (UserId $userId): ?AuthUser => $this->toAuthUser($this->repository->find($userId)),
+                fn (AdminUserId $userId): ?AuthUser => $this->toAuthUser($this->repository->find($userId)),
                 fn () => null,
             );
     }
@@ -68,7 +68,7 @@ readonly class AuthUserProvider implements UserProvider
     {
     }
 
-    private function toAuthUser(?User $user): ?AuthUser
+    private function toAuthUser(?AdminUser $user): ?AuthUser
     {
         if (is_null($user)) {
             return null;

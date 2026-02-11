@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Application\Interactors;
 
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
@@ -19,8 +21,6 @@ use ResultType\Err;
 use ResultType\Ok;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
-use User\Domain\Models\UserId;
-use User\Domain\Models\UserRepositoryInterface;
 
 class AuthenticateInteractorTest extends TestCase
 {
@@ -30,7 +30,7 @@ class AuthenticateInteractorTest extends TestCase
 
     private MockInterface&RefreshTokenRepositoryInterface $refreshTokenRepository;
 
-    private MockInterface&UserRepositoryInterface $userRepository;
+    private AdminUserRepositoryInterface&MockInterface $userRepository;
 
     protected function setUp(): void
     {
@@ -38,7 +38,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->jwtHandler = Mockery::mock(JwtHandlerInterface::class);
         $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
-        $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
+        $this->userRepository = Mockery::mock(AdminUserRepositoryInterface::class);
     }
 
     #[Test]
@@ -67,7 +67,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (UserId $arg) => $arg->value === $userId)
+            ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
             ->andReturn($this->createUser($userId, 'example@example.com', ''))
             ->once();
 
@@ -135,7 +135,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (UserId $arg) => $arg->value === $userId)
+            ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
             ->andReturnNull()
             ->once();
 

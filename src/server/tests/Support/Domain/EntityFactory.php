@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Support\Domain;
 
+use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\HashedPassword;
 use Auth\Domain\Models\Credential\AccessToken\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\Jwt;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
@@ -27,10 +31,6 @@ use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
-use User\Domain\Models\Email;
-use User\Domain\Models\HashedPassword;
-use User\Domain\Models\User;
-use User\Domain\Models\UserId;
 
 trait EntityFactory
 {
@@ -78,10 +78,10 @@ trait EntityFactory
         );
     }
 
-    protected function createUser(string $userId, string $email, string $hashedPassword): User
+    protected function createUser(string $userId, string $email, string $hashedPassword): AdminUser
     {
-        return new User(
-            UserId::reconstruct($userId),
+        return new AdminUser(
+            AdminUserId::reconstruct($userId),
             Email::reconstruct($email),
             HashedPassword::reconstruct($hashedPassword),
         );
@@ -101,7 +101,7 @@ trait EntityFactory
     ): RefreshToken {
         return new RefreshToken(
             RefreshTokenId::reconstruct($refreshTokenId),
-            UserId::reconstruct($userId),
+            AdminUserId::reconstruct($userId),
             TokenValue::reconstruct($tokenValue),
             ExpiredAt::reconstruct($expiredAt),
             $status,
