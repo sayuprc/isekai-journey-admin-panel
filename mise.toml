@@ -1,6 +1,6 @@
 [vars]
 server_tag = "8.5"
-node_tag = "22"
+node_tag = "24"
 proxy_tag = "1.27"
 openapi_tag = "7.18.0"
 server_container = "isekai-terrarium-admin-php"

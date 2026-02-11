@@ -1,5 +1,5 @@
 [tools]
-node = "22"
+node = "24"
 
 [env]
 SERVER_IMAGE = "ghcr.io/sayuprc/isekai-terrarium-admin-php:{{vars.server_tag}}"
