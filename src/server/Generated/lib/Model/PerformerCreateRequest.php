@@ -57,8 +57,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
       * @var string[]
       */
     protected static $openAPITypes = [
-        'performer_name' => 'string',
-        'order_no' => 'int'
+        'performer_name' => 'string'
     ];
 
     /**
@@ -69,8 +68,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'performer_name' => null,
-        'order_no' => 'int32'
+        'performer_name' => null
     ];
 
     /**
@@ -79,8 +77,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'performer_name' => false,
-        'order_no' => false
+        'performer_name' => false
     ];
 
     /**
@@ -169,8 +166,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
      * @var string[]
      */
     protected static $attributeMap = [
-        'performer_name' => 'performerName',
-        'order_no' => 'orderNo'
+        'performer_name' => 'performerName'
     ];
 
     /**
@@ -179,8 +175,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
      * @var string[]
      */
     protected static $setters = [
-        'performer_name' => 'setPerformerName',
-        'order_no' => 'setOrderNo'
+        'performer_name' => 'setPerformerName'
     ];
 
     /**
@@ -189,8 +184,7 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
      * @var string[]
      */
     protected static $getters = [
-        'performer_name' => 'getPerformerName',
-        'order_no' => 'getOrderNo'
+        'performer_name' => 'getPerformerName'
     ];
 
     /**
@@ -251,7 +245,6 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
     public function __construct(?array $data = null)
     {
         $this->setIfExists('performer_name', $data ?? [], null);
-        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -286,13 +279,6 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
         }
         if ((mb_strlen($this->container['performer_name']) < 1)) {
             $invalidProperties[] = "invalid value for 'performer_name', the character length must be bigger than or equal to 1.";
-        }
-
-        if ($this->container['order_no'] === null) {
-            $invalidProperties[] = "'order_no' can't be null";
-        }
-        if (($this->container['order_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -338,38 +324,6 @@ class PerformerCreateRequest implements ModelInterface, ArrayAccess, \JsonSerial
         }
 
         $this->container['performer_name'] = $performer_name;
-
-        return $this;
-    }
-
-    /**
-     * Gets order_no
-     *
-     * @return int
-     */
-    public function getOrderNo()
-    {
-        return $this->container['order_no'];
-    }
-
-    /**
-     * Sets order_no
-     *
-     * @param int $order_no 表示順
-     *
-     * @return self
-     */
-    public function setOrderNo($order_no)
-    {
-        if (is_null($order_no)) {
-            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
-        }
-
-        if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling PerformerCreateRequest., must be bigger than or equal to 1.');
-        }
-
-        $this->container['order_no'] = $order_no;
 
         return $this;
     }

@@ -18,12 +18,11 @@ class CreatePerformerTest extends TestCase
     {
         $this->postJson(route(PerformerRouteMap::Create), [
             'performerName' => 'ヰ世界情緒',
-            'orderNo' => 1,
         ])->assertStatus(200)
             ->assertJson([
                 'performer' => [
                     'performerName' => 'ヰ世界情緒',
-                    'orderNo' => 1,
+                    'orderNo' => 10,
                 ],
             ]);
     }

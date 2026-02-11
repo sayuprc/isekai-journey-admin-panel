@@ -227,7 +227,6 @@ export interface components {
         };
         PerformerCreateRequest: {
             performerName: components["schemas"]["performerName"];
-            orderNo: components["schemas"]["orderNo"];
         };
         PerformerCreateResponse: {
             performer: components["schemas"]["Performer"];
@@ -245,20 +244,17 @@ export interface components {
         PerformerUpdateResponse: {
             performer: components["schemas"]["Performer"];
         };
-        /** @description The template for omitting properties. */
+        /** @description The template for picking properties. */
         RequestArranger: {
             creatorId: components["schemas"]["creatorId"];
-            orderNo: components["schemas"]["orderNo"];
         };
-        /** @description The template for omitting properties. */
+        /** @description The template for picking properties. */
         RequestComposer: {
             creatorId: components["schemas"]["creatorId"];
-            orderNo: components["schemas"]["orderNo"];
         };
-        /** @description The template for omitting properties. */
+        /** @description The template for picking properties. */
         RequestLyricist: {
             creatorId: components["schemas"]["creatorId"];
-            orderNo: components["schemas"]["orderNo"];
         };
         /**
          * @example {
@@ -307,7 +303,6 @@ export interface components {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
-            orderNo: components["schemas"]["orderNo"];
             arrangers: components["schemas"]["RequestArranger"][];
             composers: components["schemas"]["RequestComposer"][];
             lyricists: components["schemas"]["RequestLyricist"][];

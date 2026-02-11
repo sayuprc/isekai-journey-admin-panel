@@ -20,4 +20,6 @@ interface SongRepositoryInterface
     public function save(Song $song): Song;
 
     public function delete(SongId $songId): void;
+
+    public function getMaxOrderNo(): int;
 }

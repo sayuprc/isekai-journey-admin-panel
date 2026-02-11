@@ -41,14 +41,20 @@ class PerformerIntegrityServiceTest extends TestCase
     {
         $performerName = '共演者';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $orderNo = 1;
+        $currentMaxOrderNo = 100;
+        $expectedOrderNo = 110;
 
         $this->generator->shouldReceive('generate')
             ->with()
             ->andReturn($uuid)
             ->once();
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
+        $this->repository->shouldReceive('getMaxOrderNo')
+            ->with()
+            ->andReturn($currentMaxOrderNo)
+            ->once();
+
+        $expectedPerformer = $this->createPerformer($uuid, $performerName, $expectedOrderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
@@ -58,7 +64,7 @@ class PerformerIntegrityServiceTest extends TestCase
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
                     && $performerNameArg->value === $performerName
-                    && $orderNoArg->value === $orderNo,
+                    && $orderNoArg->value === $expectedOrderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
@@ -68,7 +74,7 @@ class PerformerIntegrityServiceTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($performerName, $orderNo);
+        $result = $this->getInstance()->prepareForCreate($performerName);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedPerformer, $result->unwrap());
@@ -79,14 +85,20 @@ class PerformerIntegrityServiceTest extends TestCase
     {
         $performerName = '共演者';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $orderNo = 1;
+        $currentMaxOrderNo = 100;
+        $expectedOrderNo = 110;
 
         $this->generator->shouldReceive('generate')
             ->with()
             ->andReturn($uuid)
             ->once();
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
+        $this->repository->shouldReceive('getMaxOrderNo')
+            ->with()
+            ->andReturn($currentMaxOrderNo)
+            ->once();
+
+        $expectedPerformer = $this->createPerformer($uuid, $performerName, $expectedOrderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
@@ -96,19 +108,19 @@ class PerformerIntegrityServiceTest extends TestCase
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
                     && $performerNameArg->value === $performerName
-                    && $orderNoArg->value === $orderNo,
+                    && $orderNoArg->value === $expectedOrderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
-        $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $performerName, $orderNo);
+        $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $performerName, $expectedOrderNo);
 
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
             ->andReturn($existingPerformer)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($performerName, $orderNo);
+        $result = $this->getInstance()->prepareForCreate($performerName);
 
         $this->assertTrue($result->isErr());
         $this->assertSame('すでに使われている名前です "共演者"', $result->unwrapErr());

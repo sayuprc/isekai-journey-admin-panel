@@ -7,9 +7,9 @@ namespace Song\Application\UseCase\Update;
 readonly class UpdateInputData
 {
     /**
-     * @param array<int, array{creatorId: string, orderNo: int}> $arrangers
-     * @param array<int, array{creatorId: string, orderNo: int}> $composers
-     * @param array<int, array{creatorId: string, orderNo: int}> $lyricists
+     * @param list<array{creatorId: string}> $arrangers
+     * @param list<array{creatorId: string}> $composers
+     * @param list<array{creatorId: string}> $lyricists
      */
     public function __construct(
         public string $songId,

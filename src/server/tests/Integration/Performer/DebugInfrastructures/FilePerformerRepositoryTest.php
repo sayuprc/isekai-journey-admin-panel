@@ -83,6 +83,25 @@ class FilePerformerRepositoryTest extends TestCase
         $this->assertNull($found);
     }
 
+    #[Test]
+    public function getMaxOrderNo(): void
+    {
+        $repository = $this->getInstance();
+
+        // 空の場合は 0
+        $this->assertSame(0, $repository->getMaxOrderNo());
+
+        // データを追加
+        $performer1 = $this->createPerformer($this->generateUuid(), 'performer1', 10);
+        $performer2 = $this->createPerformer($this->generateUuid(), 'performer2', 30);
+        $performer3 = $this->createPerformer($this->generateUuid(), 'performer3', 20);
+
+        $this->store($performer1, $performer2, $performer3);
+
+        // 最大値が返ることを確認
+        $this->assertSame(30, $repository->getMaxOrderNo());
+    }
+
     private function store(Performer ...$performers): void
     {
         array_map(

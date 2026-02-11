@@ -60,7 +60,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'string',
         'description' => 'string',
         'song_type_value' => '\OpenAPI\Client\Model\SongTypeValue',
-        'order_no' => 'int',
         'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]',
         'composers' => '\OpenAPI\Client\Model\RequestComposer[]',
         'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]'
@@ -77,7 +76,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => null,
         'description' => null,
         'song_type_value' => null,
-        'order_no' => 'int32',
         'arrangers' => null,
         'composers' => null,
         'lyricists' => null
@@ -92,7 +90,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => false,
         'description' => false,
         'song_type_value' => false,
-        'order_no' => false,
         'arrangers' => false,
         'composers' => false,
         'lyricists' => false
@@ -187,7 +184,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'title',
         'description' => 'description',
         'song_type_value' => 'songTypeValue',
-        'order_no' => 'orderNo',
         'arrangers' => 'arrangers',
         'composers' => 'composers',
         'lyricists' => 'lyricists'
@@ -202,7 +198,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'setTitle',
         'description' => 'setDescription',
         'song_type_value' => 'setSongTypeValue',
-        'order_no' => 'setOrderNo',
         'arrangers' => 'setArrangers',
         'composers' => 'setComposers',
         'lyricists' => 'setLyricists'
@@ -217,7 +212,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'getTitle',
         'description' => 'getDescription',
         'song_type_value' => 'getSongTypeValue',
-        'order_no' => 'getOrderNo',
         'arrangers' => 'getArrangers',
         'composers' => 'getComposers',
         'lyricists' => 'getLyricists'
@@ -283,7 +277,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('song_type_value', $data ?? [], null);
-        $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
@@ -333,13 +326,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         if ($this->container['song_type_value'] === null) {
             $invalidProperties[] = "'song_type_value' can't be null";
         }
-        if ($this->container['order_no'] === null) {
-            $invalidProperties[] = "'order_no' can't be null";
-        }
-        if (($this->container['order_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
-        }
-
         if ($this->container['arrangers'] === null) {
             $invalidProperties[] = "'arrangers' can't be null";
         }
@@ -451,38 +437,6 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable song_type_value cannot be null');
         }
         $this->container['song_type_value'] = $song_type_value;
-
-        return $this;
-    }
-
-    /**
-     * Gets order_no
-     *
-     * @return int
-     */
-    public function getOrderNo()
-    {
-        return $this->container['order_no'];
-    }
-
-    /**
-     * Sets order_no
-     *
-     * @param int $order_no 表示順
-     *
-     * @return self
-     */
-    public function setOrderNo($order_no)
-    {
-        if (is_null($order_no)) {
-            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
-        }
-
-        if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling SongCreateRequest., must be bigger than or equal to 1.');
-        }
-
-        $this->container['order_no'] = $order_no;
 
         return $this;
     }

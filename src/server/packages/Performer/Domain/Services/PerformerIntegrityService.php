@@ -30,9 +30,14 @@ class PerformerIntegrityService
     /**
      * @return Result<Performer, string>
      */
-    public function prepareForCreate(string $performerName, int $orderNo): Result
+    public function prepareForCreate(string $performerName): Result
     {
-        $result = $this->build($this->generator->generate(), $performerName, $orderNo);
+        $result = $this->build(
+            $this->generator->generate(),
+            $performerName,
+            // 更新時に同じ値になることを防ぐために +10 で採番
+            $this->repository->getMaxOrderNo() + 10,
+        );
 
         if ($result->isErr()) {
             return new Err('');

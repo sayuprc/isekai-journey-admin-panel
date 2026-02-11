@@ -31,10 +31,9 @@ class CreateSongTest extends TestCase
             'title' => '描き続けた君へ',
             'description' => 'オリジナル楽曲',
             'songTypeValue' => SongType::Original->value,
-            'orderNo' => 1,
-            'arrangers' => [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-            'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
-            'lyricists' => [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+            'arrangers' => [['creatorId' => $creator1->creatorId->value]],
+            'composers' => [['creatorId' => $creator2->creatorId->value]],
+            'lyricists' => [['creatorId' => $creator3->creatorId->value]],
         ])->assertStatus(200)
             ->assertJson([
                 'song' => [
@@ -45,7 +44,7 @@ class CreateSongTest extends TestCase
                         'name' => SongType::Original->getName(),
                         'value' => SongType::Original->value,
                     ],
-                    'orderNo' => 1,
+                    'orderNo' => 10,
                     'arrangers' => [
                         [
                             'creatorId' => $creator1->creatorId->value,

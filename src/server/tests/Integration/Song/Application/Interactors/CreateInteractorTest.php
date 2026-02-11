@@ -35,10 +35,9 @@ class CreateInteractorTest extends TestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original->value,
-                1,
-                [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                [['creatorId' => $creator1->creatorId->value]],
+                [['creatorId' => $creator2->creatorId->value]],
+                [['creatorId' => $creator3->creatorId->value]],
             ),
         );
 
@@ -51,7 +50,7 @@ class CreateInteractorTest extends TestCase
         $this->assertSame('描き続けた君へ', $song->title->value);
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Original, $song->songType);
-        $this->assertSame(1, $song->orderNo->value);
+        $this->assertSame(10, $song->orderNo->value);
         $this->assertCount(1, $song->arrangers);
         $this->assertSame($creator1->creatorId->value, $song->arrangers[0]->creatorId->value);
         $this->assertSame(1, $song->arrangers[0]->orderNo->value);

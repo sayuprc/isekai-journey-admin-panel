@@ -17,7 +17,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class Arrangers extends ImmutableCollection
 {
     /**
-     * @param array<int, array{creatorId: string, orderNo: int}> $items
+     * @param list<array{creatorId: string}> $items
      *
      * @return Result<self, string>
      */
@@ -25,10 +25,10 @@ readonly class Arrangers extends ImmutableCollection
     {
         $arrangers = [];
 
-        foreach ($items as $item) {
+        foreach ($items as $index => $item) {
             $result = Result::collect(
                 CreatorId::create($item['creatorId']),
-                OrderNo::create($item['orderNo']),
+                OrderNo::create($index + 1),
             )->map(fn (array $values) => new Arranger(...$values));
 
             if ($result->isErr()) {

@@ -63,4 +63,13 @@ readonly class FileSongRepository implements SongRepositoryInterface
     {
         $this->store->unset($this->filePath, $songId->value);
     }
+
+    public function getMaxOrderNo(): int
+    {
+        $songs = $this->all();
+
+        uasort($songs, fn (Song $a, Song $b): int => $b->orderNo->value <=> $a->orderNo->value);
+
+        return array_first($songs)->orderNo->value ?? 0;
+    }
 }

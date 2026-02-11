@@ -17,7 +17,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class Lyricists extends ImmutableCollection
 {
     /**
-     * @param array<int, array{creatorId: string, orderNo: int}> $items
+     * @param list<array{creatorId: string}> $items
      *
      * @return Result<self, string>
      */
@@ -25,10 +25,10 @@ readonly class Lyricists extends ImmutableCollection
     {
         $lyricists = [];
 
-        foreach ($items as $item) {
+        foreach ($items as $index => $item) {
             $result = Result::collect(
                 CreatorId::create($item['creatorId']),
-                OrderNo::create($item['orderNo']),
+                OrderNo::create($index + 1),
             )->map(fn (array $values) => new Lyricist(...$values));
 
             if ($result->isErr()) {
