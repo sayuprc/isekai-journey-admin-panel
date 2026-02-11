@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Application\Interactors;
 
+use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
@@ -15,7 +16,6 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
-use User\DebugInfrastructures\FileUserRepository;
 
 class AuthenticateInteractorTest extends TestCase
 {
@@ -54,7 +54,7 @@ class AuthenticateInteractorTest extends TestCase
         );
 
         $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
-        $this->factory(FileUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
 
         $result = $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
 

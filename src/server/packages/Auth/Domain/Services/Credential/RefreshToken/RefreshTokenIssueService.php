@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Services\Credential\RefreshToken;
 
+use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
@@ -15,7 +16,6 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
-use User\Domain\Models\UserId;
 
 /**
  * TODO エラーハンドリングを強化する
@@ -39,7 +39,7 @@ class RefreshTokenIssueService
     {
         $result = Result::collect4(
             RefreshTokenId::create($this->uuidGenerator->generate()),
-            UserId::create($userId),
+            AdminUserId::create($userId),
             TokenValue::create($this->randomTokenGenerator->generate()),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
         )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));

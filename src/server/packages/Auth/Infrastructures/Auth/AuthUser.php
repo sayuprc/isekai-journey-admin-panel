@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Auth;
 
+use AdminUser\Domain\Models\AdminUser;
 use Illuminate\Contracts\Auth\Authenticatable;
-use User\Domain\Models\User;
 
-readonly class AuthUser extends User implements Authenticatable
+readonly class AuthUser extends AdminUser implements Authenticatable
 {
     public function getAuthIdentifierName()
     {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Models\Credential\RefreshToken;
 
+use AdminUser\Domain\Models\AdminUserId;
 use DateTimeInterface;
-use User\Domain\Models\UserId;
 
 readonly class RefreshToken
 {
     public function __construct(
         public RefreshTokenId $refreshTokenId,
-        public UserId $userId,
+        public AdminUserId $userId,
         public TokenValue $token,
         private ExpiredAt $expiredAt,
         private ConsumptionStatus $status,
