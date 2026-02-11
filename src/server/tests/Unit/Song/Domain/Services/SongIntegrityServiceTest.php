@@ -15,6 +15,7 @@ use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Title;
 use Song\Domain\Services\SongIntegrityService;
 use SongType\Domain\Models\SongType;
@@ -33,6 +34,8 @@ class SongIntegrityServiceTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $creatorRepository;
 
+    private MockInterface&SongRepositoryInterface $songRepository;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,6 +43,7 @@ class SongIntegrityServiceTest extends TestCase
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
         $this->factory = Mockery::mock(SongFactoryInterface::class);
         $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
     }
 
     #[Test]
@@ -48,7 +52,8 @@ class SongIntegrityServiceTest extends TestCase
         $title = '描き続けた君へ';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $songType = SongType::Original->value;
-        $orderNo = 1;
+        $currentMaxOrderNo = 100;
+        $expectedOrderNo = 110;
         $description = '説明';
 
         $expectedSong = $this->createSong(
@@ -56,7 +61,7 @@ class SongIntegrityServiceTest extends TestCase
             $title,
             $description,
             SongType::Original,
-            $orderNo,
+            $expectedOrderNo,
             [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
             [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
             [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
@@ -84,6 +89,11 @@ class SongIntegrityServiceTest extends TestCase
             ->andReturn($uuid)
             ->once();
 
+        $this->songRepository->shouldReceive('getMaxOrderNo')
+            ->with()
+            ->andReturn($currentMaxOrderNo)
+            ->once();
+
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
@@ -99,7 +109,7 @@ class SongIntegrityServiceTest extends TestCase
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
                     && $songTypeArg->value === $songType
-                    && $orderNoArg->value === $orderNo
+                    && $orderNoArg->value === $expectedOrderNo
                     && $arrangersArg->count() === 1
                     && $arrangersArg[0]->creatorId->value === $arrangerId
                     && $arrangersArg[0]->orderNo->value === 1
@@ -117,10 +127,9 @@ class SongIntegrityServiceTest extends TestCase
             $title,
             $description,
             $songType,
-            $orderNo,
-            [['creatorId' => $arrangerId, 'orderNo' => 1]],
-            [['creatorId' => $composerId, 'orderNo' => 1]],
-            [['creatorId' => $lyricistId, 'orderNo' => 1]],
+            [['creatorId' => $arrangerId]],
+            [['creatorId' => $composerId]],
+            [['creatorId' => $lyricistId]],
         );
 
         $this->assertTrue($result->isOk());
@@ -133,7 +142,8 @@ class SongIntegrityServiceTest extends TestCase
         $title = '描き続けた君へ';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $songType = SongType::Original->value;
-        $orderNo = 1;
+        $currentMaxOrderNo = 100;
+        $expectedOrderNo = 110;
         $description = '説明';
 
         $expectedSong = $this->createSong(
@@ -141,7 +151,7 @@ class SongIntegrityServiceTest extends TestCase
             $title,
             $description,
             SongType::Original,
-            $orderNo,
+            $expectedOrderNo,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
             [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
             [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
@@ -168,10 +178,9 @@ class SongIntegrityServiceTest extends TestCase
             $title,
             $description,
             $songType,
-            $orderNo,
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
         );
 
         $this->assertTrue($result->isErr());
@@ -249,9 +258,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $songType,
             $orderNo,
-            [['creatorId' => $arrangerId, 'orderNo' => 1]],
-            [['creatorId' => $composerId, 'orderNo' => 1]],
-            [['creatorId' => $lyricistId, 'orderNo' => 1]],
+            [['creatorId' => $arrangerId]],
+            [['creatorId' => $composerId]],
+            [['creatorId' => $lyricistId]],
         );
 
         $this->assertTrue($result->isOk());
@@ -289,9 +298,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $songType,
             $orderNo,
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
         );
 
         $this->assertTrue($result->isErr());
@@ -302,6 +311,7 @@ class SongIntegrityServiceTest extends TestCase
         return new SongIntegrityService(
             $this->generator,
             $this->factory,
+            $this->songRepository,
             $this->creatorRepository,
         );
     }

@@ -118,6 +118,25 @@ class FileSongRepositoryTest extends TestCase
     }
 
     #[Test]
+    public function getMaxOrderNo(): void
+    {
+        $repository = $this->getInstance();
+
+        // 空の場合は 0
+        $this->assertSame(0, $repository->getMaxOrderNo());
+
+        // データを追加
+        $this->store(
+            $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, 10, [], [], []),
+            $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, 30, [], [], []),
+            $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, 20, [], [], []),
+        );
+
+        // 最大値が返ることを確認
+        $this->assertSame(30, $repository->getMaxOrderNo());
+    }
+
+    #[Test]
     public function isCreatorUsedInArranger(): void
     {
         $creatorId = $this->generateUuid();

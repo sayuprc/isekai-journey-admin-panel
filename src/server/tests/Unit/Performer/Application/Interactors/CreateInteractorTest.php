@@ -51,7 +51,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($performerName, $orderNo)
+            ->with($performerName)
             ->andReturn(new Ok($performer = $this->createPerformer($performerId, $performerName, $orderNo)))
             ->once();
 
@@ -64,7 +64,7 @@ class CreateInteractorTest extends TestCase
             ->andReturn($performer)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($performerName, $orderNo));
+        $result = $this->getInstance()->handle(new CreateInputData($performerName));
 
         $this->assertTrue($result->isOk());
     }
@@ -73,7 +73,6 @@ class CreateInteractorTest extends TestCase
     public function createFailsIfNameAlreadyExists(): void
     {
         $performerName = '共演者';
-        $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -81,11 +80,11 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($performerName, $orderNo)
+            ->with($performerName)
             ->andReturn(new Err(''))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($performerName, $orderNo));
+        $result = $this->getInstance()->handle(new CreateInputData($performerName));
 
         $this->assertTrue($result->isErr());
     }

@@ -21,7 +21,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒', 1));
+        $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒'));
 
         $this->assertTrue($result->isOk());
 
@@ -29,7 +29,7 @@ class CreateInteractorTest extends TestCase
         $performers = $this->getAll(FilePerformerRepository::class);
         $this->assertCount(1, $performers);
         $this->assertSame('ヰ世界情緒', $performers[array_key_first($performers)]->performerName->value);
-        $this->assertSame(1, $performers[array_key_first($performers)]->orderNo->value);
+        $this->assertSame(10, $performers[array_key_first($performers)]->orderNo->value);
     }
 
     private function getInstance(): CreateInteractor

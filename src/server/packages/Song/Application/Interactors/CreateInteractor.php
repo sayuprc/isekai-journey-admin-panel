@@ -32,7 +32,6 @@ readonly class CreateInteractor implements CreateUseCaseInterface
                 $inputData->title,
                 $inputData->description,
                 $inputData->songTypeValue,
-                $inputData->orderNo,
                 $inputData->arrangers,
                 $inputData->composers,
                 $inputData->lyricists,

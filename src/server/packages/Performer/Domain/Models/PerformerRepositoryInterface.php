@@ -18,4 +18,6 @@ interface PerformerRepositoryInterface
     public function save(Performer $performer): Performer;
 
     public function delete(PerformerId $performerId): void;
+
+    public function getMaxOrderNo(): int;
 }

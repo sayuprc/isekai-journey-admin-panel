@@ -53,9 +53,9 @@ class CreateInteractorTest extends TestCase
         $description = 'オリジナル楽曲';
         $songTypeValue = SongType::Original->value;
         $orderNo = 1;
-        $arrangers = [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
-        $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
-        $lyricists = [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
+        $arrangers = [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
+        $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
+        $lyricists = [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -63,7 +63,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, $orderNo, $arrangers, $composers, $lyricists)
+            ->with($title, $description, $songTypeValue, $arrangers, $composers, $lyricists)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -135,7 +135,6 @@ class CreateInteractorTest extends TestCase
                 $title,
                 $description,
                 $songTypeValue,
-                $orderNo,
                 $arrangers,
                 $composers,
                 $lyricists,
@@ -151,10 +150,9 @@ class CreateInteractorTest extends TestCase
         $title = '曲名';
         $description = '説明';
         $songTypeValue = 1;
-        $orderNo = 1;
-        $arrangers = [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
-        $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
-        $lyricists = [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
+        $arrangers = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
+        $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
+        $lyricists = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -162,7 +160,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, $orderNo, $arrangers, $composers, $lyricists)
+            ->with($title, $description, $songTypeValue, $arrangers, $composers, $lyricists)
             ->andReturn(new Err(''))
             ->once();
 
@@ -171,7 +169,6 @@ class CreateInteractorTest extends TestCase
                 $title,
                 $description,
                 $songTypeValue,
-                $orderNo,
                 $arrangers,
                 $composers,
                 $lyricists,

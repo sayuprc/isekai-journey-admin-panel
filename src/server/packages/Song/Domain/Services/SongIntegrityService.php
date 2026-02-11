@@ -16,6 +16,7 @@ use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
@@ -24,21 +25,22 @@ use Support\Domain\ValueObjects\OrderNo;
 /**
  * TODO エラーハンドリングを強化する
  *
- * @phpstan-type creator array{creatorId: string, orderNo: int}
+ * @phpstan-type creator array{creatorId: string}
  */
 class SongIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
         private readonly SongFactoryInterface $factory,
+        private readonly SongRepositoryInterface $songRepository,
         private readonly CreatorRepositoryInterface $creatorRepository,
     ) {
     }
 
     /**
-     * @param array<int, creator> $arrangers
-     * @param array<int, creator> $composers
-     * @param array<int, creator> $lyricists
+     * @param list<creator> $arrangers
+     * @param list<creator> $composers
+     * @param list<creator> $lyricists
      *
      * @return Result<Song, string>
      */
@@ -46,7 +48,6 @@ class SongIntegrityService
         string $title,
         string $description,
         int $songType,
-        int $orderNo,
         array $arrangers,
         array $composers,
         array $lyricists,
@@ -73,15 +74,16 @@ class SongIntegrityService
             $title,
             $description,
             $songType,
-            $orderNo,
+            // 更新時に同じ値になることを防ぐために +10 で採番
+            $this->songRepository->getMaxOrderNo() + 10,
             ...$creators,
         );
     }
 
     /**
-     * @param array<int, creator> $arrangers
-     * @param array<int, creator> $composers
-     * @param array<int, creator> $lyricists
+     * @param list<creator> $arrangers
+     * @param list<creator> $composers
+     * @param list<creator> $lyricists
      *
      * @return Result<Song, string>
      */
