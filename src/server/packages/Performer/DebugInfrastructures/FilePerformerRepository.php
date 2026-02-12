@@ -13,7 +13,7 @@ use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FilePerformerRepository implements PerformerRepositoryInterface
 {
-    private const string FILE_NAME = 'performers.dat';
+    private const string FILE_NAME = 'performers.json';
 
     private string $filePath;
 
@@ -29,17 +29,17 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
 
     public function all(): array
     {
-        return array_values($this->store->getAll($this->filePath));
+        return array_values($this->store->getAll($this->filePath, Performer::class));
     }
 
     public function find(PerformerId $performerId): ?Performer
     {
-        return $this->store->get($this->filePath, $performerId->value);
+        return $this->store->get($this->filePath, $performerId->value, Performer::class);
     }
 
     public function findByName(PerformerName $performerName): ?Performer
     {
-        foreach ($this->store->getAll($this->filePath) as $performer) {
+        foreach ($this->store->getAll($this->filePath, Performer::class) as $performer) {
             if ($performer->performerName->value === $performerName->value) {
                 return $performer;
             }
@@ -50,14 +50,14 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
 
     public function save(Performer $performer): Performer
     {
-        $this->store->put($this->filePath, $performer->performerId->value, $performer);
+        $this->store->put($this->filePath, $performer->performerId->value, $performer, Performer::class);
 
         return $performer;
     }
 
     public function delete(PerformerId $performerId): void
     {
-        $this->store->unset($this->filePath, $performerId->value);
+        $this->store->unset($this->filePath, $performerId->value, Performer::class);
     }
 
     public function getMaxOrderNo(): int

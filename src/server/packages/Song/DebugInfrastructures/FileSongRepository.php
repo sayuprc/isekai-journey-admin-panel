@@ -13,7 +13,7 @@ use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileSongRepository implements SongRepositoryInterface
 {
-    private const string FILE_NAME = 'songs.dat';
+    private const string FILE_NAME = 'songs.json';
 
     private string $filePath;
 
@@ -29,12 +29,12 @@ readonly class FileSongRepository implements SongRepositoryInterface
 
     public function all(): array
     {
-        return array_values($this->store->getAll($this->filePath));
+        return array_values($this->store->getAll($this->filePath, Song::class));
     }
 
     public function find(SongId $songId): ?Song
     {
-        return $this->store->get($this->filePath, $songId->value);
+        return $this->store->get($this->filePath, $songId->value, Song::class);
     }
 
     public function isCreatorUsed(CreatorId $creatorId): bool
@@ -54,14 +54,14 @@ readonly class FileSongRepository implements SongRepositoryInterface
 
     public function save(Song $song): Song
     {
-        $this->store->put($this->filePath, $song->songId->value, $song);
+        $this->store->put($this->filePath, $song->songId->value, $song, Song::class);
 
         return $song;
     }
 
     public function delete(SongId $songId): void
     {
-        $this->store->unset($this->filePath, $songId->value);
+        $this->store->unset($this->filePath, $songId->value, Song::class);
     }
 
     public function getMaxOrderNo(): int

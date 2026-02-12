@@ -13,7 +13,7 @@ use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
 {
-    private const string FILE_NAME = 'admin-users.dat';
+    private const string FILE_NAME = 'admin-users.json';
 
     private string $filePath;
 
@@ -29,7 +29,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
 
     public function find(AdminUserId $userId): ?AdminUser
     {
-        foreach ($this->store->getAll($this->filePath) as $user) {
+        foreach ($this->store->getAll($this->filePath, AdminUser::class) as $user) {
             if ($user->userId->value === $userId->value) {
                 return $user;
             }
@@ -40,7 +40,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
 
     public function findByEmail(Email $email): ?AdminUser
     {
-        foreach ($this->store->getAll($this->filePath) as $user) {
+        foreach ($this->store->getAll($this->filePath, AdminUser::class) as $user) {
             if ($user->email->value === $email->value) {
                 return $user;
             }
@@ -51,7 +51,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
 
     public function save(AdminUser $user): AdminUser
     {
-        $this->store->put($this->filePath, $user->userId->value, $user);
+        $this->store->put($this->filePath, $user->userId->value, $user, AdminUser::class);
 
         return $user;
     }

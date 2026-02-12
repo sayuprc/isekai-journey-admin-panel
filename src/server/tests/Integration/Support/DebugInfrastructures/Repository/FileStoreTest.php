@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Support\DebugInfrastructures\Repository;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use stdClass;
+use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\FileStore;
 use Support\DebugInfrastructures\Repository\FileSystem;
+use Support\Infrastructures\Serializer;
 use Tests\Support\TestFile;
 use Tests\TestCase;
+
+class TestEntity
+{
+    public function __construct(
+        public int $id,
+        public string $name,
+    ) {
+    }
+}
 
 class FileStoreTest extends TestCase
 {
@@ -19,19 +28,25 @@ class FileStoreTest extends TestCase
     #[Test]
     public function getAllDataFromFile(): void
     {
-        $this->runWithTemporaryFile(
-            function (string $path, mixed $content) {
-                $actual = $this->getFileStore()->getAll($path);
+        $data = [
+            '1' => [
+                'id' => 1,
+                'name' => 'getAll value',
+            ],
+        ];
+        $json = json_encode($data);
 
-                $this->assertSame(unserialize($content), $actual);
+        $this->runWithTemporaryFile(
+            function (string $path) {
+                $actual = $this->getFileStore()->getAll($path, TestEntity::class);
+
+                $expected = [
+                    '1' => new TestEntity(1, 'getAll value'),
+                ];
+                $this->assertEquals($expected, $actual);
             },
-            '/tmp/get-all.dat',
-            serialize([
-                '1' => [
-                    'id' => 1,
-                    'name' => 'getAll value',
-                ],
-            ]),
+            '/tmp/get-all.json',
+            $json,
         );
     }
 
@@ -40,44 +55,46 @@ class FileStoreTest extends TestCase
     {
         $this->runWithNonexistentFile(
             function (string $path) {
-                $actual = $this->getFileStore()->getAll($path);
+                $actual = $this->getFileStore()->getAll($path, TestEntity::class);
 
                 $this->assertEmpty($actual);
             },
-            '/tmp/get-all-nonexistent.dat',
+            '/tmp/get-all-nonexistent.json',
         );
     }
 
     #[Test]
-    public function getAllDataFromEmptyFile(): void
+    public function getAllDataFromEmptyJSONFile(): void
     {
         $this->runWithTemporaryFile(
             function (string $path) {
-                $actual = $this->getFileStore()->getAll($path);
+                $actual = $this->getFileStore()->getAll($path, TestEntity::class);
 
                 $this->assertEmpty($actual);
             },
-            '/tmp/getAllEmpty.dat',
-            serialize([]),
+            '/tmp/getAllEmpty.json',
+            '{}',
         );
     }
 
     #[Test]
     public function getDataFromFile(): void
     {
-        $this->runWithTemporaryFile(
-            function (string $path, mixed $content) {
-                $actual = $this->getFileStore()->get($path, '1');
+        $data = [
+            '1' => [
+                'id' => 1,
+                'name' => 'getAll value',
+            ],
+        ];
 
-                $this->assertSame(unserialize($content)['1'], $actual);
+        $this->runWithTemporaryFile(
+            function (string $path) {
+                $actual = $this->getFileStore()->get($path, '1', TestEntity::class);
+
+                $this->assertEquals(new TestEntity(1, 'getAll value'), $actual);
             },
-            '/tmp/get.dat',
-            serialize([
-                '1' => [
-                    'id' => 1,
-                    'name' => 'getAll value',
-                ],
-            ]),
+            '/tmp/get.json',
+            json_encode($data),
         );
     }
 
@@ -86,139 +103,102 @@ class FileStoreTest extends TestCase
     {
         $this->runWithNonexistentFile(
             function (string $path) {
-                $actual = $this->getFileStore()->get($path, 'get-nonexistent');
+                $actual = $this->getFileStore()->get($path, 'get-nonexistent', TestEntity::class);
 
                 $this->assertNull($actual);
             },
-            '/tmp/get-nonexistent.dat',
+            '/tmp/get-nonexistent.json',
         );
     }
 
     #[Test]
     public function getDataNotHasKey(): void
     {
-        $this->runWithTemporaryFile(
-            function (string $path) {
-                $actual = $this->getFileStore()->get($path, '2');
-
-                $this->assertNull($actual);
-            },
-            '/tmp/get.dat',
-            serialize([
-                '1' => [
-                    'id' => 1,
-                    'name' => 'getAll value',
-                ],
-            ]),
-        );
-    }
-
-    #[Test]
-    public function getDataFromEmptyFile(): void
-    {
-        $this->runWithTemporaryFile(
-            function (string $path) {
-                $actual = $this->getFileStore()->get($path, '2');
-
-                $this->assertNull($actual);
-            },
-            '/tmp/get.dat',
-            serialize([]),
-        );
-    }
-
-    #[Test]
-    #[DataProvider('providePutDataToFile')]
-    public function putDataToFile(string $key, mixed $value, bool $isObject = false): void
-    {
-        $this->runWithTemporaryFile(
-            function (string $path) use ($key, $value, $isObject) {
-                $this->getFileStore()->put($path, $key, $value);
-
-                $actual = unserialize(file_get_contents($path));
-
-                $this->assertArrayHasKey($key, $actual);
-
-                if (! $isObject) {
-                    $this->assertSame($value, $actual[$key]);
-                } else {
-                    $this->assertEquals($value, $actual[$key]);
-                }
-            },
-            '/tmp/put.dat',
-            serialize([]),
-        );
-    }
-
-    public static function providePutDataToFile(): array
-    {
-        return [
-            [
-                'int',
-                1,
-            ],
-            [
-                'string',
-                'string value',
-            ],
-            [
-                'object',
-                new stdClass(),
-                true,
-            ],
-            [
-                'object-2',
-                (function () {
-                    $stdClass = new stdClass();
-                    $stdClass->id = 20;
-                    $stdClass->name = 'std class';
-
-                    return $stdClass;
-                })(),
-                true,
-            ],
-            [
-                'array',
-                [
-                    'id' => 10,
-                    'name' => 'array value',
-                ],
+        $data = [
+            '1' => [
+                'id' => 1,
+                'name' => 'getAll value',
             ],
         ];
+
+        $this->runWithTemporaryFile(
+            function (string $path) {
+                $actual = $this->getFileStore()->get($path, '2', TestEntity::class);
+
+                $this->assertNull($actual);
+            },
+            '/tmp/get.json',
+            json_encode($data),
+        );
+    }
+
+    #[Test]
+    public function getDataFromEmptyJSONFile(): void
+    {
+        $this->runWithTemporaryFile(
+            function (string $path) {
+                $actual = $this->getFileStore()->get($path, '2', TestEntity::class);
+
+                $this->assertNull($actual);
+            },
+            '/tmp/get.json',
+            '{}',
+        );
+    }
+
+    #[Test]
+    public function putDataToFile(): void
+    {
+        $key = 'new';
+        $value = new TestEntity(2, 'new value');
+
+        $this->runWithTemporaryFile(
+            function (string $path) use ($key, $value) {
+                $this->getFileStore()->put($path, $key, $value, TestEntity::class);
+
+                $json = file_get_contents($path);
+                $actual = json_decode($json, true);
+
+                $this->assertArrayHasKey($key, $actual);
+                $this->assertSame(['id' => 2, 'name' => 'new value'], $actual[$key]);
+            },
+            '/tmp/put.json',
+            '{}',
+        );
     }
 
     #[Test]
     public function unsetFromFile(): void
     {
+        $data = [
+            '1' => ['id' => 1, 'name' => 'hoge'],
+            '2' => ['id' => 2, 'name' => 'fuga'],
+        ];
+
         $this->runWithTemporaryFile(
-            function (string $path, mixed $content) {
+            function (string $path) use ($data) {
                 $unsetKey = '1';
 
-                $this->getFileStore()->unset($path, $unsetKey);
+                $this->getFileStore()->unset($path, $unsetKey, TestEntity::class);
 
-                $actual = unserialize(file_get_contents($path));
+                $json = file_get_contents($path);
+                $actual = json_decode($json, true);
 
                 $this->assertArrayNotHasKey($unsetKey, $actual);
-
                 $this->assertArrayHasKey('2', $actual);
-                $this->assertSame(unserialize($content)['2'], $actual['2']);
+                $this->assertSame($data['2'], $actual['2']);
             },
-            '/tmp/unset.dat',
-            serialize([
-                '1' => [
-                    'id' => 1,
-                    'name' => 'hoge',
-                ],
-                '2' => [
-                    'id' => 2,
-                    'name' => 'fuga',
-                ],
-            ]),
+            '/tmp/unset.json',
+            json_encode($data),
         );
     }
 
     private function getFileStore(): FileStore
     {
-        return new FileStore(new FileSystem());
+        return new FileStore(
+            new FileSystem(),
+            new Serializer(),
+            $this->app->make(MapperInterface::class)
+        );
     }
 }

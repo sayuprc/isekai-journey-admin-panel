@@ -61,7 +61,7 @@ trait FileRepositoryTransaction
 
     private function getDirectoryName(): string
     {
-        return str_replace('\\', '/', self::FILE_DIR . '/' . new ReflectionClass($this)->getName() . '/' . $this->name());
+        return str_replace('\\', '/', self::FILE_DIR . '/' . (new ReflectionClass($this))->getName() . '/' . $this->name());
     }
 
     private function factory(string $repository, int|string $key, mixed $value): void
@@ -69,7 +69,7 @@ trait FileRepositoryTransaction
         /** @var FileStore $store */
         $store = $this->app->make(FileStore::class);
 
-        $store->put($this->getFileName($repository), $key, $value);
+        $store->put($this->getFileName($repository), (string)$key, $value, get_class($value));
     }
 
     private function getAll(string $repository): array
@@ -77,17 +77,29 @@ trait FileRepositoryTransaction
         /** @var FileStore $store */
         $store = $this->app->make(FileStore::class);
 
-        return $store->getAll($this->getFileName($repository));
+        return $store->getAll($this->getFileName($repository), $this->getEntityClass($repository));
     }
 
     private function getFileName(string $repository): string
     {
-        $fileName = new ReflectionClass($repository)->getConstant('FILE_NAME');
+        $fileName = (new ReflectionClass($repository))->getConstant('FILE_NAME');
 
         if ($fileName === false || $fileName === '') {
             throw new RuntimeException('リポジトリに FILE_NAME 定数が設定されていません。');
         }
 
         return $this->getDirectoryName() . '/' . $fileName;
+    }
+
+    private function getEntityClass(string $repository): string
+    {
+        return match ($repository) {
+            'Song\DebugInfrastructures\FileSongRepository' => 'Song\Domain\Models\Song',
+            'Creator\DebugInfrastructures\FileCreatorRepository' => 'Creator\Domain\Models\Creator',
+            'Performer\DebugInfrastructures\FilePerformerRepository' => 'Performer\Domain\Models\Performer',
+            'AdminUser\DebugInfrastructures\FileAdminUserRepository' => 'AdminUser\Domain\Models\AdminUser',
+            'Auth\DebugInfrastructures\FileRefreshTokenRepository' => 'Auth\Domain\Models\Credential\RefreshToken\RefreshToken',
+            default => throw new RuntimeException("Unknown repository: $repository"),
+        };
     }
 }

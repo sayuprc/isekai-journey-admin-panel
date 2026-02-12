@@ -13,7 +13,7 @@ use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    private const string FILE_NAME = 'refresh-tokens.dat';
+    private const string FILE_NAME = 'refresh-tokens.json';
 
     private string $filePath;
 
@@ -30,7 +30,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
     {
-        $found = $this->store->get($this->filePath, $refreshTokenId->value);
+        $found = $this->store->get($this->filePath, $refreshTokenId->value, RefreshToken::class);
 
         return is_null($found) || ! $found->isAvailable($this->clock->now())
             ? null
@@ -39,7 +39,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function save(RefreshToken $refreshToken): RefreshToken
     {
-        $this->store->put($this->filePath, $refreshToken->refreshTokenId->value, $refreshToken);
+        $this->store->put($this->filePath, $refreshToken->refreshTokenId->value, $refreshToken, RefreshToken::class);
 
         return $refreshToken;
     }

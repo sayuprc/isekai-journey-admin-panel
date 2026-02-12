@@ -13,7 +13,7 @@ use Support\DebugInfrastructures\Repository\FileStore;
 
 readonly class FileCreatorRepository implements CreatorRepositoryInterface
 {
-    private const string FILE_NAME = 'creators.dat';
+    private const string FILE_NAME = 'creators.json';
 
     private string $filePath;
 
@@ -32,17 +32,17 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
      */
     public function all(): array
     {
-        return array_values($this->store->getAll($this->filePath));
+        return array_values($this->store->getAll($this->filePath, Creator::class));
     }
 
     public function find(CreatorId $creatorId): ?Creator
     {
-        return $this->store->get($this->filePath, $creatorId->value);
+        return $this->store->get($this->filePath, $creatorId->value, Creator::class);
     }
 
     public function findByName(CreatorName $creatorName): ?Creator
     {
-        foreach ($this->store->getAll($this->filePath) as $creator) {
+        foreach ($this->store->getAll($this->filePath, Creator::class) as $creator) {
             if ($creator->creatorName->value === $creatorName->value) {
                 return $creator;
             }
@@ -56,7 +56,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         $founds = [];
 
         foreach ($creatorIds as $creatorId) {
-            $found = $this->store->get($this->filePath, $creatorId->value);
+            $found = $this->store->get($this->filePath, $creatorId->value, Creator::class);
 
             if (! is_null($found)) {
                 $founds[] = $found;
@@ -68,13 +68,13 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
 
     public function save(Creator $creator): Creator
     {
-        $this->store->put($this->filePath, $creator->creatorId->value, $creator);
+        $this->store->put($this->filePath, $creator->creatorId->value, $creator, Creator::class);
 
         return $creator;
     }
 
     public function delete(CreatorId $creatorId): void
     {
-        $this->store->unset($this->filePath, $creatorId->value);
+        $this->store->unset($this->filePath, $creatorId->value, Creator::class);
     }
 }

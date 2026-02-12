@@ -10,9 +10,11 @@ use Support\Contracts\TransactionInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\DebugInfrastructures\NopTransaction;
 use Support\DebugInfrastructures\Repository\DebugConfig;
+use Support\DebugInfrastructures\Repository\FileStore;
 use Support\Infrastructures\Clock;
 use Support\Infrastructures\Database\SQLiteConfig;
 use Support\Infrastructures\Mapper;
+use Support\Infrastructures\StrictMapper;
 use Support\Infrastructures\UuidGenerator;
 
 class SupportServiceProvider extends EnvServiceProvider
@@ -20,6 +22,10 @@ class SupportServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(MapperInterface::class, Mapper::class);
+        $this->app->when(FileStore::class)
+            ->needs(MapperInterface::class)
+            ->give(StrictMapper::class);
+
         $this->app->bind(UuidGeneratorInterface::class, UuidGenerator::class);
         $this->app->bind(TransactionInterface::class, NopTransaction::class);
         $this->app->bind(ClockInterface::class, Clock::class);
