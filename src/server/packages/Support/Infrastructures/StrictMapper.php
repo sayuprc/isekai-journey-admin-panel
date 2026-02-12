@@ -23,7 +23,7 @@ readonly class StrictMapper implements MapperInterface
             $source = Source::json($source);
         } else {
             // Assume iterable
-            /** @var iterable<mixed> $source */
+            assert(is_iterable($source));
             $source = Source::iterable($source);
         }
 

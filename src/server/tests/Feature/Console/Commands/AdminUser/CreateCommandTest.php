@@ -16,7 +16,7 @@ class CreateCommandTest extends TestCase
     use FileRepositoryTransaction;
 
     #[Test]
-    public function createUser(): void
+    public function successCreateUser(): void
     {
         $this->artisan('admin:create example@example.com plain')
             ->expectsOutput('管理ユーザーを作成しました')

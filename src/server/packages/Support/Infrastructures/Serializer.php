@@ -63,6 +63,10 @@ class Serializer
     }
 
     /**
+     * @template T of object
+     *
+     * @param ReflectionClass<T> $reflection
+     *
      * @return array<ReflectionProperty>
      */
     private function getProperties(ReflectionClass $reflection): array
