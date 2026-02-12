@@ -23,6 +23,7 @@ class Serializer
             foreach ($data as $key => $value) {
                 $result[$key] = $this->serialize($value);
             }
+
             return $result;
         }
 
@@ -62,7 +63,6 @@ class Serializer
     }
 
     /**
-     * @param ReflectionClass<object> $reflection
      * @return array<ReflectionProperty>
      */
     private function getProperties(ReflectionClass $reflection): array
@@ -82,11 +82,12 @@ class Serializer
                 foreach ($properties as $p) {
                     if ($p->getName() === $prop->getName()) {
                         $exists = true;
+
                         break;
                     }
                 }
 
-                if (!$exists) {
+                if (! $exists) {
                     $properties[] = $prop;
                 }
             }

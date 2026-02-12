@@ -6,6 +6,7 @@ namespace Support\Infrastructures;
 
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
+use DateTimeInterface;
 use Support\Contracts\MapperInterface;
 
 readonly class StrictMapper implements MapperInterface
@@ -28,7 +29,7 @@ readonly class StrictMapper implements MapperInterface
 
         return $this->builder
             ->allowSuperfluousKeys()
-            ->supportDateFormats('Y-m-d')
+            ->supportDateFormats('Y-m-d', 'Y-m-d H:i:s', DateTimeInterface::ATOM)
             ->mapper()
             ->map($signature, $source);
     }

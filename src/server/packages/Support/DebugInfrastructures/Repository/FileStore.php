@@ -21,6 +21,7 @@ readonly class FileStore
 
     /**
      * @param class-string<T> $className
+     *
      * @return array<string, T>
      */
     public function getAll(string $path, string $className): array
@@ -30,7 +31,6 @@ readonly class FileStore
         }
 
         $json = $this->file->get($path);
-        /** @var array<string, array> */
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         if (! is_array($data)) {
@@ -43,6 +43,7 @@ readonly class FileStore
 
     /**
      * @param class-string<T> $className
+     *
      * @return T|null
      */
     public function get(string $path, string $key, string $className): mixed
@@ -50,11 +51,12 @@ readonly class FileStore
         if (! $this->file->exists($path)) {
             return null;
         }
+
         return $this->getAll($path, $className)[$key] ?? null;
     }
 
     /**
-     * @param T $data
+     * @param T               $data
      * @param class-string<T> $className
      */
     public function put(string $path, string $key, mixed $data, string $className): void
@@ -69,7 +71,7 @@ readonly class FileStore
 
         $this->file->put(
             $path,
-            json_encode($serializedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
+            json_encode($serializedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
         );
     }
 
@@ -88,7 +90,7 @@ readonly class FileStore
 
         $this->file->put(
             $path,
-            json_encode($serializedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
+            json_encode($serializedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
         );
     }
 }

@@ -198,7 +198,7 @@ class FileStoreTest extends TestCase
         return new FileStore(
             new FileSystem(),
             new Serializer(),
-            $this->app->make(MapperInterface::class)
+            $this->app->make(MapperInterface::class),
         );
     }
 }

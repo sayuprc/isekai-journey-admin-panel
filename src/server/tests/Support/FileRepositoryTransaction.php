@@ -99,7 +99,7 @@ trait FileRepositoryTransaction
             'Performer\DebugInfrastructures\FilePerformerRepository' => 'Performer\Domain\Models\Performer',
             'AdminUser\DebugInfrastructures\FileAdminUserRepository' => 'AdminUser\Domain\Models\AdminUser',
             'Auth\DebugInfrastructures\FileRefreshTokenRepository' => 'Auth\Domain\Models\Credential\RefreshToken\RefreshToken',
-            default => throw new RuntimeException("Unknown repository: $repository"),
+            default => throw new RuntimeException("Unknown repository: {$repository}"),
         };
     }
 }
