@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\ListInteractor;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
 use SongType\Domain\Models\SongType;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -81,22 +77,6 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->songs[1]->composers);
         $this->assertSame($composerId, $response->songs[1]->composers[0]->creatorId);
         $this->assertCount(0, $response->songs[1]->lyricists);
-    }
-
-    private function storeSongs(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->songId->value, $song),
-            $songs,
-        );
-    }
-
-    private function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 
     private function getInstance(): ListInteractor

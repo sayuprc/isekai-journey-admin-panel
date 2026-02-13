@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\GetInteractor;
 use Song\Application\UseCase\Get\GetInputData;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
 use SongType\Domain\Models\SongType;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -78,22 +74,6 @@ class GetInteractorTest extends TestCase
         $this->assertFalse($result->isOk());
 
         $this->assertSame('楽曲が見つかりません: ' . $songId, $result->unwrapErr());
-    }
-
-    private function storeSongs(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->songId->value, $song),
-            $songs,
-        );
-    }
-
-    private function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 
     private function getInstance(): GetInteractor

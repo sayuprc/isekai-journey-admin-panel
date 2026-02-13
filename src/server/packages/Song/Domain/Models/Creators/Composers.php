@@ -40,4 +40,22 @@ readonly class Composers extends ImmutableCollection
 
         return new Ok(new self($composers));
     }
+
+    /**
+     * @param list<array{creatorId: string, orderNo: int}> $items
+     */
+    public static function reconstruct(array $items): self
+    {
+        return new self(array_map(fn (array $item): Composer => Composer::reconstruct(...$item), $items));
+    }
+
+    /**
+     * @return list<array{creator_id: string, order_no: int}>
+     */
+    public function toArray(): array
+    {
+        return $this->toGeneric()
+            ->map(fn (Composer $item): array => $item->toArray())
+            ->toList();
+    }
 }

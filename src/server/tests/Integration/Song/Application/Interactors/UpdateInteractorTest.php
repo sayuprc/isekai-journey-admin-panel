@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Update\UpdateInputData;
@@ -60,10 +58,9 @@ class UpdateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        /** @var array<Song> $songs */
-        $songs = $this->getAll(FileSongRepository::class);
+        $songs = $this->getAll(Song::class, FileSongRepository::class);
         $this->assertCount(1, $songs);
-        $song = $songs[$songId];
+        $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title->value);
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Cover, $song->songType);
@@ -73,22 +70,6 @@ class UpdateInteractorTest extends TestCase
         $this->assertCount(1, $song->composers);
         $this->assertSame($creator2->creatorId->value, $song->composers[0]->creatorId->value);
         $this->assertCount(0, $song->lyricists);
-    }
-
-    private function storeSongs(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->songId->value, $song),
-            $songs,
-        );
-    }
-
-    private function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 
     private function getInstance(): UpdateInteractor

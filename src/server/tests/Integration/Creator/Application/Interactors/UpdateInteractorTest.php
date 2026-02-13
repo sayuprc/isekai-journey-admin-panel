@@ -26,16 +26,15 @@ class UpdateInteractorTest extends TestCase
         $beforeName = 'クリエイター';
         $afterName = 'ヰ世界情緒';
 
-        $this->factory(FileCreatorRepository::class, $creatorId, $this->createCreator($creatorId, $beforeName));
+        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, $beforeName)->toArray());
 
         $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $afterName));
 
         $this->assertTrue($result->isOk());
 
-        /** @var array<Creator> $creators */
-        $creators = $this->getAll(FileCreatorRepository::class);
+        $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
         $this->assertCount(1, $creators);
-        $this->assertSame($afterName, $creators[$creatorId]->creatorName->value);
+        $this->assertSame($afterName, array_first($creators)->creatorName->value);
     }
 
     private function getInstance(): UpdateInteractor

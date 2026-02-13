@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
@@ -95,21 +91,5 @@ class UpdateSongTest extends TestCase
     public function emptyParameters(): void
     {
         $this->markTestSkipped('TODO 実装する');
-    }
-
-    private function storeSongs(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->songId->value, $song),
-            $songs,
-        );
-    }
-
-    private function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 }

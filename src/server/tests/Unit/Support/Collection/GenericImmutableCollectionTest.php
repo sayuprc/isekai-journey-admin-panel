@@ -25,6 +25,17 @@ class GenericImmutableCollectionTest extends TestCase
     {
         $collection = new GenericImmutableCollection([1, 2, 3]);
 
-        $this->assertEquals([1, 2, 3], $collection->toArray());
+        $this->assertSame([1, 2, 3], $collection->toArray());
+    }
+
+    #[Test]
+    public function toList(): void
+    {
+        $collection = new GenericImmutableCollection(['a' => 1, 'b' => 2, 'c' => 3]);
+
+        $list = $collection->toList();
+
+        $this->assertTrue(array_is_list($list));
+        $this->assertSame([1, 2, 3], $collection->toList());
     }
 }

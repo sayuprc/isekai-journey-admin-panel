@@ -53,8 +53,8 @@ class AuthenticateInteractorTest extends TestCase
             ),
         );
 
-        $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
-        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray());
+        $this->factory(FileAdminUserRepository::class, $user->toArray());
 
         $result = $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
 

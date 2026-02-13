@@ -10,8 +10,9 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
+use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
-use Support\DebugInfrastructures\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\JsonFileStore;
 
 trait FileRepositoryTransaction
 {
@@ -21,14 +22,12 @@ trait FileRepositoryTransaction
     {
         parent::setUp();
 
-        $directory = $this->getDirectoryName();
-
-        $config = new DebugConfig($directory);
+        $config = new DebugConfig($this->getDirectoryName());
 
         $this->app->bind(DebugConfig::class, fn (): DebugConfig => $config);
 
-        if (! file_exists($directory)) {
-            mkdir($directory, 0777, true);
+        if (! file_exists($config->path)) {
+            mkdir($config->path, 0777, true);
         }
     }
 
@@ -61,23 +60,34 @@ trait FileRepositoryTransaction
 
     private function getDirectoryName(): string
     {
-        return str_replace('\\', '/', self::FILE_DIR . '/' . new ReflectionClass($this)->getName() . '/' . $this->name());
+        return str_replace(
+            '\\',
+            '/',
+            self::FILE_DIR . '/' . new ReflectionClass($this)->getName() . '/' . $this->name(),
+        );
     }
 
-    private function factory(string $repository, int|string $key, mixed $value): void
+    /**
+     * @param array<mixed> $data
+     */
+    private function factory(string $repository, array $data): void
     {
-        /** @var FileStore $store */
-        $store = $this->app->make(FileStore::class);
-
-        $store->put($this->getFileName($repository), $key, $value);
+        $this->getStore()->save($this->getFileName($repository), $data);
     }
 
-    private function getAll(string $repository): array
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return array<T>
+     */
+    private function getAll(string $class, string $repository): array
     {
-        /** @var FileStore $store */
-        $store = $this->app->make(FileStore::class);
-
-        return $store->getAll($this->getFileName($repository));
+        return $this->getMapper()->map(
+            "array<{$class}>",
+            $this->getStore()->load($this->getFileName($repository)),
+        );
     }
 
     private function getFileName(string $repository): string
@@ -89,5 +99,15 @@ trait FileRepositoryTransaction
         }
 
         return $this->getDirectoryName() . '/' . $fileName;
+    }
+
+    private function getStore(): JsonFileStore
+    {
+        return app()->make(JsonFileStore::class);
+    }
+
+    private function getMapper(): MapperInterface
+    {
+        return app()->make(MapperInterface::class);
     }
 }

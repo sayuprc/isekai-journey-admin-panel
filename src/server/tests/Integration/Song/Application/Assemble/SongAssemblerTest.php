@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Assemble;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
 use SongType\Domain\Models\SongType;
@@ -38,7 +36,7 @@ class SongAssemblerTest extends TestCase
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
         );
 
-        $this->storeCreator(
+        $this->storeCreators(
             $this->createCreator($arrangerId, '編曲者'),
             $this->createCreator($composerId, '作曲者'),
             $this->createCreator($lyricistId, '作詞者'),
@@ -64,14 +62,6 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);
         $this->assertSame('作詞者', $assembled->lyricists[0]->creatorName);
         $this->assertSame(1, $assembled->lyricists[0]->orderNo);
-    }
-
-    private function storeCreator(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 
     private function getInstance(): SongAssembler

@@ -22,7 +22,7 @@ class GetInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, 'ヰ世界情緒', 1)->toArray());
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 

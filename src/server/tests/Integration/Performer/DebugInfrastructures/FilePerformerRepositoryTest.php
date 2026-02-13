@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Performer\DebugInfrastructures;
 
 use Performer\DebugInfrastructures\FilePerformerRepository;
-use Performer\Domain\Models\Performer;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -22,7 +21,7 @@ class FilePerformerRepositoryTest extends TestCase
         $performer1 = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
         $performer2 = $this->createPerformer($this->generateUuid(), '春猿火', 2);
 
-        $this->store($performer1, $performer2);
+        $this->storePerformers($performer1, $performer2);
 
         $performers = $this->getInstance()->all();
 
@@ -35,7 +34,7 @@ class FilePerformerRepositoryTest extends TestCase
     {
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->store($performer);
+        $this->storePerformers($performer);
 
         $found = $this->getInstance()->find($performer->performerId);
 
@@ -48,7 +47,7 @@ class FilePerformerRepositoryTest extends TestCase
     {
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->store($performer);
+        $this->storePerformers($performer);
 
         $found = $this->getInstance()->findByName($performer->performerName);
 
@@ -74,7 +73,7 @@ class FilePerformerRepositoryTest extends TestCase
     {
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->store($performer);
+        $this->storePerformers($performer);
 
         $this->getInstance()->delete($performer->performerId);
 
@@ -96,18 +95,10 @@ class FilePerformerRepositoryTest extends TestCase
         $performer2 = $this->createPerformer($this->generateUuid(), 'performer2', 30);
         $performer3 = $this->createPerformer($this->generateUuid(), 'performer3', 20);
 
-        $this->store($performer1, $performer2, $performer3);
+        $this->storePerformers($performer1, $performer2, $performer3);
 
         // 最大値が返ることを確認
         $this->assertSame(30, $repository->getMaxOrderNo());
-    }
-
-    private function store(Performer ...$performers): void
-    {
-        array_map(
-            fn (Performer $performer) => $this->factory(FilePerformerRepository::class, $performer->performerId->value, $performer),
-            $performers,
-        );
     }
 
     private function getInstance(): FilePerformerRepository

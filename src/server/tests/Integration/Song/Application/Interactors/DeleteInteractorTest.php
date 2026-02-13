@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\UseCase\Delete\DeleteInputData;
 use Song\DebugInfrastructures\FileSongRepository;
+use Song\Domain\Models\Song;
 use SongType\Domain\Models\SongType;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -25,14 +26,12 @@ class DeleteInteractorTest extends TestCase
 
         $this->factory(
             FileSongRepository::class,
-            $uuid,
-            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], [])->toArray(),
         );
 
         $this->getInstance()->handle(new DeleteInputData($uuid));
 
-        /** @var array<Song> */
-        $songs = $this->getAll(FileSongRepository::class);
+        $songs = $this->getAll(Song::class, FileSongRepository::class);
         $this->assertCount(0, $songs);
     }
 

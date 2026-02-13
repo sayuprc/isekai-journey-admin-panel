@@ -16,7 +16,7 @@ class CreateCommandTest extends TestCase
     use FileRepositoryTransaction;
 
     #[Test]
-    public function createUser(): void
+    public function canCreateUser(): void
     {
         $this->artisan('admin:create example@example.com plain')
             ->expectsOutput('管理ユーザーを作成しました')
@@ -28,7 +28,7 @@ class CreateCommandTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileAdminUserRepository::class, $uuid, $this->createUser($uuid, 'example@example.com', 'plain'));
+        $this->factory(FileAdminUserRepository::class, $this->createUser($uuid, 'example@example.com', 'plain')->toArray());
 
         $this->artisan('admin:create example@example.com plain')
             ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')

@@ -25,7 +25,7 @@ class DeleteCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $uuid, $this->createCreator($uuid, 'クリエイター'));
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター')->toArray());
 
         $this->withAuth()
             ->delete(route(CreatorRouteMap::Delete, $uuid))
@@ -38,8 +38,8 @@ class DeleteCreatorTest extends TestCase
         $creatorId = $this->generateUuid();
         $songId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $creatorId, $this->createCreator($creatorId, 'クリエイター'));
-        $this->factory(FileSongRepository::class, $songId, $this->createSong(
+        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, 'クリエイター')->toArray());
+        $this->factory(FileSongRepository::class, $this->createSong(
             $songId,
             '曲名',
             '説明',
@@ -48,7 +48,7 @@ class DeleteCreatorTest extends TestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
-        ));
+        )->toArray());
 
         $this->withAuth()
             ->delete(route(CreatorRouteMap::Delete, $creatorId))

@@ -6,7 +6,6 @@ namespace Tests\Integration\Auth\DebugInfrastructures;
 
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
@@ -31,7 +30,7 @@ class FileRefreshTokenRepositoryTest extends TestCase
             ConsumptionStatus::Unused,
         );
 
-        $this->store($refreshToken);
+        $this->storeRefreshTokens($refreshToken);
 
         $found = $this->getInstance()->findActive($refreshToken->refreshTokenId);
 
@@ -58,14 +57,6 @@ class FileRefreshTokenRepositoryTest extends TestCase
 
         $this->assertNotNull($found);
         $this->assertEquals($refreshToken, $found);
-    }
-
-    private function store(RefreshToken ...$refreshTokens): void
-    {
-        array_map(
-            fn (RefreshToken $refreshToken) => $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken),
-            $refreshTokens,
-        );
     }
 
     private function getInstance(): FileRefreshTokenRepository

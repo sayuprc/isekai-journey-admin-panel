@@ -8,20 +8,19 @@ use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Support\Contracts\ClockInterface;
+use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
-use Support\DebugInfrastructures\Repository\FileStore;
+use Support\DebugInfrastructures\Repository\JsonFileStore;
 
 readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    private const string FILE_NAME = 'refresh-tokens.dat';
+    private const string FILE_NAME = 'refresh-tokens';
 
     private string $filePath;
 
-    /**
-     * @param FileStore<RefreshToken> $store
-     */
     public function __construct(
-        private FileStore $store,
+        private MapperInterface $mapper,
+        private JsonFileStore $store,
         private ClockInterface $clock,
         DebugConfig $config,
     ) {
@@ -30,7 +29,12 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
     {
-        $found = $this->store->get($this->filePath, $refreshTokenId->value);
+        $found = array_first(
+            array_filter(
+                $this->loadAll(),
+                fn (RefreshToken $token): bool => $token->refreshTokenId->value === $refreshTokenId->value,
+            ),
+        );
 
         return is_null($found) || ! $found->isAvailable($this->clock->now())
             ? null
@@ -39,8 +43,28 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function save(RefreshToken $refreshToken): RefreshToken
     {
-        $this->store->put($this->filePath, $refreshToken->refreshTokenId->value, $refreshToken);
+        $this->store->save(
+            $this->filePath,
+            $refreshToken->toArray(),
+            array_keys(
+                array_filter(
+                    $this->loadAll(),
+                    fn (RefreshToken $item): bool => $item->refreshTokenId->value === $refreshToken->refreshTokenId->value,
+                ),
+            )[0] ?? null,
+        );
 
         return $refreshToken;
+    }
+
+    /**
+     * @return array<RefreshToken>
+     */
+    private function loadAll(): array
+    {
+        $class = RefreshToken::class;
+
+        /** @var array<RefreshToken> */
+        return $this->mapper->map("array<{$class}>", $this->store->load($this->filePath));
     }
 }

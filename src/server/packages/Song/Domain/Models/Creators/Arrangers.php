@@ -40,4 +40,22 @@ readonly class Arrangers extends ImmutableCollection
 
         return new Ok(new self($arrangers));
     }
+
+    /**
+     * @param list<array{creatorId: string, orderNo: int}> $items
+     */
+    public static function reconstruct(array $items): self
+    {
+        return new self(array_map(fn (array $item): Arranger => Arranger::reconstruct(...$item), $items));
+    }
+
+    /**
+     * @return list<array{creator_id: string, order_no: int}>
+     */
+    public function toArray(): array
+    {
+        return $this->toGeneric()
+            ->map(fn (Arranger $item): array => $item->toArray())
+            ->toList();
+    }
 }
