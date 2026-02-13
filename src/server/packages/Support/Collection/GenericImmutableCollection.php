@@ -35,4 +35,12 @@ final readonly class GenericImmutableCollection extends ImmutableCollection
     {
         return $this->items;
     }
+
+    /**
+     * @return list<TValue>
+     */
+    public function toList(): array
+    {
+        return array_values($this->items);
+    }
 }

@@ -14,4 +14,20 @@ readonly class Arranger
         public OrderNo $orderNo,
     ) {
     }
+
+    public static function reconstruct(string $creatorId, int $orderNo): self
+    {
+        return new self(CreatorId::reconstruct($creatorId), OrderNo::reconstruct($orderNo));
+    }
+
+    /**
+     * @return array{creator_id: string, order_no: int}
+     */
+    public function toArray(): array
+    {
+        return [
+            'creator_id' => $this->creatorId->value,
+            'order_no' => $this->orderNo->value,
+        ];
+    }
 }

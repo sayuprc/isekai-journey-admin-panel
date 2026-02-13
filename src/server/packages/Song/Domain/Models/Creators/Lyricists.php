@@ -40,4 +40,22 @@ readonly class Lyricists extends ImmutableCollection
 
         return new Ok(new self($lyricists));
     }
+
+    /**
+     * @param list<array{creatorId: string, orderNo: int}> $items
+     */
+    public static function reconstruct(array $items): self
+    {
+        return new self(array_map(fn (array $item): Lyricist => Lyricist::reconstruct(...$item), $items));
+    }
+
+    /**
+     * @return list<array{creator_id: string, order_no: int}>
+     */
+    public function toArray(): array
+    {
+        return $this->toGeneric()
+            ->map(fn (Lyricist $item): array => $item->toArray())
+            ->toList();
+    }
 }
