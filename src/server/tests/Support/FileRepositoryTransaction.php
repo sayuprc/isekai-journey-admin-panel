@@ -61,7 +61,9 @@ trait FileRepositoryTransaction
 
     private function getDirectoryName(): string
     {
-        return str_replace('\\', '/', self::FILE_DIR . '/' . (new ReflectionClass($this))->getName() . '/' . $this->name());
+        $reflection = new ReflectionClass($this);
+
+        return str_replace('\\', '/', self::FILE_DIR . '/' . $reflection->getName() . '/' . $this->name());
     }
 
     private function factory(string $repository, int|string $key, mixed $value): void
@@ -82,7 +84,8 @@ trait FileRepositoryTransaction
 
     private function getFileName(string $repository): string
     {
-        $fileName = (new ReflectionClass($repository))->getConstant('FILE_NAME');
+        $reflection = new ReflectionClass($repository);
+        $fileName = $reflection->getConstant('FILE_NAME');
 
         if ($fileName === false || $fileName === '') {
             throw new RuntimeException('リポジトリに FILE_NAME 定数が設定されていません。');

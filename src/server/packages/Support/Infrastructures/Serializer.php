@@ -9,6 +9,10 @@ use DateTimeInterface;
 use JsonSerializable;
 use ReflectionClass;
 use ReflectionProperty;
+use Support\Domain\ValueObjects\Date\ImmutableDateTimeValueObject;
+use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
+use Support\Domain\ValueObjects\Numeric\IntegerValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 use UnitEnum;
 
 class Serializer
@@ -34,6 +38,22 @@ class Serializer
 
             if ($data instanceof DateTimeInterface) {
                 return $data->format(DateTimeInterface::ATOM);
+            }
+
+            if ($data instanceof StringValueObject) {
+                return $data->value;
+            }
+
+            if ($data instanceof IntegerValueObject) {
+                return $data->value;
+            }
+
+            if ($data instanceof ImmutableDateValueObject) {
+                return $data->value->format('Y-m-d');
+            }
+
+            if ($data instanceof ImmutableDateTimeValueObject) {
+                return $data->value->format(DateTimeInterface::ATOM);
             }
 
             if ($data instanceof JsonSerializable) {
@@ -64,7 +84,6 @@ class Serializer
 
     /**
      * @template T of object
-     *
      * @param ReflectionClass<T> $reflection
      *
      * @return array<ReflectionProperty>
@@ -86,7 +105,6 @@ class Serializer
                 foreach ($properties as $p) {
                     if ($p->getName() === $prop->getName()) {
                         $exists = true;
-
                         break;
                     }
                 }

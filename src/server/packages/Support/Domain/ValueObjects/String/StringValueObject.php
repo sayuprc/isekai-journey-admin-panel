@@ -15,7 +15,7 @@ abstract readonly class StringValueObject
     /**
      * @throws InvalidDomainException
      */
-    final public function __construct(public string $value)
+    final protected function __construct(public string $value)
     {
         if (! static::isValid($this->value)) {
             throw new InvalidDomainException(static::getMessage($this->value));

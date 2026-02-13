@@ -6,8 +6,14 @@ namespace Support\Infrastructures;
 
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
+use DateTimeImmutable;
 use DateTimeInterface;
+use DateType\ImmutableDate;
 use Support\Contracts\MapperInterface;
+use Support\Domain\ValueObjects\Date\ImmutableDateTimeValueObject;
+use Support\Domain\ValueObjects\Date\ImmutableDateValueObject;
+use Support\Domain\ValueObjects\Numeric\IntegerValueObject;
+use Support\Domain\ValueObjects\String\StringValueObject;
 
 readonly class StrictMapper implements MapperInterface
 {
@@ -30,6 +36,12 @@ readonly class StrictMapper implements MapperInterface
         return $this->builder
             ->allowSuperfluousKeys()
             ->supportDateFormats('Y-m-d', 'Y-m-d H:i:s', DateTimeInterface::ATOM)
+            ->registerConstructor(
+                fn (string $value): StringValueObject => StringValueObject::reconstruct($value),
+                fn (int $value): IntegerValueObject => IntegerValueObject::reconstruct($value),
+                fn (ImmutableDate $value): ImmutableDateValueObject => ImmutableDateValueObject::reconstruct($value),
+                fn (DateTimeImmutable $value): ImmutableDateTimeValueObject => ImmutableDateTimeValueObject::reconstruct($value),
+            )
             ->mapper()
             ->map($signature, $source);
     }

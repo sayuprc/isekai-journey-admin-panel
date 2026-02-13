@@ -16,7 +16,7 @@ abstract readonly class ImmutableDateTimeValueObject
     /**
      * @throws InvalidDomainException
      */
-    final public function __construct(public DateTimeImmutable $value)
+    final protected function __construct(public DateTimeImmutable $value)
     {
         if (! static::isValid($this->value)) {
             throw new InvalidDomainException(static::getMessage($this->value));

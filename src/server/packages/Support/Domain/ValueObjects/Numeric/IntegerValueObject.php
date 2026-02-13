@@ -15,7 +15,7 @@ abstract readonly class IntegerValueObject
     /**
      * @throws InvalidDomainException
      */
-    final public function __construct(public int $value)
+    final protected function __construct(public int $value)
     {
         if (! static::isValid($this->value)) {
             throw new InvalidDomainException(static::getMessage($this->value));
