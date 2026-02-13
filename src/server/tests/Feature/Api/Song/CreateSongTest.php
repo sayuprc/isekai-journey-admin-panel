@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
@@ -23,7 +21,7 @@ class CreateSongTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $this->storeCreator(
+        $this->storeCreators(
             $creator1 = $this->createCreator($this->generateUuid(), '編曲者'),
             $creator2 = $this->createCreator($this->generateUuid(), '作曲者'),
             $creator3 = $this->createCreator($this->generateUuid(), '作詞者'),
@@ -83,13 +81,5 @@ class CreateSongTest extends TestCase
     public function emptyParameters(): void
     {
         $this->markTestSkipped('実装する');
-    }
-
-    private function storeCreator(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 }

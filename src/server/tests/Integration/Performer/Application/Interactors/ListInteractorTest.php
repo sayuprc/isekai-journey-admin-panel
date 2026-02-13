@@ -21,7 +21,7 @@ class ListInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, 'ヰ世界情緒', 1));
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, 'ヰ世界情緒', 1)->toArray());
 
         $response = $this->getInstance()->handle();
 

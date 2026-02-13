@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Integration\AdminUser\DebugInfrastructures;
 
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
-use AdminUser\Domain\Models\AdminUser;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -21,7 +20,7 @@ class FileAdminUserRepositoryTest extends TestCase
     {
         $user = $this->createUser($this->generateUuid(), 'example@example.com', 'hashed');
 
-        $this->store($user);
+        $this->storeUsers($user);
 
         $found = $this->getInstance()->find($user->userId);
 
@@ -34,7 +33,7 @@ class FileAdminUserRepositoryTest extends TestCase
     {
         $user = $this->createUser($this->generateUuid(), 'example@example.com', 'hashed');
 
-        $this->store($user);
+        $this->storeUsers($user);
 
         $found = $this->getInstance()->findByEmail($user->email);
 
@@ -53,14 +52,6 @@ class FileAdminUserRepositoryTest extends TestCase
 
         $this->assertNotNull($found);
         $this->assertEquals($user, $found);
-    }
-
-    private function store(AdminUser ...$users): void
-    {
-        array_map(
-            fn (AdminUser $user) => $this->factory(FileAdminUserRepository::class, $user->userId->value, $user),
-            $users,
-        );
     }
 
     private function getInstance(): FileAdminUserRepository

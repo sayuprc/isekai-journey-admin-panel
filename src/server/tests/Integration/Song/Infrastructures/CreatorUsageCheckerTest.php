@@ -23,7 +23,7 @@ class CreatorUsageCheckerTest extends TestCase
     {
         $creatorId = $this->generateUuid();
 
-        $this->factory(FileSongRepository::class, $this->generateUuid(), $this->createSong(
+        $this->factory(FileSongRepository::class, $this->createSong(
             $this->generateUuid(),
             '曲名',
             '説明',
@@ -32,7 +32,7 @@ class CreatorUsageCheckerTest extends TestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
-        ));
+        )->toArray());
 
         $result = $this->getInstance()->isUsed(CreatorId::reconstruct($creatorId));
 

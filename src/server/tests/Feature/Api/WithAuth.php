@@ -28,8 +28,8 @@ trait WithAuth
 
         $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->userId->value)->unwrap();
 
-        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
-        $this->factory(FileRefreshTokenRepository::class, $refreshToken->refreshTokenId->value, $refreshToken);
+        $this->factory(FileAdminUserRepository::class, $user->toArray());
+        $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray());
 
         $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);
 

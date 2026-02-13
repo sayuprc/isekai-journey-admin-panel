@@ -27,7 +27,7 @@ class LoginTest extends TestCase
 
         $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
-        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileAdminUserRepository::class, $user->toArray());
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',
@@ -51,7 +51,7 @@ class LoginTest extends TestCase
     {
         $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
-        $this->factory(FileAdminUserRepository::class, $user->userId->value, $user);
+        $this->factory(FileAdminUserRepository::class, $user->toArray());
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',

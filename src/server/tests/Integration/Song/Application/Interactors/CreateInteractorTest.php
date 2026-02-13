@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -43,8 +41,7 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        /** @var array<Song> */
-        $songs = $this->getAll(FileSongRepository::class);
+        $songs = $this->getAll(Song::class, FileSongRepository::class);
         $this->assertCount(1, $songs);
         $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title->value);
@@ -65,13 +62,5 @@ class CreateInteractorTest extends TestCase
     private function getInstance(): CreateInteractor
     {
         return $this->app->make(CreateInteractor::class);
-    }
-
-    private function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator),
-            $creators,
-        );
     }
 }

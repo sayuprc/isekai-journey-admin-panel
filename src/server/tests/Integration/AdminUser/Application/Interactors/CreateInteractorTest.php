@@ -25,8 +25,7 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        /** @var array<AdminUser> $users */
-        $users = $this->getAll(FileAdminUserRepository::class);
+        $users = $this->getAll(AdminUser::class, FileAdminUserRepository::class);
         $this->assertCount(1, $users);
         $this->assertSame('example@example.com', $users[array_key_first($users)]->email->value);
         $this->assertNotSame('plain', $users[array_key_first($users)]->hashedPassword->value);

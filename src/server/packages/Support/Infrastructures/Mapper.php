@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Support\Infrastructures;
 
+use AdminUser\Domain\Models\AdminUser;
+use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
+use Creator\Domain\Models\Creator;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
+use Performer\Domain\Models\Performer;
+use Song\Domain\Models\Song;
 use Support\Contracts\MapperInterface;
 
 readonly class Mapper implements MapperInterface
@@ -21,8 +26,14 @@ readonly class Mapper implements MapperInterface
             : $source;
 
         return $this->builder
+            // TODO コンストラクタの設定を別のところでできるとよさそう
+            ->registerConstructor(AdminUser::reconstruct(...))
+            ->registerConstructor(RefreshToken::reconstruct(...))
+            ->registerConstructor(Creator::reconstruct(...))
+            ->registerConstructor(Performer::reconstruct(...))
+            ->registerConstructor(Song::reconstruct(...))
             ->allowSuperfluousKeys()
-            ->supportDateFormats('Y-m-d')
+            ->supportDateFormats('Y-m-d', 'Y-m-d H:i:s')
             ->mapper()
             ->map($signature, Source::json($json)->camelCaseKeys());
     }

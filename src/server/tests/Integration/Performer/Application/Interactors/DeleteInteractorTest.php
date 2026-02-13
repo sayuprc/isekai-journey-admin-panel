@@ -23,12 +23,11 @@ class DeleteInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, '共演者', 1));
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
 
         $this->getInstance()->handle(new DeleteInputData($uuid));
 
-        /** @var array<Performer> $performers */
-        $performers = $this->getAll(FilePerformerRepository::class);
+        $performers = $this->getAll(Performer::class, FilePerformerRepository::class);
         $this->assertCount(0, $performers);
     }
 

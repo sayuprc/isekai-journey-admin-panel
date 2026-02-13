@@ -26,8 +26,7 @@ class DeleteSongTest extends TestCase
 
         $this->factory(
             FileSongRepository::class,
-            $uuid,
-            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], [])->toArray(),
         );
 
         $this->withAuth()

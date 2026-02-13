@@ -21,7 +21,7 @@ class FileSongRepositoryTest extends TestCase
     #[Test]
     public function all(): void
     {
-        $this->store(
+        $this->storeSongs(
             $song1 = $this->createSong(
                 $this->generateUuid(),
                 '描き続けた君へ',
@@ -53,7 +53,7 @@ class FileSongRepositoryTest extends TestCase
     #[Test]
     public function find(): void
     {
-        $this->store(
+        $this->storeSongs(
             $song = $this->createSong(
                 $this->generateUuid(),
                 '描き続けた君へ',
@@ -88,7 +88,7 @@ class FileSongRepositoryTest extends TestCase
 
         $this->getInstance()->save($song);
 
-        $found = $this->getAll(FileSongRepository::class);
+        $found = $this->getAll(Song::class, FileSongRepository::class);
 
         $this->assertCount(1, $found);
         $this->assertEquals($song, array_first($found));
@@ -97,7 +97,7 @@ class FileSongRepositoryTest extends TestCase
     #[Test]
     public function deleting(): void
     {
-        $this->store(
+        $this->storeSongs(
             $song = $this->createSong(
                 $this->generateUuid(),
                 '描き続けた君へ',
@@ -126,7 +126,7 @@ class FileSongRepositoryTest extends TestCase
         $this->assertSame(0, $repository->getMaxOrderNo());
 
         // データを追加
-        $this->store(
+        $this->storeSongs(
             $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, 10, [], [], []),
             $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, 30, [], [], []),
             $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, 20, [], [], []),
@@ -141,7 +141,7 @@ class FileSongRepositoryTest extends TestCase
     {
         $creatorId = $this->generateUuid();
 
-        $this->store(
+        $this->storeSongs(
             $this->createSong(
                 $this->generateUuid(),
                 '曲1',
@@ -162,7 +162,7 @@ class FileSongRepositoryTest extends TestCase
     {
         $creatorId = $this->generateUuid();
 
-        $this->store(
+        $this->storeSongs(
             $this->createSong(
                 $this->generateUuid(),
                 '曲2',
@@ -183,7 +183,7 @@ class FileSongRepositoryTest extends TestCase
     {
         $creatorId = $this->generateUuid();
 
-        $this->store(
+        $this->storeSongs(
             $this->createSong(
                 $this->generateUuid(),
                 '曲3',
@@ -205,14 +205,6 @@ class FileSongRepositoryTest extends TestCase
         $creatorId = $this->generateUuid();
 
         $this->assertFalse($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($creatorId)));
-    }
-
-    private function store(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->songId->value, $song),
-            $songs,
-        );
     }
 
     private function getInstance(): FileSongRepository

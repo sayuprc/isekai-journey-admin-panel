@@ -23,17 +23,16 @@ class UpdateInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $uuid, $this->createPerformer($uuid, '共演者', 1));
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'ヰ世界情緒', 2));
 
         $this->assertTrue($result->isOk());
 
-        /** @var array<Performer> $performers */
-        $performers = $this->getAll(FilePerformerRepository::class);
+        $performers = $this->getAll(Performer::class, FilePerformerRepository::class);
         $this->assertCount(1, $performers);
-        $this->assertSame('ヰ世界情緒', $performers[$uuid]->performerName->value);
-        $this->assertSame(2, $performers[$uuid]->orderNo->value);
+        $this->assertSame('ヰ世界情緒', array_first($performers)->performerName->value);
+        $this->assertSame(2, array_first($performers)->orderNo->value);
     }
 
     private function getInstance(): UpdateInteractor
