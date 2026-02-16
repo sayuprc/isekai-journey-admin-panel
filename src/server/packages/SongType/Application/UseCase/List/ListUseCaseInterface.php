@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace SongType\Application\UseCase\List;
 
+use ResultType\Result;
+use Support\UseCase\Error\UseCaseError;
+
 interface ListUseCaseInterface
 {
-    public function handle(): ListOutputData;
+    /**
+     * @return Result<ListOutputData, UseCaseError>
+     */
+    public function handle(): Result;
 }

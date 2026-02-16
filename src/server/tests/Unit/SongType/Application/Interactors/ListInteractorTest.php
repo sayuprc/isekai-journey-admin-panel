@@ -14,9 +14,11 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongTypes(): void
     {
-        $response = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle();
 
-        $this->assertCount(6, $songTypes = $response->songTypes);
+        $this->assertTrue($result->isOk());
+
+        $this->assertCount(6, $songTypes = $result->unwrap()->songTypes);
 
         $this->assertSame(SongType::Original, $songTypes[0]);
         $this->assertSame(SongType::Cover, $songTypes[1]);
