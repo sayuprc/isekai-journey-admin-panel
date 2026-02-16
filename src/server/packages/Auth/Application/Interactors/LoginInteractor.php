@@ -10,10 +10,16 @@ use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Credential\RefreshToken\RefreshTokenIssueService;
+use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class LoginInteractor implements LoginUseCaseInterface
 {
@@ -31,8 +37,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
             $result = $this->refreshTokenIssueService->issue($inputData->userId);
 
             if ($result->isErr()) {
-                // TODO エラーハンドリング強化
-                return new Err('');
+                return new Err($this->handleError($result->unwrapErr()));
             }
 
             $refreshToken = $result->unwrap();
@@ -43,5 +48,14 @@ readonly class LoginInteractor implements LoginUseCaseInterface
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken));
         });
+    }
+
+    private function handleError(DomainError $error): UseCaseError
+    {
+        return match (true) {
+            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
+            $error instanceof DomainRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
+        };
     }
 }

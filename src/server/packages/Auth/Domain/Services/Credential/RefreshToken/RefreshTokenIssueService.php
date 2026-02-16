@@ -16,10 +16,10 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
 
-/**
- * TODO エラーハンドリングを強化する
- */
 class RefreshTokenIssueService
 {
     private const int TTL_DAY = 7;
@@ -33,7 +33,7 @@ class RefreshTokenIssueService
     }
 
     /**
-     * @return Result<RefreshToken, string>
+     * @return Result<RefreshToken, DomainError>
      */
     public function issue(string $userId): Result
     {
@@ -45,7 +45,15 @@ class RefreshTokenIssueService
         )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));
 
         if ($result->isErr()) {
-            return new Err('');
+            $messages = [];
+            foreach ($result->unwrapErr() as $error) {
+                if ($error instanceof DomainRuleViolationError) {
+                    $messages[$error->field] ??= [];
+                    $messages[$error->field][] = $error->message;
+                }
+            }
+
+            return new Err(new DomainValidationError($messages));
         }
 
         return new Ok($result->unwrap());

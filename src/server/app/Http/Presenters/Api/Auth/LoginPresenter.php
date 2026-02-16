@@ -6,7 +6,9 @@ namespace App\Http\Presenters\Api\Auth;
 
 use Auth\Application\UseCase\Login\LoginOutputData;
 use Illuminate\Http\JsonResponse;
+use OpenAPI\Client\Model\ErrorResponse;
 use ResultType\Result;
+use Support\UseCase\Error\UseCaseError;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class LoginPresenter
@@ -18,28 +20,32 @@ class LoginPresenter
     private const int REFRESH_TOKEN_COOKIE_TTL = 60 * 24 * 7;
 
     /**
-     * @param Result<LoginOutputData, string> $result
+     * @param Result<LoginOutputData, UseCaseError> $result
      */
     public function present(Result $result): JsonResponse
     {
-        $output = $result->unwrap();
-
-        return response()
-            ->json(status: 200)
-            ->cookie(
-                $this->createCookie(
-                    'access_token',
-                    $output->accessToken->jwt->value,
-                    self::ACCESS_TOKEN_COOKIE_TTL,
+        return $result->match(
+            fn (LoginOutputData $output) => response()
+                ->json(status: 200)
+                ->cookie(
+                    $this->createCookie(
+                        'access_token',
+                        $output->accessToken->jwt->value,
+                        self::ACCESS_TOKEN_COOKIE_TTL,
+                    ),
+                )
+                ->cookie(
+                    $this->createCookie(
+                        'refresh_token',
+                        $output->refreshToken->token->value,
+                        self::REFRESH_TOKEN_COOKIE_TTL,
+                    ),
                 ),
-            )
-            ->cookie(
-                $this->createCookie(
-                    'refresh_token',
-                    $output->refreshToken->token->value,
-                    self::REFRESH_TOKEN_COOKIE_TTL,
-                ),
-            );
+            fn () => response()->json(
+                new ErrorResponse()->setMessage('認証に失敗しました'),
+                400,
+            ),
+        );
     }
 
     /**
