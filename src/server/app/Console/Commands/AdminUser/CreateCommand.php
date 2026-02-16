@@ -7,6 +7,8 @@ namespace App\Console\Commands\AdminUser;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use Illuminate\Console\Command;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 class CreateCommand extends Command
 {
@@ -35,7 +37,7 @@ class CreateCommand extends Command
         $result = $interactor->handle(new CreateInputData($email, $password));
 
         if ($result->isErr()) {
-            $this->error($result->unwrapErr());
+            $this->error($this->resolveErrorMessage($result->unwrapErr()));
 
             return Command::FAILURE;
         }
@@ -43,5 +45,20 @@ class CreateCommand extends Command
         $this->info('管理ユーザーを作成しました');
 
         return Command::SUCCESS;
+    }
+
+    private function resolveErrorMessage(UseCaseError $error): string
+    {
+        if (! $error instanceof InvalidInputError) {
+            return '';
+        }
+
+        foreach ($error->errors as $messages) {
+            if ($messages !== []) {
+                return $messages[0];
+            }
+        }
+
+        return '';
     }
 }
