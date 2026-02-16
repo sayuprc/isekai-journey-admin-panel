@@ -23,7 +23,10 @@ class ListInteractorTest extends TestCase
 
         $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒')->toArray());
 
-        $response = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle();
+        $this->assertTrue($result->isOk());
+
+        $response = $result->unwrap();
 
         $this->assertCount(1, $response->creators);
 

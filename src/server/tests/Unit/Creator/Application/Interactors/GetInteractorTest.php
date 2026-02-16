@@ -11,6 +11,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -56,8 +57,10 @@ class GetInteractorTest extends TestCase
         $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
         $this->assertFalse($result->isOk());
-
-        $this->assertSame('Creator not found: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(NotFoundError::class, $error);
+        $this->assertSame('Creator', $error->resourceName);
+        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $error->identifier);
     }
 
     private function getInstance(): GetInteractor
