@@ -8,8 +8,8 @@ use DateTimeImmutable;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\ValidationError;
 
 abstract readonly class ImmutableDateTimeValueObject
 {
@@ -24,12 +24,12 @@ abstract readonly class ImmutableDateTimeValueObject
     }
 
     /**
-     * @return Result<static, ValidationError>
+     * @return Result<static, DomainRuleViolationError>
      */
     public static function create(DateTimeImmutable $value): Result
     {
         if (! static::isValid($value)) {
-            return new Err(new ValidationError(static::getMessage($value)));
+            return new Err(new DomainRuleViolationError(static::class, static::getMessage($value)));
         }
 
         return new Ok(new static($value));
