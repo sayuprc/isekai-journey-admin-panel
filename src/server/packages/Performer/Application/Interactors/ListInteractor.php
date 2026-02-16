@@ -7,6 +7,8 @@ namespace Performer\Application\Interactors;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Application\UseCase\List\ListUseCaseInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
+use ResultType\Ok;
+use ResultType\Result;
 
 readonly class ListInteractor implements ListUseCaseInterface
 {
@@ -14,8 +16,8 @@ readonly class ListInteractor implements ListUseCaseInterface
     {
     }
 
-    public function handle(): ListOutputData
+    public function handle(): Result
     {
-        return new ListOutputData($this->repository->all());
+        return new Ok(new ListOutputData($this->repository->all()));
     }
 }

@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -83,7 +84,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($performerId, $performerName, $orderNo)
-            ->andReturn(new Err(''))
+            ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
         $result = $this->getInstance()->handle(new UpdateInputData($performerId, $performerName, $orderNo));

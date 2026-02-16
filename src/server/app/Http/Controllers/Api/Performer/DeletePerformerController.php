@@ -20,8 +20,6 @@ class DeletePerformerController extends Controller
 
     public function handle(string $performerId): JsonResponse
     {
-        $this->interactor->handle(new DeleteInputData($performerId));
-
-        return $this->presenter->present();
+        return $this->presenter->present($this->interactor->handle(new DeleteInputData($performerId)));
     }
 }

@@ -8,6 +8,10 @@ use Performer\Application\UseCase\Delete\DeleteInputData;
 use Performer\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerRepositoryInterface;
+use ResultType\Ok;
+use ResultType\Result;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
@@ -15,9 +19,14 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
     {
     }
 
-    public function handle(DeleteInputData $inputData): void
+    public function handle(DeleteInputData $inputData): Result
     {
-        PerformerId::create($inputData->performerId)
-            ->map(fn (PerformerId $performerId) => $this->repository->delete($performerId));
+        return PerformerId::create($inputData->performerId)
+            ->mapErr(fn (): UseCaseError => new InvalidInputError(['performerId' => ['IDが不正です']]))
+            ->andThen(function (PerformerId $performerId): Result {
+                $this->repository->delete($performerId);
+
+                return new Ok(null);
+            });
     }
 }
