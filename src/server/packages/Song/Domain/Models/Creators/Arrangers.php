@@ -9,6 +9,8 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Collection\ImmutableCollection;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -19,7 +21,7 @@ readonly class Arrangers extends ImmutableCollection
     /**
      * @param list<array{creatorId: string}> $items
      *
-     * @return Result<self, string>
+     * @return Result<self, DomainValidationError>
      */
     public static function fromArray(array $items): Result
     {
@@ -32,7 +34,15 @@ readonly class Arrangers extends ImmutableCollection
             )->map(fn (array $values) => new Arranger(...$values));
 
             if ($result->isErr()) {
-                return new Err('');
+                $messages = [];
+                foreach ($result->unwrapErr() as $error) {
+                    if ($error instanceof DomainRuleViolationError) {
+                        $messages[$error->field] ??= [];
+                        $messages[$error->field][] = $error->message;
+                    }
+                }
+
+                return new Err(new DomainValidationError($messages));
             }
 
             $arrangers[] = $result->unwrap();

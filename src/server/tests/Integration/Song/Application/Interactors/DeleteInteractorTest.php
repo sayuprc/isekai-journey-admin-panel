@@ -29,7 +29,9 @@ class DeleteInteractorTest extends TestCase
             $this->createSong($uuid, '', '', SongType::Original, 1, [], [], [])->toArray(),
         );
 
-        $this->getInstance()->handle(new DeleteInputData($uuid));
+        $result = $this->getInstance()->handle(new DeleteInputData($uuid));
+
+        $this->assertTrue($result->isOk());
 
         $songs = $this->getAll(Song::class, FileSongRepository::class);
         $this->assertCount(0, $songs);

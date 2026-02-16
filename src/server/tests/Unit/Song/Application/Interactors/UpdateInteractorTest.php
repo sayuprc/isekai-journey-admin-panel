@@ -20,6 +20,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use SongType\Domain\Models\SongType;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -165,7 +166,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songId, $title, $description, $songTypeValue, $orderNo, $arrangers, $composers, $lyricists)
-            ->andReturn(new Err(''))
+            ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
         $result = $this->getInstance()->handle(

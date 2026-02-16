@@ -9,6 +9,8 @@ use OpenAPI\Client\Model\ErrorResponse;
 use OpenAPI\Client\Model\SongCreateResponse;
 use ResultType\Result;
 use Song\Application\UseCase\Create\CreateOutputData;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 class CreatePresenter
 {
@@ -17,7 +19,7 @@ class CreatePresenter
     }
 
     /**
-     * @param Result<CreateOutputData, string> $result
+     * @param Result<CreateOutputData, UseCaseError> $result
      */
     public function present(Result $result): JsonResponse
     {
@@ -30,14 +32,29 @@ class CreatePresenter
                     200,
                 ];
             },
-            function (string $message) {
+            function (UseCaseError $error) {
                 return [
-                    new ErrorResponse()->setMessage($message),
+                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
                     400,
                 ];
             },
         );
 
         return response()->json($data, $status);
+    }
+
+    private function resolveErrorMessage(UseCaseError $error): string
+    {
+        if (! $error instanceof InvalidInputError) {
+            return '';
+        }
+
+        foreach ($error->errors as $messages) {
+            if ($messages !== []) {
+                return $messages[0];
+            }
+        }
+
+        return '';
     }
 }

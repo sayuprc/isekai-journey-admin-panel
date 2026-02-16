@@ -20,6 +20,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use SongType\Domain\Models\SongType;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -161,7 +162,7 @@ class CreateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with($title, $description, $songTypeValue, $arrangers, $composers, $lyricists)
-            ->andReturn(new Err(''))
+            ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
         $result = $this->getInstance()->handle(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Application\Interactors;
 
+use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -14,6 +15,11 @@ use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateInteractor implements UpdateUseCaseInterface
 {
@@ -40,7 +46,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
             );
 
             if ($result->isErr()) {
-                return new Err($result->unwrapErr());
+                return new Err($this->handleError($result->unwrapErr()));
             }
 
             $song = $result->unwrap();
@@ -49,5 +55,14 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
 
             return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
         });
+    }
+
+    private function handleError(DomainError $error): UseCaseError
+    {
+        return match (true) {
+            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
+            $error instanceof DomainRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
+        };
     }
 }

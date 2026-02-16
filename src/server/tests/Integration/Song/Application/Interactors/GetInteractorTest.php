@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\GetInteractor;
 use Song\Application\UseCase\Get\GetInputData;
 use SongType\Domain\Models\SongType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -72,8 +73,10 @@ class GetInteractorTest extends TestCase
         $result = $this->getInstance()->handle(new GetInputData($songId));
 
         $this->assertFalse($result->isOk());
-
-        $this->assertSame('楽曲が見つかりません: ' . $songId, $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(NotFoundError::class, $error);
+        $this->assertSame('楽曲', $error->resourceName);
+        $this->assertSame($songId, $error->identifier);
     }
 
     private function getInstance(): GetInteractor

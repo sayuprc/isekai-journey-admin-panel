@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Song\Application\UseCase\Delete;
 
+use ResultType\Result;
+use Support\UseCase\Error\UseCaseError;
+
 interface DeleteUseCaseInterface
 {
-    public function handle(DeleteInputData $inputData): void;
+    /**
+     * @return Result<null, UseCaseError>
+     */
+    public function handle(DeleteInputData $inputData): Result;
 }

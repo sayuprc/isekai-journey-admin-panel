@@ -20,11 +20,12 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
- * TODO エラーハンドリングを強化する
- *
  * @phpstan-type creator array{creatorId: string}
  */
 class SongIntegrityService
@@ -42,7 +43,7 @@ class SongIntegrityService
      * @param list<creator> $composers
      * @param list<creator> $lyricists
      *
-     * @return Result<Song, string>
+     * @return Result<Song, DomainError>
      */
     public function prepareForCreate(
         string $title,
@@ -59,14 +60,13 @@ class SongIntegrityService
         );
 
         if ($result->isErr()) {
-            return new Err('');
+            return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
         $creators = $result->unwrap();
 
         if (! $this->existsCreators(...$creators)) {
-            // CreatorId が不正
-            return new Err('');
+            return new Err(new DomainRuleViolationError(Song::class, '指定されたクリエイターの一部が存在しません。'));
         }
 
         return $this->build(
@@ -85,7 +85,7 @@ class SongIntegrityService
      * @param list<creator> $composers
      * @param list<creator> $lyricists
      *
-     * @return Result<Song, string>
+     * @return Result<Song, DomainError>
      */
     public function prepareForUpdate(
         string $songId,
@@ -104,14 +104,13 @@ class SongIntegrityService
         );
 
         if ($result->isErr()) {
-            return new Err('');
+            return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
         $creators = $result->unwrap();
 
         if (! $this->existsCreators(...$creators)) {
-            // CreatorId が不正
-            return new Err('');
+            return new Err(new DomainRuleViolationError(Song::class, '指定されたクリエイターの一部が存在しません。'));
         }
 
         return $this->build(
@@ -125,7 +124,7 @@ class SongIntegrityService
     }
 
     /**
-     * @return Result<Song, string>
+     * @return Result<Song, DomainError>
      */
     private function build(
         string $songId,
@@ -144,22 +143,53 @@ class SongIntegrityService
             $this->toEnum($songType),
             OrderNo::create($orderNo),
         )
-            ->mapErr(fn (): string => '')
+            ->mapErr(function (array $errors): DomainValidationError {
+                $messages = [];
+                foreach ($errors as $error) {
+                    if ($error instanceof DomainRuleViolationError) {
+                        $messages[$error->field] ??= [];
+                        $messages[$error->field][] = $error->message;
+                    }
+                }
+
+                return new DomainValidationError($messages);
+            })
             ->map(fn (array $values): Song => $this->factory->create(...[...$values, $arrangers, $composers, $lyricists]));
     }
 
     /**
-     * @return Result<SongType, string>
+     * @return Result<SongType, DomainError>
      */
     private function toEnum(int $songType): Result
     {
         $result = SongType::tryFrom($songType);
 
         if (is_null($result)) {
-            return new Err('');
+            return new Err(new DomainRuleViolationError(SongType::class, "不正な楽曲種別です: {$songType}"));
         }
 
         return new Ok($result);
+    }
+
+    /**
+     * @param array<int, DomainValidationError|null> $errors
+     */
+    private function mergeValidationErrors(array $errors): DomainValidationError
+    {
+        $messages = [];
+
+        foreach ($errors as $error) {
+            if (! $error instanceof DomainValidationError) {
+                continue;
+            }
+
+            foreach ($error->errors as $field => $fieldMessages) {
+                $messages[$field] ??= [];
+                $messages[$field] = [...$messages[$field], ...$fieldMessages];
+            }
+        }
+
+        return new DomainValidationError($messages);
     }
 
     private function existsCreators(Arrangers $arrangers, Composers $composers, Lyricists $lyricists): bool

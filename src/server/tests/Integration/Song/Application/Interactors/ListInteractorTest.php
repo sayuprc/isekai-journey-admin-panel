@@ -48,7 +48,10 @@ class ListInteractorTest extends TestCase
             ),
         );
 
-        $response = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle();
+        $this->assertTrue($result->isOk());
+
+        $response = $result->unwrap();
 
         $this->assertCount(2, $response->songs);
 
