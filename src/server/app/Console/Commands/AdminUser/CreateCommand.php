@@ -6,13 +6,15 @@ namespace App\Console\Commands\AdminUser;
 
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
+use AdminUser\Domain\Models\Permission;
+use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
 class CreateCommand extends Command
 {
-    protected $signature = 'admin:create {email} {password}';
+    protected $signature = 'admin:create {email} {password} {--p|privilege} {permissions?*}';
 
     protected $description = '管理ユーザーを作成する';
 
@@ -34,7 +36,23 @@ class CreateCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $interactor->handle(new CreateInputData($email, $password));
+        $role = $this->isPrivilege()
+            ? Role::Privilege
+            : Role::General;
+
+        $permissions = $this->argument('permissions');
+        assert(array_is_list($permissions));
+
+        foreach ($permissions as $permission) {
+            $result = Permission::tryFrom($permission);
+            if (is_null($result)) {
+                $this->error("不正な権限です: {$permission}");
+
+                return Command::FAILURE;
+            }
+        }
+
+        $result = $interactor->handle(new CreateInputData($email, $password, $role->value, $permissions));
 
         if ($result->isErr()) {
             $this->error($this->resolveErrorMessage($result->unwrapErr()));
@@ -60,5 +78,11 @@ class CreateCommand extends Command
         }
 
         return '';
+    }
+
+    private function isPrivilege(): bool
+    {
+        // @phpstan-ignore-next-line function.impossibleType
+        return ! is_null($this->option('privilege'));
     }
 }

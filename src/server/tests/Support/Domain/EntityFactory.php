@@ -7,8 +7,7 @@ namespace Tests\Support\Domain;
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
-use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\HashedPassword;
+use AdminUser\Domain\Models\Role;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\Credential\AccessToken\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\Jwt;
@@ -107,12 +106,19 @@ trait EntityFactory
         );
     }
 
-    protected function createUser(string $userId, string $email, string $hashedPassword): AdminUser
-    {
-        return new AdminUser(
-            AdminUserId::reconstruct($userId),
-            Email::reconstruct($email),
-            HashedPassword::reconstruct($hashedPassword),
+    protected function createUser(
+        string $userId,
+        string $email,
+        string $hashedPassword,
+        Role $role = Role::General,
+        array $permissions = [],
+    ): AdminUser {
+        return AdminUser::reconstruct(
+            $userId,
+            $email,
+            $hashedPassword,
+            $role->value,
+            $permissions,
         );
     }
 

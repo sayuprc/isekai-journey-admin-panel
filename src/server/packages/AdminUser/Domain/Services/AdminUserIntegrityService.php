@@ -9,7 +9,9 @@ use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\PlainPassword;
+use AdminUser\Domain\Models\Role;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,11 +31,13 @@ class AdminUserIntegrityService
     }
 
     /**
+     * @param list<string> $permissions
+     *
      * @return Result<AdminUser, DomainError>
      */
-    public function prepareForCreate(string $email, #[SensitiveParameter] string $plainPassword): Result
+    public function prepareForCreate(string $email, #[SensitiveParameter] string $plainPassword, int $role, array $permissions): Result
     {
-        $result = $this->build($this->generator->generate(), $email, $plainPassword);
+        $result = $this->build($this->generator->generate(), $email, $plainPassword, $role, $permissions);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -49,14 +53,24 @@ class AdminUserIntegrityService
     }
 
     /**
+     * @param list<string> $permissions
+     *
      * @return Result<AdminUser, DomainError>
      */
-    private function build(string $userId, string $email, #[SensitiveParameter] string $plainPassword): Result
-    {
-        return Result::collect3(
+    private function build(
+        string $userId,
+        string $email,
+        #[SensitiveParameter]
+        string $plainPassword,
+        int $role,
+        array $permissions,
+    ): Result {
+        return Result::collect5(
             AdminUserId::create($userId),
             Email::create($email),
             PlainPassword::create($plainPassword),
+            $this->toRole($role),
+            Permissions::fromArray($permissions),
         )
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
@@ -70,5 +84,19 @@ class AdminUserIntegrityService
                 return new DomainValidationError($messages);
             })
             ->map(fn (array $values): AdminUser => $this->factory->create(...$values));
+    }
+
+    /**
+     * @return Result<Role, DomainError>
+     */
+    private function toRole(int $role): Result
+    {
+        $result = Role::tryFrom($role);
+
+        if (is_null($result)) {
+            return new Err(new DomainRuleViolationError(Role::class, "不正なロールです: {$role}"));
+        }
+
+        return new Ok($result);
     }
 }

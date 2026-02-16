@@ -8,7 +8,9 @@ use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\PlainPassword;
+use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
@@ -43,19 +45,23 @@ class AdminUserIntegrityServiceTest extends TestCase
         $email = 'example@example.com';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $password = 'plain';
+        $role = Role::General;
+        $permissions = [];
 
         $this->generator->shouldReceive('generate')
             ->with()
             ->andReturn($uuid)
             ->once();
 
-        $expectedUser = $this->createUser($uuid, $email, $password);
+        $expectedUser = $this->createUser($uuid, $email, $password, $role, $permissions);
 
         $this->factory->shouldReceive('create')
             ->with(
                 Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
                 Mockery::on(fn (Email $arg): bool => $arg->value === $email),
                 Mockery::on(fn (PlainPassword $arg): bool => $arg->value === $password),
+                Mockery::on(fn (Role $arg): bool => $arg === $role),
+                Mockery::on(fn (Permissions $arg): bool => $arg->toArray() === $permissions),
             )
             ->andReturn($expectedUser)
             ->once();
@@ -65,7 +71,7 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($email, $password);
+        $result = $this->getInstance()->prepareForCreate($email, $password, $role->value, $permissions);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedUser, $result->unwrap());
@@ -77,31 +83,35 @@ class AdminUserIntegrityServiceTest extends TestCase
         $email = 'example@example.com';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $password = 'plain';
+        $role = Role::General;
+        $permissions = [];
 
         $this->generator->shouldReceive('generate')
             ->with()
             ->andReturn($uuid)
             ->once();
 
-        $expectedUser = $this->createUser($uuid, $email, $password);
+        $expectedUser = $this->createUser($uuid, $email, $password, $role, $permissions);
 
         $this->factory->shouldReceive('create')
             ->with(
                 Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
                 Mockery::on(fn (Email $arg): bool => $arg->value === $email),
                 Mockery::on(fn (PlainPassword $arg): bool => $arg->value === $password),
+                Mockery::on(fn (Role $arg): bool => $arg === $role),
+                Mockery::on(fn (Permissions $arg): bool => $arg->toArray() === $permissions),
             )
             ->andReturn($expectedUser)
             ->once();
 
-        $existingUser = $this->createUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $password);
+        $existingUser = $this->createUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $password, $role, $permissions);
 
         $this->repository->shouldReceive('findByEmail')
             ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
             ->andReturn($existingUser)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($email, $password);
+        $result = $this->getInstance()->prepareForCreate($email, $password, $role->value, $permissions);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
