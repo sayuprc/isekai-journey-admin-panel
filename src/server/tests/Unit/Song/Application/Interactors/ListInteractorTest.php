@@ -39,7 +39,10 @@ class ListInteractorTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $response = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle();
+        $this->assertTrue($result->isOk());
+
+        $response = $result->unwrap();
 
         $this->assertCount(0, $response->songs);
     }
@@ -110,7 +113,10 @@ class ListInteractorTest extends TestCase
             )
             ->once();
 
-        $response = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle();
+        $this->assertTrue($result->isOk());
+
+        $response = $result->unwrap();
 
         $this->assertCount(2, $response->songs);
 

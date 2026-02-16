@@ -13,6 +13,7 @@ use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerIntegrityService;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -123,7 +124,9 @@ class PerformerIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($performerName);
 
         $this->assertTrue($result->isErr());
-        $this->assertSame('すでに使われている名前です "共演者"', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(DomainRuleViolationError::class, $error);
+        $this->assertSame('すでに使われている名前です "共演者"', $error->message);
     }
 
     #[Test]
@@ -225,7 +228,9 @@ class PerformerIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $performerName, $orderNo);
 
         $this->assertTrue($result->isErr());
-        $this->assertSame('すでに使われている名前です "共演者"', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(DomainRuleViolationError::class, $error);
+        $this->assertSame('すでに使われている名前です "共演者"', $error->message);
     }
 
     private function getInstance(): PerformerIntegrityService

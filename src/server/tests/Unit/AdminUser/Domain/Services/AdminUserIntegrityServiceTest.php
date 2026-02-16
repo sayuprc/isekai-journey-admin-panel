@@ -14,6 +14,7 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\DomainRuleViolationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -103,7 +104,9 @@ class AdminUserIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($email, $password);
 
         $this->assertTrue($result->isErr());
-        $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(DomainRuleViolationError::class, $error);
+        $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $error->message);
     }
 
     private function getInstance(): AdminUserIntegrityService

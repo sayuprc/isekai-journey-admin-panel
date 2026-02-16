@@ -12,9 +12,16 @@ use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
+use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
@@ -28,23 +35,27 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
     public function handle(AuthenticateInputData $inputData): Result
     {
         return $this->jwtHandler->verify($inputData->accessToken)
-            // TODO エラーハンドリング強化
-            ->mapErr(fn () => '')
+            ->mapErr(function (DomainError $error): UseCaseError {
+                return match (true) {
+                    $error instanceof DomainValidationError => new InvalidInputError($error->errors),
+                    $error instanceof DomainRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+                    default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
+                };
+            })
             ->andThen(function (AccessTokenPayload $payload): Result {
                 return RefreshTokenId::create($payload->jti)
-                    // TODO エラーハンドリング強化
-                    ->mapErr(fn (): string => '')
+                    ->mapErr(fn (DomainRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
                     ->andThen(function (RefreshTokenId $refreshTokenId): Result {
                         $foundRefreshToken = $this->refreshTokenRepository->findActive($refreshTokenId);
 
                         if (is_null($foundRefreshToken)) {
-                            return new Err(sprintf('リフレッシュトークンが見つからない [refreshTokenId: %s]', $refreshTokenId->value));
+                            return new Err(new NotFoundError('リフレッシュトークン', $refreshTokenId->value));
                         }
 
                         $foundUser = $this->userRepository->find($foundRefreshToken->userId);
 
                         if (is_null($foundUser)) {
-                            return new Err(sprintf('ユーザーが見つからない [userId: %s]', $foundRefreshToken->userId->value));
+                            return new Err(new NotFoundError('ユーザー', $foundRefreshToken->userId->value));
                         }
 
                         return new Ok(new AuthenticateOutputData());

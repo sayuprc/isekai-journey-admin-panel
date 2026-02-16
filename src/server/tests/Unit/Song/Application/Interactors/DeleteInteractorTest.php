@@ -31,7 +31,9 @@ class DeleteInteractorTest extends TestCase
             ->withArgs(fn (SongId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
-        $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+
+        $this->assertTrue($result->isOk());
     }
 
     private function getInstance(): DeleteInteractor

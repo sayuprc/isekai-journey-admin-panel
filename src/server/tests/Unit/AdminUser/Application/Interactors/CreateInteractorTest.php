@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -81,7 +82,7 @@ class CreateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with($email, $password)
-            ->andReturn(new Err(''))
+            ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
         $result = $this->getInstance()->handle(new CreateInputData($email, $password));

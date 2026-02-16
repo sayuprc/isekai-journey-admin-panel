@@ -8,9 +8,6 @@ use Auth\Domain\Models\Credential\AccessToken\AccessToken;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Support\Contracts\ClockInterface;
 
-/**
- * TODO エラーハンドリングを強化する
- */
 class AccessTokenIssueService
 {
     private const int TTL_HOUR = 1;

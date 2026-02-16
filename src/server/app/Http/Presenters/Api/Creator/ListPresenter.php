@@ -8,6 +8,10 @@ use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Domain\Models\Creator;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\CreatorListResponse;
+use OpenAPI\Client\Model\ErrorResponse;
+use ResultType\Result;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
 {
@@ -15,17 +19,42 @@ class ListPresenter
     {
     }
 
-    public function present(ListOutputData $outputData): JsonResponse
+    /**
+     * @param Result<ListOutputData, UseCaseError> $result
+     */
+    public function present(Result $result): JsonResponse
     {
-        return response()->json(
-            new CreatorListResponse()
-                ->setCreators(
+        [$data, $status] = $result->match(
+            fn (ListOutputData $outputData) => [
+                new CreatorListResponse()->setCreators(
                     array_map(
                         fn (Creator $creator) => $this->converter->toOpenApiCreator($creator),
                         $outputData->creators,
                     ),
                 ),
-            200,
+                200,
+            ],
+            fn (UseCaseError $error) => [
+                new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                400,
+            ],
         );
+
+        return response()->json($data, $status);
+    }
+
+    private function resolveErrorMessage(UseCaseError $error): string
+    {
+        if (! $error instanceof InvalidInputError) {
+            return '';
+        }
+
+        foreach ($error->errors as $messages) {
+            if ($messages !== []) {
+                return $messages[0];
+            }
+        }
+
+        return '';
     }
 }

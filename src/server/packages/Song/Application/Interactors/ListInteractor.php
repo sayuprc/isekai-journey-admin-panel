@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Song\Application\Interactors;
 
+use ResultType\Ok;
+use ResultType\Result;
 use Song\Application\Assemble\SongAssembler;
 use Song\Application\UseCase\List\ListOutputData;
 use Song\Application\UseCase\List\ListUseCaseInterface;
@@ -17,8 +19,8 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
-    public function handle(): ListOutputData
+    public function handle(): Result
     {
-        return new ListOutputData(array_map($this->assembler->assemble(...), $this->repository->all()));
+        return new Ok(new ListOutputData(array_map($this->assembler->assemble(...), $this->repository->all())));
     }
 }

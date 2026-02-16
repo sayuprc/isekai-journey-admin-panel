@@ -13,6 +13,10 @@ use Song\Application\UseCase\Get\GetOutputData;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class GetInteractor implements GetUseCaseInterface
 {
@@ -25,11 +29,10 @@ readonly class GetInteractor implements GetUseCaseInterface
     public function handle(GetInputData $inputData): Result
     {
         return SongId::create($inputData->songId)
-            // TODO 後で書く
-            ->mapErr(fn (): string => '')
+            ->mapErr(fn (DomainRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (SongId $songId): Result {
                 if (is_null($found = $this->repository->find($songId))) {
-                    return new Err("楽曲が見つかりません: {$songId->value}");
+                    return new Err(new NotFoundError('楽曲', $songId->value));
                 }
 
                 return new Ok(new GetOutputData($this->assembler->assemble($found)));

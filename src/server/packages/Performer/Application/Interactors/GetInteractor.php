@@ -12,6 +12,10 @@ use Performer\Domain\Models\PerformerRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class GetInteractor implements GetUseCaseInterface
 {
@@ -19,17 +23,13 @@ readonly class GetInteractor implements GetUseCaseInterface
     {
     }
 
-    /**
-     * @return Result<GetOutputData, string>
-     */
     public function handle(GetInputData $inputData): Result
     {
         return PerformerId::create($inputData->performerId)
-            // TODO エラーハンドリング強化
-            ->mapErr(fn (): string => '')
+            ->mapErr(fn (DomainRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (PerformerId $performerId): Result {
                 if (is_null($found = $this->repository->find($performerId))) {
-                    return new Err("Performer not found: {$performerId->value}");
+                    return new Err(new NotFoundError('Performer', $performerId->value));
                 }
 
                 return new Ok(new GetOutputData($found));

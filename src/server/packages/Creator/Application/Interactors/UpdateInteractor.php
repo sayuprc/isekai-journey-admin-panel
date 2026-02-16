@@ -9,10 +9,16 @@ use Creator\Application\UseCase\Update\UpdateOutputData;
 use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
+use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainError;
+use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateInteractor implements UpdateUseCaseInterface
 {
@@ -29,7 +35,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
             $result = $this->service->prepareForUpdate($inputData->creatorId, $inputData->creatorName);
 
             if ($result->isErr()) {
-                return new Err($result->unwrapErr());
+                return new Err($this->handleError($result->unwrapErr()));
             }
 
             $creator = $result->unwrap();
@@ -38,5 +44,14 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
 
             return new Ok(new UpdateOutputData($creator));
         });
+    }
+
+    private function handleError(DomainError $error): UseCaseError
+    {
+        return match (true) {
+            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
+            $error instanceof DomainRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
+        };
     }
 }

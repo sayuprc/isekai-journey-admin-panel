@@ -13,6 +13,7 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\DomainRuleViolationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -98,7 +99,9 @@ class CreatorIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($creatorName);
 
         $this->assertTrue($result->isErr());
-        $this->assertSame('すでに使われている名前です "クリエイター"', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(DomainRuleViolationError::class, $error);
+        $this->assertSame('すでに使われている名前です "クリエイター"', $error->message);
     }
 
     #[Test]
@@ -182,7 +185,9 @@ class CreatorIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $creatorName);
 
         $this->assertTrue($result->isErr());
-        $this->assertSame('すでに使われている名前です "クリエイター"', $result->unwrapErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(DomainRuleViolationError::class, $error);
+        $this->assertSame('すでに使われている名前です "クリエイター"', $error->message);
     }
 
     private function getInstance(): CreatorIntegrityService
