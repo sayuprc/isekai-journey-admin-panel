@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Performer\Application\Interactors;
 
+use AdminUser\Domain\Models\Permission;
+use Auth\Domain\Models\AuthContext;
 use LogicException;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateOutputData;
@@ -17,12 +19,15 @@ use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(
+        private AuthContext $context,
         private TransactionInterface $transaction,
         private PerformerRepositoryInterface $repository,
         private PerformerIntegrityService $service,
@@ -31,6 +36,16 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
 
     public function handle(UpdateInputData $inputData): Result
     {
+        $user = $this->context->get();
+
+        if (is_null($user)) {
+            return new Err(new AuthenticationError());
+        }
+
+        if (! $user->can(Permission::WritePerformer)) {
+            return new Err(new AuthorizationError());
+        }
+
         return $this->transaction->scope(function () use ($inputData): Result {
             $result = $this->service->prepareForUpdate($inputData->performerId, $inputData->performerName, $inputData->orderNo);
 

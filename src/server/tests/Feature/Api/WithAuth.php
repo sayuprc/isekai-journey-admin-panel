@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api;
 
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\Role;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Credential\RefreshToken\RefreshTokenIssueService;
@@ -24,7 +25,7 @@ trait WithAuth
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'root@example.com', Hash::make('password'));
+        $user = $this->createUser($this->generateUuid(), 'root@example.com', Hash::make('password'), Role::Privilege);
 
         $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->userId->value)->unwrap();
 

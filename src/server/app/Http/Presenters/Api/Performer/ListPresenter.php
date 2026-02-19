@@ -10,6 +10,8 @@ use OpenAPI\Client\Model\PerformerListResponse;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Domain\Models\Performer;
 use ResultType\Result;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -34,10 +36,14 @@ class ListPresenter
                 ),
                 200,
             ],
-            fn (UseCaseError $error) => [
-                new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
-                400,
-            ],
+            fn (UseCaseError $error) => match (true) {
+                $error instanceof AuthenticationError => [[], 401],
+                $error instanceof AuthorizationError => [[], 403],
+                default => [
+                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                    400,
+                ],
+            },
         );
 
         return response()->json($data, $status);

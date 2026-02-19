@@ -6,8 +6,10 @@ namespace Tests\Unit\Auth\Application\Interactors;
 
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\Role;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
+use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
@@ -33,6 +35,8 @@ class AuthenticateInteractorTest extends TestCase
 
     private AdminUserRepositoryInterface&MockInterface $userRepository;
 
+    private AuthContext $context;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,6 +44,7 @@ class AuthenticateInteractorTest extends TestCase
         $this->jwtHandler = Mockery::mock(JwtHandlerInterface::class);
         $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
         $this->userRepository = Mockery::mock(AdminUserRepositoryInterface::class);
+        $this->context = new AuthContext();
     }
 
     #[Test]
@@ -69,7 +74,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->userRepository->shouldReceive('find')
             ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
-            ->andReturn($this->createUser($userId, 'example@example.com', ''))
+            ->andReturn($this->createUser($userId, 'example@example.com', '', Role::General, []))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
@@ -147,6 +152,11 @@ class AuthenticateInteractorTest extends TestCase
 
     private function getInstance(): AuthenticateInteractor
     {
-        return new AuthenticateInteractor($this->jwtHandler, $this->refreshTokenRepository, $this->userRepository);
+        return new AuthenticateInteractor(
+            $this->jwtHandler,
+            $this->refreshTokenRepository,
+            $this->userRepository,
+            $this->context,
+        );
     }
 }

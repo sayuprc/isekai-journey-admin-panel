@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Song\Application\Interactors;
 
+use AdminUser\Domain\Models\Permission;
+use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -18,12 +20,15 @@ use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
+        private AuthContext $context,
         private TransactionInterface $transaction,
         private SongRepositoryInterface $repository,
         private SongIntegrityService $service,
@@ -33,6 +38,16 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 
     public function handle(CreateInputData $inputData): Result
     {
+        $user = $this->context->get();
+
+        if (is_null($user)) {
+            return new Err(new AuthenticationError());
+        }
+
+        if (! $user->can(Permission::WriteSong)) {
+            return new Err(new AuthorizationError());
+        }
+
         return $this->transaction->scope(function () use ($inputData): Result {
             $result = $this->service->prepareForCreate(
                 $inputData->title,

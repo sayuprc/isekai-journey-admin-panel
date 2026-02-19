@@ -121,6 +121,7 @@ class GetInteractorTest extends TestCase
     private function getInstance(): GetInteractor
     {
         return new GetInteractor(
+            $this->privilegedContext(),
             $this->repository,
             $this->assembler,
         );

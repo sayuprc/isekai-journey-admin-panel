@@ -95,6 +95,7 @@ class UpdateInteractorTest extends TestCase
     private function getInstance(): UpdateInteractor
     {
         return new UpdateInteractor(
+            $this->privilegedContext(),
             $this->transaction,
             $this->repository,
             $this->service,

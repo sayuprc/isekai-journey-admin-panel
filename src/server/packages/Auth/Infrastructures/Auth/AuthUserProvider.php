@@ -74,6 +74,6 @@ readonly class AuthUserProvider implements UserProvider
             return null;
         }
 
-        return new AuthUser($user->userId, $user->email, $user->hashedPassword);
+        return new AuthUser($user->userId, $user->email, $user->hashedPassword, $user->role, $user->permissions);
     }
 }

@@ -71,6 +71,7 @@ class DeleteInteractorTest extends TestCase
     private function getInstance(): DeleteInteractor
     {
         return new DeleteInteractor(
+            $this->privilegedContext(),
             $this->repository,
             $this->usageChecker,
         );

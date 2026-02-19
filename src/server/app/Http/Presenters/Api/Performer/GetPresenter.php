@@ -9,6 +9,8 @@ use OpenAPI\Client\Model\ErrorResponse;
 use OpenAPI\Client\Model\PerformerGetResponse;
 use Performer\Application\UseCase\Get\GetOutputData;
 use ResultType\Result;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
@@ -32,10 +34,15 @@ class GetPresenter
                 ];
             },
             function (UseCaseError $error) {
-                return [
-                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
-                    404,
-                ];
+                return match (true) {
+                    $error instanceof AuthenticationError => [[], 401],
+                    $error instanceof AuthorizationError => [[], 403],
+                    $error instanceof NotFoundError => [new ErrorResponse()->setMessage($this->resolveErrorMessage($error)), 404],
+                    default => [
+                        new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                        400,
+                    ],
+                };
             },
         );
 

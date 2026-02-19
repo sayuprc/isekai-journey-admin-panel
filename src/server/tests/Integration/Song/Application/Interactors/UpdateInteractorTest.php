@@ -74,6 +74,8 @@ class UpdateInteractorTest extends TestCase
 
     private function getInstance(): UpdateInteractor
     {
+        $this->privilegedContext();
+
         return $this->app->make(UpdateInteractor::class);
     }
 }

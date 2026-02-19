@@ -30,6 +30,6 @@ class ListInteractorTest extends TestCase
 
     private function getInstance(): ListInteractor
     {
-        return new ListInteractor();
+        return new ListInteractor($this->privilegedContext());
     }
 }

@@ -84,6 +84,8 @@ class ListInteractorTest extends TestCase
 
     private function getInstance(): ListInteractor
     {
+        $this->privilegedContext();
+
         return $this->app->make(ListInteractor::class);
     }
 }

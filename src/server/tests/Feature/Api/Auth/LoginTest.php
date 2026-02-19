@@ -40,6 +40,11 @@ class LoginTest extends TestCase
     #[Test]
     public function userNotFound(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',
             'password' => 'password',
@@ -49,6 +54,11 @@ class LoginTest extends TestCase
     #[Test]
     public function invalidCredentials(): void
     {
+        config()->set([
+            'auth.jwt.alg' => 'HS256',
+            'auth.jwt.key' => str_repeat('k', 256),
+        ]);
+
         $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
 
         $this->factory(FileAdminUserRepository::class, $user->toArray());

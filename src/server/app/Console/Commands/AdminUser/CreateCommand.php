@@ -82,7 +82,6 @@ class CreateCommand extends Command
 
     private function isPrivilege(): bool
     {
-        // @phpstan-ignore-next-line function.impossibleType
-        return ! is_null($this->option('privilege'));
+        return (bool)$this->option('privilege');
     }
 }
