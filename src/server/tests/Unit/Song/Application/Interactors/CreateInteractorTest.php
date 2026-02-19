@@ -182,6 +182,7 @@ class CreateInteractorTest extends TestCase
     private function getInstance(): CreateInteractor
     {
         return new CreateInteractor(
+            $this->privilegedContext(),
             $this->transaction,
             $this->repository,
             $this->service,

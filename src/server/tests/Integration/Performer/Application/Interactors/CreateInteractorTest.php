@@ -33,6 +33,8 @@ class CreateInteractorTest extends TestCase
 
     private function getInstance(): CreateInteractor
     {
+        $this->privilegedContext();
+
         return $this->app->make(CreateInteractor::class);
     }
 }

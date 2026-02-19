@@ -88,6 +88,15 @@ class ImmutableCollectionTest extends TestCase
 
         $this->assertSame([1, 2, 3], $generic->toArray());
     }
+
+    #[Test]
+    public function has(): void
+    {
+        $collection = new IntCollection([1, 2, 3]);
+
+        $this->assertTrue($collection->has(1));
+        $this->assertFalse($collection->has(4));
+    }
 }
 
 /**

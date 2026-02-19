@@ -8,6 +8,7 @@ use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use Closure;
 use Mockery;
@@ -52,8 +53,8 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, $password)
-            ->andReturn(new Ok($user = $this->createUser($uuid, $email, $password)))
+            ->with($email, $password, Role::General->value, [])
+            ->andReturn(new Ok($user = $this->createUser($uuid, $email, $password, Role::General, [])))
             ->once();
 
         $this->repository->shouldReceive('save')
@@ -64,7 +65,7 @@ class CreateInteractorTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($email, $password));
+        $result = $this->getInstance()->handle(new CreateInputData($email, $password, Role::General->value, []));
 
         $this->assertTrue($result->isOk());
     }
@@ -81,11 +82,11 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, $password)
+            ->with($email, $password, Role::General->value, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($email, $password));
+        $result = $this->getInstance()->handle(new CreateInputData($email, $password, Role::General->value, []));
 
         $this->assertTrue($result->isErr());
     }

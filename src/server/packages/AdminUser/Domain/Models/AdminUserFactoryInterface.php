@@ -6,5 +6,11 @@ namespace AdminUser\Domain\Models;
 
 interface AdminUserFactoryInterface
 {
-    public function create(AdminUserId $userId, Email $email, PlainPassword $plainPassword): AdminUser;
+    public function create(
+        AdminUserId $userId,
+        Email $email,
+        PlainPassword $plainPassword,
+        Role $role,
+        Permissions $permissions,
+    ): AdminUser;
 }

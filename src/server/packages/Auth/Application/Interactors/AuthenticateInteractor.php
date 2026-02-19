@@ -8,6 +8,7 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateOutputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
+use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
@@ -29,6 +30,7 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
         private JwtHandlerInterface $jwtHandler,
         private RefreshTokenRepositoryInterface $refreshTokenRepository,
         private AdminUserRepositoryInterface $userRepository,
+        private AuthContext $context,
     ) {
     }
 
@@ -57,6 +59,8 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
                         if (is_null($foundUser)) {
                             return new Err(new NotFoundError('ユーザー', $foundRefreshToken->userId->value));
                         }
+
+                        $this->context->set($foundUser);
 
                         return new Ok(new AuthenticateOutputData());
                     });

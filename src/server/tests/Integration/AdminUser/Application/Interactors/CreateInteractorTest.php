@@ -8,6 +8,7 @@ use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\Role;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -21,7 +22,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plain'));
+        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plain', Role::General->value, []));
 
         $this->assertTrue($result->isOk());
 

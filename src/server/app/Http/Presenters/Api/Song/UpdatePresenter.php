@@ -9,6 +9,8 @@ use OpenAPI\Client\Model\ErrorResponse;
 use OpenAPI\Client\Model\SongUpdateResponse;
 use ResultType\Result;
 use Song\Application\UseCase\Update\UpdateOutputData;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -33,10 +35,14 @@ class UpdatePresenter
                 ];
             },
             function (UseCaseError $error) {
-                return [
-                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
-                    400,
-                ];
+                return match (true) {
+                    $error instanceof AuthenticationError => [[], 401],
+                    $error instanceof AuthorizationError => [[], 403],
+                    default => [
+                        new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                        400,
+                    ],
+                };
             },
         );
 

@@ -89,4 +89,12 @@ abstract readonly class ImmutableCollection implements ArrayAccess, Countable, I
     {
         return new GenericImmutableCollection($this->items);
     }
+
+    /**
+     * @param TValue $value
+     */
+    public function has(mixed $value): bool
+    {
+        return in_array($value, $this->items, true);
+    }
 }

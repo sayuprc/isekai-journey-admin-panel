@@ -153,6 +153,7 @@ class ListInteractorTest extends TestCase
     private function getInstance(): ListInteractor
     {
         return new ListInteractor(
+            $this->privilegedContext(),
             $this->repository,
             $this->assembler,
         );

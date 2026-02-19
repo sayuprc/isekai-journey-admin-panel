@@ -9,6 +9,7 @@ use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
+use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
@@ -31,6 +32,8 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(RefreshTokenFactoryInterface::class, RefreshTokenFactory::class);
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
         $this->app->bind(RefreshTokenRepositoryInterface::class, FileRefreshTokenRepository::class);
+
+        $this->app->scoped(AuthContext::class);
 
         $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
         $this->app->bind(AuthenticateUseCaseInterface::class, AuthenticateInteractor::class);

@@ -67,6 +67,8 @@ class DeleteInteractorTest extends TestCase
 
     private function getInstance(): DeleteInteractor
     {
+        $this->privilegedContext();
+
         return $this->app->make(DeleteInteractor::class);
     }
 }

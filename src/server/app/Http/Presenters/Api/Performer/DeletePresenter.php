@@ -7,6 +7,8 @@ namespace App\Http\Presenters\Api\Performer;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\ErrorResponse;
 use ResultType\Result;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -20,8 +22,14 @@ class DeletePresenter
         return $result->match(
             fn () => response()->json(status: 204),
             fn (UseCaseError $error) => response()->json(
-                new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
-                400,
+                ...match (true) {
+                    $error instanceof AuthenticationError => [[], 401],
+                    $error instanceof AuthorizationError => [[], 403],
+                    default => [
+                        new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                        400,
+                    ],
+                },
             ),
         );
     }
