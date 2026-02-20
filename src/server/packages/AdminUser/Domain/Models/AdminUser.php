@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace AdminUser\Domain\Models;
 
+use DateTimeImmutable;
+
 readonly class AdminUser
 {
     public function __construct(
         public AdminUserId $userId,
         public Email $email,
-        public HashedPassword $hashedPassword,
+        public CreatedAt $createdAt,
         public Role $role,
         public Permissions $permissions,
     ) {
@@ -26,28 +28,28 @@ readonly class AdminUser
     public static function reconstruct(
         string $userId,
         string $email,
-        string $hashedPassword,
+        DateTimeImmutable $createdAt,
         int $role,
         array $permissions,
     ): self {
         return new self(
             AdminUserId::reconstruct($userId),
             Email::reconstruct($email),
-            HashedPassword::reconstruct($hashedPassword),
+            CreatedAt::reconstruct($createdAt),
             Role::from($role),
             Permissions::reconstruct($permissions),
         );
     }
 
     /**
-     * @return array{user_id: string, email: string, hashed_password: string, role: value-of<Role>, permissions: list<string>}
+     * @return array{user_id: string, email: string, created_at: string, role: value-of<Role>, permissions: list<string>}
      */
     public function toArray(): array
     {
         return [
             'user_id' => $this->userId->value,
             'email' => $this->email->value,
-            'hashed_password' => $this->hashedPassword->value,
+            'created_at' => $this->createdAt->value->format('Y-m-d H:i:s'),
             'role' => $this->role->value,
             'permissions' => $this->permissions->toArray(),
         ];

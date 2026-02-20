@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Support\Infrastructures;
 
 use AdminUser\Domain\Models\AdminUser;
+use Auth\Domain\Models\AuthenticatableAdminUser;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Creator\Domain\Models\Creator;
 use CuyZ\Valinor\Mapper\Source\Source;
@@ -28,6 +29,7 @@ readonly class Mapper implements MapperInterface
         return $this->builder
             // TODO コンストラクタの設定を別のところでできるとよさそう
             ->registerConstructor(AdminUser::reconstruct(...))
+            ->registerConstructor(AuthenticatableAdminUser::reconstruct(...))
             ->registerConstructor(RefreshToken::reconstruct(...))
             ->registerConstructor(Creator::reconstruct(...))
             ->registerConstructor(Performer::reconstruct(...))

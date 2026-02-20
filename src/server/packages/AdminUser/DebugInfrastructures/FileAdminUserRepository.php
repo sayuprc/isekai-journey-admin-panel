@@ -8,6 +8,7 @@ use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\HashedPassword;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;
@@ -48,11 +49,11 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         return null;
     }
 
-    public function save(AdminUser $user): AdminUser
+    public function register(AdminUser $user, HashedPassword $hashedPassword): AdminUser
     {
         $this->store->save(
             $this->filePath,
-            $user->toArray(),
+            [...$user->toArray(), 'hashed_password' => $hashedPassword->value],
             array_keys(
                 array_filter(
                     $this->loadAll(),

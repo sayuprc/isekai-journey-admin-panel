@@ -8,8 +8,10 @@ use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
+use AdminUser\Domain\Services\HasherInterface;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
@@ -18,6 +20,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\Error\InvalidInputError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -26,6 +29,8 @@ class CreateInteractorTest extends TestCase
     use EntityFactory;
 
     private MockInterface&TransactionInterface $transaction;
+
+    private HasherInterface&MockInterface $hasher;
 
     private AdminUserRepositoryInterface&MockInterface $repository;
 
@@ -36,6 +41,7 @@ class CreateInteractorTest extends TestCase
         parent::setUp();
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
+        $this->hasher = Mockery::mock(HasherInterface::class);
         $this->repository = Mockery::mock(AdminUserRepositoryInterface::class);
         $this->service = Mockery::mock(AdminUserIntegrityService::class);
     }
@@ -53,14 +59,20 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, $password, Role::General->value, [])
-            ->andReturn(new Ok($user = $this->createUser($uuid, $email, $password, Role::General, [])))
+            ->with($email, Role::General->value, [])
+            ->andReturn(new Ok($user = $this->createUser($uuid, $email, Role::General, [])))
             ->once();
 
-        $this->repository->shouldReceive('save')
+        $this->hasher->shouldReceive('hash')
+            ->with($password)
+            ->andReturn('hashed')
+            ->once();
+
+        $this->repository->shouldReceive('register')
             ->withArgs(
-                fn (AdminUser $arg): bool => $arg->userId->value === $uuid
-                    && $arg->email->value === $email,
+                fn (AdminUser $userArg, HashedPassword $passwordArg): bool => $userArg->userId->value === $uuid
+                    && $userArg->email->value === $email
+                    && $passwordArg->value === 'hashed',
             )
             ->andReturn($user)
             ->once();
@@ -82,19 +94,21 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, $password, Role::General->value, [])
+            ->with($email, Role::General->value, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
         $result = $this->getInstance()->handle(new CreateInputData($email, $password, Role::General->value, []));
 
         $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
     }
 
     private function getInstance(): CreateInteractor
     {
         return new CreateInteractor(
             $this->transaction,
+            $this->hasher,
             $this->repository,
             $this->service,
         );

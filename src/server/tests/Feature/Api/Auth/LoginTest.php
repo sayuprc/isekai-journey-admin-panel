@@ -25,9 +25,10 @@ class LoginTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
+        $hashedPassword = Hash::make('password');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com');
 
-        $this->factory(FileAdminUserRepository::class, $user->toArray());
+        $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',
@@ -59,9 +60,10 @@ class LoginTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', Hash::make('password'));
+        $hashedPassword = Hash::make('password');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com');
 
-        $this->factory(FileAdminUserRepository::class, $user->toArray());
+        $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',

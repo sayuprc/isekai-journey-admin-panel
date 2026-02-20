@@ -33,7 +33,7 @@ class AuthenticateInteractorTest extends TestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'password');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com');
         $refreshToken = $this->createRefreshToken(
             $this->generateUuid(),
             $user->userId->value,

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Auth;
 
-use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
-use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Services\HasherInterface;
+use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
+use Auth\Domain\Models\AuthenticatableAdminUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 
 readonly class AuthUserProvider implements UserProvider
 {
     public function __construct(
-        private AdminUserRepositoryInterface $repository,
+        private AuthAdminUserRepositoryInterface $repository,
         private HasherInterface $hasher,
     ) {
     }
@@ -68,12 +68,12 @@ readonly class AuthUserProvider implements UserProvider
     {
     }
 
-    private function toAuthUser(?AdminUser $user): ?AuthUser
+    private function toAuthUser(?AuthenticatableAdminUser $user): ?AuthUser
     {
         if (is_null($user)) {
             return null;
         }
 
-        return new AuthUser($user->userId, $user->email, $user->hashedPassword, $user->role, $user->permissions);
+        return new AuthUser($user->userId, $user->hashedPassword);
     }
 }

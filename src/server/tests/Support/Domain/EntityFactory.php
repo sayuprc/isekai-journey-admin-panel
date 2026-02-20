@@ -109,14 +109,14 @@ trait EntityFactory
     protected function createUser(
         string $userId,
         string $email,
-        string $hashedPassword,
         Role $role = Role::General,
         array $permissions = [],
+        ?DateTimeImmutable $createdAt = null,
     ): AdminUser {
         return AdminUser::reconstruct(
             $userId,
             $email,
-            $hashedPassword,
+            $createdAt ?? new DateTimeImmutable(),
             $role->value,
             $permissions,
         );

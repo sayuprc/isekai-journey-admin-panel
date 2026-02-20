@@ -74,7 +74,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->userRepository->shouldReceive('find')
             ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
-            ->andReturn($this->createUser($userId, 'example@example.com', '', Role::General, []))
+            ->andReturn($this->createUser($userId, 'example@example.com', Role::General, []))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));

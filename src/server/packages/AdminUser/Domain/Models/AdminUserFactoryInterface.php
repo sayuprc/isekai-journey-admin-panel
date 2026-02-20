@@ -9,7 +9,7 @@ interface AdminUserFactoryInterface
     public function create(
         AdminUserId $userId,
         Email $email,
-        PlainPassword $plainPassword,
+        CreatedAt $createdAt,
         Role $role,
         Permissions $permissions,
     ): AdminUser;

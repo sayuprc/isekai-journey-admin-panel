@@ -9,7 +9,6 @@ use AdminUser\Domain\Models\Role;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
-use Illuminate\Support\Facades\Hash;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 
@@ -25,7 +24,7 @@ trait WithAuth
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'root@example.com', Hash::make('password'), Role::Privilege);
+        $user = $this->createUser($this->generateUuid(), 'root@example.com', Role::Privilege);
 
         $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->userId->value)->unwrap();
 

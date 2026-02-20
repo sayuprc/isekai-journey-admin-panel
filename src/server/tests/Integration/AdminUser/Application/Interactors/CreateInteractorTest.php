@@ -10,13 +10,11 @@ use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class CreateInteractorTest extends TestCase
 {
-    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -29,7 +27,7 @@ class CreateInteractorTest extends TestCase
         $users = $this->getAll(AdminUser::class, FileAdminUserRepository::class);
         $this->assertCount(1, $users);
         $this->assertSame('example@example.com', $users[array_key_first($users)]->email->value);
-        $this->assertNotSame('plain', $users[array_key_first($users)]->hashedPassword->value);
+        $this->assertSame(Role::General, $users[array_key_first($users)]->role);
     }
 
     private function getInstance(): CreateInteractor
