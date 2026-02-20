@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth\DebugInfrastructures;
 
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;

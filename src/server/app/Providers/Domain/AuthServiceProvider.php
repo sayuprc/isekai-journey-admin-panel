@@ -10,17 +10,17 @@ use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
 use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\AuthContext;
-use Auth\Domain\Models\Credential\AccessToken\AccessTokenFactoryInterface;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenFactoryInterface;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Services\Credential\AccessToken\JwtConfig;
-use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
-use Auth\Domain\Services\Credential\RefreshToken\RandomTokenGeneratorInterface;
+use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\Token\AccessToken\JwtConfig;
+use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
+use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Infrastructures\Auth\AuthUserProvider;
-use Auth\Infrastructures\Credential\AccessToken\AccessTokenFactory;
-use Auth\Infrastructures\Credential\AccessToken\JwtHandler;
-use Auth\Infrastructures\Credential\RefreshToken\RandomTokenGenerator;
-use Auth\Infrastructures\Credential\RefreshToken\RefreshTokenFactory;
+use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
+use Auth\Infrastructures\Token\AccessToken\JwtHandler;
+use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
+use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends EnvServiceProvider

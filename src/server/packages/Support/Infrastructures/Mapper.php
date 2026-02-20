@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Support\Infrastructures;
 
 use AdminUser\Domain\Models\AdminUser;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Creator\Domain\Models\Creator;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
