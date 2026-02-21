@@ -6,11 +6,11 @@ namespace Tests\Unit\Auth\Application\Interactors;
 
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
-use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Services\Credential\AccessToken\AccessTokenIssueService;
-use Auth\Domain\Services\Credential\RefreshToken\RefreshTokenIssueService;
+use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
+use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Carbon\Carbon;
 use Closure;
 use Mockery;

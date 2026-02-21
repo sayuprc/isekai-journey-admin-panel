@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth\DebugInfrastructures;
 
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
-use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
+use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;

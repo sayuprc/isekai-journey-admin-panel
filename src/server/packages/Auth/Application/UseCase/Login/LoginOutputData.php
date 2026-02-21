@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth\Application\UseCase\Login;
 
-use Auth\Domain\Models\Credential\AccessToken\AccessToken;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\AccessToken\AccessToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 
 readonly class LoginOutputData
 {

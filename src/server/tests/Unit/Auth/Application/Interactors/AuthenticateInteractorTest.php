@@ -10,11 +10,11 @@ use AdminUser\Domain\Models\Role;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Domain\Models\AuthContext;
-use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Services\Credential\AccessToken\AccessTokenPayload;
-use Auth\Domain\Services\Credential\AccessToken\JwtHandlerInterface;
+use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
+use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
@@ -74,7 +74,7 @@ class AuthenticateInteractorTest extends TestCase
 
         $this->userRepository->shouldReceive('find')
             ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
-            ->andReturn($this->createUser($userId, 'example@example.com', '', Role::General, []))
+            ->andReturn($this->createUser($userId, 'example@example.com', Role::General, []))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));

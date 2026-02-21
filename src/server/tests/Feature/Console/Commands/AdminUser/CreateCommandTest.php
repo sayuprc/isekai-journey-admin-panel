@@ -45,7 +45,7 @@ class CreateCommandTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileAdminUserRepository::class, $this->createUser($uuid, 'example@example.com', 'plain', Role::General, [])->toArray());
+        $this->factory(FileAdminUserRepository::class, $this->createUser($uuid, 'example@example.com', Role::General, [])->toArray());
 
         $this->artisan('admin:create example@example.com plain')
             ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')

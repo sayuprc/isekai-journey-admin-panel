@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\Integration\AdminUser\DebugInfrastructures;
 
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\HashedPassword;
+use AdminUser\Domain\Models\Role;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -18,40 +21,49 @@ class FileAdminUserRepositoryTest extends TestCase
     #[Test]
     public function find(): void
     {
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'hashed');
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
         $this->storeUsers($user);
 
         $found = $this->getInstance()->find($user->userId);
 
         $this->assertNotNull($found);
-        $this->assertEquals($user, $found);
+        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->email->value, $found->email->value);
+        $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }
 
     #[Test]
     public function findByEmail(): void
     {
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'hashed');
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
         $this->storeUsers($user);
 
         $found = $this->getInstance()->findByEmail($user->email);
 
         $this->assertNotNull($found);
-        $this->assertEquals($user, $found);
+        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->email->value, $found->email->value);
+        $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }
 
     #[Test]
-    public function save(): void
+    public function register(): void
     {
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', 'hashed');
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
-        $this->getInstance()->save($user);
+        $this->getInstance()->register($user, HashedPassword::reconstruct('hashed-password'));
 
         $found = $this->getInstance()->find($user->userId);
 
         $this->assertNotNull($found);
-        $this->assertEquals($user, $found);
+        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->email->value, $found->email->value);
+        $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }
 
     private function getInstance(): FileAdminUserRepository

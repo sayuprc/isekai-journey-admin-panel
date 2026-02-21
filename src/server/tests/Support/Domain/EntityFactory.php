@@ -9,13 +9,13 @@ use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Role;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
-use Auth\Domain\Models\Credential\AccessToken\AccessToken;
-use Auth\Domain\Models\Credential\AccessToken\Jwt;
-use Auth\Domain\Models\Credential\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Credential\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Credential\RefreshToken\TokenValue;
+use Auth\Domain\Models\Token\AccessToken\AccessToken;
+use Auth\Domain\Models\Token\AccessToken\Jwt;
+use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
+use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
+use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
@@ -109,14 +109,14 @@ trait EntityFactory
     protected function createUser(
         string $userId,
         string $email,
-        string $hashedPassword,
         Role $role = Role::General,
         array $permissions = [],
+        ?DateTimeImmutable $createdAt = null,
     ): AdminUser {
         return AdminUser::reconstruct(
             $userId,
             $email,
-            $hashedPassword,
+            $createdAt ?? new DateTimeImmutable(),
             $role->value,
             $permissions,
         );

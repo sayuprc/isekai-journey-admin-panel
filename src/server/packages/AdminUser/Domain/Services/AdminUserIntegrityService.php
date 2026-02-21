@@ -8,14 +8,15 @@ use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
-use AdminUser\Domain\Models\PlainPassword;
 use AdminUser\Domain\Models\Role;
+use DateTimeImmutable;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use SensitiveParameter;
+use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainRuleViolationError;
@@ -24,6 +25,7 @@ use Support\Domain\Error\DomainValidationError;
 class AdminUserIntegrityService
 {
     public function __construct(
+        private readonly ClockInterface $clock,
         private readonly UuidGeneratorInterface $generator,
         private readonly AdminUserFactoryInterface $factory,
         private readonly AdminUserRepositoryInterface $repository,
@@ -35,9 +37,9 @@ class AdminUserIntegrityService
      *
      * @return Result<AdminUser, DomainError>
      */
-    public function prepareForCreate(string $email, #[SensitiveParameter] string $plainPassword, int $role, array $permissions): Result
+    public function prepareForCreate(string $email, int $role, array $permissions): Result
     {
-        $result = $this->build($this->generator->generate(), $email, $plainPassword, $role, $permissions);
+        $result = $this->build($this->generator->generate(), $email, $this->clock->now(), $role, $permissions);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -60,15 +62,14 @@ class AdminUserIntegrityService
     private function build(
         string $userId,
         string $email,
-        #[SensitiveParameter]
-        string $plainPassword,
+        DateTimeImmutable $createdAt,
         int $role,
         array $permissions,
     ): Result {
         return Result::collect5(
             AdminUserId::create($userId),
             Email::create($email),
-            PlainPassword::create($plainPassword),
+            CreatedAt::create($createdAt),
             $this->toRole($role),
             Permissions::fromArray($permissions),
         )

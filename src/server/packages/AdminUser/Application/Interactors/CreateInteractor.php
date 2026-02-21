@@ -8,7 +8,9 @@ use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateOutputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
+use AdminUser\Domain\Services\HasherInterface;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -24,6 +26,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(
         private TransactionInterface $transaction,
+        private HasherInterface $hasher,
         private AdminUserRepositoryInterface $repository,
         private AdminUserIntegrityService $service,
     ) {
@@ -32,20 +35,23 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     public function handle(CreateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForCreate(
+            $userResult = $this->service->prepareForCreate(
                 $inputData->email,
-                $inputData->plainPassword,
                 $inputData->role,
                 $inputData->permissions,
             );
 
-            if ($result->isErr()) {
-                return new Err($this->handleError($result->unwrapErr()));
+            if ($userResult->isErr()) {
+                return new Err($this->handleError($userResult->unwrapErr()));
             }
 
-            $user = $result->unwrap();
+            $passwordResult = HashedPassword::create($this->hasher->hash($inputData->plainPassword));
 
-            $this->repository->save($user);
+            if ($passwordResult->isErr()) {
+                return new Err($this->handleError($passwordResult->unwrapErr()));
+            }
+
+            $user = $this->repository->register($userResult->unwrap(), $passwordResult->unwrap());
 
             return new Ok(new CreateOutputData($user));
         });

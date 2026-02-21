@@ -7,6 +7,7 @@ namespace Tests;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
+use DateTimeImmutable;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Support\Contracts\UuidGeneratorInterface;
 
@@ -24,7 +25,7 @@ abstract class TestCase extends BaseTestCase
         $context->set(AdminUser::reconstruct(
             $this->generateUuid(),
             'test@example.com',
-            'hashed-password',
+            new DateTimeImmutable(),
             Role::Privilege->value,
             [],
         ));

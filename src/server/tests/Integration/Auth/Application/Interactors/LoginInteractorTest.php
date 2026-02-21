@@ -7,7 +7,7 @@ namespace Tests\Integration\Auth\Application\Interactors;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\DebugInfrastructures\FileRefreshTokenRepository;
-use Auth\Domain\Models\Credential\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\FileRepositoryTransaction;
