@@ -38,7 +38,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
     public function find(SongId $songId): ?Song
     {
         foreach ($this->loadAll() as $song) {
-            if ($song->songId->value === $songId->value) {
+            if ($song->songId->equals($songId)) {
                 return $song;
             }
         }
@@ -51,7 +51,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         foreach ($this->loadAll() as $song) {
             foreach ([$song->arrangers, $song->composers, $song->lyricists] as $items) {
                 foreach ($items as $item) {
-                    if ($item->creatorId->value === $creatorId->value) {
+                    if ($item->creatorId->equals($creatorId)) {
                         return true;
                     }
                 }
@@ -108,7 +108,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         return array_keys(
             array_filter(
                 $this->loadAll(),
-                fn (Song $item): bool => $item->songId->value === $songId->value,
+                fn (Song $item): bool => $item->songId->equals($songId),
             ),
         )[0] ?? null;
     }

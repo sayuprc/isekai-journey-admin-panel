@@ -27,4 +27,9 @@ readonly class Creator
             'creator_name' => $this->creatorName->value,
         ];
     }
+
+    public function equals(self $other): bool
+    {
+        return $this->creatorId->equals($other->creatorId);
+    }
 }

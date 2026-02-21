@@ -67,4 +67,9 @@ readonly class Song
             'lyricists' => $this->lyricists->toArray(),
         ];
     }
+
+    public function equals(self $other): bool
+    {
+        return $this->songId->equals($other->songId);
+    }
 }

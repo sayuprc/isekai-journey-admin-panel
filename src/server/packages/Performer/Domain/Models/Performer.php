@@ -35,4 +35,9 @@ readonly class Performer
             'order_no' => $this->orderNo->value,
         ];
     }
+
+    public function equals(self $other): bool
+    {
+        return $this->performerId->equals($other->performerId);
+    }
 }

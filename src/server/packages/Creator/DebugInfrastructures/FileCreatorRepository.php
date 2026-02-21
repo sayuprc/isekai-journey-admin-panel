@@ -38,7 +38,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
     public function find(CreatorId $creatorId): ?Creator
     {
         foreach ($this->loadAll() as $creator) {
-            if ($creator->creatorId->value === $creatorId->value) {
+            if ($creator->creatorId->equals($creatorId)) {
                 return $creator;
             }
         }
@@ -49,7 +49,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
     public function findByName(CreatorName $creatorName): ?Creator
     {
         foreach ($this->loadAll() as $creator) {
-            if ($creator->creatorName->value === $creatorName->value) {
+            if ($creator->creatorName->equals($creatorName)) {
                 return $creator;
             }
         }
@@ -64,7 +64,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
 
         foreach ($creatorIds as $creatorId) {
             foreach ($creators as $creator) {
-                if ($creator->creatorId->value === $creatorId->value) {
+                if ($creator->creatorId->equals($creatorId)) {
                     $founds[] = $creator;
 
                     break;
@@ -113,7 +113,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         return array_keys(
             array_filter(
                 $this->loadAll(),
-                fn (Creator $item): bool => $item->creatorId->value === $creatorId->value,
+                fn (Creator $item): bool => $item->creatorId->equals($creatorId),
             ),
         )[0] ?? null;
     }

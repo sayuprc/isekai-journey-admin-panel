@@ -32,7 +32,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
         $found = array_first(
             array_filter(
                 $this->loadAll(),
-                fn (RefreshToken $token): bool => $token->refreshTokenId->value === $refreshTokenId->value,
+                fn (RefreshToken $token): bool => $token->refreshTokenId->equals($refreshTokenId),
             ),
         );
 
@@ -49,7 +49,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
             array_keys(
                 array_filter(
                     $this->loadAll(),
-                    fn (RefreshToken $item): bool => $item->refreshTokenId->value === $refreshToken->refreshTokenId->value,
+                    fn (RefreshToken $item): bool => $item->equals($refreshToken),
                 ),
             )[0] ?? null,
         );

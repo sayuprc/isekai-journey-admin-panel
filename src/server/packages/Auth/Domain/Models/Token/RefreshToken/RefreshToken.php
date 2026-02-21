@@ -35,11 +35,6 @@ readonly class RefreshToken
         );
     }
 
-    public function isAvailable(DateTimeInterface $now): bool
-    {
-        return $this->status->isAvailable() && ! $this->expiredAt->isExpired($now);
-    }
-
     /**
      * @return array{refresh_token_id: string, user_id: string, token: string, expired_at: non-falsy-string, status: value-of<ConsumptionStatus>}
      */
@@ -52,5 +47,15 @@ readonly class RefreshToken
             'expired_at' => $this->expiredAt->value->format('Y-m-d H:i:s'),
             'status' => $this->status->value,
         ];
+    }
+
+    public function equals(self $other): bool
+    {
+        return $this->refreshTokenId->equals($other->refreshTokenId);
+    }
+
+    public function isAvailable(DateTimeInterface $now): bool
+    {
+        return $this->status->isAvailable() && ! $this->expiredAt->isExpired($now);
     }
 }

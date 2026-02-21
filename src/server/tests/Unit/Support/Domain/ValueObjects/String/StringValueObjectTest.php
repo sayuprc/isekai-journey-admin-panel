@@ -28,8 +28,45 @@ class StringValueObjectTest extends TestCase
             ['value'],
         ];
     }
+
+    #[Test]
+    #[DataProvider('equalsEvaluatesEquivalenceProvider')]
+    public function equalsEvaluatesEquivalence(StringObject $object, StringValueObject $other, bool $expected): void
+    {
+        $this->assertSame($expected, $object->equals($other));
+    }
+
+    public static function equalsEvaluatesEquivalenceProvider(): array
+    {
+        return [
+            [
+                StringObject::reconstruct('1'),
+                StringObject::reconstruct('1'),
+                true,
+            ],
+            [
+                StringObject::reconstruct('1'),
+                StringObject::reconstruct('2'),
+                false,
+            ],
+            [
+                StringObject::reconstruct('1'),
+                OtherStringObject::reconstruct('1'),
+                false,
+            ],
+            [
+                StringObject::reconstruct('1'),
+                OtherStringObject::reconstruct('2'),
+                false,
+            ],
+        ];
+    }
 }
 
 readonly class StringObject extends StringValueObject
+{
+}
+
+readonly class OtherStringObject extends StringValueObject
 {
 }

@@ -31,8 +31,47 @@ class ImmutableDateValueObjectTest extends TestCase
             [new ImmutableDate('2019-12-09 10:28:31.282930')],
         ];
     }
+
+    #[Test]
+    #[DataProvider('equalsEvaluatesEquivalenceProvider')]
+    public function equalsEvaluatesEquivalence(ImmutableDateValueObject $object, ImmutableDateValueObject $other, bool $expected): void
+    {
+        $this->assertSame($expected, $object->equals($other));
+    }
+
+    public static function equalsEvaluatesEquivalenceProvider(): array
+    {
+        $now = new ImmutableDate();
+
+        return [
+            [
+                Date::reconstruct($now),
+                Date::reconstruct($now),
+                true,
+            ],
+            [
+                Date::reconstruct($now),
+                Date::reconstruct($now->modify('+1 days')),
+                false,
+            ],
+            [
+                Date::reconstruct($now),
+                OtherDate::reconstruct($now),
+                false,
+            ],
+            [
+                Date::reconstruct($now),
+                OtherDate::reconstruct($now->modify('+1 days')),
+                false,
+            ],
+        ];
+    }
 }
 
 readonly class Date extends ImmutableDateValueObject
+{
+}
+
+readonly class OtherDate extends ImmutableDateValueObject
 {
 }

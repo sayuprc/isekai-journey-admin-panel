@@ -29,8 +29,45 @@ class IntegerValueObjectTest extends TestCase
             [1],
         ];
     }
+
+    #[Test]
+    #[DataProvider('equalsEvaluatesEquivalenceProvider')]
+    public function equalsEvaluatesEquivalence(IntegerObject $object, IntegerValueObject $other, bool $expected): void
+    {
+        $this->assertSame($expected, $object->equals($other));
+    }
+
+    public static function equalsEvaluatesEquivalenceProvider(): array
+    {
+        return [
+            [
+                IntegerObject::reconstruct(1),
+                IntegerObject::reconstruct(1),
+                true,
+            ],
+            [
+                IntegerObject::reconstruct(1),
+                IntegerObject::reconstruct(2),
+                false,
+            ],
+            [
+                IntegerObject::reconstruct(1),
+                OtherIntegerObject::reconstruct(1),
+                false,
+            ],
+            [
+                IntegerObject::reconstruct(1),
+                OtherIntegerObject::reconstruct(2),
+                false,
+            ],
+        ];
+    }
 }
 
 readonly class IntegerObject extends IntegerValueObject
+{
+}
+
+readonly class OtherIntegerObject extends IntegerValueObject
 {
 }

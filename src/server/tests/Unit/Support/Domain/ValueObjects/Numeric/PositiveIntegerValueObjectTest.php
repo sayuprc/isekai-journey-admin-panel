@@ -37,8 +37,45 @@ class PositiveIntegerValueObjectTest extends TestCase
             [0],
         ];
     }
+
+    #[Test]
+    #[DataProvider('equalsEvaluatesEquivalenceProvider')]
+    public function equalsEvaluatesEquivalence(PositiveIntegerObject $object, PositiveIntegerValueObject $other, bool $expected): void
+    {
+        $this->assertSame($expected, $object->equals($other));
+    }
+
+    public static function equalsEvaluatesEquivalenceProvider(): array
+    {
+        return [
+            [
+                PositiveIntegerObject::reconstruct(1),
+                PositiveIntegerObject::reconstruct(1),
+                true,
+            ],
+            [
+                PositiveIntegerObject::reconstruct(1),
+                PositiveIntegerObject::reconstruct(2),
+                false,
+            ],
+            [
+                PositiveIntegerObject::reconstruct(1),
+                OtherPositiveIntegerObject::reconstruct(1),
+                false,
+            ],
+            [
+                PositiveIntegerObject::reconstruct(1),
+                OtherPositiveIntegerObject::reconstruct(2),
+                false,
+            ],
+        ];
+    }
 }
 
 readonly class PositiveIntegerObject extends PositiveIntegerValueObject
+{
+}
+
+readonly class OtherPositiveIntegerObject extends PositiveIntegerValueObject
 {
 }
