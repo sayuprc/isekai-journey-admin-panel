@@ -10,13 +10,13 @@ use AdminUser\Domain\Models\HashedPassword;
 readonly class AuthenticatableAdminUser
 {
     public function __construct(
-        public AdminUserId $userId,
+        public AdminUserId $adminUserId,
         public HashedPassword $hashedPassword,
     ) {
     }
 
-    public static function reconstruct(string $userId, string $hashedPassword): self
+    public static function reconstruct(string $adminUserId, string $hashedPassword): self
     {
-        return new self(AdminUserId::reconstruct($userId), HashedPassword::reconstruct($hashedPassword));
+        return new self(AdminUserId::reconstruct($adminUserId), HashedPassword::reconstruct($hashedPassword));
     }
 }

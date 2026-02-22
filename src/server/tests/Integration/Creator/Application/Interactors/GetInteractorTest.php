@@ -31,7 +31,7 @@ class GetInteractorTest extends TestCase
         $response = $result->unwrap();
 
         $this->assertSame($uuid, $response->creator->creatorId->value);
-        $this->assertSame('ヰ世界情緒', $response->creator->creatorName->value);
+        $this->assertSame('ヰ世界情緒', $response->creator->name->value);
     }
 
     private function getInstance(): GetInteractor

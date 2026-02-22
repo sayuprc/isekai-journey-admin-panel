@@ -24,9 +24,9 @@ trait WithAuth
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $user = $this->createUser($this->generateUuid(), 'root@example.com', Role::Privilege);
+        $user = $this->createAdminUser($this->generateUuid(), 'root@example.com', Role::Privilege);
 
-        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->userId->value)->unwrap();
+        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
 
         $this->factory(FileAdminUserRepository::class, $user->toArray());
         $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray());

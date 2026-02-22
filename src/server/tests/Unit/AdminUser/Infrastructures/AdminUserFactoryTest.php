@@ -31,8 +31,8 @@ class AdminUserFactoryTest extends TestCase
             Permissions::reconstruct([]),
         );
 
-        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->userId->value);
-        $this->assertSame('テストユーザー', $user->adminUserName->value);
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->adminUserId->value);
+        $this->assertSame('テストユーザー', $user->name->value);
         $this->assertSame('example@example.com', $user->email->value);
         $this->assertSame('2026-01-01 00:00:00', $user->createdAt->value->format('Y-m-d H:i:s'));
         $this->assertSame(Role::General, $user->role);

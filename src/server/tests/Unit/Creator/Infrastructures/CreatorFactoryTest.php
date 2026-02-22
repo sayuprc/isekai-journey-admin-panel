@@ -21,7 +21,7 @@ class CreatorFactoryTest extends TestCase
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
-        $this->assertSame('クリエイター', $creator->creatorName->value);
+        $this->assertSame('クリエイター', $creator->name->value);
     }
 
     private function getInstance(): CreatorFactory

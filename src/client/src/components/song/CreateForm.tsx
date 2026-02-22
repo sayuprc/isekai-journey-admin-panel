@@ -102,7 +102,7 @@ export const CreateForm = () => {
                 </option>
                 <For each={creators()}>
                   {creator => (
-                    <option value={creator.creatorId}>{creator.creatorName}</option>
+                    <option value={creator.creatorId}>{creator.name}</option>
                   )}
                 </For>
               </select>

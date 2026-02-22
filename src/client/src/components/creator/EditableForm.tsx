@@ -33,7 +33,7 @@ export const EditableForm = (props: Props) => {
         },
       },
       body: {
-        creatorName: formData.get('creatorName')?.toString() ?? '',
+        name: formData.get('name')?.toString() ?? '',
       },
     });
 
@@ -115,7 +115,7 @@ export const EditableForm = (props: Props) => {
           <legend class="fieldset-legend">クリエイター詳細</legend>
 
           <label class="label">クリエイター名</label>
-          <input type="text" class="input" name="creatorName" value={props.data?.creator.creatorName} />
+          <input type="text" class="input" name="name" value={props.data?.creator.name} />
 
           <div class="flex justify-between gap-2">
             <button onClick={handleDelete} class="btn btn-error mt-4">削除</button>

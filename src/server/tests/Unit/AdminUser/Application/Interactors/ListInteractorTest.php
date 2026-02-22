@@ -46,8 +46,8 @@ class ListInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('all')
             ->andReturn([
-                $this->createUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'admin-a@example.com'),
-                $this->createUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'admin-b@example.com'),
+                $this->createAdminUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'admin-a@example.com'),
+                $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'admin-b@example.com'),
             ])
             ->once();
 
@@ -58,9 +58,9 @@ class ListInteractorTest extends TestCase
 
         $this->assertCount(2, $response->adminUsers);
 
-        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->adminUsers[0]->userId->value);
+        $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $response->adminUsers[0]->adminUserId->value);
         $this->assertSame('admin-a@example.com', $response->adminUsers[0]->email->value);
-        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->adminUsers[1]->userId->value);
+        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->adminUsers[1]->adminUserId->value);
         $this->assertSame('admin-b@example.com', $response->adminUsers[1]->email->value);
     }
 

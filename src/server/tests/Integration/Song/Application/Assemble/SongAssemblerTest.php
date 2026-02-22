@@ -52,15 +52,15 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($orderNo, $assembled->orderNo);
         $this->assertCount(1, $assembled->arrangers);
         $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
-        $this->assertSame('編曲者', $assembled->arrangers[0]->creatorName);
+        $this->assertSame('編曲者', $assembled->arrangers[0]->name);
         $this->assertSame(1, $assembled->arrangers[0]->orderNo);
         $this->assertCount(1, $assembled->composers);
         $this->assertSame($composerId, $assembled->composers[0]->creatorId);
-        $this->assertSame('作曲者', $assembled->composers[0]->creatorName);
+        $this->assertSame('作曲者', $assembled->composers[0]->name);
         $this->assertSame(1, $assembled->composers[0]->orderNo);
         $this->assertCount(1, $assembled->lyricists);
         $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);
-        $this->assertSame('作詞者', $assembled->lyricists[0]->creatorName);
+        $this->assertSame('作詞者', $assembled->lyricists[0]->name);
         $this->assertSame(1, $assembled->lyricists[0]->orderNo);
     }
 

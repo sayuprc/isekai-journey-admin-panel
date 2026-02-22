@@ -13,7 +13,7 @@ interface PerformerRepositoryInterface
 
     public function find(PerformerId $performerId): ?Performer;
 
-    public function findByName(PerformerName $performerName): ?Performer;
+    public function findByName(PerformerName $name): ?Performer;
 
     public function save(Performer $performer): Performer;
 

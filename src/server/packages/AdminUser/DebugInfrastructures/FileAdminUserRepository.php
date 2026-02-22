@@ -36,11 +36,11 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         return $adminUsers;
     }
 
-    public function find(AdminUserId $userId): ?AdminUser
+    public function find(AdminUserId $adminUserId): ?AdminUser
     {
-        foreach ($this->loadAll() as $user) {
-            if ($user->userId->equals($userId)) {
-                return $user;
+        foreach ($this->loadAll() as $adminUser) {
+            if ($adminUser->adminUserId->equals($adminUserId)) {
+                return $adminUser;
             }
         }
 
@@ -49,29 +49,29 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
 
     public function findByEmail(Email $email): ?AdminUser
     {
-        foreach ($this->loadAll() as $user) {
-            if ($user->email->equals($email)) {
-                return $user;
+        foreach ($this->loadAll() as $adminUser) {
+            if ($adminUser->email->equals($email)) {
+                return $adminUser;
             }
         }
 
         return null;
     }
 
-    public function register(AdminUser $user, HashedPassword $hashedPassword): AdminUser
+    public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser
     {
         $this->store->save(
             $this->filePath,
-            [...$user->toArray(), 'hashed_password' => $hashedPassword->value],
+            [...$adminUser->toArray(), 'hashed_password' => $hashedPassword->value],
             array_keys(
                 array_filter(
                     $this->loadAll(),
-                    fn (AdminUser $item): bool => $item->equals($user),
+                    fn (AdminUser $item): bool => $item->equals($adminUser),
                 ),
             )[0] ?? null,
         );
 
-        return $user;
+        return $adminUser;
     }
 
     /**

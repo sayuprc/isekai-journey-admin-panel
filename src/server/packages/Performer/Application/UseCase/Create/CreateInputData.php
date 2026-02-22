@@ -6,7 +6,7 @@ namespace Performer\Application\UseCase\Create;
 
 readonly class CreateInputData
 {
-    public function __construct(public string $performerName)
+    public function __construct(public string $name)
     {
     }
 }

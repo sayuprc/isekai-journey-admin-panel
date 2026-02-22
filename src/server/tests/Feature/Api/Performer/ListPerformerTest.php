@@ -32,7 +32,7 @@ class ListPerformerTest extends TestCase
                 'performers' => [
                     [
                         'performerId' => $uuid,
-                        'performerName' => 'ヰ世界情緒',
+                        'name' => 'ヰ世界情緒',
                         'orderNo' => 1,
                     ],
                 ],

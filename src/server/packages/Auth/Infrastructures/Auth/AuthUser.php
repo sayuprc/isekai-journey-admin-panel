@@ -11,12 +11,12 @@ readonly class AuthUser extends AuthenticatableAdminUser implements Authenticata
 {
     public function getAuthIdentifierName()
     {
-        return 'userId';
+        return 'adminUserId';
     }
 
     public function getAuthIdentifier()
     {
-        return $this->userId->value;
+        return $this->adminUserId->value;
     }
 
     public function getAuthPasswordName()

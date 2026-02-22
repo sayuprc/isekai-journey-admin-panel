@@ -26,10 +26,10 @@ class FileAuthAdminUserRepository implements AuthAdminUserRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
-    public function find(AdminUserId $userId): ?AuthenticatableAdminUser
+    public function find(AdminUserId $adminUserId): ?AuthenticatableAdminUser
     {
         foreach ($this->loadAll() as $adminUser) {
-            if ($adminUser->userId->equals($userId)) {
+            if ($adminUser->adminUserId->equals($adminUserId)) {
                 return $adminUser;
             }
         }

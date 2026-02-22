@@ -27,7 +27,7 @@ class CreateInteractorTest extends TestCase
 
         $performers = $this->getAll(Performer::class, FilePerformerRepository::class);
         $this->assertCount(1, $performers);
-        $this->assertSame('ヰ世界情緒', array_first($performers)->performerName->value);
+        $this->assertSame('ヰ世界情緒', array_first($performers)->name->value);
         $this->assertSame(10, array_first($performers)->orderNo->value);
     }
 

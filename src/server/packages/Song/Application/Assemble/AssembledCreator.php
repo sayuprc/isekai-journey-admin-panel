@@ -8,7 +8,7 @@ readonly class AssembledCreator
 {
     public function __construct(
         public string $creatorId,
-        public string $creatorName,
+        public string $name,
         public int $orderNo,
     ) {
     }

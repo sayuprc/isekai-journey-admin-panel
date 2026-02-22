@@ -34,17 +34,17 @@ class AuthUserProviderTest extends TestCase
     #[Test]
     public function retrieveById(): void
     {
-        $userId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (AdminUserId $arg): bool => $arg->value === $userId)
-            ->andReturn($this->createAuthenticatableUser($userId, 'hashed-password'))
+            ->withArgs(fn (AdminUserId $arg): bool => $arg->value === $adminUserId)
+            ->andReturn($this->createAuthenticatableUser($adminUserId, 'hashed-password'))
             ->once();
 
-        $result = $this->getInstance()->retrieveById($userId);
+        $result = $this->getInstance()->retrieveById($adminUserId);
 
         $this->assertInstanceOf(AuthUser::class, $result);
-        $this->assertSame($userId, $result->getAuthIdentifier());
+        $this->assertSame($adminUserId, $result->getAuthIdentifier());
     }
 
     #[Test]
@@ -94,10 +94,10 @@ class AuthUserProviderTest extends TestCase
         $this->assertTrue($result);
     }
 
-    private function createAuthenticatableUser(string $userId, string $hashedPassword): AuthenticatableAdminUser
+    private function createAuthenticatableUser(string $adminUserId, string $hashedPassword): AuthenticatableAdminUser
     {
         return new AuthenticatableAdminUser(
-            AdminUserId::reconstruct($userId),
+            AdminUserId::reconstruct($adminUserId),
             HashedPassword::reconstruct($hashedPassword),
         );
     }

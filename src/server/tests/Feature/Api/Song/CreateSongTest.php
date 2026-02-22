@@ -49,21 +49,21 @@ class CreateSongTest extends TestCase
                     'arrangers' => [
                         [
                             'creatorId' => $creator1->creatorId->value,
-                            'creatorName' => $creator1->creatorName->value,
+                            'name' => $creator1->name->value,
                             'orderNo' => 1,
                         ],
                     ],
                     'composers' => [
                         [
                             'creatorId' => $creator2->creatorId->value,
-                            'creatorName' => $creator2->creatorName->value,
+                            'name' => $creator2->name->value,
                             'orderNo' => 1,
                         ],
                     ],
                     'lyricists' => [
                         [
                             'creatorId' => $creator3->creatorId->value,
-                            'creatorName' => $creator3->creatorName->value,
+                            'name' => $creator3->name->value,
                             'orderNo' => 1,
                         ],
                     ],

@@ -38,9 +38,9 @@ class AdminUserIntegrityService
      *
      * @return Result<AdminUser, DomainError>
      */
-    public function prepareForCreate(string $adminUserName, string $email, int $role, array $permissions): Result
+    public function prepareForCreate(string $name, string $email, int $role, array $permissions): Result
     {
-        $result = $this->build($this->generator->generate(), $adminUserName, $email, $this->clock->now(), $role, $permissions);
+        $result = $this->build($this->generator->generate(), $name, $email, $this->clock->now(), $role, $permissions);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -61,16 +61,16 @@ class AdminUserIntegrityService
      * @return Result<AdminUser, DomainError>
      */
     private function build(
-        string $userId,
-        string $adminUserName,
+        string $adminUserId,
+        string $name,
         string $email,
         DateTimeImmutable $createdAt,
         int $role,
         array $permissions,
     ): Result {
         return Result::collect6(
-            AdminUserId::create($userId),
-            AdminUserName::create($adminUserName),
+            AdminUserId::create($adminUserId),
+            AdminUserName::create($name),
             Email::create($email),
             CreatedAt::create($createdAt),
             $this->toRole($role),

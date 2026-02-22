@@ -6,7 +6,7 @@ namespace Auth\Application\UseCase\Login;
 
 readonly class LoginInputData
 {
-    public function __construct(public string $userId)
+    public function __construct(public string $adminUserId)
     {
     }
 }

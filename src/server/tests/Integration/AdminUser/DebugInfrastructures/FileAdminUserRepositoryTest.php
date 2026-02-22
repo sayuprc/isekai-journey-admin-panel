@@ -30,30 +30,30 @@ class FileAdminUserRepositoryTest extends TestCase
     public function allNonEmpty(): void
     {
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
-        $userA = $this->createUser($this->generateUuid(), 'admin-a@example.com', Role::General, [], $createdAt);
-        $userB = $this->createUser($this->generateUuid(), 'admin-b@example.com', Role::Privilege, [], $createdAt);
+        $userA = $this->createAdminUser($this->generateUuid(), 'admin-a@example.com', Role::General, [], $createdAt);
+        $userB = $this->createAdminUser($this->generateUuid(), 'admin-b@example.com', Role::Privilege, [], $createdAt);
 
         $this->storeUsers($userA, $userB);
 
         $result = $this->getInstance()->all();
 
         $this->assertCount(2, $result);
-        $this->assertSame($userA->userId->value, $result[0]->userId->value);
-        $this->assertSame($userB->userId->value, $result[1]->userId->value);
+        $this->assertSame($userA->adminUserId->value, $result[0]->adminUserId->value);
+        $this->assertSame($userB->adminUserId->value, $result[1]->adminUserId->value);
     }
 
     #[Test]
     public function find(): void
     {
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
+        $user = $this->createAdminUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
         $this->storeUsers($user);
 
-        $found = $this->getInstance()->find($user->userId);
+        $found = $this->getInstance()->find($user->adminUserId);
 
         $this->assertNotNull($found);
-        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->adminUserId->value, $found->adminUserId->value);
         $this->assertSame($user->email->value, $found->email->value);
         $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }
@@ -62,14 +62,14 @@ class FileAdminUserRepositoryTest extends TestCase
     public function findByEmail(): void
     {
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
+        $user = $this->createAdminUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
         $this->storeUsers($user);
 
         $found = $this->getInstance()->findByEmail($user->email);
 
         $this->assertNotNull($found);
-        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->adminUserId->value, $found->adminUserId->value);
         $this->assertSame($user->email->value, $found->email->value);
         $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }
@@ -78,14 +78,14 @@ class FileAdminUserRepositoryTest extends TestCase
     public function register(): void
     {
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
-        $user = $this->createUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
+        $user = $this->createAdminUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
         $this->getInstance()->register($user, HashedPassword::reconstruct('hashed-password'));
 
-        $found = $this->getInstance()->find($user->userId);
+        $found = $this->getInstance()->find($user->adminUserId);
 
         $this->assertNotNull($found);
-        $this->assertSame($user->userId->value, $found->userId->value);
+        $this->assertSame($user->adminUserId->value, $found->adminUserId->value);
         $this->assertSame($user->email->value, $found->email->value);
         $this->assertSame($createdAt->format('Y-m-d H:i:s'), $found->createdAt->value->format('Y-m-d H:i:s'));
     }

@@ -35,11 +35,11 @@ class RefreshTokenIssueService
     /**
      * @return Result<RefreshToken, DomainError>
      */
-    public function issue(string $userId): Result
+    public function issue(string $adminUserId): Result
     {
         $result = Result::collect4(
             RefreshTokenId::create($this->uuidGenerator->generate()),
-            AdminUserId::create($userId),
+            AdminUserId::create($adminUserId),
             TokenValue::create($this->randomTokenGenerator->generate()),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
         )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));

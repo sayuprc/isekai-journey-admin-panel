@@ -43,7 +43,7 @@ class UpdateInteractorTest extends TestCase
     public function editCreator(): void
     {
         $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -51,19 +51,19 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($creatorId, $creatorName)
-            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $creatorName)))
+            ->with($creatorId, $name)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name)))
             ->once();
 
         $this->repository->shouldReceive('save')
             ->withArgs(
                 fn (Creator $arg): bool => $arg->creatorId->value === $creatorId
-                    && $arg->creatorName->value === $creatorName,
+                    && $arg->name->value === $name,
             )
             ->andReturn($creator)
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $creatorName));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name));
 
         $this->assertTrue($result->isOk());
     }
@@ -72,7 +72,7 @@ class UpdateInteractorTest extends TestCase
     public function editFailsIfNameAlreadyExists(): void
     {
         $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -80,11 +80,11 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($creatorId, $creatorName)
+            ->with($creatorId, $name)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $creatorName));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name));
 
         $this->assertTrue($result->isErr());
     }

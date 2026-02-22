@@ -8,23 +8,23 @@ readonly class Creator
 {
     public function __construct(
         public CreatorId $creatorId,
-        public CreatorName $creatorName,
+        public CreatorName $name,
     ) {
     }
 
-    public static function reconstruct(string $creatorId, string $creatorName): self
+    public static function reconstruct(string $creatorId, string $name): self
     {
-        return new self(CreatorId::reconstruct($creatorId), CreatorName::reconstruct($creatorName));
+        return new self(CreatorId::reconstruct($creatorId), CreatorName::reconstruct($name));
     }
 
     /**
-     * @return array{creator_id: string, creator_name: string}
+     * @return array{creator_id: string, name: string}
      */
     public function toArray(): array
     {
         return [
             'creator_id' => $this->creatorId->value,
-            'creator_name' => $this->creatorName->value,
+            'name' => $this->name->value,
         ];
     }
 

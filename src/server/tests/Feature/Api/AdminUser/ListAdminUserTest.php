@@ -27,7 +27,7 @@ class ListAdminUserTest extends TestCase
 
         $this->factory(
             FileAdminUserRepository::class,
-            $this->createUser(
+            $this->createAdminUser(
                 $uuid,
                 'admin@example.com',
                 Role::Console,
@@ -44,7 +44,7 @@ class ListAdminUserTest extends TestCase
                 'adminUsers' => [
                     [
                         'adminUserId' => $uuid,
-                        'adminUserName' => 'コンソールユーザー',
+                        'name' => 'コンソールユーザー',
                         'email' => 'admin@example.com',
                         'createdAt' => '2019-12-09T10:20:30+09:00',
                         'role' => [
@@ -54,7 +54,7 @@ class ListAdminUserTest extends TestCase
                         'permissions' => [],
                     ],
                     [
-                        'adminUserName' => 'テストユーザー',
+                        'name' => 'テストユーザー',
                         'role' => [
                             'name' => Role::Privilege->getName(),
                             'value' => Role::Privilege->value,

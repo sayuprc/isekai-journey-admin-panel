@@ -6,5 +6,5 @@ namespace Creator\Domain\Models;
 
 interface CreatorFactoryInterface
 {
-    public function create(CreatorId $creatorId, CreatorName $creatorName): Creator;
+    public function create(CreatorId $creatorId, CreatorName $name): Creator;
 }

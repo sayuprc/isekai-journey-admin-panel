@@ -43,7 +43,7 @@ class CreateInteractorTest extends TestCase
     public function create(): void
     {
         $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -51,19 +51,19 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($creatorName)
-            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $creatorName)))
+            ->with($name)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name)))
             ->once();
 
         $this->repository->shouldReceive('save')
             ->withArgs(
                 fn (Creator $arg): bool => $arg->creatorId->value === $creatorId
-                    && $arg->creatorName->value === $creatorName,
+                    && $arg->name->value === $name,
             )
             ->andReturn($creator)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
+        $result = $this->getInstance()->handle(new CreateInputData($name));
 
         $this->assertTrue($result->isOk());
     }
@@ -71,7 +71,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -79,11 +79,11 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($creatorName)
+            ->with($name)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($creatorName));
+        $result = $this->getInstance()->handle(new CreateInputData($name));
 
         $this->assertTrue($result->isErr());
     }

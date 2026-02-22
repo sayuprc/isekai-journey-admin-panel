@@ -55,9 +55,9 @@ class GetSongTest extends TestCase
                         'value' => 1,
                     ],
                     'orderNo' => 1,
-                    'arrangers' => [['creatorId' => $arrangerId, 'creatorName' => '編曲者A', 'orderNo' => 1]],
-                    'composers' => [['creatorId' => $composerId, 'creatorName' => '作曲者A', 'orderNo' => 1]],
-                    'lyricists' => [['creatorId' => $lyricistId, 'creatorName' => '作詞者A', 'orderNo' => 1]],
+                    'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
+                    'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
+                    'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
                 ],
             ]);
     }

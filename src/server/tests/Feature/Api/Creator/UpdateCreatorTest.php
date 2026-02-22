@@ -27,12 +27,12 @@ class UpdateCreatorTest extends TestCase
 
         $this->withAuth()
             ->putJson(route(CreatorRouteMap::Update, $uuid), [
-                'creatorName' => 'ヰ世界情緒',
+                'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
             ->assertJson([
                 'creator' => [
                     'creatorId' => $uuid,
-                    'creatorName' => 'ヰ世界情緒',
+                    'name' => 'ヰ世界情緒',
                 ],
             ]);
     }

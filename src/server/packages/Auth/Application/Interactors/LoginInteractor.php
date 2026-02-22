@@ -34,7 +34,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
     public function handle(LoginInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->refreshTokenIssueService->issue($inputData->userId);
+            $result = $this->refreshTokenIssueService->issue($inputData->adminUserId);
 
             if ($result->isErr()) {
                 return new Err($this->handleError($result->unwrapErr()));

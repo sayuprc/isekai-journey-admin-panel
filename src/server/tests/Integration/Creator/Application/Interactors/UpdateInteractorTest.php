@@ -34,7 +34,7 @@ class UpdateInteractorTest extends TestCase
 
         $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
         $this->assertCount(1, $creators);
-        $this->assertSame($afterName, array_first($creators)->creatorName->value);
+        $this->assertSame($afterName, array_first($creators)->name->value);
     }
 
     private function getInstance(): UpdateInteractor

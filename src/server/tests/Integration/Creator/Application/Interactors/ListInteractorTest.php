@@ -31,7 +31,7 @@ class ListInteractorTest extends TestCase
         $this->assertCount(1, $response->creators);
 
         $this->assertSame($uuid, $response->creators[0]->creatorId->value);
-        $this->assertSame('ヰ世界情緒', $response->creators[0]->creatorName->value);
+        $this->assertSame('ヰ世界情緒', $response->creators[0]->name->value);
     }
 
     private function getInstance(): ListInteractor

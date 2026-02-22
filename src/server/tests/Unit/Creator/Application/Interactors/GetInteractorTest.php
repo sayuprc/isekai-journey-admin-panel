@@ -43,7 +43,7 @@ class GetInteractorTest extends TestCase
         $response = $result->unwrap();
 
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->creator->creatorId->value);
-        $this->assertSame('クリエイター名', $response->creator->creatorName->value);
+        $this->assertSame('クリエイター名', $response->creator->name->value);
     }
 
     #[Test]

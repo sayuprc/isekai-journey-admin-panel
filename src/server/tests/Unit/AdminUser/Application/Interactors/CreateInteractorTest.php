@@ -60,7 +60,7 @@ class CreateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with('テストユーザー', $email, Role::General->value, [])
-            ->andReturn(new Ok($user = $this->createUser($uuid, $email, Role::General, [])))
+            ->andReturn(new Ok($user = $this->createAdminUser($uuid, $email, Role::General, [])))
             ->once();
 
         $this->hasher->shouldReceive('hash')
@@ -70,7 +70,7 @@ class CreateInteractorTest extends TestCase
 
         $this->repository->shouldReceive('register')
             ->withArgs(
-                fn (AdminUser $userArg, HashedPassword $passwordArg): bool => $userArg->userId->value === $uuid
+                fn (AdminUser $userArg, HashedPassword $passwordArg): bool => $userArg->adminUserId->value === $uuid
                     && $userArg->email->value === $email
                     && $passwordArg->value === 'hashed',
             )

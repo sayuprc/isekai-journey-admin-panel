@@ -29,9 +29,9 @@ class CreatorIntegrityService
     /**
      * @return Result<Creator, DomainError>
      */
-    public function prepareForCreate(string $creatorName): Result
+    public function prepareForCreate(string $name): Result
     {
-        $result = $this->build($this->generator->generate(), $creatorName);
+        $result = $this->build($this->generator->generate(), $name);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -39,8 +39,8 @@ class CreatorIntegrityService
 
         $creator = $result->unwrap();
 
-        if (! is_null($this->repository->findByName($creator->creatorName))) {
-            return new Err(new DomainRuleViolationError(CreatorName::class, sprintf('すでに使われている名前です "%s"', $creatorName)));
+        if (! is_null($this->repository->findByName($creator->name))) {
+            return new Err(new DomainRuleViolationError(CreatorName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($creator);
@@ -49,9 +49,9 @@ class CreatorIntegrityService
     /**
      * @return Result<Creator, DomainError>
      */
-    public function prepareForUpdate(string $creatorId, string $creatorName): Result
+    public function prepareForUpdate(string $creatorId, string $name): Result
     {
-        $result = $this->build($creatorId, $creatorName);
+        $result = $this->build($creatorId, $name);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -60,10 +60,10 @@ class CreatorIntegrityService
         $creator = $result->unwrap();
 
         if (
-            ! is_null($found = $this->repository->findByName($creator->creatorName))
+            ! is_null($found = $this->repository->findByName($creator->name))
             && $found->creatorId->value !== $creator->creatorId->value
         ) {
-            return new Err(new DomainRuleViolationError(CreatorName::class, sprintf('すでに使われている名前です "%s"', $creatorName)));
+            return new Err(new DomainRuleViolationError(CreatorName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($creator);
@@ -72,11 +72,11 @@ class CreatorIntegrityService
     /**
      * @return Result<Creator, DomainError>
      */
-    private function build(string $creatorId, string $creatorName): Result
+    private function build(string $creatorId, string $name): Result
     {
         return Result::collect(
             CreatorId::create($creatorId),
-            CreatorName::create($creatorName),
+            CreatorName::create($name),
         )
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];

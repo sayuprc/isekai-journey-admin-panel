@@ -30,7 +30,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
     {
         $creators = $this->loadAll();
 
-        uasort($creators, fn (Creator $a, Creator $b): int => $a->creatorName->value <=> $b->creatorName->value);
+        usort($creators, fn (Creator $a, Creator $b): int => $a->name->value <=> $b->name->value);
 
         return $creators;
     }
@@ -46,10 +46,10 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         return null;
     }
 
-    public function findByName(CreatorName $creatorName): ?Creator
+    public function findByName(CreatorName $name): ?Creator
     {
         foreach ($this->loadAll() as $creator) {
-            if ($creator->creatorName->equals($creatorName)) {
+            if ($creator->name->equals($name)) {
                 return $creator;
             }
         }

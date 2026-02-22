@@ -30,11 +30,11 @@ class PerformerIntegrityService
     /**
      * @return Result<Performer, DomainError>
      */
-    public function prepareForCreate(string $performerName): Result
+    public function prepareForCreate(string $name): Result
     {
         $result = $this->build(
             $this->generator->generate(),
-            $performerName,
+            $name,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->repository->getMaxOrderNo() + 10,
         );
@@ -45,8 +45,8 @@ class PerformerIntegrityService
 
         $performer = $result->unwrap();
 
-        if (! is_null($this->repository->findByName($performer->performerName))) {
-            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $performerName)));
+        if (! is_null($this->repository->findByName($performer->name))) {
+            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($performer);
@@ -55,9 +55,9 @@ class PerformerIntegrityService
     /**
      * @return Result<Performer, DomainError>
      */
-    public function prepareForUpdate(string $performerId, string $performerName, int $orderNo): Result
+    public function prepareForUpdate(string $performerId, string $name, int $orderNo): Result
     {
-        $result = $this->build($performerId, $performerName, $orderNo);
+        $result = $this->build($performerId, $name, $orderNo);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -66,10 +66,10 @@ class PerformerIntegrityService
         $performer = $result->unwrap();
 
         if (
-            ! is_null($found = $this->repository->findByName($performer->performerName))
+            ! is_null($found = $this->repository->findByName($performer->name))
             && $found->performerId->value !== $performer->performerId->value
         ) {
-            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $performerName)));
+            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($performer);
@@ -78,11 +78,11 @@ class PerformerIntegrityService
     /**
      * @return Result<Performer, DomainError>
      */
-    private function build(string $performerId, string $performerName, int $orderNo): Result
+    private function build(string $performerId, string $name, int $orderNo): Result
     {
         return Result::collect3(
             PerformerId::create($performerId),
-            PerformerName::create($performerName),
+            PerformerName::create($name),
             OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {

@@ -10,7 +10,7 @@ interface RefreshTokenFactoryInterface
 {
     public function create(
         RefreshTokenId $refreshTokenId,
-        AdminUserId $userId,
+        AdminUserId $adminUserId,
         TokenValue $token,
         ExpiredAt $expiredAt,
         ConsumptionStatus $status,

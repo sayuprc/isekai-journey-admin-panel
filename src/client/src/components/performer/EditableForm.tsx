@@ -33,7 +33,7 @@ export const EditableForm = (props: Props) => {
         },
       },
       body: {
-        performerName: formData.get('performerName')?.toString() ?? '',
+        name: formData.get('name')?.toString() ?? '',
         orderNo: Number(formData.get('orderNo')),
       },
     });
@@ -113,7 +113,7 @@ export const EditableForm = (props: Props) => {
           <legend class="fieldset-legend">共演者詳細</legend>
 
           <label class="label">共演者名</label>
-          <input type="text" class="input" name="performerName" value={props.data?.performer.performerName} />
+          <input type="text" class="input" name="name" value={props.data?.performer.name} />
 
           <label class="label">表示順</label>
           <input type="number" class="input" name="orderNo" required min="1" value={props.data?.performer.orderNo} />

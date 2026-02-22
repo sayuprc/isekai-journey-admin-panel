@@ -7,8 +7,8 @@ namespace AdminUser\Domain\Models;
 interface AdminUserFactoryInterface
 {
     public function create(
-        AdminUserId $userId,
-        AdminUserName $adminUserName,
+        AdminUserId $adminUserId,
+        AdminUserName $name,
         Email $email,
         CreatedAt $createdAt,
         Role $role,

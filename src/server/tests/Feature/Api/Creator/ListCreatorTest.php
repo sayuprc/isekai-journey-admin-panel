@@ -32,7 +32,7 @@ class ListCreatorTest extends TestCase
                 'creators' => [
                     [
                         'creatorId' => $uuid,
-                        'creatorName' => 'ヰ世界情緒',
+                        'name' => 'ヰ世界情緒',
                     ],
                 ],
             ]);

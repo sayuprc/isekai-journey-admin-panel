@@ -22,7 +22,7 @@ readonly class Permissions extends ImmutableCollection
      */
     public static function fromArray(array $items): Result
     {
-        $arrangers = [];
+        $permissions = [];
 
         foreach ($items as $item) {
             $result = Permission::tryFrom($item);
@@ -31,10 +31,10 @@ readonly class Permissions extends ImmutableCollection
                 return new Err(new DomainRuleViolationError('権限', '不正な権限です'));
             }
 
-            $arrangers[] = $result;
+            $permissions[] = $result;
         }
 
-        return new Ok(new self($arrangers));
+        return new Ok(new self($permissions));
     }
 
     /**

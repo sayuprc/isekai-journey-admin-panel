@@ -49,7 +49,7 @@ class FileCreatorRepositoryTest extends TestCase
 
         $this->storeCreators($creator);
 
-        $found = $this->getInstance()->findByName($creator->creatorName);
+        $found = $this->getInstance()->findByName($creator->name);
 
         $this->assertNotNull($found);
         $this->assertEquals($creator, $found);

@@ -12,8 +12,8 @@ use Support\Domain\ValueObjects\OrderNo;
 
 readonly class PerformerFactory implements PerformerFactoryInterface
 {
-    public function create(PerformerId $performerId, PerformerName $performerName, OrderNo $orderNo): Performer
+    public function create(PerformerId $performerId, PerformerName $name, OrderNo $orderNo): Performer
     {
-        return new Performer($performerId, $performerName, $orderNo);
+        return new Performer($performerId, $name, $orderNo);
     }
 }

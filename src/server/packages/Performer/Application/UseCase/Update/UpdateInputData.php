@@ -11,7 +11,7 @@ readonly class UpdateInputData
      */
     public function __construct(
         public string $performerId,
-        public string $performerName,
+        public string $name,
         public int $orderNo,
     ) {
     }

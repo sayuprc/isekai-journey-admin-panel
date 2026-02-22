@@ -31,7 +31,7 @@ if (!data) {
           data.adminUsers.map((adminUser) => {
             return (
               <tr>
-                <td>{adminUser.adminUserName}</td>
+                <td>{adminUser.name}</td>
                 <td>{adminUser.email}</td>
                 <td>{adminUser.role.name}</td>
                 <td>{formatter.format(new Date(adminUser.createdAt))}</td>
