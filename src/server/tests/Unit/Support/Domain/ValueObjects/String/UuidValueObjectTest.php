@@ -48,8 +48,45 @@ class UuidValueObjectTest extends TestCase
             ['gAAAAlAA-AAAn-AtAA-aAAh-AAAAAtAAAAAp'],
         ];
     }
+
+    #[Test]
+    #[DataProvider('equalsEvaluatesEquivalenceProvider')]
+    public function equalsEvaluatesEquivalence(Uuid $object, UuidValueObject $other, bool $expected): void
+    {
+        $this->assertSame($expected, $object->equals($other));
+    }
+
+    public static function equalsEvaluatesEquivalenceProvider(): array
+    {
+        return [
+            [
+                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                true,
+            ],
+            [
+                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                Uuid::reconstruct('B47477D8-B090-4163-9A2B-C179CC8E692F'),
+                false,
+            ],
+            [
+                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                OtherUuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                false,
+            ],
+            [
+                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                OtherUuid::reconstruct('B47477D8-B090-4163-9A2B-C179CC8E692F'),
+                false,
+            ],
+        ];
+    }
 }
 
 readonly class Uuid extends UuidValueObject
+{
+}
+
+readonly class OtherUuid extends UuidValueObject
 {
 }

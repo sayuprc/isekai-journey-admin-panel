@@ -17,11 +17,6 @@ readonly class AdminUser
     ) {
     }
 
-    public function can(Permission $permission): bool
-    {
-        return $this->role->isPrivilege() || $this->permissions->has($permission);
-    }
-
     /**
      * @param list<string> $permissions
      */
@@ -53,5 +48,15 @@ readonly class AdminUser
             'role' => $this->role->value,
             'permissions' => $this->permissions->toArray(),
         ];
+    }
+
+    public function equals(self $other): bool
+    {
+        return $this->userId->equals($other->userId);
+    }
+
+    public function can(Permission $permission): bool
+    {
+        return $this->role->isPrivilege() || $this->permissions->has($permission);
     }
 }

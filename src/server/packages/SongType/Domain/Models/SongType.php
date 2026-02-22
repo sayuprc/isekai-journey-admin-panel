@@ -29,4 +29,9 @@ enum SongType: int
             self::Amplified => '拡声曲',
         };
     }
+
+    public function equals(self $other): bool
+    {
+        return $this === $other;
+    }
 }

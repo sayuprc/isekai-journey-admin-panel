@@ -49,4 +49,10 @@ abstract readonly class ImmutableDateTimeValueObject
     {
         return "日時が不正です: {$value->format('Y-m-d H:i:s')}";
     }
+
+    public function equals(self $other): bool
+    {
+        return $this::class === $other::class
+            && $this->value->format('Y-m-d H:i:s') === $other->value->format('Y-m-d H:i:s');
+    }
 }

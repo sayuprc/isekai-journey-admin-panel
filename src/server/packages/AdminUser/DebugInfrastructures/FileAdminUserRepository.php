@@ -30,7 +30,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
     public function find(AdminUserId $userId): ?AdminUser
     {
         foreach ($this->loadAll() as $user) {
-            if ($user->userId->value === $userId->value) {
+            if ($user->userId->equals($userId)) {
                 return $user;
             }
         }
@@ -41,7 +41,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
     public function findByEmail(Email $email): ?AdminUser
     {
         foreach ($this->loadAll() as $user) {
-            if ($user->email->value === $email->value) {
+            if ($user->email->equals($email)) {
                 return $user;
             }
         }
@@ -57,7 +57,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
             array_keys(
                 array_filter(
                     $this->loadAll(),
-                    fn (AdminUser $item): bool => $item->userId->value === $user->userId->value,
+                    fn (AdminUser $item): bool => $item->equals($user),
                 ),
             )[0] ?? null,
         );

@@ -38,7 +38,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
     public function find(PerformerId $performerId): ?Performer
     {
         foreach ($this->loadAll() as $performer) {
-            if ($performer->performerId->value === $performerId->value) {
+            if ($performer->performerId->equals($performerId)) {
                 return $performer;
             }
         }
@@ -49,7 +49,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
     public function findByName(PerformerName $performerName): ?Performer
     {
         foreach ($this->loadAll() as $performer) {
-            if ($performer->performerName->value === $performerName->value) {
+            if ($performer->performerName->equals($performerName)) {
                 return $performer;
             }
         }
@@ -104,7 +104,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return array_keys(
             array_filter(
                 $this->loadAll(),
-                fn (Performer $item): bool => $item->performerId->value === $performerId->value,
+                fn (Performer $item): bool => $item->performerId->equals($performerId),
             ),
         )[0] ?? null;
     }

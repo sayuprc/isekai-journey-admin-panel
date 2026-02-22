@@ -29,7 +29,7 @@ class FileAuthAdminUserRepository implements AuthAdminUserRepositoryInterface
     public function find(AdminUserId $userId): ?AuthenticatableAdminUser
     {
         foreach ($this->loadAll() as $adminUser) {
-            if ($adminUser->userId->value === $userId->value) {
+            if ($adminUser->userId->equals($userId)) {
                 return $adminUser;
             }
         }

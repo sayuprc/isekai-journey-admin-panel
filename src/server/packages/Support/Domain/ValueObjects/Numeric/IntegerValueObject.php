@@ -48,4 +48,10 @@ abstract readonly class IntegerValueObject
     {
         return "数値が不正です: {$value}";
     }
+
+    public function equals(self $other): bool
+    {
+        return $this::class === $other::class
+            && $this->value === $other->value;
+    }
 }
