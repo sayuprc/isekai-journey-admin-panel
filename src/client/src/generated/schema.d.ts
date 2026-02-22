@@ -173,7 +173,7 @@ export interface components {
         /**
          * @example {
          *       "adminUserId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
-         *       "adminUserName": "管理ユーザー名",
+         *       "name": "管理ユーザー名",
          *       "email": "example@example.com",
          *       "createdAt": "2019-12-09T10:30:20+09:00",
          *       "role": {
@@ -190,7 +190,7 @@ export interface components {
          */
         AdminUser: {
             adminUserId: components["schemas"]["adminUserId"];
-            adminUserName: components["schemas"]["adminUserName"];
+            name: components["schemas"]["adminUserName"];
             email: components["schemas"]["email"];
             createdAt: components["schemas"]["createdAt"];
             role: components["schemas"]["Role"];
@@ -202,7 +202,7 @@ export interface components {
         /**
          * @example {
          *       "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *       "creatorName": "ヰ世界情緒",
+         *       "name": "ヰ世界情緒",
          *       "orderNo": 1
          *     }
          */
@@ -210,7 +210,7 @@ export interface components {
         /**
          * @example {
          *       "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *       "creatorName": "ヰ世界情緒",
+         *       "name": "ヰ世界情緒",
          *       "orderNo": 1
          *     }
          */
@@ -235,15 +235,15 @@ export interface components {
         /**
          * @example {
          *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
-         *       "creatorName": "ヰ世界情緒"
+         *       "name": "ヰ世界情緒"
          *     }
          */
         Creator: {
             creatorId: components["schemas"]["creatorId"];
-            creatorName: components["schemas"]["creatorName"];
+            name: components["schemas"]["creatorName"];
         };
         CreatorCreateRequest: {
-            creatorName: components["schemas"]["creatorName"];
+            name: components["schemas"]["creatorName"];
         };
         CreatorCreateResponse: {
             creator: components["schemas"]["Creator"];
@@ -255,7 +255,7 @@ export interface components {
             creators: components["schemas"]["Creator"][];
         };
         CreatorUpdateRequest: {
-            creatorName: components["schemas"]["creatorName"];
+            name: components["schemas"]["creatorName"];
         };
         CreatorUpdateResponse: {
             creator: components["schemas"]["Creator"];
@@ -271,7 +271,7 @@ export interface components {
         /**
          * @example {
          *       "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *       "creatorName": "ヰ世界情緒",
+         *       "name": "ヰ世界情緒",
          *       "orderNo": 1
          *     }
          */
@@ -279,17 +279,17 @@ export interface components {
         /**
          * @example {
          *       "performerId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-         *       "performerName": "ヰ世界情緒",
+         *       "name": "ヰ世界情緒",
          *       "orderNo": 1
          *     }
          */
         Performer: {
             performerId: components["schemas"]["performerId"];
-            performerName: components["schemas"]["performerName"];
+            name: components["schemas"]["performerName"];
             orderNo: components["schemas"]["orderNo"];
         };
         PerformerCreateRequest: {
-            performerName: components["schemas"]["performerName"];
+            name: components["schemas"]["performerName"];
         };
         PerformerCreateResponse: {
             performer: components["schemas"]["Performer"];
@@ -301,7 +301,7 @@ export interface components {
             performers: components["schemas"]["Performer"][];
         };
         PerformerUpdateRequest: {
-            performerName: components["schemas"]["performerName"];
+            name: components["schemas"]["performerName"];
             orderNo: components["schemas"]["orderNo"];
         };
         PerformerUpdateResponse: {
@@ -362,21 +362,21 @@ export interface components {
          *       "arrangers": [
          *         {
          *           "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *           "creatorName": "ヰ世界情緒",
+         *           "name": "ヰ世界情緒",
          *           "orderNo": 1
          *         }
          *       ],
          *       "composers": [
          *         {
          *           "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *           "creatorName": "ヰ世界情緒",
+         *           "name": "ヰ世界情緒",
          *           "orderNo": 1
          *         }
          *       ],
          *       "lyricists": [
          *         {
          *           "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-         *           "creatorName": "ヰ世界情緒",
+         *           "name": "ヰ世界情緒",
          *           "orderNo": 1
          *         }
          *       ]
@@ -405,7 +405,7 @@ export interface components {
         };
         SongCreator: {
             creatorId: components["schemas"]["creatorId"];
-            creatorName: components["schemas"]["creatorName"];
+            name: components["schemas"]["creatorName"];
             orderNo: components["schemas"]["orderNo"];
         };
         SongGetResponse: {

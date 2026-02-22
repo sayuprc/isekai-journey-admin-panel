@@ -58,7 +58,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'admin_user_id' => 'string',
-        'admin_user_name' => 'string',
+        'name' => 'string',
         'email' => 'string',
         'created_at' => '\DateTime',
         'role' => '\OpenAPI\Client\Model\Role',
@@ -74,7 +74,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'admin_user_id' => 'uuid',
-        'admin_user_name' => null,
+        'name' => null,
         'email' => 'email',
         'created_at' => 'date-time',
         'role' => null,
@@ -88,7 +88,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'admin_user_id' => false,
-        'admin_user_name' => false,
+        'name' => false,
         'email' => false,
         'created_at' => false,
         'role' => false,
@@ -182,7 +182,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'admin_user_id' => 'adminUserId',
-        'admin_user_name' => 'adminUserName',
+        'name' => 'name',
         'email' => 'email',
         'created_at' => 'createdAt',
         'role' => 'role',
@@ -196,7 +196,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'admin_user_id' => 'setAdminUserId',
-        'admin_user_name' => 'setAdminUserName',
+        'name' => 'setName',
         'email' => 'setEmail',
         'created_at' => 'setCreatedAt',
         'role' => 'setRole',
@@ -210,7 +210,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'admin_user_id' => 'getAdminUserId',
-        'admin_user_name' => 'getAdminUserName',
+        'name' => 'getName',
         'email' => 'getEmail',
         'created_at' => 'getCreatedAt',
         'role' => 'getRole',
@@ -275,7 +275,7 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('admin_user_id', $data ?? [], null);
-        $this->setIfExists('admin_user_name', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('email', $data ?? [], null);
         $this->setIfExists('created_at', $data ?? [], null);
         $this->setIfExists('role', $data ?? [], null);
@@ -312,8 +312,8 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['admin_user_id'] === null) {
             $invalidProperties[] = "'admin_user_id' can't be null";
         }
-        if ($this->container['admin_user_name'] === null) {
-            $invalidProperties[] = "'admin_user_name' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
         if ($this->container['email'] === null) {
             $invalidProperties[] = "'email' can't be null";
@@ -370,28 +370,28 @@ class AdminUser implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets admin_user_name
+     * Gets name
      *
      * @return string
      */
-    public function getAdminUserName()
+    public function getName()
     {
-        return $this->container['admin_user_name'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets admin_user_name
+     * Sets name
      *
-     * @param string $admin_user_name 管理ユーザー名
+     * @param string $name 管理ユーザー名
      *
      * @return self
      */
-    public function setAdminUserName($admin_user_name)
+    public function setName($name)
     {
-        if (is_null($admin_user_name)) {
-            throw new \InvalidArgumentException('non-nullable admin_user_name cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['admin_user_name'] = $admin_user_name;
+        $this->container['name'] = $name;
 
         return $this;
     }

@@ -58,7 +58,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'creator_id' => 'string',
-        'creator_name' => 'string',
+        'name' => 'string',
         'order_no' => 'int'
     ];
 
@@ -71,7 +71,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'creator_id' => 'uuid',
-        'creator_name' => null,
+        'name' => null,
         'order_no' => 'int32'
     ];
 
@@ -82,7 +82,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'creator_id' => false,
-        'creator_name' => false,
+        'name' => false,
         'order_no' => false
     ];
 
@@ -173,7 +173,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'creator_id' => 'creatorId',
-        'creator_name' => 'creatorName',
+        'name' => 'name',
         'order_no' => 'orderNo'
     ];
 
@@ -184,7 +184,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'creator_id' => 'setCreatorId',
-        'creator_name' => 'setCreatorName',
+        'name' => 'setName',
         'order_no' => 'setOrderNo'
     ];
 
@@ -195,7 +195,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'creator_id' => 'getCreatorId',
-        'creator_name' => 'getCreatorName',
+        'name' => 'getName',
         'order_no' => 'getOrderNo'
     ];
 
@@ -257,7 +257,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('creator_id', $data ?? [], null);
-        $this->setIfExists('creator_name', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
 
@@ -291,11 +291,11 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['creator_id'] === null) {
             $invalidProperties[] = "'creator_id' can't be null";
         }
-        if ($this->container['creator_name'] === null) {
-            $invalidProperties[] = "'creator_name' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['creator_name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'creator_name', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
         if ($this->container['order_no'] === null) {
@@ -348,33 +348,33 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets creator_name
+     * Gets name
      *
      * @return string
      */
-    public function getCreatorName()
+    public function getName()
     {
-        return $this->container['creator_name'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets creator_name
+     * Sets name
      *
-     * @param string $creator_name クリエイター名
+     * @param string $name クリエイター名
      *
      * @return self
      */
-    public function setCreatorName($creator_name)
+    public function setName($name)
     {
-        if (is_null($creator_name)) {
-            throw new \InvalidArgumentException('non-nullable creator_name cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
 
-        if ((mb_strlen($creator_name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $creator_name when calling Lyricist., must be bigger than or equal to 1.');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling Lyricist., must be bigger than or equal to 1.');
         }
 
-        $this->container['creator_name'] = $creator_name;
+        $this->container['name'] = $name;
 
         return $this;
     }
