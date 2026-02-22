@@ -19,7 +19,7 @@ class CreateCommandTest extends TestCase
     #[Test]
     public function canCreateUser(): void
     {
-        $this->artisan('admin:create example@example.com plain')
+        $this->artisan('admin:create テストユーザー example@example.com plain')
             ->expectsOutput('管理ユーザーを作成しました')
             ->assertSuccessful();
     }
@@ -27,7 +27,7 @@ class CreateCommandTest extends TestCase
     #[Test]
     public function canCreatePrivilegeUserWithPermissions(): void
     {
-        $this->artisan('admin:create privilege@example.com plain --privilege read_admin_user write_admin_user')
+        $this->artisan('admin:create 特権ユーザー privilege@example.com plain --privilege read_admin_user write_admin_user')
             ->expectsOutput('管理ユーザーを作成しました')
             ->assertSuccessful();
     }
@@ -35,7 +35,7 @@ class CreateCommandTest extends TestCase
     #[Test]
     public function failureCreateUserWithInvalidPermission(): void
     {
-        $this->artisan('admin:create invalid@example.com plain invalid_permission')
+        $this->artisan('admin:create テストユーザー invalid@example.com plain invalid_permission')
             ->expectsOutput('不正な権限です: invalid_permission')
             ->assertFailed();
     }
@@ -47,7 +47,7 @@ class CreateCommandTest extends TestCase
 
         $this->factory(FileAdminUserRepository::class, $this->createUser($uuid, 'example@example.com', Role::General, [])->toArray());
 
-        $this->artisan('admin:create example@example.com plain')
+        $this->artisan('admin:create テストユーザー example@example.com plain')
             ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')
             ->assertFailed();
     }

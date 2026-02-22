@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use AdminUser\Application\Interactors\CreateInteractor;
+use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
+use AdminUser\Application\UseCase\List\ListUseCaseInterface;
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -22,5 +24,6 @@ class AdminUserServiceProvider extends EnvServiceProvider
         $this->app->bind(HasherInterface::class, Hasher::class);
 
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
+        $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
     }
 }

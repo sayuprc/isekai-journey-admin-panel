@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\AdminUser\Infrastructures;
 
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
@@ -23,6 +24,7 @@ class AdminUserFactoryTest extends TestCase
 
         $user = $this->getInstance()->create(
             AdminUserId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+            AdminUserName::reconstruct('テストユーザー'),
             Email::reconstruct('example@example.com'),
             $createdAt,
             Role::General,
@@ -30,6 +32,7 @@ class AdminUserFactoryTest extends TestCase
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->userId->value);
+        $this->assertSame('テストユーザー', $user->adminUserName->value);
         $this->assertSame('example@example.com', $user->email->value);
         $this->assertSame('2026-01-01 00:00:00', $user->createdAt->value->format('Y-m-d H:i:s'));
         $this->assertSame(Role::General, $user->role);

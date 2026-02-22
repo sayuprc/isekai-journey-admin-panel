@@ -27,6 +27,15 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    public function all(): array
+    {
+        $adminUsers = $this->loadAll();
+
+        usort($adminUsers, fn (AdminUser $a, AdminUser $b): int => $a->createdAt->value <=> $b->createdAt->value);
+
+        return $adminUsers;
+    }
+
     public function find(AdminUserId $userId): ?AdminUser
     {
         foreach ($this->loadAll() as $user) {

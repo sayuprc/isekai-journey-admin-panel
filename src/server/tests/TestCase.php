@@ -24,6 +24,7 @@ abstract class TestCase extends BaseTestCase
 
         $context->set(AdminUser::reconstruct(
             $this->generateUuid(),
+            'テストユーザー',
             'test@example.com',
             new DateTimeImmutable(),
             Role::Privilege->value,

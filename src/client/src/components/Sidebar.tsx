@@ -26,6 +26,12 @@ const navItems = [
       { href: '/performers/create', label: '作成' },
     ],
   },
+  {
+    title: '管理',
+    links: [
+      { href: '/admin-users', label: '管理ユーザー一覧' },
+    ],
+  },
 ];
 
 export const Sidebar = () => {

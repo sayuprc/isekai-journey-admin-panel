@@ -12,6 +12,7 @@ readonly class CreateInputData
      * @param list<string> $permissions
      */
     public function __construct(
+        public string $adminUserName,
         public string $email,
         #[SensitiveParameter]
         public string $plainPassword,

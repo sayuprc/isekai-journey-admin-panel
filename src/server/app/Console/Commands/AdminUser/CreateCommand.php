@@ -14,12 +14,20 @@ use Support\UseCase\Error\UseCaseError;
 
 class CreateCommand extends Command
 {
-    protected $signature = 'admin:create {email} {password} {--p|privilege} {permissions?*}';
+    protected $signature = 'admin:create {name} {email} {password} {--p|privilege} {permissions?*}';
 
     protected $description = '管理ユーザーを作成する';
 
     public function handle(CreateUseCaseInterface $interactor): int
     {
+        $name = $this->argument('name');
+
+        if (mb_trim($name) === '') {
+            $this->error('管理ユーザー名を入力してください');
+
+            return Command::FAILURE;
+        }
+
         $email = $this->argument('email');
 
         if (mb_trim($email) === '') {
@@ -52,7 +60,7 @@ class CreateCommand extends Command
             }
         }
 
-        $result = $interactor->handle(new CreateInputData($email, $password, $role->value, $permissions));
+        $result = $interactor->handle(new CreateInputData($name, $email, $password, $role->value, $permissions));
 
         if ($result->isErr()) {
             $this->error($this->resolveErrorMessage($result->unwrapErr()));

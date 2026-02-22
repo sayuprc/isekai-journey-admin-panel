@@ -1,0 +1,66 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Presenters\Api\AdminUser;
+
+use AdminUser\Application\UseCase\List\ListOutputData;
+use AdminUser\Domain\Models\AdminUser;
+use Illuminate\Http\JsonResponse;
+use OpenAPI\Client\Model\AdminUserListResponse;
+use OpenAPI\Client\Model\ErrorResponse;
+use ResultType\Result;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\UseCaseError;
+
+class ListPresenter
+{
+    public function __construct(private readonly Converter $converter)
+    {
+    }
+
+    /**
+     * @param Result<ListOutputData, UseCaseError> $result
+     */
+    public function present(Result $result): JsonResponse
+    {
+        [$data, $status] = $result->match(
+            fn (ListOutputData $outputData) => [
+                new AdminUserListResponse()->setAdminUsers(
+                    array_map(
+                        fn (AdminUser $adminUser) => $this->converter->toOpenApiAdminUser($adminUser),
+                        $outputData->adminUsers,
+                    ),
+                ),
+                200,
+            ],
+            fn (UseCaseError $error) => match (true) {
+                $error instanceof AuthenticationError => [[], 401],
+                $error instanceof AuthorizationError => [[], 403],
+                default => [
+                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
+                    400,
+                ],
+            },
+        );
+
+        return response()->json($data, $status);
+    }
+
+    private function resolveErrorMessage(UseCaseError $error): string
+    {
+        if (! $error instanceof InvalidInputError) {
+            return '';
+        }
+
+        foreach ($error->errors as $messages) {
+            if ($messages !== []) {
+                return $messages[0];
+            }
+        }
+
+        return '';
+    }
+}

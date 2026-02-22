@@ -20,7 +20,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('example@example.com', 'plain', Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', 'example@example.com', 'plain', Role::General->value, []));
 
         $this->assertTrue($result->isOk());
 

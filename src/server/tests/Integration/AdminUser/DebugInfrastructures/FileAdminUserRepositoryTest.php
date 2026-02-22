@@ -19,6 +19,30 @@ class FileAdminUserRepositoryTest extends TestCase
     use FileRepositoryTransaction;
 
     #[Test]
+    public function allEmpty(): void
+    {
+        $result = $this->getInstance()->all();
+
+        $this->assertCount(0, $result);
+    }
+
+    #[Test]
+    public function allNonEmpty(): void
+    {
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $userA = $this->createUser($this->generateUuid(), 'admin-a@example.com', Role::General, [], $createdAt);
+        $userB = $this->createUser($this->generateUuid(), 'admin-b@example.com', Role::Privilege, [], $createdAt);
+
+        $this->storeUsers($userA, $userB);
+
+        $result = $this->getInstance()->all();
+
+        $this->assertCount(2, $result);
+        $this->assertSame($userA->userId->value, $result[0]->userId->value);
+        $this->assertSame($userB->userId->value, $result[1]->userId->value);
+    }
+
+    #[Test]
     public function find(): void
     {
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');

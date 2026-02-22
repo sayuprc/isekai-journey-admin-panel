@@ -112,9 +112,11 @@ trait EntityFactory
         Role $role = Role::General,
         array $permissions = [],
         ?DateTimeImmutable $createdAt = null,
+        string $adminUserName = 'テストユーザー',
     ): AdminUser {
         return AdminUser::reconstruct(
             $userId,
+            $adminUserName,
             $email,
             $createdAt ?? new DateTimeImmutable(),
             $role->value,

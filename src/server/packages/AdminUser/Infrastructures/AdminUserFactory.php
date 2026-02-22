@@ -7,6 +7,7 @@ namespace AdminUser\Infrastructures;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
@@ -16,6 +17,7 @@ readonly class AdminUserFactory implements AdminUserFactoryInterface
 {
     public function create(
         AdminUserId $userId,
+        AdminUserName $adminUserName,
         Email $email,
         CreatedAt $createdAt,
         Role $role,
@@ -23,6 +25,7 @@ readonly class AdminUserFactory implements AdminUserFactoryInterface
     ): AdminUser {
         return new AdminUser(
             $userId,
+            $adminUserName,
             $email,
             $createdAt,
             $role,

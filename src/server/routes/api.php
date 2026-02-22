@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use AdminUser\Route\AdminUserRouteMap;
+use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\DeleteCreatorController;
@@ -39,6 +41,10 @@ Route::middleware(OpenApiValidator::class)->group(function () {
     });
 
     Route::middleware(Authenticate::class)->group(function () {
+        Route::prefix('admin-users')->group(function () {
+            Route::get('/', [ListAdminUserController::class, 'handle'])->name(AdminUserRouteMap::List);
+        });
+
         Route::prefix('creators')->group(function () {
             Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
             Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);

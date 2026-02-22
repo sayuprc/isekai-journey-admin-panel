@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/admin-users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 管理ユーザー一覧取得API */
+        get: operations["AdminUserService_listAdminUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -155,6 +172,35 @@ export interface components {
     schemas: {
         /**
          * @example {
+         *       "adminUserId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
+         *       "adminUserName": "管理ユーザー名",
+         *       "email": "example@example.com",
+         *       "createdAt": "2019-12-09T10:30:20+09:00",
+         *       "role": {
+         *         "name": "一般",
+         *         "value": 3
+         *       },
+         *       "permissions": [
+         *         {
+         *           "name": "管理ユーザー読み取り",
+         *           "value": "read_admin_user"
+         *         }
+         *       ]
+         *     }
+         */
+        AdminUser: {
+            adminUserId: components["schemas"]["adminUserId"];
+            adminUserName: components["schemas"]["adminUserName"];
+            email: components["schemas"]["email"];
+            createdAt: components["schemas"]["createdAt"];
+            role: components["schemas"]["Role"];
+            permissions: components["schemas"]["Permission"][];
+        };
+        AdminUserListResponse: {
+            adminUsers: components["schemas"]["AdminUser"][];
+        };
+        /**
+         * @example {
          *       "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
          *       "creatorName": "ヰ世界情緒",
          *       "orderNo": 1
@@ -261,6 +307,21 @@ export interface components {
         PerformerUpdateResponse: {
             performer: components["schemas"]["Performer"];
         };
+        /**
+         * @example {
+         *       "name": "管理ユーザー読み取り",
+         *       "value": "read_admin_user"
+         *     }
+         */
+        Permission: {
+            name: components["schemas"]["permissionName"];
+            value: components["schemas"]["PermissionValue"];
+        };
+        /**
+         * @description 権限の値
+         * @enum {string}
+         */
+        PermissionValue: "read_admin_user" | "write_admin_user" | "read_creator" | "write_creator" | "read_performer" | "write_performer" | "read_song" | "write_song" | "read_song_type";
         /** @description The template for picking properties. */
         RequestArranger: {
             creatorId: components["schemas"]["creatorId"];
@@ -273,6 +334,21 @@ export interface components {
         RequestLyricist: {
             creatorId: components["schemas"]["creatorId"];
         };
+        /**
+         * @example {
+         *       "name": "特権",
+         *       "value": 1
+         *     }
+         */
+        Role: {
+            name: components["schemas"]["roleName"];
+            value: components["schemas"]["RoleValue"];
+        };
+        /**
+         * @description 役割の値
+         * @enum {number}
+         */
+        RoleValue: 1 | 2 | 3;
         /**
          * @example {
          *       "songId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
@@ -374,6 +450,18 @@ export interface components {
         };
         /**
          * Format: uuid
+         * @description 管理ユーザーID
+         */
+        adminUserId: string;
+        /** @description 管理ユーザー名 */
+        adminUserName: string;
+        /**
+         * Format: date-time
+         * @description 作成日時
+         */
+        createdAt: string;
+        /**
+         * Format: uuid
          * @description クリエイターID
          */
         creatorId: string;
@@ -398,6 +486,10 @@ export interface components {
         performerId: string;
         /** @description 共演者名 */
         performerName: string;
+        /** @description 権限名 */
+        permissionName: string;
+        /** @description 役割名 */
+        roleName: string;
         /**
          * Format: uuid
          * @description 楽曲ID
@@ -421,6 +513,61 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AdminUserService_listAdminUsers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserListResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AuthenticateService_login: {
         parameters: {
             query?: never;
