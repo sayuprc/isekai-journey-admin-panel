@@ -81,11 +81,9 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
 
     public function getMaxOrderNo(): int
     {
-        $performers = $this->loadAll();
+        $orderNos = array_map(fn (Performer $item): int => $item->orderNo->value, $this->loadAll());
 
-        uasort($performers, fn (Performer $a, Performer $b): int => $b->orderNo->value <=> $a->orderNo->value);
-
-        return array_first($performers)->orderNo->value ?? 0;
+        return 0 < count($orderNos) ? max($orderNos) : 0;
     }
 
     /**
