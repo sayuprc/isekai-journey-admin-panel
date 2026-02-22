@@ -10,6 +10,7 @@ readonly class AdminUser
 {
     public function __construct(
         public AdminUserId $userId,
+        public AdminUserName $adminUserName,
         public Email $email,
         public CreatedAt $createdAt,
         public Role $role,
@@ -22,6 +23,7 @@ readonly class AdminUser
      */
     public static function reconstruct(
         string $userId,
+        string $adminUserName,
         string $email,
         DateTimeImmutable $createdAt,
         int $role,
@@ -29,6 +31,7 @@ readonly class AdminUser
     ): self {
         return new self(
             AdminUserId::reconstruct($userId),
+            AdminUserName::reconstruct($adminUserName),
             Email::reconstruct($email),
             CreatedAt::reconstruct($createdAt),
             Role::from($role),
@@ -37,12 +40,13 @@ readonly class AdminUser
     }
 
     /**
-     * @return array{user_id: string, email: string, created_at: string, role: value-of<Role>, permissions: list<string>}
+     * @return array{user_id: string, admin_user_name: string, email: string, created_at: string, role: value-of<Role>, permissions: list<string>}
      */
     public function toArray(): array
     {
         return [
             'user_id' => $this->userId->value,
+            'admin_user_name' => $this->adminUserName->value,
             'email' => $this->email->value,
             'created_at' => $this->createdAt->value->format('Y-m-d H:i:s'),
             'role' => $this->role->value,

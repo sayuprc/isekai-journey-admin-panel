@@ -6,6 +6,7 @@ namespace Tests\Unit\AdminUser\Domain\Services;
 
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
@@ -47,6 +48,7 @@ class AdminUserIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreate(): void
     {
+        $adminUserName = 'テストユーザー';
         $email = 'example@example.com';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $now = new DateTimeImmutable('2026-01-01 00:00:00');
@@ -68,6 +70,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $this->factory->shouldReceive('create')
             ->with(
                 Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
+                Mockery::on(fn (AdminUserName $arg): bool => $arg->value === $adminUserName),
                 Mockery::on(fn (Email $arg): bool => $arg->value === $email),
                 Mockery::on(fn (CreatedAt $arg): bool => $arg->value === $now),
                 Mockery::on(fn (Role $arg): bool => $arg === $role),
@@ -81,7 +84,7 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($email, $role->value, $permissions);
+        $result = $this->getInstance()->prepareForCreate($adminUserName, $email, $role->value, $permissions);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedUser, $result->unwrap());
@@ -90,6 +93,7 @@ class AdminUserIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreateDuplicateEmail(): void
     {
+        $adminUserName = 'テストユーザー';
         $email = 'example@example.com';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $now = new DateTimeImmutable('2026-01-01 00:00:00');
@@ -111,6 +115,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $this->factory->shouldReceive('create')
             ->with(
                 Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
+                Mockery::on(fn (AdminUserName $arg): bool => $arg->value === $adminUserName),
                 Mockery::on(fn (Email $arg): bool => $arg->value === $email),
                 Mockery::on(fn (CreatedAt $arg): bool => $arg->value === $now),
                 Mockery::on(fn (Role $arg): bool => $arg === $role),
@@ -126,7 +131,7 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturn($existingUser)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($email, $role->value, $permissions);
+        $result = $this->getInstance()->prepareForCreate($adminUserName, $email, $role->value, $permissions);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();

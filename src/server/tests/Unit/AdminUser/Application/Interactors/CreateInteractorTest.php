@@ -59,7 +59,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, Role::General->value, [])
+            ->with('テストユーザー', $email, Role::General->value, [])
             ->andReturn(new Ok($user = $this->createUser($uuid, $email, Role::General, [])))
             ->once();
 
@@ -77,7 +77,7 @@ class CreateInteractorTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($email, $password, Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
 
         $this->assertTrue($result->isOk());
     }
@@ -94,11 +94,11 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($email, Role::General->value, [])
+            ->with('テストユーザー', $email, Role::General->value, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($email, $password, Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());

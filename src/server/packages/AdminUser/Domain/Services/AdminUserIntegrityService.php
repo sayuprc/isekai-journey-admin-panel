@@ -7,6 +7,7 @@ namespace AdminUser\Domain\Services;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
@@ -37,9 +38,9 @@ class AdminUserIntegrityService
      *
      * @return Result<AdminUser, DomainError>
      */
-    public function prepareForCreate(string $email, int $role, array $permissions): Result
+    public function prepareForCreate(string $adminUserName, string $email, int $role, array $permissions): Result
     {
-        $result = $this->build($this->generator->generate(), $email, $this->clock->now(), $role, $permissions);
+        $result = $this->build($this->generator->generate(), $adminUserName, $email, $this->clock->now(), $role, $permissions);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -61,13 +62,15 @@ class AdminUserIntegrityService
      */
     private function build(
         string $userId,
+        string $adminUserName,
         string $email,
         DateTimeImmutable $createdAt,
         int $role,
         array $permissions,
     ): Result {
-        return Result::collect5(
+        return Result::collect6(
             AdminUserId::create($userId),
+            AdminUserName::create($adminUserName),
             Email::create($email),
             CreatedAt::create($createdAt),
             $this->toRole($role),

@@ -27,6 +27,7 @@ class AdminUserTest extends TestCase
             [
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー1',
                     'admin@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -34,6 +35,7 @@ class AdminUserTest extends TestCase
                 ),
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー1',
                     'admin@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -44,6 +46,7 @@ class AdminUserTest extends TestCase
             [
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー1',
                     'first@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -51,6 +54,7 @@ class AdminUserTest extends TestCase
                 ),
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー2',
                     'second@example.com',
                     new DateTimeImmutable('2026-01-02 00:00:00'),
                     Role::Privilege->value,
@@ -61,6 +65,7 @@ class AdminUserTest extends TestCase
             [
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー1',
                     'admin@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -68,6 +73,7 @@ class AdminUserTest extends TestCase
                 ),
                 AdminUser::reconstruct(
                     '22222222-2222-2222-2222-222222222222',
+                    'ユーザー2',
                     'admin@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -78,6 +84,7 @@ class AdminUserTest extends TestCase
             [
                 AdminUser::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
+                    'ユーザー1',
                     'first@example.com',
                     new DateTimeImmutable('2026-01-01 00:00:00'),
                     Role::General->value,
@@ -85,6 +92,7 @@ class AdminUserTest extends TestCase
                 ),
                 AdminUser::reconstruct(
                     '22222222-2222-2222-2222-222222222222',
+                    'ユーザー2',
                     'second@example.com',
                     new DateTimeImmutable('2026-01-02 00:00:00'),
                     Role::Privilege->value,

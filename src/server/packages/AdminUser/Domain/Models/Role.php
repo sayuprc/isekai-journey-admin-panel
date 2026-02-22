@@ -8,10 +8,21 @@ enum Role: int
 {
     case Privilege = 1;
 
-    case General = 2;
+    case Console = 2;
+
+    case General = 3;
 
     public function isPrivilege(): bool
     {
-        return $this === self::Privilege;
+        return in_array($this, [self::Privilege, self::Console], true);
+    }
+
+    public function getName(): string
+    {
+        return match ($this) {
+            self::Privilege => '特権',
+            self::Console => 'コンソール',
+            self::General => '一般',
+        };
     }
 }

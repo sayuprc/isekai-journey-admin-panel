@@ -1,4 +1,4 @@
-enum {{classname}}: int
+enum {{classname}}: {{#isNumber}}int{{/isNumber}}{{#isString}}string{{/isString}}
 {
     /**
      * Possible values of this enum

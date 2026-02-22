@@ -38,7 +38,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-enum PermissionValue: int
+enum PermissionValue: string
 {
     /**
      * Possible values of this enum

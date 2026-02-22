@@ -36,6 +36,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     {
         return $this->transaction->scope(function () use ($inputData): Result {
             $userResult = $this->service->prepareForCreate(
+                $inputData->adminUserName,
                 $inputData->email,
                 $inputData->role,
                 $inputData->permissions,
