@@ -59,10 +59,7 @@ class CreatorIntegrityService
 
         $creator = $result->unwrap();
 
-        if (
-            ! is_null($found = $this->repository->findByName($creator->name))
-            && $found->creatorId->value !== $creator->creatorId->value
-        ) {
+        if (! is_null($found = $this->repository->findByName($creator->name)) && ! $found->equals($creator)) {
             return new Err(new DomainRuleViolationError(CreatorName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 

@@ -65,10 +65,7 @@ class PerformerIntegrityService
 
         $performer = $result->unwrap();
 
-        if (
-            ! is_null($found = $this->repository->findByName($performer->name))
-            && $found->performerId->value !== $performer->performerId->value
-        ) {
+        if (! is_null($found = $this->repository->findByName($performer->name)) && ! $found->equals($performer)) {
             return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $name)));
         }
 
