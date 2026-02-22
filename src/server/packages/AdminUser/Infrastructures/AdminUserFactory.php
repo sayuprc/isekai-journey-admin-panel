@@ -16,16 +16,16 @@ use AdminUser\Domain\Models\Role;
 readonly class AdminUserFactory implements AdminUserFactoryInterface
 {
     public function create(
-        AdminUserId $userId,
-        AdminUserName $adminUserName,
+        AdminUserId $adminUserId,
+        AdminUserName $name,
         Email $email,
         CreatedAt $createdAt,
         Role $role,
         Permissions $permissions,
     ): AdminUser {
         return new AdminUser(
-            $userId,
-            $adminUserName,
+            $adminUserId,
+            $name,
             $email,
             $createdAt,
             $role,

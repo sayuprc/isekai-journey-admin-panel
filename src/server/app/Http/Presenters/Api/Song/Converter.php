@@ -39,7 +39,7 @@ readonly class Converter
     {
         return new OpenApiArranger()
             ->setCreatorId($creator->creatorId)
-            ->setCreatorName($creator->creatorName)
+            ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
     }
 
@@ -47,7 +47,7 @@ readonly class Converter
     {
         return new OpenApiComposer()
             ->setCreatorId($creator->creatorId)
-            ->setCreatorName($creator->creatorName)
+            ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
     }
 
@@ -55,7 +55,7 @@ readonly class Converter
     {
         return new OpenApiLyricist()
             ->setCreatorId($creator->creatorId)
-            ->setCreatorName($creator->creatorName)
+            ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
     }
 }

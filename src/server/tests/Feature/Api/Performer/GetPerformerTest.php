@@ -31,7 +31,7 @@ class GetPerformerTest extends TestCase
             ->assertJson([
                 'performer' => [
                     'performerId' => $uuid,
-                    'performerName' => 'ヰ世界情緒',
+                    'name' => 'ヰ世界情緒',
                     'orderNo' => 1,
                 ],
             ]);

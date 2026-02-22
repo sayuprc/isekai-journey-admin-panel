@@ -26,7 +26,7 @@ class LoginTest extends TestCase
         ]);
 
         $hashedPassword = Hash::make('password');
-        $user = $this->createUser($this->generateUuid(), 'example@example.com');
+        $user = $this->createAdminUser($this->generateUuid(), 'example@example.com');
 
         $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
 
@@ -61,7 +61,7 @@ class LoginTest extends TestCase
         ]);
 
         $hashedPassword = Hash::make('password');
-        $user = $this->createUser($this->generateUuid(), 'example@example.com');
+        $user = $this->createAdminUser($this->generateUuid(), 'example@example.com');
 
         $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
 

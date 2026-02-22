@@ -38,11 +38,11 @@ use Support\Domain\ValueObjects\OrderNo;
 
 trait EntityFactory
 {
-    protected function createCreator(string $creatorId, string $creatorName): Creator
+    protected function createCreator(string $creatorId, string $name): Creator
     {
         return new Creator(
             CreatorId::reconstruct($creatorId),
-            CreatorName::reconstruct($creatorName),
+            CreatorName::reconstruct($name),
         );
     }
 
@@ -54,11 +54,11 @@ trait EntityFactory
         );
     }
 
-    protected function createPerformer(string $performerId, string $performerName, int $orderNo): Performer
+    protected function createPerformer(string $performerId, string $name, int $orderNo): Performer
     {
         return new Performer(
             PerformerId::reconstruct($performerId),
-            PerformerName::reconstruct($performerName),
+            PerformerName::reconstruct($name),
             OrderNo::reconstruct($orderNo),
         );
     }
@@ -106,17 +106,17 @@ trait EntityFactory
         );
     }
 
-    protected function createUser(
-        string $userId,
+    protected function createAdminUser(
+        string $adminUserId,
         string $email,
         Role $role = Role::General,
         array $permissions = [],
         ?DateTimeImmutable $createdAt = null,
-        string $adminUserName = 'テストユーザー',
+        string $name = 'テストユーザー',
     ): AdminUser {
         return AdminUser::reconstruct(
-            $userId,
-            $adminUserName,
+            $adminUserId,
+            $name,
             $email,
             $createdAt ?? new DateTimeImmutable(),
             $role->value,
@@ -139,14 +139,14 @@ trait EntityFactory
 
     protected function createRefreshToken(
         string $refreshTokenId,
-        string $userId,
+        string $adminUserId,
         string $tokenValue,
         DateTimeImmutable $expiredAt,
         ConsumptionStatus $status,
     ): RefreshToken {
         return new RefreshToken(
             RefreshTokenId::reconstruct($refreshTokenId),
-            AdminUserId::reconstruct($userId),
+            AdminUserId::reconstruct($adminUserId),
             TokenValue::reconstruct($tokenValue),
             ExpiredAt::reconstruct($expiredAt),
             $status,

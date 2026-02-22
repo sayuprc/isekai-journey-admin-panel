@@ -49,7 +49,7 @@ class LoginInteractorTest extends TestCase
         Carbon::setTestNow('2019-12-09 10:30:00');
 
         $tokenId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $userId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
+        $adminUserId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
         $token = 'token';
 
         $this->transaction->shouldReceive('scope')
@@ -60,8 +60,8 @@ class LoginInteractorTest extends TestCase
         $now = now()->toDateTimeImmutable();
 
         $this->refreshTokenIssueService->shouldReceive('issue')
-            ->with($userId)
-            ->andReturn(new Ok($this->createRefreshToken($tokenId, $userId, $token, $now, ConsumptionStatus::Unused)))
+            ->with($adminUserId)
+            ->andReturn(new Ok($this->createRefreshToken($tokenId, $adminUserId, $token, $now, ConsumptionStatus::Unused)))
             ->once();
 
         $this->accessTokenIssueService->shouldReceive('issue')
@@ -72,13 +72,13 @@ class LoginInteractorTest extends TestCase
         $this->refreshTokenRepository->shouldReceive('save')
             ->withArgs(
                 fn (RefreshToken $arg) => $arg->refreshTokenId->value === $tokenId
-                    && $arg->userId->value === $userId
+                    && $arg->adminUserId->value === $adminUserId
                     && $arg->token->value === $token,
             )
             ->andReturnArg(0)
             ->once();
 
-        $this->getInstance()->handle(new LoginInputData($userId));
+        $this->getInstance()->handle(new LoginInputData($adminUserId));
     }
 
     private function getInstance(): LoginInteractor

@@ -54,10 +54,10 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
                             return new Err(new NotFoundError('リフレッシュトークン', $refreshTokenId->value));
                         }
 
-                        $foundUser = $this->userRepository->find($foundRefreshToken->userId);
+                        $foundUser = $this->userRepository->find($foundRefreshToken->adminUserId);
 
                         if (is_null($foundUser)) {
-                            return new Err(new NotFoundError('ユーザー', $foundRefreshToken->userId->value));
+                            return new Err(new NotFoundError('ユーザー', $foundRefreshToken->adminUserId->value));
                         }
 
                         $this->context->set($foundUser);

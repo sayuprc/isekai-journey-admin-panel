@@ -13,7 +13,7 @@ interface CreatorRepositoryInterface
 
     public function find(CreatorId $creatorId): ?Creator;
 
-    public function findByName(CreatorName $creatorName): ?Creator;
+    public function findByName(CreatorName $name): ?Creator;
 
     /**
      * @return array<Creator>

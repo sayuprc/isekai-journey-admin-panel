@@ -58,7 +58,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'performer_id' => 'string',
-        'performer_name' => 'string',
+        'name' => 'string',
         'order_no' => 'int'
     ];
 
@@ -71,7 +71,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'performer_id' => 'uuid',
-        'performer_name' => null,
+        'name' => null,
         'order_no' => 'int32'
     ];
 
@@ -82,7 +82,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'performer_id' => false,
-        'performer_name' => false,
+        'name' => false,
         'order_no' => false
     ];
 
@@ -173,7 +173,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'performer_id' => 'performerId',
-        'performer_name' => 'performerName',
+        'name' => 'name',
         'order_no' => 'orderNo'
     ];
 
@@ -184,7 +184,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'performer_id' => 'setPerformerId',
-        'performer_name' => 'setPerformerName',
+        'name' => 'setName',
         'order_no' => 'setOrderNo'
     ];
 
@@ -195,7 +195,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'performer_id' => 'getPerformerId',
-        'performer_name' => 'getPerformerName',
+        'name' => 'getName',
         'order_no' => 'getOrderNo'
     ];
 
@@ -257,7 +257,7 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('performer_id', $data ?? [], null);
-        $this->setIfExists('performer_name', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
 
@@ -291,11 +291,11 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['performer_id'] === null) {
             $invalidProperties[] = "'performer_id' can't be null";
         }
-        if ($this->container['performer_name'] === null) {
-            $invalidProperties[] = "'performer_name' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['performer_name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'performer_name', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
         if ($this->container['order_no'] === null) {
@@ -348,33 +348,33 @@ class Performer implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets performer_name
+     * Gets name
      *
      * @return string
      */
-    public function getPerformerName()
+    public function getName()
     {
-        return $this->container['performer_name'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets performer_name
+     * Sets name
      *
-     * @param string $performer_name 共演者名
+     * @param string $name 共演者名
      *
      * @return self
      */
-    public function setPerformerName($performer_name)
+    public function setName($name)
     {
-        if (is_null($performer_name)) {
-            throw new \InvalidArgumentException('non-nullable performer_name cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
 
-        if ((mb_strlen($performer_name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $performer_name when calling Performer., must be bigger than or equal to 1.');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling Performer., must be bigger than or equal to 1.');
         }
 
-        $this->container['performer_name'] = $performer_name;
+        $this->container['name'] = $name;
 
         return $this;
     }

@@ -43,7 +43,7 @@ class CreateInteractorTest extends TestCase
     public function create(): void
     {
         $performerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
@@ -52,20 +52,20 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($performerName)
-            ->andReturn(new Ok($performer = $this->createPerformer($performerId, $performerName, $orderNo)))
+            ->with($name)
+            ->andReturn(new Ok($performer = $this->createPerformer($performerId, $name, $orderNo)))
             ->once();
 
         $this->repository->shouldReceive('save')
             ->withArgs(
                 fn (Performer $arg): bool => $arg->performerId->value === $performerId
-                    && $arg->performerName->value === $performerName
+                    && $arg->name->value === $name
                     && $arg->orderNo->value === $orderNo,
             )
             ->andReturn($performer)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($performerName));
+        $result = $this->getInstance()->handle(new CreateInputData($name));
 
         $this->assertTrue($result->isOk());
     }
@@ -73,7 +73,7 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function createFailsIfNameAlreadyExists(): void
     {
-        $performerName = '共演者';
+        $name = '共演者';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -81,11 +81,11 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($performerName)
+            ->with($name)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData($performerName));
+        $result = $this->getInstance()->handle(new CreateInputData($name));
 
         $this->assertTrue($result->isErr());
     }

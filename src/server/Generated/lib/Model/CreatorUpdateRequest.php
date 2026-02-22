@@ -57,7 +57,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var string[]
       */
     protected static $openAPITypes = [
-        'creator_name' => 'string'
+        'name' => 'string'
     ];
 
     /**
@@ -68,7 +68,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'creator_name' => null
+        'name' => null
     ];
 
     /**
@@ -77,7 +77,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'creator_name' => false
+        'name' => false
     ];
 
     /**
@@ -166,7 +166,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $attributeMap = [
-        'creator_name' => 'creatorName'
+        'name' => 'name'
     ];
 
     /**
@@ -175,7 +175,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $setters = [
-        'creator_name' => 'setCreatorName'
+        'name' => 'setName'
     ];
 
     /**
@@ -184,7 +184,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $getters = [
-        'creator_name' => 'getCreatorName'
+        'name' => 'getName'
     ];
 
     /**
@@ -244,7 +244,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('creator_name', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
     }
 
     /**
@@ -274,11 +274,11 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     {
         $invalidProperties = [];
 
-        if ($this->container['creator_name'] === null) {
-            $invalidProperties[] = "'creator_name' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['creator_name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'creator_name', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -297,33 +297,33 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
 
 
     /**
-     * Gets creator_name
+     * Gets name
      *
      * @return string
      */
-    public function getCreatorName()
+    public function getName()
     {
-        return $this->container['creator_name'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets creator_name
+     * Sets name
      *
-     * @param string $creator_name クリエイター名
+     * @param string $name クリエイター名
      *
      * @return self
      */
-    public function setCreatorName($creator_name)
+    public function setName($name)
     {
-        if (is_null($creator_name)) {
-            throw new \InvalidArgumentException('non-nullable creator_name cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
 
-        if ((mb_strlen($creator_name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $creator_name when calling CreatorUpdateRequest., must be bigger than or equal to 1.');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling CreatorUpdateRequest., must be bigger than or equal to 1.');
         }
 
-        $this->container['creator_name'] = $creator_name;
+        $this->container['name'] = $name;
 
         return $this;
     }

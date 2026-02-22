@@ -127,14 +127,14 @@ class ListInteractorTest extends TestCase
         $this->assertSame(1, $response->songs[0]->orderNo);
         $this->assertCount(1, $response->songs[0]->arrangers);
         $this->assertSame($arrangerId, $response->songs[0]->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->songs[0]->arrangers[0]->creatorName);
+        $this->assertSame('編曲者A', $response->songs[0]->arrangers[0]->name);
         $this->assertSame(1, $response->songs[0]->arrangers[0]->orderNo);
         $this->assertCount(1, $response->songs[0]->composers);
         $this->assertSame($composerId, $response->songs[0]->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->songs[0]->composers[0]->creatorName);
+        $this->assertSame('作曲者A', $response->songs[0]->composers[0]->name);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame($lyricistId, $response->songs[0]->lyricists[0]->creatorId);
-        $this->assertSame('作詞者A', $response->songs[0]->lyricists[0]->creatorName);
+        $this->assertSame('作詞者A', $response->songs[0]->lyricists[0]->name);
 
         $this->assertSame('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', $response->songs[1]->songId);
         $this->assertSame('全部夢だった！', $response->songs[1]->title);
@@ -143,10 +143,10 @@ class ListInteractorTest extends TestCase
         $this->assertSame(2, $response->songs[1]->orderNo);
         $this->assertCount(1, $response->songs[1]->arrangers);
         $this->assertSame($arrangerId, $response->songs[1]->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->songs[1]->arrangers[0]->creatorName);
+        $this->assertSame('編曲者A', $response->songs[1]->arrangers[0]->name);
         $this->assertCount(1, $response->songs[1]->composers);
         $this->assertSame($composerId, $response->songs[1]->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->songs[1]->composers[0]->creatorName);
+        $this->assertSame('作曲者A', $response->songs[1]->composers[0]->name);
         $this->assertCount(0, $response->songs[1]->lyricists);
     }
 

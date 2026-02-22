@@ -16,11 +16,11 @@ readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
 {
     public function create(
         RefreshTokenId $refreshTokenId,
-        AdminUserId $userId,
+        AdminUserId $adminUserId,
         TokenValue $token,
         ExpiredAt $expiredAt,
         ConsumptionStatus $status,
     ): RefreshToken {
-        return new RefreshToken($refreshTokenId, $userId, $token, $expiredAt, $status);
+        return new RefreshToken($refreshTokenId, $adminUserId, $token, $expiredAt, $status);
     }
 }

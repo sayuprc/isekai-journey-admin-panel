@@ -30,7 +30,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
     {
         $performer = $this->loadAll();
 
-        uasort($performer, fn (Performer $a, Performer $b): int => $a->orderNo->value <=> $b->orderNo->value);
+        usort($performer, fn (Performer $a, Performer $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $performer;
     }
@@ -46,10 +46,10 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return null;
     }
 
-    public function findByName(PerformerName $performerName): ?Performer
+    public function findByName(PerformerName $name): ?Performer
     {
         foreach ($this->loadAll() as $performer) {
-            if ($performer->performerName->equals($performerName)) {
+            if ($performer->name->equals($name)) {
                 return $performer;
             }
         }

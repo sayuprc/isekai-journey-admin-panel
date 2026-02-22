@@ -13,7 +13,7 @@ class Converter
     {
         return new OpenApiPerformer()
             ->setPerformerId($performer->performerId->value)
-            ->setPerformerName($performer->performerName->value)
+            ->setName($performer->name->value)
             ->setOrderNo($performer->orderNo->value);
     }
 }

@@ -43,7 +43,7 @@ class UpdateInteractorTest extends TestCase
     public function editPerformer(): void
     {
         $performerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
@@ -52,20 +52,20 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($performerId, $performerName, $orderNo)
-            ->andReturn(new Ok($performer = $this->createPerformer($performerId, $performerName, $orderNo)))
+            ->with($performerId, $name, $orderNo)
+            ->andReturn(new Ok($performer = $this->createPerformer($performerId, $name, $orderNo)))
             ->once();
 
         $this->repository->shouldReceive('save')
             ->withArgs(
                 fn (Performer $arg): bool => $arg->performerId->value === $performerId
-                    && $arg->performerName->value === $performerName
+                    && $arg->name->value === $name
                     && $arg->orderNo->value === $orderNo,
             )
             ->andReturn($performer)
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $performerName, $orderNo));
+        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $name, $orderNo));
 
         $this->assertTrue($result->isOk());
     }
@@ -74,7 +74,7 @@ class UpdateInteractorTest extends TestCase
     public function editFailsIfNameAlreadyExists(): void
     {
         $performerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
@@ -83,11 +83,11 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($performerId, $performerName, $orderNo)
+            ->with($performerId, $name, $orderNo)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $performerName, $orderNo));
+        $result = $this->getInstance()->handle(new UpdateInputData($performerId, $name, $orderNo));
 
         $this->assertTrue($result->isErr());
     }

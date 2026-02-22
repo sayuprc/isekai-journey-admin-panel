@@ -21,8 +21,8 @@ class Converter
     public function toOpenApiAdminUser(AdminUser $adminUser): OpenApiAdminUser
     {
         return new OpenApiAdminUser()
-            ->setAdminUserId($adminUser->userId->value)
-            ->setAdminUserName($adminUser->adminUserName->value)
+            ->setAdminUserId($adminUser->adminUserId->value)
+            ->setName($adminUser->name->value)
             ->setEmail($adminUser->email->value)
             ->setCreatedAt($this->toDateTime($adminUser->createdAt->value))
             ->setRole($this->toOpenApiRole($adminUser->role))

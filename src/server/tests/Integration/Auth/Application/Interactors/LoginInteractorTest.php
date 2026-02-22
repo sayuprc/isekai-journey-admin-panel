@@ -29,13 +29,13 @@ class LoginInteractorTest extends TestCase
 
         $now = new CarbonImmutable();
 
-        $userId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
-        $this->getInstance()->handle(new LoginInputData($userId));
+        $this->getInstance()->handle(new LoginInputData($adminUserId));
 
         $refreshTokens = $this->getAll(RefreshToken::class, FileRefreshTokenRepository::class);
         $this->assertCount(1, $refreshTokens);
-        $this->assertSame($userId, $refreshTokens[array_key_first($refreshTokens)]->userId->value);
+        $this->assertSame($adminUserId, $refreshTokens[array_key_first($refreshTokens)]->adminUserId->value);
         $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isAvailable($now));
     }
 

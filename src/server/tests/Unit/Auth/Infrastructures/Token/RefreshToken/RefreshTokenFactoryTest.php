@@ -35,7 +35,7 @@ class RefreshTokenFactoryTest extends TestCase
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $refreshToken->refreshTokenId->value);
-        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $refreshToken->userId->value);
+        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $refreshToken->adminUserId->value);
         $this->assertSame('aaaaaaaaaa', $refreshToken->token->value);
         $this->assertTrue($refreshToken->isAvailable(now()->subMinutes(30)));
     }

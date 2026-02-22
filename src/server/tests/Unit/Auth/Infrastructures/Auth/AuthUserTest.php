@@ -20,7 +20,7 @@ class AuthUserTest extends TestCase
             HashedPassword::reconstruct('hashed-password'),
         );
 
-        $this->assertSame('userId', $user->getAuthIdentifierName());
+        $this->assertSame('adminUserId', $user->getAuthIdentifierName());
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $user->getAuthIdentifier());
         $this->assertSame('password', $user->getAuthPasswordName());
         $this->assertSame('hashed-password', $user->getAuthPassword());

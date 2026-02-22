@@ -12,7 +12,7 @@ readonly class RefreshToken
 {
     public function __construct(
         public RefreshTokenId $refreshTokenId,
-        public AdminUserId $userId,
+        public AdminUserId $adminUserId,
         public TokenValue $token,
         private ExpiredAt $expiredAt,
         private ConsumptionStatus $status,
@@ -21,14 +21,14 @@ readonly class RefreshToken
 
     public static function reconstruct(
         string $refreshTokenId,
-        string $userId,
+        string $adminUserId,
         string $token,
         DateTimeImmutable $expiredAt,
         int $status,
     ): self {
         return new self(
             RefreshTokenId::reconstruct($refreshTokenId),
-            AdminUserId::reconstruct($userId),
+            AdminUserId::reconstruct($adminUserId),
             TokenValue::reconstruct($token),
             ExpiredAt::reconstruct($expiredAt),
             ConsumptionStatus::from($status),
@@ -36,13 +36,13 @@ readonly class RefreshToken
     }
 
     /**
-     * @return array{refresh_token_id: string, user_id: string, token: string, expired_at: non-falsy-string, status: value-of<ConsumptionStatus>}
+     * @return array{refresh_token_id: string, admin_user_id: string, token: string, expired_at: non-falsy-string, status: value-of<ConsumptionStatus>}
      */
     public function toArray(): array
     {
         return [
             'refresh_token_id' => $this->refreshTokenId->value,
-            'user_id' => $this->userId->value,
+            'admin_user_id' => $this->adminUserId->value,
             'token' => $this->token->value,
             'expired_at' => $this->expiredAt->value->format('Y-m-d H:i:s'),
             'status' => $this->status->value,

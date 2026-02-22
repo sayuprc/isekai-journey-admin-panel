@@ -11,7 +11,7 @@ export const CreateForm = () => {
 
     const { data, error, response } = await client.POST('/creators', {
       body: {
-        creatorName: formData.get('creatorName')?.toString() ?? '',
+        name: formData.get('name')?.toString() ?? '',
       },
     });
 
@@ -39,7 +39,7 @@ export const CreateForm = () => {
         <legend class="fieldset-legend">クリエイター作成</legend>
 
         <label class="label">クリエイター名</label>
-        <input type="text" class="input" name="creatorName" />
+        <input type="text" class="input" name="name" />
 
         <button class="btn btn-neutral mt-4">作成</button>
       </fieldset>

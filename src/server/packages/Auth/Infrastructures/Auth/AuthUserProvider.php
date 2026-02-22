@@ -27,7 +27,7 @@ readonly class AuthUserProvider implements UserProvider
     {
         return AdminUserId::create($identifier)
             ->match(
-                fn (AdminUserId $userId): ?AuthUser => $this->toAuthUser($this->repository->find($userId)),
+                fn (AdminUserId $adminUserId): ?AuthUser => $this->toAuthUser($this->repository->find($adminUserId)),
                 fn () => null,
             );
     }
@@ -74,6 +74,6 @@ readonly class AuthUserProvider implements UserProvider
             return null;
         }
 
-        return new AuthUser($user->userId, $user->hashedPassword);
+        return new AuthUser($user->adminUserId, $user->hashedPassword);
     }
 }

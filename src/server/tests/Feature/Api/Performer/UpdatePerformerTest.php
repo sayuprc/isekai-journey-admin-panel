@@ -27,13 +27,13 @@ class UpdatePerformerTest extends TestCase
 
         $this->withAuth()
             ->putJson(route(PerformerRouteMap::Update, $uuid), [
-                'performerName' => 'ヰ世界情緒',
+                'name' => 'ヰ世界情緒',
                 'orderNo' => 2,
             ])->assertStatus(200)
             ->assertJson([
                 'performer' => [
                     'performerId' => $uuid,
-                    'performerName' => 'ヰ世界情緒',
+                    'name' => 'ヰ世界情緒',
                     'orderNo' => 2,
                 ],
             ]);

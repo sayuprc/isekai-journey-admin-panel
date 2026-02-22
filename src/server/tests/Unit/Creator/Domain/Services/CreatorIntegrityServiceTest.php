@@ -39,7 +39,7 @@ class CreatorIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreate(): void
     {
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->generator->shouldReceive('generate')
@@ -47,22 +47,22 @@ class CreatorIntegrityServiceTest extends TestCase
             ->andReturn($uuid)
             ->once();
 
-        $expectedCreator = $this->createCreator($uuid, $creatorName);
+        $expectedCreator = $this->createCreator($uuid, $name);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
-                    && $creatorNameArg->value === $creatorName,
+                fn (CreatorId $creatorIdArg, CreatorName $nameArg): bool => $creatorIdArg->value === $uuid
+                    && $nameArg->value === $name,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($creatorName);
+        $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedCreator, $result->unwrap());
@@ -71,7 +71,7 @@ class CreatorIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreateDuplicateName(): void
     {
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->generator->shouldReceive('generate')
@@ -79,24 +79,24 @@ class CreatorIntegrityServiceTest extends TestCase
             ->andReturn($uuid)
             ->once();
 
-        $expectedCreator = $this->createCreator($uuid, $creatorName);
+        $expectedCreator = $this->createCreator($uuid, $name);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
-                    && $creatorNameArg->value === $creatorName,
+                fn (CreatorId $creatorIdArg, CreatorName $nameArg): bool => $creatorIdArg->value === $uuid
+                    && $nameArg->value === $name,
             )
             ->andReturn($expectedCreator)
             ->once();
 
-        $existingCreator = $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $creatorName);
+        $existingCreator = $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturn($existingCreator)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($creatorName);
+        $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
@@ -108,24 +108,24 @@ class CreatorIntegrityServiceTest extends TestCase
     public function prepareForUpdate(): void
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
-        $expectedCreator = $this->createCreator($uuid, $creatorName);
+        $expectedCreator = $this->createCreator($uuid, $name);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
-                    && $creatorNameArg->value === $creatorName,
+                fn (CreatorId $creatorIdArg, CreatorName $nameArg): bool => $creatorIdArg->value === $uuid
+                    && $nameArg->value === $name,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $creatorName);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedCreator, $result->unwrap());
@@ -135,24 +135,24 @@ class CreatorIntegrityServiceTest extends TestCase
     public function prepareForUpdateSameNameSelf(): void
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
-        $expectedCreator = $this->createCreator($uuid, $creatorName);
+        $expectedCreator = $this->createCreator($uuid, $name);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
-                    && $creatorNameArg->value === $creatorName,
+                fn (CreatorId $creatorIdArg, CreatorName $nameArg): bool => $creatorIdArg->value === $uuid
+                    && $nameArg->value === $name,
             )
             ->andReturn($expectedCreator)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturn($expectedCreator)
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $creatorName);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedCreator, $result->unwrap());
@@ -163,26 +163,26 @@ class CreatorIntegrityServiceTest extends TestCase
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $otherUuid = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
-        $creatorName = 'クリエイター';
+        $name = 'クリエイター';
 
-        $expectedCreator = $this->createCreator($uuid, $creatorName);
+        $expectedCreator = $this->createCreator($uuid, $name);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $creatorNameArg): bool => $creatorIdArg->value === $uuid
-                    && $creatorNameArg->value === $creatorName,
+                fn (CreatorId $creatorIdArg, CreatorName $nameArg): bool => $creatorIdArg->value === $uuid
+                    && $nameArg->value === $name,
             )
             ->andReturn($expectedCreator)
             ->once();
 
-        $otherCreator = $this->createCreator($otherUuid, $creatorName);
+        $otherCreator = $this->createCreator($otherUuid, $name);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $creatorName)
+            ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturn($otherCreator)
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $creatorName);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();

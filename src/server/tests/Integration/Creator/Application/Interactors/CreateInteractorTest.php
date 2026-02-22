@@ -27,7 +27,7 @@ class CreateInteractorTest extends TestCase
 
         $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
         $this->assertCount(1, $creators);
-        $this->assertSame('ヰ世界情緒', array_first($creators)->creatorName->value);
+        $this->assertSame('ヰ世界情緒', array_first($creators)->name->value);
     }
 
     private function getInstance(): CreateInteractor

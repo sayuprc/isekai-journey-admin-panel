@@ -9,7 +9,7 @@ use AdminUser\Domain\Models\Email;
 
 interface AuthAdminUserRepositoryInterface
 {
-    public function find(AdminUserId $userId): ?AuthenticatableAdminUser;
+    public function find(AdminUserId $adminUserId): ?AuthenticatableAdminUser;
 
     public function findByEmail(Email $email): ?AuthenticatableAdminUser;
 }

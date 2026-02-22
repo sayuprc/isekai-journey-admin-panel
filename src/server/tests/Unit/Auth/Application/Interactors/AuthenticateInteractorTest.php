@@ -57,14 +57,14 @@ class AuthenticateInteractorTest extends TestCase
             ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
             ->once();
 
-        $userId = $this->generateUuid();
+        $adminUserId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
             ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
-                    $userId,
+                    $adminUserId,
                     'token',
                     new DateTimeImmutable(),
                     ConsumptionStatus::Unused,
@@ -73,8 +73,8 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
-            ->andReturn($this->createUser($userId, 'example@example.com', Role::General, []))
+            ->withArgs(fn (AdminUserId $arg) => $arg->value === $adminUserId)
+            ->andReturn($this->createAdminUser($adminUserId, 'example@example.com', Role::General, []))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
@@ -125,14 +125,14 @@ class AuthenticateInteractorTest extends TestCase
             ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
             ->once();
 
-        $userId = $this->generateUuid();
+        $adminUserId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
             ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
-                    $userId,
+                    $adminUserId,
                     'token',
                     new DateTimeImmutable(),
                     ConsumptionStatus::Unused,
@@ -141,7 +141,7 @@ class AuthenticateInteractorTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (AdminUserId $arg) => $arg->value === $userId)
+            ->withArgs(fn (AdminUserId $arg) => $arg->value === $adminUserId)
             ->andReturnNull()
             ->once();
 

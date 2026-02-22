@@ -46,7 +46,7 @@ class RefreshTokenIssueServiceTest extends TestCase
     #[Test]
     public function issue(): void
     {
-        $userIdStr = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $generatedUuid = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
         $generatedToken = 'random-token-value-12345678901234567890123456789012';
         $now = new DateTimeImmutable('2026-02-01 00:00:00');
@@ -70,7 +70,7 @@ class RefreshTokenIssueServiceTest extends TestCase
 
         $expectedRefreshToken = $this->createRefreshToken(
             $generatedUuid,
-            $userIdStr,
+            $adminUserId,
             $generatedToken,
             $expectedExpiredAt,
             ConsumptionStatus::Unused,
@@ -80,12 +80,12 @@ class RefreshTokenIssueServiceTest extends TestCase
             ->withArgs(
                 fn (
                     RefreshTokenId $id,
-                    AdminUserId $userId,
+                    AdminUserId $adminUserIdArg,
                     TokenValue $token,
                     ExpiredAt $expiredAt,
                     ConsumptionStatus $status,
                 ): bool => $id->value === $generatedUuid
-                    && $userId->value === $userIdStr
+                    && $adminUserIdArg->value === $adminUserId
                     && $token->value === $generatedToken
                     && $expiredAt->value->getTimestamp() === $expectedExpiredAt->getTimestamp()
                     && $status === ConsumptionStatus::Unused,
@@ -93,7 +93,7 @@ class RefreshTokenIssueServiceTest extends TestCase
             ->andReturn($expectedRefreshToken)
             ->once();
 
-        $result = $this->getInstance()->issue($userIdStr);
+        $result = $this->getInstance()->issue($adminUserId);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedRefreshToken, $result->unwrap());

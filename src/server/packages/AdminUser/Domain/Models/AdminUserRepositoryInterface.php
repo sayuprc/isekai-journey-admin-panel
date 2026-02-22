@@ -11,9 +11,9 @@ interface AdminUserRepositoryInterface
      */
     public function all(): array;
 
-    public function find(AdminUserId $userId): ?AdminUser;
+    public function find(AdminUserId $adminUserId): ?AdminUser;
 
     public function findByEmail(Email $email): ?AdminUser;
 
-    public function register(AdminUser $user, HashedPassword $hashedPassword): AdminUser;
+    public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser;
 }

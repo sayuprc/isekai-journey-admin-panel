@@ -8,5 +8,5 @@ use Support\Domain\ValueObjects\OrderNo;
 
 interface PerformerFactoryInterface
 {
-    public function create(PerformerId $performerId, PerformerName $performerName, OrderNo $orderNo): Performer;
+    public function create(PerformerId $performerId, PerformerName $name, OrderNo $orderNo): Performer;
 }

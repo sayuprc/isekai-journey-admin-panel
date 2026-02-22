@@ -35,15 +35,15 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     public function handle(CreateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
-            $userResult = $this->service->prepareForCreate(
-                $inputData->adminUserName,
+            $adminUserResult = $this->service->prepareForCreate(
+                $inputData->name,
                 $inputData->email,
                 $inputData->role,
                 $inputData->permissions,
             );
 
-            if ($userResult->isErr()) {
-                return new Err($this->handleError($userResult->unwrapErr()));
+            if ($adminUserResult->isErr()) {
+                return new Err($this->handleError($adminUserResult->unwrapErr()));
             }
 
             $passwordResult = HashedPassword::create($this->hasher->hash($inputData->plainPassword));
@@ -52,9 +52,9 @@ readonly class CreateInteractor implements CreateUseCaseInterface
                 return new Err($this->handleError($passwordResult->unwrapErr()));
             }
 
-            $user = $this->repository->register($userResult->unwrap(), $passwordResult->unwrap());
+            $adminUser = $this->repository->register($adminUserResult->unwrap(), $passwordResult->unwrap());
 
-            return new Ok(new CreateOutputData($user));
+            return new Ok(new CreateOutputData($adminUser));
         });
     }
 

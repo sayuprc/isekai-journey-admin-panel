@@ -9,8 +9,8 @@ use DateTimeImmutable;
 readonly class AdminUser
 {
     public function __construct(
-        public AdminUserId $userId,
-        public AdminUserName $adminUserName,
+        public AdminUserId $adminUserId,
+        public AdminUserName $name,
         public Email $email,
         public CreatedAt $createdAt,
         public Role $role,
@@ -22,16 +22,16 @@ readonly class AdminUser
      * @param list<string> $permissions
      */
     public static function reconstruct(
-        string $userId,
-        string $adminUserName,
+        string $adminUserId,
+        string $name,
         string $email,
         DateTimeImmutable $createdAt,
         int $role,
         array $permissions,
     ): self {
         return new self(
-            AdminUserId::reconstruct($userId),
-            AdminUserName::reconstruct($adminUserName),
+            AdminUserId::reconstruct($adminUserId),
+            AdminUserName::reconstruct($name),
             Email::reconstruct($email),
             CreatedAt::reconstruct($createdAt),
             Role::from($role),
@@ -40,13 +40,13 @@ readonly class AdminUser
     }
 
     /**
-     * @return array{user_id: string, admin_user_name: string, email: string, created_at: string, role: value-of<Role>, permissions: list<string>}
+     * @return array{admin_user_id: string, name: string, email: string, created_at: string, role: value-of<Role>, permissions: list<string>}
      */
     public function toArray(): array
     {
         return [
-            'user_id' => $this->userId->value,
-            'admin_user_name' => $this->adminUserName->value,
+            'admin_user_id' => $this->adminUserId->value,
+            'name' => $this->name->value,
             'email' => $this->email->value,
             'created_at' => $this->createdAt->value->format('Y-m-d H:i:s'),
             'role' => $this->role->value,
@@ -56,7 +56,7 @@ readonly class AdminUser
 
     public function equals(self $other): bool
     {
-        return $this->userId->equals($other->userId);
+        return $this->adminUserId->equals($other->adminUserId);
     }
 
     public function can(Permission $permission): bool

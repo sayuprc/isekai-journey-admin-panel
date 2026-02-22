@@ -47,7 +47,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
         }
 
         return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForUpdate($inputData->performerId, $inputData->performerName, $inputData->orderNo);
+            $result = $this->service->prepareForUpdate($inputData->performerId, $inputData->name, $inputData->orderNo);
 
             if ($result->isErr()) {
                 return new Err($this->handleError($result->unwrapErr()));

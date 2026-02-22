@@ -39,7 +39,7 @@ class SongAssembler
 
         return new AssembledCreator(
             $creator->creatorId->value,
-            $found->creatorName->value,
+            $found->name->value,
             $creator->orderNo->value,
         );
     }

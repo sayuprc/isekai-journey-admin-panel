@@ -175,7 +175,7 @@ export const EditableForm = (props: Props) => {
                       value={creator.creatorId}
                       selected={creator.creatorId === entry.creatorId}
                     >
-                      {creator.creatorName}
+                      {creator.name}
                     </option>
                   )}
                 </For>

@@ -40,7 +40,7 @@ class PerformerIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreate(): void
     {
-        $performerName = '共演者';
+        $name = '共演者';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
@@ -55,27 +55,27 @@ class PerformerIntegrityServiceTest extends TestCase
             ->andReturn($currentMaxOrderNo)
             ->once();
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $expectedOrderNo);
+        $expectedPerformer = $this->createPerformer($uuid, $name, $expectedOrderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
                     PerformerId $performerIdArg,
-                    PerformerName $performerNameArg,
+                    PerformerName $nameArg,
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
-                    && $performerNameArg->value === $performerName
+                    && $nameArg->value === $name
                     && $orderNoArg->value === $expectedOrderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($performerName);
+        $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedPerformer, $result->unwrap());
@@ -84,7 +84,7 @@ class PerformerIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreateDuplicateName(): void
     {
-        $performerName = '共演者';
+        $name = '共演者';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
@@ -99,29 +99,29 @@ class PerformerIntegrityServiceTest extends TestCase
             ->andReturn($currentMaxOrderNo)
             ->once();
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $expectedOrderNo);
+        $expectedPerformer = $this->createPerformer($uuid, $name, $expectedOrderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
                     PerformerId $performerIdArg,
-                    PerformerName $performerNameArg,
+                    PerformerName $nameArg,
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
-                    && $performerNameArg->value === $performerName
+                    && $nameArg->value === $name
                     && $orderNoArg->value === $expectedOrderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
-        $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $performerName, $expectedOrderNo);
+        $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, $expectedOrderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturn($existingPerformer)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($performerName);
+        $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
@@ -133,30 +133,30 @@ class PerformerIntegrityServiceTest extends TestCase
     public function prepareForUpdate(): void
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
+        $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
                     PerformerId $performerIdArg,
-                    PerformerName $performerNameArg,
+                    PerformerName $nameArg,
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
-                    && $performerNameArg->value === $performerName
+                    && $nameArg->value === $name
                     && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $performerName, $orderNo);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedPerformer, $result->unwrap());
@@ -166,30 +166,30 @@ class PerformerIntegrityServiceTest extends TestCase
     public function prepareForUpdateSameNameSelf(): void
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
+        $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
                     PerformerId $performerIdArg,
-                    PerformerName $performerNameArg,
+                    PerformerName $nameArg,
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
-                    && $performerNameArg->value === $performerName
+                    && $nameArg->value === $name
                     && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturn($expectedPerformer)
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $performerName, $orderNo);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
         $this->assertSame($expectedPerformer, $result->unwrap());
@@ -200,32 +200,32 @@ class PerformerIntegrityServiceTest extends TestCase
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $otherUuid = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
-        $performerName = '共演者';
+        $name = '共演者';
         $orderNo = 1;
 
-        $expectedPerformer = $this->createPerformer($uuid, $performerName, $orderNo);
+        $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
 
         $this->factory->shouldReceive('create')
             ->withArgs(
                 fn (
                     PerformerId $performerIdArg,
-                    PerformerName $performerNameArg,
+                    PerformerName $nameArg,
                     OrderNo $orderNoArg,
                 ): bool => $performerIdArg->value === $uuid
-                    && $performerNameArg->value === $performerName
+                    && $nameArg->value === $name
                     && $orderNoArg->value === $orderNo,
             )
             ->andReturn($expectedPerformer)
             ->once();
 
-        $otherPerformer = $this->createPerformer($otherUuid, $performerName, $orderNo);
+        $otherPerformer = $this->createPerformer($otherUuid, $name, $orderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $performerName)
+            ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturn($otherPerformer)
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($uuid, $performerName, $orderNo);
+        $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();

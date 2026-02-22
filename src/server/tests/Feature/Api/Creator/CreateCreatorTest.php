@@ -20,11 +20,11 @@ class CreateCreatorTest extends TestCase
     {
         $this->withAuth()
             ->postJson(route(CreatorRouteMap::Create), [
-                'creatorName' => 'ヰ世界情緒',
+                'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
             ->assertJson([
                 'creator' => [
-                    'creatorName' => 'ヰ世界情緒',
+                    'name' => 'ヰ世界情緒',
                 ],
             ]);
     }

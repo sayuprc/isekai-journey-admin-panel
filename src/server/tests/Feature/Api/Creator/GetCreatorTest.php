@@ -31,7 +31,7 @@ class GetCreatorTest extends TestCase
             ->assertJson([
                 'creator' => [
                     'creatorId' => $uuid,
-                    'creatorName' => 'ヰ世界情緒',
+                    'name' => 'ヰ世界情緒',
                 ],
             ]);
     }

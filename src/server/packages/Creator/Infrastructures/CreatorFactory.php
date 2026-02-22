@@ -11,8 +11,8 @@ use Creator\Domain\Models\CreatorName;
 
 readonly class CreatorFactory implements CreatorFactoryInterface
 {
-    public function create(CreatorId $creatorId, CreatorName $creatorName): Creator
+    public function create(CreatorId $creatorId, CreatorName $name): Creator
     {
-        return new Creator($creatorId, $creatorName);
+        return new Creator($creatorId, $name);
     }
 }

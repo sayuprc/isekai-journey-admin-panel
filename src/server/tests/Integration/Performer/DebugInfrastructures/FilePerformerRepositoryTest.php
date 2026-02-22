@@ -49,7 +49,7 @@ class FilePerformerRepositoryTest extends TestCase
 
         $this->storePerformers($performer);
 
-        $found = $this->getInstance()->findByName($performer->performerName);
+        $found = $this->getInstance()->findByName($performer->name);
 
         $this->assertNotNull($found);
         $this->assertEquals($performer, $found);

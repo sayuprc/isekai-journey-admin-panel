@@ -8,7 +8,7 @@ use AdminUser\Domain\Models\AdminUser;
 
 readonly class CreateOutputData
 {
-    public function __construct(public AdminUser $user)
+    public function __construct(public AdminUser $adminUser)
     {
     }
 }
