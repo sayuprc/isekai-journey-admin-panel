@@ -30,7 +30,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
     {
         $songs = $this->loadAll();
 
-        uasort($songs, fn (Song $a, Song $b): int => $a->orderNo->value <=> $b->orderNo->value);
+        usort($songs, fn (Song $a, Song $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $songs;
     }
@@ -85,11 +85,9 @@ readonly class FileSongRepository implements SongRepositoryInterface
 
     public function getMaxOrderNo(): int
     {
-        $songs = $this->loadAll();
+        $orderNos = array_map(fn (Song $item): int => $item->orderNo->value, $this->loadAll());
 
-        uasort($songs, fn (Song $a, Song $b): int => $b->orderNo->value <=> $a->orderNo->value);
-
-        return array_first($songs)->orderNo->value ?? 0;
+        return 0 < count($orderNos) ? max($orderNos) : 0;
     }
 
     /**
