@@ -41,6 +41,7 @@ services:
       - 4010:4010
     extra_hosts:
       - local.admin.terrarium.isekaijoucho.fan:host-gateway
+      - local.api.terrarium.isekaijoucho.fan:host-gateway
     volumes:
       - ./src/client:/app/src
       - ./src/contracts:/app/contracts
