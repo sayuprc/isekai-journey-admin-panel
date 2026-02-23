@@ -19,6 +19,7 @@ SERVER_IMAGE = "isekai-terrarium-admin-php:{{vars.server_tag}}"
 PROXY_IMAGE = "isekai-terrarium-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
 NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
+OAS_FILE = "IsekaiTerrarium.Admin.v1.yaml"
 
 [tasks.setup]
 description = "環境構築をする"
@@ -153,7 +154,7 @@ run = '''
 rm -rf ./src/server/Generated
 
 docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
-  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -i /local/src/contracts/generated/oas/${OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
   -o /local/src/server/Generated

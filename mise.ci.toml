@@ -49,7 +49,7 @@ run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
 description = "CI 環境でコード生成を行い、差分をチェックする"
 run = '''
 docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
-  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -i /local/src/contracts/generated/oas/${OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
   -o /local/src/server/Generated
