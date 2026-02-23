@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Auth;
 use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
@@ -34,8 +35,15 @@ class LoginTest extends TestCase
             'email' => 'example@example.com',
             'password' => 'password',
         ])->assertStatus(200)
-            ->assertCookie('access_token')
-            ->assertCookie('refresh_token');
+            ->assertJson(
+                fn (AssertableJson $json) => $json->has('accessToken')
+                    ->has('refreshToken')
+                    ->whereAllType([
+                        'accessToken' => 'string',
+                        'refreshToken' => 'string',
+                    ])
+                    ->etc(),
+            );
     }
 
     #[Test]

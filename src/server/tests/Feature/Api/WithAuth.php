@@ -33,7 +33,6 @@ trait WithAuth
 
         $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);
 
-        return $this->withUnencryptedCookie('access_token', $accessToken->jwt->value)
-            ->withCredentials();
+        return $this->withHeader('Authorization', 'Bearer ' . $accessToken->jwt->value);
     }
 }
