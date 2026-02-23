@@ -1,6 +1,6 @@
 <?php
 /**
- * CookieAuth
+ * LoginResponse
  *
  * PHP version 8.1
  *
@@ -32,16 +32,15 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * CookieAuth Class Doc Comment
+ * LoginResponse Class Doc Comment
  *
  * @category Class
- * @description 
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
+class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -50,7 +49,7 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'CookieAuth';
+    protected static $openAPIModelName = 'LoginResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -58,9 +57,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'type' => 'string',
-        'in' => 'string',
-        'name' => 'string'
+        'access_token' => 'string',
+        'refresh_token' => 'string'
     ];
 
     /**
@@ -71,9 +69,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'type' => null,
-        'in' => null,
-        'name' => null
+        'access_token' => 'password',
+        'refresh_token' => 'password'
     ];
 
     /**
@@ -82,9 +79,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'type' => false,
-        'in' => false,
-        'name' => false
+        'access_token' => false,
+        'refresh_token' => false
     ];
 
     /**
@@ -173,9 +169,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'type' => 'type',
-        'in' => 'in',
-        'name' => 'name'
+        'access_token' => 'accessToken',
+        'refresh_token' => 'refreshToken'
     ];
 
     /**
@@ -184,9 +179,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'type' => 'setType',
-        'in' => 'setIn',
-        'name' => 'setName'
+        'access_token' => 'setAccessToken',
+        'refresh_token' => 'setRefreshToken'
     ];
 
     /**
@@ -195,9 +189,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'type' => 'getType',
-        'in' => 'getIn',
-        'name' => 'getName'
+        'access_token' => 'getAccessToken',
+        'refresh_token' => 'getRefreshToken'
     ];
 
     /**
@@ -241,45 +234,6 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
         return self::$openAPIModelName;
     }
 
-    public const TYPE_API_KEY = 'apiKey';
-    public const IN_COOKIE = 'cookie';
-    public const NAME_ACCESS_TOKEN = 'access_token';
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getTypeAllowableValues()
-    {
-        return [
-            self::TYPE_API_KEY,
-        ];
-    }
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getInAllowableValues()
-    {
-        return [
-            self::IN_COOKIE,
-        ];
-    }
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getNameAllowableValues()
-    {
-        return [
-            self::NAME_ACCESS_TOKEN,
-        ];
-    }
 
     /**
      * Associative array for storing property values
@@ -296,9 +250,8 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('in', $data ?? [], null);
-        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('access_token', $data ?? [], null);
+        $this->setIfExists('refresh_token', $data ?? [], null);
     }
 
     /**
@@ -328,42 +281,12 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['type'] === null) {
-            $invalidProperties[] = "'type' can't be null";
+        if ($this->container['access_token'] === null) {
+            $invalidProperties[] = "'access_token' can't be null";
         }
-        $allowedValues = $this->getTypeAllowableValues();
-        if (!is_null($this->container['type']) && !in_array($this->container['type'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value '%s' for 'type', must be one of '%s'",
-                $this->container['type'],
-                implode("', '", $allowedValues)
-            );
+        if ($this->container['refresh_token'] === null) {
+            $invalidProperties[] = "'refresh_token' can't be null";
         }
-
-        if ($this->container['in'] === null) {
-            $invalidProperties[] = "'in' can't be null";
-        }
-        $allowedValues = $this->getInAllowableValues();
-        if (!is_null($this->container['in']) && !in_array($this->container['in'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value '%s' for 'in', must be one of '%s'",
-                $this->container['in'],
-                implode("', '", $allowedValues)
-            );
-        }
-
-        if ($this->container['name'] === null) {
-            $invalidProperties[] = "'name' can't be null";
-        }
-        $allowedValues = $this->getNameAllowableValues();
-        if (!is_null($this->container['name']) && !in_array($this->container['name'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value '%s' for 'name', must be one of '%s'",
-                $this->container['name'],
-                implode("', '", $allowedValues)
-            );
-        }
-
         return $invalidProperties;
     }
 
@@ -380,112 +303,55 @@ class CookieAuth implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets type
+     * Gets access_token
      *
      * @return string
      */
-    public function getType()
+    public function getAccessToken()
     {
-        return $this->container['type'];
+        return $this->container['access_token'];
     }
 
     /**
-     * Sets type
+     * Sets access_token
      *
-     * @param string $type API key authentication
+     * @param string $access_token アクセストークン(JWT)
      *
      * @return self
      */
-    public function setType($type)
+    public function setAccessToken($access_token)
     {
-        if (is_null($type)) {
-            throw new \InvalidArgumentException('non-nullable type cannot be null');
+        if (is_null($access_token)) {
+            throw new \InvalidArgumentException('non-nullable access_token cannot be null');
         }
-        $allowedValues = $this->getTypeAllowableValues();
-        if (!in_array($type, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Invalid value '%s' for 'type', must be one of '%s'",
-                    $type,
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['type'] = $type;
+        $this->container['access_token'] = $access_token;
 
         return $this;
     }
 
     /**
-     * Gets in
+     * Gets refresh_token
      *
      * @return string
      */
-    public function getIn()
+    public function getRefreshToken()
     {
-        return $this->container['in'];
+        return $this->container['refresh_token'];
     }
 
     /**
-     * Sets in
+     * Sets refresh_token
      *
-     * @param string $in location of the API key
+     * @param string $refresh_token リフレッシュトークン
      *
      * @return self
      */
-    public function setIn($in)
+    public function setRefreshToken($refresh_token)
     {
-        if (is_null($in)) {
-            throw new \InvalidArgumentException('non-nullable in cannot be null');
+        if (is_null($refresh_token)) {
+            throw new \InvalidArgumentException('non-nullable refresh_token cannot be null');
         }
-        $allowedValues = $this->getInAllowableValues();
-        if (!in_array($in, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Invalid value '%s' for 'in', must be one of '%s'",
-                    $in,
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['in'] = $in;
-
-        return $this;
-    }
-
-    /**
-     * Gets name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->container['name'];
-    }
-
-    /**
-     * Sets name
-     *
-     * @param string $name name of the API key
-     *
-     * @return self
-     */
-    public function setName($name)
-    {
-        if (is_null($name)) {
-            throw new \InvalidArgumentException('non-nullable name cannot be null');
-        }
-        $allowedValues = $this->getNameAllowableValues();
-        if (!in_array($name, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Invalid value '%s' for 'name', must be one of '%s'",
-                    $name,
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['name'] = $name;
+        $this->container['refresh_token'] = $refresh_token;
 
         return $this;
     }

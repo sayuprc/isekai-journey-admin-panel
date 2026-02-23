@@ -21,7 +21,7 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $accessToken = $request->cookie('access_token');
+        $accessToken = $request->bearerToken();
 
         if (! is_string($accessToken)) {
             return response()->json(status: 401);

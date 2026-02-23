@@ -342,7 +342,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets password
      *
-     * @param string $password password
+     * @param string $password 平文パスワード
      *
      * @return self
      */
