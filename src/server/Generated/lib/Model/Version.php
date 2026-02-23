@@ -1,6 +1,6 @@
 <?php
 /**
- * PermissionValue
+ * Version
  *
  * PHP version 8.1
  *
@@ -30,36 +30,19 @@ namespace OpenAPI\Client\Model;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * PermissionValue Class Doc Comment
+ * Version Class Doc Comment
  *
  * @category Class
- * @description 権限の値
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-enum PermissionValue: string
+enum Version: string
 {
     /**
      * Possible values of this enum
      */
-    case READ_ADMIN_USER = 'read_admin_user';
-
-    case WRITE_ADMIN_USER = 'write_admin_user';
-
-    case READ_CREATOR = 'read_creator';
-
-    case WRITE_CREATOR = 'write_creator';
-
-    case READ_PERFORMER = 'read_performer';
-
-    case WRITE_PERFORMER = 'write_performer';
-
-    case READ_SONG = 'read_song';
-
-    case WRITE_SONG = 'write_song';
-
-    case READ_SONG_TYPE = 'read_song_type';
+    case V1 = 'v1';
 
 }
 

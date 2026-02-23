@@ -246,6 +246,8 @@ export interface components {
         ErrorResponse: {
             message: string;
         };
+        /** @enum {string} */
+        "IsekaiTerrarium.Admin.Version": "v1";
         LoginRequest: {
             email: components["schemas"]["email"];
             password: components["schemas"]["password"];
@@ -434,6 +436,8 @@ export interface components {
             field: string;
             message: string;
         };
+        /** @enum {string} */
+        Version: "v1";
         /**
          * Format: password
          * @description アクセストークン(JWT)
