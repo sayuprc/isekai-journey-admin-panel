@@ -215,23 +215,6 @@ export interface components {
          *     }
          */
         Composer: components["schemas"]["SongCreator"];
-        CookieAuth: {
-            /**
-             * @description API key authentication
-             * @enum {string}
-             */
-            type: "apiKey";
-            /**
-             * @description location of the API key
-             * @enum {string}
-             */
-            in: "cookie";
-            /**
-             * @description name of the API key
-             * @enum {string}
-             */
-            name: "access_token";
-        };
         /**
          * @example {
          *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
@@ -265,8 +248,11 @@ export interface components {
         };
         LoginRequest: {
             email: components["schemas"]["email"];
-            /** Format: password */
-            password: string;
+            password: components["schemas"]["password"];
+        };
+        LoginResponse: {
+            accessToken: components["schemas"]["accessToken"];
+            refreshToken: components["schemas"]["refreshToken"];
         };
         /**
          * @example {
@@ -449,6 +435,11 @@ export interface components {
             message: string;
         };
         /**
+         * Format: password
+         * @description アクセストークン(JWT)
+         */
+        accessToken: string;
+        /**
          * Format: uuid
          * @description 管理ユーザーID
          */
@@ -480,6 +471,11 @@ export interface components {
          */
         orderNo: number;
         /**
+         * Format: password
+         * @description 平文パスワード
+         */
+        password: string;
+        /**
          * Format: uuid
          * @description 共演者ID
          */
@@ -488,6 +484,11 @@ export interface components {
         performerName: string;
         /** @description 権限名 */
         permissionName: string;
+        /**
+         * Format: password
+         * @description リフレッシュトークン
+         */
+        refreshToken: string;
         /** @description 役割名 */
         roleName: string;
         /**
@@ -584,10 +585,11 @@ export interface operations {
             /** @description The request has succeeded. */
             200: {
                 headers: {
-                    "Set-Cookie": string;
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
             };
             /** @description The server could not understand the request due to invalid syntax. */
             400: {
