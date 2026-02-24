@@ -23,11 +23,14 @@ class CreateCreatorTest extends TestCase
             ->postJson(route(CreatorRouteMap::Create), [
                 'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('creator', fn (AssertableJson $json) => $json
-                    ->whereType('creatorId', 'string')
-                    ->where('name', 'ヰ世界情緒')
-                )
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'creator',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('creatorId', 'string')
+                            ->where('name', 'ヰ世界情緒'),
+                    ),
             );
     }
 

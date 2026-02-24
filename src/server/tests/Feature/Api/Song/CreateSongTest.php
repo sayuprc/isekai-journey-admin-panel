@@ -37,32 +37,35 @@ class CreateSongTest extends TestCase
                 'composers' => [['creatorId' => $creator2->creatorId->value]],
                 'lyricists' => [['creatorId' => $creator3->creatorId->value]],
             ])->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('song', fn (AssertableJson $json) => $json
-                    ->whereType('songId', 'string')
-                    ->where('title', '描き続けた君へ')
-                    ->where('description', 'オリジナル楽曲')
-                    ->where('songType', [
-                        'name' => SongType::Original->getName(),
-                        'value' => SongType::Original->value,
-                    ])
-                    ->where('orderNo', 10)
-                    ->where('arrangers', [[
-                        'creatorId' => $creator1->creatorId->value,
-                        'name' => $creator1->name->value,
-                        'orderNo' => 1,
-                    ]])
-                    ->where('composers', [[
-                        'creatorId' => $creator2->creatorId->value,
-                        'name' => $creator2->name->value,
-                        'orderNo' => 1,
-                    ]])
-                    ->where('lyricists', [[
-                        'creatorId' => $creator3->creatorId->value,
-                        'name' => $creator3->name->value,
-                        'orderNo' => 1,
-                    ]])
-                )
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'song',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('songId', 'string')
+                            ->where('title', '描き続けた君へ')
+                            ->where('description', 'オリジナル楽曲')
+                            ->where('songType', [
+                                'name' => SongType::Original->getName(),
+                                'value' => SongType::Original->value,
+                            ])
+                            ->where('orderNo', 10)
+                            ->where('arrangers', [[
+                                'creatorId' => $creator1->creatorId->value,
+                                'name' => $creator1->name->value,
+                                'orderNo' => 1,
+                            ]])
+                            ->where('composers', [[
+                                'creatorId' => $creator2->creatorId->value,
+                                'name' => $creator2->name->value,
+                                'orderNo' => 1,
+                            ]])
+                            ->where('lyricists', [[
+                                'creatorId' => $creator3->creatorId->value,
+                                'name' => $creator3->name->value,
+                                'orderNo' => 1,
+                            ]]),
+                    ),
             );
     }
 

@@ -23,12 +23,15 @@ class CreatePerformerTest extends TestCase
             ->postJson(route(PerformerRouteMap::Create), [
                 'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('performer', fn (AssertableJson $json) => $json
-                    ->whereType('performerId', 'string')
-                    ->where('name', 'ヰ世界情緒')
-                    ->where('orderNo', 10)
-                )
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'performer',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('performerId', 'string')
+                            ->where('name', 'ヰ世界情緒')
+                            ->where('orderNo', 10),
+                    ),
             );
     }
 
