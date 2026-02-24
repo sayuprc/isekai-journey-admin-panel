@@ -6,7 +6,9 @@ namespace Tests\Integration\AdminUser\Application\Interactors;
 
 use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\List\ListInputData;
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use DateTimeImmutable;
@@ -25,31 +27,32 @@ class ListInteractorTest extends TestCase
     {
         $this->permissionContext(Permission::ReadAdminUser);
 
-        $id1 = $this->generateUuid();
-        $id2 = $this->generateUuid();
-        $date1 = (new DateTimeImmutable())->modify('-1 day')->format('Y-m-d H:i:s');
-        $date2 = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $date1 = new DateTimeImmutable()->modify('-1 day');
+        $date2 = new DateTimeImmutable();
 
-        $this->factory(FileAdminUserRepository::class, [
-            [
-                'admin_user_id' => $id1,
-                'name' => 'ユーザー1',
-                'email' => 'user1@example.com',
-                'created_at' => $date1,
-                'role' => Role::General->value,
-                'permissions' => [],
-                'hashed_password' => 'password',
-            ],
-            [
-                'admin_user_id' => $id2,
-                'name' => 'ユーザー2',
-                'email' => 'user2@example.com',
-                'created_at' => $date2,
-                'role' => Role::General->value,
-                'permissions' => [],
-                'hashed_password' => 'password',
-            ],
-        ]);
+        $repository = $this->app->make(AdminUserRepositoryInterface::class);
+
+        $id1 = $this->generateUuid();
+        $user1 = AdminUser::reconstruct(
+            $id1,
+            'ユーザー1',
+            'user1@example.com',
+            $date1,
+            Role::General->value,
+            [],
+        );
+        $repository->register($user1, HashedPassword::create('password')->unwrap());
+
+        $id2 = $this->generateUuid();
+        $user2 = AdminUser::reconstruct(
+            $id2,
+            'ユーザー2',
+            'user2@example.com',
+            $date2,
+            Role::General->value,
+            [],
+        );
+        $repository->register($user2, HashedPassword::create('password')->unwrap());
 
         $result = $this->getInstance()->handle(new ListInputData());
 
@@ -58,6 +61,7 @@ class ListInteractorTest extends TestCase
         $output = $result->unwrap();
 
         $this->assertCount(2, $output->adminUsers);
+        // Note: FileAdminUserRepository sorts by createdAt ascending.
         $this->assertSame($id1, $output->adminUsers[0]->adminUserId->value);
         $this->assertSame($id2, $output->adminUsers[1]->adminUserId->value);
     }
