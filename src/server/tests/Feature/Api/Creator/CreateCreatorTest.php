@@ -37,12 +37,17 @@ class CreateCreatorTest extends TestCase
     #[Test]
     public function createFails(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(CreatorRouteMap::Create), [
+                'name' => '',
+            ])->assertStatus(422);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(CreatorRouteMap::Create), [])
+            ->assertStatus(422);
     }
 }

@@ -31,8 +31,10 @@ class DeletePerformerTest extends TestCase
     }
 
     #[Test]
-    public function emptyParameters(): void
+    public function invalidId(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $this->withAuth()
+            ->delete(route(PerformerRouteMap::Delete, 'invalid-uuid'))
+            ->assertStatus(422);
     }
 }

@@ -35,8 +35,10 @@ class DeleteSongTest extends TestCase
     }
 
     #[Test]
-    public function emptyParameters(): void
+    public function invalidId(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $this->withAuth()
+            ->delete(route(SongRouteMap::Delete, 'invalid-uuid'))
+            ->assertStatus(422);
     }
 }

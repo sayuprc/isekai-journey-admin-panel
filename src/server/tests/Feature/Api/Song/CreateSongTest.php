@@ -72,12 +72,22 @@ class CreateSongTest extends TestCase
     #[Test]
     public function createFails(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [
+                'title' => '',
+                'description' => '',
+                'songTypeValue' => 99,
+                'arrangers' => [],
+                'composers' => [],
+                'lyricists' => [],
+            ])->assertStatus(422);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [])
+            ->assertStatus(422);
     }
 }

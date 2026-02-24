@@ -84,12 +84,51 @@ class UpdateSongTest extends TestCase
     #[Test]
     public function updateFails(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $songId = $this->generateUuid();
+        $this->storeSongs(
+            $this->createSong(
+                $songId,
+                '曲名',
+                '説明',
+                SongType::Original,
+                1,
+                [],
+                [],
+                [],
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => '',
+                'description' => '',
+                'songTypeValue' => 99,
+                'orderNo' => 0,
+                'arrangers' => [],
+                'composers' => [],
+                'lyricists' => [],
+            ])->assertStatus(422);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $songId = $this->generateUuid();
+        $this->storeSongs(
+            $this->createSong(
+                $songId,
+                '曲名',
+                '説明',
+                SongType::Original,
+                1,
+                [],
+                [],
+                [],
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [])
+            ->assertStatus(422);
     }
 }
