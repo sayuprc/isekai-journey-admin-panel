@@ -28,7 +28,7 @@ class ListPerformerTest extends TestCase
         $this->withAuth()
             ->get(route(PerformerRouteMap::List))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'performers' => [
                     [
                         'performerId' => $uuid,
@@ -45,6 +45,6 @@ class ListPerformerTest extends TestCase
         $this->withAuth()
             ->get(route(PerformerRouteMap::List))
             ->assertStatus(200)
-            ->assertJson(['performers' => []]);
+            ->assertExactJson(['performers' => []]);
     }
 }

@@ -18,16 +18,21 @@ class CreatePerformerTest extends TestCase
     #[Test]
     public function canCreate(): void
     {
-        $this->withAuth()
+        $response = $this->withAuth()
             ->postJson(route(PerformerRouteMap::Create), [
                 'name' => 'ヰ世界情緒',
-            ])->assertStatus(200)
-            ->assertJson([
-                'performer' => [
-                    'name' => 'ヰ世界情緒',
-                    'orderNo' => 10,
-                ],
             ]);
+
+        $response->assertStatus(200);
+        $performerId = $response->json('performer.performerId');
+
+        $response->assertExactJson([
+            'performer' => [
+                'performerId' => $performerId,
+                'name' => 'ヰ世界情緒',
+                'orderNo' => 10,
+            ],
+        ]);
     }
 
     #[Test]

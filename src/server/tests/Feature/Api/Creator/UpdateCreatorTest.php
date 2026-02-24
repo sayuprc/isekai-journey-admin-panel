@@ -29,7 +29,7 @@ class UpdateCreatorTest extends TestCase
             ->putJson(route(CreatorRouteMap::Update, $uuid), [
                 'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'creator' => [
                     'creatorId' => $uuid,
                     'name' => 'ヰ世界情緒',
