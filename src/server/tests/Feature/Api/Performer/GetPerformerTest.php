@@ -28,7 +28,7 @@ class GetPerformerTest extends TestCase
         $this->withAuth()
             ->get(route(PerformerRouteMap::Get, $uuid))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'performer' => [
                     'performerId' => $uuid,
                     'name' => 'ヰ世界情緒',

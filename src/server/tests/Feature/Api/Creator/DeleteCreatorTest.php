@@ -53,7 +53,7 @@ class DeleteCreatorTest extends TestCase
         $this->withAuth()
             ->delete(route(CreatorRouteMap::Delete, $creatorId))
             ->assertStatus(400)
-            ->assertJson([
+            ->assertExactJson([
                 'message' => 'このクリエイターは楽曲に使用されているため削除できません',
             ]);
     }

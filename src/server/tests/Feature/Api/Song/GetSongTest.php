@@ -45,7 +45,7 @@ class GetSongTest extends TestCase
         $this->withAuth()
             ->get(route(SongRouteMap::Get, $songId))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'song' => [
                     'songId' => $songId,
                     'title' => '描き続けた君へ',

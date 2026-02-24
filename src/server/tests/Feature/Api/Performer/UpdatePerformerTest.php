@@ -30,7 +30,7 @@ class UpdatePerformerTest extends TestCase
                 'name' => 'ヰ世界情緒',
                 'orderNo' => 2,
             ])->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'performer' => [
                     'performerId' => $uuid,
                     'name' => 'ヰ世界情緒',
