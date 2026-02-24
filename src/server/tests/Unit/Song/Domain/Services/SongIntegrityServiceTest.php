@@ -306,6 +306,139 @@ class SongIntegrityServiceTest extends TestCase
         $this->assertTrue($result->isErr());
     }
 
+    #[Test]
+    public function prepareForCreateReturnsErrorWhenSongTypeIsInvalid(): void
+    {
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = 999; // Invalid
+        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->andReturn([
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+                $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
+            ]);
+
+        $this->generator->shouldReceive('generate')->andReturn($uuid);
+
+        $this->songRepository->shouldReceive('getMaxOrderNo')->andReturn(100);
+
+        $result = $this->getInstance()->prepareForCreate(
+            $title,
+            $description,
+            $songType,
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
+    #[Test]
+    public function prepareForCreateReturnsErrorWhenCreatorsAreInvalid(): void
+    {
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = SongType::Original->value;
+
+        $result = $this->getInstance()->prepareForCreate(
+            $title,
+            $description,
+            $songType,
+            [['creatorId' => 'invalid-uuid']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
+    #[Test]
+    public function prepareForUpdateReturnsErrorWhenOrderNoIsInvalid(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = SongType::Original->value;
+        $orderNo = 0; // Invalid
+
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->andReturn([
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+                $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
+            ]);
+
+        $result = $this->getInstance()->prepareForUpdate(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
+    #[Test]
+    public function prepareForUpdateReturnsErrorWhenSongTypeIsInvalid(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = 999; // Invalid
+        $orderNo = 1;
+
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->andReturn([
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+                $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
+            ]);
+
+        $result = $this->getInstance()->prepareForUpdate(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
+    #[Test]
+    public function prepareForUpdateReturnsErrorWhenCreatorsAreInvalid(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $title = '描き続けた君へ';
+        $description = '説明';
+        $songType = SongType::Original->value;
+        $orderNo = 1;
+
+        $result = $this->getInstance()->prepareForUpdate(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            [['creatorId' => 'invalid-uuid']],
+            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
+            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+        );
+
+        $this->assertTrue($result->isErr());
+    }
+
     private function getInstance(): SongIntegrityService
     {
         return new SongIntegrityService(

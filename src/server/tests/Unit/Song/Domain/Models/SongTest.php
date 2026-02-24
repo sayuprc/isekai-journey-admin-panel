@@ -124,4 +124,47 @@ class SongTest extends TestCase
     {
         return [['creatorId' => $creatorId, 'orderNo' => 1]];
     }
+
+    #[Test]
+    public function toArray(): void
+    {
+        $songId = '11111111-1111-1111-1111-111111111111';
+        $title = 'Song Title';
+        $description = 'Song Description';
+        $songType = SongType::Original->value;
+        $orderNo = 1;
+        $arrangers = self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+        $composers = self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+        $lyricists = self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc');
+
+        $song = Song::reconstruct(
+            $songId,
+            $title,
+            $description,
+            $songType,
+            $orderNo,
+            $arrangers,
+            $composers,
+            $lyricists,
+        );
+
+        $expected = [
+            'song_id' => $songId,
+            'title' => $title,
+            'description' => $description,
+            'song_type' => $songType,
+            'order_no' => $orderNo,
+            'arrangers' => [
+                ['creator_id' => 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'order_no' => 1],
+            ],
+            'composers' => [
+                ['creator_id' => 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'order_no' => 1],
+            ],
+            'lyricists' => [
+                ['creator_id' => 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'order_no' => 1],
+            ],
+        ];
+
+        $this->assertSame($expected, $song->toArray());
+    }
 }

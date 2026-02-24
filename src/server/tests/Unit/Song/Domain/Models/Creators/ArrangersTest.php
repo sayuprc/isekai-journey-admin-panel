@@ -42,4 +42,16 @@ class ArrangersTest extends TestCase
 
         $this->assertCount(0, $arrangers);
     }
+
+    #[Test]
+    public function fromArrayInvalidCreatorId(): void
+    {
+        $input = [
+            ['creatorId' => 'invalid-uuid'],
+        ];
+
+        $result = Arrangers::fromArray($input);
+
+        $this->assertTrue($result->isErr());
+    }
 }

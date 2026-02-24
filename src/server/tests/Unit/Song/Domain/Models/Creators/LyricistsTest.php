@@ -42,4 +42,16 @@ class LyricistsTest extends TestCase
 
         $this->assertCount(0, $lyricists);
     }
+
+    #[Test]
+    public function fromArrayInvalidCreatorId(): void
+    {
+        $input = [
+            ['creatorId' => 'invalid-uuid'],
+        ];
+
+        $result = Lyricists::fromArray($input);
+
+        $this->assertTrue($result->isErr());
+    }
 }
