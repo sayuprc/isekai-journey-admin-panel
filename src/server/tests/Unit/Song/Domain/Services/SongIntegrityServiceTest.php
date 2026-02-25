@@ -331,9 +331,15 @@ class SongIntegrityServiceTest extends TestCase
             ])
             ->once();
 
-        $this->generator->shouldReceive('generate')->andReturn($uuid);
+        $this->generator->shouldReceive('generate')
+            ->with()
+            ->andReturn($uuid)
+            ->once();
 
-        $this->songRepository->shouldReceive('getMaxOrderNo')->andReturn(100);
+        $this->songRepository->shouldReceive('getMaxOrderNo')
+            ->with()
+            ->andReturn(100)
+            ->once();
 
         $result = $this->getInstance()->prepareForCreate(
             $title,
