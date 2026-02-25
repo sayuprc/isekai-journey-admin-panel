@@ -315,11 +315,21 @@ class SongIntegrityServiceTest extends TestCase
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(
+                fn (
+                    CreatorId $arg1,
+                    CreatorId $arg2,
+                    CreatorId $arg3,
+                ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                    && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
+            )
             ->andReturn([
                 $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
                 $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
                 $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
-            ]);
+            ])
+            ->once();
 
         $this->generator->shouldReceive('generate')->andReturn($uuid);
 
@@ -344,6 +354,8 @@ class SongIntegrityServiceTest extends TestCase
         $description = '説明';
         $songType = SongType::Original->value;
 
+        $this->creatorRepository->shouldNotReceive('findByIds');
+
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
@@ -366,11 +378,21 @@ class SongIntegrityServiceTest extends TestCase
         $orderNo = 0; // Invalid
 
         $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(
+                fn (
+                    CreatorId $arg1,
+                    CreatorId $arg2,
+                    CreatorId $arg3,
+                ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                    && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
+            )
             ->andReturn([
                 $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
                 $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
                 $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
-            ]);
+            ])
+            ->once();
 
         $result = $this->getInstance()->prepareForUpdate(
             $songId,
@@ -396,11 +418,21 @@ class SongIntegrityServiceTest extends TestCase
         $orderNo = 1;
 
         $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(
+                fn (
+                    CreatorId $arg1,
+                    CreatorId $arg2,
+                    CreatorId $arg3,
+                ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
+                    && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
+                    && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
+            )
             ->andReturn([
                 $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
                 $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
                 $this->createCreator('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', ''),
-            ]);
+            ])
+            ->once();
 
         $result = $this->getInstance()->prepareForUpdate(
             $songId,
@@ -424,6 +456,8 @@ class SongIntegrityServiceTest extends TestCase
         $description = '説明';
         $songType = SongType::Original->value;
         $orderNo = 1;
+
+        $this->creatorRepository->shouldNotReceive('findByIds');
 
         $result = $this->getInstance()->prepareForUpdate(
             $songId,
