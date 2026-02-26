@@ -97,16 +97,15 @@ class OpenApiValidator
 
         if (is_null($breadcrumb)) {
             $field = '';
-            $message = '予期せぬエラー';
         } else {
             $field = implode('/', $breadcrumb->buildChain());
-
-            // TODO エラーに応じてメッセージを変える
-            $message = match (true) {
-                $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
-                default => $exception->getMessage(),
-            };
         }
+
+        // TODO エラーに応じてメッセージを変える
+        $message = match (true) {
+            $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
+            default => $exception->getMessage(),
+        };
 
         return new ValidationError()
             ->setField($field)
