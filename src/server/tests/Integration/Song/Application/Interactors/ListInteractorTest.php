@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
+use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\Role;
+use Auth\Domain\Models\AuthContext;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\ListInteractor;
 use SongType\Domain\Models\SongType;
+use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Error\AuthorizationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -19,6 +25,8 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongs(): void
     {
+        $this->privilegedContext();
+
         $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A');
         $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A');
         $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A');
@@ -82,10 +90,49 @@ class ListInteractorTest extends TestCase
         $this->assertCount(0, $response->songs[1]->lyricists);
     }
 
-    private function getInstance(): ListInteractor
+    #[Test]
+    public function emptySongs(): void
     {
         $this->privilegedContext();
 
+        $result = $this->getInstance()->handle();
+        $this->assertTrue($result->isOk());
+
+        $response = $result->unwrap();
+
+        $this->assertCount(0, $response->songs);
+    }
+
+    #[Test]
+    public function cannotListWhenUnauthenticated(): void
+    {
+        $result = $this->getInstance()->handle();
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+    }
+
+    #[Test]
+    public function cannotListWhenUnauthorized(): void
+    {
+        $context = $this->app->make(AuthContext::class);
+        $context->set(AdminUser::reconstruct(
+            $this->generateUuid(),
+            'Unprivileged User',
+            'unprivileged@example.com',
+            new DateTimeImmutable(),
+            Role::General->value,
+            [], // No permissions
+        ));
+
+        $result = $this->getInstance()->handle();
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+    }
+
+    private function getInstance(): ListInteractor
+    {
         return $this->app->make(ListInteractor::class);
     }
 }

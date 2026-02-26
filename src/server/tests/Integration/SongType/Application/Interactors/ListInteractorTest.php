@@ -2,57 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Creator\Application\Interactors;
+namespace Tests\Integration\SongType\Application\Interactors;
 
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
-use Creator\Application\Interactors\ListInteractor;
-use Creator\DebugInfrastructures\FileCreatorRepository;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use SongType\Application\Interactors\ListInteractor;
+use SongType\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    use EntityFactory;
-    use FileRepositoryTransaction;
-
     #[Test]
-    public function nonEmptyCreators(): void
-    {
-        $this->privilegedContext();
-
-        $uuid = $this->generateUuid();
-
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒')->toArray());
-
-        $result = $this->getInstance()->handle();
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
-
-        $this->assertCount(1, $response->creators);
-
-        $this->assertSame($uuid, $response->creators[0]->creatorId->value);
-        $this->assertSame('ヰ世界情緒', $response->creators[0]->name->value);
-    }
-
-    #[Test]
-    public function emptyCreators(): void
+    public function canList(): void
     {
         $this->privilegedContext();
 
         $result = $this->getInstance()->handle();
+
         $this->assertTrue($result->isOk());
 
-        $response = $result->unwrap();
-
-        $this->assertCount(0, $response->creators);
+        $types = $result->unwrap()->songTypes;
+        $this->assertCount(count(SongType::cases()), $types);
     }
 
     #[Test]

@@ -2,63 +2,70 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Creator\Application\Interactors;
+namespace Tests\Integration\AdminUser\Application\Interactors;
 
+use AdminUser\Application\Interactors\ListInteractor;
+use AdminUser\Application\UseCase\List\ListInputData;
+use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
-use Creator\Application\Interactors\ListInteractor;
-use Creator\DebugInfrastructures\FileCreatorRepository;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class ListInteractorTest extends TestCase
 {
-    use EntityFactory;
     use FileRepositoryTransaction;
 
     #[Test]
-    public function nonEmptyCreators(): void
+    public function canList(): void
     {
         $this->privilegedContext();
 
         $uuid = $this->generateUuid();
+        $user = AdminUser::reconstruct(
+            $uuid,
+            'テストユーザー',
+            'test@example.com',
+            new DateTimeImmutable(),
+            Role::General->value,
+            [],
+        );
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒')->toArray());
+        $this->factory(FileAdminUserRepository::class, $user->toArray());
 
-        $result = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle(new ListInputData());
+
         $this->assertTrue($result->isOk());
 
-        $response = $result->unwrap();
-
-        $this->assertCount(1, $response->creators);
-
-        $this->assertSame($uuid, $response->creators[0]->creatorId->value);
-        $this->assertSame('ヰ世界情緒', $response->creators[0]->name->value);
+        $users = $result->unwrap()->users;
+        $this->assertCount(1, $users);
+        $this->assertSame($uuid, $users[0]->adminUserId->value);
     }
 
     #[Test]
-    public function emptyCreators(): void
+    public function emptyAdminUsers(): void
     {
         $this->privilegedContext();
 
-        $result = $this->getInstance()->handle();
+        // No users created
+
+        $result = $this->getInstance()->handle(new ListInputData());
+
         $this->assertTrue($result->isOk());
 
-        $response = $result->unwrap();
-
-        $this->assertCount(0, $response->creators);
+        $users = $result->unwrap()->users;
+        $this->assertCount(0, $users);
     }
 
     #[Test]
     public function cannotListWhenUnauthenticated(): void
     {
-        $result = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle(new ListInputData());
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
@@ -77,7 +84,7 @@ class ListInteractorTest extends TestCase
             [], // No permissions
         ));
 
-        $result = $this->getInstance()->handle();
+        $result = $this->getInstance()->handle(new ListInputData());
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
