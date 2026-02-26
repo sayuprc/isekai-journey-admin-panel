@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Performer;
 
+use Illuminate\Testing\Fluent\AssertableJson;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
@@ -22,12 +23,16 @@ class CreatePerformerTest extends TestCase
             ->postJson(route(PerformerRouteMap::Create), [
                 'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
-            ->assertJson([
-                'performer' => [
-                    'name' => 'ヰ世界情緒',
-                    'orderNo' => 10,
-                ],
-            ]);
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'performer',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('performerId', 'string')
+                            ->where('name', 'ヰ世界情緒')
+                            ->where('orderNo', 10),
+                    ),
+            );
     }
 
     #[Test]

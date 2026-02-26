@@ -28,7 +28,7 @@ class ListCreatorTest extends TestCase
         $this->withAuth()
             ->get(route(CreatorRouteMap::List))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'creators' => [
                     [
                         'creatorId' => $uuid,
@@ -44,6 +44,6 @@ class ListCreatorTest extends TestCase
         $this->withAuth()
             ->get(route(CreatorRouteMap::List))
             ->assertStatus(200)
-            ->assertJson(['creators' => []]);
+            ->assertExactJson(['creators' => []]);
     }
 }

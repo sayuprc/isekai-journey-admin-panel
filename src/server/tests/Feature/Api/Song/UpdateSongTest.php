@@ -52,7 +52,7 @@ class UpdateSongTest extends TestCase
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 'lyricists' => [],
             ])->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'song' => [
                     'songId' => $songId,
                     'title' => '描き続けた君へ',

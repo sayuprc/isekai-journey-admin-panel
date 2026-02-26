@@ -37,30 +37,39 @@ class ListAdminUserTest extends TestCase
             )->toArray(),
         );
 
-        $this->withAuth()
-            ->get(route(AdminUserRouteMap::List))
-            ->assertStatus(200)
-            ->assertJson([
-                'adminUsers' => [
-                    [
-                        'adminUserId' => $uuid,
-                        'name' => 'コンソールユーザー',
-                        'email' => 'admin@example.com',
-                        'createdAt' => '2019-12-09T10:20:30+09:00',
-                        'role' => [
-                            'name' => Role::Console->getName(),
-                            'value' => Role::Console->value,
-                        ],
-                        'permissions' => [],
+        $response = $this->withAuth()
+            ->get(route(AdminUserRouteMap::List));
+
+        $response->assertStatus(200);
+
+        $json = $response->json();
+        $authUser = collect($json['adminUsers'])->firstWhere('email', 'root@example.com');
+
+        $response->assertExactJson([
+            'adminUsers' => [
+                [
+                    'adminUserId' => $uuid,
+                    'name' => 'コンソールユーザー',
+                    'email' => 'admin@example.com',
+                    'createdAt' => '2019-12-09T10:20:30+09:00',
+                    'role' => [
+                        'name' => Role::Console->getName(),
+                        'value' => Role::Console->value,
                     ],
-                    [
-                        'name' => 'テストユーザー',
-                        'role' => [
-                            'name' => Role::Privilege->getName(),
-                            'value' => Role::Privilege->value,
-                        ],
-                    ],
+                    'permissions' => [],
                 ],
-            ]);
+                [
+                    'adminUserId' => $authUser['adminUserId'],
+                    'name' => 'テストユーザー',
+                    'email' => 'root@example.com',
+                    'createdAt' => $authUser['createdAt'],
+                    'role' => [
+                        'name' => Role::Privilege->getName(),
+                        'value' => Role::Privilege->value,
+                    ],
+                    'permissions' => [],
+                ],
+            ],
+        ]);
     }
 }
