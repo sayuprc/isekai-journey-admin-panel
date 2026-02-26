@@ -119,7 +119,7 @@ class UpdateSongTest extends TestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json
                     ->where('field', 'orderNo')
-                    ->where('message', 'The value does not match the expected format: 0.'),
+                    ->where('message', 'Keyword validation failed: Value 0 must be greater or equal to 1'),
             );
     }
 
