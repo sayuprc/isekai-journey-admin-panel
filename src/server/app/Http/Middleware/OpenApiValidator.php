@@ -78,14 +78,17 @@ class OpenApiValidator
 
     private function handleValidationFailed(ValidationFailed $exception): JsonResponse
     {
-        $previous = $exception->getPrevious();
+        $cause = $exception->getPrevious();
+        while ($cause !== null && ! ($cause instanceof SchemaMismatch)) {
+            $cause = $cause->getPrevious();
+        }
 
-        if ($previous instanceof SchemaMismatch) {
-            $error = $this->formatSchemaMismatch($previous);
+        if ($cause instanceof SchemaMismatch) {
+            $error = $this->formatSchemaMismatch($cause);
         } else {
             $error = new ValidationError()
                 ->setField('')
-                ->setMessage('予期せぬエラー');
+                ->setMessage($exception->getMessage());
         }
 
         return response()->json($error, 422);
