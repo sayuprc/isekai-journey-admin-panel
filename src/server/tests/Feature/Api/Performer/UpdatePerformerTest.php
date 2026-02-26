@@ -42,12 +42,27 @@ class UpdatePerformerTest extends TestCase
     #[Test]
     public function updateFails(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $uuid = $this->generateUuid();
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
+
+        $this->withAuth()
+            ->putJson(route(PerformerRouteMap::Update, $uuid), [
+                'name' => 'ヰ世界情緒',
+                'orderNo' => 0,
+            ])->assertStatus(422)
+            ->assertJson([
+                'field' => 'orderNo',
+            ]);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $uuid = $this->generateUuid();
+        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
+
+        $this->withAuth()
+            ->putJson(route(PerformerRouteMap::Update, $uuid), [])
+            ->assertStatus(422);
     }
 }

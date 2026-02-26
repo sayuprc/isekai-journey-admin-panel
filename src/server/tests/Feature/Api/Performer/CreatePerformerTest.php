@@ -38,12 +38,20 @@ class CreatePerformerTest extends TestCase
     #[Test]
     public function createFails(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(PerformerRouteMap::Create), [
+                'name' => '',
+            ])->assertStatus(422)
+            ->assertJson([
+                'field' => 'name',
+            ]);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(PerformerRouteMap::Create), [])
+            ->assertStatus(422);
     }
 }

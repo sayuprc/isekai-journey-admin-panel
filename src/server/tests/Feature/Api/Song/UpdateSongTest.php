@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
@@ -84,12 +85,63 @@ class UpdateSongTest extends TestCase
     #[Test]
     public function updateFails(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $creator1 = $this->createCreator($this->generateUuid(), '編曲者');
+        $creator2 = $this->createCreator($this->generateUuid(), '作曲者');
+        $creator3 = $this->createCreator($this->generateUuid(), '作詞者');
+
+        $this->storeCreators($creator1, $creator2, $creator3);
+
+        $songId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong(
+                $songId,
+                '曲名',
+                '説明',
+                SongType::Original,
+                1,
+                [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
+                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
+                [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'songTypeValue' => SongType::Cover->value,
+                'orderNo' => 0, // Invalid value
+                'arrangers' => [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
+                'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
+                'lyricists' => [],
+            ])->assertStatus(422)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('field', 'orderNo'),
+            );
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $songId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong(
+                $songId,
+                '曲名',
+                '説明',
+                SongType::Original,
+                1,
+                [],
+                [],
+                [],
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [])
+            ->assertStatus(422);
     }
 }

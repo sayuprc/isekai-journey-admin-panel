@@ -40,12 +40,26 @@ class UpdateCreatorTest extends TestCase
     #[Test]
     public function updateFails(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $uuid = $this->generateUuid();
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター')->toArray());
+
+        $this->withAuth()
+            ->putJson(route(CreatorRouteMap::Update, $uuid), [
+                'name' => '',
+            ])->assertStatus(422)
+            ->assertJson([
+                'field' => 'name',
+            ]);
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $uuid = $this->generateUuid();
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター')->toArray());
+
+        $this->withAuth()
+            ->putJson(route(CreatorRouteMap::Update, $uuid), [])
+            ->assertStatus(422);
     }
 }

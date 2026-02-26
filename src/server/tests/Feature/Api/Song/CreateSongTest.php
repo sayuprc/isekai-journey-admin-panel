@@ -72,12 +72,38 @@ class CreateSongTest extends TestCase
     #[Test]
     public function createFails(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->storeCreators(
+            $creator1 = $this->createCreator($this->generateUuid(), '編曲者'),
+            $creator2 = $this->createCreator($this->generateUuid(), '作曲者'),
+            $creator3 = $this->createCreator($this->generateUuid(), '作詞者'),
+        );
+
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'songTypeValue' => 99, // Invalid value
+                'arrangers' => [['creatorId' => $creator1->creatorId->value]],
+                'composers' => [['creatorId' => $creator2->creatorId->value]],
+                'lyricists' => [['creatorId' => $creator3->creatorId->value]],
+            ])->assertStatus(422)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('field', 'songTypeValue')
+                    ->where('message', 'The value does not match the expected format: 99.'),
+            );
     }
 
     #[Test]
     public function emptyParameters(): void
     {
-        $this->markTestSkipped('実装する');
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [])
+            ->assertStatus(422)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('field', '')
+                    ->where('message', 'Keyword validation failed: Required property \'title\' must be present in the object'),
+            );
     }
 }
