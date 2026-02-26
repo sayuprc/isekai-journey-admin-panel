@@ -42,4 +42,22 @@ class LyricistsTest extends TestCase
 
         $this->assertCount(0, $lyricists);
     }
+
+    #[Test]
+    public function toArray(): void
+    {
+        $input = [
+            ['creatorId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'],
+            ['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'],
+        ];
+
+        $lyricists = Lyricists::fromArray($input)->unwrap();
+
+        $expected = [
+            ['creator_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'order_no' => 1],
+            ['creator_id' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'order_no' => 2],
+        ];
+
+        $this->assertSame($expected, $lyricists->toArray());
+    }
 }

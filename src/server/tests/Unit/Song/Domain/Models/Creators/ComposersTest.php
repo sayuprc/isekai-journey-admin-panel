@@ -42,4 +42,22 @@ class ComposersTest extends TestCase
 
         $this->assertCount(0, $composers);
     }
+
+    #[Test]
+    public function toArray(): void
+    {
+        $input = [
+            ['creatorId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'],
+            ['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'],
+        ];
+
+        $composers = Composers::fromArray($input)->unwrap();
+
+        $expected = [
+            ['creator_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'order_no' => 1],
+            ['creator_id' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'order_no' => 2],
+        ];
+
+        $this->assertSame($expected, $composers->toArray());
+    }
 }

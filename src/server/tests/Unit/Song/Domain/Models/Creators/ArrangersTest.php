@@ -42,4 +42,22 @@ class ArrangersTest extends TestCase
 
         $this->assertCount(0, $arrangers);
     }
+
+    #[Test]
+    public function toArray(): void
+    {
+        $input = [
+            ['creatorId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'],
+            ['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'],
+        ];
+
+        $arrangers = Arrangers::fromArray($input)->unwrap();
+
+        $expected = [
+            ['creator_id' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'order_no' => 1],
+            ['creator_id' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'order_no' => 2],
+        ];
+
+        $this->assertSame($expected, $arrangers->toArray());
+    }
 }
