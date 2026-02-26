@@ -27,7 +27,6 @@ class ListInteractorTest extends TestCase
     {
         $this->permissionContext(Permission::ReadAdminUser);
 
-        // Date1 is 1 day before Date2.
         $date1 = new DateTimeImmutable()->modify('-1 day');
         $date2 = new DateTimeImmutable();
 
