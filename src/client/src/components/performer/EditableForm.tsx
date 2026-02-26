@@ -26,30 +26,25 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
-    const { data, error, response } = await client.PUT('/performers/{performerId}', {
-      params: {
-        path: {
-          performerId: performerId,
-        },
-      },
-      body: {
-        name: formData.get('name')?.toString() ?? '',
-        orderNo: Number(formData.get('orderNo')),
-      },
+    const { data, response } = await client.api.performers({ performerId: performerId }).put({
+      name: formData.get('name')?.toString() ?? '',
+      orderNo: Number(formData.get('orderNo')),
     });
 
     // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
     if (response.status === 400) {
       // TODO わかりやすい表示にする
-      const errorAs = error as components['schemas']['ErrorResponse'];
-      alert(`リクエストが不正 ${errorAs.message}`);
+      // const errorAs = error as components['schemas']['ErrorResponse'];
+      // alert(`リクエストが不正 ${errorAs.message}`);
+      alert('400');
     } else if (response.status === 404) {
       setFlash('データがありません');
       window.location.href = `/performers`;
     } else if (response.status === 422) {
       // TODO わかりやすい表示にする
-      const errorAs = error as components['schemas']['ValidationError'];
-      alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      // const errorAs = error as components['schemas']['ValidationError'];
+      // alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      alert('422');
     } else if (!data) {
       // TODO エラーハンドリング
       throw new Error();
@@ -73,19 +68,14 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
-    const { error, response } = await client.DELETE('/performers/{performerId}', {
-      params: {
-        path: {
-          performerId: performerId,
-        },
-      },
-    });
+    const { response } = await client.api.performers({ performerId: performerId }).delete();
 
     // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
     if (response.status === 422) {
       // TODO わかりやすい表示にする
-      const errorAs = error as components['schemas']['ValidationError'];
-      alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      // const errorAs = error as components['schemas']['ValidationError'];
+      // alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      alert('422');
     } else {
       setFlash('削除しました');
       window.location.href = `/performers`;

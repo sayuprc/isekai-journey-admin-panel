@@ -1,4 +1,4 @@
-import type { components } from '../../generated/schema';
+// import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
 import { setFlash } from '../Flash';
 
@@ -9,21 +9,21 @@ export const CreateForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { data, error, response } = await client.POST('/creators', {
-      body: {
-        name: formData.get('name')?.toString() ?? '',
-      },
+    const { data, response } = await client.api.creators.post({
+      name: formData.get('name')?.toString() ?? '',
     });
 
     // TODO リクエストはリポジトリ経由にし、レスポンス型を別途定義する
     if (response.status === 400) {
       // TODO わかりやすい表示にする
-      const errorAs = error as components['schemas']['ErrorResponse'];
-      alert(`リクエストが不正 ${errorAs.message}`);
+      // const errorAs = error as components['schemas']['ErrorResponse'];
+      // alert(`リクエストが不正 ${errorAs.message}`);
+      alert('400');
     } else if (response.status === 422) {
       // TODO わかりやすい表示にする
-      const errorAs = error as components['schemas']['ValidationError'];
-      alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      // const errorAs = error as components['schemas']['ValidationError'];
+      // alert(`エラー ${errorAs.field}: ${errorAs.message}`);
+      alert('422');
     } else if (!data) {
       // TODO エラーハンドリング
       throw new Error();
