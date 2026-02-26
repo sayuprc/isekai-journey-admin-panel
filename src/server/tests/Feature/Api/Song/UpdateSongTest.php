@@ -118,7 +118,8 @@ class UpdateSongTest extends TestCase
             ])->assertStatus(422)
             ->assertJson(
                 fn (AssertableJson $json) => $json
-                    ->where('field', 'orderNo'),
+                    ->where('field', 'orderNo')
+                    ->where('message', 'The value does not match the expected format: 0.'),
             );
     }
 

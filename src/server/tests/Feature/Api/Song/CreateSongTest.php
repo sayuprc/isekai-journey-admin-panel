@@ -90,7 +90,7 @@ class CreateSongTest extends TestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json
                     ->where('field', 'songTypeValue')
-                    ->where('message', 'The value does not match the expected format: 99.'),
+                    ->where('message', 'Keyword validation failed: Value must be present in the enum'),
             );
     }
 
@@ -102,7 +102,7 @@ class CreateSongTest extends TestCase
             ->assertStatus(422)
             ->assertJson(
                 fn (AssertableJson $json) => $json
-                    ->where('field', '')
+                    ->where('field', 'title')
                     ->where('message', 'Keyword validation failed: Required property \'title\' must be present in the object'),
             );
     }
