@@ -42,7 +42,7 @@ class ListInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $users = $result->unwrap()->users;
+        $users = $result->unwrap()->adminUsers;
         $this->assertCount(1, $users);
         $this->assertSame($uuid, $users[0]->adminUserId->value);
     }
@@ -58,7 +58,7 @@ class ListInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $users = $result->unwrap()->users;
+        $users = $result->unwrap()->adminUsers;
         $this->assertCount(0, $users);
     }
 
