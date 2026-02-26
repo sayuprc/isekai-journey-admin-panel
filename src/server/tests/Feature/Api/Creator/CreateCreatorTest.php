@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Creator;
 
 use Creator\Route\CreatorRouteMap;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\FileRepositoryTransaction;
@@ -22,11 +23,15 @@ class CreateCreatorTest extends TestCase
             ->postJson(route(CreatorRouteMap::Create), [
                 'name' => 'ヰ世界情緒',
             ])->assertStatus(200)
-            ->assertJson([
-                'creator' => [
-                    'name' => 'ヰ世界情緒',
-                ],
-            ]);
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'creator',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('creatorId', 'string')
+                            ->where('name', 'ヰ世界情緒'),
+                    ),
+            );
     }
 
     #[Test]

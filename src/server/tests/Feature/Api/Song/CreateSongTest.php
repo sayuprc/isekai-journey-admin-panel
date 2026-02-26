@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
@@ -36,39 +37,36 @@ class CreateSongTest extends TestCase
                 'composers' => [['creatorId' => $creator2->creatorId->value]],
                 'lyricists' => [['creatorId' => $creator3->creatorId->value]],
             ])->assertStatus(200)
-            ->assertJson([
-                'song' => [
-                    // ID は事前にわからないのでチェックしない
-                    'title' => '描き続けた君へ',
-                    'description' => 'オリジナル楽曲',
-                    'songType' => [
-                        'name' => SongType::Original->getName(),
-                        'value' => SongType::Original->value,
-                    ],
-                    'orderNo' => 10,
-                    'arrangers' => [
-                        [
-                            'creatorId' => $creator1->creatorId->value,
-                            'name' => $creator1->name->value,
-                            'orderNo' => 1,
-                        ],
-                    ],
-                    'composers' => [
-                        [
-                            'creatorId' => $creator2->creatorId->value,
-                            'name' => $creator2->name->value,
-                            'orderNo' => 1,
-                        ],
-                    ],
-                    'lyricists' => [
-                        [
-                            'creatorId' => $creator3->creatorId->value,
-                            'name' => $creator3->name->value,
-                            'orderNo' => 1,
-                        ],
-                    ],
-                ],
-            ]);
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'song',
+                        fn (AssertableJson $json) => $json
+                            ->whereType('songId', 'string')
+                            ->where('title', '描き続けた君へ')
+                            ->where('description', 'オリジナル楽曲')
+                            ->where('songType', [
+                                'name' => SongType::Original->getName(),
+                                'value' => SongType::Original->value,
+                            ])
+                            ->where('orderNo', 10)
+                            ->where('arrangers', [[
+                                'creatorId' => $creator1->creatorId->value,
+                                'name' => $creator1->name->value,
+                                'orderNo' => 1,
+                            ]])
+                            ->where('composers', [[
+                                'creatorId' => $creator2->creatorId->value,
+                                'name' => $creator2->name->value,
+                                'orderNo' => 1,
+                            ]])
+                            ->where('lyricists', [[
+                                'creatorId' => $creator3->creatorId->value,
+                                'name' => $creator3->name->value,
+                                'orderNo' => 1,
+                            ]]),
+                    ),
+            );
     }
 
     #[Test]

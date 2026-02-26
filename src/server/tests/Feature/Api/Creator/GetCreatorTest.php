@@ -28,7 +28,7 @@ class GetCreatorTest extends TestCase
         $this->withAuth()
             ->get(route(CreatorRouteMap::Get, $uuid))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'creator' => [
                     'creatorId' => $uuid,
                     'name' => 'ヰ世界情緒',

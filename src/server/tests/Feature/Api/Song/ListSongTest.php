@@ -56,7 +56,7 @@ class ListSongTest extends TestCase
         $this->withAuth()
             ->get(route(SongRouteMap::List))
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'songs' => [
                     [
                         'songId' => $song1Id,
@@ -94,6 +94,6 @@ class ListSongTest extends TestCase
         $this->withAuth()
             ->get(route(SongRouteMap::List))
             ->assertStatus(200)
-            ->assertJson(['songs' => []]);
+            ->assertExactJson(['songs' => []]);
     }
 }
