@@ -35,6 +35,7 @@ class DeletePerformerTest extends TestCase
     {
         $this->withAuth()
             ->delete(route(PerformerRouteMap::Delete, 'invalid-uuid'))
-            ->assertStatus(422);
+            ->assertStatus(422)
+            ->assertJson(['message' => 'The value does not match the expected format: uuid.']);
     }
 }
