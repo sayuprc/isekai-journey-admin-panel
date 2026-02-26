@@ -62,7 +62,7 @@ class AdminUserTest extends TestCase
                     'admin@example.com',
                     new DateTimeImmutable(),
                     Role::Privilege->value,
-                    [] // No explicit permissions
+                    [], // No explicit permissions
                 ),
                 Permission::ReadSong,
                 true,
@@ -74,7 +74,7 @@ class AdminUserTest extends TestCase
                     'user@example.com',
                     new DateTimeImmutable(),
                     Role::General->value,
-                    [Permission::ReadSong->value]
+                    [Permission::ReadSong->value],
                 ),
                 Permission::ReadSong,
                 true,
@@ -86,7 +86,7 @@ class AdminUserTest extends TestCase
                     'user@example.com',
                     new DateTimeImmutable(),
                     Role::General->value,
-                    [Permission::ReadSong->value]
+                    [Permission::ReadSong->value],
                 ),
                 Permission::WriteSong,
                 false,
