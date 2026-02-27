@@ -1,7 +1,12 @@
+import { randomBytes } from 'node:crypto';
 import { Redis } from '@upstash/redis';
 import { Elysia, t } from 'elysia';
 import createClient from 'openapi-fetch';
 import type { paths, components } from '../generated/schema';
+
+const generateRandomBytes = (): string => {
+  return randomBytes(32).toString('base64url');
+};
 
 const cc = (credential: Credential) => {
   return createClient<paths>({
@@ -446,9 +451,9 @@ const auth = new Elysia({ prefix: '/auth' })
       throw new Error('エラー');
     }
 
-    const sessionId = crypto.randomUUID();
+    const sessionId = generateRandomBytes();
 
-    const csrfToken = crypto.randomUUID();
+    const csrfToken = generateRandomBytes();
 
     await redis.set(
       `session:${sessionId}`,
