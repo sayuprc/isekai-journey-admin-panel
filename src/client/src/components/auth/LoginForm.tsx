@@ -31,8 +31,6 @@ export const LoginForm = () => {
   return (
     <form onsubmit={handleSubmit}>
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend class="fieldset-legend">ログイン</legend>
-
         <label class="label">メールアドレス</label>
         <input type="email" class="input" name="email" required />
 

@@ -89,19 +89,27 @@ export const EditableForm = (props: Props) => {
   return (
     // TODO ローディング用のコンポーネントを用意する
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
+      <a href="/creators" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
       <form onsubmit={handleSubmit}>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend class="fieldset-legend">クリエイター詳細</legend>
-
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">クリエイター名</label>
-          <input type="text" class="input" name="name" value={props.data?.creator.name} />
+          <input type="text" class="input w-full" name="name" value={props.data?.creator.name} />
 
-          <div class="flex justify-between gap-2">
-            <button onClick={handleDelete} class="btn btn-error mt-4">削除</button>
-            <button onClick={handleUpdate} class="btn btn-neutral mt-4">更新</button>
+          <div class="mt-6 flex justify-end">
+            <button onClick={handleUpdate} class="btn btn-neutral">更新</button>
           </div>
         </fieldset>
       </form>
+
+      <div class="divider max-w-lg" />
+
+      <div class="max-w-lg rounded-box border border-error/20 bg-error/5 p-6">
+        <h3 class="font-semibold text-error">危険な操作</h3>
+        <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
+        <div class="mt-4">
+          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm">このクリエイターを削除する</button>
+        </div>
+      </div>
     </Show>
   );
 };

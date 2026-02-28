@@ -1,55 +1,93 @@
-const navItems = [
-  {
-    title: '楽曲種別',
-    links: [
-      { href: '/song-types', label: '一覧' },
-    ],
-  },
+import type { JSX } from 'solid-js';
+
+const MusicNoteIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z" />
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+  </svg>
+);
+
+const ShieldIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+  </svg>
+);
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: () => JSX.Element;
+};
+
+type NavSection = {
+  title: string;
+  items: NavItem[];
+};
+
+const navSections: NavSection[] = [
   {
     title: '楽曲',
-    links: [
-      { href: '/songs', label: '一覧' },
-      { href: '/songs/create', label: '作成' },
+    items: [
+      { href: '/songs', label: '楽曲', icon: MusicNoteIcon },
+      { href: '/song-types', label: '楽曲種別', icon: TagIcon },
     ],
   },
   {
-    title: 'クリエイター',
-    links: [
-      { href: '/creators', label: '一覧' },
-      { href: '/creators/create', label: '作成' },
-    ],
-  },
-  {
-    title: '共演者',
-    links: [
-      { href: '/performers', label: '一覧' },
-      { href: '/performers/create', label: '作成' },
+    title: '関係者',
+    items: [
+      { href: '/creators', label: 'クリエイター', icon: UserIcon },
+      { href: '/performers', label: '共演者', icon: UsersIcon },
     ],
   },
   {
     title: '管理',
-    links: [
-      { href: '/admin-users', label: '管理ユーザー一覧' },
+    items: [
+      { href: '/admin-users', label: '管理ユーザー', icon: ShieldIcon },
     ],
   },
 ];
 
 export const Sidebar = () => {
   return (
-    <aside class="w-48 bg-base-200 min-h-screen p-4">
-      <div class="mb-6">
-        <span class="text-xl font-bold">ヰ世界のテラリウム</span>
+    <aside class="bg-base-200 flex min-h-screen w-56 flex-col border-r border-base-300">
+      <div class="border-b border-base-300 px-4 py-5">
+        <a href="/" class="text-lg font-bold">ヰ世界のテラリウム</a>
       </div>
-      {navItems.map(item => (
-        <>
-          <h2>{item.title}</h2>
-          <ul class="menu">
-            {item.links.map(link => (
-              <li><a href={link.href}>{link.label}</a></li>
-            ))}
-          </ul>
-        </>
-      ))}
+      <nav class="flex-1 px-2 py-4">
+        {navSections.map(section => (
+          <div class="mb-3">
+            <h2 class="px-3 py-1 text-xs font-semibold tracking-wider text-base-content/60">{section.title}</h2>
+            <ul class="menu menu-sm gap-1">
+              {section.items.map(item => (
+                <li>
+                  <a href={item.href}>
+                    {item.icon()}
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
     </aside>
   );
 };

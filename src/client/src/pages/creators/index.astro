@@ -19,9 +19,12 @@ if (!data) {
 
 <Layout pageTitle="クリエイター一覧">
   <FlashMessage client:only="solid-js" />
+  <div class="mb-4 flex justify-end">
+    <a href="/creators/create" class="btn btn-neutral btn-sm">新規作成</a>
+  </div>
   <!-- TODO コンポーネント化する -->
-  <div class="h-full overflow-x-auto">
-    <table class="table table-pin-rows table-zebra">
+  <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
+    <table class="table table-zebra">
       <thead>
         <tr>
           <th>クリエイター名</th>
@@ -35,7 +38,7 @@ if (!data) {
               <tr>
                 <td>{creator.name}</td>
                 <td>
-                  <a href={`/creators/${creator.creatorId}`}>編集</a>
+                  <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">編集</a>
                 </td>
               </tr>
             );

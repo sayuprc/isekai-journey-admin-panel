@@ -2,6 +2,7 @@ import { createSignal, For, onMount } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
 import { setFlash } from '../Flash';
+import { SearchableSelect } from '../SearchableSelect';
 
 type Creator = components['schemas']['Creator'];
 type SongType = components['schemas']['SongType'];
@@ -67,14 +68,17 @@ export const CreateForm = () => {
     }
   };
 
+  const creatorOptions = () =>
+    creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
+
   const CreatorList = (props: {
     label: string;
     entries: () => CreatorEntry[];
     setter: typeof setArrangers;
   }) => (
-    <div class="mt-2">
+    <div class="mt-4">
       <div class="flex items-center gap-2">
-        <label class="label">{props.label}</label>
+        <span class="label">{props.label}</span>
         <button
           type="button"
           class="btn btn-xs btn-outline"
@@ -85,32 +89,22 @@ export const CreateForm = () => {
       </div>
       <For each={props.entries()}>
         {(entry, index) => (
-          <div class="mt-1 flex items-end gap-2">
-            <div>
-              <label class="label text-xs">クリエイター</label>
-              <select
-                class="select select-bordered"
-                value={entry.creatorId}
-                onchange={e =>
-                  updateEntry(props.setter, index(), 'creatorId', e.currentTarget.value)}
-                required
-              >
-                <option value="" disabled>
-                  選択してください
-                </option>
-                <For each={creators()}>
-                  {creator => (
-                    <option value={creator.creatorId}>{creator.name}</option>
-                  )}
-                </For>
-              </select>
-            </div>
+          <div class="mt-2 flex items-center gap-3">
+            <SearchableSelect
+              options={creatorOptions()}
+              value={entry.creatorId}
+              onChange={value => updateEntry(props.setter, index(), 'creatorId', value)}
+              placeholder="クリエイターを検索..."
+              required
+            />
             <button
               type="button"
-              class="btn btn-xs btn-error"
+              class="btn btn-ghost btn-xs btn-square text-error"
               onclick={() => removeEntry(props.setter, index())}
             >
-              削除
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
             </button>
           </div>
         )}
@@ -120,17 +114,16 @@ export const CreateForm = () => {
 
   return (
     <form onsubmit={handleSubmit}>
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4">
-        <legend class="fieldset-legend">楽曲作成</legend>
-
+      <a href="/songs" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
         <label class="label">楽曲名</label>
-        <input type="text" class="input" name="title" required />
+        <input type="text" class="input w-full" name="title" required />
 
         <label class="label">説明</label>
-        <input type="text" class="input" name="description" required />
+        <input type="text" class="input w-full" name="description" required />
 
         <label class="label">楽曲種別</label>
-        <select class="select select-bordered" name="songTypeValue" required>
+        <select class="select select-bordered w-full" name="songTypeValue" required>
           <option value="" disabled selected>
             選択してください
           </option>
@@ -143,7 +136,9 @@ export const CreateForm = () => {
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
         <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
-        <button class="btn btn-neutral mt-4">作成</button>
+        <div class="mt-6 flex justify-end">
+          <button class="btn btn-neutral">作成</button>
+        </div>
       </fieldset>
     </form>
   );
