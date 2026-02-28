@@ -1,6 +1,6 @@
-import { t } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { createAuthClient } from '../client';
-import { withAuth } from '../middleware';
+import { authGuard } from '../middleware';
 
 /** SongTypeValue のスキーマ定義（1〜6） */
 const SongTypeValueSchema = t.Union([
@@ -16,7 +16,8 @@ const CreatorRefSchema = t.Array(
   t.Object({ creatorId: t.String() }),
 );
 
-export const songs = withAuth('/songs')
+export const songs = new Elysia({ prefix: '/songs' })
+  .use(authGuard)
   .get('/', async ({ credential }) => {
     const { data } = await createAuthClient(credential).GET('/songs');
 

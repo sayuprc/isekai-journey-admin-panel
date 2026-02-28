@@ -1,8 +1,9 @@
-import { t } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { createAuthClient } from '../client';
-import { withAuth } from '../middleware';
+import { authGuard } from '../middleware';
 
-export const performers = withAuth('/performers')
+export const performers = new Elysia({ prefix: '/performers' })
+  .use(authGuard)
   .get('/', async ({ credential }) => {
     const { data } = await createAuthClient(credential).GET('/performers');
 

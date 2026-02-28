@@ -1,7 +1,9 @@
+import { Elysia } from 'elysia';
 import { createAuthClient } from '../client';
-import { withAuth } from '../middleware';
+import { authGuard } from '../middleware';
 
-export const songTypes = withAuth('/song-types')
+export const songTypes = new Elysia({ prefix: '/song-types' })
+  .use(authGuard)
   .get('/', async ({ credential }) => {
     const { data } = await createAuthClient(credential).GET('/song-types');
 
