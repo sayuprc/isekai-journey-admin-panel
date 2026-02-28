@@ -1,11 +1,16 @@
 ---
 import { FlashMessage } from '../../components/Flash';
 import Layout from '../../layouts/Layout.astro';
-import { createClient } from '../../utils/client';
+import { client } from '../../utils/client';
 
 export const prerender = false;
 
-const { data } = await createClient(Astro.request).GET('/performers');
+const { data } = await client.api.performers.get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
 
 if (!data) {
   throw new Error();
