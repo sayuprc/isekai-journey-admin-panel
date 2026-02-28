@@ -96,7 +96,7 @@ export const EditableForm = (props: Props) => {
           <input type="text" class="input w-full" name="name" value={props.data?.creator.name} />
 
           <div class="mt-6 flex justify-end">
-            <button onClick={handleUpdate} class="btn btn-neutral">更新</button>
+            <button onClick={handleUpdate} class="btn btn-primary">更新</button>
           </div>
         </fieldset>
       </form>

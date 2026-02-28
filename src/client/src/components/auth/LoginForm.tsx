@@ -37,7 +37,7 @@ export const LoginForm = () => {
         <label class="label">パスワード</label>
         <input type="password" class="input" name="password" required />
 
-        <button class="btn btn-neutral mt-4">ログイン</button>
+        <button class="btn btn-primary mt-4">ログイン</button>
       </fieldset>
     </form>
   );

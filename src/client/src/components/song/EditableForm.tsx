@@ -232,7 +232,7 @@ export const EditableForm = (props: Props) => {
           <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
           <div class="mt-6 flex justify-end">
-            <button onClick={handleUpdate} class="btn btn-neutral">更新</button>
+            <button onClick={handleUpdate} class="btn btn-primary">更新</button>
           </div>
         </fieldset>
       </form>

@@ -33,7 +33,7 @@ export const CreateForm = () => {
         <input type="text" class="input w-full" name="name" required />
 
         <div class="mt-6 flex justify-end">
-          <button class="btn btn-neutral">作成</button>
+          <button class="btn btn-primary">作成</button>
         </div>
       </fieldset>
     </form>

@@ -137,7 +137,7 @@ export const CreateForm = () => {
         <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
         <div class="mt-6 flex justify-end">
-          <button class="btn btn-neutral">作成</button>
+          <button class="btn btn-primary">作成</button>
         </div>
       </fieldset>
     </form>
