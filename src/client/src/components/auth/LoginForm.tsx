@@ -31,15 +31,13 @@ export const LoginForm = () => {
   return (
     <form onsubmit={handleSubmit}>
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend class="fieldset-legend">ログイン</legend>
-
         <label class="label">メールアドレス</label>
         <input type="email" class="input" name="email" required />
 
         <label class="label">パスワード</label>
         <input type="password" class="input" name="password" required />
 
-        <button class="btn btn-neutral mt-4">ログイン</button>
+        <button class="btn btn-primary mt-4">ログイン</button>
       </fieldset>
     </form>
   );

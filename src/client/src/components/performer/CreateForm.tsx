@@ -27,13 +27,14 @@ export const CreateForm = () => {
 
   return (
     <form onsubmit={handleSubmit}>
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend class="fieldset-legend">共演者作成</legend>
-
+      <a href="/performers" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
         <label class="label">共演者名</label>
-        <input type="text" class="input" name="name" required />
+        <input type="text" class="input w-full" name="name" required />
 
-        <button class="btn btn-neutral mt-4">作成</button>
+        <div class="mt-6 flex justify-end">
+          <button class="btn btn-primary">作成</button>
+        </div>
       </fieldset>
     </form>
   );

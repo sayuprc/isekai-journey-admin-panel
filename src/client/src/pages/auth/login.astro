@@ -1,8 +1,10 @@
 ---
 import { LoginForm } from '../../components/auth/LoginForm';
-import Layout from '../../layouts/Layout.astro';
+import SimpleLayout from '../../layouts/SimpleLayout.astro';
 ---
 
-<Layout pageTitle="ログイン">
-  <LoginForm client:load />
-</Layout>
+<SimpleLayout pageTitle="ログイン">
+  <div class="flex min-h-[70vh] items-center justify-center">
+    <LoginForm client:load />
+  </div>
+</SimpleLayout>

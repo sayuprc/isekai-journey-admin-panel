@@ -19,9 +19,12 @@ if (!data) {
 
 <Layout pageTitle="共演者一覧">
   <FlashMessage client:only="solid-js" />
+  <div class="mb-4 flex justify-end">
+    <a href="/performers/create" class="btn btn-primary btn-sm">新規作成</a>
+  </div>
   <!-- TODO コンポーネント化する -->
-  <div class="h-full overflow-x-auto">
-    <table class="table table-pin-rows table-zebra">
+  <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
+    <table class="table table-zebra">
       <thead>
         <tr>
           <th>共演者名</th>
@@ -37,7 +40,7 @@ if (!data) {
                 <td>{performer.name}</td>
                 <td>{performer.orderNo}</td>
                 <td>
-                  <a href={`/performers/${performer.performerId}`}>編集</a>
+                  <a href={`/performers/${performer.performerId}`} class="btn btn-ghost btn-xs">編集</a>
                 </td>
               </tr>
             );

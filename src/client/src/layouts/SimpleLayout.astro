@@ -1,5 +1,4 @@
 ---
-import { Sidebar } from '../components/Sidebar';
 import '../styles/app.css';
 
 interface Props {
@@ -27,18 +26,8 @@ const title = generateTitle(pageTitle);
     <title>{title}</title>
   </head>
   <body>
-    <div class="flex min-h-screen">
-      <Sidebar />
-      <div class="flex flex-1 flex-col">
-        {pageTitle && (
-          <header class="bg-base-100 border-base-300 border-b px-6 py-4">
-            <h1 class="text-xl font-bold">{pageTitle}</h1>
-          </header>
-        )}
-        <main class="flex-1 p-6">
-          <slot />
-        </main>
-      </div>
-    </div>
+    <main class="flex min-h-screen items-center justify-center">
+      <slot />
+    </main>
   </body>
 </html>

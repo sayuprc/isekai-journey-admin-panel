@@ -88,22 +88,30 @@ export const EditableForm = (props: Props) => {
   return (
     // TODO ローディング用のコンポーネントを用意する
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
+      <a href="/performers" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
       <form onsubmit={handleSubmit}>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend class="fieldset-legend">共演者詳細</legend>
-
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">共演者名</label>
-          <input type="text" class="input" name="name" value={props.data?.performer.name} />
+          <input type="text" class="input w-full" name="name" value={props.data?.performer.name} />
 
           <label class="label">表示順</label>
-          <input type="number" class="input" name="orderNo" required min="1" value={props.data?.performer.orderNo} />
+          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.performer.orderNo} />
 
-          <div class="flex justify-between gap-2">
-            <button onClick={handleDelete} class="btn btn-error mt-4">削除</button>
-            <button onClick={handleUpdate} class="btn btn-neutral mt-4">更新</button>
+          <div class="mt-6 flex justify-end">
+            <button onClick={handleUpdate} class="btn btn-primary">更新</button>
           </div>
         </fieldset>
       </form>
+
+      <div class="divider max-w-lg" />
+
+      <div class="max-w-lg rounded-box border border-error/20 bg-error/5 p-6">
+        <h3 class="font-semibold text-error">危険な操作</h3>
+        <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
+        <div class="mt-4">
+          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm">この共演者を削除する</button>
+        </div>
+      </div>
     </Show>
   );
 };
