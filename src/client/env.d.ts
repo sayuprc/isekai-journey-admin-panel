@@ -1,5 +1,8 @@
 interface ImportMetaEnv {
-  readonly PUBLIC_API_URL: string;
+  readonly API_URL: string;
+  readonly CACHE_URL: string;
+  readonly CACHE_TOKEN: string;
+  readonly PUBLIC_APP_URL: string;
 }
 
 interface ImportMeta {
