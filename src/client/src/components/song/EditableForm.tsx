@@ -5,7 +5,7 @@ import { setFlash } from '../Flash';
 
 type Creator = components['schemas']['Creator'];
 type SongType = components['schemas']['SongType'];
-// type SongTypeValue = components['schemas']['SongTypeValue'];
+type SongTypeValue = components['schemas']['SongTypeValue'];
 
 type CreatorEntry = {
   creatorId: string;
@@ -113,7 +113,7 @@ export const EditableForm = (props: Props) => {
     const { data } = await client.api.songs({ songId: songId }).put({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
-      songTypeValue: Number(formData.get('songTypeValue')),
+      songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
       orderNo: Number(formData.get('orderNo')),
       arrangers: arrangers(),
       composers: composers(),

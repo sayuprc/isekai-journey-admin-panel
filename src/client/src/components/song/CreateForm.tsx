@@ -5,7 +5,7 @@ import { setFlash } from '../Flash';
 
 type Creator = components['schemas']['Creator'];
 type SongType = components['schemas']['SongType'];
-// type SongTypeValue = components['schemas']['SongTypeValue'];
+type SongTypeValue = components['schemas']['SongTypeValue'];
 
 type CreatorEntry = {
   creatorId: string;
@@ -55,7 +55,7 @@ export const CreateForm = () => {
     const { data } = await client.api.songs.post({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
-      songTypeValue: Number(formData.get('songTypeValue')),
+      songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
       arrangers: arrangers(),
       composers: composers(),
       lyricists: lyricists(),
