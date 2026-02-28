@@ -1,7 +1,7 @@
 ---
 import { EditableForm } from '../../components/song/EditableForm';
 import Layout from '../../layouts/Layout.astro';
-import { createClient } from '../../utils/client';
+import { client } from '../../utils/client';
 
 export const prerender = false;
 
@@ -16,11 +16,16 @@ if (typeof id !== 'string') {
   throw new Error('URL が不正');
 }
 
-const { data, response } = await createClient(Astro.request).GET('/songs/{songId}', {
-  params: {
-    path: { songId: id },
+const { data, response } = await client.api.songs({ songId: id }).get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
   },
 });
+
+if (!data) {
+  throw new Error();
+}
 ---
 
 <Layout pageTitle="楽曲詳細">

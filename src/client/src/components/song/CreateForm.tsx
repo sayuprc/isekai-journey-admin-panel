@@ -21,8 +21,8 @@ export const CreateForm = () => {
 
   onMount(async () => {
     const [creatorsRes, songTypesRes] = await Promise.all([
-      client.GET('/creators'),
-      client.GET('/song-types'),
+      client.api.creators.get(),
+      client.api['song-types'].get(),
     ]);
 
     if (creatorsRes.data) {
@@ -52,15 +52,13 @@ export const CreateForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { data } = await client.POST('/songs', {
-      body: {
-        title: formData.get('title')?.toString() ?? '',
-        description: formData.get('description')?.toString() ?? '',
-        songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
-        arrangers: arrangers(),
-        composers: composers(),
-        lyricists: lyricists(),
-      },
+    const { data } = await client.api.songs.post({
+      title: formData.get('title')?.toString() ?? '',
+      description: formData.get('description')?.toString() ?? '',
+      songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
+      arrangers: arrangers(),
+      composers: composers(),
+      lyricists: lyricists(),
     });
 
     if (data) {

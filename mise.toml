@@ -1,10 +1,11 @@
+[tools]
+bun = "1.3.9"
+
 [vars]
 server_tag = "8.5"
-node_tag = "24"
 proxy_tag = "1.27"
 openapi_tag = "7.18.0"
 server_container = "isekai-terrarium-admin-php"
-client_container = "isekai-terrarium-admin-node"
 uid = "`id -u`"
 user_name = "`id -un`"
 gid = "`id -g`"
@@ -12,13 +13,13 @@ group_name = "`id -gn`"
 
 [env]
 SERVER_TAG = "{{vars.server_tag}}"
-NODE_TAG = "{{vars.node_tag}}"
 PROXY_TAG = "{{vars.proxy_tag}}"
 OPENAPI_TAG = "{{vars.openapi_tag}}"
 SERVER_IMAGE = "isekai-terrarium-admin-php:{{vars.server_tag}}"
-NODE_IMAGE = "isekai-terrarium-admin-node:{{vars.node_tag}}"
 PROXY_IMAGE = "isekai-terrarium-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
+NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
+OAS_FILE = "IsekaiTerrarium.Admin.v1.yaml"
 
 [tasks.setup]
 description = "環境構築をする"
@@ -26,7 +27,7 @@ run = [
   { task = "cert:make" },
   { task = "cert:copy-pem" },
   { task = "build" },
-  { tasks = ["composer:install", "npm:install"] },
+  { tasks = ["composer:install", "bun:install"] },
   { task = "up" },
 ]
 
@@ -59,10 +60,6 @@ docker build -t ${OPENAPI_IMAGE} ./docker/openapi-generator \
   --build-arg USERNAME={{vars.user_name}} \
   --build-arg GROUPNAME={{vars.group_name}}
 '''
-
-[tasks."build:node"]
-description = "Node のイメージをビルドする"
-run = "docker build -t ${NODE_IMAGE} ./docker/node --build-arg TAG=${NODE_TAG}"
 
 [tasks.up]
 description = "コンテナを起動する"
@@ -157,7 +154,7 @@ run = '''
 rm -rf ./src/server/Generated
 
 docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
-  -i /local/src/contracts/generated/oas/openapi.yaml \
+  -i /local/src/contracts/generated/oas/${OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
   -o /local/src/server/Generated
@@ -165,10 +162,11 @@ docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} gene
 
 [tasks."generate:client"]
 description = "OAS からクライアントのコードを生成する"
+dir = "src/client"
 run = '''
-rm -rf ./src/client/src/generated
+rm -rf src/generated
 
-docker exec {{vars.client_container}} npm run generate:api
+bun run generate:api
 '''
 
 [tasks."cert:make"]
@@ -189,16 +187,12 @@ description = "rootCA.pem をコピーする"
 run = '''
 caroot_pem=$(mkcert -CAROOT)/rootCA.pem
 cp ${caroot_pem} docker/php/certs/
-cp ${caroot_pem} docker/node/certs/
 '''
 
-[tasks.node]
-description = "node のコンテナの中に入る"
-run = "docker exec -it {{vars.client_container}} bash"
-
-[tasks."npm:install"]
-description = "npm のパッケージをインストールする"
-run = "docker compose run --rm node npm i"
+[tasks."bun:install"]
+description = "bun のパッケージをインストールする"
+dir = "src/client"
+run = "bun install"
 
 [tasks.format]
 description = "ESLint と Stylelint を --fix オプション付きで実行する"
@@ -206,31 +200,38 @@ depends = ["lint:fix", "style:fix"]
 
 [tasks.lint]
 description = "ESLint を実行する"
-run = "docker exec {{vars.client_container}} npm run lint"
+dir = "src/client"
+run = "bun run lint"
 
 [tasks."lint:fix"]
 description = "ESLint を --fix オプション付きで実行する"
-run = "docker exec {{vars.client_container}} npm run lint:fix"
+dir = "src/client"
+run = "bun run lint:fix"
 
 [tasks.style]
 description = "Stylelint を実行する"
-run = "docker exec {{vars.client_container}} npm run style"
+dir = "src/client"
+run = "bun run style"
 
 [tasks."style:fix"]
 description = "Stylelint を --fix オプション付きで実行する"
-run = "docker exec {{vars.client_container}} npm run style:fix"
+dir = "src/client"
+run = "bun run style:fix"
 
 [tasks.tcm]
 description = "tcm を実行する"
-run = "docker exec {{vars.client_container}} npm run tcm"
+dir = "src/client"
+run = "bun run tcm"
 
 [tasks."tcm:watch"]
 description = "tcm を --watch オプション付きで実行する"
-run = "docker exec {{vars.client_container}} npm run tcm:watch"
+dir = "src/client"
+run = "bun run tcm:watch"
 
 [tasks.prism]
 description = "Prism のモックサーバーを起動する"
-run = "docker exec {{vars.client_container}} npm run prism"
+dir = "src/client"
+run = "bun run prism"
 
 [tasks."ai:check"]
 quiet = true

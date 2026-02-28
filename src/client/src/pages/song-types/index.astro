@@ -1,13 +1,19 @@
 ---
 import { FlashMessage } from '../../components/Flash';
 import Layout from '../../layouts/Layout.astro';
-import { createClient } from '../../utils/client';
+import { client } from '../../utils/client';
 
 export const prerender = false;
 
-const { data } = await createClient(Astro.request).GET('/song-types');
+const { data, error } = await client.api['song-types'].get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
 
-if (!data) {
+if (error) {
+  // TODO 適切なエラーハンドリング
   throw new Error();
 }
 ---
