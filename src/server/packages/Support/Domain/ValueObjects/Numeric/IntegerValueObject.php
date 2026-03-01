@@ -7,7 +7,7 @@ namespace Support\Domain\ValueObjects\Numeric;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\Exceptions\InvalidDomainException;
 
 abstract readonly class IntegerValueObject
@@ -23,12 +23,12 @@ abstract readonly class IntegerValueObject
     }
 
     /**
-     * @return Result<static, DomainRuleViolationError>
+     * @return Result<static, EntityRuleViolationError>
      */
     public static function create(int $value): Result
     {
         if (! static::isValid($value)) {
-            return new Err(new DomainRuleViolationError(static::class, static::getMessage($value)));
+            return new Err(new EntityRuleViolationError(static::class, static::getMessage($value)));
         }
 
         return new Ok(new static($value));

@@ -21,7 +21,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -87,7 +87,7 @@ class AuthenticateInteractorTest extends TestCase
     {
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new Err(new DomainRuleViolationError('exp', '期限切れです')))
+            ->andReturn(new Err(new EntityRuleViolationError('exp', '期限切れです')))
             ->once();
 
         $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));

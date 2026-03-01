@@ -436,6 +436,9 @@ export interface components {
             song: components["schemas"]["Song"];
         };
         ValidationError: {
+            errors: components["schemas"]["ValidationErrorDetail"][];
+        };
+        ValidationErrorDetail: {
             field: string;
             message: string;
         };
@@ -1327,6 +1330,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
             /** @description Access is unauthorized. */
             401: {
                 headers: {
@@ -1740,6 +1752,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
             };
             /** @description Access is unauthorized. */
             401: {

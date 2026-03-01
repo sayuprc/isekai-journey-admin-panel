@@ -19,9 +19,10 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 
 class AdminUserIntegrityService
 {
@@ -49,7 +50,7 @@ class AdminUserIntegrityService
         $user = $result->unwrap();
 
         if (! is_null($this->repository->findByEmail($user->email))) {
-            return new Err(new DomainRuleViolationError(Email::class, sprintf('すでに使われているメールアドレスです "%s"', $email)));
+            return new Err(new BusinessRuleViolationError(sprintf('すでに使われているメールアドレスです "%s"', $email)));
         }
 
         return new Ok($user);
@@ -79,7 +80,7 @@ class AdminUserIntegrityService
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
-                    if ($error instanceof DomainRuleViolationError) {
+                    if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
                     }
@@ -98,7 +99,7 @@ class AdminUserIntegrityService
         $result = Role::tryFrom($role);
 
         if (is_null($result)) {
-            return new Err(new DomainRuleViolationError(Role::class, "不正なロールです: {$role}"));
+            return new Err(new EntityRuleViolationError(Role::class, "不正なロールです: {$role}"));
         }
 
         return new Ok($result);

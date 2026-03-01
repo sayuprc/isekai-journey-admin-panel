@@ -9,6 +9,7 @@ use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
+use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -75,6 +76,10 @@ class CreateCommand extends Command
 
     private function resolveErrorMessage(UseCaseError $error): string
     {
+        if ($error instanceof BusinessLogicError) {
+            return $error->message;
+        }
+
         if (! $error instanceof InvalidInputError) {
             return '';
         }

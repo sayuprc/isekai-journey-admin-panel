@@ -13,9 +13,10 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 class PerformerIntegrityService
@@ -46,7 +47,7 @@ class PerformerIntegrityService
         $performer = $result->unwrap();
 
         if (! is_null($this->repository->findByName($performer->name))) {
-            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $name)));
+            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($performer);
@@ -66,7 +67,7 @@ class PerformerIntegrityService
         $performer = $result->unwrap();
 
         if (! is_null($found = $this->repository->findByName($performer->name)) && ! $found->equals($performer)) {
-            return new Err(new DomainRuleViolationError(PerformerName::class, sprintf('すでに使われている名前です "%s"', $name)));
+            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
         }
 
         return new Ok($performer);
@@ -85,7 +86,7 @@ class PerformerIntegrityService
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
-                    if ($error instanceof DomainRuleViolationError) {
+                    if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
                     }

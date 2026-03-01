@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Support\Domain\Error;
 
-readonly class DomainRuleViolationError implements DomainError
+readonly class EntityRuleViolationError implements DomainError
 {
     public function __construct(
         public string $field,

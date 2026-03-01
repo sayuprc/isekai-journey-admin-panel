@@ -14,7 +14,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
@@ -42,7 +42,7 @@ readonly class GetInteractor implements GetUseCaseInterface
         }
 
         return CreatorId::create($inputData->creatorId)
-            ->mapErr(fn (DomainRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (CreatorId $creatorId): Result {
                 if (is_null($found = $this->repository->find($creatorId))) {
                     return new Err(new NotFoundError('Creator', $creatorId->value));

@@ -12,7 +12,7 @@ use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\BusinessLogicError;
 use Tests\TestCase;
 
 class DeleteInteractorTest extends TestCase
@@ -64,8 +64,8 @@ class DeleteInteractorTest extends TestCase
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['creatorId' => ['このクリエイターは楽曲に使用されているため削除できません']], $error->errors);
+        $this->assertInstanceOf(BusinessLogicError::class, $error);
+        $this->assertSame('このクリエイターは楽曲に使用されているため削除できません', $error->message);
     }
 
     private function getInstance(): DeleteInteractor
