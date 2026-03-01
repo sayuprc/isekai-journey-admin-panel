@@ -38,11 +38,12 @@ use Support\Domain\ValueObjects\OrderNo;
 
 trait EntityFactory
 {
-    protected function createCreator(string $creatorId, string $name): Creator
+    protected function createCreator(string $creatorId, string $name, int $orderNo): Creator
     {
         return new Creator(
             CreatorId::reconstruct($creatorId),
             CreatorName::reconstruct($name),
+            OrderNo::reconstruct($orderNo),
         );
     }
 

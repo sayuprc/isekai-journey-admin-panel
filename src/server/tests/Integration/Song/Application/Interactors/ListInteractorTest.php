@@ -19,9 +19,9 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongs(): void
     {
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A');
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A');
-        $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A');
+        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
+        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
+        $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
 
         $this->storeCreators($arranger, $composer, $lyricist);
 

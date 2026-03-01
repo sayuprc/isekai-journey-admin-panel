@@ -26,7 +26,7 @@ class DeleteInteractorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター')->toArray());
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター', 1)->toArray());
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
@@ -42,7 +42,7 @@ class DeleteInteractorTest extends TestCase
         $creatorId = $this->generateUuid();
         $songId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, 'クリエイター')->toArray());
+        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, 'クリエイター', 1)->toArray());
         $this->factory(FileSongRepository::class, $this->createSong(
             $songId,
             '曲名',

@@ -9,6 +9,7 @@ readonly class UpdateInputData
     public function __construct(
         public string $creatorId,
         public string $name,
+        public int $orderNo,
     ) {
     }
 }

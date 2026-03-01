@@ -23,7 +23,7 @@ class GetCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒')->toArray());
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒', 1)->toArray());
 
         $this->withAuth()
             ->get(route(CreatorRouteMap::Get, $uuid))
@@ -32,6 +32,7 @@ class GetCreatorTest extends TestCase
                 'creator' => [
                     'creatorId' => $uuid,
                     'name' => 'ヰ世界情緒',
+                    'orderNo' => 1,
                 ],
             ]);
     }

@@ -8,6 +8,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Infrastructures\CreatorFactory;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
 class CreatorFactoryTest extends TestCase
@@ -18,10 +19,12 @@ class CreatorFactoryTest extends TestCase
         $creator = $this->getInstance()->create(
             CreatorId::create('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')->unwrap(),
             CreatorName::create('クリエイター')->unwrap(),
+            OrderNo::create(1)->unwrap(),
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $creator->creatorId->value);
         $this->assertSame('クリエイター', $creator->name->value);
+        $this->assertSame(1, $creator->orderNo->value);
     }
 
     private function getInstance(): CreatorFactory

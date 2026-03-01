@@ -21,9 +21,9 @@ class UpdateSongTest extends TestCase
     #[Test]
     public function canUpdate(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '編曲者');
-        $creator2 = $this->createCreator($this->generateUuid(), '作曲者');
-        $creator3 = $this->createCreator($this->generateUuid(), '作詞者');
+        $creator1 = $this->createCreator($this->generateUuid(), '編曲者', 1);
+        $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
+        $creator3 = $this->createCreator($this->generateUuid(), '作詞者', 1);
 
         $this->storeCreators($creator1, $creator2, $creator3);
 

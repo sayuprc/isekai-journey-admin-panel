@@ -23,9 +23,9 @@ class CreateSongTest extends TestCase
     public function canCreate(): void
     {
         $this->storeCreators(
-            $creator1 = $this->createCreator($this->generateUuid(), '編曲者'),
-            $creator2 = $this->createCreator($this->generateUuid(), '作曲者'),
-            $creator3 = $this->createCreator($this->generateUuid(), '作詞者'),
+            $creator1 = $this->createCreator($this->generateUuid(), '編曲者', 1),
+            $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1),
+            $creator3 = $this->createCreator($this->generateUuid(), '作詞者', 1),
         );
 
         $this->withAuth()

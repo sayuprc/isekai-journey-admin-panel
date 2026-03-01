@@ -28,6 +28,7 @@ export const EditableForm = (props: Props) => {
 
     const { data, response } = await client.api.creators({ creatorId: creatorId }).put({
       name: formData.get('name')?.toString() ?? '',
+      orderNo: Number(formData.get('orderNo')),
     });
 
     // TODO エラーハンドリング
@@ -94,6 +95,9 @@ export const EditableForm = (props: Props) => {
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">クリエイター名</label>
           <input type="text" class="input w-full" name="name" value={props.data?.creator.name} />
+
+          <label class="label">表示順</label>
+          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.creator.orderNo} />
 
           <div class="mt-6 flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary">更新</button>

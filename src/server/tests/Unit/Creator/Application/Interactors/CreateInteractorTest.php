@@ -52,7 +52,7 @@ class CreateInteractorTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with($name)
-            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name)))
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name, 1)))
             ->once();
 
         $this->repository->shouldReceive('save')
