@@ -350,7 +350,7 @@ export interface components {
          *         "value": 1
          *       },
          *       "orderNo": 1,
-         *       "arrangers": [
+         *       "lyricists": [
          *         {
          *           "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
          *           "name": "ヰ世界情緒",
@@ -364,7 +364,7 @@ export interface components {
          *           "orderNo": 1
          *         }
          *       ],
-         *       "lyricists": [
+         *       "arrangers": [
          *         {
          *           "creatorId": "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
          *           "name": "ヰ世界情緒",
@@ -379,17 +379,17 @@ export interface components {
             description: components["schemas"]["description"];
             songType: components["schemas"]["SongType"];
             orderNo: components["schemas"]["orderNo"];
-            arrangers: components["schemas"]["Arranger"][];
-            composers: components["schemas"]["Composer"][];
             lyricists: components["schemas"]["Lyricist"][];
+            composers: components["schemas"]["Composer"][];
+            arrangers: components["schemas"]["Arranger"][];
         };
         SongCreateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
-            arrangers: components["schemas"]["RequestArranger"][];
-            composers: components["schemas"]["RequestComposer"][];
             lyricists: components["schemas"]["RequestLyricist"][];
+            composers: components["schemas"]["RequestComposer"][];
+            arrangers: components["schemas"]["RequestArranger"][];
         };
         SongCreateResponse: {
             song: components["schemas"]["Song"];
@@ -428,9 +428,9 @@ export interface components {
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
             orderNo: components["schemas"]["orderNo"];
-            arrangers: components["schemas"]["RequestArranger"][];
-            composers: components["schemas"]["RequestComposer"][];
             lyricists: components["schemas"]["RequestLyricist"][];
+            composers: components["schemas"]["RequestComposer"][];
+            arrangers: components["schemas"]["RequestArranger"][];
         };
         SongUpdateResponse: {
             song: components["schemas"]["Song"];
