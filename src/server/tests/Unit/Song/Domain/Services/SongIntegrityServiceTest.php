@@ -62,9 +62,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             SongType::Original,
             $expectedOrderNo,
-            [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
+            [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
             [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
         );
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -73,14 +73,14 @@ class SongIntegrityServiceTest extends TestCase
                     CreatorId $arg1,
                     CreatorId $arg2,
                     CreatorId $arg3,
-                ): bool => $arg1->value === $arrangerId
+                ): bool => $arg1->value === $lyricistId
                     && $arg2->value === $composerId
-                    && $arg3->value === $lyricistId,
+                    && $arg3->value === $arrangerId,
             )
             ->andReturn([
-                $this->createCreator($arrangerId, '', 1),
-                $this->createCreator($composerId, '', 1),
                 $this->createCreator($lyricistId, '', 1),
+                $this->createCreator($composerId, '', 1),
+                $this->createCreator($arrangerId, '', 1),
             ])
             ->once();
 
@@ -102,23 +102,23 @@ class SongIntegrityServiceTest extends TestCase
                     Description $descriptionArg,
                     SongType $songTypeArg,
                     OrderNo $orderNoArg,
-                    Arrangers $arrangersArg,
-                    Composers $composersArg,
                     Lyricists $lyricistsArg,
+                    Composers $composersArg,
+                    Arrangers $arrangersArg,
                 ): bool => $songIdArg->value === $uuid
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
                     && $songTypeArg->value === $songType
                     && $orderNoArg->value === $expectedOrderNo
-                    && $arrangersArg->count() === 1
-                    && $arrangersArg[0]->creatorId->value === $arrangerId
-                    && $arrangersArg[0]->orderNo->value === 1
+                    && $lyricistsArg->count() === 1
+                    && $lyricistsArg[0]->creatorId->value === $lyricistId
+                    && $lyricistsArg[0]->orderNo->value === 1
                     && $composersArg->count() === 1
                     && $composersArg[0]->creatorId->value === $composerId
                     && $composersArg[0]->orderNo->value === 1
-                    && $lyricistsArg->count() === 1
-                    && $lyricistsArg[0]->creatorId->value === $lyricistId
-                    && $lyricistsArg[0]->orderNo->value === 1,
+                    && $arrangersArg->count() === 1
+                    && $arrangersArg[0]->creatorId->value === $arrangerId
+                    && $arrangersArg[0]->orderNo->value === 1,
             )
             ->andReturn($expectedSong)
             ->once();
@@ -127,9 +127,9 @@ class SongIntegrityServiceTest extends TestCase
             $title,
             $description,
             $songType,
-            [['creatorId' => $arrangerId]],
-            [['creatorId' => $composerId]],
             [['creatorId' => $lyricistId]],
+            [['creatorId' => $composerId]],
+            [['creatorId' => $arrangerId]],
         );
 
         $this->assertTrue($result->isOk());
@@ -201,9 +201,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             SongType::Original,
             $orderNo,
-            [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
+            [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
             [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
         );
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -212,14 +212,14 @@ class SongIntegrityServiceTest extends TestCase
                     CreatorId $arg1,
                     CreatorId $arg2,
                     CreatorId $arg3,
-                ): bool => $arg1->value === $arrangerId
+                ): bool => $arg1->value === $lyricistId
                     && $arg2->value === $composerId
-                    && $arg3->value === $lyricistId,
+                    && $arg3->value === $arrangerId,
             )
             ->andReturn([
-                $this->createCreator($arrangerId, '', 1),
-                $this->createCreator($composerId, '', 1),
                 $this->createCreator($lyricistId, '', 1),
+                $this->createCreator($composerId, '', 1),
+                $this->createCreator($arrangerId, '', 1),
             ])
             ->once();
 
@@ -231,23 +231,23 @@ class SongIntegrityServiceTest extends TestCase
                     Description $descriptionArg,
                     SongType $songTypeArg,
                     OrderNo $orderNoArg,
-                    Arrangers $arrangersArg,
-                    Composers $composersArg,
                     Lyricists $lyricistsArg,
+                    Composers $composersArg,
+                    Arrangers $arrangersArg,
                 ): bool => $songIdArg->value === $songId
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
                     && $songTypeArg->value === $songType
                     && $orderNoArg->value === $orderNo
-                    && $arrangersArg->count() === 1
-                    && $arrangersArg[0]->creatorId->value === $arrangerId
-                    && $arrangersArg[0]->orderNo->value === 1
+                    && $lyricistsArg->count() === 1
+                    && $lyricistsArg[0]->creatorId->value === $lyricistId
+                    && $lyricistsArg[0]->orderNo->value === 1
                     && $composersArg->count() === 1
                     && $composersArg[0]->creatorId->value === $composerId
                     && $composersArg[0]->orderNo->value === 1
-                    && $lyricistsArg->count() === 1
-                    && $lyricistsArg[0]->creatorId->value === $lyricistId
-                    && $lyricistsArg[0]->orderNo->value === 1,
+                    && $arrangersArg->count() === 1
+                    && $arrangersArg[0]->creatorId->value === $arrangerId
+                    && $arrangersArg[0]->orderNo->value === 1,
             )
             ->andReturn($expectedSong)
             ->once();
@@ -258,9 +258,9 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $songType,
             $orderNo,
-            [['creatorId' => $arrangerId]],
-            [['creatorId' => $composerId]],
             [['creatorId' => $lyricistId]],
+            [['creatorId' => $composerId]],
+            [['creatorId' => $arrangerId]],
         );
 
         $this->assertTrue($result->isOk());

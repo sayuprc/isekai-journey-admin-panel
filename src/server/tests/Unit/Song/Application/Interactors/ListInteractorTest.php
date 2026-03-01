@@ -50,9 +50,9 @@ class ListInteractorTest extends TestCase
     #[Test]
     public function nonEmptySongs(): void
     {
-        $arrangerId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $lyricistId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $composerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
-        $lyricistId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+        $arrangerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
 
         $song1 = $this->createSong(
             'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
@@ -60,9 +60,9 @@ class ListInteractorTest extends TestCase
             'オリジナル楽曲',
             SongType::Original,
             1,
-            [['creatorId' => $arrangerId, 'orderNo' => 1]],
-            [['creatorId' => $composerId, 'orderNo' => 1]],
             [['creatorId' => $lyricistId, 'orderNo' => 1]],
+            [['creatorId' => $composerId, 'orderNo' => 1]],
+            [['creatorId' => $arrangerId, 'orderNo' => 1]],
         );
         $song2 = $this->createSong(
             'EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE',
@@ -70,7 +70,7 @@ class ListInteractorTest extends TestCase
             'カバー楽曲',
             SongType::Cover,
             2,
-            [['creatorId' => $arrangerId, 'orderNo' => 1]],
+            [['creatorId' => $lyricistId, 'orderNo' => 1]],
             [['creatorId' => $composerId, 'orderNo' => 1]],
             [],
         );
@@ -89,9 +89,9 @@ class ListInteractorTest extends TestCase
                     $song1->songType->getName(),
                     $song1->songType->value,
                     $song1->orderNo->value,
-                    [new AssembledCreator($arrangerId, '編曲者A', 1)],
-                    [new AssembledCreator($composerId, '作曲者A', 1)],
                     [new AssembledCreator($lyricistId, '作詞者A', 1)],
+                    [new AssembledCreator($composerId, '作曲者A', 1)],
+                    [new AssembledCreator($arrangerId, '編曲者A', 1)],
                 ),
             )
             ->once();
@@ -106,7 +106,7 @@ class ListInteractorTest extends TestCase
                     $song2->songType->getName(),
                     $song2->songType->value,
                     $song2->orderNo->value,
-                    [new AssembledCreator($arrangerId, '編曲者A', 1)],
+                    [new AssembledCreator($lyricistId, '作詞者A', 1)],
                     [new AssembledCreator($composerId, '作曲者A', 1)],
                     [],
                 ),
@@ -125,29 +125,29 @@ class ListInteractorTest extends TestCase
         $this->assertSame(SongType::Original->getName(), $response->songs[0]->songTypeName);
         $this->assertSame(SongType::Original->value, $response->songs[0]->songTypeValue);
         $this->assertSame(1, $response->songs[0]->orderNo);
-        $this->assertCount(1, $response->songs[0]->arrangers);
-        $this->assertSame($arrangerId, $response->songs[0]->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->songs[0]->arrangers[0]->name);
-        $this->assertSame(1, $response->songs[0]->arrangers[0]->orderNo);
-        $this->assertCount(1, $response->songs[0]->composers);
-        $this->assertSame($composerId, $response->songs[0]->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->songs[0]->composers[0]->name);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame($lyricistId, $response->songs[0]->lyricists[0]->creatorId);
         $this->assertSame('作詞者A', $response->songs[0]->lyricists[0]->name);
+        $this->assertSame(1, $response->songs[0]->lyricists[0]->orderNo);
+        $this->assertCount(1, $response->songs[0]->composers);
+        $this->assertSame($composerId, $response->songs[0]->composers[0]->creatorId);
+        $this->assertSame('作曲者A', $response->songs[0]->composers[0]->name);
+        $this->assertCount(1, $response->songs[0]->arrangers);
+        $this->assertSame($arrangerId, $response->songs[0]->arrangers[0]->creatorId);
+        $this->assertSame('編曲者A', $response->songs[0]->arrangers[0]->name);
 
         $this->assertSame('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', $response->songs[1]->songId);
         $this->assertSame('全部夢だった！', $response->songs[1]->title);
         $this->assertSame(SongType::Cover->getName(), $response->songs[1]->songTypeName);
         $this->assertSame(SongType::Cover->value, $response->songs[1]->songTypeValue);
         $this->assertSame(2, $response->songs[1]->orderNo);
-        $this->assertCount(1, $response->songs[1]->arrangers);
-        $this->assertSame($arrangerId, $response->songs[1]->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->songs[1]->arrangers[0]->name);
+        $this->assertCount(1, $response->songs[1]->lyricists);
+        $this->assertSame($lyricistId, $response->songs[1]->lyricists[0]->creatorId);
+        $this->assertSame('作詞者A', $response->songs[1]->lyricists[0]->name);
         $this->assertCount(1, $response->songs[1]->composers);
         $this->assertSame($composerId, $response->songs[1]->composers[0]->creatorId);
         $this->assertSame('作曲者A', $response->songs[1]->composers[0]->name);
-        $this->assertCount(0, $response->songs[1]->lyricists);
+        $this->assertCount(0, $response->songs[1]->arrangers);
     }
 
     private function getInstance(): ListInteractor

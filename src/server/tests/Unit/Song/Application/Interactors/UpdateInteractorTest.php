@@ -54,9 +54,9 @@ class UpdateInteractorTest extends TestCase
         $description = 'オリジナル楽曲';
         $songTypeValue = SongType::Original->value;
         $orderNo = 1;
-        $arrangers = [['creatorId' => $arrangerId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
+        $lyricists = [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
         $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
-        $lyricists = [['creatorId' => $lyricistId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
+        $arrangers = [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -64,7 +64,7 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $songTypeValue, $orderNo, $arrangers, $composers, $lyricists)
+            ->with($songId, $title, $description, $songTypeValue, $orderNo, $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -72,9 +72,9 @@ class UpdateInteractorTest extends TestCase
                     $description,
                     SongType::from($songTypeValue),
                     $orderNo,
-                    $arrangers,
-                    $composers,
                     $lyricists,
+                    $composers,
+                    $arrangers,
                 )),
             )
             ->once();
@@ -86,15 +86,15 @@ class UpdateInteractorTest extends TestCase
                     && $arg->description->value === $description
                     && $arg->songType->value === $songTypeValue
                     && $arg->orderNo->value === $orderNo
-                    && $arg->arrangers->count() === 1
-                    && $arg->arrangers[0]->creatorId->value === $arrangerId
-                    && $arg->arrangers[0]->orderNo->value === 1
+                    && $arg->lyricists->count() === 1
+                    && $arg->lyricists[0]->creatorId->value === $lyricistId
+                    && $arg->lyricists[0]->orderNo->value === 1
                     && $arg->composers->count() === 1
                     && $arg->composers[0]->creatorId->value === $composerId
                     && $arg->composers[0]->orderNo->value === 1
-                    && $arg->lyricists->count() === 1
-                    && $arg->lyricists[0]->creatorId->value === $lyricistId
-                    && $arg->lyricists[0]->orderNo->value === 1,
+                    && $arg->arrangers->count() === 1
+                    && $arg->arrangers[0]->creatorId->value === $arrangerId
+                    && $arg->arrangers[0]->orderNo->value === 1,
             )
             ->andReturn($song)
             ->once();
@@ -106,15 +106,15 @@ class UpdateInteractorTest extends TestCase
                     && $arg->description->value === $description
                     && $arg->songType->value === $songTypeValue
                     && $arg->orderNo->value === $orderNo
-                    && $arg->arrangers->count() === 1
-                    && $arg->arrangers[0]->creatorId->value === $arrangerId
-                    && $arg->arrangers[0]->orderNo->value === 1
+                    && $arg->lyricists->count() === 1
+                    && $arg->lyricists[0]->creatorId->value === $lyricistId
+                    && $arg->lyricists[0]->orderNo->value === 1
                     && $arg->composers->count() === 1
                     && $arg->composers[0]->creatorId->value === $composerId
                     && $arg->composers[0]->orderNo->value === 1
-                    && $arg->lyricists->count() === 1
-                    && $arg->lyricists[0]->creatorId->value === $lyricistId
-                    && $arg->lyricists[0]->orderNo->value === 1,
+                    && $arg->arrangers->count() === 1
+                    && $arg->arrangers[0]->creatorId->value === $arrangerId
+                    && $arg->arrangers[0]->orderNo->value === 1,
             )
             ->andReturn(
                 new AssembledSong(
@@ -124,9 +124,9 @@ class UpdateInteractorTest extends TestCase
                     $song->songType->name,
                     $song->songType->value,
                     $song->orderNo->value,
-                    [new AssembledCreator($arrangerId, '編曲者', 1)],
-                    [new AssembledCreator($composerId, '作曲者', 1)],
                     [new AssembledCreator($lyricistId, '作詞者', 1)],
+                    [new AssembledCreator($composerId, '作曲者', 1)],
+                    [new AssembledCreator($arrangerId, '編曲者', 1)],
                 ),
             )
             ->once();
@@ -138,9 +138,9 @@ class UpdateInteractorTest extends TestCase
                 $description,
                 $songTypeValue,
                 $orderNo,
-                $arrangers,
-                $composers,
                 $lyricists,
+                $composers,
+                $arrangers,
             ),
         );
 
@@ -155,9 +155,9 @@ class UpdateInteractorTest extends TestCase
         $description = '説明';
         $songTypeValue = 1;
         $orderNo = 1;
-        $arrangers = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
+        $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
         $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
-        $lyricists = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
+        $arrangers = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -165,7 +165,7 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $songTypeValue, $orderNo, $arrangers, $composers, $lyricists)
+            ->with($songId, $title, $description, $songTypeValue, $orderNo, $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -176,9 +176,9 @@ class UpdateInteractorTest extends TestCase
                 $description,
                 $songTypeValue,
                 $orderNo,
-                $arrangers,
-                $composers,
                 $lyricists,
+                $composers,
+                $arrangers,
             ),
         );
 

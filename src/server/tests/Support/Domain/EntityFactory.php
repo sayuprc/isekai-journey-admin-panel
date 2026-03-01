@@ -73,9 +73,9 @@ trait EntityFactory
     }
 
     /**
-     * @param array<array{creatorId: string, orderNo: int}> $arrangers
-     * @param array<array{creatorId: string, orderNo: int}> $composers
      * @param array<array{creatorId: string, orderNo: int}> $lyricists
+     * @param array<array{creatorId: string, orderNo: int}> $composers
+     * @param array<array{creatorId: string, orderNo: int}> $arrangers
      */
     protected function createSong(
         string $songId,
@@ -83,9 +83,9 @@ trait EntityFactory
         string $description,
         SongType $songType,
         int $orderNo,
-        array $arrangers,
-        array $composers,
         array $lyricists,
+        array $composers,
+        array $arrangers,
     ): Song {
         return new Song(
             SongId::reconstruct($songId),
@@ -93,9 +93,9 @@ trait EntityFactory
             Description::reconstruct($description),
             $songType,
             OrderNo::reconstruct($orderNo),
-            Arrangers::fromArray($arrangers)->unwrap(),
-            Composers::fromArray($composers)->unwrap(),
             Lyricists::fromArray($lyricists)->unwrap(),
+            Composers::fromArray($composers)->unwrap(),
+            Arrangers::fromArray($arrangers)->unwrap(),
         );
     }
 

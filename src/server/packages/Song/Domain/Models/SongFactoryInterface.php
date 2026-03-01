@@ -18,8 +18,8 @@ interface SongFactoryInterface
         Description $description,
         SongType $songType,
         OrderNo $orderNo,
-        Arrangers $arrangers,
-        Composers $composers,
         Lyricists $lyricists,
+        Composers $composers,
+        Arrangers $arrangers,
     ): Song;
 }

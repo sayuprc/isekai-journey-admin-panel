@@ -21,11 +21,11 @@ class GetInteractorTest extends TestCase
     #[Test]
     public function getSong(): void
     {
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
         $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
+        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
+        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $this->storeCreators($arranger, $composer, $lyricist);
+        $this->storeCreators($lyricist, $composer, $arranger);
 
         $songId = $this->generateUuid();
 
@@ -36,9 +36,9 @@ class GetInteractorTest extends TestCase
                 'オリジナル楽曲',
                 SongType::Original,
                 1,
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
-                [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
+                [['creatorId' => $composerId, 'orderNo' => 1]],
+                [['creatorId' => $arrangerId, 'orderNo' => 1]],
             ),
         );
 
@@ -54,15 +54,15 @@ class GetInteractorTest extends TestCase
         $this->assertSame(SongType::Original->getName(), $response->song->songTypeName);
         $this->assertSame(SongType::Original->value, $response->song->songTypeValue);
         $this->assertSame(1, $response->song->orderNo);
-        $this->assertCount(1, $response->song->arrangers);
-        $this->assertSame($arrangerId, $response->song->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->song->arrangers[0]->name);
-        $this->assertCount(1, $response->song->composers);
-        $this->assertSame($composerId, $response->song->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->song->composers[0]->name);
         $this->assertCount(1, $response->song->lyricists);
         $this->assertSame($lyricistId, $response->song->lyricists[0]->creatorId);
         $this->assertSame('作詞者A', $response->song->lyricists[0]->name);
+        $this->assertCount(1, $response->song->composers);
+        $this->assertSame($composerId, $response->song->composers[0]->creatorId);
+        $this->assertSame('作曲者A', $response->song->composers[0]->name);
+        $this->assertCount(1, $response->song->arrangers);
+        $this->assertSame($arrangerId, $response->song->arrangers[0]->creatorId);
+        $this->assertSame('編曲者A', $response->song->arrangers[0]->name);
     }
 
     #[Test]

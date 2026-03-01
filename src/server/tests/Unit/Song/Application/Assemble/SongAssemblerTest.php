@@ -47,15 +47,15 @@ class SongAssemblerTest extends TestCase
             $description,
             $songType,
             $orderNo,
-            [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
-            [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
+            [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],
+            [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
         );
 
         foreach ([
-            $arrangerId => '編曲者',
-            $composerId => '作曲者',
             $lyricistId => '作詞者',
+            $composerId => '作曲者',
+            $arrangerId => '編曲者',
         ] as $id => $name) {
             $this->creatorRepository->shouldReceive('find')
                 ->withArgs(fn (CreatorId $arg): bool => $arg->value === $id)
@@ -71,18 +71,18 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($songType->getName(), $assembled->songTypeName);
         $this->assertSame($songType->value, $assembled->songTypeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
-        $this->assertCount(1, $assembled->arrangers);
-        $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
-        $this->assertSame('編曲者', $assembled->arrangers[0]->name);
-        $this->assertSame(1, $assembled->arrangers[0]->orderNo);
-        $this->assertCount(1, $assembled->composers);
-        $this->assertSame($composerId, $assembled->composers[0]->creatorId);
-        $this->assertSame('作曲者', $assembled->composers[0]->name);
-        $this->assertSame(1, $assembled->composers[0]->orderNo);
         $this->assertCount(1, $assembled->lyricists);
         $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);
         $this->assertSame('作詞者', $assembled->lyricists[0]->name);
         $this->assertSame(1, $assembled->lyricists[0]->orderNo);
+        $this->assertCount(1, $assembled->composers);
+        $this->assertSame($composerId, $assembled->composers[0]->creatorId);
+        $this->assertSame('作曲者', $assembled->composers[0]->name);
+        $this->assertSame(1, $assembled->composers[0]->orderNo);
+        $this->assertCount(1, $assembled->arrangers);
+        $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
+        $this->assertSame('編曲者', $assembled->arrangers[0]->name);
+        $this->assertSame(1, $assembled->arrangers[0]->orderNo);
     }
 
     private function getInstance(): SongAssembler

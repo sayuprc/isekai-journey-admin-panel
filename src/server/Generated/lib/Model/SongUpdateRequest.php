@@ -61,9 +61,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'string',
         'song_type_value' => '\OpenAPI\Client\Model\SongTypeValue',
         'order_no' => 'int',
-        'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]',
+        'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
         'composers' => '\OpenAPI\Client\Model\RequestComposer[]',
-        'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]'
+        'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]'
     ];
 
     /**
@@ -78,9 +78,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => null,
         'song_type_value' => null,
         'order_no' => 'int32',
-        'arrangers' => null,
+        'lyricists' => null,
         'composers' => null,
-        'lyricists' => null
+        'arrangers' => null
     ];
 
     /**
@@ -93,9 +93,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => false,
         'song_type_value' => false,
         'order_no' => false,
-        'arrangers' => false,
+        'lyricists' => false,
         'composers' => false,
-        'lyricists' => false
+        'arrangers' => false
     ];
 
     /**
@@ -188,9 +188,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'description',
         'song_type_value' => 'songTypeValue',
         'order_no' => 'orderNo',
-        'arrangers' => 'arrangers',
+        'lyricists' => 'lyricists',
         'composers' => 'composers',
-        'lyricists' => 'lyricists'
+        'arrangers' => 'arrangers'
     ];
 
     /**
@@ -203,9 +203,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'setDescription',
         'song_type_value' => 'setSongTypeValue',
         'order_no' => 'setOrderNo',
-        'arrangers' => 'setArrangers',
+        'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
-        'lyricists' => 'setLyricists'
+        'arrangers' => 'setArrangers'
     ];
 
     /**
@@ -218,9 +218,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'getDescription',
         'song_type_value' => 'getSongTypeValue',
         'order_no' => 'getOrderNo',
-        'arrangers' => 'getArrangers',
+        'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
-        'lyricists' => 'getLyricists'
+        'arrangers' => 'getArrangers'
     ];
 
     /**
@@ -284,9 +284,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('song_type_value', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
-        $this->setIfExists('arrangers', $data ?? [], null);
-        $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
+        $this->setIfExists('composers', $data ?? [], null);
+        $this->setIfExists('arrangers', $data ?? [], null);
     }
 
     /**
@@ -340,14 +340,14 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
-        if ($this->container['arrangers'] === null) {
-            $invalidProperties[] = "'arrangers' can't be null";
+        if ($this->container['lyricists'] === null) {
+            $invalidProperties[] = "'lyricists' can't be null";
         }
         if ($this->container['composers'] === null) {
             $invalidProperties[] = "'composers' can't be null";
         }
-        if ($this->container['lyricists'] === null) {
-            $invalidProperties[] = "'lyricists' can't be null";
+        if ($this->container['arrangers'] === null) {
+            $invalidProperties[] = "'arrangers' can't be null";
         }
         return $invalidProperties;
     }
@@ -488,28 +488,28 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     }
 
     /**
-     * Gets arrangers
+     * Gets lyricists
      *
-     * @return \OpenAPI\Client\Model\RequestArranger[]
+     * @return \OpenAPI\Client\Model\RequestLyricist[]
      */
-    public function getArrangers()
+    public function getLyricists()
     {
-        return $this->container['arrangers'];
+        return $this->container['lyricists'];
     }
 
     /**
-     * Sets arrangers
+     * Sets lyricists
      *
-     * @param \OpenAPI\Client\Model\RequestArranger[] $arrangers arrangers
+     * @param \OpenAPI\Client\Model\RequestLyricist[] $lyricists lyricists
      *
      * @return self
      */
-    public function setArrangers($arrangers)
+    public function setLyricists($lyricists)
     {
-        if (is_null($arrangers)) {
-            throw new \InvalidArgumentException('non-nullable arrangers cannot be null');
+        if (is_null($lyricists)) {
+            throw new \InvalidArgumentException('non-nullable lyricists cannot be null');
         }
-        $this->container['arrangers'] = $arrangers;
+        $this->container['lyricists'] = $lyricists;
 
         return $this;
     }
@@ -542,28 +542,28 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     }
 
     /**
-     * Gets lyricists
+     * Gets arrangers
      *
-     * @return \OpenAPI\Client\Model\RequestLyricist[]
+     * @return \OpenAPI\Client\Model\RequestArranger[]
      */
-    public function getLyricists()
+    public function getArrangers()
     {
-        return $this->container['lyricists'];
+        return $this->container['arrangers'];
     }
 
     /**
-     * Sets lyricists
+     * Sets arrangers
      *
-     * @param \OpenAPI\Client\Model\RequestLyricist[] $lyricists lyricists
+     * @param \OpenAPI\Client\Model\RequestArranger[] $arrangers arrangers
      *
      * @return self
      */
-    public function setLyricists($lyricists)
+    public function setArrangers($arrangers)
     {
-        if (is_null($lyricists)) {
-            throw new \InvalidArgumentException('non-nullable lyricists cannot be null');
+        if (is_null($arrangers)) {
+            throw new \InvalidArgumentException('non-nullable arrangers cannot be null');
         }
-        $this->container['lyricists'] = $lyricists;
+        $this->container['arrangers'] = $arrangers;
 
         return $this;
     }

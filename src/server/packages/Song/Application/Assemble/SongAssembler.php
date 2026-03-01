@@ -25,9 +25,9 @@ class SongAssembler
             $song->songType->getName(),
             $song->songType->value,
             $song->orderNo->value,
-            $song->arrangers->toGeneric()->map($this->toAssembledCreator(...))->toArray(),
-            $song->composers->toGeneric()->map($this->toAssembledCreator(...))->toArray(),
             $song->lyricists->toGeneric()->map($this->toAssembledCreator(...))->toArray(),
+            $song->composers->toGeneric()->map($this->toAssembledCreator(...))->toArray(),
+            $song->arrangers->toGeneric()->map($this->toAssembledCreator(...))->toArray(),
         );
     }
 

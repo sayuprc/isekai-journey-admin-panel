@@ -27,9 +27,9 @@ class SongFactoryTest extends TestCase
             Description::reconstruct('オリジナル楽曲'),
             SongType::Original,
             OrderNo::reconstruct(1),
-            Arrangers::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
+            Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
             Composers::fromArray([['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]])->unwrap(),
-            Lyricists::fromArray([['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]])->unwrap(),
+            Arrangers::fromArray([['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]])->unwrap(),
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $song->songId->value);
@@ -37,15 +37,15 @@ class SongFactoryTest extends TestCase
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Original, $song->songType);
         $this->assertSame(1, $song->orderNo->value);
-        $this->assertCount(1, $song->arrangers);
-        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->arrangers[0]->creatorId->value);
-        $this->assertSame(1, $song->arrangers[0]->orderNo->value);
+        $this->assertCount(1, $song->lyricists);
+        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->lyricists[0]->creatorId->value);
+        $this->assertSame(1, $song->lyricists[0]->orderNo->value);
         $this->assertCount(1, $song->composers);
         $this->assertSame('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', $song->composers[0]->creatorId->value);
         $this->assertSame(1, $song->composers[0]->orderNo->value);
-        $this->assertCount(1, $song->lyricists);
-        $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $song->lyricists[0]->creatorId->value);
-        $this->assertSame(1, $song->lyricists[0]->orderNo->value);
+        $this->assertCount(1, $song->arrangers);
+        $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $song->arrangers[0]->creatorId->value);
+        $this->assertSame(1, $song->arrangers[0]->orderNo->value);
     }
 
     private function getInstance(): SongFactory

@@ -38,16 +38,16 @@ export const songs = new Elysia({ prefix: '/songs' })
       songId: t.String(),
     }),
   })
-  .post('/', async ({ body: { title, description, songTypeValue, arrangers, composers, lyricists }, credential }) => {
+  .post('/', async ({ body: { title, description, songTypeValue, lyricists, composers, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).POST('/songs', {
         body: {
           title,
           description,
           songTypeValue,
-          arrangers,
-          composers,
           lyricists,
+          composers,
+          arrangers,
         },
       }),
     );
@@ -56,12 +56,12 @@ export const songs = new Elysia({ prefix: '/songs' })
       title: t.String(),
       description: t.String(),
       songTypeValue: SongTypeValueSchema,
-      arrangers: CreatorRefSchema,
-      composers: CreatorRefSchema,
       lyricists: CreatorRefSchema,
+      composers: CreatorRefSchema,
+      arrangers: CreatorRefSchema,
     }),
   })
-  .put('/:songId', async ({ params: { songId }, body: { title, description, songTypeValue, orderNo, arrangers, composers, lyricists }, credential }) => {
+  .put('/:songId', async ({ params: { songId }, body: { title, description, songTypeValue, orderNo, composers, lyricists, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).PUT('/songs/{songId}', {
         params: {
@@ -74,9 +74,9 @@ export const songs = new Elysia({ prefix: '/songs' })
           description,
           songTypeValue,
           orderNo,
-          arrangers,
-          composers,
           lyricists,
+          composers,
+          arrangers,
         },
       }),
     );
@@ -89,9 +89,9 @@ export const songs = new Elysia({ prefix: '/songs' })
       description: t.String(),
       songTypeValue: SongTypeValueSchema,
       orderNo: t.Number(),
-      arrangers: CreatorRefSchema,
-      composers: CreatorRefSchema,
       lyricists: CreatorRefSchema,
+      composers: CreatorRefSchema,
+      arrangers: CreatorRefSchema,
     }),
   })
   .delete('/:songId', async ({ params: { songId }, credential }) => {

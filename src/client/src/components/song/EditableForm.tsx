@@ -28,14 +28,14 @@ export const EditableForm = (props: Props) => {
     items: components['schemas']['Arranger'][] | undefined,
   ): CreatorEntry[] => (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
 
-  const [arrangers, setArrangers] = createSignal<CreatorEntry[]>(
-    toEntries(props.data?.song.arrangers),
+  const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(
+    toEntries(props.data?.song.lyricists),
   );
   const [composers, setComposers] = createSignal<CreatorEntry[]>(
     toEntries(props.data?.song.composers),
   );
-  const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(
-    toEntries(props.data?.song.lyricists),
+  const [arrangers, setArrangers] = createSignal<CreatorEntry[]>(
+    toEntries(props.data?.song.arrangers),
   );
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -256,8 +256,8 @@ export const EditableForm = (props: Props) => {
             value={props.data?.song.orderNo}
           />
 
-          <CreatorList label="作曲者" entries={composers} setter={setComposers} />
           <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
+          <CreatorList label="作曲者" entries={composers} setter={setComposers} />
           <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
           <div class="mt-6 flex justify-end">

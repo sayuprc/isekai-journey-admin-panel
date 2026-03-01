@@ -40,9 +40,9 @@ class SongIntegrityService
     }
 
     /**
-     * @param list<creator> $arrangers
-     * @param list<creator> $composers
      * @param list<creator> $lyricists
+     * @param list<creator> $composers
+     * @param list<creator> $arrangers
      *
      * @return Result<Song, DomainError>
      */
@@ -50,14 +50,14 @@ class SongIntegrityService
         string $title,
         string $description,
         int $songType,
-        array $arrangers,
-        array $composers,
         array $lyricists,
+        array $composers,
+        array $arrangers,
     ): Result {
         $result = Result::collect3(
-            Arrangers::fromArray($arrangers),
-            Composers::fromArray($composers),
             Lyricists::fromArray($lyricists),
+            Composers::fromArray($composers),
+            Arrangers::fromArray($arrangers),
         );
 
         if ($result->isErr()) {
@@ -82,9 +82,9 @@ class SongIntegrityService
     }
 
     /**
-     * @param list<creator> $arrangers
-     * @param list<creator> $composers
      * @param list<creator> $lyricists
+     * @param list<creator> $composers
+     * @param list<creator> $arrangers
      *
      * @return Result<Song, DomainError>
      */
@@ -94,14 +94,14 @@ class SongIntegrityService
         string $description,
         int $songType,
         int $orderNo,
-        array $arrangers,
-        array $composers,
         array $lyricists,
+        array $composers,
+        array $arrangers,
     ): Result {
         $result = Result::collect3(
-            Arrangers::fromArray($arrangers),
-            Composers::fromArray($composers),
             Lyricists::fromArray($lyricists),
+            Composers::fromArray($composers),
+            Arrangers::fromArray($arrangers),
         );
 
         if ($result->isErr()) {
@@ -133,9 +133,9 @@ class SongIntegrityService
         string $description,
         int $songType,
         int $orderNo,
-        Arrangers $arrangers,
-        Composers $composers,
         Lyricists $lyricists,
+        Composers $composers,
+        Arrangers $arrangers,
     ): Result {
         return Result::collect5(
             SongId::create($songId),
@@ -155,7 +155,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $arrangers, $composers, $lyricists]));
+            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $lyricists, $composers, $arrangers]));
     }
 
     /**
@@ -193,11 +193,11 @@ class SongIntegrityService
         return new DomainValidationError($messages);
     }
 
-    private function existsCreators(Arrangers $arrangers, Composers $composers, Lyricists $lyricists): bool
+    private function existsCreators(Lyricists $lyricists, Composers $composers, Arrangers $arrangers): bool
     {
         $creatorIds = [];
 
-        foreach ([$arrangers, $composers, $lyricists] as $items) {
+        foreach ([$lyricists, $composers, $arrangers] as $items) {
             foreach ($items as $item) {
                 if (! isset($creatorIds[$item->creatorId->value])) {
                     $creatorIds[$item->creatorId->value] = $item->creatorId;

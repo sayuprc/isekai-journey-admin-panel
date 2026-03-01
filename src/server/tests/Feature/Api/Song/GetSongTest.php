@@ -21,11 +21,11 @@ class GetSongTest extends TestCase
     #[Test]
     public function found(): void
     {
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
         $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
+        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
+        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $this->storeCreators($arranger, $composer, $lyricist);
+        $this->storeCreators($lyricist, $composer, $arranger);
 
         $songId = $this->generateUuid();
 
@@ -36,9 +36,9 @@ class GetSongTest extends TestCase
                 'オリジナル楽曲',
                 SongType::Original,
                 1,
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
-                [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
+                [['creatorId' => $composerId, 'orderNo' => 1]],
+                [['creatorId' => $arrangerId, 'orderNo' => 1]],
             ),
         );
 
@@ -55,9 +55,9 @@ class GetSongTest extends TestCase
                         'value' => 1,
                     ],
                     'orderNo' => 1,
-                    'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
-                    'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
                     'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
+                    'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
+                    'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
                 ],
             ]);
     }
