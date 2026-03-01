@@ -23,9 +23,9 @@ class CreateSongTest extends TestCase
     public function canCreate(): void
     {
         $this->storeCreators(
-            $creator1 = $this->createCreator($this->generateUuid(), '編曲者', 1),
+            $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1),
             $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1),
-            $creator3 = $this->createCreator($this->generateUuid(), '作詞者', 1),
+            $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1),
         );
 
         $this->withAuth()
@@ -33,9 +33,9 @@ class CreateSongTest extends TestCase
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
                 'songTypeValue' => SongType::Original->value,
-                'arrangers' => [['creatorId' => $creator1->creatorId->value]],
+                'lyricists' => [['creatorId' => $creator1->creatorId->value]],
                 'composers' => [['creatorId' => $creator2->creatorId->value]],
-                'lyricists' => [['creatorId' => $creator3->creatorId->value]],
+                'arrangers' => [['creatorId' => $creator3->creatorId->value]],
             ])->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) => $json
@@ -50,7 +50,7 @@ class CreateSongTest extends TestCase
                                 'value' => SongType::Original->value,
                             ])
                             ->where('orderNo', 10)
-                            ->where('arrangers', [[
+                            ->where('lyricists', [[
                                 'creatorId' => $creator1->creatorId->value,
                                 'name' => $creator1->name->value,
                                 'orderNo' => 1,
@@ -60,7 +60,7 @@ class CreateSongTest extends TestCase
                                 'name' => $creator2->name->value,
                                 'orderNo' => 1,
                             ]])
-                            ->where('lyricists', [[
+                            ->where('arrangers', [[
                                 'creatorId' => $creator3->creatorId->value,
                                 'name' => $creator3->name->value,
                                 'orderNo' => 1,

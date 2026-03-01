@@ -21,9 +21,9 @@ class UpdateSongTest extends TestCase
     #[Test]
     public function canUpdate(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '編曲者', 1);
+        $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1);
         $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
-        $creator3 = $this->createCreator($this->generateUuid(), '作詞者', 1);
+        $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1);
 
         $this->storeCreators($creator1, $creator2, $creator3);
 
@@ -48,9 +48,9 @@ class UpdateSongTest extends TestCase
                 'description' => 'オリジナル楽曲',
                 'songTypeValue' => SongType::Cover->value,
                 'orderNo' => 2,
-                'arrangers' => [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-                'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 'lyricists' => [],
+                'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
+                'arrangers' => [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -62,13 +62,7 @@ class UpdateSongTest extends TestCase
                         'value' => SongType::Cover->value,
                     ],
                     'orderNo' => 2,
-                    'arrangers' => [
-                        [
-                            'creatorId' => $creator1->creatorId->value,
-                            'name' => $creator1->name->value,
-                            'orderNo' => 1,
-                        ],
-                    ],
+                    'lyricists' => [],
                     'composers' => [
                         [
                             'creatorId' => $creator2->creatorId->value,
@@ -76,7 +70,13 @@ class UpdateSongTest extends TestCase
                             'orderNo' => 1,
                         ],
                     ],
-                    'lyricists' => [],
+                    'arrangers' => [
+                        [
+                            'creatorId' => $creator3->creatorId->value,
+                            'name' => $creator3->name->value,
+                            'orderNo' => 1,
+                        ],
+                    ],
                 ],
             ]);
     }

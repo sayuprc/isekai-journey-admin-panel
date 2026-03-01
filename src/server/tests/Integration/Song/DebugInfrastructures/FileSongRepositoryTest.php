@@ -148,9 +148,9 @@ class FileSongRepositoryTest extends TestCase
                 '説明',
                 SongType::Original,
                 1,
+                [],
+                [],
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
-                [],
-                [],
             ),
         );
 
@@ -190,9 +190,9 @@ class FileSongRepositoryTest extends TestCase
                 '説明',
                 SongType::Original,
                 1,
-                [],
-                [],
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
+                [],
+                [],
             ),
         );
 

@@ -21,11 +21,11 @@ class ListSongTest extends TestCase
     #[Test]
     public function showList(): void
     {
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
         $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
+        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
+        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $this->storeCreators($arranger, $composer, $lyricist);
+        $this->storeCreators($lyricist, $composer, $arranger);
 
         $song1Id = $this->generateUuid();
         $song2Id = $this->generateUuid();
@@ -37,9 +37,9 @@ class ListSongTest extends TestCase
                 'オリジナル楽曲',
                 SongType::Original,
                 1,
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
-                [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
+                [['creatorId' => $composerId, 'orderNo' => 1]],
+                [['creatorId' => $arrangerId, 'orderNo' => 1]],
             ),
             $this->createSong(
                 $song2Id,
@@ -47,7 +47,7 @@ class ListSongTest extends TestCase
                 'カバー楽曲',
                 SongType::Cover,
                 2,
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
+                [['creatorId' => $lyricistId, 'orderNo' => 1]],
                 [['creatorId' => $composerId, 'orderNo' => 1]],
                 [],
             ),
@@ -67,9 +67,9 @@ class ListSongTest extends TestCase
                             'value' => 1,
                         ],
                         'orderNo' => 1,
-                        'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
-                        'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
                         'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
+                        'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
+                        'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
                     ],
                     [
                         'songId' => $song2Id,
@@ -80,9 +80,9 @@ class ListSongTest extends TestCase
                             'value' => 2,
                         ],
                         'orderNo' => 2,
-                        'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
+                        'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
                         'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
-                        'lyricists' => [],
+                        'arrangers' => [],
                     ],
                 ],
             ]);

@@ -18,16 +18,16 @@ readonly class Song
         public Description $description,
         public SongType $songType,
         public OrderNo $orderNo,
-        public Arrangers $arrangers,
-        public Composers $composers,
         public Lyricists $lyricists,
+        public Composers $composers,
+        public Arrangers $arrangers,
     ) {
     }
 
     /**
-     * @param list<array{creatorId: string, orderNo: int}> $arrangers
-     * @param list<array{creatorId: string, orderNo: int}> $composers
      * @param list<array{creatorId: string, orderNo: int}> $lyricists
+     * @param list<array{creatorId: string, orderNo: int}> $composers
+     * @param list<array{creatorId: string, orderNo: int}> $arrangers
      */
     public static function reconstruct(
         string $songId,
@@ -35,9 +35,9 @@ readonly class Song
         string $description,
         int $songType,
         int $orderNo,
-        array $arrangers,
-        array $composers,
         array $lyricists,
+        array $composers,
+        array $arrangers,
     ): self {
         return new self(
             SongId::reconstruct($songId),
@@ -45,14 +45,14 @@ readonly class Song
             Description::reconstruct($description),
             SongType::from($songType),
             OrderNo::reconstruct($orderNo),
-            Arrangers::reconstruct($arrangers),
-            Composers::reconstruct($composers),
             Lyricists::reconstruct($lyricists),
+            Composers::reconstruct($composers),
+            Arrangers::reconstruct($arrangers),
         );
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, song_type: value-of<SongType>, order_no: int, arrangers: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, lyricists: array<int, array{creator_id: string, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, song_type: value-of<SongType>, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>}
      */
     public function toArray(): array
     {
@@ -62,9 +62,9 @@ readonly class Song
             'description' => $this->description->value,
             'song_type' => $this->songType->value,
             'order_no' => $this->orderNo->value,
-            'arrangers' => $this->arrangers->toArray(),
-            'composers' => $this->composers->toArray(),
             'lyricists' => $this->lyricists->toArray(),
+            'composers' => $this->composers->toArray(),
+            'arrangers' => $this->arrangers->toArray(),
         ];
     }
 

@@ -48,15 +48,15 @@ class CreateInteractorTest extends TestCase
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Original, $song->songType);
         $this->assertSame(10, $song->orderNo->value);
-        $this->assertCount(1, $song->arrangers);
-        $this->assertSame($creator1->creatorId->value, $song->arrangers[0]->creatorId->value);
-        $this->assertSame(1, $song->arrangers[0]->orderNo->value);
+        $this->assertCount(1, $song->lyricists);
+        $this->assertSame($creator1->creatorId->value, $song->lyricists[0]->creatorId->value);
+        $this->assertSame(1, $song->lyricists[0]->orderNo->value);
         $this->assertCount(1, $song->composers);
         $this->assertSame($creator2->creatorId->value, $song->composers[0]->creatorId->value);
         $this->assertSame(1, $song->composers[0]->orderNo->value);
-        $this->assertCount(1, $song->lyricists);
-        $this->assertSame($creator3->creatorId->value, $song->lyricists[0]->creatorId->value);
-        $this->assertSame(1, $song->lyricists[0]->orderNo->value);
+        $this->assertCount(1, $song->arrangers);
+        $this->assertSame($creator3->creatorId->value, $song->arrangers[0]->creatorId->value);
+        $this->assertSame(1, $song->arrangers[0]->orderNo->value);
     }
 
     private function getInstance(): CreateInteractor

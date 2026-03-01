@@ -23,9 +23,9 @@ readonly class Converter
             ->setDescription($song->description)
             ->setSongType($this->toOpenApiSongType($song))
             ->setOrderNo($song->orderNo)
-            ->setArrangers(array_map($this->toOpenApiArranger(...), $song->arrangers))
+            ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
             ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))
-            ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists));
+            ->setArrangers(array_map($this->toOpenApiArranger(...), $song->arrangers));
     }
 
     private function toOpenApiSongType(AssembledSong $song): OpenApiSongType
@@ -35,9 +35,9 @@ readonly class Converter
             ->setValue(SongTypeValue::from($song->songTypeValue));
     }
 
-    private function toOpenApiArranger(AssembledCreator $creator): OpenApiArranger
+    private function toOpenApiLyricist(AssembledCreator $creator): OpenApiLyricist
     {
-        return new OpenApiArranger()
+        return new OpenApiLyricist()
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
@@ -51,9 +51,9 @@ readonly class Converter
             ->setOrderNo($creator->orderNo);
     }
 
-    private function toOpenApiLyricist(AssembledCreator $creator): OpenApiLyricist
+    private function toOpenApiArranger(AssembledCreator $creator): OpenApiArranger
     {
-        return new OpenApiLyricist()
+        return new OpenApiArranger()
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);

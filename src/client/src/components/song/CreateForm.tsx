@@ -18,9 +18,9 @@ export const CreateForm = () => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
   const [songTypes, setSongTypes] = createSignal<SongType[]>([]);
 
-  const [arrangers, setArrangers] = createSignal<CreatorEntry[]>([]);
-  const [composers, setComposers] = createSignal<CreatorEntry[]>([]);
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
+  const [composers, setComposers] = createSignal<CreatorEntry[]>([]);
+  const [arrangers, setArrangers] = createSignal<CreatorEntry[]>([]);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
 
@@ -147,8 +147,8 @@ export const CreateForm = () => {
           </For>
         </select>
 
-        <CreatorList label="作曲者" entries={composers} setter={setComposers} />
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
+        <CreatorList label="作曲者" entries={composers} setter={setComposers} />
         <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
         <div class="mt-6 flex justify-end">

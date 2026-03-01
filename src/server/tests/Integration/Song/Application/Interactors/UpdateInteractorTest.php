@@ -22,9 +22,9 @@ class UpdateInteractorTest extends TestCase
     #[Test]
     public function canUpdate(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '編曲者', 1);
+        $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1);
         $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
-        $creator3 = $this->createCreator($this->generateUuid(), '作詞者', 1);
+        $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1);
 
         $this->storeCreators($creator1, $creator2, $creator3);
 
@@ -50,9 +50,9 @@ class UpdateInteractorTest extends TestCase
                 'オリジナル楽曲',
                 SongType::Cover->value,
                 2,
-                [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [],
+                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
+                [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
             ),
         );
 
@@ -65,11 +65,11 @@ class UpdateInteractorTest extends TestCase
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Cover, $song->songType);
         $this->assertSame(2, $song->orderNo->value);
-        $this->assertCount(1, $song->arrangers);
-        $this->assertSame($creator1->creatorId->value, $song->arrangers[0]->creatorId->value);
+        $this->assertCount(0, $song->lyricists);
         $this->assertCount(1, $song->composers);
         $this->assertSame($creator2->creatorId->value, $song->composers[0]->creatorId->value);
-        $this->assertCount(0, $song->lyricists);
+        $this->assertCount(1, $song->arrangers);
+        $this->assertSame($creator3->creatorId->value, $song->arrangers[0]->creatorId->value);
     }
 
     private function getInstance(): UpdateInteractor
