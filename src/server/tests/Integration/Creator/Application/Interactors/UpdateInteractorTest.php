@@ -26,9 +26,9 @@ class UpdateInteractorTest extends TestCase
         $beforeName = 'クリエイター';
         $afterName = 'ヰ世界情緒';
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, $beforeName)->toArray());
+        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, $beforeName, 10)->toArray());
 
-        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $afterName));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $afterName, 20));
 
         $this->assertTrue($result->isOk());
 

@@ -49,7 +49,7 @@ export const creators = new Elysia({ prefix: '/creators' })
       name: t.String(),
     }),
   })
-  .put('/:creatorId', async ({ params: { creatorId }, body: { name }, credential }) => {
+  .put('/:creatorId', async ({ params: { creatorId }, body: { name, orderNo }, credential }) => {
     const { data } = await createAuthClient(credential).PUT('/creators/{creatorId}', {
       params: {
         path: {
@@ -58,6 +58,7 @@ export const creators = new Elysia({ prefix: '/creators' })
       },
       body: {
         name,
+        orderNo,
       },
     });
 
@@ -72,6 +73,7 @@ export const creators = new Elysia({ prefix: '/creators' })
     }),
     body: t.Object({
       name: t.String(),
+      orderNo: t.Number(),
     }),
   })
   .delete('/:creatorId', async ({ params: { creatorId }, credential }) => {

@@ -37,9 +37,9 @@ class SongAssemblerTest extends TestCase
         );
 
         $this->storeCreators(
-            $this->createCreator($arrangerId, '編曲者'),
-            $this->createCreator($composerId, '作曲者'),
-            $this->createCreator($lyricistId, '作詞者'),
+            $this->createCreator($arrangerId, '編曲者', 1),
+            $this->createCreator($composerId, '作曲者', 1),
+            $this->createCreator($lyricistId, '作詞者', 1),
         );
 
         $assembled = $this->getInstance()->assemble($song);

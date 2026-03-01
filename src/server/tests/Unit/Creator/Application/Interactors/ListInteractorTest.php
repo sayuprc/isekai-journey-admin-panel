@@ -45,8 +45,8 @@ class ListInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('all')
             ->andReturn([
-                $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイターA'),
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイターB'),
+                $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'クリエイターA', 1),
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイターB', 1),
             ])
             ->once();
 

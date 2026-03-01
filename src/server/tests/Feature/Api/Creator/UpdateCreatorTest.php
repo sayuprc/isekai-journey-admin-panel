@@ -23,16 +23,18 @@ class UpdateCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター')->toArray());
+        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター', 10)->toArray());
 
         $this->withAuth()
             ->putJson(route(CreatorRouteMap::Update, $uuid), [
                 'name' => 'ヰ世界情緒',
+                'orderNo' => 20,
             ])->assertStatus(200)
             ->assertExactJson([
                 'creator' => [
                     'creatorId' => $uuid,
                     'name' => 'ヰ世界情緒',
+                    'orderNo' => 20,
                 ],
             ]);
     }

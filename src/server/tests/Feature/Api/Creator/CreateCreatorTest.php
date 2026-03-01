@@ -29,7 +29,8 @@ class CreateCreatorTest extends TestCase
                         'creator',
                         fn (AssertableJson $json) => $json
                             ->whereType('creatorId', 'string')
-                            ->where('name', 'ヰ世界情緒'),
+                            ->where('name', 'ヰ世界情緒')
+                            ->whereType('orderNo', 'integer'),
                     ),
             );
     }

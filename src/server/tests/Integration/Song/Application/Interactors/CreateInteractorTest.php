@@ -22,9 +22,9 @@ class CreateInteractorTest extends TestCase
     #[Test]
     public function create(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '');
-        $creator2 = $this->createCreator($this->generateUuid(), '');
-        $creator3 = $this->createCreator($this->generateUuid(), '');
+        $creator1 = $this->createCreator($this->generateUuid(), '', 1);
+        $creator2 = $this->createCreator($this->generateUuid(), '', 1);
+        $creator3 = $this->createCreator($this->generateUuid(), '', 1);
 
         $this->storeCreators($creator1, $creator2, $creator3);
 

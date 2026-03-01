@@ -16,6 +16,7 @@ use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\ValueObjects\OrderNo;
 
 class CreatorIntegrityService
 {
@@ -31,7 +32,12 @@ class CreatorIntegrityService
      */
     public function prepareForCreate(string $name): Result
     {
-        $result = $this->build($this->generator->generate(), $name);
+        $result = $this->build(
+            $this->generator->generate(),
+            $name,
+            // 更新時に同じ値になることを防ぐために +10 で採番
+            $this->repository->getMaxOrderNo() + 10,
+        );
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -49,9 +55,9 @@ class CreatorIntegrityService
     /**
      * @return Result<Creator, DomainError>
      */
-    public function prepareForUpdate(string $creatorId, string $name): Result
+    public function prepareForUpdate(string $creatorId, string $name, int $orderNo): Result
     {
-        $result = $this->build($creatorId, $name);
+        $result = $this->build($creatorId, $name, $orderNo);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -69,11 +75,12 @@ class CreatorIntegrityService
     /**
      * @return Result<Creator, DomainError>
      */
-    private function build(string $creatorId, string $name): Result
+    private function build(string $creatorId, string $name, int $orderNo): Result
     {
-        return Result::collect(
+        return Result::collect3(
             CreatorId::create($creatorId),
             CreatorName::create($name),
+            OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];

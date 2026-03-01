@@ -13,6 +13,7 @@ class Converter
     {
         return new OpenApiCreator()
             ->setCreatorId($creator->creatorId->value)
-            ->setName($creator->name->value);
+            ->setName($creator->name->value)
+            ->setOrderNo($creator->orderNo->value);
     }
 }

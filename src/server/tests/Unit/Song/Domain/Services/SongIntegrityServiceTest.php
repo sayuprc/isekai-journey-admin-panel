@@ -78,9 +78,9 @@ class SongIntegrityServiceTest extends TestCase
                     && $arg3->value === $lyricistId,
             )
             ->andReturn([
-                $this->createCreator($arrangerId, ''),
-                $this->createCreator($composerId, ''),
-                $this->createCreator($lyricistId, ''),
+                $this->createCreator($arrangerId, '', 1),
+                $this->createCreator($composerId, '', 1),
+                $this->createCreator($lyricistId, '', 1),
             ])
             ->once();
 
@@ -169,8 +169,8 @@ class SongIntegrityServiceTest extends TestCase
             )
             ->andReturn([
                 // D のやつがいない場合
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
-                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
             ])
             ->once();
 
@@ -217,9 +217,9 @@ class SongIntegrityServiceTest extends TestCase
                     && $arg3->value === $lyricistId,
             )
             ->andReturn([
-                $this->createCreator($arrangerId, ''),
-                $this->createCreator($composerId, ''),
-                $this->createCreator($lyricistId, ''),
+                $this->createCreator($arrangerId, '', 1),
+                $this->createCreator($composerId, '', 1),
+                $this->createCreator($lyricistId, '', 1),
             ])
             ->once();
 
@@ -287,8 +287,8 @@ class SongIntegrityServiceTest extends TestCase
                     && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
             )
             ->andReturn([
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', ''),
-                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', ''),
+                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
+                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
             ])
             ->once();
 

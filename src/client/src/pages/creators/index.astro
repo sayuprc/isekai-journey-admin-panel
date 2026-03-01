@@ -28,6 +28,7 @@ if (!data) {
       <thead>
         <tr>
           <th>クリエイター名</th>
+          <th>表示順</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -37,6 +38,7 @@ if (!data) {
             return (
               <tr>
                 <td>{creator.name}</td>
+                <td>{creator.orderNo}</td>
                 <td>
                   <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">編集</a>
                 </td>

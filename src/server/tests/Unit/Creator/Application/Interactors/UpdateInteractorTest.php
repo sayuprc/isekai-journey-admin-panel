@@ -44,6 +44,7 @@ class UpdateInteractorTest extends TestCase
     {
         $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $name = 'クリエイター';
+        $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -51,8 +52,8 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($creatorId, $name)
-            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name)))
+            ->with($creatorId, $name, $orderNo)
+            ->andReturn(new Ok($creator = $this->createCreator($creatorId, $name, $orderNo)))
             ->once();
 
         $this->repository->shouldReceive('save')
@@ -63,7 +64,7 @@ class UpdateInteractorTest extends TestCase
             ->andReturn($creator)
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name, $orderNo));
 
         $this->assertTrue($result->isOk());
     }
@@ -73,6 +74,7 @@ class UpdateInteractorTest extends TestCase
     {
         $creatorId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $name = 'クリエイター';
+        $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -80,11 +82,11 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($creatorId, $name)
+            ->with($creatorId, $name, $orderNo)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name));
+        $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $name, $orderNo));
 
         $this->assertTrue($result->isErr());
     }

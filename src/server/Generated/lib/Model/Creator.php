@@ -58,7 +58,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'creator_id' => 'string',
-        'name' => 'string'
+        'name' => 'string',
+        'order_no' => 'int'
     ];
 
     /**
@@ -70,7 +71,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'creator_id' => 'uuid',
-        'name' => null
+        'name' => null,
+        'order_no' => 'int32'
     ];
 
     /**
@@ -80,7 +82,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'creator_id' => false,
-        'name' => false
+        'name' => false,
+        'order_no' => false
     ];
 
     /**
@@ -170,7 +173,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'creator_id' => 'creatorId',
-        'name' => 'name'
+        'name' => 'name',
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -180,7 +184,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'creator_id' => 'setCreatorId',
-        'name' => 'setName'
+        'name' => 'setName',
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -190,7 +195,8 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'creator_id' => 'getCreatorId',
-        'name' => 'getName'
+        'name' => 'getName',
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -252,6 +258,7 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $this->setIfExists('creator_id', $data ?? [], null);
         $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -289,6 +296,13 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ((mb_strlen($this->container['name']) < 1)) {
             $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -361,6 +375,38 @@ class Creator implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling Creator., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

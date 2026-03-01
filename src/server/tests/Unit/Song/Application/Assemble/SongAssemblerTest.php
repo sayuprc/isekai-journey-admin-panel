@@ -14,6 +14,7 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
 use SongType\Domain\Models\SongType;
+use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -58,7 +59,7 @@ class SongAssemblerTest extends TestCase
         ] as $id => $name) {
             $this->creatorRepository->shouldReceive('find')
                 ->withArgs(fn (CreatorId $arg): bool => $arg->value === $id)
-                ->andReturn(new Creator(CreatorId::reconstruct($id), CreatorName::reconstruct($name)))
+                ->andReturn(new Creator(CreatorId::reconstruct($id), CreatorName::reconstruct($name), OrderNo::reconstruct(1)))
                 ->once();
         }
 

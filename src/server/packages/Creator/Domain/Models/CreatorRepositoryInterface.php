@@ -23,4 +23,6 @@ interface CreatorRepositoryInterface
     public function save(Creator $creator): Creator;
 
     public function delete(CreatorId $creatorId): void;
+
+    public function getMaxOrderNo(): int;
 }

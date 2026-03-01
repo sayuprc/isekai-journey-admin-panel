@@ -22,23 +22,23 @@ class CreatorTest extends TestCase
     {
         return [
             [
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name'),
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name'),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name', 1),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name', 1),
                 true,
             ],
             [
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name'),
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Other Name'),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name', 1),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Other Name', 2),
                 true,
             ],
             [
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name'),
-                Creator::reconstruct('22222222-2222-2222-2222-222222222222', 'Creator Name'),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name', 1),
+                Creator::reconstruct('22222222-2222-2222-2222-222222222222', 'Creator Name', 1),
                 false,
             ],
             [
-                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name'),
-                Creator::reconstruct('22222222-2222-2222-2222-222222222222', 'Other Name'),
+                Creator::reconstruct('11111111-1111-1111-1111-111111111111', 'Creator Name', 1),
+                Creator::reconstruct('22222222-2222-2222-2222-222222222222', 'Other Name', 2),
                 false,
             ],
         ];

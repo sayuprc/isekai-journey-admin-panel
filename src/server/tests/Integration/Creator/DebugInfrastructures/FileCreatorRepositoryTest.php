@@ -18,8 +18,8 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function all(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
-        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ');
+        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
+        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
 
         $this->storeCreators($creator1, $creator2);
 
@@ -32,7 +32,7 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function find(): void
     {
-        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
+        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
         $this->storeCreators($creator);
 
@@ -45,7 +45,7 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function findByName(): void
     {
-        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
+        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
         $this->storeCreators($creator);
 
@@ -58,8 +58,8 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function findByIds(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
-        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ');
+        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
+        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
 
         $this->storeCreators($creator1, $creator2);
 
@@ -72,7 +72,7 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function save(): void
     {
-        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
+        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
         $this->getInstance()->save($creator);
 
@@ -85,7 +85,7 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function deleting(): void
     {
-        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒');
+        $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
         $this->storeCreators($creator);
 
@@ -94,6 +94,23 @@ class FileCreatorRepositoryTest extends TestCase
         $found = $this->getInstance()->find($creator->creatorId);
 
         $this->assertNull($found);
+    }
+
+    #[Test]
+    public function getMaxOrderNo(): void
+    {
+        $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
+        $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
+
+        $this->storeCreators($creator1, $creator2);
+
+        $this->assertSame(20, $this->getInstance()->getMaxOrderNo());
+    }
+
+    #[Test]
+    public function getMaxOrderNoWhenEmpty(): void
+    {
+        $this->assertSame(0, $this->getInstance()->getMaxOrderNo());
     }
 
     private function getInstance(): FileCreatorRepository

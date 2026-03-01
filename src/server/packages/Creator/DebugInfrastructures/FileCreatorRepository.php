@@ -30,7 +30,7 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
     {
         $creators = $this->loadAll();
 
-        usort($creators, fn (Creator $a, Creator $b): int => $a->name->value <=> $b->name->value);
+        usort($creators, fn (Creator $a, Creator $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $creators;
     }
@@ -95,6 +95,13 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         }
 
         $this->store->unset($this->filePath, $index);
+    }
+
+    public function getMaxOrderNo(): int
+    {
+        $orderNos = array_map(fn (Creator $item): int => $item->orderNo->value, $this->loadAll());
+
+        return 0 < count($orderNos) ? max($orderNos) : 0;
     }
 
     /**

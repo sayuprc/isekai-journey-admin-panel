@@ -33,7 +33,7 @@ class GetInteractorTest extends TestCase
     {
         $this->repository->shouldReceive('find')
             ->withArgs(fn (CreatorId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
-            ->andReturn($this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイター名'))
+            ->andReturn($this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'クリエイター名', 1))
             ->once();
 
         $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
