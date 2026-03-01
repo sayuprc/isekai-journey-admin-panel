@@ -1,7 +1,9 @@
-import { createSignal, For, onMount } from 'solid-js';
+import { createSignal, For, onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
+import { createFormErrors } from '../../utils/form-error';
 import { setFlash } from '../Flash';
+import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 
 type Creator = components['schemas']['Creator'];
@@ -19,6 +21,8 @@ export const CreateForm = () => {
   const [arrangers, setArrangers] = createSignal<CreatorEntry[]>([]);
   const [composers, setComposers] = createSignal<CreatorEntry[]>([]);
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
+
+  const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
     const [creatorsRes, songTypesRes] = await Promise.all([
@@ -49,11 +53,12 @@ export const CreateForm = () => {
 
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
+    clearErrors();
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { data } = await client.api.songs.post({
+    const { data, error, status } = await client.api.songs.post({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
@@ -65,7 +70,10 @@ export const CreateForm = () => {
     if (data) {
       setFlash('作成しました');
       window.location.href = '/songs';
+      return;
     }
+
+    handleError(status, error);
   };
 
   const creatorOptions = () =>
@@ -115,12 +123,19 @@ export const CreateForm = () => {
   return (
     <form onsubmit={handleSubmit}>
       <a href="/songs" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <FormError message={formError()} onClose={clearErrors} />
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
         <label class="label">楽曲名</label>
-        <input type="text" class="input w-full" name="title" required />
+        <input type="text" class="input w-full" name="title" required classList={{ 'input-error': !!getFieldError('title') }} />
+        <Show when={getFieldError('title')}>
+          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+        </Show>
 
         <label class="label">説明</label>
-        <input type="text" class="input w-full" name="description" required />
+        <input type="text" class="input w-full" name="description" required classList={{ 'input-error': !!getFieldError('description') }} />
+        <Show when={getFieldError('description')}>
+          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+        </Show>
 
         <label class="label">楽曲種別</label>
         <select class="select select-bordered w-full" name="songTypeValue" required>

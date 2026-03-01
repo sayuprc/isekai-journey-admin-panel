@@ -1,36 +1,42 @@
+import { Show } from 'solid-js';
 import { client } from '../../utils/client';
+import { createFormErrors } from '../../utils/form-error';
 import { setFlash } from '../Flash';
+import { FormError } from '../FormError';
 
 export const CreateForm = () => {
+  const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
+
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
+    clearErrors();
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { data, status } = await client.api.performers.post({
+    const { data, error, status } = await client.api.performers.post({
       name: formData.get('name')?.toString() ?? '',
     });
 
-    // TODO エラーハンドリング
-    if (status === 400) {
-      alert('400');
-    } else if (status === 422) {
-      alert('422');
-    } else if (!data) {
-      throw new Error();
-    } else {
+    if (data) {
       setFlash('作成しました');
       window.location.href = '/performers';
+      return;
     }
+
+    handleError(status, error);
   };
 
   return (
     <form onsubmit={handleSubmit}>
       <a href="/performers" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <FormError message={formError()} onClose={clearErrors} />
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
         <label class="label">共演者名</label>
-        <input type="text" class="input w-full" name="name" required />
+        <input type="text" class="input w-full" name="name" required classList={{ 'input-error': !!getFieldError('name') }} />
+        <Show when={getFieldError('name')}>
+          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+        </Show>
 
         <div class="mt-6 flex justify-end">
           <button class="btn btn-primary">作成</button>

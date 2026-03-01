@@ -1,7 +1,9 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
+import { createFormErrors } from '../../utils/form-error';
 import { setFlash } from '../Flash';
+import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 
 type Creator = components['schemas']['Creator'];
@@ -35,6 +37,8 @@ export const EditableForm = (props: Props) => {
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(
     toEntries(props.data?.song.lyricists),
   );
+
+  const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
     const [creatorsRes, songTypesRes] = await Promise.all([
@@ -85,14 +89,21 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
+    clearErrors();
+
     const songId = props.data?.song.songId;
 
     if (!songId) {
-      alert('削除対象の楽曲IDを取得できませんでした');
+      setFormError('削除対象の楽曲IDを取得できませんでした');
       return;
     }
 
-    await client.api.songs({ songId: songId }).delete();
+    const { error, status } = await client.api.songs({ songId: songId }).delete();
+
+    if (error) {
+      handleError(status, error);
+      return;
+    }
 
     setFlash('削除しました');
     window.location.href = '/songs';
@@ -100,6 +111,7 @@ export const EditableForm = (props: Props) => {
 
   const handleUpdate = async (e: Event) => {
     e.preventDefault();
+    clearErrors();
 
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
@@ -107,11 +119,11 @@ export const EditableForm = (props: Props) => {
     const songId = props.data?.song.songId;
 
     if (!songId) {
-      alert('更新対象の楽曲IDを取得できませんでした');
+      setFormError('更新対象の楽曲IDを取得できませんでした');
       return;
     }
 
-    const { data } = await client.api.songs({ songId: songId }).put({
+    const { data, error, status } = await client.api.songs({ songId: songId }).put({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
@@ -124,7 +136,16 @@ export const EditableForm = (props: Props) => {
     if (data) {
       setFlash('更新しました');
       window.location.href = '/songs';
+      return;
     }
+
+    if (status === 404) {
+      setFlash('データがありません');
+      window.location.href = '/songs';
+      return;
+    }
+
+    handleError(status, error);
   };
 
   const creatorOptions = () =>
@@ -186,10 +207,14 @@ export const EditableForm = (props: Props) => {
   return (
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
       <a href="/songs" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <FormError message={formError()} onClose={clearErrors} />
       <form onsubmit={handleSubmit}>
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">楽曲名</label>
-          <input type="text" class="input w-full" name="title" required value={props.data?.song.title} />
+          <input type="text" class="input w-full" name="title" required value={props.data?.song.title} classList={{ 'input-error': !!getFieldError('title') }} />
+          <Show when={getFieldError('title')}>
+            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+          </Show>
 
           <label class="label">説明</label>
           <input
@@ -198,7 +223,11 @@ export const EditableForm = (props: Props) => {
             name="description"
             required
             value={props.data?.song.description}
+            classList={{ 'input-error': !!getFieldError('description') }}
           />
+          <Show when={getFieldError('description')}>
+            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+          </Show>
 
           <label class="label">楽曲種別</label>
           <select class="select select-bordered w-full" name="songTypeValue" required>
