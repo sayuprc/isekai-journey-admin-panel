@@ -57,7 +57,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var string[]
       */
     protected static $openAPITypes = [
-        'name' => 'string'
+        'name' => 'string',
+        'order_no' => 'int'
     ];
 
     /**
@@ -68,7 +69,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'name' => null
+        'name' => null,
+        'order_no' => 'int32'
     ];
 
     /**
@@ -77,7 +79,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'name' => false
+        'name' => false,
+        'order_no' => false
     ];
 
     /**
@@ -166,7 +169,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $attributeMap = [
-        'name' => 'name'
+        'name' => 'name',
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -175,7 +179,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $setters = [
-        'name' => 'setName'
+        'name' => 'setName',
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -184,7 +189,8 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $getters = [
-        'name' => 'getName'
+        'name' => 'getName',
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -245,6 +251,7 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     public function __construct(?array $data = null)
     {
         $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -279,6 +286,13 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
         if ((mb_strlen($this->container['name']) < 1)) {
             $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -324,6 +338,38 @@ class CreatorUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
 
         $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling CreatorUpdateRequest., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

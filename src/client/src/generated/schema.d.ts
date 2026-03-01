@@ -218,12 +218,14 @@ export interface components {
         /**
          * @example {
          *       "creatorId": "0cc5f492-22fe-4f38-b702-8b2375bc0254",
-         *       "name": "ヰ世界情緒"
+         *       "name": "ヰ世界情緒",
+         *       "orderNo": 10
          *     }
          */
         Creator: {
             creatorId: components["schemas"]["creatorId"];
             name: components["schemas"]["creatorName"];
+            orderNo: components["schemas"]["orderNo"];
         };
         CreatorCreateRequest: {
             name: components["schemas"]["creatorName"];
@@ -239,6 +241,7 @@ export interface components {
         };
         CreatorUpdateRequest: {
             name: components["schemas"]["creatorName"];
+            orderNo: components["schemas"]["orderNo"];
         };
         CreatorUpdateResponse: {
             creator: components["schemas"]["Creator"];
