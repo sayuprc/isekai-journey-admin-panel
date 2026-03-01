@@ -20,9 +20,10 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
+use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -66,7 +67,7 @@ class SongIntegrityService
         $creators = $result->unwrap();
 
         if (! $this->existsCreators(...$creators)) {
-            return new Err(new DomainRuleViolationError(Song::class, '指定されたクリエイターの一部が存在しません。'));
+            return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
         }
 
         return $this->build(
@@ -110,7 +111,7 @@ class SongIntegrityService
         $creators = $result->unwrap();
 
         if (! $this->existsCreators(...$creators)) {
-            return new Err(new DomainRuleViolationError(Song::class, '指定されたクリエイターの一部が存在しません。'));
+            return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
         }
 
         return $this->build(
@@ -146,7 +147,7 @@ class SongIntegrityService
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
-                    if ($error instanceof DomainRuleViolationError) {
+                    if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
                     }
@@ -165,7 +166,7 @@ class SongIntegrityService
         $result = SongType::tryFrom($songType);
 
         if (is_null($result)) {
-            return new Err(new DomainRuleViolationError(SongType::class, "不正な楽曲種別です: {$songType}"));
+            return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$songType}"));
         }
 
         return new Ok($result);

@@ -15,7 +15,7 @@ use Song\Application\UseCase\Get\GetOutputData;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
@@ -44,7 +44,7 @@ readonly class GetInteractor implements GetUseCaseInterface
         }
 
         return SongId::create($inputData->songId)
-            ->mapErr(fn (DomainRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (SongId $songId): Result {
                 if (is_null($found = $this->repository->find($songId))) {
                     return new Err(new NotFoundError('楽曲', $songId->value));

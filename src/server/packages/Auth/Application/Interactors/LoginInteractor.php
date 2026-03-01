@@ -16,8 +16,8 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -54,7 +54,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
     {
         return match (true) {
             $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof DomainRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
             default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
         };
     }

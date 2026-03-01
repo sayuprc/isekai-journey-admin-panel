@@ -7,7 +7,7 @@ namespace Support\Domain\ValueObjects\String;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\Exceptions\InvalidDomainException;
 
 abstract readonly class StringValueObject
@@ -23,12 +23,12 @@ abstract readonly class StringValueObject
     }
 
     /**
-     * @return Result<static, DomainRuleViolationError>
+     * @return Result<static, EntityRuleViolationError>
      */
     public static function create(string $value): Result
     {
         if (! static::isValid($value)) {
-            return new Err(new DomainRuleViolationError(static::class, static::getMessage($value)));
+            return new Err(new EntityRuleViolationError(static::class, static::getMessage($value)));
         }
 
         return new Ok(new static($value));

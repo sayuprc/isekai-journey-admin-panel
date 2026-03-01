@@ -11,7 +11,7 @@ use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
 use Song\DebugInfrastructures\FileSongRepository;
 use SongType\Domain\Models\SongType;
-use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\BusinessLogicError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
@@ -58,8 +58,8 @@ class DeleteInteractorTest extends TestCase
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['creatorId' => ['このクリエイターは楽曲に使用されているため削除できません']], $error->errors);
+        $this->assertInstanceOf(BusinessLogicError::class, $error);
+        $this->assertSame('このクリエイターは楽曲に使用されているため削除できません', $error->message);
 
         $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
         $this->assertCount(1, $creators);

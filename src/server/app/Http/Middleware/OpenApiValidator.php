@@ -15,6 +15,7 @@ use League\OpenAPIValidation\Schema\Exception\FormatMismatch;
 use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use OpenAPI\Client\Model\ValidationError;
+use OpenAPI\Client\Model\ValidationErrorDetail;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,17 +82,19 @@ class OpenApiValidator
         $previous = $exception->getPrevious();
 
         if ($previous instanceof SchemaMismatch) {
-            $error = $this->formatSchemaMismatch($previous);
+            $detail = $this->formatSchemaMismatch($previous);
         } else {
-            $error = new ValidationError()
+            $detail = new ValidationErrorDetail()
                 ->setField('')
                 ->setMessage('予期せぬエラー');
         }
 
+        $error = new ValidationError()->setErrors([$detail]);
+
         return response()->json($error, 422);
     }
 
-    private function formatSchemaMismatch(SchemaMismatch $exception): ValidationError
+    private function formatSchemaMismatch(SchemaMismatch $exception): ValidationErrorDetail
     {
         $breadcrumb = $exception->dataBreadCrumb();
 
@@ -101,14 +104,13 @@ class OpenApiValidator
         } else {
             $field = implode('/', $breadcrumb->buildChain());
 
-            // TODO エラーに応じてメッセージを変える
             $message = match (true) {
                 $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
                 default => $exception->getMessage(),
             };
         }
 
-        return new ValidationError()
+        return new ValidationErrorDetail()
             ->setField($field)
             ->setMessage($message);
     }

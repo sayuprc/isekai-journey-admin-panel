@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Performer;
 
+use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\ErrorResponse;
 use OpenAPI\Client\Model\PerformerListResponse;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Domain\Models\Performer;
 use ResultType\Result;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
-use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
 {
+    use ResolvesUseCaseError;
+
     public function __construct(private readonly Converter $converter)
     {
     }
@@ -36,31 +35,9 @@ class ListPresenter
                 ),
                 200,
             ],
-            fn (UseCaseError $error) => match (true) {
-                $error instanceof AuthenticationError => [[], 401],
-                $error instanceof AuthorizationError => [[], 403],
-                default => [
-                    new ErrorResponse()->setMessage($this->resolveErrorMessage($error)),
-                    400,
-                ],
-            },
+            fn (UseCaseError $error) => $this->resolveError($error),
         );
 
         return response()->json($data, $status);
-    }
-
-    private function resolveErrorMessage(UseCaseError $error): string
-    {
-        if (! $error instanceof InvalidInputError) {
-            return '';
-        }
-
-        foreach ($error->errors as $messages) {
-            if ($messages !== []) {
-                return $messages[0];
-            }
-        }
-
-        return '';
     }
 }

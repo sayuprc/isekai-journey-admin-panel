@@ -15,7 +15,7 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 
 readonly class JwtHandler implements JwtHandlerInterface
 {
@@ -38,13 +38,13 @@ readonly class JwtHandler implements JwtHandlerInterface
         try {
             $decoded = JWT::decode($jwt, new Key($this->config->key, $this->config->alg));
         } catch (ExpiredException $e) {
-            return new Err(new DomainRuleViolationError('exp', $e->getMessage()));
+            return new Err(new EntityRuleViolationError('exp', $e->getMessage()));
         }
 
         $payload = $this->mapper->map(AccessTokenPayload::class, $decoded);
 
         if ($payload->iss !== $this->config->issuer) {
-            return new Err(new DomainRuleViolationError('iss', sprintf('不正なissが設定されている[%s]', $payload->iss)));
+            return new Err(new EntityRuleViolationError('iss', sprintf('不正なissが設定されている[%s]', $payload->iss)));
         }
 
         return new Ok($payload);
