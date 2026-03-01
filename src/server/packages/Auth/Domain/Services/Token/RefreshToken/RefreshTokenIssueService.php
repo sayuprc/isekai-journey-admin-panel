@@ -17,8 +17,8 @@ use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 
 class RefreshTokenIssueService
 {
@@ -47,7 +47,7 @@ class RefreshTokenIssueService
         if ($result->isErr()) {
             $messages = [];
             foreach ($result->unwrapErr() as $error) {
-                if ($error instanceof DomainRuleViolationError) {
+                if ($error instanceof EntityRuleViolationError) {
                     $messages[$error->field] ??= [];
                     $messages[$error->field][] = $error->message;
                 }

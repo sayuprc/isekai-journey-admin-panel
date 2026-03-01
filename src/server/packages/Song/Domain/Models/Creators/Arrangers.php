@@ -9,8 +9,8 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainRuleViolationError;
 use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -36,7 +36,7 @@ readonly class Arrangers extends ImmutableCollection
             if ($result->isErr()) {
                 $messages = [];
                 foreach ($result->unwrapErr() as $error) {
-                    if ($error instanceof DomainRuleViolationError) {
+                    if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
                     }

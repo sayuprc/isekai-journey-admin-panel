@@ -8,7 +8,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainRuleViolationError;
+use Support\Domain\Error\EntityRuleViolationError;
 
 /**
  * @extends ImmutableCollection<int, Permission>
@@ -18,7 +18,7 @@ readonly class Permissions extends ImmutableCollection
     /**
      * @param list<string> $items
      *
-     * @return Result<self, DomainRuleViolationError>
+     * @return Result<self, EntityRuleViolationError>
      */
     public static function fromArray(array $items): Result
     {
@@ -28,7 +28,7 @@ readonly class Permissions extends ImmutableCollection
             $result = Permission::tryFrom($item);
 
             if (is_null($result)) {
-                return new Err(new DomainRuleViolationError('権限', '不正な権限です'));
+                return new Err(new EntityRuleViolationError('権限', '不正な権限です'));
             }
 
             $permissions[] = $result;
