@@ -1,7 +1,9 @@
 import { onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
+import { createFormErrors } from '../../utils/form-error';
 import { setFlash } from '../Flash';
+import { FormError } from '../FormError';
 
 interface Props {
   data?: { creator: components['schemas']['Creator'] };
@@ -9,12 +11,15 @@ interface Props {
 }
 
 export const EditableForm = (props: Props) => {
+  const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
+
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
   };
 
   const handleUpdate = async (e: Event) => {
     e.preventDefault();
+    clearErrors();
 
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
@@ -22,29 +27,28 @@ export const EditableForm = (props: Props) => {
     const creatorId = props.data?.creator.creatorId;
 
     if (!creatorId) {
-      alert('更新対象のクリエイターIDを取得できませんでした');
+      setFormError('更新対象のクリエイターIDを取得できませんでした');
       return;
     }
 
-    const { data, response } = await client.api.creators({ creatorId: creatorId }).put({
+    const { data, error, status } = await client.api.creators({ creatorId: creatorId }).put({
       name: formData.get('name')?.toString() ?? '',
       orderNo: Number(formData.get('orderNo')),
     });
 
-    // TODO エラーハンドリング
-    if (response.status === 400) {
-      alert('400');
-    } else if (response.status === 404) {
-      setFlash('データがありません');
-      window.location.href = `/creators`;
-    } else if (response.status === 422) {
-      alert('422');
-    } else if (!data) {
-      throw new Error();
-    } else {
+    if (data) {
       setFlash('更新しました');
       window.location.href = `/creators`;
+      return;
     }
+
+    if (status === 404) {
+      setFlash('データがありません');
+      window.location.href = `/creators`;
+      return;
+    }
+
+    handleError(status, error);
   };
 
   const handleDelete = async (e: Event) => {
@@ -54,36 +58,35 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
+    clearErrors();
+
     const creatorId = props.data?.creator.creatorId;
 
     if (!creatorId) {
-      alert('削除対象のクリエイターIDを取得できませんでした');
+      setFormError('削除対象のクリエイターIDを取得できませんでした');
       return;
     }
 
-    const { response } = await client.api.creators({ creatorId: creatorId }).delete();
+    const { error, status } = await client.api.creators({ creatorId: creatorId }).delete();
 
-    // TODO エラーハンドリング
-    if (response.status === 400) {
-      alert('400');
-    } else if (response.status === 422) {
-      alert('422');
-    } else {
-      setFlash('削除しました');
-      window.location.href = `/creators`;
+    if (error) {
+      handleError(status, error);
+      return;
     }
+
+    setFlash('削除しました');
+    window.location.href = `/creators`;
   };
 
   onMount(() => {
     if (props.status === 404) {
-      setFlash('データがない');
+      setFlash('データがありません');
       window.location.href = '/creators';
     } else if (props.status === 422) {
-      setFlash('リクエストがおかしい');
+      setFlash('不正なリクエストです');
       window.location.href = '/creators';
     } else if (!props.data) {
-      // TODO ちゃんとしたハンドリングをする
-      alert('エラーが発生した');
+      setFormError('予期しないエラーが発生しました');
     }
   });
 
@@ -91,13 +94,20 @@ export const EditableForm = (props: Props) => {
     // TODO ローディング用のコンポーネントを用意する
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
       <a href="/creators" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <FormError message={formError()} onClose={clearErrors} />
       <form onsubmit={handleSubmit}>
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">クリエイター名</label>
-          <input type="text" class="input w-full" name="name" value={props.data?.creator.name} />
+          <input type="text" class="input w-full" name="name" value={props.data?.creator.name} classList={{ 'input-error': !!getFieldError('name') }} />
+          <Show when={getFieldError('name')}>
+            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+          </Show>
 
           <label class="label">表示順</label>
-          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.creator.orderNo} />
+          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.creator.orderNo} classList={{ 'input-error': !!getFieldError('orderNo') }} />
+          <Show when={getFieldError('orderNo')}>
+            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+          </Show>
 
           <div class="mt-6 flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary">更新</button>

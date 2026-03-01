@@ -6,12 +6,16 @@ import { formatter } from '../../utils/date';
 
 export const prerender = false;
 
-const { data } = await client.api['admin-users'].get({
+const { data, status } = await client.api['admin-users'].get({
   headers: {
     'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
     'cookie': Astro.request.headers.get('cookie') ?? '',
   },
 });
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
 
 if (!data) {
   throw new Error();

@@ -5,15 +5,18 @@ import { client } from '../../utils/client';
 
 export const prerender = false;
 
-const { data, error } = await client.api['song-types'].get({
+const { data, error, status } = await client.api['song-types'].get({
   headers: {
     'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
     'cookie': Astro.request.headers.get('cookie') ?? '',
   },
 });
 
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
+
 if (error) {
-  // TODO 適切なエラーハンドリング
   throw new Error();
 }
 ---

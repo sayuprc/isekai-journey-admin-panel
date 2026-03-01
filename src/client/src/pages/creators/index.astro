@@ -5,12 +5,16 @@ import { client } from '../../utils/client';
 
 export const prerender = false;
 
-const { data } = await client.api.creators.get({
+const { data, status } = await client.api.creators.get({
   headers: {
     'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
     'cookie': Astro.request.headers.get('cookie') ?? '',
   },
 });
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
 
 if (!data) {
   throw new Error();

@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia';
+import { ApiError } from './errors';
 import { redis } from './redis';
 import type { Credential } from './types';
 
@@ -13,21 +14,21 @@ export const authGuard = new Elysia({ name: 'authGuard' })
   })
   .resolve(async ({ headers, cookie: { session } }) => {
     if (!session?.value) {
-      throw new Error('Unauthorized: session cookie がありません');
+      throw new ApiError(401, {});
     }
 
     if (!headers['x-csrf-token']) {
-      throw new Error('Forbidden: CSRF トークンがありません');
+      throw new ApiError(403, {});
     }
 
     const credential = await redis.get<Credential>(`session:${session.value}`);
 
     if (!credential) {
-      throw new Error('Unauthorized: セッションが無効です');
+      throw new ApiError(401, {});
     }
 
     if (credential.csrfToken !== headers['x-csrf-token']) {
-      throw new Error('Forbidden: CSRF トークンが一致しません');
+      throw new ApiError(403, {});
     }
 
     return { credential };

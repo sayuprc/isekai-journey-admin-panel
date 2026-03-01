@@ -1,72 +1,57 @@
 import { Elysia, t } from 'elysia';
 import { createAuthClient } from '../client';
+import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 export const creators = new Elysia({ prefix: '/creators' })
   .use(authGuard)
   .get('/', async ({ credential }) => {
-    const { data } = await createAuthClient(credential).GET('/creators');
-
-    if (!data) {
-      throw new Error('TODO エラーハンドリング');
-    }
-
-    return data;
+    return resolveApiResponse(
+      await createAuthClient(credential).GET('/creators'),
+    );
   })
   .get('/:creatorId', async ({ params: { creatorId }, credential }) => {
-    const { data } = await createAuthClient(credential).GET('/creators/{creatorId}', {
-      params: {
-        path: {
-          creatorId,
+    return resolveApiResponse(
+      await createAuthClient(credential).GET('/creators/{creatorId}', {
+        params: {
+          path: {
+            creatorId,
+          },
         },
-      },
-    });
-
-    if (!data) {
-      throw new Error('TODO エラーハンドリング');
-    }
-
-    return data;
+      }),
+    );
   }, {
     params: t.Object({
       creatorId: t.String(),
     }),
   })
   .post('/', async ({ body: { name }, credential }) => {
-    const { data } = await createAuthClient(credential).POST('/creators', {
-      body: {
-        name,
-      },
-    });
-
-    if (!data) {
-      throw new Error('TODO エラーハンドリング');
-    }
-
-    return data;
+    return resolveApiResponse(
+      await createAuthClient(credential).POST('/creators', {
+        body: {
+          name,
+        },
+      }),
+    );
   }, {
     body: t.Object({
       name: t.String(),
     }),
   })
   .put('/:creatorId', async ({ params: { creatorId }, body: { name, orderNo }, credential }) => {
-    const { data } = await createAuthClient(credential).PUT('/creators/{creatorId}', {
-      params: {
-        path: {
-          creatorId,
+    return resolveApiResponse(
+      await createAuthClient(credential).PUT('/creators/{creatorId}', {
+        params: {
+          path: {
+            creatorId,
+          },
         },
-      },
-      body: {
-        name,
-        orderNo,
-      },
-    });
-
-    if (!data) {
-      throw new Error('TODO エラーハンドリング');
-    }
-
-    return data;
+        body: {
+          name,
+          orderNo,
+        },
+      }),
+    );
   }, {
     params: t.Object({
       creatorId: t.String(),
@@ -77,19 +62,15 @@ export const creators = new Elysia({ prefix: '/creators' })
     }),
   })
   .delete('/:creatorId', async ({ params: { creatorId }, credential }) => {
-    const { data } = await createAuthClient(credential).DELETE('/creators/{creatorId}', {
-      params: {
-        path: {
-          creatorId,
+    resolveApiResponse(
+      await createAuthClient(credential).DELETE('/creators/{creatorId}', {
+        params: {
+          path: {
+            creatorId,
+          },
         },
-      },
-    });
-
-    if (!data) {
-      throw new Error('TODO エラーハンドリング');
-    }
-
-    return data;
+      }),
+    );
   }, {
     params: t.Object({
       creatorId: t.String(),

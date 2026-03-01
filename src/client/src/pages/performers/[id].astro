@@ -16,21 +16,20 @@ if (typeof id !== 'string') {
   throw new Error('URL が不正');
 }
 
-const { data, response } = await client.api.performers({ performerId: id }).get({
+const { data, status } = await client.api.performers({ performerId: id }).get({
   headers: {
     'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
     'cookie': Astro.request.headers.get('cookie') ?? '',
   },
 });
 
-if (!data) {
-  // 適切なエラーハンドリング
-  throw new Error();
+if (status === 401) {
+  return Astro.redirect('/auth/login');
 }
 ---
 
 <Layout pageTitle="共演者詳細">
   <div>
-    <EditableForm data={data} status={response.status} client:load />
+    <EditableForm data={data ?? undefined} status={status} client:load />
   </div>
 </Layout>
