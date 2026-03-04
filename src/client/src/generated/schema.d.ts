@@ -422,7 +422,7 @@ export interface components {
          * @description 楽曲種別の値
          * @enum {number}
          */
-        SongTypeValue: 1 | 2 | 3 | 4 | 5 | 6;
+        SongTypeValue: 1 | 2;
         SongUpdateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
