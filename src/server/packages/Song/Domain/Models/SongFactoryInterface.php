@@ -17,6 +17,7 @@ interface SongFactoryInterface
         Title $title,
         Description $description,
         SongType $songType,
+        ?SongAttribute $attribute,
         OrderNo $orderNo,
         Lyricists $lyricists,
         Composers $composers,

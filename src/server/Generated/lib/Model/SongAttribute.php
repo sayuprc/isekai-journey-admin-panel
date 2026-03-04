@@ -1,6 +1,6 @@
 <?php
 /**
- * SongCreateRequest
+ * SongAttribute
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * SongCreateRequest Class Doc Comment
+ * SongAttribute Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongAttribute implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SongCreateRequest';
+    protected static $openAPIModelName = 'SongAttribute';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,13 +57,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'title' => 'string',
-        'description' => 'string',
-        'song_type_value' => '\OpenAPI\Client\Model\SongTypeValue',
-        'attribute_value' => '\OpenAPI\Client\Model\SongAttributeValue',
-        'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
-        'composers' => '\OpenAPI\Client\Model\RequestComposer[]',
-        'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]'
+        'name' => 'string',
+        'value' => '\OpenAPI\Client\Model\SongAttributeValue'
     ];
 
     /**
@@ -74,13 +69,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'title' => null,
-        'description' => null,
-        'song_type_value' => null,
-        'attribute_value' => null,
-        'lyricists' => null,
-        'composers' => null,
-        'arrangers' => null
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -89,13 +79,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'title' => false,
-        'description' => false,
-        'song_type_value' => false,
-        'attribute_value' => false,
-        'lyricists' => false,
-        'composers' => false,
-        'arrangers' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -184,13 +169,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'title' => 'title',
-        'description' => 'description',
-        'song_type_value' => 'songTypeValue',
-        'attribute_value' => 'attributeValue',
-        'lyricists' => 'lyricists',
-        'composers' => 'composers',
-        'arrangers' => 'arrangers'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -199,13 +179,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'title' => 'setTitle',
-        'description' => 'setDescription',
-        'song_type_value' => 'setSongTypeValue',
-        'attribute_value' => 'setAttributeValue',
-        'lyricists' => 'setLyricists',
-        'composers' => 'setComposers',
-        'arrangers' => 'setArrangers'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -214,13 +189,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'title' => 'getTitle',
-        'description' => 'getDescription',
-        'song_type_value' => 'getSongTypeValue',
-        'attribute_value' => 'getAttributeValue',
-        'lyricists' => 'getLyricists',
-        'composers' => 'getComposers',
-        'arrangers' => 'getArrangers'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -280,13 +250,8 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('description', $data ?? [], null);
-        $this->setIfExists('song_type_value', $data ?? [], null);
-        $this->setIfExists('attribute_value', $data ?? [], null);
-        $this->setIfExists('lyricists', $data ?? [], null);
-        $this->setIfExists('composers', $data ?? [], null);
-        $this->setIfExists('arrangers', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -316,31 +281,15 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $invalidProperties = [];
 
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['title']) < 1)) {
-            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
-        }
-
-        if ($this->container['description'] === null) {
-            $invalidProperties[] = "'description' can't be null";
-        }
-        if ((mb_strlen($this->container['description']) < 1)) {
-            $invalidProperties[] = "invalid value for 'description', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['song_type_value'] === null) {
-            $invalidProperties[] = "'song_type_value' can't be null";
-        }
-        if ($this->container['lyricists'] === null) {
-            $invalidProperties[] = "'lyricists' can't be null";
-        }
-        if ($this->container['composers'] === null) {
-            $invalidProperties[] = "'composers' can't be null";
-        }
-        if ($this->container['arrangers'] === null) {
-            $invalidProperties[] = "'arrangers' can't be null";
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
         }
         return $invalidProperties;
     }
@@ -358,200 +307,60 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets title
+     * Gets name
      *
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->container['title'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets title
+     * Sets name
      *
-     * @param string $title 楽曲名
+     * @param string $name 楽曲属性名
      *
      * @return self
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
 
-        if ((mb_strlen($title) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $title when calling SongCreateRequest., must be bigger than or equal to 1.');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling SongAttribute., must be bigger than or equal to 1.');
         }
 
-        $this->container['title'] = $title;
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets description
+     * Gets value
      *
-     * @return string
+     * @return \OpenAPI\Client\Model\SongAttributeValue
      */
-    public function getDescription()
+    public function getValue()
     {
-        return $this->container['description'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets description
+     * Sets value
      *
-     * @param string $description 楽曲の説明
+     * @param \OpenAPI\Client\Model\SongAttributeValue $value value
      *
      * @return self
      */
-    public function setDescription($description)
+    public function setValue($value)
     {
-        if (is_null($description)) {
-            throw new \InvalidArgumentException('non-nullable description cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-
-        if ((mb_strlen($description) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $description when calling SongCreateRequest., must be bigger than or equal to 1.');
-        }
-
-        $this->container['description'] = $description;
-
-        return $this;
-    }
-
-    /**
-     * Gets song_type_value
-     *
-     * @return \OpenAPI\Client\Model\SongTypeValue
-     */
-    public function getSongTypeValue()
-    {
-        return $this->container['song_type_value'];
-    }
-
-    /**
-     * Sets song_type_value
-     *
-     * @param \OpenAPI\Client\Model\SongTypeValue $song_type_value song_type_value
-     *
-     * @return self
-     */
-    public function setSongTypeValue($song_type_value)
-    {
-        if (is_null($song_type_value)) {
-            throw new \InvalidArgumentException('non-nullable song_type_value cannot be null');
-        }
-        $this->container['song_type_value'] = $song_type_value;
-
-        return $this;
-    }
-
-    /**
-     * Gets attribute_value
-     *
-     * @return \OpenAPI\Client\Model\SongAttributeValue|null
-     */
-    public function getAttributeValue()
-    {
-        return $this->container['attribute_value'];
-    }
-
-    /**
-     * Sets attribute_value
-     *
-     * @param \OpenAPI\Client\Model\SongAttributeValue|null $attribute_value attribute_value
-     *
-     * @return self
-     */
-    public function setAttributeValue($attribute_value)
-    {
-        if (is_null($attribute_value)) {
-            throw new \InvalidArgumentException('non-nullable attribute_value cannot be null');
-        }
-        $this->container['attribute_value'] = $attribute_value;
-
-        return $this;
-    }
-
-    /**
-     * Gets lyricists
-     *
-     * @return \OpenAPI\Client\Model\RequestLyricist[]
-     */
-    public function getLyricists()
-    {
-        return $this->container['lyricists'];
-    }
-
-    /**
-     * Sets lyricists
-     *
-     * @param \OpenAPI\Client\Model\RequestLyricist[] $lyricists lyricists
-     *
-     * @return self
-     */
-    public function setLyricists($lyricists)
-    {
-        if (is_null($lyricists)) {
-            throw new \InvalidArgumentException('non-nullable lyricists cannot be null');
-        }
-        $this->container['lyricists'] = $lyricists;
-
-        return $this;
-    }
-
-    /**
-     * Gets composers
-     *
-     * @return \OpenAPI\Client\Model\RequestComposer[]
-     */
-    public function getComposers()
-    {
-        return $this->container['composers'];
-    }
-
-    /**
-     * Sets composers
-     *
-     * @param \OpenAPI\Client\Model\RequestComposer[] $composers composers
-     *
-     * @return self
-     */
-    public function setComposers($composers)
-    {
-        if (is_null($composers)) {
-            throw new \InvalidArgumentException('non-nullable composers cannot be null');
-        }
-        $this->container['composers'] = $composers;
-
-        return $this;
-    }
-
-    /**
-     * Gets arrangers
-     *
-     * @return \OpenAPI\Client\Model\RequestArranger[]
-     */
-    public function getArrangers()
-    {
-        return $this->container['arrangers'];
-    }
-
-    /**
-     * Sets arrangers
-     *
-     * @param \OpenAPI\Client\Model\RequestArranger[] $arrangers arrangers
-     *
-     * @return self
-     */
-    public function setArrangers($arrangers)
-    {
-        if (is_null($arrangers)) {
-            throw new \InvalidArgumentException('non-nullable arrangers cannot be null');
-        }
-        $this->container['arrangers'] = $arrangers;
+        $this->container['value'] = $value;
 
         return $this;
     }

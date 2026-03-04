@@ -35,6 +35,7 @@ class GetInteractorTest extends TestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
                 [['creatorId' => $composerId, 'orderNo' => 1]],
