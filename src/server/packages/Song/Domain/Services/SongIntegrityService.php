@@ -14,6 +14,7 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
+use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -50,6 +51,7 @@ class SongIntegrityService
         string $title,
         string $description,
         int $songType,
+        ?int $attribute,
         array $lyricists,
         array $composers,
         array $arrangers,
@@ -75,6 +77,7 @@ class SongIntegrityService
             $title,
             $description,
             $songType,
+            $attribute,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
             ...$creators,
@@ -93,6 +96,7 @@ class SongIntegrityService
         string $title,
         string $description,
         int $songType,
+        ?int $attribute,
         int $orderNo,
         array $lyricists,
         array $composers,
@@ -119,6 +123,7 @@ class SongIntegrityService
             $title,
             $description,
             $songType,
+            $attribute,
             $orderNo,
             ...$creators,
         );
@@ -132,16 +137,18 @@ class SongIntegrityService
         string $title,
         string $description,
         int $songType,
+        ?int $attribute,
         int $orderNo,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
     ): Result {
-        return Result::collect5(
+        return Result::collect6(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
-            $this->toEnum($songType),
+            $this->toSongType($songType),
+            $this->toSongAttribute($attribute),
             OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {
@@ -161,12 +168,30 @@ class SongIntegrityService
     /**
      * @return Result<SongType, DomainError>
      */
-    private function toEnum(int $songType): Result
+    private function toSongType(int $songType): Result
     {
         $result = SongType::tryFrom($songType);
 
         if (is_null($result)) {
             return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$songType}"));
+        }
+
+        return new Ok($result);
+    }
+
+    /**
+     * @return Result<SongAttribute|null, DomainError>
+     */
+    private function toSongAttribute(?int $attribute): Result
+    {
+        if (is_null($attribute)) {
+            return new Ok(null);
+        }
+
+        $result = SongAttribute::tryFrom($attribute);
+
+        if (is_null($result)) {
+            return new Err(new EntityRuleViolationError(SongAttribute::class, "不正な楽曲属性です: {$attribute}"));
         }
 
         return new Ok($result);

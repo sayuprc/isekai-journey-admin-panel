@@ -27,6 +27,7 @@ class FileSongRepositoryTest extends TestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
@@ -37,6 +38,7 @@ class FileSongRepositoryTest extends TestCase
                 '全部夢だった！',
                 'カバー楽曲',
                 SongType::Cover,
+                null,
                 2,
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
@@ -59,6 +61,7 @@ class FileSongRepositoryTest extends TestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
@@ -80,6 +83,7 @@ class FileSongRepositoryTest extends TestCase
             '描き続けた君へ',
             'オリジナル楽曲',
             SongType::Original,
+            null,
             1,
             [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
@@ -103,6 +107,7 @@ class FileSongRepositoryTest extends TestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
@@ -127,9 +132,9 @@ class FileSongRepositoryTest extends TestCase
 
         // データを追加
         $this->storeSongs(
-            $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, 10, [], [], []),
-            $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, 30, [], [], []),
-            $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, 20, [], [], []),
+            $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, null, 10, [], [], []),
+            $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, null, 30, [], [], []),
+            $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, null, 20, [], [], []),
         );
 
         // 最大値が返ることを確認
@@ -147,6 +152,7 @@ class FileSongRepositoryTest extends TestCase
                 '曲1',
                 '説明',
                 SongType::Original,
+                null,
                 1,
                 [],
                 [],
@@ -168,6 +174,7 @@ class FileSongRepositoryTest extends TestCase
                 '曲2',
                 '説明',
                 SongType::Original,
+                null,
                 1,
                 [],
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
@@ -189,6 +196,7 @@ class FileSongRepositoryTest extends TestCase
                 '曲3',
                 '説明',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
                 [],

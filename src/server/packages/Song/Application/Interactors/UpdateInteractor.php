@@ -56,6 +56,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
                 $inputData->title,
                 $inputData->description,
                 $inputData->songTypeValue,
+                $inputData->attributeValue,
                 $inputData->orderNo,
                 $inputData->lyricists,
                 $inputData->composers,

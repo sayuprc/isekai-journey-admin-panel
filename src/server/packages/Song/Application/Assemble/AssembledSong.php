@@ -17,10 +17,21 @@ readonly class AssembledSong
         public string $description,
         public string $songTypeName,
         public int $songTypeValue,
+        public ?string $attributeName,
+        public ?int $attributeValue,
         public int $orderNo,
         public array $lyricists,
         public array $composers,
         public array $arrangers,
     ) {
+    }
+
+    /**
+     * @phpstan-assert-if-true !null $this->attributeName
+     * @phpstan-assert-if-true !null $this->attributeValue
+     */
+    public function hasAttribute(): bool
+    {
+        return ! is_null($this->attributeName) && ! is_null($this->attributeValue);
     }
 }

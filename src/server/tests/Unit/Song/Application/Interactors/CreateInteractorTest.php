@@ -64,13 +64,14 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $songTypeValue, null, $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
                     $title,
                     $description,
                     SongType::from($songTypeValue),
+                    null,
                     $orderNo,
                     $lyricists,
                     $composers,
@@ -123,6 +124,8 @@ class CreateInteractorTest extends TestCase
                     $song->description->value,
                     $song->songType->name,
                     $song->songType->value,
+                    null,
+                    null,
                     $song->orderNo->value,
                     [new AssembledCreator($lyricistId, '作詞者', 1)],
                     [new AssembledCreator($composerId, '作曲者', 1)],
@@ -161,7 +164,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $songTypeValue, null, $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 

@@ -44,6 +44,7 @@ class DeleteCreatorTest extends TestCase
             '曲名',
             '説明',
             SongType::Original,
+            null,
             1,
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
