@@ -1,5 +1,7 @@
 ---
 applyTo: 'src/client/**'
+paths:
+  - 'src/client/**'
 ---
 
 # クライアント規約

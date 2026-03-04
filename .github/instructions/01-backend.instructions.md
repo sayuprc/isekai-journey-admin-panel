@@ -1,5 +1,7 @@
 ---
 applyTo: 'src/server/**'
+paths:
+  - 'src/server/**'
 ---
 
 # サーバー規約
