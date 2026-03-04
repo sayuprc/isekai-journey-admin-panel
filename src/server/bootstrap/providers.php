@@ -10,6 +10,7 @@ return [
     App\Providers\Domain\PerformerServiceProvider::class,
     App\Providers\Domain\SongServiceProvider::class,
     App\Providers\Domain\SongTypeServiceProvider::class,
+    App\Providers\Domain\SongAttributeServiceProvider::class,
     App\Providers\Domain\SupportServiceProvider::class,
     App\Providers\Domain\AdminUserServiceProvider::class,
 ];
