@@ -232,29 +232,3 @@ run = "bun run tcm:watch"
 description = "Prism のモックサーバーを起動する"
 dir = "src/client"
 run = "bun run prism"
-
-[tasks."ai:check"]
-quiet = true
-description = "AI 指示書とスキルの同期状態を確認する"
-run = '''
-status=0
-diff -u GEMINI.md .github/copilot-instructions.md || status=1
-diff -qr .gemini/skills .github/skills || status=1
-
-if [ $status -ne 0 ]; then
-  echo "❌ AI 設定ファイルに差分があります。'mise ai:sync' を実行して同期してください。"
-  exit 1
-fi
-echo "✅ すべての AI 設定ファイルが同期されています。"
-'''
-
-[tasks."ai:sync"]
-description = "Gemini の AI 設定（指示書・スキル）を Copilot 側へ同期する"
-confirm = "Gemini 側の設定を正として、Copilot 側の設定（.github/ 配下）を上書きします。よろしいですか？"
-run = '''
-rm -f .github/copilot-instructions.md
-cp GEMINI.md .github/copilot-instructions.md
-
-rm -rf .github/skills
-cp -r .gemini/skills .github/
-'''
