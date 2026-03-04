@@ -61,6 +61,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'string',
         'description' => 'string',
         'song_type' => '\OpenAPI\Client\Model\SongType',
+        'attribute' => '\OpenAPI\Client\Model\SongAttribute',
         'order_no' => 'int',
         'lyricists' => '\OpenAPI\Client\Model\Lyricist[]',
         'composers' => '\OpenAPI\Client\Model\Composer[]',
@@ -79,6 +80,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => null,
         'description' => null,
         'song_type' => null,
+        'attribute' => null,
         'order_no' => 'int32',
         'lyricists' => null,
         'composers' => null,
@@ -95,6 +97,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'description' => false,
         'song_type' => false,
+        'attribute' => false,
         'order_no' => false,
         'lyricists' => false,
         'composers' => false,
@@ -191,6 +194,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'title',
         'description' => 'description',
         'song_type' => 'songType',
+        'attribute' => 'attribute',
         'order_no' => 'orderNo',
         'lyricists' => 'lyricists',
         'composers' => 'composers',
@@ -207,6 +211,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'setTitle',
         'description' => 'setDescription',
         'song_type' => 'setSongType',
+        'attribute' => 'setAttribute',
         'order_no' => 'setOrderNo',
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
@@ -223,6 +228,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'getTitle',
         'description' => 'getDescription',
         'song_type' => 'getSongType',
+        'attribute' => 'getAttribute',
         'order_no' => 'getOrderNo',
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
@@ -290,6 +296,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('song_type', $data ?? [], null);
+        $this->setIfExists('attribute', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
@@ -488,6 +495,33 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable song_type cannot be null');
         }
         $this->container['song_type'] = $song_type;
+
+        return $this;
+    }
+
+    /**
+     * Gets attribute
+     *
+     * @return \OpenAPI\Client\Model\SongAttribute|null
+     */
+    public function getAttribute()
+    {
+        return $this->container['attribute'];
+    }
+
+    /**
+     * Sets attribute
+     *
+     * @param \OpenAPI\Client\Model\SongAttribute|null $attribute attribute
+     *
+     * @return self
+     */
+    public function setAttribute($attribute)
+    {
+        if (is_null($attribute)) {
+            throw new \InvalidArgumentException('non-nullable attribute cannot be null');
+        }
+        $this->container['attribute'] = $attribute;
 
         return $this;
     }

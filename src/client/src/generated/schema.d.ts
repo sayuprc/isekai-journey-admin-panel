@@ -349,6 +349,10 @@ export interface components {
          *         "name": "オリジナル曲",
          *         "value": 1
          *       },
+         *       "attribute": {
+         *         "name": "コラボ",
+         *         "value": 1
+         *       },
          *       "orderNo": 1,
          *       "lyricists": [
          *         {
@@ -378,15 +382,32 @@ export interface components {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songType: components["schemas"]["SongType"];
+            attribute?: components["schemas"]["SongAttribute"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["Lyricist"][];
             composers: components["schemas"]["Composer"][];
             arrangers: components["schemas"]["Arranger"][];
         };
+        /**
+         * @example {
+         *       "name": "コラボ",
+         *       "value": 1
+         *     }
+         */
+        SongAttribute: {
+            name: components["schemas"]["songAttributeName"];
+            value: components["schemas"]["SongAttributeValue"];
+        };
+        /**
+         * @description 楽曲属性の値
+         * @enum {number}
+         */
+        SongAttributeValue: 1 | 2 | 3 | 4 | 5;
         SongCreateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
+            attributeValue?: components["schemas"]["SongAttributeValue"];
             lyricists: components["schemas"]["RequestLyricist"][];
             composers: components["schemas"]["RequestComposer"][];
             arrangers: components["schemas"]["RequestArranger"][];
@@ -427,6 +448,7 @@ export interface components {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
+            attributeValue?: components["schemas"]["SongAttributeValue"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["RequestLyricist"][];
             composers: components["schemas"]["RequestComposer"][];
@@ -501,6 +523,8 @@ export interface components {
         refreshToken: string;
         /** @description 役割名 */
         roleName: string;
+        /** @description 楽曲属性名 */
+        songAttributeName: string;
         /**
          * Format: uuid
          * @description 楽曲ID
