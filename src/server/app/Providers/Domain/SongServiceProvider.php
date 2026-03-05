@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\Interactors\GetInteractor;
+use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -16,6 +17,7 @@ use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
+use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\DebugInfrastructures\FileSongRepository;
@@ -55,5 +57,12 @@ class SongServiceProvider extends EnvServiceProvider
                 ],
             );
         });
+
+        $this->registerSongAttribute();
+    }
+
+    private function registerSongAttribute(): void
+    {
+        $this->app->bind(ListAttributeUseCaseInterface::class, ListAttributeInteractor::class);
     }
 }
