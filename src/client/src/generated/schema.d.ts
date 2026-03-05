@@ -112,6 +112,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/song-attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 楽曲属性一覧取得API */
+        get: operations["SongAttributeService_listSongAttributes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/song-types": {
         parameters: {
             query?: never;
@@ -397,6 +414,9 @@ export interface components {
         SongAttribute: {
             name: components["schemas"]["songAttributeName"];
             value: components["schemas"]["SongAttributeValue"];
+        };
+        SongAttributeListResponse: {
+            attributes: components["schemas"]["SongAttribute"][];
         };
         /**
          * @description 楽曲属性の値
@@ -1385,6 +1405,61 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongAttributeService_listSongAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongAttributeListResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
