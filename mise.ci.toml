@@ -39,7 +39,7 @@ mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
 
 [tasks.up]
 description = "CI 環境でコンテナを起動する"
-run = "docker compose -f ./docker/compose.ci.yaml up -d php"
+run = "docker compose up -d php"
 
 [tasks."composer:install"]
 description = "CI 環境で composer install を実行する"
