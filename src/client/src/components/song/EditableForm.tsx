@@ -9,6 +9,8 @@ import { SearchableSelect } from '../SearchableSelect';
 type Creator = components['schemas']['Creator'];
 type SongType = components['schemas']['SongType'];
 type SongTypeValue = components['schemas']['SongTypeValue'];
+type SongAttribute = components['schemas']['SongAttribute'];
+type SongAttributeValue = components['schemas']['SongAttributeValue'];
 
 type CreatorEntry = {
   creatorId: string;
@@ -23,6 +25,7 @@ interface Props {
 export const EditableForm = (props: Props) => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
   const [songTypes, setSongTypes] = createSignal<SongType[]>([]);
+  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
   const toEntries = (
     items: components['schemas']['Arranger'][] | undefined,
@@ -41,9 +44,10 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
-    const [creatorsRes, songTypesRes] = await Promise.all([
+    const [creatorsRes, songTypesRes, attributesRes] = await Promise.all([
       client.api.creators.get(),
       client.api['song-types'].get(),
+      client.api['song-attributes'].get(),
     ]);
 
     if (creatorsRes.data) {
@@ -52,6 +56,10 @@ export const EditableForm = (props: Props) => {
 
     if (songTypesRes.data) {
       setSongTypes(songTypesRes.data.songTypes);
+    }
+
+    if (attributesRes.data) {
+      setAttributes(attributesRes.data.attributes);
     }
 
     if (props.status === 404) {
@@ -127,6 +135,9 @@ export const EditableForm = (props: Props) => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
+      attributeValue: formData.get('attributeValue') !== ''
+        ? Number(formData.get('attributeValue')) as SongAttributeValue
+        : undefined,
       orderNo: Number(formData.get('orderNo')),
       arrangers: arrangers(),
       composers: composers(),
@@ -241,6 +252,23 @@ export const EditableForm = (props: Props) => {
                   selected={songType.value === props.data?.song.songType.value}
                 >
                   {songType.name}
+                </option>
+              )}
+            </For>
+          </select>
+
+          <label class="label">楽曲属性</label>
+          <select class="select select-bordered w-full" name="attributeValue">
+            <option value="">
+              選択してください
+            </option>
+            <For each={attributes()}>
+              {attribute => (
+                <option
+                  value={attribute.value}
+                  selected={attribute.value === props.data?.song.attribute?.value}
+                >
+                  {attribute.name}
                 </option>
               )}
             </For>
