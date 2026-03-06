@@ -6,10 +6,14 @@ import { authGuard } from '../middleware';
 const SongTypeValueSchema = t.Union([
   t.Literal(1),
   t.Literal(2),
+]);
+
+const SongAttributeValueSchema = t.Union([
+  t.Literal(1),
+  t.Literal(2),
   t.Literal(3),
   t.Literal(4),
   t.Literal(5),
-  t.Literal(6),
 ]);
 
 const CreatorRefSchema = t.Array(
@@ -38,13 +42,14 @@ export const songs = new Elysia({ prefix: '/songs' })
       songId: t.String(),
     }),
   })
-  .post('/', async ({ body: { title, description, songTypeValue, lyricists, composers, arrangers }, credential }) => {
+  .post('/', async ({ body: { title, description, songTypeValue, attributeValue, lyricists, composers, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).POST('/songs', {
         body: {
           title,
           description,
           songTypeValue,
+          attributeValue,
           lyricists,
           composers,
           arrangers,
@@ -56,12 +61,13 @@ export const songs = new Elysia({ prefix: '/songs' })
       title: t.String(),
       description: t.String(),
       songTypeValue: SongTypeValueSchema,
+      attributeValue: t.Optional(SongAttributeValueSchema),
       lyricists: CreatorRefSchema,
       composers: CreatorRefSchema,
       arrangers: CreatorRefSchema,
     }),
   })
-  .put('/:songId', async ({ params: { songId }, body: { title, description, songTypeValue, orderNo, composers, lyricists, arrangers }, credential }) => {
+  .put('/:songId', async ({ params: { songId }, body: { title, description, songTypeValue, attributeValue, orderNo, composers, lyricists, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).PUT('/songs/{songId}', {
         params: {
@@ -73,6 +79,7 @@ export const songs = new Elysia({ prefix: '/songs' })
           title,
           description,
           songTypeValue,
+          attributeValue,
           orderNo,
           lyricists,
           composers,
@@ -88,6 +95,7 @@ export const songs = new Elysia({ prefix: '/songs' })
       title: t.String(),
       description: t.String(),
       songTypeValue: SongTypeValueSchema,
+      attributeValue: t.Optional(SongAttributeValueSchema),
       orderNo: t.Number(),
       lyricists: CreatorRefSchema,
       composers: CreatorRefSchema,
