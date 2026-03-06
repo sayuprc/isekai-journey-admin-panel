@@ -1,4 +1,5 @@
 [tools]
+atlas = "1.1.0"
 bun = "1.3.9"
 
 [vars]
