@@ -7,13 +7,16 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && update-ca-certificates \
   && apt-get update \
   && apt-get install -y \
+    default-mysql-client \
     git \
     unzip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
-  && curl -sSf https://atlasgo.sh | sh \
   && install-php-extensions \
-    xdebug
+    pdo \
+    pdo_mysql \
+    xdebug \
+  && echo "[client]\nssl-verify-server-cert=false" > /etc/mysql/conf.d/skip-ssl.cnf
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
