@@ -1,0 +1,47 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+export const prerender = false;
+
+const { data, error, status } = await client.api['song-attributes'].get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
+
+if (error) {
+  throw new Error();
+}
+---
+
+<Layout pageTitle="楽曲属性一覧">
+  <FlashMessage client:only="solid-js" />
+  <!-- TODO コンポーネント化する -->
+  <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>楽曲属性名</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          data.attributes.map((attribute) => {
+            return (
+              <tr>
+                <td>{attribute.name}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</Layout>
