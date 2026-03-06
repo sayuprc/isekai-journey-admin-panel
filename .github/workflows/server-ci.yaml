@@ -215,16 +215,7 @@ jobs:
       - name: Setup env
         run: mise run setup:env
 
-      - name: Cache database
-        id: cache-database
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.DATABASE_PATH }}
-          key: ${{ env.DATABASE_KEY_PREFIX }}${{ hashFiles('./src/server/database/atlas/schemas/*.hcl') }}
-
-      - name: Migrate
-        if: steps.cache-database.outputs.cache-hit != 'true'
-        run: mise run migrate
+      # TODO DB マイグレーションを実行する
 
       - name: Run PHPUnit
         run: mise run test:all

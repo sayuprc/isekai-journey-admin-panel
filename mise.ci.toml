@@ -5,8 +5,6 @@ SERVER_DOCKER_PATH = "/tmp/cache/docker/server"
 SERVER_DOCKER_KEY_PREFIX = "docker-server-"
 VENDOR_PATH = "./src/server/vendor"
 VENDOR_KEY_PREFIX = "composer-"
-DATABASE_PATH = "./src/server/database/isekai_terrarium.sqlite"
-DATABASE_KEY_PREFIX = "database-"
 OPENAPI_GENERATOR_CLI_DOCKER_PATH = "/tmp/cache/docker/openapi-generator-cli"
 OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX = "docker-openapi-generator-cli-"
 
@@ -66,13 +64,6 @@ description = "CI 環境の環境変数をセットアップする"
 run = '''
 cp src/server/.env.example src/server/.env
 docker exec {{vars.server_container}} php artisan key:generate
-'''
-
-[tasks.migrate]
-description = "CI 環境でマイグレーションを実行する"
-run = '''
-touch $DATABASE_PATH
-docker exec {{vars.server_container}} bash -c "cd database/atlas; atlas schema apply --env 'local' --var db_name=$(basename $DATABASE_PATH) --auto-approve"
 '''
 
 [tasks."generate:client"]
