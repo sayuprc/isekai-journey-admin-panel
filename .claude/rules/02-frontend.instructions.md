@@ -1,1 +1,1 @@
-.github/instructions/02-frontend.instructions.md
+../../.github/instructions/02-frontend.instructions.md
