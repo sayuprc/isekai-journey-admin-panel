@@ -36,6 +36,7 @@ class UpdateInteractorTest extends TestCase
                 '曲名',
                 '説明',
                 SongType::Original,
+                null,
                 1,
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],

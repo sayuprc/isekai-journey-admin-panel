@@ -46,6 +46,7 @@ class SongAssemblerTest extends TestCase
             $title,
             $description,
             $songType,
+            null,
             $orderNo,
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],

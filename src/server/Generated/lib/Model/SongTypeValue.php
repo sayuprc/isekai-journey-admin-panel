@@ -47,14 +47,6 @@ enum SongTypeValue: int
 
     case NUMBER_2 = 2;
 
-    case NUMBER_3 = 3;
-
-    case NUMBER_4 = 4;
-
-    case NUMBER_5 = 5;
-
-    case NUMBER_6 = 6;
-
 }
 
 

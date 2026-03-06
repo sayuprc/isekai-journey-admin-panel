@@ -10,23 +10,11 @@ enum SongType: int
 
     case Cover = 2;
 
-    case Collaboration = 3;
-
-    case Lineage = 4;
-
-    case Derivative = 5;
-
-    case Amplified = 6;
-
     public function getName(): string
     {
         return match ($this) {
             self::Original => 'オリジナル曲',
             self::Cover => 'カバー曲',
-            self::Collaboration => 'コラボ曲',
-            self::Lineage => '系譜曲',
-            self::Derivative => '派生曲',
-            self::Amplified => '拡声曲',
         };
     }
 

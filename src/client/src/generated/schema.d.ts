@@ -112,6 +112,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/song-attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 楽曲属性一覧取得API */
+        get: operations["SongAttributeService_listSongAttributes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/song-types": {
         parameters: {
             query?: never;
@@ -349,6 +366,10 @@ export interface components {
          *         "name": "オリジナル曲",
          *         "value": 1
          *       },
+         *       "attribute": {
+         *         "name": "コラボ",
+         *         "value": 1
+         *       },
          *       "orderNo": 1,
          *       "lyricists": [
          *         {
@@ -378,15 +399,35 @@ export interface components {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songType: components["schemas"]["SongType"];
+            attribute?: components["schemas"]["SongAttribute"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["Lyricist"][];
             composers: components["schemas"]["Composer"][];
             arrangers: components["schemas"]["Arranger"][];
         };
+        /**
+         * @example {
+         *       "name": "コラボ",
+         *       "value": 1
+         *     }
+         */
+        SongAttribute: {
+            name: components["schemas"]["songAttributeName"];
+            value: components["schemas"]["SongAttributeValue"];
+        };
+        SongAttributeListResponse: {
+            attributes: components["schemas"]["SongAttribute"][];
+        };
+        /**
+         * @description 楽曲属性の値
+         * @enum {number}
+         */
+        SongAttributeValue: 1 | 2 | 3 | 4 | 5;
         SongCreateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
+            attributeValue?: components["schemas"]["SongAttributeValue"];
             lyricists: components["schemas"]["RequestLyricist"][];
             composers: components["schemas"]["RequestComposer"][];
             arrangers: components["schemas"]["RequestArranger"][];
@@ -422,11 +463,12 @@ export interface components {
          * @description 楽曲種別の値
          * @enum {number}
          */
-        SongTypeValue: 1 | 2 | 3 | 4 | 5 | 6;
+        SongTypeValue: 1 | 2;
         SongUpdateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
             songTypeValue: components["schemas"]["SongTypeValue"];
+            attributeValue?: components["schemas"]["SongAttributeValue"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["RequestLyricist"][];
             composers: components["schemas"]["RequestComposer"][];
@@ -501,6 +543,8 @@ export interface components {
         refreshToken: string;
         /** @description 役割名 */
         roleName: string;
+        /** @description 楽曲属性名 */
+        songAttributeName: string;
         /**
          * Format: uuid
          * @description 楽曲ID
@@ -1361,6 +1405,61 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongAttributeService_listSongAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongAttributeListResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
