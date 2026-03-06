@@ -9,6 +9,8 @@ import { SearchableSelect } from '../SearchableSelect';
 type Creator = components['schemas']['Creator'];
 type SongType = components['schemas']['SongType'];
 type SongTypeValue = components['schemas']['SongTypeValue'];
+type SongAttribute = components['schemas']['SongAttribute'];
+type SongAttributeValue = components['schemas']['SongAttributeValue'];
 
 type CreatorEntry = {
   creatorId: string;
@@ -17,6 +19,7 @@ type CreatorEntry = {
 export const CreateForm = () => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
   const [songTypes, setSongTypes] = createSignal<SongType[]>([]);
+  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
   const [composers, setComposers] = createSignal<CreatorEntry[]>([]);
@@ -25,9 +28,10 @@ export const CreateForm = () => {
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
-    const [creatorsRes, songTypesRes] = await Promise.all([
+    const [creatorsRes, songTypesRes, attributesRes] = await Promise.all([
       client.api.creators.get(),
       client.api['song-types'].get(),
+      client.api['song-attributes'].get(),
     ]);
 
     if (creatorsRes.data) {
@@ -36,6 +40,10 @@ export const CreateForm = () => {
 
     if (songTypesRes.data) {
       setSongTypes(songTypesRes.data.songTypes);
+    }
+
+    if (attributesRes.data) {
+      setAttributes(attributesRes.data.attributes);
     }
   });
 
@@ -62,6 +70,9 @@ export const CreateForm = () => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
+      attributeValue: formData.get('attributeValue') !== ''
+        ? Number(formData.get('attributeValue')) as SongAttributeValue
+        : undefined,
       arrangers: arrangers(),
       composers: composers(),
       lyricists: lyricists(),
@@ -144,6 +155,16 @@ export const CreateForm = () => {
           </option>
           <For each={songTypes()}>
             {songType => <option value={songType.value}>{songType.name}</option>}
+          </For>
+        </select>
+
+        <label class="label">楽曲属性</label>
+        <select class="select select-bordered w-full" name="attributeValue">
+          <option value="" selected>
+            選択してください
+          </option>
+          <For each={attributes()}>
+            {attribute => <option value={attribute.value}>{attribute.name}</option>}
           </For>
         </select>
 

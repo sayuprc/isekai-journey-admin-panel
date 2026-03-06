@@ -31,6 +31,7 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
+use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\Title;
 use SongType\Domain\Models\SongType;
@@ -82,6 +83,7 @@ trait EntityFactory
         string $title,
         string $description,
         SongType $songType,
+        ?SongAttribute $attribute,
         int $orderNo,
         array $lyricists,
         array $composers,
@@ -92,6 +94,7 @@ trait EntityFactory
             Title::reconstruct($title),
             Description::reconstruct($description),
             $songType,
+            $attribute,
             OrderNo::reconstruct($orderNo),
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
