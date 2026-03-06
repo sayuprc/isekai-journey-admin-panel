@@ -33,6 +33,7 @@ if (!data) {
         <tr>
           <th>楽曲名</th>
           <th>楽曲種別</th>
+          <th>楽曲属性</th>
           <th>説明</th>
           <th>表示順</th>
           <th>操作</th>
@@ -45,6 +46,7 @@ if (!data) {
               <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                 <td>{song.title}</td>
                 <td>{song.songType.name}</td>
+                <td>{song.attribute?.name ?? '-'}</td>
                 <td>{song.description}</td>
                 <td>{song.orderNo}</td>
                 <td>
