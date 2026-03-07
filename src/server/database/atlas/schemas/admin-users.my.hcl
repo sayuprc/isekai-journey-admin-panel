@@ -7,6 +7,11 @@ table "admin_users" {
     type    = binary(16)
     comment = "管理ユーザーID"
   }
+  column "name" {
+    null    = false
+    type    = varchar(255)
+    comment = "管理者名"
+  }
   column "email" {
     null    = false
     type    = varchar(255)
@@ -16,6 +21,12 @@ table "admin_users" {
     null    = false
     type    = varchar(255)
     comment = "パスワード"
+  }
+  column "role" {
+    null     = false
+    type     = tinyint
+    unsigned = true
+    comment  = "ロール"
   }
   column "created_at" {
     null    = false
