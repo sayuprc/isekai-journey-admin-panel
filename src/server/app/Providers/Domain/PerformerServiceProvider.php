@@ -17,16 +17,16 @@ use Performer\Application\UseCase\Get\GetUseCaseInterface;
 use Performer\Application\UseCase\List\ListUseCaseInterface;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
-use Performer\DebugInfrastructures\FilePerformerRepository;
 use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Infrastructures\PerformerFactory;
+use Performer\Infrastructures\PerformerRepository;
 
 class PerformerServiceProvider extends EnvServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(PerformerRepositoryInterface::class, FilePerformerRepository::class);
+        $this->app->bind(PerformerRepositoryInterface::class, PerformerRepository::class);
         $this->app->bind(PerformerFactoryInterface::class, PerformerFactory::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);

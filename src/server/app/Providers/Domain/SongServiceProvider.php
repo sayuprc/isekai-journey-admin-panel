@@ -20,17 +20,17 @@ use Song\Application\UseCase\List\ListUseCaseInterface;
 use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
-use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
+use Song\Infrastructures\SongRepository;
 
 class SongServiceProvider extends EnvServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(SongRepositoryInterface::class, FileSongRepository::class);
+        $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
         $this->app->bind(SongFactoryInterface::class, SongFactory::class);
         $this->app->bind(CreatorUsageCheckerInterface::class, CreatorUsageChecker::class);
 
