@@ -3,12 +3,14 @@ variable "table_schemas" {
   default = [
     "file://schemas/schema.my.hcl",
     "file://schemas/admin-users.my.hcl",
+    "file://schemas/admin-user-permissions.my.hcl",
     "file://schemas/creators.my.hcl",
     "file://schemas/performers.my.hcl",
     "file://schemas/songs.my.hcl",
     "file://schemas/song-lyricists.my.hcl",
     "file://schemas/song-composers.my.hcl",
     "file://schemas/song-arrangers.my.hcl",
+    "file://schemas/refresh-tokens.my.hcl",
   ]
 }
 
