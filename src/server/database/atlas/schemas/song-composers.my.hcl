@@ -13,9 +13,10 @@ table "song_composers" {
     comment = "作曲者ID"
   }
   column "order_no" {
-    null    = false
-    type    = tinyint
-    comment = "表示順"
+    null     = false
+    type     = int
+    unsigned = true
+    comment  = "表示順"
   }
 
   primary_key {

@@ -18,14 +18,22 @@ table "songs" {
     comment = "説明"
   }
   column "type" {
-    null    = false
-    type    = tinyint
-    comment = "種別"
+    null     = false
+    type     = tinyint
+    unsigned = true
+    comment  = "種別"
   }
   column "attribute" {
-    null    = true
-    type    = tinyint
-    comment = "属性"
+    null     = true
+    type     = tinyint
+    unsigned = true
+    comment  = "属性"
+  }
+  column "order_no" {
+    null     = true
+    type     = int
+    unsigned = true
+    comment  = "表示順"
   }
   column "created_at" {
     null    = false
