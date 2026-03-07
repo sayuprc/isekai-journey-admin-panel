@@ -170,6 +170,10 @@ _.file = "src/server/.env"
 description = "Laravel tinker を実行する"
 run = "docker exec {{vars.server_container}} php artisan tinker"
 
+[tasks."ide:doc"]
+description = "Eloquent にカラム情報を書き込む"
+run = "docker exec {{vars.server_container}} php artisan ide-helper:models -RW -n"
+
 [tasks.generate]
 description = "OAS からコードを生成する"
 depends = "generate:*"
