@@ -8,7 +8,7 @@ use App\Models\Creator\Creator as ModelsCreator;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
 use PHPUnit\Framework\Attributes\Test;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Support\UseCase\Error\BusinessLogicError;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;

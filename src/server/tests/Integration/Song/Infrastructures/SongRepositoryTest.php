@@ -9,8 +9,8 @@ use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
-use SongType\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 

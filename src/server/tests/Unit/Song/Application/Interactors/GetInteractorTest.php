@@ -14,7 +14,7 @@ use Song\Application\Interactors\GetInteractor;
 use Song\Application\UseCase\Get\GetInputData;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -67,8 +67,8 @@ class GetInteractorTest extends TestCase
                     $song->songId->value,
                     $song->title->value,
                     $song->description->value,
-                    $song->songType->getName(),
-                    $song->songType->value,
+                    $song->type->getName(),
+                    $song->type->value,
                     null,
                     null,
                     $song->orderNo->value,
@@ -88,8 +88,8 @@ class GetInteractorTest extends TestCase
         $this->assertSame($songId, $response->song->songId);
         $this->assertSame('描き続けた君へ', $response->song->title);
         $this->assertSame('オリジナル楽曲', $response->song->description);
-        $this->assertSame(SongType::Original->getName(), $response->song->songTypeName);
-        $this->assertSame(SongType::Original->value, $response->song->songTypeValue);
+        $this->assertSame(SongType::Original->getName(), $response->song->typeName);
+        $this->assertSame(SongType::Original->value, $response->song->typeValue);
         $this->assertSame(1, $response->song->orderNo);
 
         $this->assertCount(1, $response->song->lyricists);

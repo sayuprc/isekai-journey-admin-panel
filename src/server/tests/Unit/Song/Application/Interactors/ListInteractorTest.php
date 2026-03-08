@@ -12,7 +12,7 @@ use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Application\Interactors\ListInteractor;
 use Song\Domain\Models\SongRepositoryInterface;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -88,8 +88,8 @@ class ListInteractorTest extends TestCase
                     $song1->songId->value,
                     $song1->title->value,
                     $song1->description->value,
-                    $song1->songType->getName(),
-                    $song1->songType->value,
+                    $song1->type->getName(),
+                    $song1->type->value,
                     null,
                     null,
                     $song1->orderNo->value,
@@ -107,8 +107,8 @@ class ListInteractorTest extends TestCase
                     $song2->songId->value,
                     $song2->title->value,
                     $song2->description->value,
-                    $song2->songType->getName(),
-                    $song2->songType->value,
+                    $song2->type->getName(),
+                    $song2->type->value,
                     null,
                     null,
                     $song2->orderNo->value,
@@ -128,8 +128,8 @@ class ListInteractorTest extends TestCase
 
         $this->assertSame('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', $response->songs[0]->songId);
         $this->assertSame('描き続けた君へ', $response->songs[0]->title);
-        $this->assertSame(SongType::Original->getName(), $response->songs[0]->songTypeName);
-        $this->assertSame(SongType::Original->value, $response->songs[0]->songTypeValue);
+        $this->assertSame(SongType::Original->getName(), $response->songs[0]->typeName);
+        $this->assertSame(SongType::Original->value, $response->songs[0]->typeValue);
         $this->assertSame(1, $response->songs[0]->orderNo);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame($lyricistId, $response->songs[0]->lyricists[0]->creatorId);
@@ -144,8 +144,8 @@ class ListInteractorTest extends TestCase
 
         $this->assertSame('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', $response->songs[1]->songId);
         $this->assertSame('全部夢だった！', $response->songs[1]->title);
-        $this->assertSame(SongType::Cover->getName(), $response->songs[1]->songTypeName);
-        $this->assertSame(SongType::Cover->value, $response->songs[1]->songTypeValue);
+        $this->assertSame(SongType::Cover->getName(), $response->songs[1]->typeName);
+        $this->assertSame(SongType::Cover->value, $response->songs[1]->typeValue);
         $this->assertSame(2, $response->songs[1]->orderNo);
         $this->assertCount(1, $response->songs[1]->lyricists);
         $this->assertSame($lyricistId, $response->songs[1]->lyricists[0]->creatorId);

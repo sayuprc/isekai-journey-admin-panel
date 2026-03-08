@@ -6,9 +6,9 @@ namespace Tests\Feature\Api\Song;
 
 use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
-use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -54,7 +54,7 @@ class GetSongTest extends DatabaseTestCase
                     'songId' => $songId,
                     'title' => '描き続けた君へ',
                     'description' => 'オリジナル楽曲',
-                    'songType' => [
+                    'type' => [
                         'name' => 'オリジナル曲',
                         'value' => 1,
                     ],

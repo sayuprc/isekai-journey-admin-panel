@@ -29,7 +29,7 @@ readonly class ListAttributeInteractor implements ListAttributeUseCaseInterface
             return new Err(new AuthenticationError());
         }
 
-        if (! $user->can(Permission::ReadSongAttribute)) {
+        if (! $user->can(Permission::ReadSong)) {
             return new Err(new AuthorizationError());
         }
 

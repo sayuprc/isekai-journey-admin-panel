@@ -6,7 +6,7 @@ namespace Tests\Integration\Song\Application\Interactors;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\ListInteractor;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -59,8 +59,8 @@ class ListInteractorTest extends DatabaseTestCase
 
         $this->assertSame($song1->songId->value, $response->songs[0]->songId);
         $this->assertSame('描き続けた君へ', $response->songs[0]->title);
-        $this->assertSame(SongType::Original->getName(), $response->songs[0]->songTypeName);
-        $this->assertSame(SongType::Original->value, $response->songs[0]->songTypeValue);
+        $this->assertSame(SongType::Original->getName(), $response->songs[0]->typeName);
+        $this->assertSame(SongType::Original->value, $response->songs[0]->typeValue);
         $this->assertSame(1, $response->songs[0]->orderNo);
         $this->assertCount(1, $response->songs[0]->lyricists);
         $this->assertSame($lyricistId, $response->songs[0]->lyricists[0]->creatorId);
@@ -74,8 +74,8 @@ class ListInteractorTest extends DatabaseTestCase
 
         $this->assertSame($song2->songId->value, $response->songs[1]->songId);
         $this->assertSame('全部夢だった！', $response->songs[1]->title);
-        $this->assertSame(SongType::Cover->getName(), $response->songs[1]->songTypeName);
-        $this->assertSame(SongType::Cover->value, $response->songs[1]->songTypeValue);
+        $this->assertSame(SongType::Cover->getName(), $response->songs[1]->typeName);
+        $this->assertSame(SongType::Cover->value, $response->songs[1]->typeValue);
         $this->assertSame(2, $response->songs[1]->orderNo);
         $this->assertCount(1, $response->songs[1]->lyricists);
         $this->assertSame($lyricistId, $response->songs[1]->lyricists[0]->creatorId);

@@ -10,9 +10,9 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
 use Song\Infrastructures\SongFactory;
-use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
@@ -36,7 +36,7 @@ class SongFactoryTest extends TestCase
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $song->songId->value);
         $this->assertSame('描き続けた君へ', $song->title->value);
         $this->assertSame('オリジナル楽曲', $song->description->value);
-        $this->assertSame(SongType::Original, $song->songType);
+        $this->assertSame(SongType::Original, $song->type);
         $this->assertSame(1, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->lyricists[0]->creatorId->value);

@@ -15,7 +15,7 @@ readonly class UpdateInputData
         public string $songId,
         public string $title,
         public string $description,
-        public int $songTypeValue,
+        public int $typeValue,
         public int $orderNo,
         public array $lyricists,
         public array $composers,
