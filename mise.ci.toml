@@ -12,7 +12,7 @@ MYSQL_DOCKER_PATH = "/tmp/cache/docker/mysql"
 MYSQL_DOCKER_KEY_PREFIX = "docker-mysql-"
 
 [tasks."build:php"]
-description = "QA 向けに PHP イメージをビルドして GHCR にプッシュする"
+description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
 run = '''
 touch ./docker/php/certs/rootCA.pem
 docker build -t $SERVER_IMAGE ./docker/php \
@@ -26,7 +26,7 @@ mkdir -p $SERVER_DOCKER_PATH
 '''
 
 [tasks."build:openapi-generator"]
-description = "QA 向けに OpenAPI Generator イメージをビルドして GHCR にプッシュする"
+description = "CI 向けに OpenAPI Generator イメージをビルドして GHCR にプッシュする"
 run = '''
 docker build -t $OPENAPI_IMAGE ./docker/openapi-generator \
   --build-arg TAG={{vars.openapi_tag}} \
@@ -39,7 +39,7 @@ mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
 '''
 
 [tasks."build:mysql"]
-description = "QA 向けに MySQL イメージをビルドして GHCR にプッシュする"
+description = "CI 向けに MySQL イメージをビルドして GHCR にプッシュする"
 run = '''
 docker build -t $MYSQL_IMAGE ./docker/mysql \
   --build-arg TAG={{vars.mysql_tag}}
@@ -48,15 +48,15 @@ mkdir -p $MYSQL_DOCKER_PATH
 '''
 
 [tasks.up]
-description = "QA 環境でコンテナを起動する"
+description = "CI 環境でコンテナを起動する"
 run = "docker compose up -d php mysql"
 
 [tasks."composer:install"]
-description = "QA 環境で composer install を実行する"
+description = "CI 環境で composer install を実行する"
 run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
 
 [tasks."generate:server"]
-description = "QA 環境でコード生成を行い、差分をチェックする"
+description = "CI 環境でコード生成を行い、差分をチェックする"
 run = '''
 docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
   -i /local/src/contracts/generated/oas/${OAS_FILE} \
@@ -72,14 +72,14 @@ fi
 '''
 
 [tasks."setup:env"]
-description = "QA 環境の環境変数をセットアップする"
+description = "CI 環境の環境変数をセットアップする"
 run = '''
 cp src/server/.env.example src/server/.env
 docker exec {{vars.server_container}} php artisan key:generate
 '''
 
 [tasks.migrate]
-description = "QA 環境でスキーマをデータベースに適用する"
+description = "CI 環境でスキーマをデータベースに適用する"
 dir = "src/server/database/atlas"
 run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --auto-approve'
 
@@ -87,7 +87,7 @@ run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --auto-appr
 _.file = "src/server/.env"
 
 [tasks."generate:client"]
-description = "QA 環境でクライアントコード生成を行い、差分をチェックする"
+description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
 dir = "src/client"
 run = '''
 bun run generate:api

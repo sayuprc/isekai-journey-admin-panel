@@ -9,7 +9,7 @@ on:
       - dev
 
 env:
-  MISE_ENV: qa
+  MISE_ENV: ci
 
 jobs:
   setup:
