@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Creator\Infrastructures;
 
 use App\Models\Creator\Creator as ModelsCreator;
+use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
@@ -24,6 +25,40 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
             ->get()
             ->map($this->hydrate(...))
             ->all();
+    }
+
+    public function search(CreatorSearchCriteria $criteria): array
+    {
+        $query = ModelsCreator::query();
+
+        if ($criteria->name->isPresent()) {
+            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+        }
+
+        $offset = ($criteria->page - 1) * $criteria->perPage->value;
+
+        return $query->orderBy($criteria->sort->value, $criteria->order->value)
+            ->limit($criteria->perPage->value)
+            ->offset($offset)
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    public function maxPage(CreatorSearchCriteria $criteria): int
+    {
+        $query = ModelsCreator::query();
+
+        if ($criteria->name->isPresent()) {
+            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+        }
+
+        return (int)ceil($query->count() / $criteria->perPage->value);
+    }
+
+    private function likeEscape(string $keyword): string
+    {
+        return addcslashes($keyword, '%_\\');
     }
 
     public function find(CreatorId $creatorId): ?Creator

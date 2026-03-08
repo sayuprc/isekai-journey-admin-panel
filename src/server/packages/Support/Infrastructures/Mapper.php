@@ -35,6 +35,8 @@ readonly class Mapper implements MapperInterface
             ->registerConstructor(Performer::reconstruct(...))
             ->registerConstructor(Song::reconstruct(...))
             ->allowSuperfluousKeys()
+            // 場合によって builder を DI できるようにして適宜変えるのがよさそう
+            ->allowScalarValueCasting()
             ->supportDateFormats('Y-m-d', 'Y-m-d H:i:s')
             ->mapper()
             ->map($signature, Source::json($json)->camelCaseKeys());
