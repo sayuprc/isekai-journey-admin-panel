@@ -1,13 +1,15 @@
 import { Show } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
+import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
 export const CreateForm = () => {
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
+  const { isSubmitting, withSubmitting } = createSubmitting();
 
-  const handleSubmit = async (e: Event) => {
+  const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
     clearErrors();
 
@@ -25,7 +27,7 @@ export const CreateForm = () => {
     }
 
     handleError(status, error);
-  };
+  });
 
   return (
     <form onsubmit={handleSubmit}>
@@ -39,7 +41,9 @@ export const CreateForm = () => {
         </Show>
 
         <div class="mt-6 flex justify-end">
-          <button class="btn btn-primary">作成</button>
+          <button class="btn btn-primary" disabled={isSubmitting()}>
+            {isSubmitting() ? '作成中...' : '作成'}
+          </button>
         </div>
       </fieldset>
     </form>

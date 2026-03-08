@@ -1,13 +1,15 @@
 import { Show } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
+import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
 export const LoginForm = () => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
+  const { isSubmitting, withSubmitting } = createSubmitting();
 
-  const handleSubmit = async (e: Event) => {
+  const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
     clearErrors();
 
@@ -31,7 +33,7 @@ export const LoginForm = () => {
     }
 
     handleError(status, error);
-  };
+  });
 
   return (
     <form onsubmit={handleSubmit}>
@@ -49,7 +51,9 @@ export const LoginForm = () => {
           {message => <p class="mt-1 text-xs text-error">{message()}</p>}
         </Show>
 
-        <button class="btn btn-primary mt-4">ログイン</button>
+        <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
+          {isSubmitting() ? 'ログイン中...' : 'ログイン'}
+        </button>
       </fieldset>
     </form>
   );
