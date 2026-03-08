@@ -9,6 +9,7 @@ use App\Models\Song\SongArranger;
 use App\Models\Song\SongComposer;
 use App\Models\Song\SongLyricist;
 use Creator\Domain\Models\CreatorId;
+use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -27,6 +28,56 @@ readonly class SongRepository implements SongRepositoryInterface
             ->get()
             ->map($this->hydrate(...))
             ->all();
+    }
+
+    public function search(SongSearchCriteria $criteria): array
+    {
+        $query = ModelsSong::query();
+
+        if ($criteria->title->isPresent()) {
+            $query = $query->whereLike('title', '%' . $this->likeEscape($criteria->title->get()) . '%');
+        }
+
+        if ($criteria->type->isPresent()) {
+            $query = $query->where('type', $criteria->type->get());
+        }
+
+        if ($criteria->attribute->isPresent()) {
+            $query = $query->where('attribute', $criteria->attribute->get());
+        }
+
+        $offset = ($criteria->page - 1) * $criteria->perPage->value;
+
+        return $query->orderBy($criteria->sort->value, $criteria->order->value)
+            ->limit($criteria->perPage->value)
+            ->offset($offset)
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    public function maxPage(SongSearchCriteria $criteria): int
+    {
+        $query = ModelsSong::query();
+
+        if ($criteria->title->isPresent()) {
+            $query = $query->whereLike('title', '%' . $this->likeEscape($criteria->title->get()) . '%');
+        }
+
+        if ($criteria->type->isPresent()) {
+            $query = $query->where('type', $criteria->type->get());
+        }
+
+        if ($criteria->attribute->isPresent()) {
+            $query = $query->where('attribute', $criteria->attribute->get());
+        }
+
+        return (int)ceil($query->count() / $criteria->perPage->value);
+    }
+
+    private function likeEscape(string $keyword): string
+    {
+        return addcslashes($keyword, '%_\\');
     }
 
     public function find(SongId $songId): ?Song
