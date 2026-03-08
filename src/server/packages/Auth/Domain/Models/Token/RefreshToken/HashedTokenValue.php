@@ -6,6 +6,6 @@ namespace Auth\Domain\Models\Token\RefreshToken;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-readonly class TokenValue extends StringValueObject
+readonly class HashedTokenValue extends StringValueObject
 {
 }

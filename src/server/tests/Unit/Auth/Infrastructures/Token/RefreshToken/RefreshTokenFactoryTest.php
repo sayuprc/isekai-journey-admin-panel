@@ -7,8 +7,8 @@ namespace Tests\Unit\Auth\Infrastructures\Token\RefreshToken;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
@@ -29,7 +29,7 @@ class RefreshTokenFactoryTest extends TestCase
         $refreshToken = $this->getInstance()->create(
             RefreshTokenId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
             AdminUserId::reconstruct('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-            TokenValue::reconstruct('aaaaaaaaaa'),
+            HashedTokenValue::reconstruct('aaaaaaaaaa'),
             ExpiredAt::reconstruct(now()->toDateTimeImmutable()),
             ConsumptionStatus::Unused,
         );

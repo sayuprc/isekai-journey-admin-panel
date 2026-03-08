@@ -13,7 +13,7 @@ readonly class RefreshToken
     public function __construct(
         public RefreshTokenId $refreshTokenId,
         public AdminUserId $adminUserId,
-        public TokenValue $token,
+        public HashedTokenValue $token,
         private ExpiredAt $expiredAt,
         private ConsumptionStatus $status,
     ) {
@@ -29,7 +29,7 @@ readonly class RefreshToken
         return new self(
             RefreshTokenId::reconstruct($refreshTokenId),
             AdminUserId::reconstruct($adminUserId),
-            TokenValue::reconstruct($token),
+            HashedTokenValue::reconstruct($token),
             ExpiredAt::reconstruct($expiredAt),
             ConsumptionStatus::from($status),
         );

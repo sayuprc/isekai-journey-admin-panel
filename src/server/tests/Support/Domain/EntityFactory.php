@@ -11,9 +11,9 @@ use Auth\Domain\Models\Token\AccessToken\AccessToken;
 use Auth\Domain\Models\Token\AccessToken\Jwt;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
@@ -114,7 +114,7 @@ trait EntityFactory
         return new RefreshToken(
             RefreshTokenId::reconstruct($refreshTokenId),
             AdminUserId::reconstruct($adminUserId),
-            TokenValue::reconstruct($tokenValue),
+            HashedTokenValue::reconstruct($tokenValue),
             ExpiredAt::reconstruct($expiredAt),
             $status,
         );

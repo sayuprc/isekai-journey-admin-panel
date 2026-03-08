@@ -7,9 +7,9 @@ namespace Tests\Unit\Auth\Domain\Services\Token\RefreshToken;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
@@ -91,7 +91,7 @@ class RefreshTokenIssueServiceTest extends TestCase
                 fn (
                     RefreshTokenId $id,
                     AdminUserId $adminUserIdArg,
-                    TokenValue $token,
+                    HashedTokenValue $token,
                     ExpiredAt $expiredAt,
                     ConsumptionStatus $status,
                 ): bool => $id->value === $generatedUuid

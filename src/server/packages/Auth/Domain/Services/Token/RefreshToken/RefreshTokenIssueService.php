@@ -7,10 +7,10 @@ namespace Auth\Domain\Services\Token\RefreshToken;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -45,7 +45,7 @@ class RefreshTokenIssueService
         $result = Result::collect4(
             RefreshTokenId::create($this->uuidGenerator->generate()),
             AdminUserId::create($adminUserId),
-            TokenValue::create($hashedToken),
+            HashedTokenValue::create($hashedToken),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
         )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));
 
