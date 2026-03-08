@@ -11,6 +11,7 @@ use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\SqlHelper;
 
 readonly class PerformerRepository implements PerformerRepositoryInterface
 {
@@ -32,7 +33,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
         }
 
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
@@ -50,15 +51,10 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
         }
 
         return (int)ceil($query->count() / $criteria->perPage->value);
-    }
-
-    private function likeEscape(string $keyword): string
-    {
-        return addcslashes($keyword, '%_\\');
     }
 
     public function find(PerformerId $performerId): ?Performer

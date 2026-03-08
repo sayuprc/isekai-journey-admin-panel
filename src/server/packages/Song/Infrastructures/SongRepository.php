@@ -14,6 +14,7 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\SqlHelper;
 
 readonly class SongRepository implements SongRepositoryInterface
 {
@@ -35,7 +36,7 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $query = $query->whereLike('title', '%' . $this->likeEscape($criteria->title->get()) . '%');
+            $query = $query->whereLike('title', '%' . SqlHelper::escapeLike($criteria->title->get()) . '%');
         }
 
         if ($criteria->type->isPresent()) {
@@ -61,7 +62,7 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $query = $query->whereLike('title', '%' . $this->likeEscape($criteria->title->get()) . '%');
+            $query = $query->whereLike('title', '%' . SqlHelper::escapeLike($criteria->title->get()) . '%');
         }
 
         if ($criteria->type->isPresent()) {
@@ -73,11 +74,6 @@ readonly class SongRepository implements SongRepositoryInterface
         }
 
         return (int)ceil($query->count() / $criteria->perPage->value);
-    }
-
-    private function likeEscape(string $keyword): string
-    {
-        return addcslashes($keyword, '%_\\');
     }
 
     public function find(SongId $songId): ?Song
