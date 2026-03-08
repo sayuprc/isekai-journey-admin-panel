@@ -29,7 +29,7 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
   mysql:
-    image: mysql:8.4
+    image: ${MYSQL_IMAGE}
     container_name: isekai-terrarium-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -41,8 +41,6 @@ services:
       - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
 
   redis:
     image: redis:8.2

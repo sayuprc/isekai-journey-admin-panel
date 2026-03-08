@@ -62,6 +62,17 @@ jobs:
         if: steps.cache-openapi-generator-cli-docker-image.outputs.cache-hit != 'true'
         run: mise run build:openapi-generator
 
+      - name: Cache mysql docker image
+        id: cache-mysql-docker-image
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.MYSQL_DOCKER_PATH }}
+          key: ${{ env.MYSQL_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/mysql/Dockerfile', './docker/mysql/my.cnf', './docker/mysql/init/*') }}
+
+      - name: Build mysql image
+        if: steps.cache-mysql-docker-image.outputs.cache-hit != 'true'
+        run: mise run build:mysql
+
       - name: Copy .env
         run: cp src/server/.env.example src/server/.env
 
@@ -205,6 +216,19 @@ jobs:
       - name: Run Container
         run: mise run up
 
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec isekai-terrarium-mysql mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; then
+              echo "MySQL is ready"
+              exit 0
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+          echo "MySQL did not become ready in time"
+          exit 1
+
       - name: Cache composer
         id: cache-composer
         uses: actions/cache@v4
@@ -215,7 +239,8 @@ jobs:
       - name: Setup env
         run: mise run setup:env
 
-      # TODO DB マイグレーションを実行する
+      - name: Run migration
+        run: mise run migrate
 
       - name: Run PHPUnit
         run: mise run test:all
