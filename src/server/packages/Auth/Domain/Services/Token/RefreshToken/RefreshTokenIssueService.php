@@ -14,7 +14,6 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use SensitiveParameter;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
@@ -37,7 +36,7 @@ class RefreshTokenIssueService
     /**
      * @return Result<array{token: RefreshToken, plainToken: string}, DomainError>
      */
-    public function issue(#[SensitiveParameter] string $adminUserId): Result
+    public function issue(string $adminUserId): Result
     {
         $plainToken = $this->randomTokenGenerator->generate();
         $hashedToken = $this->tokenHasher->hash($plainToken);
