@@ -7,10 +7,10 @@ namespace Auth\Domain\Services\Token\RefreshToken;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,18 +29,22 @@ class RefreshTokenIssueService
         private readonly UuidGeneratorInterface $uuidGenerator,
         private readonly RandomTokenGeneratorInterface $randomTokenGenerator,
         private readonly RefreshTokenFactoryInterface $factory,
+        private readonly TokenHasherInterface $tokenHasher,
     ) {
     }
 
     /**
-     * @return Result<RefreshToken, DomainError>
+     * @return Result<array{token: RefreshToken, plainToken: string}, DomainError>
      */
     public function issue(string $adminUserId): Result
     {
+        $plainToken = $this->randomTokenGenerator->generate();
+        $hashedToken = $this->tokenHasher->hash($plainToken);
+
         $result = Result::collect4(
             RefreshTokenId::create($this->uuidGenerator->generate()),
             AdminUserId::create($adminUserId),
-            TokenValue::create($this->randomTokenGenerator->generate()),
+            HashedTokenValue::create($hashedToken),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
         )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));
 
@@ -56,6 +60,9 @@ class RefreshTokenIssueService
             return new Err(new DomainValidationError($messages));
         }
 
-        return new Ok($result->unwrap());
+        return new Ok([
+            'token' => $result->unwrap(),
+            'plainToken' => $plainToken,
+        ]);
     }
 }

@@ -43,9 +43,11 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function save(RefreshToken $refreshToken): RefreshToken
     {
+        $data = $refreshToken->toArray();
+
         $this->store->save(
             $this->filePath,
-            $refreshToken->toArray(),
+            $data,
             array_keys(
                 array_filter(
                     $this->loadAll(),

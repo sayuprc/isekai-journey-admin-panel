@@ -7,11 +7,12 @@ namespace Tests\Unit\Auth\Domain\Services\Token\RefreshToken;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
+use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Auth\Domain\Models\Token\RefreshToken\TokenValue;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
+use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
@@ -33,6 +34,8 @@ class RefreshTokenIssueServiceTest extends TestCase
 
     private MockInterface&RefreshTokenFactoryInterface $factory;
 
+    private MockInterface&TokenHasherInterface $tokenHasher;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +44,7 @@ class RefreshTokenIssueServiceTest extends TestCase
         $this->uuidGenerator = Mockery::mock(UuidGeneratorInterface::class);
         $this->randomTokenGenerator = Mockery::mock(RandomTokenGeneratorInterface::class);
         $this->factory = Mockery::mock(RefreshTokenFactoryInterface::class);
+        $this->tokenHasher = Mockery::mock(TokenHasherInterface::class);
     }
 
     #[Test]
@@ -49,6 +53,7 @@ class RefreshTokenIssueServiceTest extends TestCase
         $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $generatedUuid = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
         $generatedToken = 'random-token-value-12345678901234567890123456789012';
+        $hashedToken = 'hashed-token-value';
         $now = new DateTimeImmutable('2026-02-01 00:00:00');
 
         $this->clock->shouldReceive('now')
@@ -66,12 +71,17 @@ class RefreshTokenIssueServiceTest extends TestCase
             ->andReturn($generatedToken)
             ->once();
 
+        $this->tokenHasher->shouldReceive('hash')
+            ->with($generatedToken)
+            ->andReturn($hashedToken)
+            ->once();
+
         $expectedExpiredAt = $now->modify('+7 days');
 
         $expectedRefreshToken = $this->createRefreshToken(
             $generatedUuid,
             $adminUserId,
-            $generatedToken,
+            $hashedToken,
             $expectedExpiredAt,
             ConsumptionStatus::Unused,
         );
@@ -81,12 +91,12 @@ class RefreshTokenIssueServiceTest extends TestCase
                 fn (
                     RefreshTokenId $id,
                     AdminUserId $adminUserIdArg,
-                    TokenValue $token,
+                    HashedTokenValue $token,
                     ExpiredAt $expiredAt,
                     ConsumptionStatus $status,
                 ): bool => $id->value === $generatedUuid
                     && $adminUserIdArg->value === $adminUserId
-                    && $token->value === $generatedToken
+                    && $token->value === $hashedToken
                     && $expiredAt->value->getTimestamp() === $expectedExpiredAt->getTimestamp()
                     && $status === ConsumptionStatus::Unused,
             )
@@ -96,7 +106,12 @@ class RefreshTokenIssueServiceTest extends TestCase
         $result = $this->getInstance()->issue($adminUserId);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedRefreshToken, $result->unwrap());
+        $unwrapped = $result->unwrap();
+        $this->assertIsArray($unwrapped);
+        $this->assertArrayHasKey('token', $unwrapped);
+        $this->assertArrayHasKey('plainToken', $unwrapped);
+        $this->assertSame($expectedRefreshToken, $unwrapped['token']);
+        $this->assertSame($generatedToken, $unwrapped['plainToken']);
     }
 
     private function getInstance(): RefreshTokenIssueService
@@ -106,6 +121,7 @@ class RefreshTokenIssueServiceTest extends TestCase
             $this->uuidGenerator,
             $this->randomTokenGenerator,
             $this->factory,
+            $this->tokenHasher,
         );
     }
 }

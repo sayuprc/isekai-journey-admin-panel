@@ -40,13 +40,13 @@ readonly class LoginInteractor implements LoginUseCaseInterface
                 return new Err($this->handleError($result->unwrapErr()));
             }
 
-            $refreshToken = $result->unwrap();
+            ['token' => $refreshToken, 'plainToken' => $plainToken] = $result->unwrap();
 
             $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
 
             $this->refreshTokenRepository->save($refreshToken);
 
-            return new Ok(new LoginOutputData($accessToken, $refreshToken));
+            return new Ok(new LoginOutputData($accessToken, $plainToken));
         });
     }
 
