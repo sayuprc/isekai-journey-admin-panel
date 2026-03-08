@@ -17,6 +17,8 @@ class SqlHelper
      *
      * @param string $keyword エスケープする文字列
      * @return string エスケープされた文字列
+     *
+     * @pure
      */
     public static function escapeLike(string $keyword): string
     {
