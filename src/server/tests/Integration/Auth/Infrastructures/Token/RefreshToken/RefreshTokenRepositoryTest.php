@@ -183,7 +183,6 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
         $repository = $this->getInstance();
         $repository->save($refreshToken);
 
-        // Check that the token in DB is hashed, not plain text
         $converter = $this->app->make(UuidConverterInterface::class);
         $stored = AuthRefreshToken::query()
             ->where('refresh_token_id', $converter->toBin($refreshToken->refreshTokenId->value))
@@ -192,7 +191,6 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
         $this->assertNotNull($stored);
         $this->assertNotEquals($plainToken, $stored->token);
 
-        // Verify that the hash can be verified with the plain token
         $hasher = $this->app->make(TokenHasherInterface::class);
         $this->assertTrue($hasher->verify($plainToken, $stored->token));
     }

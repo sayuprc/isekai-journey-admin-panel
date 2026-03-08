@@ -19,7 +19,7 @@ class TokenHasherTest extends TestCase
         $hashedToken = $hasher->hash($plainToken);
 
         $this->assertNotEquals($plainToken, $hashedToken);
-        $this->assertStringStartsWith('$2y$', $hashedToken); // bcrypt format
+        $this->assertStringStartsWith('$2y$', $hashedToken);
     }
 
     #[Test]
@@ -56,9 +56,7 @@ class TokenHasherTest extends TestCase
         $hash1 = $hasher->hash($plainToken);
         $hash2 = $hasher->hash($plainToken);
 
-        // bcrypt includes a salt, so hashes should be different
         $this->assertNotEquals($hash1, $hash2);
-        // But both should verify correctly
         $this->assertTrue($hasher->verify($plainToken, $hash1));
         $this->assertTrue($hasher->verify($plainToken, $hash2));
     }
