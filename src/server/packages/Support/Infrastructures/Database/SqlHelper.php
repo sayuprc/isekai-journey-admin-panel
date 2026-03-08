@@ -16,10 +16,6 @@ class SqlHelper
      * これにより、ユーザー入力を安全に LIKE 検索に使用できます。
      *
      * @pure
-     *
-     * @param string $keyword エスケープする文字列
-     *
-     * @return string エスケープされた文字列
      */
     public static function escapeLike(string $keyword): string
     {
