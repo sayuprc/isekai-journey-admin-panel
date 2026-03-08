@@ -12,6 +12,7 @@ readonly class LoginOutputData
     public function __construct(
         public AccessToken $accessToken,
         public RefreshToken $refreshToken,
+        public string $plainRefreshToken,
     ) {
     }
 }

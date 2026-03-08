@@ -50,7 +50,8 @@ class LoginInteractorTest extends TestCase
 
         $tokenId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $adminUserId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
-        $token = 'token';
+        $hashedToken = 'hashed-token';
+        $plainToken = 'plain-token';
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -61,7 +62,10 @@ class LoginInteractorTest extends TestCase
 
         $this->refreshTokenIssueService->shouldReceive('issue')
             ->with($adminUserId)
-            ->andReturn(new Ok($this->createRefreshToken($tokenId, $adminUserId, $token, $now, ConsumptionStatus::Unused)))
+            ->andReturn(new Ok([
+                'token' => $this->createRefreshToken($tokenId, $adminUserId, $hashedToken, $now, ConsumptionStatus::Unused),
+                'plainToken' => $plainToken,
+            ]))
             ->once();
 
         $this->accessTokenIssueService->shouldReceive('issue')
@@ -73,7 +77,7 @@ class LoginInteractorTest extends TestCase
             ->withArgs(
                 fn (RefreshToken $arg) => $arg->refreshTokenId->value === $tokenId
                     && $arg->adminUserId->value === $adminUserId
-                    && $arg->token->value === $token,
+                    && $arg->token->value === $hashedToken,
             )
             ->andReturnArg(0)
             ->once();

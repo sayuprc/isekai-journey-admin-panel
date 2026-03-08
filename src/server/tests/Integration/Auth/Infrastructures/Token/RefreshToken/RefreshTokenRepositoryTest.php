@@ -164,18 +164,21 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function saveHashesTokenBeforeStoring(): void
+    public function saveStoresHashedTokenDirectly(): void
     {
         Carbon::setTestNow('2026-01-01 00:00:00');
 
         $adminUser = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], new DateTimeImmutable());
         $this->app->make(AdminUserRepository::class)->register($adminUser, HashedPassword::reconstruct('hashed-password'));
 
+        $hasher = $this->app->make(TokenHasherInterface::class);
         $plainToken = 'my-plain-token-value-12345';
+        $hashedToken = $hasher->hash($plainToken);
+
         $refreshToken = $this->createRefreshToken(
             $this->generateUuid(),
             $adminUser->adminUserId->value,
-            $plainToken,
+            $hashedToken,
             now()->addMinutes(30)->toDateTimeImmutable(),
             ConsumptionStatus::Unused,
         );
@@ -189,9 +192,7 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
             ->first();
 
         $this->assertNotNull($stored);
-        $this->assertNotEquals($plainToken, $stored->token);
-
-        $hasher = $this->app->make(TokenHasherInterface::class);
+        $this->assertEquals($hashedToken, $stored->token);
         $this->assertTrue($hasher->verify($plainToken, $stored->token));
     }
 
