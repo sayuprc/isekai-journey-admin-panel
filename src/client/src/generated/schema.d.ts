@@ -56,6 +56,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/creators/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description クリエイター検索API */
+        get: operations["CreatorService_searchCreators"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/creators/{creatorId}": {
         parameters: {
             query?: never;
@@ -87,6 +104,23 @@ export interface paths {
         put?: never;
         /** @description 共演者作成API */
         post: operations["PerformerService_createPerformer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/performers/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共演者検索API */
+        get: operations["PerformerService_searchPerformers"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -256,6 +290,16 @@ export interface components {
         CreatorListResponse: {
             creators: components["schemas"]["Creator"][];
         };
+        CreatorSearchResponse: {
+            creators: components["schemas"]["Creator"][];
+            /** Format: int32 */
+            maxPage: number;
+        };
+        /**
+         * @description クリエイター検索のソート条件
+         * @enum {string}
+         */
+        CreatorSearchSortBy: "name" | "order_no";
         CreatorUpdateRequest: {
             name: components["schemas"]["creatorName"];
             orderNo: components["schemas"]["orderNo"];
@@ -308,6 +352,16 @@ export interface components {
         PerformerListResponse: {
             performers: components["schemas"]["Performer"][];
         };
+        PerformerSearchResponse: {
+            performers: components["schemas"]["Performer"][];
+            /** Format: int32 */
+            maxPage: number;
+        };
+        /**
+         * @description 共演者検索のソート条件
+         * @enum {string}
+         */
+        PerformerSearchSortBy: "name" | "order_no";
         PerformerUpdateRequest: {
             name: components["schemas"]["performerName"];
             orderNo: components["schemas"]["orderNo"];
@@ -477,6 +531,11 @@ export interface components {
         SongUpdateResponse: {
             song: components["schemas"]["Song"];
         };
+        /**
+         * @description ソート順
+         * @enum {string}
+         */
+        SortOrder: "asc" | "desc";
         ValidationError: {
             errors: components["schemas"]["ValidationErrorDetail"][];
         };
@@ -801,6 +860,67 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CreatorService_searchCreators: {
+        parameters: {
+            query?: {
+                name?: string;
+                sort?: components["schemas"]["CreatorSearchSortBy"];
+                order?: components["schemas"]["SortOrder"];
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatorSearchResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
@@ -1169,6 +1289,67 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PerformerService_searchPerformers: {
+        parameters: {
+            query?: {
+                name?: string;
+                sort?: components["schemas"]["PerformerSearchSortBy"];
+                order?: components["schemas"]["SortOrder"];
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PerformerSearchResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {
