@@ -6,14 +6,14 @@ namespace Tests\Unit\Auth\Infrastructures\Token\RefreshToken;
 
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class TokenHasherTest extends TestCase
 {
     #[Test]
     public function hashCreatesHashedToken(): void
     {
-        $hasher = new TokenHasher();
+        $hasher = $this->getInstance();
         $plainToken = 'my-plain-token-value-12345';
 
         $hashedToken = $hasher->hash($plainToken);
@@ -25,7 +25,7 @@ class TokenHasherTest extends TestCase
     #[Test]
     public function verifyReturnsTrueForMatchingToken(): void
     {
-        $hasher = new TokenHasher();
+        $hasher = $this->getInstance();
         $plainToken = 'my-plain-token-value-12345';
         $hashedToken = $hasher->hash($plainToken);
 
@@ -37,7 +37,7 @@ class TokenHasherTest extends TestCase
     #[Test]
     public function verifyReturnsFalseForNonMatchingToken(): void
     {
-        $hasher = new TokenHasher();
+        $hasher = $this->getInstance();
         $plainToken = 'my-plain-token-value-12345';
         $wrongToken = 'different-token-value';
         $hashedToken = $hasher->hash($plainToken);
@@ -50,7 +50,7 @@ class TokenHasherTest extends TestCase
     #[Test]
     public function hashCreatesUniqueHashesForSameInput(): void
     {
-        $hasher = new TokenHasher();
+        $hasher = $this->getInstance();
         $plainToken = 'my-plain-token-value-12345';
 
         $hash1 = $hasher->hash($plainToken);
@@ -59,5 +59,10 @@ class TokenHasherTest extends TestCase
         $this->assertNotEquals($hash1, $hash2);
         $this->assertTrue($hasher->verify($plainToken, $hash1));
         $this->assertTrue($hasher->verify($plainToken, $hash2));
+    }
+
+    private function getInstance(): TokenHasher
+    {
+        return new TokenHasher();
     }
 }
