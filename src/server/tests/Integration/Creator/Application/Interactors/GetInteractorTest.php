@@ -6,23 +6,22 @@ namespace Tests\Integration\Creator\Application\Interactors;
 
 use Creator\Application\Interactors\GetInteractor;
 use Creator\Application\UseCase\Get\GetInputData;
-use Creator\DebugInfrastructures\FileCreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class GetInteractorTest extends TestCase
+class GetInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function getCreator(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒', 1)->toArray());
+        $this->storeCreators($this->createCreator($uuid, 'ヰ世界情緒', 1));
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 

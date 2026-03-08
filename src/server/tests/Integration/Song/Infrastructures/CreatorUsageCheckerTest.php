@@ -6,24 +6,24 @@ namespace Tests\Integration\Song\Infrastructures;
 
 use Creator\Domain\Models\CreatorId;
 use PHPUnit\Framework\Attributes\Test;
-use Song\DebugInfrastructures\FileSongRepository;
 use Song\Infrastructures\CreatorUsageChecker;
 use SongType\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class CreatorUsageCheckerTest extends TestCase
+class CreatorUsageCheckerTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function isUsed(): void
     {
         $creatorId = $this->generateUuid();
 
-        $this->factory(FileSongRepository::class, $this->createSong(
+        $this->storeCreators($this->createCreator($creatorId, 'テスト', 1));
+        $this->storeSongs($this->createSong(
             $this->generateUuid(),
             '曲名',
             '説明',
@@ -33,7 +33,7 @@ class CreatorUsageCheckerTest extends TestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
-        )->toArray());
+        ));
 
         $result = $this->getInstance()->isUsed(CreatorId::reconstruct($creatorId));
 

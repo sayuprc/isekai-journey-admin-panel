@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Creator\Application\Interactors;
 
+use App\Models\Creator\Creator as ModelsCreator;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class CreateInteractorTest extends TestCase
+class CreateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function create(): void
@@ -25,9 +22,9 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
+        $creators = ModelsCreator::query()->get();
         $this->assertCount(1, $creators);
-        $this->assertSame('ヰ世界情緒', array_first($creators)->name->value);
+        $this->assertSame('ヰ世界情緒', $creators->first()->name);
     }
 
     private function getInstance(): CreateInteractor

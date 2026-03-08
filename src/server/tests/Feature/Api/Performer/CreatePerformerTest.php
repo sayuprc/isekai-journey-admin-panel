@@ -8,12 +8,10 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\DatabaseTestCase;
 
-class CreatePerformerTest extends TestCase
+class CreatePerformerTest extends DatabaseTestCase
 {
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]

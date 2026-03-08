@@ -61,6 +61,8 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'root_username' => env('DB_ROOT_USERNAME', 'root'),
+            'root_password' => env('DB_ROOT_PASSWORD', ''),
         ],
 
         'mariadb' => [

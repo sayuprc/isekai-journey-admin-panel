@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Auth;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\HashedPassword;
+use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class LoginTest extends TestCase
+class LoginTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function canLogin(): void
@@ -29,7 +28,7 @@ class LoginTest extends TestCase
         $hashedPassword = Hash::make('password');
         $user = $this->createAdminUser($this->generateUuid(), 'example@example.com');
 
-        $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
+        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct($hashedPassword));
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',
@@ -71,7 +70,7 @@ class LoginTest extends TestCase
         $hashedPassword = Hash::make('password');
         $user = $this->createAdminUser($this->generateUuid(), 'example@example.com');
 
-        $this->factory(FileAdminUserRepository::class, [...$user->toArray(), 'hashed_password' => $hashedPassword]);
+        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct($hashedPassword));
 
         $this->postJson(route(AuthRouteMap::Login), [
             'email' => 'example@example.com',

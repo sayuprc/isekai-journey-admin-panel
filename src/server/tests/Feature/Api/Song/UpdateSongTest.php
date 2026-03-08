@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class UpdateSongTest extends TestCase
+class UpdateSongTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -25,11 +25,14 @@ class UpdateSongTest extends TestCase
         $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
         $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1);
 
-        $this->storeCreators($creator1, $creator2, $creator3);
+        $creatorRepo = $this->app->make(CreatorRepository::class);
+        $creatorRepo->save($creator1);
+        $creatorRepo->save($creator2);
+        $creatorRepo->save($creator3);
 
         $songId = $this->generateUuid();
 
-        $this->storeSongs(
+        $this->app->make(SongRepository::class)->save(
             $this->createSong(
                 $songId,
                 '曲名',
