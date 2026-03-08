@@ -2,6 +2,7 @@ import { onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
+import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
@@ -12,12 +13,13 @@ interface Props {
 
 export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
+  const { isSubmitting, withSubmitting } = createSubmitting();
 
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
   };
 
-  const handleUpdate = async (e: Event) => {
+  const handleUpdate = withSubmitting(async (e: Event) => {
     e.preventDefault();
     clearErrors();
 
@@ -49,9 +51,9 @@ export const EditableForm = (props: Props) => {
     }
 
     handleError(status, error);
-  };
+  });
 
-  const handleDelete = async (e: Event) => {
+  const handleDelete = withSubmitting(async (e: Event) => {
     e.preventDefault();
 
     if (!window.confirm('削除します。よろしいですか？')) {
@@ -76,7 +78,7 @@ export const EditableForm = (props: Props) => {
 
     setFlash('削除しました');
     window.location.href = `/creators`;
-  };
+  });
 
   onMount(() => {
     if (props.status === 404) {
@@ -110,7 +112,9 @@ export const EditableForm = (props: Props) => {
           </Show>
 
           <div class="mt-6 flex justify-end">
-            <button onClick={handleUpdate} class="btn btn-primary">更新</button>
+            <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>
+              {isSubmitting() ? '更新中...' : '更新'}
+            </button>
           </div>
         </fieldset>
       </form>
@@ -121,7 +125,9 @@ export const EditableForm = (props: Props) => {
         <h3 class="font-semibold text-error">危険な操作</h3>
         <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
         <div class="mt-4">
-          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm">このクリエイターを削除する</button>
+          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
+            {isSubmitting() ? '削除中...' : 'このクリエイターを削除する'}
+          </button>
         </div>
       </div>
     </Show>

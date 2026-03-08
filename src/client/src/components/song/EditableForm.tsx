@@ -2,6 +2,7 @@ import { createSignal, For, onMount, Show } from 'solid-js';
 import type { components } from '../../generated/schema';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
+import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
@@ -42,6 +43,7 @@ export const EditableForm = (props: Props) => {
   );
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
+  const { isSubmitting, withSubmitting } = createSubmitting();
 
   onMount(async () => {
     const [creatorsRes, typesRes, attributesRes] = await Promise.all([
@@ -92,7 +94,7 @@ export const EditableForm = (props: Props) => {
     e.preventDefault();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = withSubmitting(async () => {
     if (!window.confirm('削除します。よろしいですか？')) {
       return;
     }
@@ -115,9 +117,9 @@ export const EditableForm = (props: Props) => {
 
     setFlash('削除しました');
     window.location.href = '/songs';
-  };
+  });
 
-  const handleUpdate = async (e: Event) => {
+  const handleUpdate = withSubmitting(async (e: Event) => {
     e.preventDefault();
     clearErrors();
 
@@ -157,7 +159,7 @@ export const EditableForm = (props: Props) => {
     }
 
     handleError(status, error);
-  };
+  });
 
   const creatorOptions = () =>
     creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
@@ -289,7 +291,9 @@ export const EditableForm = (props: Props) => {
           <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
 
           <div class="mt-6 flex justify-end">
-            <button onClick={handleUpdate} class="btn btn-primary">更新</button>
+            <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>
+              {isSubmitting() ? '更新中...' : '更新'}
+            </button>
           </div>
         </fieldset>
       </form>
@@ -300,7 +304,9 @@ export const EditableForm = (props: Props) => {
         <h3 class="font-semibold text-error">危険な操作</h3>
         <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
         <div class="mt-4">
-          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm">この楽曲を削除する</button>
+          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
+            {isSubmitting() ? '削除中...' : 'この楽曲を削除する'}
+          </button>
         </div>
       </div>
     </Show>
