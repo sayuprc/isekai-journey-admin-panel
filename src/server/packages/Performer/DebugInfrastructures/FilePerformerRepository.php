@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Performer\DebugInfrastructures;
 
+use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
@@ -33,6 +34,46 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         usort($performer, fn (Performer $a, Performer $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $performer;
+    }
+
+    public function search(PerformerSearchCriteria $criteria): array
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->name->isPresent()) {
+            $items = array_filter($items, fn (Performer $item): bool => str_contains($item->name->value, $criteria->name->get()))
+                |> array_values(...);
+        }
+
+        if ($criteria->sort->isName()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Performer $a, Performer $b): int => $a->name->value <=> $b->name->value);
+            } else {
+                usort($items, fn (Performer $a, Performer $b): int => $b->name->value <=> $a->name->value);
+            }
+        } elseif ($criteria->sort->isOrderNo()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Performer $a, Performer $b): int => $a->orderNo->value <=> $b->orderNo->value);
+            } else {
+                usort($items, fn (Performer $a, Performer $b): int => $b->orderNo->value <=> $a->orderNo->value);
+            }
+        }
+
+        $chunked = array_chunk($items, $criteria->perPage->value);
+
+        return $chunked[$criteria->page - 1] ?? [];
+    }
+
+    public function maxPage(PerformerSearchCriteria $criteria): int
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->name->isPresent()) {
+            $items = array_filter($items, fn (Performer $item): bool => str_contains($item->name->value, $criteria->name->get()))
+                |> array_values(...);
+        }
+
+        return (int)ceil(count($items) / $criteria->perPage->value);
     }
 
     public function find(PerformerId $performerId): ?Performer

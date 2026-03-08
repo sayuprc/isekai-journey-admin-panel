@@ -54,6 +54,7 @@ return [
             PerformerComponent::Domain,
             SupportComponent::Domain,
             SupportComponent::Contracts,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),
@@ -61,6 +62,8 @@ return [
         PerformerComponent::UseCase,
         [
             PerformerComponent::Domain,
+            SupportComponent::Domain,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),

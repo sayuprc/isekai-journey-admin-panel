@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performer\Infrastructures;
 
 use App\Models\Performer\Performer as ModelsPerformer;
+use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
@@ -24,6 +25,40 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
             ->get()
             ->map($this->hydrate(...))
             ->all();
+    }
+
+    public function search(PerformerSearchCriteria $criteria): array
+    {
+        $query = ModelsPerformer::query();
+
+        if ($criteria->name->isPresent()) {
+            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+        }
+
+        $offset = ($criteria->page - 1) * $criteria->perPage->value;
+
+        return $query->orderBy($criteria->sort->value, $criteria->order->value)
+            ->limit($criteria->perPage->value)
+            ->offset($offset)
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    public function maxPage(PerformerSearchCriteria $criteria): int
+    {
+        $query = ModelsPerformer::query();
+
+        if ($criteria->name->isPresent()) {
+            $query = $query->whereLike('name', '%' . $this->likeEscape($criteria->name->get()) . '%');
+        }
+
+        return (int)ceil($query->count() / $criteria->perPage->value);
+    }
+
+    private function likeEscape(string $keyword): string
+    {
+        return addcslashes($keyword, '%_\\');
     }
 
     public function find(PerformerId $performerId): ?Performer
