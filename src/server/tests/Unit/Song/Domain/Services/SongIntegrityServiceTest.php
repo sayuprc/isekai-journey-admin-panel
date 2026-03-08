@@ -17,9 +17,9 @@ use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
 use Song\Domain\Services\SongIntegrityService;
-use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
@@ -52,7 +52,7 @@ class SongIntegrityServiceTest extends TestCase
     {
         $title = '描き続けた君へ';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $songType = SongType::Original->value;
+        $type = SongType::Original->value;
         $attribute = null;
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
@@ -103,7 +103,7 @@ class SongIntegrityServiceTest extends TestCase
                     SongId $songIdArg,
                     Title $titleArg,
                     Description $descriptionArg,
-                    SongType $songTypeArg,
+                    SongType $typeArg,
                     ?SongAttribute $attributeArg,
                     OrderNo $orderNoArg,
                     Lyricists $lyricistsArg,
@@ -112,7 +112,7 @@ class SongIntegrityServiceTest extends TestCase
                 ): bool => $songIdArg->value === $uuid
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
-                    && $songTypeArg->value === $songType
+                    && $typeArg->value === $type
                     && $attributeArg === $attribute
                     && $orderNoArg->value === $expectedOrderNo
                     && $lyricistsArg->count() === 1
@@ -131,7 +131,7 @@ class SongIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
-            $songType,
+            $type,
             $attribute,
             [['creatorId' => $lyricistId]],
             [['creatorId' => $composerId]],
@@ -147,7 +147,7 @@ class SongIntegrityServiceTest extends TestCase
     {
         $title = '描き続けた君へ';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $songType = SongType::Original->value;
+        $type = SongType::Original->value;
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
         $description = '説明';
@@ -172,7 +172,7 @@ class SongIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
-            $songType,
+            $type,
             null,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
             [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
@@ -188,7 +188,7 @@ class SongIntegrityServiceTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
         $description = '説明';
-        $songType = SongType::Original->value;
+        $type = SongType::Original->value;
         $orderNo = 1;
 
         $expectedSong = $this->createSong(
@@ -226,7 +226,7 @@ class SongIntegrityServiceTest extends TestCase
                     SongId $songIdArg,
                     Title $titleArg,
                     Description $descriptionArg,
-                    SongType $songTypeArg,
+                    SongType $typeArg,
                     ?SongAttribute $attributeArg,
                     OrderNo $orderNoArg,
                     Lyricists $lyricistsArg,
@@ -235,7 +235,7 @@ class SongIntegrityServiceTest extends TestCase
                 ): bool => $songIdArg->value === $songId
                     && $titleArg->value === $title
                     && $descriptionArg->value === $description
-                    && $songTypeArg->value === $songType
+                    && $typeArg->value === $type
                     && $attributeArg === null
                     && $orderNoArg->value === $orderNo
                     && $lyricistsArg->count() === 1
@@ -255,7 +255,7 @@ class SongIntegrityServiceTest extends TestCase
             $songId,
             $title,
             $description,
-            $songType,
+            $type,
             null,
             $orderNo,
             [['creatorId' => $lyricistId]],
@@ -273,7 +273,7 @@ class SongIntegrityServiceTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
         $description = '説明';
-        $songType = SongType::Original->value;
+        $type = SongType::Original->value;
         $orderNo = 1;
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -296,7 +296,7 @@ class SongIntegrityServiceTest extends TestCase
             $songId,
             $title,
             $description,
-            $songType,
+            $type,
             null,
             $orderNo,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],

@@ -22,12 +22,6 @@ enum Permission: string
 
     case WriteSong = 'write_song';
 
-    // TODO 将来的に song に統合
-    case ReadSongType = 'read_song_type';
-
-    // TODO 将来的に song に統合
-    case ReadSongAttribute = 'read_song_attribute';
-
     public function getName(): string
     {
         return match ($this) {
@@ -39,8 +33,6 @@ enum Permission: string
             self::WritePerformer => '共演者編集',
             self::ReadSong => '楽曲閲覧',
             self::WriteSong => '楽曲編集',
-            self::ReadSongType => '楽曲種別閲覧',
-            self::ReadSongAttribute => '楽曲属性閲覧',
         };
     }
 }

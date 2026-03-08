@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Song;
 
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
-use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;

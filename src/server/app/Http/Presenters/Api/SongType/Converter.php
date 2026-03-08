@@ -6,14 +6,14 @@ namespace App\Http\Presenters\Api\SongType;
 
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
 use OpenAPI\Client\Model\SongTypeValue;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 
 class Converter
 {
-    public function toOpenApiSongType(SongType $songType): OpenApiSongType
+    public function toOpenApiSongType(SongType $type): OpenApiSongType
     {
         return new OpenApiSongType()
-            ->setName($songType->getName())
-            ->setValue(SongTypeValue::from($songType->value));
+            ->setName($type->getName())
+            ->setValue(SongTypeValue::from($type->value));
     }
 }

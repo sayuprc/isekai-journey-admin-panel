@@ -6,8 +6,8 @@ namespace Tests\Integration\Song\Infrastructures;
 
 use Creator\Domain\Models\CreatorId;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Song\Infrastructures\CreatorUsageChecker;
-use SongType\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;

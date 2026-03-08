@@ -57,7 +57,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_types' => '\OpenAPI\Client\Model\SongType[]'
+        'types' => '\OpenAPI\Client\Model\SongType[]'
     ];
 
     /**
@@ -68,7 +68,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_types' => null
+        'types' => null
     ];
 
     /**
@@ -77,7 +77,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_types' => false
+        'types' => false
     ];
 
     /**
@@ -166,7 +166,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_types' => 'songTypes'
+        'types' => 'types'
     ];
 
     /**
@@ -175,7 +175,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $setters = [
-        'song_types' => 'setSongTypes'
+        'types' => 'setTypes'
     ];
 
     /**
@@ -184,7 +184,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $getters = [
-        'song_types' => 'getSongTypes'
+        'types' => 'getTypes'
     ];
 
     /**
@@ -244,7 +244,7 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_types', $data ?? [], null);
+        $this->setIfExists('types', $data ?? [], null);
     }
 
     /**
@@ -274,8 +274,8 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
     {
         $invalidProperties = [];
 
-        if ($this->container['song_types'] === null) {
-            $invalidProperties[] = "'song_types' can't be null";
+        if ($this->container['types'] === null) {
+            $invalidProperties[] = "'types' can't be null";
         }
         return $invalidProperties;
     }
@@ -293,28 +293,28 @@ class SongTypeListResponse implements ModelInterface, ArrayAccess, \JsonSerializ
 
 
     /**
-     * Gets song_types
+     * Gets types
      *
      * @return \OpenAPI\Client\Model\SongType[]
      */
-    public function getSongTypes()
+    public function getTypes()
     {
-        return $this->container['song_types'];
+        return $this->container['types'];
     }
 
     /**
-     * Sets song_types
+     * Sets types
      *
-     * @param \OpenAPI\Client\Model\SongType[] $song_types song_types
+     * @param \OpenAPI\Client\Model\SongType[] $types types
      *
      * @return self
      */
-    public function setSongTypes($song_types)
+    public function setTypes($types)
     {
-        if (is_null($song_types)) {
-            throw new \InvalidArgumentException('non-nullable song_types cannot be null');
+        if (is_null($types)) {
+            throw new \InvalidArgumentException('non-nullable types cannot be null');
         }
-        $this->container['song_types'] = $song_types;
+        $this->container['types'] = $types;
 
         return $this;
     }

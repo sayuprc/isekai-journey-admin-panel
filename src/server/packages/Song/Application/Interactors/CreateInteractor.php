@@ -54,7 +54,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
             $result = $this->service->prepareForCreate(
                 $inputData->title,
                 $inputData->description,
-                $inputData->songTypeValue,
+                $inputData->typeValue,
                 $inputData->attributeValue,
                 $inputData->lyricists,
                 $inputData->composers,

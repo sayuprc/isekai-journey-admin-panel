@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SongType\Application\UseCase\List;
+namespace Song\Application\UseCase\ListType;
 
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
-interface ListUseCaseInterface
+interface ListTypeUseCaseInterface
 {
     /**
-     * @return Result<ListOutputData, UseCaseError>
+     * @return Result<ListTypeOutputData, UseCaseError>
      */
     public function handle(): Result;
 }

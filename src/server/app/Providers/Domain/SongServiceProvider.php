@@ -11,6 +11,7 @@ use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\Interactors\GetInteractor;
 use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListInteractor;
+use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
@@ -18,6 +19,7 @@ use Song\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
 use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
+use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -59,10 +61,17 @@ class SongServiceProvider extends EnvServiceProvider
         });
 
         $this->registerSongAttribute();
+
+        $this->registerSongType();
     }
 
     private function registerSongAttribute(): void
     {
         $this->app->bind(ListAttributeUseCaseInterface::class, ListAttributeInteractor::class);
+    }
+
+    private function registerSongType(): void
+    {
+        $this->app->bind(ListTypeUseCaseInterface::class, ListTypeInteractor::class);
     }
 }

@@ -28,8 +28,8 @@ use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
-use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 
 trait EntityFactory
@@ -61,7 +61,7 @@ trait EntityFactory
         string $songId,
         string $title,
         string $description,
-        SongType $songType,
+        SongType $type,
         ?SongAttribute $attribute,
         int $orderNo,
         array $lyricists,
@@ -72,7 +72,7 @@ trait EntityFactory
             SongId::reconstruct($songId),
             Title::reconstruct($title),
             Description::reconstruct($description),
-            $songType,
+            $type,
             $attribute,
             OrderNo::reconstruct($orderNo),
             Lyricists::fromArray($lyricists)->unwrap(),
