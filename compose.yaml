@@ -28,6 +28,20 @@ services:
       - ./src/contracts:/var/www/contracts
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
+  mysql:
+    image: ${MYSQL_IMAGE}
+    container_name: isekai-terrarium-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: isekai_terrarium
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
+      TZ: Asia/Tokyo
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   redis:
     image: redis:8.2
     ports:
@@ -41,3 +55,6 @@ services:
       SRH_MODE: 'env'
       SRH_TOKEN: '${REDIS_HTTP_TOKEN}'
       SRH_CONNECTION_STRING: 'redis://redis:6379'
+
+volumes:
+  mysql_data:

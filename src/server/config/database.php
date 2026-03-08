@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Str;
+use PDO\Mysql;
 
 return [
     /*
@@ -58,8 +59,10 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                \PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'root_username' => env('DB_ROOT_USERNAME', 'root'),
+            'root_password' => env('DB_ROOT_PASSWORD', ''),
         ],
 
         'mariadb' => [
@@ -78,7 +81,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                \PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

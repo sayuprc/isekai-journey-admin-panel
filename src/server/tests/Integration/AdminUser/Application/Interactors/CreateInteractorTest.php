@@ -6,17 +6,13 @@ namespace Tests\Integration\AdminUser\Application\Interactors;
 
 use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
-use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
+use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\DatabaseTestCase;
 
-class CreateInteractorTest extends TestCase
+class CreateInteractorTest extends DatabaseTestCase
 {
-    use FileRepositoryTransaction;
-
     #[Test]
     public function canCreate(): void
     {
@@ -24,10 +20,10 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $users = $this->getAll(AdminUser::class, FileAdminUserRepository::class);
-        $this->assertCount(1, $users);
-        $this->assertSame('example@example.com', $users[array_key_first($users)]->email->value);
-        $this->assertSame(Role::General, $users[array_key_first($users)]->role);
+        $adminUsers = ModelsAdminUser::query()->get()->all();
+        $this->assertCount(1, $adminUsers);
+        $this->assertSame('example@example.com', array_first($adminUsers)->email);
+        $this->assertSame(Role::General->value, array_first($adminUsers)->role);
     }
 
     private function getInstance(): CreateInteractor

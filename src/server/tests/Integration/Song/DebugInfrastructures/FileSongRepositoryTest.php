@@ -10,12 +10,14 @@ use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
 use SongType\Domain\Models\SongType;
 use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class FileSongRepositoryTest extends TestCase
 {
     use EntityFactory;
+    use EntityStore;
     use FileRepositoryTransaction;
 
     #[Test]

@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Creator;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
+use Creator\Infrastructures\CreatorRepository;
 use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
-use Song\DebugInfrastructures\FileSongRepository;
+use Song\Infrastructures\SongRepository;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class DeleteCreatorTest extends TestCase
+class DeleteCreatorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
     use WithAuth;
 
     #[Test]
@@ -25,7 +25,7 @@ class DeleteCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター', 1)->toArray());
+        $this->storeCreators($this->createCreator($uuid, 'クリエイター', 1));
 
         $this->withAuth()
             ->delete(route(CreatorRouteMap::Delete, $uuid))
@@ -38,8 +38,8 @@ class DeleteCreatorTest extends TestCase
         $creatorId = $this->generateUuid();
         $songId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, 'クリエイター', 1)->toArray());
-        $this->factory(FileSongRepository::class, $this->createSong(
+        $this->app->make(CreatorRepository::class)->save($this->createCreator($creatorId, 'クリエイター', 1));
+        $this->app->make(SongRepository::class)->save($this->createSong(
             $songId,
             '曲名',
             '説明',
@@ -49,7 +49,7 @@ class DeleteCreatorTest extends TestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
-        )->toArray());
+        ));
 
         $this->withAuth()
             ->delete(route(CreatorRouteMap::Delete, $creatorId))

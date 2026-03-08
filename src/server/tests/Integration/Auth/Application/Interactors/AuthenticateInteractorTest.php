@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Application\Interactors;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
-use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class AuthenticateInteractorTest extends TestCase
+class AuthenticateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canAuthenticate(): void
@@ -53,8 +51,8 @@ class AuthenticateInteractorTest extends TestCase
             ),
         );
 
-        $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray());
-        $this->factory(FileAdminUserRepository::class, $user->toArray());
+        $this->storeAdminUsers($user);
+        $this->storeRefreshTokens($refreshToken);
 
         $result = $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
 

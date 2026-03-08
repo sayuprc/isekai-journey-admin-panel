@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Song;
 
 use PHPUnit\Framework\Attributes\Test;
-use Song\DebugInfrastructures\FileSongRepository;
+use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class DeleteSongTest extends TestCase
+class DeleteSongTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -24,9 +22,8 @@ class DeleteSongTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileSongRepository::class,
-            $this->createSong($uuid, '', '', SongType::Original, null, 1, [], [], [])->toArray(),
+        $this->app->make(SongRepository::class)->save(
+            $this->createSong($uuid, '', '', SongType::Original, null, 1, [], [], []),
         );
 
         $this->withAuth()

@@ -7,12 +7,14 @@ namespace Tests\Integration\Creator\DebugInfrastructures;
 use Creator\DebugInfrastructures\FileCreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class FileCreatorRepositoryTest extends TestCase
 {
     use EntityFactory;
+    use EntityStore;
     use FileRepositoryTransaction;
 
     #[Test]

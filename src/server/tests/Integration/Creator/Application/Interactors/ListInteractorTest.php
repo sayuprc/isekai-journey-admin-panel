@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace Tests\Integration\Creator\Application\Interactors;
 
 use Creator\Application\Interactors\ListInteractor;
-use Creator\DebugInfrastructures\FileCreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class ListInteractorTest extends TestCase
+class ListInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function nonEmptyCreators(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒', 1)->toArray());
+        $this->storeCreators($this->createCreator($uuid, 'ヰ世界情緒', 1));
 
         $result = $this->getInstance()->handle();
         $this->assertTrue($result->isOk());

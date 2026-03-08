@@ -10,12 +10,14 @@ use AdminUser\Domain\Models\Role;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 use Tests\Support\FileRepositoryTransaction;
 use Tests\TestCase;
 
 class FileAdminUserRepositoryTest extends TestCase
 {
     use EntityFactory;
+    use EntityStore;
     use FileRepositoryTransaction;
 
     #[Test]
@@ -33,7 +35,7 @@ class FileAdminUserRepositoryTest extends TestCase
         $userA = $this->createAdminUser($this->generateUuid(), 'admin-a@example.com', Role::General, [], $createdAt);
         $userB = $this->createAdminUser($this->generateUuid(), 'admin-b@example.com', Role::Privilege, [], $createdAt);
 
-        $this->storeUsers($userA, $userB);
+        $this->storeAdminUsers($userA, $userB);
 
         $result = $this->getInstance()->all();
 
@@ -48,7 +50,7 @@ class FileAdminUserRepositoryTest extends TestCase
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
-        $this->storeUsers($user);
+        $this->storeAdminUsers($user);
 
         $found = $this->getInstance()->find($user->adminUserId);
 
@@ -64,7 +66,7 @@ class FileAdminUserRepositoryTest extends TestCase
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'example@example.com', Role::General, [], $createdAt);
 
-        $this->storeUsers($user);
+        $this->storeAdminUsers($user);
 
         $found = $this->getInstance()->findByEmail($user->email);
 

@@ -4,29 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class CreateSongTest extends TestCase
+class CreateSongTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
     public function canCreate(): void
     {
-        $this->storeCreators(
-            $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1),
-            $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1),
-            $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1),
-        );
+        $creatorRepo = $this->app->make(CreatorRepository::class);
+        $creatorRepo->save($creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1));
+        $creatorRepo->save($creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1));
+        $creatorRepo->save($creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1));
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [

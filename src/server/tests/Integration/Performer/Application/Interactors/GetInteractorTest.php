@@ -6,23 +6,22 @@ namespace Tests\Integration\Performer\Application\Interactors;
 
 use Performer\Application\Interactors\GetInteractor;
 use Performer\Application\UseCase\Get\GetInputData;
-use Performer\DebugInfrastructures\FilePerformerRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class GetInteractorTest extends TestCase
+class GetInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function getPerformer(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, 'ヰ世界情緒', 1)->toArray());
+        $this->storePerformers($this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 

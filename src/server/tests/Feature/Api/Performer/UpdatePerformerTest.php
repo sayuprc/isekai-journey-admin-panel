@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Performer;
 
-use Performer\DebugInfrastructures\FilePerformerRepository;
+use Performer\Infrastructures\PerformerRepository;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class UpdatePerformerTest extends TestCase
+class UpdatePerformerTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -23,7 +21,7 @@ class UpdatePerformerTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
+        $this->app->make(PerformerRepository::class)->save($this->createPerformer($uuid, '共演者', 1));
 
         $this->withAuth()
             ->putJson(route(PerformerRouteMap::Update, $uuid), [

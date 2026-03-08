@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
 use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class ListSongTest extends TestCase
+class ListSongTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -25,12 +25,16 @@ class ListSongTest extends TestCase
         $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
         $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $this->storeCreators($lyricist, $composer, $arranger);
+        $creatorRepo = $this->app->make(CreatorRepository::class);
+        $creatorRepo->save($lyricist);
+        $creatorRepo->save($composer);
+        $creatorRepo->save($arranger);
 
         $song1Id = $this->generateUuid();
         $song2Id = $this->generateUuid();
 
-        $this->storeSongs(
+        $songRepo = $this->app->make(SongRepository::class);
+        $songRepo->save(
             $this->createSong(
                 $song1Id,
                 '描き続けた君へ',
@@ -42,6 +46,8 @@ class ListSongTest extends TestCase
                 [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $arrangerId, 'orderNo' => 1]],
             ),
+        );
+        $songRepo->save(
             $this->createSong(
                 $song2Id,
                 '全部夢だった！',

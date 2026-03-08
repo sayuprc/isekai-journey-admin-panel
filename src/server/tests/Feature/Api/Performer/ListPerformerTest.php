@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Performer;
 
-use Performer\DebugInfrastructures\FilePerformerRepository;
+use Performer\Infrastructures\PerformerRepository;
 use Performer\Route\PerformerRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class ListPerformerTest extends TestCase
+class ListPerformerTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -23,7 +21,7 @@ class ListPerformerTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, 'ヰ世界情緒', 1)->toArray());
+        $this->app->make(PerformerRepository::class)->save($this->createPerformer($uuid, 'ヰ世界情緒', 1));
 
         $this->withAuth()
             ->get(route(PerformerRouteMap::List))

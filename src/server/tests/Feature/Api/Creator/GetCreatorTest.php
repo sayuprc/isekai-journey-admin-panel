@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Creator;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
+use Creator\Infrastructures\CreatorRepository;
 use Creator\Route\CreatorRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class GetCreatorTest extends TestCase
+class GetCreatorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -23,7 +21,7 @@ class GetCreatorTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'ヰ世界情緒', 1)->toArray());
+        $this->app->make(CreatorRepository::class)->save($this->createCreator($uuid, 'ヰ世界情緒', 1));
 
         $this->withAuth()
             ->get(route(CreatorRouteMap::Get, $uuid))

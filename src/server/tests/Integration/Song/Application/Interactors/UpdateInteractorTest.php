@@ -7,17 +7,16 @@ namespace Tests\Integration\Song\Application\Interactors;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Update\UpdateInputData;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
+use Song\Domain\Models\SongRepositoryInterface;
 use SongType\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class UpdateInteractorTest extends TestCase
+class UpdateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canUpdate(): void
@@ -59,7 +58,7 @@ class UpdateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = $this->getAll(Song::class, FileSongRepository::class);
+        $songs = $this->app->make(SongRepositoryInterface::class)->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title->value);

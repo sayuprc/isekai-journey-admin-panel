@@ -6,17 +6,14 @@ namespace Tests\Integration\Performer\Application\Interactors;
 
 use Performer\Application\Interactors\CreateInteractor;
 use Performer\Application\UseCase\Create\CreateInputData;
-use Performer\DebugInfrastructures\FilePerformerRepository;
-use Performer\Domain\Models\Performer;
+use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class CreateInteractorTest extends TestCase
+class CreateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function create(): void
@@ -25,7 +22,7 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $performers = $this->getAll(Performer::class, FilePerformerRepository::class);
+        $performers = $this->app->make(PerformerRepositoryInterface::class)->all();
         $this->assertCount(1, $performers);
         $this->assertSame('ヰ世界情緒', array_first($performers)->name->value);
         $this->assertSame(10, array_first($performers)->orderNo->value);

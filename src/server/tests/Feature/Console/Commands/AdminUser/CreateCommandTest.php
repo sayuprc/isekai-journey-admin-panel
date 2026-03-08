@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Console\Commands\AdminUser;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
+use AdminUser\Infrastructures\AdminUserRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class CreateCommandTest extends TestCase
+class CreateCommandTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function canCreateUser(): void
@@ -45,7 +44,10 @@ class CreateCommandTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileAdminUserRepository::class, $this->createAdminUser($uuid, 'example@example.com', Role::General, [])->toArray());
+        $this->app->make(AdminUserRepository::class)->register(
+            $this->createAdminUser($uuid, 'example@example.com', Role::General, []),
+            HashedPassword::reconstruct('hashed-password'),
+        );
 
         $this->artisan('admin:create テストユーザー example@example.com plain')
             ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')
