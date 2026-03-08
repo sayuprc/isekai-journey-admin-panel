@@ -46,7 +46,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
 
             $this->refreshTokenRepository->save($refreshToken);
 
-            return new Ok(new LoginOutputData($accessToken, $refreshToken, $plainToken));
+            return new Ok(new LoginOutputData($accessToken, $plainToken));
         });
     }
 
