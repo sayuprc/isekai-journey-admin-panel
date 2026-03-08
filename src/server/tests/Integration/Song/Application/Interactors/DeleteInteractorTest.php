@@ -7,33 +7,31 @@ namespace Tests\Integration\Song\Application\Interactors;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\UseCase\Delete\DeleteInputData;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
+use Song\Domain\Models\SongRepositoryInterface;
 use SongType\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class DeleteInteractorTest extends TestCase
+class DeleteInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canDelete(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileSongRepository::class,
-            $this->createSong($uuid, '', '', SongType::Original, null, 1, [], [], [])->toArray(),
+        $this->storeSongs(
+            $this->createSong($uuid, '', '', SongType::Original, null, 1, [], [], []),
         );
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
         $this->assertTrue($result->isOk());
 
-        $songs = $this->getAll(Song::class, FileSongRepository::class);
+        $songs = $this->app->make(SongRepositoryInterface::class)->all();
         $this->assertCount(0, $songs);
     }
 

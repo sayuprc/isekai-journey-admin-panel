@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\AdminUser;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
+use AdminUser\Infrastructures\AdminUserRepository;
 use AdminUser\Route\AdminUserRouteMap;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class ListAdminUserTest extends TestCase
+class ListAdminUserTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
     use WithAuth;
 
     #[Test]
@@ -25,8 +24,7 @@ class ListAdminUserTest extends TestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(
-            FileAdminUserRepository::class,
+        $this->app->make(AdminUserRepository::class)->register(
             $this->createAdminUser(
                 $uuid,
                 'admin@example.com',
@@ -34,13 +32,13 @@ class ListAdminUserTest extends TestCase
                 [],
                 new DateTimeImmutable('2019-12-09 10:20:30'),
                 'コンソールユーザー',
-            )->toArray(),
+            ),
+            HashedPassword::reconstruct('hashed-password'),
         );
 
         $response = $this->withAuth()
-            ->get(route(AdminUserRouteMap::List));
-
-        $response->assertStatus(200);
+            ->get(route(AdminUserRouteMap::List))
+            ->assertStatus(200);
 
         $json = $response->json();
         $authUser = collect($json['adminUsers'])->firstWhere('email', 'root@example.com');

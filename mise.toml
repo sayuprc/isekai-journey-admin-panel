@@ -1,10 +1,12 @@
 [tools]
+atlas = "1.1.0"
 bun = "1.3.9"
 
 [vars]
 server_tag = "8.5"
 proxy_tag = "1.27"
 openapi_tag = "7.18.0"
+mysql_tag = "8.4"
 server_container = "isekai-terrarium-admin-php"
 uid = "`id -u`"
 user_name = "`id -un`"
@@ -18,6 +20,7 @@ OPENAPI_TAG = "{{vars.openapi_tag}}"
 SERVER_IMAGE = "isekai-terrarium-admin-php:{{vars.server_tag}}"
 PROXY_IMAGE = "isekai-terrarium-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
+MYSQL_IMAGE = "isekai-terrarium-mysql:{{vars.mysql_tag}}"
 NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
 OAS_FILE = "IsekaiTerrarium.Admin.v1.yaml"
 
@@ -60,6 +63,10 @@ docker build -t ${OPENAPI_IMAGE} ./docker/openapi-generator \
   --build-arg USERNAME={{vars.user_name}} \
   --build-arg GROUPNAME={{vars.group_name}}
 '''
+
+[tasks."build:mysql"]
+description = "MySQL のイメージをビルドする"
+run = "docker build -t ${MYSQL_IMAGE} ./docker/mysql --build-arg TAG={{vars.mysql_tag}}"
 
 [tasks.up]
 description = "コンテナを起動する"
@@ -104,9 +111,8 @@ run = "docker exec {{vars.server_container}} composer ecs-fix ${usage_path}"
 description = "テストを実行する"
 usage = '''
 arg "[path]" var=#true help="テスト対象パス"
-flag "-p --parallel" help="並列実行"
 '''
-run = "docker exec {{vars.server_container}} ./vendor/bin/{% if usage.parallel %}paratest{% else %}phpunit{% endif %} ${usage_path}"
+run = "docker exec {{vars.server_container}} ./vendor/bin/paratest ${usage_path}"
 
 [tasks."test:all"]
 description = "すべてのテストを実行する"
@@ -137,12 +143,41 @@ description = "コードメトリクスを出力する"
 run = "docker exec {{vars.server_container}} composer metrics"
 
 [tasks.migrate]
-description = "マイグレーションを実行する"
-run = "docker exec {{vars.server_container}} bash -c cd database/atlas; ./apply.sh"
+description = "スキーマをデータベースに適用する"
+depends = ["migrate:local", "migrate:testing"]
+
+[tasks."migrate:local"]
+description = "スキーマを local データベースに適用する"
+dir = "src/server/database/atlas"
+run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}"'
+
+[tasks."migrate:local".env]
+_.file = "src/server/.env"
+
+[tasks."migrate:testing"]
+description = "スキーマを testing データベースに適用する"
+dir = "src/server/database/atlas"
+run = 'atlas schema apply --env testing --var "db_name=${DB_DATABASE}"'
+
+[tasks."migrate:testing".env]
+_.file = "src/server/.env.testing"
+
+[tasks."migrate:dry-run"]
+quiet = true
+description = "適用されるスキーマの差分を確認する（適用はしない）"
+dir = "src/server/database/atlas"
+run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --dry-run'
+
+[tasks."migrate:dry-run".env]
+_.file = "src/server/.env"
 
 [tasks.tinker]
 description = "Laravel tinker を実行する"
 run = "docker exec {{vars.server_container}} php artisan tinker"
+
+[tasks."ide:doc"]
+description = "Eloquent にカラム情報を書き込む"
+run = "docker exec {{vars.server_container}} php artisan ide-helper:models -RW -n"
 
 [tasks.generate]
 description = "OAS からコードを生成する"

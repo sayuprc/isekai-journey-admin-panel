@@ -1,14 +1,15 @@
 [env]
 SERVER_IMAGE = "ghcr.io/sayuprc/isekai-terrarium-admin-php:{{vars.server_tag}}"
 OPENAPI_IMAGE = "ghcr.io/sayuprc/openapi-generator:{{vars.openapi_tag}}"
+MYSQL_IMAGE = "ghcr.io/sayuprc/isekai-terrarium-mysql:{{vars.mysql_tag}}"
 SERVER_DOCKER_PATH = "/tmp/cache/docker/server"
 SERVER_DOCKER_KEY_PREFIX = "docker-server-"
 VENDOR_PATH = "./src/server/vendor"
 VENDOR_KEY_PREFIX = "composer-"
-DATABASE_PATH = "./src/server/database/isekai_terrarium.sqlite"
-DATABASE_KEY_PREFIX = "database-"
 OPENAPI_GENERATOR_CLI_DOCKER_PATH = "/tmp/cache/docker/openapi-generator-cli"
 OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX = "docker-openapi-generator-cli-"
+MYSQL_DOCKER_PATH = "/tmp/cache/docker/mysql"
+MYSQL_DOCKER_KEY_PREFIX = "docker-mysql-"
 
 [tasks."build:php"]
 description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
@@ -37,9 +38,18 @@ docker push $OPENAPI_IMAGE
 mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
 '''
 
+[tasks."build:mysql"]
+description = "CI 向けに MySQL イメージをビルドして GHCR にプッシュする"
+run = '''
+docker build -t $MYSQL_IMAGE ./docker/mysql \
+  --build-arg TAG={{vars.mysql_tag}}
+docker push $MYSQL_IMAGE
+mkdir -p $MYSQL_DOCKER_PATH
+'''
+
 [tasks.up]
 description = "CI 環境でコンテナを起動する"
-run = "docker compose up -d php"
+run = "docker compose up -d php mysql"
 
 [tasks."composer:install"]
 description = "CI 環境で composer install を実行する"
@@ -69,11 +79,12 @@ docker exec {{vars.server_container}} php artisan key:generate
 '''
 
 [tasks.migrate]
-description = "CI 環境でマイグレーションを実行する"
-run = '''
-touch $DATABASE_PATH
-docker exec {{vars.server_container}} bash -c "cd database/atlas; atlas schema apply --env 'local' --var db_name=$(basename $DATABASE_PATH) --auto-approve"
-'''
+description = "CI 環境でスキーマをデータベースに適用する"
+dir = "src/server/database/atlas"
+run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --auto-approve'
+
+[tasks.migrate.env]
+_.file = "src/server/.env"
 
 [tasks."generate:client"]
 description = "CI 環境でクライアントコード生成を行い、差分をチェックする"

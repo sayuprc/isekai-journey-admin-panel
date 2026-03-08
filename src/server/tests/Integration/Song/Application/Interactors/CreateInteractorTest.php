@@ -7,17 +7,16 @@ namespace Tests\Integration\Song\Application\Interactors;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
-use Song\DebugInfrastructures\FileSongRepository;
-use Song\Domain\Models\Song;
+use Song\Domain\Models\SongRepositoryInterface;
 use SongType\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class CreateInteractorTest extends TestCase
+class CreateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function create(): void
@@ -41,7 +40,7 @@ class CreateInteractorTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = $this->getAll(Song::class, FileSongRepository::class);
+        $songs = $this->app->make(SongRepositoryInterface::class)->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title->value);

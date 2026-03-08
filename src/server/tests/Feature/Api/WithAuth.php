@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
-use Auth\DebugInfrastructures\FileRefreshTokenRepository;
+use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
+use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
 
 trait WithAuth
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
 
     private function withAuth(): self
     {
@@ -28,8 +27,8 @@ trait WithAuth
 
         $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
 
-        $this->factory(FileAdminUserRepository::class, $user->toArray());
-        $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray());
+        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
+        $this->app->make(RefreshTokenRepository::class)->save($refreshToken);
 
         $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);
 

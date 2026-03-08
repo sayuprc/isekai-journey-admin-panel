@@ -6,30 +6,29 @@ namespace Tests\Integration\Performer\Application\Interactors;
 
 use Performer\Application\Interactors\DeleteInteractor;
 use Performer\Application\UseCase\Delete\DeleteInputData;
-use Performer\DebugInfrastructures\FilePerformerRepository;
-use Performer\Domain\Models\Performer;
+use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class DeleteInteractorTest extends TestCase
+class DeleteInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canDelete(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FilePerformerRepository::class, $this->createPerformer($uuid, '共演者', 1)->toArray());
+        $this->storePerformers($this->createPerformer($uuid, '共演者', 1));
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
         $this->assertTrue($result->isOk());
 
-        $performers = $this->getAll(Performer::class, FilePerformerRepository::class);
+        $performers = $this->app->make(PerformerRepositoryInterface::class)->all();
         $this->assertCount(0, $performers);
     }
 

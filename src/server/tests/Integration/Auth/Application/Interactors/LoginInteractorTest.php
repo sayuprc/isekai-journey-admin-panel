@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Application\Interactors;
 
+use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
-use Auth\DebugInfrastructures\FileRefreshTokenRepository;
-use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
+use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Support\Contracts\Uuid\UuidConverterInterface;
+use Tests\Support\DatabaseTestCase;
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 
-class LoginInteractorTest extends TestCase
+class LoginInteractorTest extends DatabaseTestCase
 {
-    use FileRepositoryTransaction;
+    use EntityFactory;
+    use EntityStore;
 
     #[Test]
     public function canLogin(): void
@@ -29,14 +32,18 @@ class LoginInteractorTest extends TestCase
 
         $now = new CarbonImmutable();
 
-        $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $adminUserId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+
+        $this->storeAdminUsers($this->createAdminUser($adminUserId, 'example@example.com'));
 
         $this->getInstance()->handle(new LoginInputData($adminUserId));
 
-        $refreshTokens = $this->getAll(RefreshToken::class, FileRefreshTokenRepository::class);
+        $refreshTokens = AuthRefreshToken::query()->get()->all();
         $this->assertCount(1, $refreshTokens);
-        $this->assertSame($adminUserId, $refreshTokens[array_key_first($refreshTokens)]->adminUserId->value);
-        $this->assertTrue($refreshTokens[array_key_first($refreshTokens)]->isAvailable($now));
+        $converter = $this->app->make(UuidConverterInterface::class);
+        $this->assertSame($adminUserId, $converter->toUuid(array_first($refreshTokens)->admin_user_id));
+        $this->assertSame(ConsumptionStatus::Unused->value, array_first($refreshTokens)->status);
+        $this->assertSame($now->addDays(7)->format('Y-m-d H:i:s'), array_first($refreshTokens)->expired_at->format('Y-m-d H:i:s'));
     }
 
     private function getInstance(): LoginInteractor

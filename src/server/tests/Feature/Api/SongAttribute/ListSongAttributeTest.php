@@ -8,9 +8,9 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongAttribute;
 use Song\Route\SongAttributeRouteMap;
 use Tests\Feature\Api\WithAuth;
-use Tests\TestCase;
+use Tests\Support\DatabaseTestCase;
 
-class ListSongAttributeTest extends TestCase
+class ListSongAttributeTest extends DatabaseTestCase
 {
     use WithAuth;
 

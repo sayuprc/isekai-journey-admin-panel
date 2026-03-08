@@ -6,17 +6,16 @@ namespace Tests\Integration\Creator\Application\Interactors;
 
 use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Update\UpdateInputData;
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
+use Creator\Domain\Models\CreatorRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class UpdateInteractorTest extends TestCase
+class UpdateInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canUpdate(): void
@@ -26,13 +25,13 @@ class UpdateInteractorTest extends TestCase
         $beforeName = 'クリエイター';
         $afterName = 'ヰ世界情緒';
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, $beforeName, 10)->toArray());
+        $this->storeCreators($this->createCreator($creatorId, $beforeName, 10));
 
         $result = $this->getInstance()->handle(new UpdateInputData($creatorId, $afterName, 20));
 
         $this->assertTrue($result->isOk());
 
-        $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
+        $creators = $this->app->make(CreatorRepositoryInterface::class)->all();
         $this->assertCount(1, $creators);
         $this->assertSame($afterName, array_first($creators)->name->value);
     }
