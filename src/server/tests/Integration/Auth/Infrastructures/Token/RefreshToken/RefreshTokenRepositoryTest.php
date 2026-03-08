@@ -7,12 +7,15 @@ namespace Tests\Integration\Auth\Infrastructures\Token\RefreshToken;
 use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
+use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
+use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Carbon\Carbon;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Contracts\Uuid\UuidConverterInterface;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 
@@ -158,6 +161,40 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
         $found = $repository->findActive($refreshToken->refreshTokenId);
 
         $this->assertNull($found);
+    }
+
+    #[Test]
+    public function saveHashesTokenBeforeStoring(): void
+    {
+        Carbon::setTestNow('2026-01-01 00:00:00');
+
+        $adminUser = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], new DateTimeImmutable());
+        $this->app->make(AdminUserRepository::class)->register($adminUser, HashedPassword::reconstruct('hashed-password'));
+
+        $plainToken = 'my-plain-token-value-12345';
+        $refreshToken = $this->createRefreshToken(
+            $this->generateUuid(),
+            $adminUser->adminUserId->value,
+            $plainToken,
+            now()->addMinutes(30)->toDateTimeImmutable(),
+            ConsumptionStatus::Unused,
+        );
+
+        $repository = $this->getInstance();
+        $repository->save($refreshToken);
+
+        // Check that the token in DB is hashed, not plain text
+        $converter = $this->app->make(UuidConverterInterface::class);
+        $stored = AuthRefreshToken::query()
+            ->where('refresh_token_id', $converter->toBin($refreshToken->refreshTokenId->value))
+            ->first();
+
+        $this->assertNotNull($stored);
+        $this->assertNotEquals($plainToken, $stored->token);
+
+        // Verify that the hash can be verified with the plain token
+        $hasher = $this->app->make(TokenHasherInterface::class);
+        $this->assertTrue($hasher->verify($plainToken, $stored->token));
     }
 
     private function getInstance(): RefreshTokenRepository

@@ -8,6 +8,7 @@ use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
@@ -16,6 +17,7 @@ readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     public function __construct(
         private UuidConverterInterface $converter,
         private ClockInterface $clock,
+        private TokenHasherInterface $tokenHasher,
     ) {
     }
 
@@ -42,12 +44,14 @@ readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
         $id = $this->converter->toBin($data['refresh_token_id']);
         $adminUserId = $this->converter->toBin($data['admin_user_id']);
+        $hashedToken = $this->tokenHasher->hash($data['token']);
 
         AuthRefreshToken::query()->upsert(
             [
                 ...$refreshToken->toArray(),
                 'refresh_token_id' => $id,
                 'admin_user_id' => $adminUserId,
+                'token' => $hashedToken,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

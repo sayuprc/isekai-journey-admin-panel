@@ -7,6 +7,7 @@ namespace Auth\DebugInfrastructures;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
@@ -22,6 +23,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
         private MapperInterface $mapper,
         private JsonFileStore $store,
         private ClockInterface $clock,
+        private TokenHasherInterface $tokenHasher,
         DebugConfig $config,
     ) {
         $this->filePath = $config->path . '/' . self::FILE_NAME;
@@ -43,9 +45,12 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
 
     public function save(RefreshToken $refreshToken): RefreshToken
     {
+        $data = $refreshToken->toArray();
+        $data['token'] = $this->tokenHasher->hash($data['token']);
+
         $this->store->save(
             $this->filePath,
-            $refreshToken->toArray(),
+            $data,
             array_keys(
                 array_filter(
                     $this->loadAll(),
