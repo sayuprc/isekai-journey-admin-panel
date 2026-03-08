@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Support\Infrastructures\Database;
 
-/**
- * SQL クエリ生成時に使用する汎用ヘルパークラス
- */
 class SqlHelper
 {
     /**
