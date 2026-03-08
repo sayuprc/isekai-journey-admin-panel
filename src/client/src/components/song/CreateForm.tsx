@@ -18,7 +18,7 @@ type CreatorEntry = {
 
 export const CreateForm = () => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
-  const [songTypes, setSongTypes] = createSignal<SongType[]>([]);
+  const [types, setTypes] = createSignal<SongType[]>([]);
   const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
@@ -28,7 +28,7 @@ export const CreateForm = () => {
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
-    const [creatorsRes, songTypesRes, attributesRes] = await Promise.all([
+    const [creatorsRes, typesRes, attributesRes] = await Promise.all([
       client.api.creators.get(),
       client.api['song-types'].get(),
       client.api['song-attributes'].get(),
@@ -38,8 +38,8 @@ export const CreateForm = () => {
       setCreators(creatorsRes.data.creators);
     }
 
-    if (songTypesRes.data) {
-      setSongTypes(songTypesRes.data.songTypes);
+    if (typesRes.data) {
+      setTypes(typesRes.data.types);
     }
 
     if (attributesRes.data) {
@@ -69,7 +69,7 @@ export const CreateForm = () => {
     const { data, error, status } = await client.api.songs.post({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
-      songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
+      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
       attributeValue: formData.get('attributeValue') !== ''
         ? Number(formData.get('attributeValue')) as SongAttributeValue
         : undefined,
@@ -149,12 +149,12 @@ export const CreateForm = () => {
         </Show>
 
         <label class="label">楽曲種別</label>
-        <select class="select select-bordered w-full" name="songTypeValue" required>
+        <select class="select select-bordered w-full" name="typeValue" required>
           <option value="" disabled selected>
             選択してください
           </option>
-          <For each={songTypes()}>
-            {songType => <option value={songType.value}>{songType.name}</option>}
+          <For each={types()}>
+            {type => <option value={type.value}>{type.name}</option>}
           </For>
         </select>
 
