@@ -48,7 +48,7 @@ export const SearchList = () => {
     async (params) => {
       setFetchError(null);
 
-      const { data, status } = await client.api.creators.search.get({
+      const { data, status } = await client.api.performers.search.get({
         query: {
           name: params.name,
           sort: params.sort,
@@ -95,7 +95,7 @@ export const SearchList = () => {
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="name">クリエイター名</label>
+          <label class="fieldset-label" for="name">共演者名</label>
           <input
             type="text"
             id="name"
@@ -103,7 +103,7 @@ export const SearchList = () => {
             value={inputName()}
             onInput={e => setInputName(e.currentTarget.value)}
             class="input input-bordered input-sm"
-            placeholder="クリエイター名で検索"
+            placeholder="共演者名で検索"
           />
         </fieldset>
         <fieldset class="fieldset">
@@ -116,7 +116,7 @@ export const SearchList = () => {
             onChange={e => setInputSort(e.currentTarget.value)}
           >
             <option value="order_no">表示順</option>
-            <option value="name">クリエイター名</option>
+            <option value="name">共演者名</option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -149,13 +149,13 @@ export const SearchList = () => {
         <button type="submit" class="btn btn-primary btn-sm">検索</button>
       </form>
       <div class="mb-4 flex justify-end">
-        <a href="/creators/create" class="btn btn-primary btn-sm">新規作成</a>
+        <a href="/performers/create" class="btn btn-primary btn-sm">新規作成</a>
       </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
         <table class="table table-zebra">
           <thead>
             <tr>
-              <th>クリエイター名</th>
+              <th>共演者名</th>
               <th>表示順</th>
               <th>操作</th>
             </tr>
@@ -184,13 +184,13 @@ export const SearchList = () => {
               </Match>
               <Match when={data()}>
                 {result => (
-                  <For each={result().creators}>
-                    {creator => (
+                  <For each={result().performers}>
+                    {performer => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{creator.name}</td>
-                        <td>{creator.orderNo}</td>
+                        <td>{performer.name}</td>
+                        <td>{performer.orderNo}</td>
                         <td>
-                          <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">編集</a>
+                          <a href={`/performers/${performer.performerId}`} class="btn btn-ghost btn-xs">編集</a>
                         </td>
                       </tr>
                     )}
