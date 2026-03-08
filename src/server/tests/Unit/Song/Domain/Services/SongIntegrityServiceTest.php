@@ -20,7 +20,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
 use Song\Domain\Services\SongIntegrityService;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;

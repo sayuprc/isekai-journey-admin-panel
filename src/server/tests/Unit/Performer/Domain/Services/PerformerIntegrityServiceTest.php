@@ -12,7 +12,7 @@ use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerIntegrityService;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;

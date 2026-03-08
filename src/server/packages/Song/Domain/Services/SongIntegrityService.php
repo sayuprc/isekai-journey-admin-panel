@@ -20,7 +20,7 @@ use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;

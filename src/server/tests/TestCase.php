@@ -9,7 +9,7 @@ use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 
 abstract class TestCase extends BaseTestCase
 {
