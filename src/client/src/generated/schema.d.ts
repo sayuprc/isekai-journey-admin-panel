@@ -198,6 +198,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/songs/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 楽曲検索API */
+        get: operations["SongService_searchSongs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/songs/{songId}": {
         parameters: {
             query?: never;
@@ -500,6 +517,16 @@ export interface components {
         SongListResponse: {
             songs: components["schemas"]["Song"][];
         };
+        SongSearchResponse: {
+            songs: components["schemas"]["Song"][];
+            /** Format: int32 */
+            maxPage: number;
+        };
+        /**
+         * @description 楽曲検索のソート条件
+         * @enum {string}
+         */
+        SongSearchSortBy: "title" | "order_no";
         /**
          * @example {
          *       "name": "オリジナル曲",
@@ -1828,6 +1855,69 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
                 };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Server error */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SongService_searchSongs: {
+        parameters: {
+            query?: {
+                title?: string;
+                type?: number;
+                attribute?: number;
+                sort?: components["schemas"]["SongSearchSortBy"];
+                order?: components["schemas"]["SortOrder"];
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SongSearchResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Server error */
             500: {

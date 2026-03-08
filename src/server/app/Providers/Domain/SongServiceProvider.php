@@ -12,6 +12,7 @@ use Song\Application\Interactors\GetInteractor;
 use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
+use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
@@ -20,6 +21,8 @@ use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\List\ListUseCaseInterface;
 use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
+use Song\Application\UseCase\Search\SearchInputData;
+use Song\Application\UseCase\Search\SearchUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -37,10 +40,17 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(CreatorUsageCheckerInterface::class, CreatorUsageChecker::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
+        $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(GetUseCaseInterface::class, GetInteractor::class);
         $this->app->bind(UpdateUseCaseInterface::class, UpdateInteractor::class);
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
+
+        $this->app->bind(SearchInputData::class, function (): SearchInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(SearchInputData::class, $request->query());
+        });
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(Request::class);
