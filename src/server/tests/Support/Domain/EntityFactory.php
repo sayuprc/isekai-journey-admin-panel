@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Support\Domain;
 
-use AdminUser\DebugInfrastructures\FileAdminUserRepository;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Role;
-use Auth\DebugInfrastructures\FileRefreshTokenRepository;
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 use Auth\Domain\Models\Token\AccessToken\Jwt;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
@@ -16,16 +14,13 @@ use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\TokenValue;
-use Creator\DebugInfrastructures\FileCreatorRepository;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use DateTimeImmutable;
-use Performer\DebugInfrastructures\FilePerformerRepository;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
-use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
@@ -48,28 +43,12 @@ trait EntityFactory
         );
     }
 
-    protected function storeCreators(Creator ...$creators): void
-    {
-        array_map(
-            fn (Creator $creator) => $this->factory(FileCreatorRepository::class, $creator->toArray()),
-            $creators,
-        );
-    }
-
     protected function createPerformer(string $performerId, string $name, int $orderNo): Performer
     {
         return new Performer(
             PerformerId::reconstruct($performerId),
             PerformerName::reconstruct($name),
             OrderNo::reconstruct($orderNo),
-        );
-    }
-
-    protected function storePerformers(Performer ...$performers): void
-    {
-        array_map(
-            fn (Performer $performer) => $this->factory(FilePerformerRepository::class, $performer->toArray()),
-            $performers,
         );
     }
 
@@ -102,14 +81,6 @@ trait EntityFactory
         );
     }
 
-    private function storeSongs(Song ...$songs): void
-    {
-        array_map(
-            fn (Song $song) => $this->factory(FileSongRepository::class, $song->toArray()),
-            $songs,
-        );
-    }
-
     protected function createAdminUser(
         string $adminUserId,
         string $email,
@@ -125,14 +96,6 @@ trait EntityFactory
             $createdAt ?? new DateTimeImmutable(),
             $role->value,
             $permissions,
-        );
-    }
-
-    protected function storeUsers(AdminUser ...$users): void
-    {
-        array_map(
-            fn (AdminUser $user) => $this->factory(FileAdminUserRepository::class, $user->toArray()),
-            $users,
         );
     }
 
@@ -154,14 +117,6 @@ trait EntityFactory
             TokenValue::reconstruct($tokenValue),
             ExpiredAt::reconstruct($expiredAt),
             $status,
-        );
-    }
-
-    protected function storeRefreshTokens(RefreshToken ...$refreshTokens): void
-    {
-        array_map(
-            fn (RefreshToken $refreshToken) => $this->factory(FileRefreshTokenRepository::class, $refreshToken->toArray()),
-            $refreshTokens,
         );
     }
 }

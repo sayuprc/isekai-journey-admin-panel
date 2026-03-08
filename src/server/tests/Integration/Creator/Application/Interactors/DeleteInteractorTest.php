@@ -4,35 +4,33 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Creator\Application\Interactors;
 
+use App\Models\Creator\Creator as ModelsCreator;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
-use Creator\DebugInfrastructures\FileCreatorRepository;
-use Creator\Domain\Models\Creator;
 use PHPUnit\Framework\Attributes\Test;
-use Song\DebugInfrastructures\FileSongRepository;
 use SongType\Domain\Models\SongType;
 use Support\UseCase\Error\BusinessLogicError;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class DeleteInteractorTest extends TestCase
+class DeleteInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canDelete(): void
     {
         $uuid = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($uuid, 'クリエイター', 1)->toArray());
+        $this->storeCreators($this->createCreator($uuid, 'クリエイター', 1));
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
         $this->assertTrue($result->isOk());
 
-        $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
+        $creators = ModelsCreator::query()->get()->all();
         $this->assertCount(0, $creators);
     }
 
@@ -42,8 +40,8 @@ class DeleteInteractorTest extends TestCase
         $creatorId = $this->generateUuid();
         $songId = $this->generateUuid();
 
-        $this->factory(FileCreatorRepository::class, $this->createCreator($creatorId, 'クリエイター', 1)->toArray());
-        $this->factory(FileSongRepository::class, $this->createSong(
+        $this->storeCreators($this->createCreator($creatorId, 'クリエイター', 1));
+        $this->storeSongs($this->createSong(
             $songId,
             '曲名',
             '説明',
@@ -53,7 +51,7 @@ class DeleteInteractorTest extends TestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
-        )->toArray());
+        ));
 
         $result = $this->getInstance()->handle(new DeleteInputData($creatorId));
 
@@ -62,7 +60,7 @@ class DeleteInteractorTest extends TestCase
         $this->assertInstanceOf(BusinessLogicError::class, $error);
         $this->assertSame('このクリエイターは楽曲に使用されているため削除できません', $error->message);
 
-        $creators = $this->getAll(Creator::class, FileCreatorRepository::class);
+        $creators = ModelsCreator::query()->get()->all();
         $this->assertCount(1, $creators);
     }
 

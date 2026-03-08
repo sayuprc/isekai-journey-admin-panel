@@ -9,14 +9,14 @@ use Song\Application\Interactors\GetInteractor;
 use Song\Application\UseCase\Get\GetInputData;
 use SongType\Domain\Models\SongType;
 use Support\UseCase\Error\NotFoundError;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class GetInteractorTest extends TestCase
+class GetInteractorTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function getSong(): void

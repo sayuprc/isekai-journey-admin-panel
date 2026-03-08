@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Performer\DebugInfrastructures;
+namespace Tests\Integration\Performer\Infrastructures;
 
-use Performer\DebugInfrastructures\FilePerformerRepository;
+use Performer\Domain\Models\PerformerId;
+use Performer\Infrastructures\PerformerRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\Domain\EntityStore;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class FilePerformerRepositoryTest extends TestCase
+class PerformerRepositoryTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use EntityStore;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function all(): void
     {
+        $repository = $this->getInstance();
+
         $performer1 = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
         $performer2 = $this->createPerformer($this->generateUuid(), '春猿火', 2);
 
-        $this->storePerformers($performer1, $performer2);
+        $repository->save($performer1);
+        $repository->save($performer2);
 
-        $performers = $this->getInstance()->all();
+        $performers = $repository->all();
 
         $this->assertCount(2, $performers);
         $this->assertEquals([$performer1, $performer2], $performers);
@@ -34,24 +34,36 @@ class FilePerformerRepositoryTest extends TestCase
     #[Test]
     public function find(): void
     {
+        $repository = $this->getInstance();
+
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storePerformers($performer);
+        $repository->save($performer);
 
-        $found = $this->getInstance()->find($performer->performerId);
+        $found = $repository->find($performer->performerId);
 
         $this->assertNotNull($found);
         $this->assertEquals($performer, $found);
     }
 
     #[Test]
+    public function findNotFound(): void
+    {
+        $found = $this->getInstance()->find(PerformerId::reconstruct($this->generateUuid()));
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
     public function findByName(): void
     {
+        $repository = $this->getInstance();
+
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storePerformers($performer);
+        $repository->save($performer);
 
-        $found = $this->getInstance()->findByName($performer->name);
+        $found = $repository->findByName($performer->name);
 
         $this->assertNotNull($found);
         $this->assertEquals($performer, $found);
@@ -60,11 +72,13 @@ class FilePerformerRepositoryTest extends TestCase
     #[Test]
     public function save(): void
     {
+        $repository = $this->getInstance();
+
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->getInstance()->save($performer);
+        $repository->save($performer);
 
-        $found = $this->getInstance()->find($performer->performerId);
+        $found = $repository->find($performer->performerId);
 
         $this->assertNotNull($found);
         $this->assertEquals($performer, $found);
@@ -73,13 +87,15 @@ class FilePerformerRepositoryTest extends TestCase
     #[Test]
     public function deleting(): void
     {
+        $repository = $this->getInstance();
+
         $performer = $this->createPerformer($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storePerformers($performer);
+        $repository->save($performer);
 
-        $this->getInstance()->delete($performer->performerId);
+        $repository->delete($performer->performerId);
 
-        $found = $this->getInstance()->find($performer->performerId);
+        $found = $repository->find($performer->performerId);
 
         $this->assertNull($found);
     }
@@ -89,22 +105,25 @@ class FilePerformerRepositoryTest extends TestCase
     {
         $repository = $this->getInstance();
 
-        // 空の場合は 0
-        $this->assertSame(0, $repository->getMaxOrderNo());
-
-        // データを追加
         $performer1 = $this->createPerformer($this->generateUuid(), 'performer1', 10);
         $performer2 = $this->createPerformer($this->generateUuid(), 'performer2', 30);
         $performer3 = $this->createPerformer($this->generateUuid(), 'performer3', 20);
 
-        $this->storePerformers($performer1, $performer2, $performer3);
+        $repository->save($performer1);
+        $repository->save($performer2);
+        $repository->save($performer3);
 
-        // 最大値が返ることを確認
         $this->assertSame(30, $repository->getMaxOrderNo());
     }
 
-    private function getInstance(): FilePerformerRepository
+    #[Test]
+    public function getMaxOrderNoWhenEmpty(): void
     {
-        return $this->app->make(FilePerformerRepository::class);
+        $this->assertSame(0, $this->getInstance()->getMaxOrderNo());
+    }
+
+    private function getInstance(): PerformerRepository
+    {
+        return $this->app->make(PerformerRepository::class);
     }
 }

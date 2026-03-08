@@ -7,14 +7,14 @@ namespace Tests\Integration\Song\Application\Assemble;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
 use SongType\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
+use Tests\Support\Domain\EntityStore;
 
-class SongAssemblerTest extends TestCase
+class SongAssemblerTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use FileRepositoryTransaction;
+    use EntityStore;
 
     #[Test]
     public function canAssemble(): void

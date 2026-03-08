@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Creator\DebugInfrastructures;
+namespace Tests\Integration\Creator\Infrastructures;
 
-use Creator\DebugInfrastructures\FileCreatorRepository;
+use Creator\Domain\Models\CreatorId;
+use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
-use Tests\Support\Domain\EntityStore;
-use Tests\Support\FileRepositoryTransaction;
-use Tests\TestCase;
 
-class FileCreatorRepositoryTest extends TestCase
+class CreatorRepositoryTest extends DatabaseTestCase
 {
     use EntityFactory;
-    use EntityStore;
-    use FileRepositoryTransaction;
 
     #[Test]
     public function all(): void
     {
+        $repository = $this->getInstance();
+
         $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
         $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
 
-        $this->storeCreators($creator1, $creator2);
+        $repository->save($creator1);
+        $repository->save($creator2);
 
-        $creators = $this->getInstance()->all();
+        $creators = $repository->all();
 
         $this->assertCount(2, $creators);
         $this->assertEquals([$creator1, $creator2], $creators);
@@ -34,24 +34,36 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function find(): void
     {
+        $repository = $this->getInstance();
+
         $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storeCreators($creator);
+        $repository->save($creator);
 
-        $found = $this->getInstance()->find($creator->creatorId);
+        $found = $repository->find($creator->creatorId);
 
         $this->assertNotNull($found);
         $this->assertEquals($creator, $found);
     }
 
     #[Test]
+    public function findNotFound(): void
+    {
+        $found = $this->getInstance()->find(CreatorId::reconstruct($this->generateUuid()));
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
     public function findByName(): void
     {
+        $repository = $this->getInstance();
+
         $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storeCreators($creator);
+        $repository->save($creator);
 
-        $found = $this->getInstance()->findByName($creator->name);
+        $found = $repository->findByName($creator->name);
 
         $this->assertNotNull($found);
         $this->assertEquals($creator, $found);
@@ -60,25 +72,30 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function findByIds(): void
     {
+        $repository = $this->getInstance();
+
         $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
         $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
 
-        $this->storeCreators($creator1, $creator2);
+        $repository->save($creator1);
+        $repository->save($creator2);
 
-        $creators = $this->getInstance()->findByIds($creator1->creatorId, $creator2->creatorId);
+        $creators = $repository->findByIds($creator1->creatorId, $creator2->creatorId);
 
         $this->assertCount(2, $creators);
-        $this->assertEquals([$creator1, $creator2], $creators);
+        $this->assertEqualsCanonicalizing([$creator1, $creator2], $creators);
     }
 
     #[Test]
     public function save(): void
     {
+        $repository = $this->getInstance();
+
         $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->getInstance()->save($creator);
+        $repository->save($creator);
 
-        $found = $this->getInstance()->find($creator->creatorId);
+        $found = $repository->find($creator->creatorId);
 
         $this->assertNotNull($found);
         $this->assertEquals($creator, $found);
@@ -87,13 +104,15 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function deleting(): void
     {
+        $repository = $this->getInstance();
+
         $creator = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 1);
 
-        $this->storeCreators($creator);
+        $repository->save($creator);
 
-        $this->getInstance()->delete($creator->creatorId);
+        $repository->delete($creator->creatorId);
 
-        $found = $this->getInstance()->find($creator->creatorId);
+        $found = $repository->find($creator->creatorId);
 
         $this->assertNull($found);
     }
@@ -101,12 +120,15 @@ class FileCreatorRepositoryTest extends TestCase
     #[Test]
     public function getMaxOrderNo(): void
     {
+        $repository = $this->getInstance();
+
         $creator1 = $this->createCreator($this->generateUuid(), 'ヰ世界情緒', 10);
         $creator2 = $this->createCreator($this->generateUuid(), '香椎モイミ', 20);
 
-        $this->storeCreators($creator1, $creator2);
+        $repository->save($creator1);
+        $repository->save($creator2);
 
-        $this->assertSame(20, $this->getInstance()->getMaxOrderNo());
+        $this->assertSame(20, $repository->getMaxOrderNo());
     }
 
     #[Test]
@@ -115,8 +137,8 @@ class FileCreatorRepositoryTest extends TestCase
         $this->assertSame(0, $this->getInstance()->getMaxOrderNo());
     }
 
-    private function getInstance(): FileCreatorRepository
+    private function getInstance(): CreatorRepository
     {
-        return $this->app->make(FileCreatorRepository::class);
+        return $this->app->make(CreatorRepository::class);
     }
 }
