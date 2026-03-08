@@ -23,7 +23,7 @@ readonly class Converter
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setDescription($song->description)
-            ->setSongType($this->toOpenApiSongType($song))
+            ->setType($this->toOpenApiSongType($song))
             ->setOrderNo($song->orderNo)
             ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
             ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))
@@ -39,8 +39,8 @@ readonly class Converter
     private function toOpenApiSongType(AssembledSong $song): OpenApiSongType
     {
         return new OpenApiSongType()
-            ->setName($song->songTypeName)
-            ->setValue(SongTypeValue::from($song->songTypeValue));
+            ->setName($song->typeName)
+            ->setValue(SongTypeValue::from($song->typeValue));
     }
 
     private function toOpenApiSongAttribute(string $name, int $value): OpenApiSongAttribute

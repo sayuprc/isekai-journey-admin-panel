@@ -18,8 +18,8 @@ use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
-use SongType\Domain\Models\SongType;
 use Support\Contracts\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
@@ -50,7 +50,7 @@ class SongIntegrityService
     public function prepareForCreate(
         string $title,
         string $description,
-        int $songType,
+        int $type,
         ?int $attribute,
         array $lyricists,
         array $composers,
@@ -76,7 +76,7 @@ class SongIntegrityService
             $this->generator->generate(),
             $title,
             $description,
-            $songType,
+            $type,
             $attribute,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
@@ -95,7 +95,7 @@ class SongIntegrityService
         string $songId,
         string $title,
         string $description,
-        int $songType,
+        int $type,
         ?int $attribute,
         int $orderNo,
         array $lyricists,
@@ -122,7 +122,7 @@ class SongIntegrityService
             $songId,
             $title,
             $description,
-            $songType,
+            $type,
             $attribute,
             $orderNo,
             ...$creators,
@@ -136,7 +136,7 @@ class SongIntegrityService
         string $songId,
         string $title,
         string $description,
-        int $songType,
+        int $type,
         ?int $attribute,
         int $orderNo,
         Lyricists $lyricists,
@@ -147,7 +147,7 @@ class SongIntegrityService
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
-            $this->toSongType($songType),
+            $this->toSongType($type),
             $this->toSongAttribute($attribute),
             OrderNo::create($orderNo),
         )
@@ -168,12 +168,12 @@ class SongIntegrityService
     /**
      * @return Result<SongType, DomainError>
      */
-    private function toSongType(int $songType): Result
+    private function toSongType(int $type): Result
     {
-        $result = SongType::tryFrom($songType);
+        $result = SongType::tryFrom($type);
 
         if (is_null($result)) {
-            return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$songType}"));
+            return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$type}"));
         }
 
         return new Ok($result);

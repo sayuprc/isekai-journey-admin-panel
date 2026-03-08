@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SongType\Domain\Models;
+namespace Song\Domain\Models;
 
 enum SongType: int
 {

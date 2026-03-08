@@ -6,9 +6,9 @@ namespace Tests\Feature\Api\Song;
 
 use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
 use Song\Route\SongRouteMap;
-use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -50,7 +50,7 @@ class UpdateSongTest extends DatabaseTestCase
             ->putJson(route(SongRouteMap::Update, $songId), [
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
-                'songTypeValue' => SongType::Cover->value,
+                'typeValue' => SongType::Cover->value,
                 'orderNo' => 2,
                 'lyricists' => [],
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
@@ -61,7 +61,7 @@ class UpdateSongTest extends DatabaseTestCase
                     'songId' => $songId,
                     'title' => '描き続けた君へ',
                     'description' => 'オリジナル楽曲',
-                    'songType' => [
+                    'type' => [
                         'name' => SongType::Cover->getName(),
                         'value' => SongType::Cover->value,
                     ],

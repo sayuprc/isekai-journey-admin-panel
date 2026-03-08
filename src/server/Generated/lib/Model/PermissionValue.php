@@ -59,8 +59,6 @@ enum PermissionValue: string
 
     case WRITE_SONG = 'write_song';
 
-    case READ_SONG_TYPE = 'read_song_type';
-
 }
 
 

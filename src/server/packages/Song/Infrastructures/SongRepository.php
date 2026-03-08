@@ -65,7 +65,7 @@ readonly class SongRepository implements SongRepositoryInterface
                 'song_id' => $id,
                 'title' => $data['title'],
                 'description' => $data['description'],
-                'type' => $data['song_type'],
+                'type' => $data['type'],
                 'attribute' => $data['attribute'],
                 'order_no' => $data['order_no'],
                 'created_at' => now(),

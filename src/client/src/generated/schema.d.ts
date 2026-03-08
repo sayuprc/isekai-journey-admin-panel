@@ -329,7 +329,7 @@ export interface components {
          * @description 権限の値
          * @enum {string}
          */
-        PermissionValue: "read_admin_user" | "write_admin_user" | "read_creator" | "write_creator" | "read_performer" | "write_performer" | "read_song" | "write_song" | "read_song_type";
+        PermissionValue: "read_admin_user" | "write_admin_user" | "read_creator" | "write_creator" | "read_performer" | "write_performer" | "read_song" | "write_song";
         /** @description The template for picking properties. */
         RequestArranger: {
             creatorId: components["schemas"]["creatorId"];
@@ -362,7 +362,7 @@ export interface components {
          *       "songId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
          *       "title": "描き続けた君へ",
          *       "description": "オリジナル楽曲",
-         *       "songType": {
+         *       "type": {
          *         "name": "オリジナル曲",
          *         "value": 1
          *       },
@@ -398,7 +398,7 @@ export interface components {
             songId: components["schemas"]["songId"];
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
-            songType: components["schemas"]["SongType"];
+            type: components["schemas"]["SongType"];
             attribute?: components["schemas"]["SongAttribute"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["Lyricist"][];
@@ -426,7 +426,7 @@ export interface components {
         SongCreateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
-            songTypeValue: components["schemas"]["SongTypeValue"];
+            typeValue: components["schemas"]["SongTypeValue"];
             attributeValue?: components["schemas"]["SongAttributeValue"];
             lyricists: components["schemas"]["RequestLyricist"][];
             composers: components["schemas"]["RequestComposer"][];
@@ -457,7 +457,7 @@ export interface components {
             value: components["schemas"]["SongTypeValue"];
         };
         SongTypeListResponse: {
-            songTypes: components["schemas"]["SongType"][];
+            types: components["schemas"]["SongType"][];
         };
         /**
          * @description 楽曲種別の値
@@ -467,7 +467,7 @@ export interface components {
         SongUpdateRequest: {
             title: components["schemas"]["title"];
             description: components["schemas"]["description"];
-            songTypeValue: components["schemas"]["SongTypeValue"];
+            typeValue: components["schemas"]["SongTypeValue"];
             attributeValue?: components["schemas"]["SongAttributeValue"];
             orderNo: components["schemas"]["orderNo"];
             lyricists: components["schemas"]["RequestLyricist"][];

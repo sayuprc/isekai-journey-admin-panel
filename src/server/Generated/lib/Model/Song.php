@@ -60,7 +60,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'string',
         'title' => 'string',
         'description' => 'string',
-        'song_type' => '\OpenAPI\Client\Model\SongType',
+        'type' => '\OpenAPI\Client\Model\SongType',
         'attribute' => '\OpenAPI\Client\Model\SongAttribute',
         'order_no' => 'int',
         'lyricists' => '\OpenAPI\Client\Model\Lyricist[]',
@@ -79,7 +79,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'uuid',
         'title' => null,
         'description' => null,
-        'song_type' => null,
+        'type' => null,
         'attribute' => null,
         'order_no' => 'int32',
         'lyricists' => null,
@@ -96,7 +96,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => false,
         'title' => false,
         'description' => false,
-        'song_type' => false,
+        'type' => false,
         'attribute' => false,
         'order_no' => false,
         'lyricists' => false,
@@ -193,7 +193,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'songId',
         'title' => 'title',
         'description' => 'description',
-        'song_type' => 'songType',
+        'type' => 'type',
         'attribute' => 'attribute',
         'order_no' => 'orderNo',
         'lyricists' => 'lyricists',
@@ -210,7 +210,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'setSongId',
         'title' => 'setTitle',
         'description' => 'setDescription',
-        'song_type' => 'setSongType',
+        'type' => 'setType',
         'attribute' => 'setAttribute',
         'order_no' => 'setOrderNo',
         'lyricists' => 'setLyricists',
@@ -227,7 +227,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'getSongId',
         'title' => 'getTitle',
         'description' => 'getDescription',
-        'song_type' => 'getSongType',
+        'type' => 'getType',
         'attribute' => 'getAttribute',
         'order_no' => 'getOrderNo',
         'lyricists' => 'getLyricists',
@@ -295,7 +295,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('song_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
-        $this->setIfExists('song_type', $data ?? [], null);
+        $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('attribute', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
@@ -347,8 +347,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'description', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['song_type'] === null) {
-            $invalidProperties[] = "'song_type' can't be null";
+        if ($this->container['type'] === null) {
+            $invalidProperties[] = "'type' can't be null";
         }
         if ($this->container['order_no'] === null) {
             $invalidProperties[] = "'order_no' can't be null";
@@ -473,28 +473,28 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets song_type
+     * Gets type
      *
      * @return \OpenAPI\Client\Model\SongType
      */
-    public function getSongType()
+    public function getType()
     {
-        return $this->container['song_type'];
+        return $this->container['type'];
     }
 
     /**
-     * Sets song_type
+     * Sets type
      *
-     * @param \OpenAPI\Client\Model\SongType $song_type song_type
+     * @param \OpenAPI\Client\Model\SongType $type type
      *
      * @return self
      */
-    public function setSongType($song_type)
+    public function setType($type)
     {
-        if (is_null($song_type)) {
-            throw new \InvalidArgumentException('non-nullable song_type cannot be null');
+        if (is_null($type)) {
+            throw new \InvalidArgumentException('non-nullable type cannot be null');
         }
-        $this->container['song_type'] = $song_type;
+        $this->container['type'] = $type;
 
         return $this;
     }

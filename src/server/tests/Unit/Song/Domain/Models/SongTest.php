@@ -7,7 +7,7 @@ namespace Tests\Unit\Song\Domain\Models;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Song;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\TestCase;
 
 class SongTest extends TestCase

@@ -24,7 +24,7 @@ interface Props {
 
 export const EditableForm = (props: Props) => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
-  const [songTypes, setSongTypes] = createSignal<SongType[]>([]);
+  const [types, setTypes] = createSignal<SongType[]>([]);
   const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
   const toEntries = (
@@ -44,7 +44,7 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
 
   onMount(async () => {
-    const [creatorsRes, songTypesRes, attributesRes] = await Promise.all([
+    const [creatorsRes, typesRes, attributesRes] = await Promise.all([
       client.api.creators.get(),
       client.api['song-types'].get(),
       client.api['song-attributes'].get(),
@@ -54,8 +54,8 @@ export const EditableForm = (props: Props) => {
       setCreators(creatorsRes.data.creators);
     }
 
-    if (songTypesRes.data) {
-      setSongTypes(songTypesRes.data.songTypes);
+    if (typesRes.data) {
+      setTypes(typesRes.data.types);
     }
 
     if (attributesRes.data) {
@@ -134,7 +134,7 @@ export const EditableForm = (props: Props) => {
     const { data, error, status } = await client.api.songs({ songId: songId }).put({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
-      songTypeValue: Number(formData.get('songTypeValue')) as SongTypeValue,
+      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
       attributeValue: formData.get('attributeValue') !== ''
         ? Number(formData.get('attributeValue')) as SongAttributeValue
         : undefined,
@@ -241,17 +241,17 @@ export const EditableForm = (props: Props) => {
           </Show>
 
           <label class="label">楽曲種別</label>
-          <select class="select select-bordered w-full" name="songTypeValue" required>
+          <select class="select select-bordered w-full" name="typeValue" required>
             <option value="" disabled>
               選択してください
             </option>
-            <For each={songTypes()}>
-              {songType => (
+            <For each={types()}>
+              {type => (
                 <option
-                  value={songType.value}
-                  selected={songType.value === props.data?.song.songType.value}
+                  value={type.value}
+                  selected={type.value === props.data?.song.type.value}
                 >
-                  {songType.name}
+                  {type.name}
                 </option>
               )}
             </For>

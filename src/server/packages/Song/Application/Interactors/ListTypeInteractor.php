@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SongType\Application\Interactors;
+namespace Song\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use SongType\Application\UseCase\List\ListOutputData;
-use SongType\Application\UseCase\List\ListUseCaseInterface;
-use SongType\Domain\Models\SongType;
+use Song\Application\UseCase\ListType\ListTypeOutputData;
+use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
+use Song\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 
-readonly class ListInteractor implements ListUseCaseInterface
+readonly class ListTypeInteractor implements ListTypeUseCaseInterface
 {
     public function __construct(private AuthContext $context)
     {
@@ -29,10 +29,10 @@ readonly class ListInteractor implements ListUseCaseInterface
             return new Err(new AuthenticationError());
         }
 
-        if (! $user->can(Permission::ReadSongType)) {
+        if (! $user->can(Permission::ReadSong)) {
             return new Err(new AuthorizationError());
         }
 
-        return new Ok(new ListOutputData(SongType::cases()));
+        return new Ok(new ListTypeOutputData(SongType::cases()));
     }
 }

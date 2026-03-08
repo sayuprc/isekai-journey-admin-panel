@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\SongType;
 
 use PHPUnit\Framework\Attributes\Test;
-use SongType\Domain\Models\SongType;
-use SongType\Route\SongTypeRouteMap;
+use Song\Domain\Models\SongType;
+use Song\Route\SongTypeRouteMap;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 
@@ -21,10 +21,10 @@ class ListSongTypeTest extends DatabaseTestCase
             ->get(route(SongTypeRouteMap::List))
             ->assertStatus(200)
             ->assertExactJson([
-                'songTypes' => collect(SongType::cases())
-                    ->map(fn (SongType $songType): array => [
-                        'name' => $songType->getName(),
-                        'value' => $songType->value,
+                'types' => collect(SongType::cases())
+                    ->map(fn (SongType $type): array => [
+                        'name' => $type->getName(),
+                        'value' => $type->value,
                     ])
                     ->all(),
             ]);

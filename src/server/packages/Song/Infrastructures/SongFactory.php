@@ -13,8 +13,8 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
+use Song\Domain\Models\SongType;
 use Song\Domain\Models\Title;
-use SongType\Domain\Models\SongType;
 use Support\Domain\ValueObjects\OrderNo;
 
 readonly class SongFactory implements SongFactoryInterface
@@ -24,13 +24,13 @@ readonly class SongFactory implements SongFactoryInterface
         SongId $songId,
         Title $title,
         Description $description,
-        SongType $songType,
+        SongType $type,
         ?SongAttribute $attribute,
         OrderNo $orderNo,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
     ): Song {
-        return new Song($songId, $title, $description, $songType, $attribute, $orderNo, $lyricists, $composers, $arrangers);
+        return new Song($songId, $title, $description, $type, $attribute, $orderNo, $lyricists, $composers, $arrangers);
     }
 }

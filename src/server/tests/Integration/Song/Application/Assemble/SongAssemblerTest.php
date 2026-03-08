@@ -6,7 +6,7 @@ namespace Tests\Integration\Song\Application\Assemble;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -22,14 +22,14 @@ class SongAssemblerTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
-        $songType = SongType::Original;
+        $type = SongType::Original;
         $orderNo = 1;
 
         $song = $this->createSong(
             $uuid,
             $title,
             $description,
-            $songType,
+            $type,
             null,
             $orderNo,
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
@@ -48,8 +48,8 @@ class SongAssemblerTest extends DatabaseTestCase
         $this->assertSame($uuid, $assembled->songId);
         $this->assertSame($title, $assembled->title);
         $this->assertSame($description, $assembled->description);
-        $this->assertSame($songType->getName(), $assembled->songTypeName);
-        $this->assertSame($songType->value, $assembled->songTypeValue);
+        $this->assertSame($type->getName(), $assembled->typeName);
+        $this->assertSame($type->value, $assembled->typeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
         $this->assertCount(1, $assembled->lyricists);
         $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);

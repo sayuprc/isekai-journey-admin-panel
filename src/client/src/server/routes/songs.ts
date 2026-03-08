@@ -42,13 +42,13 @@ export const songs = new Elysia({ prefix: '/songs' })
       songId: t.String(),
     }),
   })
-  .post('/', async ({ body: { title, description, songTypeValue, attributeValue, lyricists, composers, arrangers }, credential }) => {
+  .post('/', async ({ body: { title, description, typeValue, attributeValue, lyricists, composers, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).POST('/songs', {
         body: {
           title,
           description,
-          songTypeValue,
+          typeValue,
           attributeValue,
           lyricists,
           composers,
@@ -60,14 +60,14 @@ export const songs = new Elysia({ prefix: '/songs' })
     body: t.Object({
       title: t.String(),
       description: t.String(),
-      songTypeValue: SongTypeValueSchema,
+      typeValue: SongTypeValueSchema,
       attributeValue: t.Optional(SongAttributeValueSchema),
       lyricists: CreatorRefSchema,
       composers: CreatorRefSchema,
       arrangers: CreatorRefSchema,
     }),
   })
-  .put('/:songId', async ({ params: { songId }, body: { title, description, songTypeValue, attributeValue, orderNo, composers, lyricists, arrangers }, credential }) => {
+  .put('/:songId', async ({ params: { songId }, body: { title, description, typeValue, attributeValue, orderNo, composers, lyricists, arrangers }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).PUT('/songs/{songId}', {
         params: {
@@ -78,7 +78,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         body: {
           title,
           description,
-          songTypeValue,
+          typeValue,
           attributeValue,
           orderNo,
           lyricists,
@@ -94,7 +94,7 @@ export const songs = new Elysia({ prefix: '/songs' })
     body: t.Object({
       title: t.String(),
       description: t.String(),
-      songTypeValue: SongTypeValueSchema,
+      typeValue: SongTypeValueSchema,
       attributeValue: t.Optional(SongAttributeValueSchema),
       orderNo: t.Number(),
       lyricists: CreatorRefSchema,

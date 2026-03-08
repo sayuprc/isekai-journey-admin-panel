@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\UseCase\Delete\DeleteInputData;
 use Song\Domain\Models\SongRepositoryInterface;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;

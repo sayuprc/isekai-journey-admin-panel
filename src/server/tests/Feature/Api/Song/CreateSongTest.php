@@ -7,8 +7,8 @@ namespace Tests\Feature\Api\Song;
 use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Song\Route\SongRouteMap;
-use SongType\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -30,7 +30,7 @@ class CreateSongTest extends DatabaseTestCase
             ->postJson(route(SongRouteMap::Create), [
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
-                'songTypeValue' => SongType::Original->value,
+                'typeValue' => SongType::Original->value,
                 'lyricists' => [['creatorId' => $creator1->creatorId->value]],
                 'composers' => [['creatorId' => $creator2->creatorId->value]],
                 'arrangers' => [['creatorId' => $creator3->creatorId->value]],
@@ -43,7 +43,7 @@ class CreateSongTest extends DatabaseTestCase
                             ->whereType('songId', 'string')
                             ->where('title', '描き続けた君へ')
                             ->where('description', 'オリジナル楽曲')
-                            ->where('songType', [
+                            ->where('type', [
                                 'name' => SongType::Original->getName(),
                                 'value' => SongType::Original->value,
                             ])

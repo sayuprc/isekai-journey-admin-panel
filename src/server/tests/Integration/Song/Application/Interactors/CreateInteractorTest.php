@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\CreateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Domain\Models\SongRepositoryInterface;
-use SongType\Domain\Models\SongType;
+use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -45,7 +45,7 @@ class CreateInteractorTest extends DatabaseTestCase
         $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title->value);
         $this->assertSame('オリジナル楽曲', $song->description->value);
-        $this->assertSame(SongType::Original, $song->songType);
+        $this->assertSame(SongType::Original, $song->type);
         $this->assertSame(10, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame($creator1->creatorId->value, $song->lyricists[0]->creatorId->value);

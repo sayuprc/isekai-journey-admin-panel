@@ -17,8 +17,8 @@ use Song\Application\Interactors\CreateInteractor;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
-use SongType\Domain\Models\SongType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
@@ -52,7 +52,7 @@ class CreateInteractorTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
-        $songTypeValue = SongType::Original->value;
+        $typeValue = SongType::Original->value;
         $orderNo = 1;
         $lyricists = [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
         $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
@@ -64,13 +64,13 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, null, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $typeValue, null, $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
                     $title,
                     $description,
-                    SongType::from($songTypeValue),
+                    SongType::from($typeValue),
                     null,
                     $orderNo,
                     $lyricists,
@@ -85,7 +85,7 @@ class CreateInteractorTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
-                    && $arg->songType->value === $songTypeValue
+                    && $arg->type->value === $typeValue
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -105,7 +105,7 @@ class CreateInteractorTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
-                    && $arg->songType->value === $songTypeValue
+                    && $arg->type->value === $typeValue
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -122,8 +122,8 @@ class CreateInteractorTest extends TestCase
                     $song->songId->value,
                     $song->title->value,
                     $song->description->value,
-                    $song->songType->name,
-                    $song->songType->value,
+                    $song->type->name,
+                    $song->type->value,
                     null,
                     null,
                     $song->orderNo->value,
@@ -138,7 +138,7 @@ class CreateInteractorTest extends TestCase
             new CreateInputData(
                 $title,
                 $description,
-                $songTypeValue,
+                $typeValue,
                 $lyricists,
                 $composers,
                 $arrangers,
@@ -153,7 +153,7 @@ class CreateInteractorTest extends TestCase
     {
         $title = '曲名';
         $description = '説明';
-        $songTypeValue = 1;
+        $typeValue = 1;
         $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
         $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
         $arrangers = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
@@ -164,7 +164,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $songTypeValue, null, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $typeValue, null, $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -172,7 +172,7 @@ class CreateInteractorTest extends TestCase
             new CreateInputData(
                 $title,
                 $description,
-                $songTypeValue,
+                $typeValue,
                 $lyricists,
                 $composers,
                 $arrangers,

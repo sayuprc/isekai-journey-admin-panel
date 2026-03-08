@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
 use Song\Route\SongAttributeRouteMap;
 use Song\Route\SongRouteMap;
-use SongType\Route\SongTypeRouteMap;
+use Song\Route\SongTypeRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
