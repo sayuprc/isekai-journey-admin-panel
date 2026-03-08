@@ -11,4 +11,6 @@ enum SupportComponent: string implements ComponentMap
     case Domain = 'Support\Domain\*';
 
     case Contracts = 'Support\Contracts\*';
+
+    case Optional = 'Support\Optional\*';
 }
