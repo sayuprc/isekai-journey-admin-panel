@@ -1,4 +1,4 @@
-name: Client CI
+name: Client QA
 
 on:
   schedule:
@@ -13,7 +13,7 @@ env:
 
 jobs:
   check:
-    name: Client CI
+    name: Client QA
     runs-on: ubuntu-latest
 
     steps:
