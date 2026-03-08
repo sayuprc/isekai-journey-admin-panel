@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\DebugInfrastructures;
 
 use Creator\Domain\Models\CreatorId;
+use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -33,6 +34,66 @@ readonly class FileSongRepository implements SongRepositoryInterface
         usort($songs, fn (Song $a, Song $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $songs;
+    }
+
+    public function search(SongSearchCriteria $criteria): array
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->title->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => str_contains($item->title->value, $criteria->title->get()))
+                |> array_values(...);
+        }
+
+        if ($criteria->type->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => $item->type === $criteria->type->get())
+                |> array_values(...);
+        }
+
+        if ($criteria->attribute->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => $item->attribute === $criteria->attribute->get())
+                |> array_values(...);
+        }
+
+        if ($criteria->sort->isTitle()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Song $a, Song $b): int => $a->title->value <=> $b->title->value);
+            } else {
+                usort($items, fn (Song $a, Song $b): int => $b->title->value <=> $a->title->value);
+            }
+        } elseif ($criteria->sort->isOrderNo()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Song $a, Song $b): int => $a->orderNo->value <=> $b->orderNo->value);
+            } else {
+                usort($items, fn (Song $a, Song $b): int => $b->orderNo->value <=> $a->orderNo->value);
+            }
+        }
+
+        $chunked = array_chunk($items, $criteria->perPage->value);
+
+        return $chunked[$criteria->page - 1] ?? [];
+    }
+
+    public function maxPage(SongSearchCriteria $criteria): int
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->title->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => str_contains($item->title->value, $criteria->title->get()))
+                |> array_values(...);
+        }
+
+        if ($criteria->type->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => $item->type === $criteria->type->get())
+                |> array_values(...);
+        }
+
+        if ($criteria->attribute->isPresent()) {
+            $items = array_filter($items, fn (Song $item): bool => $item->attribute === $criteria->attribute->get())
+                |> array_values(...);
+        }
+
+        return (int)ceil(count($items) / $criteria->perPage->value);
     }
 
     public function find(SongId $songId): ?Song

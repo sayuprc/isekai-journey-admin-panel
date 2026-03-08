@@ -9,16 +9,19 @@ use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
+use App\Http\Controllers\Api\Creator\SearchCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
 use App\Http\Controllers\Api\Performer\CreatePerformerController;
 use App\Http\Controllers\Api\Performer\DeletePerformerController;
 use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
+use App\Http\Controllers\Api\Performer\SearchPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
 use App\Http\Controllers\Api\Song\CreateSongController;
 use App\Http\Controllers\Api\Song\DeleteSongController;
 use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\ListSongController;
+use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
@@ -54,6 +57,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
                     Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
                     Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
+                    Route::get('/search', [SearchCreatorController::class, 'handle'])->name(CreatorRouteMap::Search);
                     Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
                 });
 
@@ -62,6 +66,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
                     Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
                     Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
+                    Route::get('/search', [SearchPerformerController::class, 'handle'])->name(PerformerRouteMap::Search);
                     Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
                 });
 
@@ -70,6 +75,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/', [ListSongController::class, 'handle'])->name(SongRouteMap::List);
                     Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
                     Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
+                    Route::get('/search', [SearchSongController::class, 'handle'])->name(SongRouteMap::Search);
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
                 });
 

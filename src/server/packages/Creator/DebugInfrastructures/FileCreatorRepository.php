@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\DebugInfrastructures;
 
+use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
@@ -33,6 +34,46 @@ readonly class FileCreatorRepository implements CreatorRepositoryInterface
         usort($creators, fn (Creator $a, Creator $b): int => $a->orderNo->value <=> $b->orderNo->value);
 
         return $creators;
+    }
+
+    public function search(CreatorSearchCriteria $criteria): array
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->name->isPresent()) {
+            $items = array_filter($items, fn (Creator $item): bool => str_contains($item->name->value, $criteria->name->get()))
+                |> array_values(...);
+        }
+
+        if ($criteria->sort->isName()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Creator $a, Creator $b): int => $a->name->value <=> $b->name->value);
+            } else {
+                usort($items, fn (Creator $a, Creator $b): int => $b->name->value <=> $a->name->value);
+            }
+        } elseif ($criteria->sort->isOrderNo()) {
+            if ($criteria->order->isAsc()) {
+                usort($items, fn (Creator $a, Creator $b): int => $a->orderNo->value <=> $b->orderNo->value);
+            } else {
+                usort($items, fn (Creator $a, Creator $b): int => $b->orderNo->value <=> $a->orderNo->value);
+            }
+        }
+
+        $chunked = array_chunk($items, $criteria->perPage->value);
+
+        return $chunked[$criteria->page - 1] ?? [];
+    }
+
+    public function maxPage(CreatorSearchCriteria $criteria): int
+    {
+        $items = $this->loadAll();
+
+        if ($criteria->name->isPresent()) {
+            $items = array_filter($items, fn (Creator $item): bool => str_contains($item->name->value, $criteria->name->get()))
+                |> array_values(...);
+        }
+
+        return (int)ceil(count($items) / $criteria->perPage->value);
     }
 
     public function find(CreatorId $creatorId): ?Creator

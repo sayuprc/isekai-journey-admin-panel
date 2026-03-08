@@ -34,6 +34,7 @@ return [
             CreatorComponent::Domain,
             SupportComponent::Domain,
             SupportComponent::Contracts,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),
@@ -41,6 +42,8 @@ return [
         CreatorComponent::UseCase,
         [
             CreatorComponent::Domain,
+            SupportComponent::Domain,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),
@@ -51,6 +54,7 @@ return [
             PerformerComponent::Domain,
             SupportComponent::Domain,
             SupportComponent::Contracts,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),
@@ -58,6 +62,8 @@ return [
         PerformerComponent::UseCase,
         [
             PerformerComponent::Domain,
+            SupportComponent::Domain,
+            SupportComponent::Optional,
             LibraryComponent::ResultType,
         ],
     ),
@@ -71,4 +77,5 @@ return [
         ],
     ),
     new Define(SupportComponent::Contracts),
+    new Define(SupportComponent::Optional),
 ];

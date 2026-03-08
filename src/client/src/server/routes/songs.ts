@@ -27,6 +27,33 @@ export const songs = new Elysia({ prefix: '/songs' })
       await createAuthClient(credential).GET('/songs'),
     );
   })
+  .get('/search', async ({ query, credential }) => {
+    return resolveApiResponse(
+      await createAuthClient(credential).GET('/songs/search', {
+        params: {
+          query: {
+            title: query.title || undefined,
+            type: query.type,
+            attribute: query.attribute,
+            sort: query.sort ?? 'order_no',
+            order: query.order ?? 'asc',
+            page: query.page ?? 1,
+            per_page: query.per_page ?? 25,
+          },
+        },
+      }),
+    );
+  }, {
+    query: t.Object({
+      title: t.String(),
+      type: t.Optional(t.Number()),
+      attribute: t.Optional(t.Number()),
+      sort: t.Optional(t.Union([t.Literal('title'), t.Literal('order_no')])),
+      order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
+      page: t.Optional(t.Number()),
+      per_page: t.Optional(t.Number()),
+    }),
+  })
   .get('/:songId', async ({ params: { songId }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).GET('/songs/{songId}', {

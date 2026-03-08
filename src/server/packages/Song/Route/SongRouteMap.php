@@ -8,6 +8,8 @@ enum SongRouteMap: string
 {
     case List = 'songs';
 
+    case Search = 'songs.search';
+
     case Get = 'songs.show';
 
     case Create = 'songs.create';

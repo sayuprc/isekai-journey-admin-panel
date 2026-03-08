@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\Domain\Models;
 
 use Creator\Domain\Models\CreatorId;
+use Song\Domain\Criteria\SongSearchCriteria;
 
 interface SongRepositoryInterface
 {
@@ -12,6 +13,13 @@ interface SongRepositoryInterface
      * @return array<Song>
      */
     public function all(): array;
+
+    /**
+     * @return array<Song>
+     */
+    public function search(SongSearchCriteria $criteria): array;
+
+    public function maxPage(SongSearchCriteria $criteria): int;
 
     public function find(SongId $songId): ?Song;
 

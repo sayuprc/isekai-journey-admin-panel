@@ -8,12 +8,15 @@ use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\Interactors\GetInteractor;
 use Creator\Application\Interactors\ListInteractor;
+use Creator\Application\Interactors\SearchInteractor;
 use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
 use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
+use Creator\Application\UseCase\Search\SearchInputData;
+use Creator\Application\UseCase\Search\SearchUseCaseInterface;
 use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\CreatorFactoryInterface;
@@ -30,10 +33,17 @@ class CreatorServiceProvider extends EnvServiceProvider
         $this->app->bind(CreatorFactoryInterface::class, CreatorFactory::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
+        $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(GetUseCaseInterface::class, GetInteractor::class);
         $this->app->bind(UpdateUseCaseInterface::class, UpdateInteractor::class);
         $this->app->bind(DeleteUseCaseInterface::class, DeleteInteractor::class);
+
+        $this->app->bind(SearchInputData::class, function (): SearchInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(SearchInputData::class, $request->query());
+        });
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(Request::class);

@@ -1,56 +1,12 @@
 ---
+import { SearchList } from '../../components/creator/SearchList';
 import { FlashMessage } from '../../components/Flash';
 import Layout from '../../layouts/Layout.astro';
-import { client } from '../../utils/client';
 
 export const prerender = false;
-
-const { data, status } = await client.api.creators.get({
-  headers: {
-    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
-    'cookie': Astro.request.headers.get('cookie') ?? '',
-  },
-});
-
-if (status === 401) {
-  return Astro.redirect('/auth/login');
-}
-
-if (!data) {
-  throw new Error();
-}
 ---
 
 <Layout pageTitle="クリエイター一覧">
   <FlashMessage client:only="solid-js" />
-  <div class="mb-4 flex justify-end">
-    <a href="/creators/create" class="btn btn-primary btn-sm">新規作成</a>
-  </div>
-  <!-- TODO コンポーネント化する -->
-  <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-    <table class="table table-zebra">
-      <thead>
-        <tr>
-          <th>クリエイター名</th>
-          <th>表示順</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          data.creators.map((creator) => {
-            return (
-              <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                <td>{creator.name}</td>
-                <td>{creator.orderNo}</td>
-                <td>
-                  <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">編集</a>
-                </td>
-              </tr>
-            );
-          })
-        }
-      </tbody>
-    </table>
-  </div>
+  <SearchList client:only="solid-js" />
 </Layout>

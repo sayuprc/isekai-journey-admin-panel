@@ -10,6 +10,29 @@ export const creators = new Elysia({ prefix: '/creators' })
       await createAuthClient(credential).GET('/creators'),
     );
   })
+  .get('/search', async ({ query, credential }) => {
+    return resolveApiResponse(
+      await createAuthClient(credential).GET('/creators/search', {
+        params: {
+          query: {
+            name: query.name || undefined,
+            sort: query.sort ?? 'order_no',
+            order: query.order ?? 'asc',
+            page: query.page ?? 1,
+            per_page: query.per_page ?? 25,
+          },
+        },
+      }),
+    );
+  }, {
+    query: t.Object({
+      name: t.String(),
+      sort: t.Optional(t.Union([t.Literal('name'), t.Literal('order_no')])),
+      order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
+      page: t.Optional(t.Number()),
+      per_page: t.Optional(t.Number()),
+    }),
+  })
   .get('/:creatorId', async ({ params: { creatorId }, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).GET('/creators/{creatorId}', {

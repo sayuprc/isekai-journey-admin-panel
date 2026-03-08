@@ -8,6 +8,8 @@ enum CreatorRouteMap: string
 {
     case List = 'creators';
 
+    case Search = 'creators.search';
+
     case Get = 'creators.show';
 
     case Create = 'creators.create';

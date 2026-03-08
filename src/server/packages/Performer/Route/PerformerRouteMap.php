@@ -8,6 +8,8 @@ enum PerformerRouteMap: string
 {
     case List = 'performers';
 
+    case Search = 'performers.search';
+
     case Get = 'performers.show';
 
     case Create = 'performers.create';
