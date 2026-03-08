@@ -12,7 +12,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Contracts;
+namespace Support\Contracts\Uuid;
 
 interface UuidGeneratorInterface
 {

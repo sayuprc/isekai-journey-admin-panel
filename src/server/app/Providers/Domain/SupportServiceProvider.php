@@ -8,14 +8,14 @@ use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\Infrastructures\Clock;
 use Support\Infrastructures\Database\SQLiteConfig;
 use Support\Infrastructures\DbTransaction;
 use Support\Infrastructures\Mapper;
 use Support\Infrastructures\Uuid\UuidConverter;
-use Support\Infrastructures\UuidGenerator;
+use Support\Infrastructures\Uuid\UuidGenerator;
 
 class SupportServiceProvider extends EnvServiceProvider
 {

@@ -17,7 +17,7 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
-use Support\Contracts\UuidGeneratorInterface;
+use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
