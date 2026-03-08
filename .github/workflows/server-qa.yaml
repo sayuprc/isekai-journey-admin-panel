@@ -1,4 +1,4 @@
-name: Server CI
+name: Server QA
 
 on:
   schedule:
@@ -9,7 +9,7 @@ on:
       - dev
 
 env:
-  MISE_ENV: ci
+  MISE_ENV: qa
 
 jobs:
   setup:
