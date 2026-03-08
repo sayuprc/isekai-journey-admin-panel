@@ -1,4 +1,4 @@
-name: Server CI
+name: Server QA
 
 on:
   schedule:
