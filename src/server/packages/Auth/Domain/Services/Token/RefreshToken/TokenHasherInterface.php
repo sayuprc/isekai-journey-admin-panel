@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Services\Token\RefreshToken;
 
+use SensitiveParameter;
+
 interface TokenHasherInterface
 {
-    /**
-     * Hash a plain text token for storage
-     */
-    public function hash(string $plainToken): string;
+    public function hash(#[SensitiveParameter] string $plainToken): string;
 
-    /**
-     * Verify a plain text token against a hashed token
-     */
-    public function verify(string $plainToken, string $hashedToken): bool;
+    public function verify(#[SensitiveParameter] string $plainToken, string $hashedToken): bool;
 }
