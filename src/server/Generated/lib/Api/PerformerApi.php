@@ -86,6 +86,9 @@ class PerformerApi
         'performerServiceListPerformers' => [
             'application/json',
         ],
+        'performerServiceSearchPerformers' => [
+            'application/json',
+        ],
         'performerServiceUpdatePerformer' => [
             'application/json',
         ],
@@ -1133,6 +1136,325 @@ class PerformerApi
         $httpBody = '';
         $multipart = false;
 
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation performerServiceSearchPerformers
+     *
+     * @param  string|null $name name (optional)
+     * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort sort (optional)
+     * @param  \OpenAPIClientModelSortOrder|null $order order (optional)
+     * @param  int|null $page page (optional, default to 1)
+     * @param  int|null $per_page per_page (optional, default to 50)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\PerformerSearchResponse
+     */
+    public function performerServiceSearchPerformers($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    {
+        list($response) = $this->performerServiceSearchPerformersWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation performerServiceSearchPerformersWithHttpInfo
+     *
+     * @param  string|null $name (optional)
+     * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
+     * @param  \OpenAPIClientModelSortOrder|null $order (optional)
+     * @param  int|null $page (optional, default to 1)
+     * @param  int|null $per_page (optional, default to 50)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\PerformerSearchResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function performerServiceSearchPerformersWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    {
+        $request = $this->performerServiceSearchPerformersRequest($name, $sort, $order, $page, $per_page, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\PerformerSearchResponse',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\PerformerSearchResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\PerformerSearchResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation performerServiceSearchPerformersAsync
+     *
+     * @param  string|null $name (optional)
+     * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
+     * @param  \OpenAPIClientModelSortOrder|null $order (optional)
+     * @param  int|null $page (optional, default to 1)
+     * @param  int|null $per_page (optional, default to 50)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function performerServiceSearchPerformersAsync($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    {
+        return $this->performerServiceSearchPerformersAsyncWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation performerServiceSearchPerformersAsyncWithHttpInfo
+     *
+     * @param  string|null $name (optional)
+     * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
+     * @param  \OpenAPIClientModelSortOrder|null $order (optional)
+     * @param  int|null $page (optional, default to 1)
+     * @param  int|null $per_page (optional, default to 50)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function performerServiceSearchPerformersAsyncWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\PerformerSearchResponse';
+        $request = $this->performerServiceSearchPerformersRequest($name, $sort, $order, $page, $per_page, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'performerServiceSearchPerformers'
+     *
+     * @param  string|null $name (optional)
+     * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
+     * @param  \OpenAPIClientModelSortOrder|null $order (optional)
+     * @param  int|null $page (optional, default to 1)
+     * @param  int|null $per_page (optional, default to 50)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function performerServiceSearchPerformersRequest($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    {
+
+
+
+
+
+
+
+        $resourcePath = '/performers/search';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $name,
+            'name', // param base name
+            'string', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $sort,
+            'sort', // param base name
+            'PerformerSearchSortBy', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $order,
+            'order', // param base name
+            'SortOrder', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_page,
+            'per_page', // param base name
+            'integer', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
 
 
 

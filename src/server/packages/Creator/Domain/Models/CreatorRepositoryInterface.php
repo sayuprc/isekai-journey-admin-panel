@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Creator\Domain\Models;
 
+use Creator\Domain\Criteria\CreatorSearchCriteria;
+
 interface CreatorRepositoryInterface
 {
     /**
      * @return array<Creator>
      */
     public function all(): array;
+
+    /**
+     * @return array<Creator>
+     */
+    public function search(CreatorSearchCriteria $criteria): array;
+
+    public function maxPage(CreatorSearchCriteria $criteria): int;
 
     public function find(CreatorId $creatorId): ?Creator;
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
 use App\Http\Controllers\Api\Creator\ListCreatorController;
+use App\Http\Controllers\Api\Creator\SearchCreatorController;
 use App\Http\Controllers\Api\Creator\UpdateCreatorController;
 use App\Http\Controllers\Api\Performer\CreatePerformerController;
 use App\Http\Controllers\Api\Performer\DeletePerformerController;
@@ -54,6 +55,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
                     Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
                     Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
+                    Route::get('/search', [SearchCreatorController::class, 'handle'])->name(CreatorRouteMap::Search);
                     Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
                 });
 
