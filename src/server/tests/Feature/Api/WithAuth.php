@@ -25,7 +25,8 @@ trait WithAuth
 
         $user = $this->createAdminUser($this->generateUuid(), 'root@example.com', Role::Privilege);
 
-        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
+        $result = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
+        $refreshToken = $result['token'];
 
         $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
         $this->app->make(RefreshTokenRepository::class)->save($refreshToken);
