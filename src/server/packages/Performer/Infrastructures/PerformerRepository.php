@@ -33,7 +33,10 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
+            // 前方一致検索でインデックスを活用
+            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
+            $query = $query->whereLike('name_lower', $keyword . '%');
         }
 
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
@@ -51,7 +54,10 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
+            // 前方一致検索でインデックスを活用
+            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
+            $query = $query->whereLike('name_lower', $keyword . '%');
         }
 
         return (int)ceil($query->count() / $criteria->perPage->value);

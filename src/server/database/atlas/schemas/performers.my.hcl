@@ -12,6 +12,15 @@ table "performers" {
     type    = varchar(255)
     comment = "共演者名"
   }
+  column "name_lower" {
+    null = true
+    type = varchar(255)
+    as {
+      expr = "lower(`name`)"
+      type = VIRTUAL
+    }
+    comment = "共演者名（小文字）"
+  }
   column "order_no" {
     null     = false
     type     = int
@@ -31,5 +40,9 @@ table "performers" {
 
   primary_key {
     columns = [column.performer_id]
+  }
+
+  index "idx_performers_name_lower" {
+    columns = [column.name_lower]
   }
 }
