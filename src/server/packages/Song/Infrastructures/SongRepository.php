@@ -36,8 +36,10 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->whereRaw('title_lower LIKE lower(?)', ['%' . $keyword . '%']);
+            // 前方一致検索でインデックスを活用
+            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
+            $keyword = SqlHelper::escapeLike(strtolower($criteria->title->get()));
+            $query = $query->whereLike('title_lower', $keyword . '%');
         }
 
         if ($criteria->type->isPresent()) {
@@ -63,8 +65,10 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->whereRaw('title_lower LIKE lower(?)', ['%' . $keyword . '%']);
+            // 前方一致検索でインデックスを活用
+            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
+            $keyword = SqlHelper::escapeLike(strtolower($criteria->title->get()));
+            $query = $query->whereLike('title_lower', $keyword . '%');
         }
 
         if ($criteria->type->isPresent()) {
