@@ -145,7 +145,7 @@ export const CreateForm = () => {
         </Show>
 
         <label class="label">説明</label>
-        <input type="text" class="input w-full" name="description" required classList={{ 'input-error': !!getFieldError('description') }} />
+        <input type="text" class="input w-full" name="description" classList={{ 'input-error': !!getFieldError('description') }} />
         <Show when={getFieldError('description')}>
           {message => <p class="mt-1 text-xs text-error">{message()}</p>}
         </Show>
