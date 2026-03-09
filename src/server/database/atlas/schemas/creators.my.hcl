@@ -12,6 +12,15 @@ table "creators" {
     type    = varchar(255)
     comment = "クリエイター名"
   }
+  column "name_lower" {
+    null = true
+    type = varchar(255)
+    as {
+      expr = "lower(`name`)"
+      type = VIRTUAL
+    }
+    comment = "クリエイター名（小文字）"
+  }
   column "order_no" {
     null     = false
     type     = int
@@ -31,5 +40,9 @@ table "creators" {
 
   primary_key {
     columns = [column.creator_id]
+  }
+
+  index "idx_creators_name_lower" {
+    columns = [column.name_lower]
   }
 }

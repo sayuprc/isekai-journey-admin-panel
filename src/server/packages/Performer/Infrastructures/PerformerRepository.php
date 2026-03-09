@@ -33,7 +33,8 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
+            $keyword = SqlHelper::escapeLike($criteria->name->get());
+            $query = $query->whereRaw('name_lower LIKE lower(?)', ['%' . $keyword . '%']);
         }
 
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
@@ -51,7 +52,8 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         $query = ModelsPerformer::query();
 
         if ($criteria->name->isPresent()) {
-            $query = $query->whereLike('name', '%' . SqlHelper::escapeLike($criteria->name->get()) . '%');
+            $keyword = SqlHelper::escapeLike($criteria->name->get());
+            $query = $query->whereRaw('name_lower LIKE lower(?)', ['%' . $keyword . '%']);
         }
 
         return (int)ceil($query->count() / $criteria->perPage->value);

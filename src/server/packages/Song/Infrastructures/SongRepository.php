@@ -36,7 +36,8 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $query = $query->whereLike('title', '%' . SqlHelper::escapeLike($criteria->title->get()) . '%');
+            $keyword = SqlHelper::escapeLike($criteria->title->get());
+            $query = $query->whereRaw('title_lower LIKE lower(?)', ['%' . $keyword . '%']);
         }
 
         if ($criteria->type->isPresent()) {
@@ -62,7 +63,8 @@ readonly class SongRepository implements SongRepositoryInterface
         $query = ModelsSong::query();
 
         if ($criteria->title->isPresent()) {
-            $query = $query->whereLike('title', '%' . SqlHelper::escapeLike($criteria->title->get()) . '%');
+            $keyword = SqlHelper::escapeLike($criteria->title->get());
+            $query = $query->whereRaw('title_lower LIKE lower(?)', ['%' . $keyword . '%']);
         }
 
         if ($criteria->type->isPresent()) {

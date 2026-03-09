@@ -12,6 +12,15 @@ table "songs" {
     type    = varchar(255)
     comment = "楽曲名"
   }
+  column "title_lower" {
+    null = true
+    type = varchar(255)
+    as {
+      expr = "lower(`title`)"
+      type = VIRTUAL
+    }
+    comment = "楽曲名（小文字）"
+  }
   column "description" {
     null    = false
     type    = text
@@ -48,5 +57,9 @@ table "songs" {
 
   primary_key {
     columns = [column.song_id]
+  }
+
+  index "idx_songs_title_lower" {
+    columns = [column.title_lower]
   }
 }
