@@ -38,7 +38,7 @@ readonly class SongRepository implements SongRepositoryInterface
         if ($criteria->title->isPresent()) {
             // 前方一致検索でインデックスを活用
             // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(strtolower($criteria->title->get()));
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
             $query = $query->whereLike('title_lower', $keyword . '%');
         }
 
@@ -67,7 +67,7 @@ readonly class SongRepository implements SongRepositoryInterface
         if ($criteria->title->isPresent()) {
             // 前方一致検索でインデックスを活用
             // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(strtolower($criteria->title->get()));
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
             $query = $query->whereLike('title_lower', $keyword . '%');
         }
 

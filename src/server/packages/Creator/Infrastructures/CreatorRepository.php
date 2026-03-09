@@ -35,7 +35,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         if ($criteria->name->isPresent()) {
             // 前方一致検索でインデックスを活用
             // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(strtolower($criteria->name->get()));
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
             $query = $query->whereLike('name_lower', $keyword . '%');
         }
 
@@ -56,7 +56,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         if ($criteria->name->isPresent()) {
             // 前方一致検索でインデックスを活用
             // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(strtolower($criteria->name->get()));
+            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
             $query = $query->whereLike('name_lower', $keyword . '%');
         }
 
