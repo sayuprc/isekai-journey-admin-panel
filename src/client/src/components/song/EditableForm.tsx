@@ -234,7 +234,6 @@ export const EditableForm = (props: Props) => {
             type="text"
             class="input w-full"
             name="description"
-            required
             value={props.data?.song.description}
             classList={{ 'input-error': !!getFieldError('description') }}
           />
