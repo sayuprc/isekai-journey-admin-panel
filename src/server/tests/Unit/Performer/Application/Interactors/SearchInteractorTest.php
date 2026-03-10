@@ -9,6 +9,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Performer\Application\Interactors\SearchInteractor;
 use Performer\Application\UseCase\Search\SearchInputData;
+use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\AuthenticationError;
@@ -34,12 +35,12 @@ class SearchInteractorTest extends TestCase
         $performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(fn (PerformerSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn([$performer])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(fn (PerformerSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -59,12 +60,12 @@ class SearchInteractorTest extends TestCase
         $performer = $this->createPerformer('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
+            ->withArgs(fn (PerformerSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
             ->andReturn([$performer])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
+            ->withArgs(fn (PerformerSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
             ->andReturn(1)
             ->once();
 

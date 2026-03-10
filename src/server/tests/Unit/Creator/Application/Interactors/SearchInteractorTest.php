@@ -7,6 +7,7 @@ namespace Tests\Unit\Creator\Application\Interactors;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\Interactors\SearchInteractor;
 use Creator\Application\UseCase\Search\SearchInputData;
+use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
@@ -34,12 +35,12 @@ class SearchInteractorTest extends TestCase
         $creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(fn (CreatorSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn([$creator])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(fn (CreatorSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -59,12 +60,12 @@ class SearchInteractorTest extends TestCase
         $creator = $this->createCreator('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'ヰ世界情緒', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
+            ->withArgs(fn (CreatorSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
             ->andReturn([$creator])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
+            ->withArgs(fn (CreatorSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'ヰ世界情緒')
             ->andReturn(1)
             ->once();
 

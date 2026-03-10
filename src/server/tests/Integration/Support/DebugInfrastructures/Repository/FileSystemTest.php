@@ -17,7 +17,7 @@ class FileSystemTest extends TestCase
     public function isExistsFile(): void
     {
         $this->runWithTemporaryFile(
-            function (string $path) {
+            function (string $path): void {
                 $this->assertTrue(new FileSystem()->exists($path));
             },
             '/tmp/exists.txt',
@@ -28,7 +28,7 @@ class FileSystemTest extends TestCase
     public function isNonexistentFile(): void
     {
         $this->runWithNonexistentFile(
-            function (string $path) {
+            function (string $path): void {
                 $this->assertFalse(new FileSystem()->exists($path));
             },
             '/tmp/nonexistent.txt',
@@ -39,7 +39,7 @@ class FileSystemTest extends TestCase
     public function putDataToFile(): void
     {
         $this->runWithTemporaryFile(
-            function (string $path, mixed $content) {
+            function (string $path, mixed $content): void {
                 new FileSystem()->put($path, $content);
 
                 $this->assertSame($content, file_get_contents($path));
@@ -53,7 +53,7 @@ class FileSystemTest extends TestCase
     public function getDataFromFile(): void
     {
         $this->runWithTemporaryFile(
-            function (string $path, mixed $content) {
+            function (string $path, mixed $content): void {
                 $this->assertSame($content, new FileSystem()->get($path));
             },
             '/tmp/get.txt',
