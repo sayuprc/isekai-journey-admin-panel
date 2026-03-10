@@ -53,16 +53,21 @@ class SongAssemblerTest extends TestCase
             [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
         );
 
-        foreach ([
-            $lyricistId => '作詞者',
-            $composerId => '作曲者',
-            $arrangerId => '編曲者',
-        ] as $id => $name) {
-            $this->creatorRepository->shouldReceive('find')
-                ->withArgs(fn (CreatorId $arg): bool => $arg->value === $id)
-                ->andReturn(new Creator(CreatorId::reconstruct($id), CreatorName::reconstruct($name), OrderNo::reconstruct(1)))
-                ->once();
-        }
+        $this->creatorRepository->shouldReceive('findByIds')
+            ->withArgs(function (CreatorId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
+                $idValues = array_map(fn (CreatorId $id): string => $id->value, $ids);
+                sort($idValues);
+                $expectedIds = [$lyricistId, $composerId, $arrangerId];
+                sort($expectedIds);
+
+                return $idValues === $expectedIds;
+            })
+            ->andReturn([
+                new Creator(CreatorId::reconstruct($lyricistId), CreatorName::reconstruct('作詞者'), OrderNo::reconstruct(1)),
+                new Creator(CreatorId::reconstruct($composerId), CreatorName::reconstruct('作曲者'), OrderNo::reconstruct(1)),
+                new Creator(CreatorId::reconstruct($arrangerId), CreatorName::reconstruct('編曲者'), OrderNo::reconstruct(1)),
+            ])
+            ->once();
 
         $assembled = $this->getInstance()->assemble($song);
 
@@ -84,6 +89,42 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
         $this->assertSame('編曲者', $assembled->arrangers[0]->name);
         $this->assertSame(1, $assembled->arrangers[0]->orderNo);
+    }
+
+    #[Test]
+    public function canAssembleWithoutCreators(): void
+    {
+        $uuid = $this->generateUuid();
+        $title = 'インストゥルメンタル';
+        $description = 'クリエイター無しの楽曲';
+        $type = SongType::Original;
+        $orderNo = 1;
+
+        $song = $this->createSong(
+            $uuid,
+            $title,
+            $description,
+            $type,
+            null,
+            $orderNo,
+            [],
+            [],
+            [],
+        );
+
+        $this->creatorRepository->shouldReceive('findByIds')->never();
+
+        $assembled = $this->getInstance()->assemble($song);
+
+        $this->assertSame($uuid, $assembled->songId);
+        $this->assertSame($title, $assembled->title);
+        $this->assertSame($description, $assembled->description);
+        $this->assertSame($type->getName(), $assembled->typeName);
+        $this->assertSame($type->value, $assembled->typeValue);
+        $this->assertSame($orderNo, $assembled->orderNo);
+        $this->assertCount(0, $assembled->lyricists);
+        $this->assertCount(0, $assembled->composers);
+        $this->assertCount(0, $assembled->arrangers);
     }
 
     private function getInstance(): SongAssembler
