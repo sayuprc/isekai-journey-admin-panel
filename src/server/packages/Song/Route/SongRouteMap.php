@@ -6,8 +6,6 @@ namespace Song\Route;
 
 enum SongRouteMap: string
 {
-    case List = 'songs';
-
     case Search = 'songs.search';
 
     case Get = 'songs.show';

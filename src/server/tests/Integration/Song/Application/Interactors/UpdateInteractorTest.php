@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
+use App\Models\Song\Song;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\UseCase\Update\UpdateInputData;
-use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -58,18 +58,18 @@ class UpdateInteractorTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = $this->app->make(SongRepositoryInterface::class)->all();
+        $songs = Song::query()->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
-        $this->assertSame('描き続けた君へ', $song->title->value);
-        $this->assertSame('オリジナル楽曲', $song->description->value);
-        $this->assertSame(SongType::Cover, $song->type);
-        $this->assertSame(2, $song->orderNo->value);
+        $this->assertSame('描き続けた君へ', $song->title);
+        $this->assertSame('オリジナル楽曲', $song->description);
+        $this->assertSame(SongType::Cover->value, $song->type);
+        $this->assertSame(2, $song->order_no);
         $this->assertCount(0, $song->lyricists);
         $this->assertCount(1, $song->composers);
-        $this->assertSame($creator2->creatorId->value, $song->composers[0]->creatorId->value);
+        $this->assertSame($creator2->creatorId->value, $this->toUuid($song->composers->first()->creator_id));
         $this->assertCount(1, $song->arrangers);
-        $this->assertSame($creator3->creatorId->value, $song->arrangers[0]->creatorId->value);
+        $this->assertSame($creator3->creatorId->value, $this->toUuid($song->arrangers->first()->creator_id));
     }
 
     private function getInstance(): UpdateInteractor

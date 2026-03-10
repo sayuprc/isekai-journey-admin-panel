@@ -23,7 +23,7 @@ class UuidConverterTest extends TestCase
     }
 
     #[Test]
-    public function toUuid(): void
+    public function binToUuid(): void
     {
         $uuid = '550e8400-e29b-41d4-a716-446655440000';
         $bin = Uuid::fromString($uuid)->getBytes();
