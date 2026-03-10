@@ -15,6 +15,7 @@ use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongSummary;
 use Song\Application\UseCase\Search\SearchInputData;
+use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
@@ -47,12 +48,12 @@ class SearchInteractorTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -78,12 +79,12 @@ class SearchInteractorTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
             ->andReturn(1)
             ->once();
 
@@ -108,12 +109,12 @@ class SearchInteractorTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
             ->andReturn(1)
             ->once();
 
@@ -138,12 +139,12 @@ class SearchInteractorTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn ($criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn ($criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
             ->andReturn(1)
             ->once();
 
