@@ -24,6 +24,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
+
 readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
     public function __construct(

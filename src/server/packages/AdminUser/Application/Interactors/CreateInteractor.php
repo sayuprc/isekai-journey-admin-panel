@@ -24,6 +24,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(

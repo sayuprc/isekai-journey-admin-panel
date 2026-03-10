@@ -16,6 +16,7 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+
 readonly class ListInteractor implements ListUseCaseInterface
 {
     public function __construct(

@@ -13,6 +13,7 @@ use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
+
 readonly class PerformerRepository implements PerformerRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)

@@ -11,6 +11,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Override;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+
 readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     public function __construct(

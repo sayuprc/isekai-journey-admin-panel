@@ -13,6 +13,7 @@ use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\AdminUserPermission;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
+
 readonly class AdminUserRepository implements AdminUserRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)

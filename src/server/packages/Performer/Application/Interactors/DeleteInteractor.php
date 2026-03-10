@@ -18,6 +18,7 @@ use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
     public function __construct(

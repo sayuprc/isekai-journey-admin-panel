@@ -17,6 +17,7 @@ use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Domain\Error\EntityRuleViolationError;
+
 readonly class JwtHandler implements JwtHandlerInterface
 {
     public function __construct(

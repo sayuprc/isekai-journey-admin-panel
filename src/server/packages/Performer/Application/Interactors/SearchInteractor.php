@@ -20,6 +20,7 @@ use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+
 readonly class SearchInteractor implements SearchUseCaseInterface
 {
     public function __construct(

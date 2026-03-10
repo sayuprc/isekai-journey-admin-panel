@@ -21,6 +21,7 @@ use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+
 readonly class LoginInteractor implements LoginUseCaseInterface
 {
     public function __construct(
