@@ -53,7 +53,6 @@ class SongAssemblerTest extends TestCase
             [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
         );
 
-        // Expect a single findByIds call with all creator IDs
         $this->creatorRepository->shouldReceive('findByIds')
             ->withArgs(function (CreatorId ...$ids): bool {
                 $idValues = array_map(fn (CreatorId $id): string => $id->value, $ids);
@@ -107,12 +106,11 @@ class SongAssemblerTest extends TestCase
             $type,
             null,
             $orderNo,
-            [], // No lyricists
-            [], // No composers
-            [], // No arrangers
+            [],
+            [],
+            [],
         );
 
-        // Should not call findByIds when there are no creators
         $this->creatorRepository->shouldReceive('findByIds')->never();
 
         $assembled = $this->getInstance()->assemble($song);
