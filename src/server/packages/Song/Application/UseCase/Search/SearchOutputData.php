@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Song\Application\UseCase\Search;
 
-use Song\Application\Assemble\AssembledSong;
+use Song\Application\Query\SongSummary;
 
 readonly class SearchOutputData
 {
     /**
-     * @param array<AssembledSong> $songs
+     * @param array<SongSummary> $songs
      */
     public function __construct(
         public array $songs,

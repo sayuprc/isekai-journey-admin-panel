@@ -11,12 +11,11 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Application\Assemble\AssembledSong;
-use Song\Application\Assemble\SongAssembler;
 use Song\Application\Interactors\SearchInteractor;
+use Song\Application\Query\SongQueryServiceInterface;
+use Song\Application\Query\SongSummary;
 use Song\Application\UseCase\Search\SearchInputData;
 use Song\Domain\Models\SongAttribute;
-use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
@@ -27,60 +26,34 @@ class SearchInteractorTest extends TestCase
 {
     use EntityFactory;
 
-    private MockInterface&SongRepositoryInterface $repository;
-
-    private MockInterface&SongAssembler $assembler;
+    private MockInterface&SongQueryServiceInterface $query;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->repository = Mockery::mock(SongRepositoryInterface::class);
-        $this->assembler = Mockery::mock(SongAssembler::class);
+        $this->query = Mockery::mock(SongQueryServiceInterface::class);
     }
 
     #[Test]
     public function searchWithoutFilters(): void
     {
-        $song = $this->createSong(
+        $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
-            'オリジナル楽曲',
             SongType::Original,
             null,
             1,
-            [],
-            [],
-            [],
         );
 
-        $assembledSong = new AssembledSong(
-            $song->songId->value,
-            $song->title->value,
-            $song->description->value,
-            $song->type->getName(),
-            $song->type->value,
-            null,
-            null,
-            $song->orderNo->value,
-            [],
-            [],
-            [],
-        );
-
-        $this->repository->shouldReceive('search')
+        $this->query->shouldReceive('search')
             ->withArgs(fn ($criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
-            ->andReturn([$song])
+            ->andReturn([$summary])
             ->once();
 
-        $this->repository->shouldReceive('maxPage')
+        $this->query->shouldReceive('maxPage')
             ->withArgs(fn ($criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
             ->andReturn(1)
-            ->once();
-
-        $this->assembler->shouldReceive('assemble')
-            ->with($song)
-            ->andReturn($assembledSong)
             ->once();
 
         $result = $this->getInstance()->handle(new SearchInputData());
@@ -96,45 +69,22 @@ class SearchInteractorTest extends TestCase
     #[Test]
     public function searchWithTitle(): void
     {
-        $song = $this->createSong(
+        $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
-            'オリジナル楽曲',
             SongType::Original,
             null,
             1,
-            [],
-            [],
-            [],
         );
 
-        $assembledSong = new AssembledSong(
-            $song->songId->value,
-            $song->title->value,
-            $song->description->value,
-            $song->type->getName(),
-            $song->type->value,
-            null,
-            null,
-            $song->orderNo->value,
-            [],
-            [],
-            [],
-        );
-
-        $this->repository->shouldReceive('search')
+        $this->query->shouldReceive('search')
             ->withArgs(fn ($criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
-            ->andReturn([$song])
+            ->andReturn([$summary])
             ->once();
 
-        $this->repository->shouldReceive('maxPage')
+        $this->query->shouldReceive('maxPage')
             ->withArgs(fn ($criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
             ->andReturn(1)
-            ->once();
-
-        $this->assembler->shouldReceive('assemble')
-            ->with($song)
-            ->andReturn($assembledSong)
             ->once();
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '描き続けた君へ'));
@@ -149,45 +99,22 @@ class SearchInteractorTest extends TestCase
     #[Test]
     public function searchWithType(): void
     {
-        $song = $this->createSong(
+        $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
-            'オリジナル楽曲',
             SongType::Original,
             null,
             1,
-            [],
-            [],
-            [],
         );
 
-        $assembledSong = new AssembledSong(
-            $song->songId->value,
-            $song->title->value,
-            $song->description->value,
-            $song->type->getName(),
-            $song->type->value,
-            null,
-            null,
-            $song->orderNo->value,
-            [],
-            [],
-            [],
-        );
-
-        $this->repository->shouldReceive('search')
+        $this->query->shouldReceive('search')
             ->withArgs(fn ($criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
-            ->andReturn([$song])
+            ->andReturn([$summary])
             ->once();
 
-        $this->repository->shouldReceive('maxPage')
+        $this->query->shouldReceive('maxPage')
             ->withArgs(fn ($criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
             ->andReturn(1)
-            ->once();
-
-        $this->assembler->shouldReceive('assemble')
-            ->with($song)
-            ->andReturn($assembledSong)
             ->once();
 
         $result = $this->getInstance()->handle(new SearchInputData(type: SongType::Original->value));
@@ -196,51 +123,28 @@ class SearchInteractorTest extends TestCase
 
         $output = $result->unwrap();
         $this->assertCount(1, $output->songs);
-        $this->assertSame(SongType::Original->value, $output->songs[0]->typeValue);
+        $this->assertSame(SongType::Original, $output->songs[0]->type);
     }
 
     #[Test]
     public function searchWithAttribute(): void
     {
-        $song = $this->createSong(
+        $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
-            'オリジナル楽曲',
             SongType::Original,
             SongAttribute::Collaboration,
             1,
-            [],
-            [],
-            [],
         );
 
-        $assembledSong = new AssembledSong(
-            $song->songId->value,
-            $song->title->value,
-            $song->description->value,
-            $song->type->getName(),
-            $song->type->value,
-            $song->attribute?->getName(),
-            $song->attribute?->value,
-            $song->orderNo->value,
-            [],
-            [],
-            [],
-        );
-
-        $this->repository->shouldReceive('search')
+        $this->query->shouldReceive('search')
             ->withArgs(fn ($criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
-            ->andReturn([$song])
+            ->andReturn([$summary])
             ->once();
 
-        $this->repository->shouldReceive('maxPage')
+        $this->query->shouldReceive('maxPage')
             ->withArgs(fn ($criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
             ->andReturn(1)
-            ->once();
-
-        $this->assembler->shouldReceive('assemble')
-            ->with($song)
-            ->andReturn($assembledSong)
             ->once();
 
         $result = $this->getInstance()->handle(new SearchInputData(attribute: SongAttribute::Collaboration->value));
@@ -249,19 +153,18 @@ class SearchInteractorTest extends TestCase
 
         $output = $result->unwrap();
         $this->assertCount(1, $output->songs);
-        $this->assertSame(SongAttribute::Collaboration->value, $output->songs[0]->attributeValue);
+        $this->assertSame(SongAttribute::Collaboration, $output->songs[0]->attribute);
     }
 
     #[Test]
     public function returnAuthenticationError(): void
     {
-        $this->repository->shouldNotReceive('search');
-        $this->repository->shouldNotReceive('maxPage');
-        $this->assembler->shouldNotReceive('assemble');
+        $this->query->shouldNotReceive('search');
+        $this->query->shouldNotReceive('maxPage');
 
         $context = $this->app->make(AuthContext::class);
 
-        $result = new SearchInteractor($context, $this->repository, $this->assembler)->handle(new SearchInputData());
+        $result = new SearchInteractor($context, $this->query)->handle(new SearchInputData());
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
@@ -270,9 +173,8 @@ class SearchInteractorTest extends TestCase
     #[Test]
     public function returnAuthorizationError(): void
     {
-        $this->repository->shouldNotReceive('search');
-        $this->repository->shouldNotReceive('maxPage');
-        $this->assembler->shouldNotReceive('assemble');
+        $this->query->shouldNotReceive('search');
+        $this->query->shouldNotReceive('maxPage');
 
         $context = $this->app->make(AuthContext::class);
 
@@ -285,7 +187,7 @@ class SearchInteractorTest extends TestCase
             [],
         ));
 
-        $result = new SearchInteractor($context, $this->repository, $this->assembler)->handle(new SearchInputData());
+        $result = new SearchInteractor($context, $this->query)->handle(new SearchInputData());
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
@@ -295,8 +197,7 @@ class SearchInteractorTest extends TestCase
     {
         return new SearchInteractor(
             $this->privilegedContext(),
-            $this->repository,
-            $this->assembler,
+            $this->query,
         );
     }
 }
