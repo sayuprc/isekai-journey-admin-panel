@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateOutputData;
@@ -15,6 +14,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

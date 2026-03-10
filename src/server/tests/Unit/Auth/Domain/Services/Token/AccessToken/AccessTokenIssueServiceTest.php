@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Domain\Services\Token\AccessToken;
 
-use Override;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
@@ -12,6 +11,7 @@ use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Tests\Support\Domain\EntityFactory;

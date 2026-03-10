@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures;
 
-use Override;
 use App\Models\Song\Song;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongSummary;
 use Song\Domain\Criteria\SongSearchCriteria;

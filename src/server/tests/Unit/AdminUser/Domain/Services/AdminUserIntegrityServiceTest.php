@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Domain\Services;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserName;
@@ -17,6 +16,7 @@ use AdminUser\Domain\Services\AdminUserIntegrityService;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;

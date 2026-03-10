@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Query\SongQueryServiceInterface;

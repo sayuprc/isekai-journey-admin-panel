@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
-use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -12,6 +11,7 @@ use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\HashedPassword;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\AdminUserPermission;
+use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
 readonly class AdminUserRepository implements AdminUserRepositoryInterface

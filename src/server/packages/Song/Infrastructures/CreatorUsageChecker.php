@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures;
 
-use Override;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
+use Override;
 use Song\Domain\Models\SongRepositoryInterface;
 
 readonly class CreatorUsageChecker implements CreatorUsageCheckerInterface

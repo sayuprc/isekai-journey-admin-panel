@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Application\Interactors;
 
-use Override;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
@@ -16,6 +15,7 @@ use Carbon\Carbon;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;

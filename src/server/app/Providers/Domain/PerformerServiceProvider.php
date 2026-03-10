@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Override;
 use Illuminate\Http\Request;
+use Override;
 use Performer\Application\Interactors\CreateInteractor;
 use Performer\Application\Interactors\DeleteInteractor;
 use Performer\Application\Interactors\GetInteractor;

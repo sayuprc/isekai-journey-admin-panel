@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Performer\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Get\GetInputData;
 use Performer\Application\UseCase\Get\GetOutputData;
 use Performer\Application\UseCase\Get\GetUseCaseInterface;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Auth;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\HashedPassword;
@@ -15,6 +14,7 @@ use Auth\Infrastructures\Auth\AuthUser;
 use Auth\Infrastructures\Auth\AuthUserProvider;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 

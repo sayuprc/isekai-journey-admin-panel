@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Creator\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\UseCase\Search\SearchInputData;
@@ -12,6 +11,7 @@ use Creator\Application\UseCase\Search\SearchOutputData;
 use Creator\Application\UseCase\Search\SearchUseCaseInterface;
 use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

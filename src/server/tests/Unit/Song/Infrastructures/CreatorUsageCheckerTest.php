@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Infrastructures;
 
-use Override;
 use Creator\Domain\Models\CreatorId;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Creator\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\UseCase\Create\CreateInputData;
@@ -13,6 +12,7 @@ use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

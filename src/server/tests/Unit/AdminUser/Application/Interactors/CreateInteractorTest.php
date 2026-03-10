@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Application\Interactors;
 
-use Override;
 use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Domain\Models\AdminUser;
@@ -16,6 +15,7 @@ use AdminUser\Domain\Services\HasherInterface;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;

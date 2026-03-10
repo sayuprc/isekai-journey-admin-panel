@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Override;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\Interactors\GetInteractor;
@@ -25,6 +24,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Infrastructures\CreatorFactory;
 use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Http\Request;
+use Override;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Support\Infrastructures;
 
-use Override;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
+use Override;
 use Support\Contracts\ClockInterface;
 
 readonly class Clock implements ClockInterface

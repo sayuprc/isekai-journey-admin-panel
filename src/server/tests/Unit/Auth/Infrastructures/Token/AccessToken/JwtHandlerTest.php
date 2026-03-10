@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Token\AccessToken;
 
-use Override;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;

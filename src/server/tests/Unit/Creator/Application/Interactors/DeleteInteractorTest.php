@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
-use Override;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
 use Creator\Domain\Models\CreatorId;
@@ -12,6 +11,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\BusinessLogicError;
 use Tests\TestCase;

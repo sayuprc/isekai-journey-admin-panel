@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
-use Override;
 use AdminUser\Domain\Services\HasherInterface;
 use Illuminate\Support\Facades\Hash;
+use Override;
 
 readonly class Hasher implements HasherInterface
 {

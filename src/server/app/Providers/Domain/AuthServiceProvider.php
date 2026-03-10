@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Override;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
@@ -27,6 +26,7 @@ use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
 use Illuminate\Support\Facades\Auth;
+use Override;
 
 class AuthServiceProvider extends EnvServiceProvider
 {
@@ -56,7 +56,6 @@ class AuthServiceProvider extends EnvServiceProvider
         );
     }
 
-    #[Override]
     public function boot(): void
     {
         Auth::provider('custom', fn () => $this->app->make(AuthUserProvider::class));

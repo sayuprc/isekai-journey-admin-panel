@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Token\RefreshToken;
 
-use Override;
 use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Override;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Interactors;
 
-use Override;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;

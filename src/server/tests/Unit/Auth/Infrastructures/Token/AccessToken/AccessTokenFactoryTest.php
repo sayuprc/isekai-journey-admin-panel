@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Token\AccessToken;
 
-use Override;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
 use Carbon\Carbon;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 

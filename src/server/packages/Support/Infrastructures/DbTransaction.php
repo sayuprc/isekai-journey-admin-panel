@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Support\Infrastructures;
 
-use Override;
 use Closure;
 use Illuminate\Support\Facades\DB;
+use Override;
 use Support\Contracts\TransactionInterface;
 
 readonly class DbTransaction implements TransactionInterface

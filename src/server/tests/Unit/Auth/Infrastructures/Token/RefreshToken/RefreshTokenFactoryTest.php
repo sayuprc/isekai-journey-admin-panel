@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Token\RefreshToken;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
@@ -12,6 +11,7 @@ use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Carbon\Carbon;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 

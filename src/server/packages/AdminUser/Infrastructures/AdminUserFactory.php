@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
-use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
@@ -13,6 +12,7 @@ use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\Role;
+use Override;
 
 readonly class AdminUserFactory implements AdminUserFactoryInterface
 {

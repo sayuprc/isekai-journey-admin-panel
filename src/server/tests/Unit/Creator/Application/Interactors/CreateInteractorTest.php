@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
-use Override;
 use Closure;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
@@ -13,6 +12,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Application\Interactors;
 
-use Override;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\GetInteractor;
 use Performer\Application\UseCase\Get\GetInputData;
 use Performer\Domain\Models\PerformerId;

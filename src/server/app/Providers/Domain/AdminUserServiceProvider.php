@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Override;
 use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
@@ -15,6 +14,7 @@ use AdminUser\Domain\Services\HasherInterface;
 use AdminUser\Infrastructures\AdminUserFactory;
 use AdminUser\Infrastructures\AdminUserRepository;
 use AdminUser\Infrastructures\Hasher;
+use Override;
 
 class AdminUserServiceProvider extends EnvServiceProvider
 {

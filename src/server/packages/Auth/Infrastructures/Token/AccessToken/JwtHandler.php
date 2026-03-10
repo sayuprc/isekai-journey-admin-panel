@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Token\AccessToken;
 
-use Override;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

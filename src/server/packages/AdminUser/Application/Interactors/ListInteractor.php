@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Interactors;
 
-use Override;
 use AdminUser\Application\UseCase\List\ListInputData;
 use AdminUser\Application\UseCase\List\ListOutputData;
 use AdminUser\Application\UseCase\List\ListUseCaseInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

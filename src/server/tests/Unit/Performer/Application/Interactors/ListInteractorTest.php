@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Application\Interactors;
 
-use Override;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\ListInteractor;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;

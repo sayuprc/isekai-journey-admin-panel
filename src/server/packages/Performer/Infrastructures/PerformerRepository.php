@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Performer\Infrastructures;
 
-use Override;
 use App\Models\Performer\Performer as ModelsPerformer;
+use Override;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
-use Override;
 use Creator\Application\Interactors\ListInteractor;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;

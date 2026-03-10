@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
-use Override;
 use Creator\Application\Interactors\GetInteractor;
 use Creator\Application\UseCase\Get\GetInputData;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;

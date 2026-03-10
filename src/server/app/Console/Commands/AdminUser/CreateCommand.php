@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\AdminUser;
 
-use Override;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
+use Override;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;

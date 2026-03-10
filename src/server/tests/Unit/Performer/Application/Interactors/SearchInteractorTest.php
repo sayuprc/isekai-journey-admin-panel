@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Application\Interactors;
 
-use Override;
 use Auth\Domain\Models\AuthContext;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\SearchInteractor;
 use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Domain\Models\PerformerRepositoryInterface;

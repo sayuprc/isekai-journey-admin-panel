@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Interactors;
 
-use Override;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateOutputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
@@ -13,6 +12,7 @@ use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\HasherInterface;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

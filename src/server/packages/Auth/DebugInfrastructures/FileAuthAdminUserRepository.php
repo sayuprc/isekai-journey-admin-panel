@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Auth\DebugInfrastructures;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
+use Override;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;

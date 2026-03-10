@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Performer\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Application\UseCase\Search\SearchOutputData;
 use Performer\Application\UseCase\Search\SearchUseCaseInterface;

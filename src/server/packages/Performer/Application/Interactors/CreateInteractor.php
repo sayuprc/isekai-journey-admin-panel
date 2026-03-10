@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Performer\Application\Interactors;
 
-use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use LogicException;
+use Override;
 use Performer\Application\UseCase\Create\CreateInputData;
 use Performer\Application\UseCase\Create\CreateOutputData;
 use Performer\Application\UseCase\Create\CreateUseCaseInterface;

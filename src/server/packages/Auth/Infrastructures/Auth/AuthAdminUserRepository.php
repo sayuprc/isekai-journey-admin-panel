@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Auth;
 
-use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
+use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
 readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterface

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth\Application\Interactors;
 
-use Override;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Application\UseCase\Login\LoginOutputData;
 use Auth\Application\UseCase\Login\LoginUseCaseInterface;
@@ -12,6 +11,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;

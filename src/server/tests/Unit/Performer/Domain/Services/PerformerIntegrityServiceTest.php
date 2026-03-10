@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Domain\Services;
 
-use Override;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;

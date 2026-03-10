@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Application\Interactors;
 
-use Override;
 use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\List\ListInputData;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
