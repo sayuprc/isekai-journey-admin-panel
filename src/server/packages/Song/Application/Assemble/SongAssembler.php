@@ -18,16 +18,13 @@ class SongAssembler
 
     public function assemble(Song $song): AssembledSong
     {
-        // Collect all creator IDs from lyricists, composers, and arrangers
         $allCreatorIds = [];
-        $creatorCollections = [$song->lyricists, $song->composers, $song->arrangers];
-        foreach ($creatorCollections as $collection) {
+        foreach ([$song->lyricists, $song->composers, $song->arrangers] as $collection) {
             foreach ($collection as $creator) {
                 $allCreatorIds[$creator->creatorId->value] = $creator->creatorId;
             }
         }
 
-        // Fetch all creators in a single query if there are any
         $creatorMap = [];
         if (! empty($allCreatorIds)) {
             $creators = $this->creatorRepository->findByIds(...array_values($allCreatorIds));
@@ -36,7 +33,6 @@ class SongAssembler
             }
         }
 
-        // Create closure to assemble creators using the fetched creator map
         $toAssembled = function (Arranger|Composer|Lyricist $creator) use ($creatorMap): AssembledCreator {
             $found = $creatorMap[$creator->creatorId->value] ?? null;
             // Song Entity が成立している時点で $found が null になることはない
