@@ -11,6 +11,7 @@ use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;
+use Override;
 
 readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -27,6 +28,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
     {
         $found = array_first(
@@ -41,6 +43,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
             : $found;
     }
 
+    #[Override]
     public function save(RefreshToken $refreshToken): RefreshToken
     {
         $data = $refreshToken->toArray();

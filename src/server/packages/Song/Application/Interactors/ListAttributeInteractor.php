@@ -14,6 +14,7 @@ use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Domain\Models\SongAttribute;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+use Override;
 
 readonly class ListAttributeInteractor implements ListAttributeUseCaseInterface
 {
@@ -21,6 +22,7 @@ readonly class ListAttributeInteractor implements ListAttributeUseCaseInterface
     {
     }
 
+    #[Override]
     public function handle(): Result
     {
         $user = $this->context->get();

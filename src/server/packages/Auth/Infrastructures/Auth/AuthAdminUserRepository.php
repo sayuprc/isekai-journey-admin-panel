@@ -10,6 +10,7 @@ use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Override;
 
 readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterface
 {
@@ -17,6 +18,7 @@ readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterfa
     {
     }
 
+    #[Override]
     public function find(AdminUserId $adminUserId): ?AuthenticatableAdminUser
     {
         $found = ModelsAdminUser::query()
@@ -31,6 +33,7 @@ readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterfa
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByEmail(Email $email): ?AuthenticatableAdminUser
     {
         $found = ModelsAdminUser::query()

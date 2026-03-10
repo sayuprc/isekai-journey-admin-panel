@@ -13,6 +13,7 @@ use CuyZ\Valinor\MapperBuilder;
 use Performer\Domain\Models\Performer;
 use Song\Domain\Models\Song;
 use Support\Contracts\MapperInterface;
+use Override;
 
 readonly class Mapper implements MapperInterface
 {
@@ -20,6 +21,7 @@ readonly class Mapper implements MapperInterface
     {
     }
 
+    #[Override]
     public function map(string $signature, mixed $source): mixed
     {
         $json = ! is_string($source) || ! json_validate($source)

@@ -30,9 +30,11 @@ use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
 use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
+use Override;
 
 class SongServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);

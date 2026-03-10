@@ -23,6 +23,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
@@ -34,6 +35,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(CreateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {

@@ -15,6 +15,7 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+use Override;
 
 readonly class ListInteractor implements ListUseCaseInterface
 {
@@ -24,6 +25,7 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(ListInputData $inputData): Result
     {
         $user = $this->context->get();

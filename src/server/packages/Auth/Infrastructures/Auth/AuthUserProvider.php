@@ -11,6 +11,7 @@ use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Override;
 
 readonly class AuthUserProvider implements UserProvider
 {
@@ -23,6 +24,7 @@ readonly class AuthUserProvider implements UserProvider
     /**
      * @param string $identifier
      */
+    #[Override]
     public function retrieveById($identifier)
     {
         return AdminUserId::create($identifier)
@@ -32,11 +34,13 @@ readonly class AuthUserProvider implements UserProvider
             );
     }
 
+    #[Override]
     public function retrieveByToken($identifier, $token)
     {
         return null;
     }
 
+    #[Override]
     public function updateRememberToken(Authenticatable $user, $token)
     {
     }
@@ -44,6 +48,7 @@ readonly class AuthUserProvider implements UserProvider
     /**
      * @param array{email: string, password: string} $credentials
      */
+    #[Override]
     public function retrieveByCredentials(array $credentials)
     {
         return Email::create($credentials['email'])
@@ -56,6 +61,7 @@ readonly class AuthUserProvider implements UserProvider
     /**
      * @param array{password: string} $credentials
      */
+    #[Override]
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
@@ -64,6 +70,7 @@ readonly class AuthUserProvider implements UserProvider
     /**
      * @param array<mixed> $credentials
      */
+    #[Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
     {
     }

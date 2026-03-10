@@ -25,6 +25,7 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class UpdateInteractor implements UpdateUseCaseInterface
 {
@@ -36,6 +37,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(UpdateInputData $inputData): Result
     {
         $user = $this->context->get();

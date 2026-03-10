@@ -21,6 +21,7 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class GetInteractor implements GetUseCaseInterface
 {
@@ -31,6 +32,7 @@ readonly class GetInteractor implements GetUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(GetInputData $inputData): Result
     {
         $user = $this->context->get();

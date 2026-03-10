@@ -17,6 +17,7 @@ use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
@@ -26,6 +27,7 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(DeleteInputData $inputData): Result
     {
         $user = $this->context->get();

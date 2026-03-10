@@ -14,6 +14,7 @@ use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+use Override;
 
 readonly class ListTypeInteractor implements ListTypeUseCaseInterface
 {
@@ -21,6 +22,7 @@ readonly class ListTypeInteractor implements ListTypeUseCaseInterface
     {
     }
 
+    #[Override]
     public function handle(): Result
     {
         $user = $this->context->get();

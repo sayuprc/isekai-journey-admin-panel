@@ -19,6 +19,7 @@ use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+use Override;
 
 readonly class SearchInteractor implements SearchUseCaseInterface
 {
@@ -28,6 +29,7 @@ readonly class SearchInteractor implements SearchUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(SearchInputData $inputData): Result
     {
         $user = $this->context->get();

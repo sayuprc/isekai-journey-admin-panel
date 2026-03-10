@@ -9,9 +9,11 @@ use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Support\Domain\ValueObjects\OrderNo;
+use Override;
 
 readonly class PerformerFactory implements PerformerFactoryInterface
 {
+    #[Override]
     public function create(PerformerId $performerId, PerformerName $name, OrderNo $orderNo): Performer
     {
         return new Performer($performerId, $name, $orderNo);

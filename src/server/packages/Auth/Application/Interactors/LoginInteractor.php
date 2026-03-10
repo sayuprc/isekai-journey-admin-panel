@@ -20,6 +20,7 @@ use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class LoginInteractor implements LoginUseCaseInterface
 {
@@ -31,6 +32,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(LoginInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {

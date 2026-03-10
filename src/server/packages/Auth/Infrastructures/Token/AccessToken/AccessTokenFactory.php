@@ -9,6 +9,7 @@ use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\AccessToken\Jwt;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
+use Override;
 
 readonly class AccessTokenFactory implements AccessTokenFactoryInterface
 {
@@ -16,6 +17,7 @@ readonly class AccessTokenFactory implements AccessTokenFactoryInterface
     {
     }
 
+    #[Override]
     public function create(AccessTokenPayload $payload): AccessToken
     {
         return new AccessToken(Jwt::reconstruct($this->jwt->generate($payload)));

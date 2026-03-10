@@ -23,6 +23,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
+use Override;
 
 readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
@@ -34,6 +35,7 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(AuthenticateInputData $inputData): Result
     {
         return $this->jwtHandler->verify($inputData->accessToken)

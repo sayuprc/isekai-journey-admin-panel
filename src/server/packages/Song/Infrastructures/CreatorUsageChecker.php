@@ -7,6 +7,7 @@ namespace Song\Infrastructures;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Song\Domain\Models\SongRepositoryInterface;
+use Override;
 
 readonly class CreatorUsageChecker implements CreatorUsageCheckerInterface
 {
@@ -14,6 +15,7 @@ readonly class CreatorUsageChecker implements CreatorUsageCheckerInterface
     {
     }
 
+    #[Override]
     public function isUsed(CreatorId $creatorId): bool
     {
         return $this->repository->isCreatorUsed($creatorId);

@@ -13,6 +13,7 @@ use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
+use Override;
 
 readonly class SongQueryService implements SongQueryServiceInterface
 {
@@ -20,6 +21,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
     {
     }
 
+    #[Override]
     public function search(SongSearchCriteria $criteria): array
     {
         $query = $this->buildQuery($criteria);
@@ -34,6 +36,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             ->all();
     }
 
+    #[Override]
     public function maxPage(SongSearchCriteria $criteria): int
     {
         $query = $this->buildQuery($criteria);

@@ -10,6 +10,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Override;
 
 readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -19,6 +20,7 @@ readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     ) {
     }
 
+    #[Override]
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
     {
         $found = AuthRefreshToken::query()
@@ -36,6 +38,7 @@ readonly class RefreshTokenRepository implements RefreshTokenRepositoryInterface
             : $hydrated;
     }
 
+    #[Override]
     public function save(RefreshToken $refreshToken): RefreshToken
     {
         $data = $refreshToken->toArray();

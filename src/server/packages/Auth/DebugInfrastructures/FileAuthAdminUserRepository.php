@@ -8,6 +8,7 @@ use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
+use Override;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;
@@ -26,6 +27,7 @@ class FileAuthAdminUserRepository implements AuthAdminUserRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function find(AdminUserId $adminUserId): ?AuthenticatableAdminUser
     {
         foreach ($this->loadAll() as $adminUser) {
@@ -37,6 +39,7 @@ class FileAuthAdminUserRepository implements AuthAdminUserRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function findByEmail(Email $email): ?AuthenticatableAdminUser
     {
         foreach ($this->store->load($this->filePath) as $item) {
