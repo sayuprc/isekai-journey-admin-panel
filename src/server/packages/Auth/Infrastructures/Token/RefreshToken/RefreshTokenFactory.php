@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Token\RefreshToken;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
@@ -14,6 +15,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 
 readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
 {
+    #[Override]
     public function create(
         RefreshTokenId $refreshTokenId,
         AdminUserId $adminUserId,

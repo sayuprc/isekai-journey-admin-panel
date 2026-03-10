@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
+use Override;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -19,6 +20,7 @@ abstract class DatabaseTestCase extends TestCase
 
     private static ?string $testDatabase = null;
 
+    #[Override]
     public function createApplication(): Application
     {
         $app = parent::createApplication();

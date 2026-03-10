@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Application\Interactors;
 
+use Override;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Application\UseCase\Login\LoginOutputData;
 use Auth\Application\UseCase\Login\LoginUseCaseInterface;
@@ -31,6 +32,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(LoginInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {

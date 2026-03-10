@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\UseCase\Update\UpdateInputData;
@@ -36,6 +37,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(UpdateInputData $inputData): Result
     {
         $user = $this->context->get();

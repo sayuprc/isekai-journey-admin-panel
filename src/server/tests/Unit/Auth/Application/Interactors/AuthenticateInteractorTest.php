@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Role;
@@ -37,6 +38,7 @@ class AuthenticateInteractorTest extends TestCase
 
     private AuthContext $context;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

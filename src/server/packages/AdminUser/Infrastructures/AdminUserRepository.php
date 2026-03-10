@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
+use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -19,6 +20,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
     {
     }
 
+    #[Override]
     public function all(): array
     {
         return ModelsAdminUser::query()
@@ -28,6 +30,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function find(AdminUserId $adminUserId): ?AdminUser
     {
         $found = ModelsAdminUser::query()
@@ -41,6 +44,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByEmail(Email $email): ?AdminUser
     {
         $found = ModelsAdminUser::query()
@@ -54,6 +58,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser
     {
         $data = $adminUser->toArray();

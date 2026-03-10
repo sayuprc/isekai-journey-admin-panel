@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\DebugInfrastructures;
 
+use Override;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
@@ -27,6 +28,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function findActive(RefreshTokenId $refreshTokenId): ?RefreshToken
     {
         $found = array_first(
@@ -41,6 +43,7 @@ readonly class FileRefreshTokenRepository implements RefreshTokenRepositoryInter
             : $found;
     }
 
+    #[Override]
     public function save(RefreshToken $refreshToken): RefreshToken
     {
         $data = $refreshToken->toArray();

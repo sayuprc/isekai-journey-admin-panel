@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Domain\Services\Token\AccessToken;
 
+use Override;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
@@ -24,6 +25,7 @@ class AccessTokenIssueServiceTest extends TestCase
 
     private AccessTokenFactoryInterface&MockInterface $factory;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

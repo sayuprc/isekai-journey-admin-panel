@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Domain\Services;
 
+use Override;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
@@ -28,6 +29,7 @@ class CreatorIntegrityServiceTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

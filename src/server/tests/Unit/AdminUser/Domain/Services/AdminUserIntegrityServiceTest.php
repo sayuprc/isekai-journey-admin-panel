@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Domain\Services;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserName;
@@ -35,6 +36,7 @@ class AdminUserIntegrityServiceTest extends TestCase
 
     private AdminUserRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Support\Infrastructures;
 
+use Override;
 use AdminUser\Domain\Models\AdminUser;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
@@ -20,6 +21,7 @@ readonly class Mapper implements MapperInterface
     {
     }
 
+    #[Override]
     public function map(string $signature, mixed $source): mixed
     {
         $json = ! is_string($source) || ! json_validate($source)

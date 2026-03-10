@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Closure;
 use Creator\Application\Interactors\UpdateInteractor;
 use Creator\Application\UseCase\Update\UpdateInputData;
@@ -30,6 +31,7 @@ class UpdateInteractorTest extends TestCase
 
     private CreatorIntegrityService&MockInterface $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

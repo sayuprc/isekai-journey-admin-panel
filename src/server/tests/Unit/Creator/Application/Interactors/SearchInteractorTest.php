@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\Interactors\SearchInteractor;
 use Creator\Application\UseCase\Search\SearchInputData;
@@ -21,6 +22,7 @@ class SearchInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

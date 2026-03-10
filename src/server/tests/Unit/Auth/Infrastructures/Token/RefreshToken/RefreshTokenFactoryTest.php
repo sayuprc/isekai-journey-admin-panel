@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Token\RefreshToken;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
@@ -16,6 +17,7 @@ use Tests\TestCase;
 
 class RefreshTokenFactoryTest extends TestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Domain\Services;
 
+use Override;
 use Mockery;
 use Mockery\MockInterface;
 use Performer\Domain\Models\PerformerFactoryInterface;
@@ -28,6 +29,7 @@ class PerformerIntegrityServiceTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

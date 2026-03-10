@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Closure;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\UseCase\Create\CreateInputData;
@@ -30,6 +31,7 @@ class CreateInteractorTest extends TestCase
 
     private CreatorIntegrityService&MockInterface $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\AdminUser;
 
+use Override;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use AdminUser\Domain\Models\Permission;
@@ -15,10 +16,13 @@ use Support\UseCase\Error\UseCaseError;
 
 class CreateCommand extends Command
 {
+    #[Override]
     protected $signature = 'admin:create {name} {email} {password} {--p|privilege} {permissions?*}';
 
+    #[Override]
     protected $description = '管理ユーザーを作成する';
 
+    #[Override]
     public function handle(CreateUseCaseInterface $interactor): int
     {
         $name = $this->argument('name');

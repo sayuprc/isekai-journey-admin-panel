@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Creator\Application\Interactors\ListInteractor;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
@@ -18,6 +19,7 @@ class ListInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

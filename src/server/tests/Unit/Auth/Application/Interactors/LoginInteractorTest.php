@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Application\Interactors;
 
+use Override;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Login\LoginInputData;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
@@ -33,6 +34,7 @@ class LoginInteractorTest extends TestCase
 
     private AccessTokenIssueService&MockInterface $accessTokenIssueService;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

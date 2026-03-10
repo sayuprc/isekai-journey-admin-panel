@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
@@ -21,6 +22,7 @@ readonly class ListTypeInteractor implements ListTypeUseCaseInterface
     {
     }
 
+    #[Override]
     public function handle(): Result
     {
         $user = $this->context->get();

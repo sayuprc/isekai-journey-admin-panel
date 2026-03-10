@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\UseCase\Delete\DeleteInputData;
 use Creator\Domain\Models\CreatorId;
@@ -21,6 +22,7 @@ class DeleteInteractorTest extends TestCase
 
     private CreatorUsageCheckerInterface&MockInterface $usageChecker;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

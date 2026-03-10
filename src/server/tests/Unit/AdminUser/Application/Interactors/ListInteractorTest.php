@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Application\Interactors;
 
+use Override;
 use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\List\ListInputData;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -19,6 +20,7 @@ class ListInteractorTest extends TestCase
 
     private AdminUserRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

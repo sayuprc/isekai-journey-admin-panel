@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Interactors;
 
+use Override;
 use AdminUser\Application\UseCase\List\ListInputData;
 use AdminUser\Application\UseCase\List\ListOutputData;
 use AdminUser\Application\UseCase\List\ListUseCaseInterface;
@@ -24,6 +25,7 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(ListInputData $inputData): Result
     {
         $user = $this->context->get();

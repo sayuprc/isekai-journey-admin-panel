@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Interactors;
 
+use Override;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,6 +18,7 @@ class DeleteInteractorTest extends TestCase
 {
     private MockInterface&SongRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

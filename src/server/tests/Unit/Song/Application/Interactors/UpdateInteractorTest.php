@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Interactors;
 
+use Override;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
@@ -36,6 +37,7 @@ class UpdateInteractorTest extends TestCase
 
     private MockInterface&SongAssembler $assembler;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

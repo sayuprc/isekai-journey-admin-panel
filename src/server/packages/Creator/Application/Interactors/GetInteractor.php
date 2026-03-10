@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use Creator\Application\UseCase\Get\GetInputData;
@@ -29,6 +30,7 @@ readonly class GetInteractor implements GetUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(GetInputData $inputData): Result
     {
         $user = $this->context->get();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Interactors;
 
+use Override;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Application\UseCase\Create\CreateOutputData;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
@@ -34,6 +35,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(CreateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Performer\Application\Interactors;
 
+use Override;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
@@ -30,6 +31,7 @@ class UpdateInteractorTest extends TestCase
 
     private MockInterface&PerformerIntegrityService $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

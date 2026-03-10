@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Performer\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use Performer\Application\UseCase\Delete\DeleteInputData;
@@ -26,6 +27,7 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(DeleteInputData $inputData): Result
     {
         $user = $this->context->get();

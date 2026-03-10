@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
@@ -28,6 +29,7 @@ class SearchInteractorTest extends TestCase
 
     private MockInterface&SongQueryServiceInterface $query;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

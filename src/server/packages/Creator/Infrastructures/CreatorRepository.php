@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\Infrastructures;
 
+use Override;
 use App\Models\Creator\Creator as ModelsCreator;
 use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\Creator;
@@ -19,6 +20,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
     {
     }
 
+    #[Override]
     public function all(): array
     {
         return ModelsCreator::query()
@@ -28,6 +30,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function search(CreatorSearchCriteria $criteria): array
     {
         $query = ModelsCreator::query();
@@ -49,6 +52,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function maxPage(CreatorSearchCriteria $criteria): int
     {
         $query = ModelsCreator::query();
@@ -63,6 +67,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         return (int)ceil($query->count() / $criteria->perPage->value);
     }
 
+    #[Override]
     public function find(CreatorId $creatorId): ?Creator
     {
         $found = ModelsCreator::query()
@@ -76,6 +81,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByName(CreatorName $name): ?Creator
     {
         $found = ModelsCreator::query()
@@ -89,6 +95,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByIds(CreatorId ...$creatorIds): array
     {
         return ModelsCreator::query()
@@ -101,6 +108,7 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function save(Creator $creator): Creator
     {
         ModelsCreator::query()->upsert(
@@ -121,11 +129,13 @@ readonly class CreatorRepository implements CreatorRepositoryInterface
         return $creator;
     }
 
+    #[Override]
     public function delete(CreatorId $creatorId): void
     {
         ModelsCreator::query()->where('creator_id', $this->converter->toBin($creatorId->value))->delete();
     }
 
+    #[Override]
     public function getMaxOrderNo(): int
     {
         /** @var int */

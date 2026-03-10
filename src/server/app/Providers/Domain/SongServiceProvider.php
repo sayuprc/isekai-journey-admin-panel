@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Override;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Illuminate\Http\Request;
 use Song\Application\Interactors\CreateInteractor;
@@ -33,6 +34,7 @@ use Song\Infrastructures\SongRepository;
 
 class SongServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);

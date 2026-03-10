@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Token\AccessToken;
 
+use Override;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
@@ -21,6 +22,7 @@ class JwtHandlerTest extends TestCase
 
     private MapperInterface&MockInterface $mapper;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

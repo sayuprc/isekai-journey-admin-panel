@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Override;
 use Creator\Application\Interactors\CreateInteractor;
 use Creator\Application\Interactors\DeleteInteractor;
 use Creator\Application\Interactors\GetInteractor;
@@ -27,6 +28,7 @@ use Illuminate\Http\Request;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(CreatorRepositoryInterface::class, CreatorRepository::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Override;
 use Emonkak\Database\PDOInterface;
 use Emonkak\Orm\Grammar\DefaultGrammar;
 use Emonkak\Orm\Grammar\GrammarInterface;
@@ -13,6 +14,7 @@ use Support\Infrastructures\Database\SQLiteConnector;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(GrammarInterface::class, DefaultGrammar::class);
@@ -25,6 +27,7 @@ class DatabaseServiceProvider extends ServiceProvider
         );
     }
 
+    #[Override]
     public function boot(): void
     {
     }

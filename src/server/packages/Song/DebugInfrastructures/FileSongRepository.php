@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\DebugInfrastructures;
 
+use Override;
 use Creator\Domain\Models\CreatorId;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
@@ -26,6 +27,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function find(SongId $songId): ?Song
     {
         foreach ($this->loadAll() as $song) {
@@ -37,6 +39,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function isCreatorUsed(CreatorId $creatorId): bool
     {
         foreach ($this->loadAll() as $song) {
@@ -52,6 +55,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         return false;
     }
 
+    #[Override]
     public function save(Song $song): Song
     {
         $this->store->save(
@@ -63,6 +67,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         return $song;
     }
 
+    #[Override]
     public function delete(SongId $songId): void
     {
         $index = $this->findIndex($songId);
@@ -74,6 +79,7 @@ readonly class FileSongRepository implements SongRepositoryInterface
         $this->store->unset($this->filePath, $index);
     }
 
+    #[Override]
     public function getMaxOrderNo(): int
     {
         $orderNos = array_map(fn (Song $item): int => $item->orderNo->value, $this->loadAll());

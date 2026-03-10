@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Override;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
@@ -19,6 +20,7 @@ use Support\Infrastructures\Uuid\UuidGenerator;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(MapperInterface::class, Mapper::class);

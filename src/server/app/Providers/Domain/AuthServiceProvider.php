@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Override;
 use Auth\Application\Interactors\AuthenticateInteractor;
 use Auth\Application\Interactors\LoginInteractor;
 use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(JwtHandlerInterface::class, JwtHandler::class);
@@ -54,6 +56,7 @@ class AuthServiceProvider extends EnvServiceProvider
         );
     }
 
+    #[Override]
     public function boot(): void
     {
         Auth::provider('custom', fn () => $this->app->make(AuthUserProvider::class));

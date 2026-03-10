@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Application\Interactors;
 
+use Override;
 use Creator\Application\Interactors\GetInteractor;
 use Creator\Application\UseCase\Get\GetInputData;
 use Creator\Domain\Models\CreatorId;
@@ -21,6 +22,7 @@ class GetInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

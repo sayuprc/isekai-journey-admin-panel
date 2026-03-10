@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Creator\Infrastructures;
 
+use Override;
 use Creator\Domain\Models\Creator;
 use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
@@ -12,6 +13,7 @@ use Support\Domain\ValueObjects\OrderNo;
 
 readonly class CreatorFactory implements CreatorFactoryInterface
 {
+    #[Override]
     public function create(CreatorId $creatorId, CreatorName $name, OrderNo $orderNo): Creator
     {
         return new Creator($creatorId, $name, $orderNo);

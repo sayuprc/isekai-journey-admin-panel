@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Application\Interactors;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\UseCase\Authenticate\AuthenticateOutputData;
@@ -34,6 +35,7 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(AuthenticateInputData $inputData): Result
     {
         return $this->jwtHandler->verify($inputData->accessToken)

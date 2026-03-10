@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Domain\Services\Token\RefreshToken;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
@@ -36,6 +37,7 @@ class RefreshTokenIssueServiceTest extends TestCase
 
     private MockInterface&TokenHasherInterface $tokenHasher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

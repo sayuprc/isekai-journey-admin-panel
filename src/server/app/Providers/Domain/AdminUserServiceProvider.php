@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
+use Override;
 use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\Interactors\ListInteractor;
 use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
@@ -17,6 +18,7 @@ use AdminUser\Infrastructures\Hasher;
 
 class AdminUserServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);

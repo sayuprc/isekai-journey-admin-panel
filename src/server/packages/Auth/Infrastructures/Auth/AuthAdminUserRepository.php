@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Auth;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
@@ -17,6 +18,7 @@ readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterfa
     {
     }
 
+    #[Override]
     public function find(AdminUserId $adminUserId): ?AuthenticatableAdminUser
     {
         $found = ModelsAdminUser::query()
@@ -31,6 +33,7 @@ readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterfa
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByEmail(Email $email): ?AuthenticatableAdminUser
     {
         $found = ModelsAdminUser::query()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Token\AccessToken;
 
+use Override;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
@@ -26,11 +27,13 @@ readonly class JwtHandler implements JwtHandlerInterface
     ) {
     }
 
+    #[Override]
     public function generate(AccessTokenPayload $payload): string
     {
         return JWT::encode($payload->toArray(), $this->config->key, $this->config->alg);
     }
 
+    #[Override]
     public function verify(string $jwt): Result
     {
         JWT::$timestamp = $this->clock->now()->getTimestamp();

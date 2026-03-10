@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures\Auth;
 
+use Override;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\HashedPassword;
@@ -23,6 +24,7 @@ class AuthUserProviderTest extends TestCase
 
     private HasherInterface&MockInterface $hasher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

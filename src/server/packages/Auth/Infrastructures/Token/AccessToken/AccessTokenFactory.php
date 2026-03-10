@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures\Token\AccessToken;
 
+use Override;
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\AccessToken\Jwt;
@@ -16,6 +17,7 @@ readonly class AccessTokenFactory implements AccessTokenFactoryInterface
     {
     }
 
+    #[Override]
     public function create(AccessTokenPayload $payload): AccessToken
     {
         return new AccessToken(Jwt::reconstruct($this->jwt->generate($payload)));

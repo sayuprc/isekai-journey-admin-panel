@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
+use Override;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
@@ -15,6 +16,7 @@ use AdminUser\Domain\Models\Role;
 
 readonly class AdminUserFactory implements AdminUserFactoryInterface
 {
+    #[Override]
     public function create(
         AdminUserId $adminUserId,
         AdminUserName $name,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures;
 
+use Override;
 use App\Models\Song\Song;
 use Illuminate\Database\Eloquent\Builder;
 use Song\Application\Query\SongQueryServiceInterface;
@@ -20,6 +21,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
     {
     }
 
+    #[Override]
     public function search(SongSearchCriteria $criteria): array
     {
         $query = $this->buildQuery($criteria);
@@ -34,6 +36,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             ->all();
     }
 
+    #[Override]
     public function maxPage(SongSearchCriteria $criteria): int
     {
         $query = $this->buildQuery($criteria);

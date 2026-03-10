@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Domain\Services;
 
+use Override;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
@@ -37,6 +38,7 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&SongRepositoryInterface $songRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

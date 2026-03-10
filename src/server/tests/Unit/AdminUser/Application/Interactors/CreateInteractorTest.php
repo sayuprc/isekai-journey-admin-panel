@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Application\Interactors;
 
+use Override;
 use AdminUser\Application\Interactors\CreateInteractor;
 use AdminUser\Application\UseCase\Create\CreateInputData;
 use AdminUser\Domain\Models\AdminUser;
@@ -36,6 +37,7 @@ class CreateInteractorTest extends TestCase
 
     private AdminUserIntegrityService&MockInterface $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
