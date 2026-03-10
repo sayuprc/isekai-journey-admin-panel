@@ -80,7 +80,7 @@ class SearchInteractorTest extends DatabaseTestCase
 
         $this->assertCount(1, $output->songs);
         $this->assertSame($uuid1, $output->songs[0]->songId);
-        $this->assertSame(SongType::Original->value, $output->songs[0]->typeValue);
+        $this->assertSame(SongType::Original, $output->songs[0]->type);
     }
 
     #[Test]
@@ -102,7 +102,7 @@ class SearchInteractorTest extends DatabaseTestCase
 
         $this->assertCount(1, $output->songs);
         $this->assertSame($uuid1, $output->songs[0]->songId);
-        $this->assertSame(SongAttribute::Collaboration->value, $output->songs[0]->attributeValue);
+        $this->assertSame(SongAttribute::Collaboration, $output->songs[0]->attribute);
     }
 
     #[Test]

@@ -14,6 +14,7 @@ use Song\Application\Interactors\ListInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\UpdateInteractor;
+use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Application\UseCase\Delete\DeleteUseCaseInterface;
@@ -29,6 +30,7 @@ use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
+use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
 
 class SongServiceProvider extends EnvServiceProvider
@@ -41,6 +43,7 @@ class SongServiceProvider extends EnvServiceProvider
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
         $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);
+        $this->app->bind(SongQueryServiceInterface::class, SongQueryService::class);
         $this->app->bind(CreateUseCaseInterface::class, CreateInteractor::class);
         $this->app->bind(GetUseCaseInterface::class, GetInteractor::class);
         $this->app->bind(UpdateUseCaseInterface::class, UpdateInteractor::class);

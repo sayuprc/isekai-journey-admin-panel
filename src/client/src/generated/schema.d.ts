@@ -518,7 +518,7 @@ export interface components {
             songs: components["schemas"]["Song"][];
         };
         SongSearchResponse: {
-            songs: components["schemas"]["Song"][];
+            songs: components["schemas"]["SongSummary"][];
             /** Format: int32 */
             maxPage: number;
         };
@@ -527,6 +527,28 @@ export interface components {
          * @enum {string}
          */
         SongSearchSortBy: "title" | "order_no";
+        /**
+         * @example {
+         *       "songId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
+         *       "title": "描き続けた君へ",
+         *       "type": {
+         *         "name": "オリジナル曲",
+         *         "value": 1
+         *       },
+         *       "attribute": {
+         *         "name": "コラボ",
+         *         "value": 1
+         *       },
+         *       "orderNo": 1
+         *     }
+         */
+        SongSummary: {
+            songId: components["schemas"]["songId"];
+            title: components["schemas"]["title"];
+            type: components["schemas"]["SongType"];
+            attribute?: components["schemas"]["SongAttribute"];
+            orderNo: components["schemas"]["orderNo"];
+        };
         /**
          * @example {
          *       "name": "オリジナル曲",

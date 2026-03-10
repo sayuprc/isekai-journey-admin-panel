@@ -36,15 +36,11 @@ class SearchSongTest extends DatabaseTestCase
                     [
                         'songId' => $uuid,
                         'title' => '描き続けた君へ',
-                        'description' => 'オリジナル楽曲',
                         'type' => [
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
                         'orderNo' => 1,
-                        'lyricists' => [],
-                        'composers' => [],
-                        'arrangers' => [],
                     ],
                 ],
                 'maxPage' => 1,
@@ -70,15 +66,11 @@ class SearchSongTest extends DatabaseTestCase
                     [
                         'songId' => $uuid1,
                         'title' => '描き続けた君へ',
-                        'description' => 'オリジナル楽曲',
                         'type' => [
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
                         'orderNo' => 1,
-                        'lyricists' => [],
-                        'composers' => [],
-                        'arrangers' => [],
                     ],
                 ],
                 'maxPage' => 1,
@@ -104,15 +96,11 @@ class SearchSongTest extends DatabaseTestCase
                     [
                         'songId' => $uuid1,
                         'title' => '描き続けた君へ',
-                        'description' => 'オリジナル楽曲',
                         'type' => [
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
                         'orderNo' => 1,
-                        'lyricists' => [],
-                        'composers' => [],
-                        'arrangers' => [],
                     ],
                 ],
                 'maxPage' => 1,
@@ -138,7 +126,6 @@ class SearchSongTest extends DatabaseTestCase
                     [
                         'songId' => $uuid1,
                         'title' => '描き続けた君へ',
-                        'description' => 'コラボ楽曲',
                         'type' => [
                             'name' => 'オリジナル曲',
                             'value' => 1,
@@ -148,9 +135,6 @@ class SearchSongTest extends DatabaseTestCase
                             'value' => 1,
                         ],
                         'orderNo' => 1,
-                        'lyricists' => [],
-                        'composers' => [],
-                        'arrangers' => [],
                     ],
                 ],
                 'maxPage' => 1,

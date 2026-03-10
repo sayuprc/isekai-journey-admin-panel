@@ -9,13 +9,12 @@ use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Song\Application\Assemble\SongAssembler;
+use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchOutputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
 use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\SongAttribute;
-use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Support\Optional\Arg;
 use Support\Optional\None;
@@ -27,8 +26,7 @@ readonly class SearchInteractor implements SearchUseCaseInterface
 {
     public function __construct(
         private AuthContext $context,
-        private SongRepositoryInterface $repository,
-        private SongAssembler $assembler,
+        private SongQueryServiceInterface $query,
     ) {
     }
 
@@ -62,8 +60,8 @@ readonly class SearchInteractor implements SearchUseCaseInterface
 
         return new Ok(
             new SearchOutputData(
-                array_map($this->assembler->assemble(...), $this->repository->search($criteria)),
-                $this->repository->maxPage($criteria),
+                $this->query->search($criteria),
+                $this->query->maxPage($criteria),
             ),
         );
     }
