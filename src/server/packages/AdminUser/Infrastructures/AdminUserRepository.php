@@ -11,9 +11,8 @@ use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\HashedPassword;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\AdminUserPermission;
-use Support\Contracts\Uuid\UuidConverterInterface;
 use Override;
-
+use Support\Contracts\Uuid\UuidConverterInterface;
 readonly class AdminUserRepository implements AdminUserRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)

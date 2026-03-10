@@ -14,6 +14,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -23,8 +24,6 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
 {
     public function __construct(

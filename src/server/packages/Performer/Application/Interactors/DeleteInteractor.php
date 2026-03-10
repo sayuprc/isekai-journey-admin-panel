@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Delete\DeleteInputData;
 use Performer\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Performer\Domain\Models\PerformerId;
@@ -17,8 +18,6 @@ use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
     public function __construct(

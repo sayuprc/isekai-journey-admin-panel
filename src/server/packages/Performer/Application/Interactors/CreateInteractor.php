@@ -7,6 +7,7 @@ namespace Performer\Application\Interactors;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use LogicException;
+use Override;
 use Performer\Application\UseCase\Create\CreateInputData;
 use Performer\Application\UseCase\Create\CreateOutputData;
 use Performer\Application\UseCase\Create\CreateUseCaseInterface;
@@ -25,8 +26,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(

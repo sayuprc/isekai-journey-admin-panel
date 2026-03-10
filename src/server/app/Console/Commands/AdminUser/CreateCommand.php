@@ -9,7 +9,6 @@ use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
-use Override;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -20,7 +19,6 @@ class CreateCommand extends Command
 
     protected $description = '管理ユーザーを作成する';
 
-    #[Override]
     public function handle(CreateUseCaseInterface $interactor): int
     {
         $name = $this->argument('name');

@@ -6,6 +6,7 @@ namespace Song\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -17,7 +18,6 @@ use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
 
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {

@@ -6,9 +6,8 @@ namespace Auth\Infrastructures\Token\RefreshToken;
 
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Illuminate\Support\Facades\Hash;
-use SensitiveParameter;
 use Override;
-
+use SensitiveParameter;
 readonly class TokenHasher implements TokenHasherInterface
 {
     #[Override]

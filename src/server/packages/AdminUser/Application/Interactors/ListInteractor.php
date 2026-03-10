@@ -10,13 +10,12 @@ use AdminUser\Application\UseCase\List\ListUseCaseInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Override;
-
 readonly class ListInteractor implements ListUseCaseInterface
 {
     public function __construct(

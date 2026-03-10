@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Search\SearchOutputData;
 use Creator\Application\UseCase\Search\SearchUseCaseInterface;
 use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -19,8 +20,6 @@ use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Override;
-
 readonly class SearchInteractor implements SearchUseCaseInterface
 {
     public function __construct(

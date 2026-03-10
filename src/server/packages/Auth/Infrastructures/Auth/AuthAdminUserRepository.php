@@ -9,9 +9,8 @@ use AdminUser\Domain\Models\Email;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
-use Support\Contracts\Uuid\UuidConverterInterface;
 use Override;
-
+use Support\Contracts\Uuid\UuidConverterInterface;
 readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)

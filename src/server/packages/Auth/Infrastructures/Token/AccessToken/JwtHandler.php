@@ -10,14 +10,13 @@ use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Domain\Error\EntityRuleViolationError;
-use Override;
-
 readonly class JwtHandler implements JwtHandlerInterface
 {
     public function __construct(

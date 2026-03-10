@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Support\DebugInfrastructures;
 
 use Closure;
-use Support\Contracts\TransactionInterface;
 use Override;
+use Support\Contracts\TransactionInterface;
 
 readonly class NopTransaction implements TransactionInterface
 {

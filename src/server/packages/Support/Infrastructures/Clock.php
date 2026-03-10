@@ -6,8 +6,8 @@ namespace Support\Infrastructures;
 
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
-use Support\Contracts\ClockInterface;
 use Override;
+use Support\Contracts\ClockInterface;
 
 readonly class Clock implements ClockInterface
 {

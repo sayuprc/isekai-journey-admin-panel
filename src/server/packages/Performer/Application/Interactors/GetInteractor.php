@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Get\GetInputData;
 use Performer\Application\UseCase\Get\GetOutputData;
 use Performer\Application\UseCase\Get\GetUseCaseInterface;
@@ -20,8 +21,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class GetInteractor implements GetUseCaseInterface
 {
     public function __construct(

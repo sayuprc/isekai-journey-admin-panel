@@ -12,6 +12,7 @@ use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\HasherInterface;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -23,8 +24,6 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(

@@ -6,6 +6,7 @@ namespace Song\Infrastructures;
 
 use App\Models\Song\Song;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongSummary;
 use Song\Domain\Criteria\SongSearchCriteria;
@@ -13,7 +14,6 @@ use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
-use Override;
 
 readonly class SongQueryService implements SongQueryServiceInterface
 {

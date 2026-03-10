@@ -12,6 +12,7 @@ use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -25,8 +26,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class UpdateInteractor implements UpdateUseCaseInterface
 {
     public function __construct(

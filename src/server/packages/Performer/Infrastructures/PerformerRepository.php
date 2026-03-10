@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performer\Infrastructures;
 
 use App\Models\Performer\Performer as ModelsPerformer;
+use Override;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
@@ -12,8 +13,6 @@ use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
-use Override;
-
 readonly class PerformerRepository implements PerformerRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)

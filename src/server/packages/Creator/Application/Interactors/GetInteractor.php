@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Get\GetOutputData;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -20,8 +21,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class GetInteractor implements GetUseCaseInterface
 {
     public function __construct(

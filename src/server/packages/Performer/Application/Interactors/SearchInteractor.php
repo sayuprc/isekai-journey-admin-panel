@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Application\UseCase\Search\SearchOutputData;
 use Performer\Application\UseCase\Search\SearchUseCaseInterface;
@@ -19,8 +20,6 @@ use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Override;
-
 readonly class SearchInteractor implements SearchUseCaseInterface
 {
     public function __construct(

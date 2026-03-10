@@ -6,8 +6,8 @@ namespace Song\Infrastructures;
 
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
-use Song\Domain\Models\SongRepositoryInterface;
 use Override;
+use Song\Domain\Models\SongRepositoryInterface;
 
 readonly class CreatorUsageChecker implements CreatorUsageCheckerInterface
 {

@@ -6,8 +6,8 @@ namespace Support\Infrastructures;
 
 use Closure;
 use Illuminate\Support\Facades\DB;
-use Support\Contracts\TransactionInterface;
 use Override;
+use Support\Contracts\TransactionInterface;
 
 readonly class DbTransaction implements TransactionInterface
 {

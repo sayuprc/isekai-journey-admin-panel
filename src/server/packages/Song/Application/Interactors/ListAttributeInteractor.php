@@ -6,6 +6,7 @@ namespace Song\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -14,7 +15,6 @@ use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Domain\Models\SongAttribute;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Override;
 
 readonly class ListAttributeInteractor implements ListAttributeUseCaseInterface
 {

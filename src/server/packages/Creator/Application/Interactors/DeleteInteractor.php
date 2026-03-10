@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -19,8 +20,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class DeleteInteractor implements DeleteUseCaseInterface
 {
     public function __construct(

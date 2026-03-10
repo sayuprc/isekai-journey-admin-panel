@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Application\UseCase\List\ListUseCaseInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
@@ -14,8 +15,6 @@ use ResultType\Ok;
 use ResultType\Result;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
-use Override;
-
 readonly class ListInteractor implements ListUseCaseInterface
 {
     public function __construct(

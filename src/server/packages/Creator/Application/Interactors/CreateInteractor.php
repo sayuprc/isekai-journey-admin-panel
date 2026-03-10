@@ -12,6 +12,7 @@ use Creator\Application\UseCase\Create\CreateUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -25,8 +26,6 @@ use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class CreateInteractor implements CreateUseCaseInterface
 {
     public function __construct(

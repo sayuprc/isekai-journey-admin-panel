@@ -11,6 +11,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -20,8 +21,6 @@ use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
-use Override;
-
 readonly class LoginInteractor implements LoginUseCaseInterface
 {
     public function __construct(
