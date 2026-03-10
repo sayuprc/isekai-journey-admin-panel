@@ -26,7 +26,7 @@ class JsonFileStoreTest extends TestCase
         ];
 
         $this->runWithTemporaryFile(
-            function (string $path) use ($data) {
+            function (string $path) use ($data): void {
                 $actual = $this->getFileStore()->load($path);
 
                 $this->assertSame($data, $actual);
@@ -40,7 +40,7 @@ class JsonFileStoreTest extends TestCase
     public function loadAllDataFromNonexistentFile(): void
     {
         $this->runWithNonexistentFile(
-            function (string $path) {
+            function (string $path): void {
                 $actual = $this->getFileStore()->load($path);
 
                 $this->assertEmpty($actual);
@@ -53,7 +53,7 @@ class JsonFileStoreTest extends TestCase
     public function loadAllDataFromEmptyFile(): void
     {
         $this->runWithTemporaryFile(
-            function (string $path) {
+            function (string $path): void {
                 $actual = $this->getFileStore()->load($path);
 
                 $this->assertEmpty($actual);
@@ -68,7 +68,7 @@ class JsonFileStoreTest extends TestCase
     public function putDataToFile(array $value, ?string $key): void
     {
         $this->runWithTemporaryFile(
-            function (string $path) use ($key, $value) {
+            function (string $path) use ($key, $value): void {
                 $this->getFileStore()->save($path, $value, $key);
 
                 $actual = $this->jsonDecode(file_get_contents($path));
@@ -108,7 +108,7 @@ class JsonFileStoreTest extends TestCase
         ];
 
         $this->runWithTemporaryFile(
-            function (string $path) {
+            function (string $path): void {
                 $this->getFileStore()->unset($path, 0);
 
                 $actual = $this->jsonDecode(file_get_contents($path));
