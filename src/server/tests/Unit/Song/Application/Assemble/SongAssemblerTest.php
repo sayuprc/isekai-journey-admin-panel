@@ -54,11 +54,12 @@ class SongAssemblerTest extends TestCase
         );
 
         $this->creatorRepository->shouldReceive('findByIds')
-            ->withArgs(function (CreatorId ...$ids): bool {
+            ->withArgs(function (CreatorId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
                 $idValues = array_map(fn (CreatorId $id): string => $id->value, $ids);
                 sort($idValues);
                 $expectedIds = [$lyricistId, $composerId, $arrangerId];
                 sort($expectedIds);
+
                 return $idValues === $expectedIds;
             })
             ->andReturn([
