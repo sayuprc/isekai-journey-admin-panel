@@ -222,7 +222,6 @@ export const SearchList = () => {
               <th>楽曲名</th>
               <th>楽曲種別</th>
               <th>楽曲属性</th>
-              <th>説明</th>
               <th>表示順</th>
               <th>操作</th>
             </tr>
@@ -236,7 +235,6 @@ export const SearchList = () => {
                       <td><div class="skeleton h-4 w-32" /></td>
                       <td><div class="skeleton h-4 w-8" /></td>
                       <td><div class="skeleton h-6 w-10" /></td>
-                      <td><div class="skeleton h-4 w-32" /></td>
                       <td><div class="skeleton h-4 w-8" /></td>
                       <td><div class="skeleton h-6 w-10" /></td>
                     </tr>
@@ -246,7 +244,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="6" class="py-8 text-center text-error">
+                    <td colspan="5" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -260,7 +258,6 @@ export const SearchList = () => {
                         <td>{song.title}</td>
                         <td>{song.type.name}</td>
                         <td>{song.attribute?.name ?? '-'}</td>
-                        <td>{song.description}</td>
                         <td>{song.orderNo}</td>
                         <td>
                           <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">編集</a>
