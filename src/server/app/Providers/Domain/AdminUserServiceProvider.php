@@ -14,11 +14,9 @@ use AdminUser\Domain\Services\HasherInterface;
 use AdminUser\Infrastructures\AdminUserFactory;
 use AdminUser\Infrastructures\AdminUserRepository;
 use AdminUser\Infrastructures\Hasher;
-use Override;
 
 class AdminUserServiceProvider extends EnvServiceProvider
 {
-    #[Override]
     public function register(): void
     {
         $this->app->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);

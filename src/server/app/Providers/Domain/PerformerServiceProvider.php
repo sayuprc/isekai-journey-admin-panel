@@ -24,11 +24,9 @@ use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Infrastructures\PerformerFactory;
 use Performer\Infrastructures\PerformerRepository;
-use Override;
 
 class PerformerServiceProvider extends EnvServiceProvider
 {
-    #[Override]
     public function register(): void
     {
         $this->app->bind(PerformerRepositoryInterface::class, PerformerRepository::class);

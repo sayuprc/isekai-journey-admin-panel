@@ -24,11 +24,9 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Infrastructures\CreatorFactory;
 use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Http\Request;
-use Override;
 
 class CreatorServiceProvider extends EnvServiceProvider
 {
-    #[Override]
     public function register(): void
     {
         $this->app->bind(CreatorRepositoryInterface::class, CreatorRepository::class);

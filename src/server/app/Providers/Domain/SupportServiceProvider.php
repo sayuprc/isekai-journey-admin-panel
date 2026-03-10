@@ -16,11 +16,9 @@ use Support\Infrastructures\DbTransaction;
 use Support\Infrastructures\Mapper;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
-use Override;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
-    #[Override]
     public function register(): void
     {
         $this->app->bind(MapperInterface::class, Mapper::class);
