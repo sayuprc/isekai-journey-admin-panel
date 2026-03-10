@@ -9,77 +9,15 @@ use App\Models\Song\SongArranger;
 use App\Models\Song\SongComposer;
 use App\Models\Song\SongLyricist;
 use Creator\Domain\Models\CreatorId;
-use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
-use Support\Infrastructures\Database\SqlHelper;
 
 readonly class SongRepository implements SongRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)
     {
-    }
-
-    public function all(): array
-    {
-        return ModelsSong::query()
-            ->orderBy('order_no')
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
-    }
-
-    public function search(SongSearchCriteria $criteria): array
-    {
-        $query = ModelsSong::query();
-
-        if ($criteria->title->isPresent()) {
-            // 前方一致検索でインデックスを活用
-            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
-            $query = $query->whereLike('title_lower', $keyword . '%');
-        }
-
-        if ($criteria->type->isPresent()) {
-            $query = $query->where('type', $criteria->type->get());
-        }
-
-        if ($criteria->attribute->isPresent()) {
-            $query = $query->where('attribute', $criteria->attribute->get());
-        }
-
-        $offset = ($criteria->page - 1) * $criteria->perPage->value;
-
-        return $query->orderBy($criteria->sort->value, $criteria->order->value)
-            ->limit($criteria->perPage->value)
-            ->offset($offset)
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
-    }
-
-    public function maxPage(SongSearchCriteria $criteria): int
-    {
-        $query = ModelsSong::query();
-
-        if ($criteria->title->isPresent()) {
-            // 前方一致検索でインデックスを活用
-            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
-            $query = $query->whereLike('title_lower', $keyword . '%');
-        }
-
-        if ($criteria->type->isPresent()) {
-            $query = $query->where('type', $criteria->type->get());
-        }
-
-        if ($criteria->attribute->isPresent()) {
-            $query = $query->where('attribute', $criteria->attribute->get());
-        }
-
-        return (int)ceil($query->count() / $criteria->perPage->value);
     }
 
     public function find(SongId $songId): ?Song

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Interactors;
 
+use App\Models\Song\Song;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\UseCase\Delete\DeleteInputData;
-use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -31,7 +31,7 @@ class DeleteInteractorTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = $this->app->make(SongRepositoryInterface::class)->all();
+        $songs = Song::query()->get();
         $this->assertCount(0, $songs);
     }
 

@@ -22,11 +22,6 @@ const CreatorRefSchema = t.Array(
 
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
-  .get('/', async ({ credential }) => {
-    return resolveApiResponse(
-      await createAuthClient(credential).GET('/songs'),
-    );
-  })
   .get('/search', async ({ query, credential }) => {
     return resolveApiResponse(
       await createAuthClient(credential).GET('/songs/search', {
