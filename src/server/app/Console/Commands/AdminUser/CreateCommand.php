@@ -22,7 +22,6 @@ class CreateCommand extends Command
     #[Override]
     protected $description = '管理ユーザーを作成する';
 
-    #[Override]
     public function handle(CreateUseCaseInterface $interactor): int
     {
         $name = $this->argument('name');
