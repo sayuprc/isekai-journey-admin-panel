@@ -6,6 +6,7 @@ namespace Tests\Unit\Performer\Application\Interactors;
 
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\ListInteractor;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,6 +19,7 @@ class ListInteractorTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

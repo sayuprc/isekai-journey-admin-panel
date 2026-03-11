@@ -14,6 +14,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -34,6 +35,7 @@ readonly class AuthenticateInteractor implements AuthenticateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(AuthenticateInputData $inputData): Result
     {
         return $this->jwtHandler->verify($inputData->accessToken)

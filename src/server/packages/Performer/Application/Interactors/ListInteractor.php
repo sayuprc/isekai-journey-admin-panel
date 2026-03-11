@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\List\ListOutputData;
 use Performer\Application\UseCase\List\ListUseCaseInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
@@ -23,6 +24,7 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(): Result
     {
         $user = $this->context->get();

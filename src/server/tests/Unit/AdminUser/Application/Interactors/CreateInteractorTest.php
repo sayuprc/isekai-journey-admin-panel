@@ -15,6 +15,7 @@ use AdminUser\Domain\Services\HasherInterface;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
@@ -36,6 +37,7 @@ class CreateInteractorTest extends TestCase
 
     private AdminUserIntegrityService&MockInterface $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

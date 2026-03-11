@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Http\Request;
+use Override;
 use Performer\Application\Interactors\CreateInteractor;
 use Performer\Application\Interactors\DeleteInteractor;
 use Performer\Application\Interactors\GetInteractor;
@@ -27,6 +28,7 @@ use Performer\Infrastructures\PerformerRepository;
 
 class PerformerServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(PerformerRepositoryInterface::class, PerformerRepository::class);

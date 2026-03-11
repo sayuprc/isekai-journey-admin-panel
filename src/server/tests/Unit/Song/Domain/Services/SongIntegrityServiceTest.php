@@ -8,6 +8,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
@@ -37,6 +38,7 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&SongRepositoryInterface $songRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -9,6 +9,7 @@ use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\HashedPassword;
+use Override;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;
@@ -27,6 +28,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function all(): array
     {
         $adminUsers = $this->loadAll();
@@ -36,6 +38,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         return $adminUsers;
     }
 
+    #[Override]
     public function find(AdminUserId $adminUserId): ?AdminUser
     {
         foreach ($this->loadAll() as $adminUser) {
@@ -47,6 +50,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function findByEmail(Email $email): ?AdminUser
     {
         foreach ($this->loadAll() as $adminUser) {
@@ -58,6 +62,7 @@ readonly class FileAdminUserRepository implements AdminUserRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser
     {
         $this->store->save(

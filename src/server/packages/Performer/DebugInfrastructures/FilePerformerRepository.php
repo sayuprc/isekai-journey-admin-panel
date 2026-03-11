@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Performer\DebugInfrastructures;
 
+use Override;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
@@ -27,6 +28,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         $this->filePath = $config->path . '/' . self::FILE_NAME;
     }
 
+    #[Override]
     public function all(): array
     {
         $performer = $this->loadAll();
@@ -36,6 +38,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return $performer;
     }
 
+    #[Override]
     public function search(PerformerSearchCriteria $criteria): array
     {
         $items = $this->loadAll();
@@ -64,6 +67,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return $chunked[$criteria->page - 1] ?? [];
     }
 
+    #[Override]
     public function maxPage(PerformerSearchCriteria $criteria): int
     {
         $items = $this->loadAll();
@@ -76,6 +80,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return (int)ceil(count($items) / $criteria->perPage->value);
     }
 
+    #[Override]
     public function find(PerformerId $performerId): ?Performer
     {
         foreach ($this->loadAll() as $performer) {
@@ -87,6 +92,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function findByName(PerformerName $name): ?Performer
     {
         foreach ($this->loadAll() as $performer) {
@@ -98,6 +104,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function save(Performer $performer): Performer
     {
         $this->store->save(
@@ -109,6 +116,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         return $performer;
     }
 
+    #[Override]
     public function delete(PerformerId $performerId): void
     {
         $index = $this->findIndex($performerId);
@@ -120,6 +128,7 @@ readonly class FilePerformerRepository implements PerformerRepositoryInterface
         $this->store->unset($this->filePath, $index);
     }
 
+    #[Override]
     public function getMaxOrderNo(): int
     {
         $orderNos = array_map(fn (Performer $item): int => $item->orderNo->value, $this->loadAll());

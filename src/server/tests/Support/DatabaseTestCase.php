@@ -8,6 +8,7 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Override;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -19,6 +20,7 @@ abstract class DatabaseTestCase extends TestCase
 
     private static ?string $testDatabase = null;
 
+    #[Override]
     public function createApplication(): Application
     {
         $app = parent::createApplication();

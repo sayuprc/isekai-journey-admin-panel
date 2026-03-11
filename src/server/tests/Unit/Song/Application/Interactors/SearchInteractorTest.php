@@ -10,6 +10,7 @@ use Auth\Domain\Models\AuthContext;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
@@ -29,6 +30,7 @@ class SearchInteractorTest extends TestCase
 
     private MockInterface&SongQueryServiceInterface $query;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

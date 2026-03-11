@@ -11,11 +11,13 @@ use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Carbon\Carbon;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RefreshTokenFactoryTest extends TestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

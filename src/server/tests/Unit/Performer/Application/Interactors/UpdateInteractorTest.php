@@ -7,6 +7,7 @@ namespace Tests\Unit\Performer\Application\Interactors;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\UpdateInteractor;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Domain\Models\Performer;
@@ -30,6 +31,7 @@ class UpdateInteractorTest extends TestCase
 
     private MockInterface&PerformerIntegrityService $service;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

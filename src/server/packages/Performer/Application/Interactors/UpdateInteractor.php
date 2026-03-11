@@ -7,6 +7,7 @@ namespace Performer\Application\Interactors;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use LogicException;
+use Override;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateOutputData;
 use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
@@ -36,6 +37,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(UpdateInputData $inputData): Result
     {
         $user = $this->context->get();

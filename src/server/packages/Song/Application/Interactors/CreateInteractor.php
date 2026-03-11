@@ -7,6 +7,7 @@ namespace Song\Application\Interactors;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -38,6 +39,7 @@ readonly class CreateInteractor implements CreateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(CreateInputData $inputData): Result
     {
         $user = $this->context->get();

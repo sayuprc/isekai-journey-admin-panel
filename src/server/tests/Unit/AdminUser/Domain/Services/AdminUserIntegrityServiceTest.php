@@ -16,6 +16,7 @@ use AdminUser\Domain\Services\AdminUserIntegrityService;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
@@ -35,6 +36,7 @@ class AdminUserIntegrityServiceTest extends TestCase
 
     private AdminUserRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

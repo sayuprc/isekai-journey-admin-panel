@@ -10,6 +10,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Creator\Domain\Models\Creator;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
+use Override;
 use Performer\Domain\Models\Performer;
 use Song\Domain\Models\Song;
 use Support\Contracts\MapperInterface;
@@ -20,6 +21,7 @@ readonly class Mapper implements MapperInterface
     {
     }
 
+    #[Override]
     public function map(string $signature, mixed $source): mixed
     {
         $json = ! is_string($source) || ! json_validate($source)

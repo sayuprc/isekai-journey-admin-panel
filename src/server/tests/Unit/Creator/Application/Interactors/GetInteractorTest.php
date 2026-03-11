@@ -10,6 +10,7 @@ use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
@@ -21,6 +22,7 @@ class GetInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -7,9 +7,11 @@ namespace App\Providers;
 use App\Http\Middleware\OpenApiConfig;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 class AppServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(

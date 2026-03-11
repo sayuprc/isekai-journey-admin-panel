@@ -6,6 +6,7 @@ namespace Song\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -30,6 +31,7 @@ readonly class SearchInteractor implements SearchUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(SearchInputData $inputData): Result
     {
         $user = $this->context->get();

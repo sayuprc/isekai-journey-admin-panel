@@ -16,6 +16,7 @@ use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
@@ -36,6 +37,7 @@ class RefreshTokenIssueServiceTest extends TestCase
 
     private MockInterface&TokenHasherInterface $tokenHasher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -9,6 +9,7 @@ use Auth\Domain\Models\AuthContext;
 use Creator\Application\UseCase\List\ListOutputData;
 use Creator\Application\UseCase\List\ListUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -23,6 +24,7 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(): Result
     {
         $user = $this->context->get();

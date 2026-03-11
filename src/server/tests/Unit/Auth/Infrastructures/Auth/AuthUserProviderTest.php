@@ -14,6 +14,7 @@ use Auth\Infrastructures\Auth\AuthUser;
 use Auth\Infrastructures\Auth\AuthUserProvider;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -23,6 +24,7 @@ class AuthUserProviderTest extends TestCase
 
     private HasherInterface&MockInterface $hasher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

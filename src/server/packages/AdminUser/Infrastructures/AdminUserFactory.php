@@ -12,9 +12,11 @@ use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\Role;
+use Override;
 
 readonly class AdminUserFactory implements AdminUserFactoryInterface
 {
+    #[Override]
     public function create(
         AdminUserId $adminUserId,
         AdminUserName $name,

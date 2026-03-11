@@ -9,6 +9,7 @@ use App\Models\Song\SongArranger;
 use App\Models\Song\SongComposer;
 use App\Models\Song\SongLyricist;
 use Creator\Domain\Models\CreatorId;
+use Override;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -20,6 +21,7 @@ readonly class SongRepository implements SongRepositoryInterface
     {
     }
 
+    #[Override]
     public function find(SongId $songId): ?Song
     {
         $found = ModelsSong::query()
@@ -33,6 +35,7 @@ readonly class SongRepository implements SongRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function isCreatorUsed(CreatorId $creatorId): bool
     {
         $id = $this->converter->toBin($creatorId->value);
@@ -42,6 +45,7 @@ readonly class SongRepository implements SongRepositoryInterface
             || SongArranger::query()->where('creator_id', $id)->exists();
     }
 
+    #[Override]
     public function save(Song $song): Song
     {
         $id = $this->converter->toBin($song->songId->value);
@@ -106,11 +110,13 @@ readonly class SongRepository implements SongRepositoryInterface
         ];
     }
 
+    #[Override]
     public function delete(SongId $songId): void
     {
         ModelsSong::query()->where('song_id', $this->converter->toBin($songId->value))->delete();
     }
 
+    #[Override]
     public function getMaxOrderNo(): int
     {
         /** @var int */

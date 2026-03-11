@@ -6,6 +6,7 @@ namespace Tests\Unit\Song\Application\Interactors;
 
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\AssembledCreator;
 use Song\Application\Assemble\AssembledSong;
@@ -27,6 +28,7 @@ class GetInteractorTest extends TestCase
 
     private MockInterface&SongAssembler $assembler;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

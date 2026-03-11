@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Support;
 
 use FilesystemIterator;
+use Override;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -18,6 +19,7 @@ trait FileRepositoryTransaction
 {
     private const string FILE_DIR = __DIR__ . '/../../storage/app/tests';
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,6 +33,7 @@ trait FileRepositoryTransaction
         }
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();

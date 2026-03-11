@@ -11,6 +11,7 @@ use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\AuthenticationError;
 use Tests\Support\Domain\EntityFactory;
@@ -22,6 +23,7 @@ class SearchInteractorTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

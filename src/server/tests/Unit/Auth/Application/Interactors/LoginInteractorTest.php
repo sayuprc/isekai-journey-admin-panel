@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
@@ -33,6 +34,7 @@ class LoginInteractorTest extends TestCase
 
     private AccessTokenIssueService&MockInterface $accessTokenIssueService;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -11,6 +11,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -31,6 +32,7 @@ readonly class LoginInteractor implements LoginUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(LoginInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {

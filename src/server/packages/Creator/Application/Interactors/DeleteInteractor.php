@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,6 +30,7 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(DeleteInputData $inputData): Result
     {
         $user = $this->context->get();

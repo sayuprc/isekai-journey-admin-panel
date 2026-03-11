@@ -12,6 +12,7 @@ use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use LogicException;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -36,6 +37,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(UpdateInputData $inputData): Result
     {
         $user = $this->context->get();

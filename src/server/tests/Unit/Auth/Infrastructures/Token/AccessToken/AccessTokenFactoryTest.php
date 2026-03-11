@@ -10,6 +10,7 @@ use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
 use Carbon\Carbon;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,6 +18,7 @@ class AccessTokenFactoryTest extends TestCase
 {
     private JwtHandlerInterface&MockInterface $jwt;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

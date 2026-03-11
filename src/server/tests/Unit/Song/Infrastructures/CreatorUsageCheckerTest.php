@@ -7,6 +7,7 @@ namespace Tests\Unit\Song\Infrastructures;
 use Creator\Domain\Models\CreatorId;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;
@@ -16,6 +17,7 @@ class CreatorUsageCheckerTest extends TestCase
 {
     private MockInterface&SongRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

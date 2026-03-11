@@ -11,6 +11,7 @@ use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Tests\Support\Domain\EntityFactory;
@@ -24,6 +25,7 @@ class AccessTokenIssueServiceTest extends TestCase
 
     private AccessTokenFactoryInterface&MockInterface $factory;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

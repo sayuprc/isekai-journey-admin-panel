@@ -9,6 +9,7 @@ use AdminUser\Application\UseCase\List\ListInputData;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -19,6 +20,7 @@ class ListInteractorTest extends TestCase
 
     private AdminUserRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

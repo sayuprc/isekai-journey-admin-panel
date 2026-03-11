@@ -6,6 +6,7 @@ namespace Tests\Unit\Performer\Application\Interactors;
 
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\GetInteractor;
 use Performer\Application\UseCase\Get\GetInputData;
 use Performer\Domain\Models\PerformerId;
@@ -21,6 +22,7 @@ class GetInteractorTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

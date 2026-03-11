@@ -11,6 +11,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Error\BusinessLogicError;
 use Tests\TestCase;
@@ -21,6 +22,7 @@ class DeleteInteractorTest extends TestCase
 
     private CreatorUsageCheckerInterface&MockInterface $usageChecker;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

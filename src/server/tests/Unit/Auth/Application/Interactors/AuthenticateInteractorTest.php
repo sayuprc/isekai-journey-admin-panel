@@ -18,6 +18,7 @@ use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
@@ -37,6 +38,7 @@ class AuthenticateInteractorTest extends TestCase
 
     private AuthContext $context;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

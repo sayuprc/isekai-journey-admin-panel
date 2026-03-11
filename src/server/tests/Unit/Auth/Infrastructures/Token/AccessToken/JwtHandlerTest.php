@@ -10,6 +10,7 @@ use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
@@ -21,6 +22,7 @@ class JwtHandlerTest extends TestCase
 
     private MapperInterface&MockInterface $mapper;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

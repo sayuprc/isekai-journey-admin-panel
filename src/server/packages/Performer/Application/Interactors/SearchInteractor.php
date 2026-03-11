@@ -6,6 +6,7 @@ namespace Performer\Application\Interactors;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Application\UseCase\Search\SearchOutputData;
 use Performer\Application\UseCase\Search\SearchUseCaseInterface;
@@ -28,6 +29,7 @@ readonly class SearchInteractor implements SearchUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(SearchInputData $inputData): Result
     {
         $user = $this->context->get();

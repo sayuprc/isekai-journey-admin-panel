@@ -11,6 +11,7 @@ use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
@@ -28,6 +29,7 @@ class CreatorIntegrityServiceTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

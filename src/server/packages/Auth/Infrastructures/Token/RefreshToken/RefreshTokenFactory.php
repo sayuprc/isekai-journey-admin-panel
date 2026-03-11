@@ -11,9 +11,11 @@ use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
+use Override;
 
 readonly class RefreshTokenFactory implements RefreshTokenFactoryInterface
 {
+    #[Override]
     public function create(
         RefreshTokenId $refreshTokenId,
         AdminUserId $adminUserId,

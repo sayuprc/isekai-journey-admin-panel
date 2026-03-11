@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performer\Infrastructures;
 
 use App\Models\Performer\Performer as ModelsPerformer;
+use Override;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
@@ -19,6 +20,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
     {
     }
 
+    #[Override]
     public function all(): array
     {
         return ModelsPerformer::query()
@@ -28,6 +30,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function search(PerformerSearchCriteria $criteria): array
     {
         $query = ModelsPerformer::query();
@@ -49,6 +52,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
             ->all();
     }
 
+    #[Override]
     public function maxPage(PerformerSearchCriteria $criteria): int
     {
         $query = ModelsPerformer::query();
@@ -63,6 +67,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         return (int)ceil($query->count() / $criteria->perPage->value);
     }
 
+    #[Override]
     public function find(PerformerId $performerId): ?Performer
     {
         $found = ModelsPerformer::query()
@@ -76,6 +81,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function findByName(PerformerName $name): ?Performer
     {
         $found = ModelsPerformer::query()
@@ -89,6 +95,7 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         return $this->hydrate($found);
     }
 
+    #[Override]
     public function save(Performer $performer): Performer
     {
         ModelsPerformer::query()->upsert(
@@ -109,11 +116,13 @@ readonly class PerformerRepository implements PerformerRepositoryInterface
         return $performer;
     }
 
+    #[Override]
     public function delete(PerformerId $performerId): void
     {
         ModelsPerformer::query()->where('performer_id', $this->converter->toBin($performerId->value))->delete();
     }
 
+    #[Override]
     public function getMaxOrderNo(): int
     {
         /** @var int */

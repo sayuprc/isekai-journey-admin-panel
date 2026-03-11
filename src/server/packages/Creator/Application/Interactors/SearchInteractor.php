@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Search\SearchOutputData;
 use Creator\Application\UseCase\Search\SearchUseCaseInterface;
 use Creator\Domain\Criteria\CreatorSearchCriteria;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -28,6 +29,7 @@ readonly class SearchInteractor implements SearchUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(SearchInputData $inputData): Result
     {
         $user = $this->context->get();

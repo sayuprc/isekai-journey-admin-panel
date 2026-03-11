@@ -11,6 +11,7 @@ use Creator\Application\UseCase\Get\GetOutputData;
 use Creator\Application\UseCase\Get\GetUseCaseInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,6 +30,7 @@ readonly class GetInteractor implements GetUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(GetInputData $inputData): Result
     {
         $user = $this->context->get();

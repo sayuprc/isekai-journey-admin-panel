@@ -26,9 +26,11 @@ use Auth\Infrastructures\Token\RefreshToken\RefreshTokenFactory;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
 use Illuminate\Support\Facades\Auth;
+use Override;
 
 class AuthServiceProvider extends EnvServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->bind(JwtHandlerInterface::class, JwtHandler::class);

@@ -10,6 +10,7 @@ use AdminUser\Application\UseCase\List\ListUseCaseInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
+use Override;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -24,6 +25,7 @@ readonly class ListInteractor implements ListUseCaseInterface
     ) {
     }
 
+    #[Override]
     public function handle(ListInputData $inputData): Result
     {
         $user = $this->context->get();

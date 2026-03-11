@@ -7,6 +7,7 @@ namespace Tests\Unit\Performer\Application\Interactors;
 use Auth\Domain\Models\AuthContext;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Performer\Application\Interactors\SearchInteractor;
 use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
@@ -22,6 +23,7 @@ class SearchInteractorTest extends TestCase
 
     private MockInterface&PerformerRepositoryInterface $repository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
