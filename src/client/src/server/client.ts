@@ -1,5 +1,5 @@
 import createClient from 'openapi-fetch';
-import type { paths } from '../generated/schema';
+import type { paths } from '../generated/types.gen';
 import type { Credential } from './types';
 
 const apiUrl = import.meta.env.API_URL;

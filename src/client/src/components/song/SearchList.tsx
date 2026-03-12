@@ -1,5 +1,5 @@
 import { Show, createResource, createSignal, For, Match, Switch, onMount } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { components } from '../../generated/types.gen';
 import { client } from '../../utils/client';
 
 type SongType = components['schemas']['SongType'];

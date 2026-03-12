@@ -1,6 +1,6 @@
 import { treaty } from '@elysiajs/eden';
 import baseClient from 'openapi-fetch';
-import type { paths } from '../generated/schema';
+import type { paths } from '../generated/types.gen';
 import type { App } from '../server';
 
 const getCookie = (name: string): string | undefined => {

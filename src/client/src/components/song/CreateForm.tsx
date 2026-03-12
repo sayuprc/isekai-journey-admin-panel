@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { components } from '../../generated/types.gen';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
