@@ -49,6 +49,10 @@ mkdir -p $MYSQL_DOCKER_PATH
 
 [tasks.up]
 description = "CI 環境でコンテナを起動する"
+run = "docker compose up -d php"
+
+[tasks."up:test"]
+description = "CI 環境でテスト用コンテナを起動する"
 run = "docker compose up -d php mysql"
 
 [tasks."composer:install"]
