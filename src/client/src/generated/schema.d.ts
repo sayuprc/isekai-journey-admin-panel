@@ -423,8 +423,9 @@ export interface components {
             value: components["schemas"]["RoleValue"];
         };
         /**
+         * Format: int32
          * @description 役割の値
-         * @enum {number}
+         * @enum {integer}
          */
         RoleValue: 1 | 2 | 3;
         /**
@@ -489,8 +490,9 @@ export interface components {
             attributes: components["schemas"]["SongAttribute"][];
         };
         /**
+         * Format: int32
          * @description 楽曲属性の値
-         * @enum {number}
+         * @enum {integer}
          */
         SongAttributeValue: 1 | 2 | 3 | 4 | 5;
         SongCreateRequest: {
@@ -559,8 +561,9 @@ export interface components {
             types: components["schemas"]["SongType"][];
         };
         /**
+         * Format: int32
          * @description 楽曲種別の値
-         * @enum {number}
+         * @enum {integer}
          */
         SongTypeValue: 1 | 2;
         SongUpdateRequest: {
