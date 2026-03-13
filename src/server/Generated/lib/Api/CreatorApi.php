@@ -1204,14 +1204,14 @@ class CreatorApi
      * @param  \OpenAPIClientModelCreatorSearchSortBy|null $sort sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order order (optional)
      * @param  int|null $page page (optional, default to 1)
-     * @param  int|null $per_page per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['creatorServiceSearchCreators'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\CreatorSearchResponse
      */
-    public function creatorServiceSearchCreators($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
+    public function creatorServiceSearchCreators($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
     {
         list($response) = $this->creatorServiceSearchCreatorsWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType);
         return $response;
@@ -1224,14 +1224,14 @@ class CreatorApi
      * @param  \OpenAPIClientModelCreatorSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['creatorServiceSearchCreators'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\CreatorSearchResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function creatorServiceSearchCreatorsWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
+    public function creatorServiceSearchCreatorsWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
     {
         $request = $this->creatorServiceSearchCreatorsRequest($name, $sort, $order, $page, $per_page, $contentType);
 
@@ -1311,13 +1311,13 @@ class CreatorApi
      * @param  \OpenAPIClientModelCreatorSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['creatorServiceSearchCreators'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function creatorServiceSearchCreatorsAsync($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
+    public function creatorServiceSearchCreatorsAsync($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
     {
         return $this->creatorServiceSearchCreatorsAsyncWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType)
             ->then(
@@ -1334,13 +1334,13 @@ class CreatorApi
      * @param  \OpenAPIClientModelCreatorSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['creatorServiceSearchCreators'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function creatorServiceSearchCreatorsAsyncWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
+    public function creatorServiceSearchCreatorsAsyncWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
     {
         $returnType = '\OpenAPI\Client\Model\CreatorSearchResponse';
         $request = $this->creatorServiceSearchCreatorsRequest($name, $sort, $order, $page, $per_page, $contentType);
@@ -1388,13 +1388,13 @@ class CreatorApi
      * @param  \OpenAPIClientModelCreatorSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['creatorServiceSearchCreators'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function creatorServiceSearchCreatorsRequest($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
+    public function creatorServiceSearchCreatorsRequest($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['creatorServiceSearchCreators'][0])
     {
 
 
@@ -1450,7 +1450,7 @@ class CreatorApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $per_page,
             'per_page', // param base name
-            'integer', // openApiType
+            'PerPage', // openApiType
             'form', // style
             false, // explode
             false // required

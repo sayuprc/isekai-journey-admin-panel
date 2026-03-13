@@ -345,6 +345,12 @@ export interface components {
          */
         Lyricist: components["schemas"]["SongCreator"];
         /**
+         * Format: int32
+         * @description 1ページあたりの件数
+         * @enum {integer}
+         */
+        PerPage: 25 | 50 | 100;
+        /**
          * @example {
          *       "performerId": "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
          *       "name": "ヰ世界情緒",
@@ -939,7 +945,7 @@ export interface operations {
                 sort?: components["schemas"]["CreatorSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
                 page?: number;
-                per_page?: number;
+                per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
             path?: never;
@@ -1368,7 +1374,7 @@ export interface operations {
                 sort?: components["schemas"]["PerformerSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
                 page?: number;
-                per_page?: number;
+                per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
             path?: never;
@@ -1849,12 +1855,12 @@ export interface operations {
         parameters: {
             query?: {
                 title?: string;
-                type?: number;
-                attribute?: number;
+                type?: components["schemas"]["SongTypeValue"];
+                attribute?: components["schemas"]["SongAttributeValue"];
                 sort?: components["schemas"]["SongSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
                 page?: number;
-                per_page?: number;
+                per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
             path?: never;

@@ -1204,14 +1204,14 @@ class PerformerApi
      * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order order (optional)
      * @param  int|null $page page (optional, default to 1)
-     * @param  int|null $per_page per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\PerformerSearchResponse
      */
-    public function performerServiceSearchPerformers($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    public function performerServiceSearchPerformers($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
     {
         list($response) = $this->performerServiceSearchPerformersWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType);
         return $response;
@@ -1224,14 +1224,14 @@ class PerformerApi
      * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\PerformerSearchResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function performerServiceSearchPerformersWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    public function performerServiceSearchPerformersWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
     {
         $request = $this->performerServiceSearchPerformersRequest($name, $sort, $order, $page, $per_page, $contentType);
 
@@ -1311,13 +1311,13 @@ class PerformerApi
      * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function performerServiceSearchPerformersAsync($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    public function performerServiceSearchPerformersAsync($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
     {
         return $this->performerServiceSearchPerformersAsyncWithHttpInfo($name, $sort, $order, $page, $per_page, $contentType)
             ->then(
@@ -1334,13 +1334,13 @@ class PerformerApi
      * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function performerServiceSearchPerformersAsyncWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    public function performerServiceSearchPerformersAsyncWithHttpInfo($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
     {
         $returnType = '\OpenAPI\Client\Model\PerformerSearchResponse';
         $request = $this->performerServiceSearchPerformersRequest($name, $sort, $order, $page, $per_page, $contentType);
@@ -1388,13 +1388,13 @@ class PerformerApi
      * @param  \OpenAPIClientModelPerformerSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
      * @param  int|null $page (optional, default to 1)
-     * @param  int|null $per_page (optional, default to 50)
+     * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['performerServiceSearchPerformers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function performerServiceSearchPerformersRequest($name = null, $sort = null, $order = null, $page = 1, $per_page = 50, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
+    public function performerServiceSearchPerformersRequest($name = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['performerServiceSearchPerformers'][0])
     {
 
 
@@ -1450,7 +1450,7 @@ class PerformerApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $per_page,
             'per_page', // param base name
-            'integer', // openApiType
+            'PerPage', // openApiType
             'form', // style
             false, // explode
             false // required
