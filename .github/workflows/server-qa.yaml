@@ -214,7 +214,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Run Container
-        run: mise run up
+        run: mise run up:test
 
       - name: Wait for MySQL
         run: |
