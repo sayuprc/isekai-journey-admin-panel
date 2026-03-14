@@ -49,6 +49,18 @@ case "$file" in
         }
       }'
     fi
+
+    # mago lint（ホスト上で高速実行）
+    mago_diag="$(mago lint "$file" 2>&1 | head -30)" || true
+
+    if [ -n "$mago_diag" ] && echo "$mago_diag" | grep -qiE 'warning|error|help'; then
+      jq -n --arg msg "$mago_diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: ("mago lint:\n" + $msg)
+        }
+      }'
+    fi
     ;;
 
   */src/client/*.ts|*/src/client/*.tsx|*/src/client/*.js|*/src/client/*.jsx|*/src/client/*.mjs)
