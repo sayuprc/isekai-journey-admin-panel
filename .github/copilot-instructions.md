@@ -3,23 +3,19 @@
 ## プロジェクト概要
 
 isekai-terrarium の管理画面プロジェクト。
-フロントエンド (Astro/SolidJS)、バックエンド (PHP/Laravel)、API 定義 (TypeSpec) の 3 つで構成されています。
+`src/server` (PHP/Laravel)、`src/client` (Astro/SolidJS)、`src/contracts` (TypeSpec, git submodule) で構成。
 
-## ディレクトリ構造
+## 検証
 
-- `src/client`: フロントエンド (Astro, SolidJS, Elysia BFF) → 詳細は `src/client/CLAUDE.md`
-- `src/contracts`: API 定義 (TypeSpec, git submodule で別リポジトリとして管理)
-- `src/server`: バックエンド (PHP 8.5, Laravel 12) → 詳細は `src/server/CLAUDE.md`
+変更後は `mise tasks` で関連する検証タスクを確認し、実行すること。
 
-## 共通規約
+## ADR
 
-- **フォーマット**: `.editorconfig` をすべてのファイルに適用します。
+アーキテクチャ決定記録は `docs/adr/` にあります（`mise run adr:pull` で取得・更新）。
 
-## 便利なコマンド
+## 禁止事項
 
-- `mise run test:all`: 全テスト実行
-- `mise run phpstan`: 静的解析
-- `mise ecs`: コーディング規約チェック (サーバー)
-- `mise ecs:fix`: 自動修正 (サーバー)
-- `mise format`: 自動修正 (クライアント)
-- `mise generate`: `src/contracts` からコードを自動生成
+- リンター・フォーマッター設定ファイルの変更（コードを修正すること）
+- `src/server/Generated/`, `src/client/src/generated/` の手動編集
+- `git commit --no-verify` の使用
+- `npm`, `yarn`, `pnpm` の使用（`bun` を使うこと）
