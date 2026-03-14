@@ -1,0 +1,30 @@
+# Lefthook pre-commit hooks
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    php-ecs:
+      root: "src/server/"
+      glob: "{app,bootstrap,config,database,packages,routes,tests,tools}/**/*.php"
+      run: docker exec isekai-terrarium-admin-php vendor/bin/ecs check --no-progress-bar -- {staged_files}
+
+    php-phpstan:
+      root: "src/server/"
+      glob: "{app,bootstrap,packages}/**/*.php"
+      run: docker exec isekai-terrarium-admin-php vendor/bin/phpstan analyze --no-progress -- {staged_files}
+
+    eslint:
+      root: "src/client/"
+      glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
+      run: bunx eslint {staged_files}
+
+    biome-format:
+      root: "src/client/"
+      glob: "src/**/*.{ts,tsx,js,jsx,mjs}"
+      run: bunx biome format {staged_files}
+
+    stylelint:
+      root: "src/client/"
+      glob: "src/**/*.{css,astro}"
+      run: bunx stylelint {staged_files}

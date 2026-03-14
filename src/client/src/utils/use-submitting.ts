@@ -3,9 +3,7 @@ import { createSignal } from 'solid-js';
 export const createSubmitting = () => {
   const [isSubmitting, setIsSubmitting] = createSignal(false);
 
-  const withSubmitting = <T extends unknown[], R>(
-    handler: (...args: T) => Promise<R>,
-  ) => {
+  const withSubmitting = <T extends unknown[], R>(handler: (...args: T) => Promise<R>) => {
     return async (...args: T): Promise<R | undefined> => {
       if (isSubmitting()) {
         return;

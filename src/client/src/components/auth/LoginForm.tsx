@@ -40,16 +40,24 @@ export const LoginForm = () => {
       <FormError message={formError()} onClose={clearErrors} />
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <label class="label">メールアドレス</label>
-        <input type="email" class="input" name="email" required classList={{ 'input-error': !!getFieldError('email') }} />
-        <Show when={getFieldError('email')}>
-          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-        </Show>
+        <input
+          type="email"
+          class="input"
+          name="email"
+          required
+          classList={{ 'input-error': !!getFieldError('email') }}
+        />
+        <Show when={getFieldError('email')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <label class="label">パスワード</label>
-        <input type="password" class="input" name="password" required classList={{ 'input-error': !!getFieldError('password') }} />
-        <Show when={getFieldError('password')}>
-          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-        </Show>
+        <input
+          type="password"
+          class="input"
+          name="password"
+          required
+          classList={{ 'input-error': !!getFieldError('password') }}
+        />
+        <Show when={getFieldError('password')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? 'ログイン中...' : 'ログイン'}

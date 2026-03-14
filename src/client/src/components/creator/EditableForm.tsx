@@ -95,21 +95,33 @@ export const EditableForm = (props: Props) => {
   return (
     // TODO ローディング用のコンポーネントを用意する
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
-      <a href="/creators" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <a href="/creators" class="btn btn-ghost btn-sm mb-4">
+        ← 一覧に戻る
+      </a>
       <FormError message={formError()} onClose={clearErrors} />
       <form onsubmit={handleSubmit}>
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
           <label class="label">クリエイター名</label>
-          <input type="text" class="input w-full" name="name" value={props.data?.creator.name} classList={{ 'input-error': !!getFieldError('name') }} />
-          <Show when={getFieldError('name')}>
-            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-          </Show>
+          <input
+            type="text"
+            class="input w-full"
+            name="name"
+            value={props.data?.creator.name}
+            classList={{ 'input-error': !!getFieldError('name') }}
+          />
+          <Show when={getFieldError('name')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
           <label class="label">表示順</label>
-          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.creator.orderNo} classList={{ 'input-error': !!getFieldError('orderNo') }} />
-          <Show when={getFieldError('orderNo')}>
-            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-          </Show>
+          <input
+            type="number"
+            class="input w-full"
+            name="orderNo"
+            required
+            min="1"
+            value={props.data?.creator.orderNo}
+            classList={{ 'input-error': !!getFieldError('orderNo') }}
+          />
+          <Show when={getFieldError('orderNo')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
           <div class="mt-6 flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>
