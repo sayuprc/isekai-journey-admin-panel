@@ -19,20 +19,19 @@ export const SearchableSelect = (props: Props) => {
   const [activeIndex, setActiveIndex] = createSignal(-1);
   let containerRef: HTMLDivElement | undefined;
 
-  const selectedLabel = () =>
-    props.options.find(option => option.value === props.value)?.label ?? '';
+  const selectedLabel = () => props.options.find((option) => option.value === props.value)?.label ?? '';
 
   const filtered = () => {
     const loweredQuery = query().toLowerCase();
     if (loweredQuery === '') {
       return props.options;
     }
-    return props.options.filter(o => o.label.toLowerCase().includes(loweredQuery));
+    return props.options.filter((o) => o.label.toLowerCase().includes(loweredQuery));
   };
 
   const selectOption = (value: string) => {
     props.onChange(value);
-    const label = props.options.find(option => option.value === value)?.label ?? '';
+    const label = props.options.find((option) => option.value === value)?.label ?? '';
     setQuery(label);
     setOpen(false);
     setActiveIndex(-1);
@@ -60,13 +59,13 @@ export const SearchableSelect = (props: Props) => {
       case 'ArrowDown': {
         e.preventDefault();
         setOpen(true);
-        setActiveIndex(prev => (prev < items.length - 1 ? prev + 1 : 0));
+        setActiveIndex((prev) => (prev < items.length - 1 ? prev + 1 : 0));
         break;
       }
       case 'ArrowUp': {
         e.preventDefault();
         setOpen(true);
-        setActiveIndex(prev => (prev > 0 ? prev - 1 : items.length - 1));
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : items.length - 1));
         break;
       }
       case 'Enter': {
@@ -123,15 +122,7 @@ export const SearchableSelect = (props: Props) => {
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
       />
-      {props.required && (
-        <input
-          type="text"
-          class="hidden"
-          value={props.value}
-          required
-          tabIndex={-1}
-        />
-      )}
+      {props.required && <input type="text" class="hidden" value={props.value} required tabIndex={-1} />}
       <Show when={open() && filtered().length > 0}>
         <ul class="menu bg-base-100 rounded-box shadow-lg absolute z-50 mt-1 max-h-48 w-full overflow-y-auto border border-base-300 p-1">
           <For each={filtered()}>

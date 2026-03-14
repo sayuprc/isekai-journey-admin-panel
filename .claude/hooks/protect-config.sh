@@ -23,6 +23,7 @@ PROTECTED_FILES=(
   "infection.json5"
   "phpunit.xml"
   "baseline.php"
+  "biome.json"
 )
 
 for p in "${PROTECTED_FILES[@]}"; do

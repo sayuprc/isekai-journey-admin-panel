@@ -6,7 +6,5 @@ import { authGuard } from '../middleware';
 export const songAttributes = new Elysia({ prefix: '/song-attributes' })
   .use(authGuard)
   .get('/', async ({ credential }) => {
-    return resolveApiResponse(
-      await createAuthClient(credential).GET('/song-attributes'),
-    );
+    return resolveApiResponse(await createAuthClient(credential).GET('/song-attributes'));
   });

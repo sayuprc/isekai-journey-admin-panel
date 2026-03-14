@@ -31,14 +31,20 @@ export const CreateForm = () => {
 
   return (
     <form onsubmit={handleSubmit}>
-      <a href="/performers" class="btn btn-ghost btn-sm mb-4">← 一覧に戻る</a>
+      <a href="/performers" class="btn btn-ghost btn-sm mb-4">
+        ← 一覧に戻る
+      </a>
       <FormError message={formError()} onClose={clearErrors} />
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
         <label class="label">共演者名</label>
-        <input type="text" class="input w-full" name="name" required classList={{ 'input-error': !!getFieldError('name') }} />
-        <Show when={getFieldError('name')}>
-          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-        </Show>
+        <input
+          type="text"
+          class="input w-full"
+          name="name"
+          required
+          classList={{ 'input-error': !!getFieldError('name') }}
+        />
+        <Show when={getFieldError('name')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <div class="mt-6 flex justify-end">
           <button class="btn btn-primary" disabled={isSubmitting()}>
