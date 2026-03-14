@@ -29,9 +29,9 @@
     "tailwindcss": "^4.2.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.7",
     "@eslint/js": "^9.39.2",
     "@stoplight/prism-cli": "^5.14.2",
-    "@stylistic/eslint-plugin": "^5.9.0",
     "@stylistic/stylelint-plugin": "^4.0.1",
     "@types/bun": "^1.3.9",
     "@typescript-eslint/parser": "^8.56.0",
@@ -39,6 +39,7 @@
     "eslint-plugin-astro": "^1.6.0",
     "eslint-plugin-import": "^2.32.0",
     "openapi-typescript": "^7.13.0",
+    "oxlint": "^1.55.0",
     "postcss-html": "^1.8.1",
     "redis-commander": "^0.9.0",
     "stylelint": "^16.26.1",

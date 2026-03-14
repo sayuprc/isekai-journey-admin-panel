@@ -9,8 +9,9 @@ const generateRandomBytes = (): string => {
   return randomBytes(32).toString('base64url');
 };
 
-export const auth = new Elysia({ prefix: '/auth' })
-  .post('/login', async ({ body: { email, password }, cookie: { session, csrf } }) => {
+export const auth = new Elysia({ prefix: '/auth' }).post(
+  '/login',
+  async ({ body: { email, password }, cookie: { session, csrf } }) => {
     const data = resolveApiResponse(
       await client.POST('/auth/login', {
         body: {
@@ -23,11 +24,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     const sessionId = generateRandomBytes();
     const csrfToken = generateRandomBytes();
 
-    await redis.set(
-      `session:${sessionId}`,
-      { ...data, csrfToken },
-      { ex: SESSION_TTL_SECONDS },
-    );
+    await redis.set(`session:${sessionId}`, { ...data, csrfToken }, { ex: SESSION_TTL_SECONDS });
 
     await session?.set({
       value: sessionId,
@@ -46,9 +43,11 @@ export const auth = new Elysia({ prefix: '/auth' })
       path: '/',
       maxAge: SESSION_TTL_SECONDS,
     });
-  }, {
+  },
+  {
     body: t.Object({
       email: t.String(),
       password: t.String(),
     }),
-  });
+  },
+);

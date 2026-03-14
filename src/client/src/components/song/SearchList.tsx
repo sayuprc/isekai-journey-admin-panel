@@ -59,7 +59,15 @@ export const SearchList = () => {
     }
   });
 
-  const updateUrl = (params: { title: string; type?: number; attribute?: number; sort: string; order: string; page: number; perPage: number }) => {
+  const updateUrl = (params: {
+    title: string;
+    type?: number;
+    attribute?: number;
+    sort: string;
+    order: string;
+    page: number;
+    perPage: number;
+  }) => {
     const searchParams = new URLSearchParams();
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', String(params.type));
@@ -74,7 +82,15 @@ export const SearchList = () => {
   const [fetchError, setFetchError] = createSignal<string | null>(null);
 
   const [data] = createResource(
-    () => ({ title: title(), type: type(), attribute: attribute(), sort: sort(), order: order(), page: page(), perPage: perPage() }),
+    () => ({
+      title: title(),
+      type: type(),
+      attribute: attribute(),
+      sort: sort(),
+      order: order(),
+      page: page(),
+      perPage: perPage(),
+    }),
     async (params) => {
       setFetchError(null);
 
@@ -117,103 +133,131 @@ export const SearchList = () => {
     setOrder(inputOrder());
     setPerPage(inputPerPage());
     setPage(newPage);
-    updateUrl({ title: inputTitle(), type: inputType(), attribute: inputAttribute(), sort: inputSort(), order: inputOrder(), page: newPage, perPage: inputPerPage() });
+    updateUrl({
+      title: inputTitle(),
+      type: inputType(),
+      attribute: inputAttribute(),
+      sort: inputSort(),
+      order: inputOrder(),
+      page: newPage,
+      perPage: inputPerPage(),
+    });
   };
 
   const handlePageChange = (page: number) => {
     setPage(page);
-    updateUrl({ title: title(), type: type(), attribute: attribute(), sort: sort(), order: order(), page: page, perPage: perPage() });
+    updateUrl({
+      title: title(),
+      type: type(),
+      attribute: attribute(),
+      sort: sort(),
+      order: order(),
+      page: page,
+      perPage: perPage(),
+    });
   };
 
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="title">楽曲名</label>
+          <label class="fieldset-label" for="title">
+            楽曲名
+          </label>
           <input
             type="text"
             id="title"
             name="title"
             value={inputTitle()}
-            onInput={e => setInputTitle(e.currentTarget.value)}
+            onInput={(e) => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="楽曲名で検索"
           />
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="type">楽曲種別</label>
+          <label class="fieldset-label" for="type">
+            楽曲種別
+          </label>
           <select
             id="type"
             name="type"
             class="select select-bordered select-sm"
             value={inputType() ?? ''}
-            onChange={e => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
+            onChange={(e) => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
           >
             <option value="">すべて</option>
-            <For each={types()}>
-              {t => <option value={t.value}>{t.name}</option>}
-            </For>
+            <For each={types()}>{(t) => <option value={t.value}>{t.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="attribute">楽曲属性</label>
+          <label class="fieldset-label" for="attribute">
+            楽曲属性
+          </label>
           <select
             id="attribute"
             name="attribute"
             class="select select-bordered select-sm"
             value={inputAttribute() ?? ''}
-            onChange={e => setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
+            onChange={(e) =>
+              setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)
+            }
           >
             <option value="">すべて</option>
-            <For each={attributes()}>
-              {a => <option value={a.value}>{a.name}</option>}
-            </For>
+            <For each={attributes()}>{(a) => <option value={a.value}>{a.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="sort">ソート項目</label>
+          <label class="fieldset-label" for="sort">
+            ソート項目
+          </label>
           <select
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
             value={inputSort()}
-            onChange={e => setInputSort(e.currentTarget.value)}
+            onChange={(e) => setInputSort(e.currentTarget.value)}
           >
             <option value="order_no">表示順</option>
             <option value="title">楽曲名</option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="order">並び順</label>
+          <label class="fieldset-label" for="order">
+            並び順
+          </label>
           <select
             id="order"
             name="order"
             class="select select-bordered select-sm"
             value={inputOrder()}
-            onChange={e => setInputOrder(e.currentTarget.value)}
+            onChange={(e) => setInputOrder(e.currentTarget.value)}
           >
             <option value="asc">昇順</option>
             <option value="desc">降順</option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="perPage">表示件数</label>
+          <label class="fieldset-label" for="perPage">
+            表示件数
+          </label>
           <select
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
             value={inputPerPage()}
-            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>
-              {n => <option value={n}>{n}件</option>}
-            </For>
+            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n}>{n}件</option>}</For>
           </select>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-sm">検索</button>
+        <button type="submit" class="btn btn-primary btn-sm">
+          検索
+        </button>
       </form>
       <div class="mb-4 flex justify-end">
-        <a href="/songs/create" class="btn btn-primary btn-sm">新規作成</a>
+        <a href="/songs/create" class="btn btn-primary btn-sm">
+          新規作成
+        </a>
       </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
         <table class="table table-zebra">
@@ -232,17 +276,27 @@ export const SearchList = () => {
                 <For each={Array.from({ length: 5 })}>
                   {() => (
                     <tr>
-                      <td><div class="skeleton h-4 w-32" /></td>
-                      <td><div class="skeleton h-4 w-8" /></td>
-                      <td><div class="skeleton h-6 w-10" /></td>
-                      <td><div class="skeleton h-4 w-8" /></td>
-                      <td><div class="skeleton h-6 w-10" /></td>
+                      <td>
+                        <div class="skeleton h-4 w-32" />
+                      </td>
+                      <td>
+                        <div class="skeleton h-4 w-8" />
+                      </td>
+                      <td>
+                        <div class="skeleton h-6 w-10" />
+                      </td>
+                      <td>
+                        <div class="skeleton h-4 w-8" />
+                      </td>
+                      <td>
+                        <div class="skeleton h-6 w-10" />
+                      </td>
                     </tr>
                   )}
                 </For>
               </Match>
               <Match when={fetchError()}>
-                {message => (
+                {(message) => (
                   <tr>
                     <td colspan="5" class="py-8 text-center text-error">
                       {message()}
@@ -251,16 +305,18 @@ export const SearchList = () => {
                 )}
               </Match>
               <Match when={data()}>
-                {result => (
+                {(result) => (
                   <For each={result().songs}>
-                    {song => (
+                    {(song) => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
                         <td>{song.type.name}</td>
                         <td>{song.attribute?.name ?? '-'}</td>
                         <td>{song.orderNo}</td>
                         <td>
-                          <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">編集</a>
+                          <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">
+                            編集
+                          </a>
                         </td>
                       </tr>
                     )}
@@ -275,7 +331,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {p => (
+              {(p) => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

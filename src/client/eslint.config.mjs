@@ -1,5 +1,4 @@
 import eslint from '@eslint/js';
-import stylistic from '@stylistic/eslint-plugin';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import importPlugin from 'eslint-plugin-import';
 import tsEslint from 'typescript-eslint';
@@ -14,16 +13,6 @@ const defaultRules = {
       },
     },
   ],
-  '@stylistic/jsx-one-expression-per-line': [
-    'error',
-    {
-      allow: 'single-line',
-    },
-  ],
-  '@stylistic/brace-style': [
-    'error',
-    '1tbs',
-  ],
   '@typescript-eslint/consistent-type-imports': [
     'error',
     {
@@ -35,17 +24,12 @@ const defaultRules = {
 export default [
   {
     plugins: {
-      '@stylistic': stylistic,
       'import': importPlugin,
     },
   },
   eslint.configs.recommended,
   ...tsEslint.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
-  stylistic.configs.customize({
-    quotes: 'single',
-    semi: true,
-  }),
   {
     ignores: [
       '.astro/**',
@@ -56,11 +40,5 @@ export default [
   {
     files: ['**/*.{js,mjs,ts,jsx,tsx,astro}'],
     rules: defaultRules,
-  },
-  {
-    files: ['**/*.astro'],
-    rules: {
-      '@stylistic/jsx-one-expression-per-line': 'off',
-    },
   },
 ];
