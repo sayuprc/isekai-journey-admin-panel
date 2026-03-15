@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/protect-config.sh"
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/post-lint.sh"
+      }
+    ]
+  }
+}
