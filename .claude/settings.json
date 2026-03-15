@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/protect-config.sh"
+            "command": "bash .github/hooks/protect-config.sh"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/post-lint.sh"
+            "command": "bash .github/hooks/post-lint.sh"
           }
         ]
       }

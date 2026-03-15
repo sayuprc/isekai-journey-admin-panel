@@ -1,1 +1,0 @@
-../../.github/hooks/protect-config.sh
