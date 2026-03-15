@@ -314,7 +314,7 @@ export const SearchList = () => {
                         <td>{song.attribute?.name ?? '-'}</td>
                         <td>{song.orderNo}</td>
                         <td>
-                          <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">
+                          <a href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
                           </a>
                         </td>

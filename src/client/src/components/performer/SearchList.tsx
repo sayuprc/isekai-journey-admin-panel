@@ -206,7 +206,7 @@ export const SearchList = () => {
                         <td>{performer.name}</td>
                         <td>{performer.orderNo}</td>
                         <td>
-                          <a href={`/performers/${performer.performerId}`} class="btn btn-ghost btn-xs">
+                          <a href={`/performers/${performer.performerId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
                           </a>
                         </td>

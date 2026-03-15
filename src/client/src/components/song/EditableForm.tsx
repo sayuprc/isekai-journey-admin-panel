@@ -24,6 +24,18 @@ interface Props {
 }
 
 export const EditableForm = (props: Props) => {
+  const back = new URLSearchParams(window.location.search).get('back') ?? '';
+  const listQuery = (() => {
+    if (!back.startsWith('?')) return '';
+    try {
+      const q = new URLSearchParams(back.slice(1)).toString();
+      return q ? `?${q}` : '';
+    } catch {
+      return '';
+    }
+  })();
+  const listUrl = `/songs${listQuery}`;
+
   const [creators, setCreators] = createSignal<Creator[]>([]);
   const [types, setTypes] = createSignal<SongType[]>([]);
   const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
@@ -59,10 +71,10 @@ export const EditableForm = (props: Props) => {
 
     if (props.status === 404) {
       setFlash('データがない');
-      window.location.href = '/songs';
+      window.location.href = listUrl;
     } else if (props.status === 422) {
       setFlash('リクエストがおかしい');
-      window.location.href = '/songs';
+      window.location.href = listUrl;
     }
   });
 
@@ -109,7 +121,7 @@ export const EditableForm = (props: Props) => {
     }
 
     setFlash('削除しました');
-    window.location.href = '/songs';
+    window.location.href = listUrl;
   });
 
   const handleUpdate = withSubmitting(async (e: Event) => {
@@ -142,13 +154,13 @@ export const EditableForm = (props: Props) => {
 
     if (data) {
       setFlash('更新しました');
-      window.location.href = '/songs';
+      window.location.href = listUrl;
       return;
     }
 
     if (status === 404) {
       setFlash('データがありません');
-      window.location.href = '/songs';
+      window.location.href = listUrl;
       return;
     }
 
@@ -214,7 +226,7 @@ export const EditableForm = (props: Props) => {
 
   return (
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
-      <a href="/songs" class="btn btn-ghost btn-sm mb-4">
+      <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
       <FormError message={formError()} onClose={clearErrors} />

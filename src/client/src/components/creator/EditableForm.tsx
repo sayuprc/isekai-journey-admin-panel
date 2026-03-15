@@ -12,6 +12,18 @@ interface Props {
 }
 
 export const EditableForm = (props: Props) => {
+  const back = new URLSearchParams(window.location.search).get('back') ?? '';
+  const listQuery = (() => {
+    if (!back.startsWith('?')) return '';
+    try {
+      const q = new URLSearchParams(back.slice(1)).toString();
+      return q ? `?${q}` : '';
+    } catch {
+      return '';
+    }
+  })();
+  const listUrl = `/creators${listQuery}`;
+
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
@@ -40,13 +52,13 @@ export const EditableForm = (props: Props) => {
 
     if (data) {
       setFlash('更新しました');
-      window.location.href = `/creators`;
+      window.location.href = listUrl;
       return;
     }
 
     if (status === 404) {
       setFlash('データがありません');
-      window.location.href = `/creators`;
+      window.location.href = listUrl;
       return;
     }
 
@@ -77,16 +89,16 @@ export const EditableForm = (props: Props) => {
     }
 
     setFlash('削除しました');
-    window.location.href = `/creators`;
+    window.location.href = listUrl;
   });
 
   onMount(() => {
     if (props.status === 404) {
       setFlash('データがありません');
-      window.location.href = '/creators';
+      window.location.href = listUrl;
     } else if (props.status === 422) {
       setFlash('不正なリクエストです');
-      window.location.href = '/creators';
+      window.location.href = listUrl;
     } else if (!props.data) {
       setFormError('予期しないエラーが発生しました');
     }
@@ -95,7 +107,7 @@ export const EditableForm = (props: Props) => {
   return (
     // TODO ローディング用のコンポーネントを用意する
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
-      <a href="/creators" class="btn btn-ghost btn-sm mb-4">
+      <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
       <FormError message={formError()} onClose={clearErrors} />

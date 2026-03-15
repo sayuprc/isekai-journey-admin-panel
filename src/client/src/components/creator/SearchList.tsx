@@ -206,7 +206,7 @@ export const SearchList = () => {
                         <td>{creator.name}</td>
                         <td>{creator.orderNo}</td>
                         <td>
-                          <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">
+                          <a href={`/creators/${creator.creatorId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
                           </a>
                         </td>
