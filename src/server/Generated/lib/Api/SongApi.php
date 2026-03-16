@@ -958,7 +958,7 @@ class SongApi
      * @param  \OpenAPI\Client\Model\SongAttributeValue|null $attribute attribute (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order order (optional)
-     * @param  int|null $page page (optional, default to 1)
+     * @param  Int|null $page page (optional)
      * @param  \OpenAPIClientModelPerPage|null $per_page per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songServiceSearchSongs'] to see the possible values for this operation
      *
@@ -966,7 +966,7 @@ class SongApi
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\SongSearchResponse
      */
-    public function songServiceSearchSongs($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
+    public function songServiceSearchSongs($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = null, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
     {
         list($response) = $this->songServiceSearchSongsWithHttpInfo($title, $type, $attribute, $sort, $order, $page, $per_page, $contentType);
         return $response;
@@ -980,7 +980,7 @@ class SongApi
      * @param  \OpenAPI\Client\Model\SongAttributeValue|null $attribute (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
-     * @param  int|null $page (optional, default to 1)
+     * @param  Int|null $page (optional)
      * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songServiceSearchSongs'] to see the possible values for this operation
      *
@@ -988,7 +988,7 @@ class SongApi
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\SongSearchResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function songServiceSearchSongsWithHttpInfo($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
+    public function songServiceSearchSongsWithHttpInfo($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = null, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
     {
         $request = $this->songServiceSearchSongsRequest($title, $type, $attribute, $sort, $order, $page, $per_page, $contentType);
 
@@ -1069,14 +1069,14 @@ class SongApi
      * @param  \OpenAPI\Client\Model\SongAttributeValue|null $attribute (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
-     * @param  int|null $page (optional, default to 1)
+     * @param  Int|null $page (optional)
      * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songServiceSearchSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function songServiceSearchSongsAsync($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
+    public function songServiceSearchSongsAsync($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = null, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
     {
         return $this->songServiceSearchSongsAsyncWithHttpInfo($title, $type, $attribute, $sort, $order, $page, $per_page, $contentType)
             ->then(
@@ -1094,14 +1094,14 @@ class SongApi
      * @param  \OpenAPI\Client\Model\SongAttributeValue|null $attribute (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
-     * @param  int|null $page (optional, default to 1)
+     * @param  Int|null $page (optional)
      * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songServiceSearchSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function songServiceSearchSongsAsyncWithHttpInfo($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
+    public function songServiceSearchSongsAsyncWithHttpInfo($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = null, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
     {
         $returnType = '\OpenAPI\Client\Model\SongSearchResponse';
         $request = $this->songServiceSearchSongsRequest($title, $type, $attribute, $sort, $order, $page, $per_page, $contentType);
@@ -1150,14 +1150,14 @@ class SongApi
      * @param  \OpenAPI\Client\Model\SongAttributeValue|null $attribute (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
-     * @param  int|null $page (optional, default to 1)
+     * @param  Int|null $page (optional)
      * @param  \OpenAPIClientModelPerPage|null $per_page (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['songServiceSearchSongs'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function songServiceSearchSongsRequest($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = 1, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
+    public function songServiceSearchSongsRequest($title = null, $type = null, $attribute = null, $sort = null, $order = null, $page = null, $per_page = null, string $contentType = self::contentTypes['songServiceSearchSongs'][0])
     {
 
 

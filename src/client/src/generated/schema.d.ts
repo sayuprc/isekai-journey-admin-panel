@@ -636,6 +636,11 @@ export interface components {
          */
         orderNo: number;
         /**
+         * Format: int32
+         * @description ページ番号
+         */
+        page: number;
+        /**
          * Format: password
          * @description 平文パスワード
          */
@@ -944,7 +949,7 @@ export interface operations {
                 name?: string;
                 sort?: components["schemas"]["CreatorSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
-                page?: number;
+                page?: components["schemas"]["page"];
                 per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
@@ -1373,7 +1378,7 @@ export interface operations {
                 name?: string;
                 sort?: components["schemas"]["PerformerSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
-                page?: number;
+                page?: components["schemas"]["page"];
                 per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
@@ -1859,7 +1864,7 @@ export interface operations {
                 attribute?: components["schemas"]["SongAttributeValue"];
                 sort?: components["schemas"]["SongSearchSortBy"];
                 order?: components["schemas"]["SortOrder"];
-                page?: number;
+                page?: components["schemas"]["page"];
                 per_page?: components["schemas"]["PerPage"];
             };
             header?: never;
