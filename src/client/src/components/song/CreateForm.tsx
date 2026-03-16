@@ -1,17 +1,11 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
-
-type Creator = components['schemas']['Creator'];
-type SongType = components['schemas']['SongType'];
-type SongTypeValue = components['schemas']['SongTypeValue'];
-type SongAttribute = components['schemas']['SongAttribute'];
-type SongAttributeValue = components['schemas']['SongAttributeValue'];
 
 type CreatorEntry = {
   creatorId: string;

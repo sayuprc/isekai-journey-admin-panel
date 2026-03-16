@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     allowedHosts: ['local.admin.terrarium.isekaijoucho.fan'],
   },
+  security: {
+    checkOrigin: false,
+  },
   vite: {
     plugins: [tailwindcss()],
   },

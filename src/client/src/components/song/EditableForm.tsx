@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue, Song, Arranger } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -7,19 +7,13 @@ import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 
-type Creator = components['schemas']['Creator'];
-type SongType = components['schemas']['SongType'];
-type SongTypeValue = components['schemas']['SongTypeValue'];
-type SongAttribute = components['schemas']['SongAttribute'];
-type SongAttributeValue = components['schemas']['SongAttributeValue'];
-
 type CreatorEntry = {
   creatorId: string;
   orderNo: number;
 };
 
 interface Props {
-  data?: { song: components['schemas']['Song'] };
+  data?: { song: Song };
   status: number;
 }
 
@@ -40,7 +34,7 @@ export const EditableForm = (props: Props) => {
   const [types, setTypes] = createSignal<SongType[]>([]);
   const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
-  const toEntries = (items: components['schemas']['Arranger'][] | undefined): CreatorEntry[] =>
+  const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
     (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
 
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.lyricists));

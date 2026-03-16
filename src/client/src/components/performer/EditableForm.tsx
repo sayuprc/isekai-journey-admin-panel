@@ -1,5 +1,5 @@
 import { onMount, Show } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { Performer } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -7,7 +7,7 @@ import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
 interface Props {
-  data?: { performer: components['schemas']['Performer'] };
+  data?: { performer: Performer };
   status: number;
 }
 

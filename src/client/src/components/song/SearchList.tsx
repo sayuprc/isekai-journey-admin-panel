@@ -1,9 +1,6 @@
 import { Show, createResource, createSignal, For, Match, Switch, onMount } from 'solid-js';
-import type { components } from '../../generated/schema';
+import type { SongType, SongAttribute } from '../../generated';
 import { client } from '../../utils/client';
-
-type SongType = components['schemas']['SongType'];
-type SongAttribute = components['schemas']['SongAttribute'];
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
