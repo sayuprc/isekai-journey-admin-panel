@@ -19,11 +19,6 @@ pre-commit:
       glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
       run: bunx eslint {staged_files}
 
-    biome-format:
-      root: "src/client/"
-      glob: "src/**/*.{ts,tsx,js,jsx,mjs}"
-      run: bunx biome format {staged_files}
-
     stylelint:
       root: "src/client/"
       glob: "src/**/*.{css,astro}"

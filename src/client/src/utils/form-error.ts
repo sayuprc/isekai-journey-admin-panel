@@ -36,7 +36,7 @@ export const createFormErrors = () => {
   const [formError, setFormError] = createSignal<string | null>(null);
   const [fieldErrors, setFieldErrors] = createSignal<ValidationErrorDetail[]>([]);
 
-  const getFieldError = (field: string): string | undefined => fieldErrors().find((e) => e.field === field)?.message;
+  const getFieldError = (field: string): string | undefined => fieldErrors().find(e => e.field === field)?.message;
 
   const clearErrors = () => {
     setFormError(null);

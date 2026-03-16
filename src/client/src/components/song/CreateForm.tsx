@@ -50,15 +50,15 @@ export const CreateForm = () => {
   });
 
   const addEntry = (setter: typeof setArrangers) => {
-    setter((prev) => [...prev, { creatorId: '' }]);
+    setter(prev => [...prev, { creatorId: '' }]);
   };
 
   const removeEntry = (setter: typeof setArrangers, index: number) => {
-    setter((prev) => prev.filter((_, i) => i !== index));
+    setter(prev => prev.filter((_, i) => i !== index));
   };
 
   const updateEntry = (setter: typeof setArrangers, index: number, field: keyof CreatorEntry, value: string) => {
-    setter((prev) => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+    setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
   const handleSubmit = withSubmitting(async (e: Event) => {
@@ -90,7 +90,7 @@ export const CreateForm = () => {
     handleError(status, error);
   });
 
-  const creatorOptions = () => creators().map((creator) => ({ value: creator.creatorId, label: creator.name }));
+  const creatorOptions = () => creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
 
   const CreatorList = (props: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
     <div class="mt-4">
@@ -106,7 +106,7 @@ export const CreateForm = () => {
             <SearchableSelect
               options={creatorOptions()}
               value={entry.creatorId}
-              onChange={(value) => updateEntry(props.setter, index(), 'creatorId', value)}
+              onChange={value => updateEntry(props.setter, index(), 'creatorId', value)}
               placeholder="クリエイターを検索..."
               required
             />
@@ -151,7 +151,7 @@ export const CreateForm = () => {
           required
           classList={{ 'input-error': !!getFieldError('title') }}
         />
-        <Show when={getFieldError('title')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+        <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <label class="label">説明</label>
         <input
@@ -161,7 +161,7 @@ export const CreateForm = () => {
           classList={{ 'input-error': !!getFieldError('description') }}
         />
         <Show when={getFieldError('description')}>
-          {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+          {message => <p class="mt-1 text-xs text-error">{message()}</p>}
         </Show>
 
         <label class="label">楽曲種別</label>
@@ -169,7 +169,7 @@ export const CreateForm = () => {
           <option value="" disabled selected>
             選択してください
           </option>
-          <For each={types()}>{(type) => <option value={type.value}>{type.name}</option>}</For>
+          <For each={types()}>{type => <option value={type.value}>{type.name}</option>}</For>
         </select>
 
         <label class="label">楽曲属性</label>
@@ -177,7 +177,7 @@ export const CreateForm = () => {
           <option value="" selected>
             選択してください
           </option>
-          <For each={attributes()}>{(attribute) => <option value={attribute.value}>{attribute.name}</option>}</For>
+          <For each={attributes()}>{attribute => <option value={attribute.value}>{attribute.name}</option>}</For>
         </select>
 
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />

@@ -67,9 +67,6 @@ case "$file" in
     repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
     cd "$repo_root/src/client"
 
-    # Biome フォーマット
-    bunx biome format --write "$file" >/dev/null 2>&1 || true
-
     # Oxlint 自動修正
     bunx oxlint --fix "$file" >/dev/null 2>&1 || true
 
@@ -90,11 +87,49 @@ case "$file" in
     repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
     cd "$repo_root/src/client"
 
-    # Biome フォーマット（フロントマターの script 部分）
-    bunx biome format --write "$file" >/dev/null 2>&1 || true
+    # ESLint
+    bunx eslint --fix "$file" >/dev/null 2>&1 || true
+    diag_eslint="$(bunx eslint "$file" 2>&1 | head -10)" || true
+
+    # Stylelint
+    bunx stylelint --fix "$file" >/dev/null 2>&1 || true
+    diag_style="$(bunx stylelint "$file" 2>&1 | head -10)" || true
+
+    diag=""
+    if [ -n "$diag_eslint" ] && echo "$diag_eslint" | grep -qiE 'error|warning'; then
+      diag="$diag_eslint"
+    fi
+    if [ -n "$diag_style" ] && echo "$diag_style" | grep -qiE 'error|warning'; then
+      diag="${diag:+$diag\n}$diag_style"
+    fi
+
+    if [ -n "$diag" ]; then
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: $msg
+        }
+      }'
+    fi
     ;;
 
   */src/client/*.css)
-    # CSS は Stylelint が担当（Tailwind v4 構文は Biome 非対応）
+    repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+    cd "$repo_root/src/client"
+
+    # Stylelint 自動修正
+    bunx stylelint --fix "$file" >/dev/null 2>&1 || true
+
+    # 残った違反
+    diag="$(bunx stylelint "$file" 2>&1 | head -20)" || true
+
+    if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: $msg
+        }
+      }'
+    fi
     ;;
 esac
