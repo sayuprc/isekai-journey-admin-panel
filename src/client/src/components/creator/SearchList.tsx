@@ -116,11 +116,14 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            value={inputSort()}
             onChange={(e) => setInputSort(e.currentTarget.value)}
           >
-            <option value="order_no">表示順</option>
-            <option value="name">クリエイター名</option>
+            <option value="order_no" selected={inputSort() === 'order_no'}>
+              表示順
+            </option>
+            <option value="name" selected={inputSort() === 'name'}>
+              クリエイター名
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -131,11 +134,14 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            value={inputOrder()}
             onChange={(e) => setInputOrder(e.currentTarget.value)}
           >
-            <option value="asc">昇順</option>
-            <option value="desc">降順</option>
+            <option value="asc" selected={inputOrder() === 'asc'}>
+              昇順
+            </option>
+            <option value="desc" selected={inputOrder() === 'desc'}>
+              降順
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -146,10 +152,9 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            value={inputPerPage()}
             onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
@@ -206,7 +211,7 @@ export const SearchList = () => {
                         <td>{creator.name}</td>
                         <td>{creator.orderNo}</td>
                         <td>
-                          <a href={`/creators/${creator.creatorId}`} class="btn btn-ghost btn-xs">
+                          <a href={`/creators/${creator.creatorId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
                           </a>
                         </td>

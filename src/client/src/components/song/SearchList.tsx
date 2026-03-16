@@ -182,11 +182,12 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            value={inputType() ?? ''}
             onChange={(e) => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
           >
-            <option value="">すべて</option>
-            <For each={types()}>{(t) => <option value={t.value}>{t.name}</option>}</For>
+            <option value="" selected={inputType() === undefined}>
+              すべて
+            </option>
+            <For each={types()}>{(t) => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -197,13 +198,14 @@ export const SearchList = () => {
             id="attribute"
             name="attribute"
             class="select select-bordered select-sm"
-            value={inputAttribute() ?? ''}
             onChange={(e) =>
               setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)
             }
           >
-            <option value="">すべて</option>
-            <For each={attributes()}>{(a) => <option value={a.value}>{a.name}</option>}</For>
+            <option value="" selected={inputAttribute() === undefined}>
+              すべて
+            </option>
+            <For each={attributes()}>{(a) => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -214,11 +216,14 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            value={inputSort()}
             onChange={(e) => setInputSort(e.currentTarget.value)}
           >
-            <option value="order_no">表示順</option>
-            <option value="title">楽曲名</option>
+            <option value="order_no" selected={inputSort() === 'order_no'}>
+              表示順
+            </option>
+            <option value="title" selected={inputSort() === 'title'}>
+              楽曲名
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -229,11 +234,14 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            value={inputOrder()}
             onChange={(e) => setInputOrder(e.currentTarget.value)}
           >
-            <option value="asc">昇順</option>
-            <option value="desc">降順</option>
+            <option value="asc" selected={inputOrder() === 'asc'}>
+              昇順
+            </option>
+            <option value="desc" selected={inputOrder() === 'desc'}>
+              降順
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -244,10 +252,9 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            value={inputPerPage()}
             onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
@@ -314,7 +321,7 @@ export const SearchList = () => {
                         <td>{song.attribute?.name ?? '-'}</td>
                         <td>{song.orderNo}</td>
                         <td>
-                          <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">
+                          <a href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
                           </a>
                         </td>
