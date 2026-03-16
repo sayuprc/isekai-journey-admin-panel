@@ -9,7 +9,7 @@ export const authGuard = new Elysia({ name: 'authGuard' })
       // treaty で必ず x-csrf-token を取ってくるようにしているが、CSR なところで明示的に書かないと波線が出るのでいったん optional にしている
       'x-csrf-token': t.Optional(t.String()),
       // CSRF では自動送信されるため、tsx では指定してないが波線が出るのでいったん optional にしている
-      cookie: t.Optional(t.String()),
+      'cookie': t.Optional(t.String()),
     }),
   })
   .resolve(async ({ headers, cookie: { session } }) => {

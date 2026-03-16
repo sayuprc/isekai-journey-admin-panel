@@ -103,7 +103,7 @@ export const SearchList = () => {
             id="name"
             name="name"
             value={inputName()}
-            onInput={(e) => setInputName(e.currentTarget.value)}
+            onInput={e => setInputName(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="クリエイター名で検索"
           />
@@ -116,7 +116,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputSort(e.currentTarget.value)}
+            onChange={e => setInputSort(e.currentTarget.value)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -134,7 +134,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputOrder(e.currentTarget.value)}
+            onChange={e => setInputOrder(e.currentTarget.value)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順
@@ -152,9 +152,9 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
@@ -195,7 +195,7 @@ export const SearchList = () => {
                 </For>
               </Match>
               <Match when={fetchError()}>
-                {(message) => (
+                {message => (
                   <tr>
                     <td colspan="3" class="py-8 text-center text-error">
                       {message()}
@@ -204,9 +204,9 @@ export const SearchList = () => {
                 )}
               </Match>
               <Match when={data()}>
-                {(result) => (
+                {result => (
                   <For each={result().creators}>
-                    {(creator) => (
+                    {creator => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{creator.name}</td>
                         <td>{creator.orderNo}</td>
@@ -228,7 +228,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {(p) => (
+              {p => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

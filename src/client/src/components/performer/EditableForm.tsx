@@ -121,7 +121,7 @@ export const EditableForm = (props: Props) => {
             value={props.data?.performer.name}
             classList={{ 'input-error': !!getFieldError('name') }}
           />
-          <Show when={getFieldError('name')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+          <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
           <label class="label">表示順</label>
           <input
@@ -133,7 +133,7 @@ export const EditableForm = (props: Props) => {
             value={props.data?.performer.orderNo}
             classList={{ 'input-error': !!getFieldError('orderNo') }}
           />
-          <Show when={getFieldError('orderNo')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+          <Show when={getFieldError('orderNo')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
           <div class="mt-6 flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>

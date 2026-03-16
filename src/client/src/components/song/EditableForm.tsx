@@ -41,7 +41,7 @@ export const EditableForm = (props: Props) => {
   const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
 
   const toEntries = (items: components['schemas']['Arranger'][] | undefined): CreatorEntry[] =>
-    (items ?? []).map((item) => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
+    (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
 
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.lyricists));
   const [composers, setComposers] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.composers));
@@ -79,11 +79,11 @@ export const EditableForm = (props: Props) => {
   });
 
   const addEntry = (setter: typeof setArrangers) => {
-    setter((prev) => [...prev, { creatorId: '', orderNo: prev.length + 1 }]);
+    setter(prev => [...prev, { creatorId: '', orderNo: prev.length + 1 }]);
   };
 
   const removeEntry = (setter: typeof setArrangers, index: number) => {
-    setter((prev) => prev.filter((_, i) => i !== index));
+    setter(prev => prev.filter((_, i) => i !== index));
   };
 
   const updateEntry = (
@@ -92,7 +92,7 @@ export const EditableForm = (props: Props) => {
     field: keyof CreatorEntry,
     value: string | number,
   ) => {
-    setter((prev) => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+    setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
   const handleSubmit = async (e: Event) => {
@@ -167,7 +167,7 @@ export const EditableForm = (props: Props) => {
     handleError(status, error);
   });
 
-  const creatorOptions = () => creators().map((creator) => ({ value: creator.creatorId, label: creator.name }));
+  const creatorOptions = () => creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
 
   const CreatorList = (listProps: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
     <div class="mt-4">
@@ -183,7 +183,7 @@ export const EditableForm = (props: Props) => {
             <SearchableSelect
               options={creatorOptions()}
               value={entry.creatorId}
-              onChange={(value) => updateEntry(listProps.setter, index(), 'creatorId', value)}
+              onChange={value => updateEntry(listProps.setter, index(), 'creatorId', value)}
               placeholder="クリエイターを検索..."
               required
             />
@@ -193,7 +193,7 @@ export const EditableForm = (props: Props) => {
                 type="number"
                 class="input input-bordered w-16"
                 value={entry.orderNo}
-                onchange={(e) => updateEntry(listProps.setter, index(), 'orderNo', Number(e.currentTarget.value))}
+                onchange={e => updateEntry(listProps.setter, index(), 'orderNo', Number(e.currentTarget.value))}
                 required
                 min="1"
               />
@@ -241,7 +241,7 @@ export const EditableForm = (props: Props) => {
             value={props.data?.song.title}
             classList={{ 'input-error': !!getFieldError('title') }}
           />
-          <Show when={getFieldError('title')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+          <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
           <label class="label">説明</label>
           <input
@@ -252,7 +252,7 @@ export const EditableForm = (props: Props) => {
             classList={{ 'input-error': !!getFieldError('description') }}
           />
           <Show when={getFieldError('description')}>
-            {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+            {message => <p class="mt-1 text-xs text-error">{message()}</p>}
           </Show>
 
           <label class="label">楽曲種別</label>
@@ -261,7 +261,7 @@ export const EditableForm = (props: Props) => {
               選択してください
             </option>
             <For each={types()}>
-              {(type) => (
+              {type => (
                 <option value={type.value} selected={type.value === props.data?.song.type.value}>
                   {type.name}
                 </option>
@@ -273,7 +273,7 @@ export const EditableForm = (props: Props) => {
           <select class="select select-bordered w-full" name="attributeValue">
             <option value="">選択してください</option>
             <For each={attributes()}>
-              {(attribute) => (
+              {attribute => (
                 <option value={attribute.value} selected={attribute.value === props.data?.song.attribute?.value}>
                   {attribute.name}
                 </option>

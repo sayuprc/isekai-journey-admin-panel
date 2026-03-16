@@ -169,7 +169,7 @@ export const SearchList = () => {
             id="title"
             name="title"
             value={inputTitle()}
-            onInput={(e) => setInputTitle(e.currentTarget.value)}
+            onInput={e => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="楽曲名で検索"
           />
@@ -182,12 +182,12 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
+            onChange={e => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
           >
             <option value="" selected={inputType() === undefined}>
               すべて
             </option>
-            <For each={types()}>{(t) => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}</For>
+            <For each={types()}>{t => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -198,14 +198,13 @@ export const SearchList = () => {
             id="attribute"
             name="attribute"
             class="select select-bordered select-sm"
-            onChange={(e) =>
-              setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)
-            }
+            onChange={e =>
+              setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
           >
             <option value="" selected={inputAttribute() === undefined}>
               すべて
             </option>
-            <For each={attributes()}>{(a) => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}</For>
+            <For each={attributes()}>{a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}</For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -216,7 +215,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputSort(e.currentTarget.value)}
+            onChange={e => setInputSort(e.currentTarget.value)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -234,7 +233,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputOrder(e.currentTarget.value)}
+            onChange={e => setInputOrder(e.currentTarget.value)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順
@@ -252,9 +251,9 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{(n) => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
@@ -303,7 +302,7 @@ export const SearchList = () => {
                 </For>
               </Match>
               <Match when={fetchError()}>
-                {(message) => (
+                {message => (
                   <tr>
                     <td colspan="5" class="py-8 text-center text-error">
                       {message()}
@@ -312,9 +311,9 @@ export const SearchList = () => {
                 )}
               </Match>
               <Match when={data()}>
-                {(result) => (
+                {result => (
                   <For each={result().songs}>
-                    {(song) => (
+                    {song => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
                         <td>{song.type.name}</td>
@@ -338,7 +337,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {(p) => (
+              {p => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}
