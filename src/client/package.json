@@ -13,7 +13,7 @@
     "style:fix": "stylelint '**/*.{css,astro}' --fix",
     "tcm": "tcm -p 'src/styles/*.module.css' .",
     "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
-    "generate:api": "openapi-typescript ../contracts/generated/oas/${OAS_FILE} -o ./src/generated/schema.d.ts",
+    "generate:api": "openapi-ts",
     "prism": "prism mock ../contracts/generated/oas/${OAS_FILE} -h 0.0.0.0",
     "redis": "redis-commander"
   },
@@ -25,11 +25,11 @@
     "astro": "6.0.4",
     "daisyui": "^5.5.18",
     "elysia": "^1.4.25",
-    "openapi-fetch": "^0.17.0",
     "tailwindcss": "^4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@hey-api/openapi-ts": "0.94.2",
     "@stoplight/prism-cli": "^5.14.2",
     "@stylistic/eslint-plugin": "^5.9.0",
     "@stylistic/stylelint-plugin": "^4.0.1",
@@ -38,7 +38,6 @@
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.6.0",
     "eslint-plugin-import": "^2.32.0",
-    "openapi-typescript": "^7.13.0",
     "oxlint": "^1.55.0",
     "postcss-html": "^1.8.1",
     "redis-commander": "^0.9.0",

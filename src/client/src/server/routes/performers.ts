@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia';
+import { performerServiceCreatePerformer, performerServiceDeletePerformer, performerServiceGetPerformer, performerServiceListPerformers, performerServiceSearchPerformers, performerServiceUpdatePerformer } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
@@ -6,21 +7,20 @@ import { authGuard } from '../middleware';
 export const performers = new Elysia({ prefix: '/performers' })
   .use(authGuard)
   .get('/', async ({ credential }) => {
-    return resolveApiResponse(await createAuthClient(credential).GET('/performers'));
+    return resolveApiResponse(await performerServiceListPerformers({ client: createAuthClient(credential) }));
   })
   .get(
     '/search',
     async ({ query, credential }) => {
       return resolveApiResponse(
-        await createAuthClient(credential).GET('/performers/search', {
-          params: {
-            query: {
-              name: query.name || undefined,
-              sort: query.sort ?? 'order_no',
-              order: query.order ?? 'asc',
-              page: query.page ?? 1,
-              per_page: query.per_page ?? 25,
-            },
+        await performerServiceSearchPerformers({
+          client: createAuthClient(credential),
+          query: {
+            name: query.name || undefined,
+            sort: query.sort ?? 'order_no',
+            order: query.order ?? 'asc',
+            page: query.page ?? 1,
+            per_page: query.per_page ?? 25,
           },
         }),
       );
@@ -38,15 +38,7 @@ export const performers = new Elysia({ prefix: '/performers' })
   .get(
     '/:performerId',
     async ({ params: { performerId }, credential }) => {
-      return resolveApiResponse(
-        await createAuthClient(credential).GET('/performers/{performerId}', {
-          params: {
-            path: {
-              performerId,
-            },
-          },
-        }),
-      );
+      return resolveApiResponse(await performerServiceGetPerformer({ client: createAuthClient(credential), path: { performerId } }));
     },
     {
       params: t.Object({
@@ -57,13 +49,7 @@ export const performers = new Elysia({ prefix: '/performers' })
   .post(
     '/',
     async ({ body: { name }, credential }) => {
-      return resolveApiResponse(
-        await createAuthClient(credential).POST('/performers', {
-          body: {
-            name,
-          },
-        }),
-      );
+      return resolveApiResponse(await performerServiceCreatePerformer({ client: createAuthClient(credential), body: { name } }));
     },
     {
       body: t.Object({
@@ -74,19 +60,7 @@ export const performers = new Elysia({ prefix: '/performers' })
   .put(
     '/:performerId',
     async ({ params: { performerId }, body: { name, orderNo }, credential }) => {
-      return resolveApiResponse(
-        await createAuthClient(credential).PUT('/performers/{performerId}', {
-          params: {
-            path: {
-              performerId,
-            },
-          },
-          body: {
-            name,
-            orderNo,
-          },
-        }),
-      );
+      return resolveApiResponse(await performerServiceUpdatePerformer({ client: createAuthClient(credential), path: { performerId }, body: { name, orderNo } }));
     },
     {
       params: t.Object({
@@ -101,15 +75,7 @@ export const performers = new Elysia({ prefix: '/performers' })
   .delete(
     '/:performerId',
     async ({ params: { performerId }, credential }) => {
-      resolveApiResponse(
-        await createAuthClient(credential).DELETE('/performers/{performerId}', {
-          params: {
-            path: {
-              performerId,
-            },
-          },
-        }),
-      );
+      resolveApiResponse(await performerServiceDeletePerformer({ client: createAuthClient(credential), path: { performerId } }));
     },
     {
       params: t.Object({

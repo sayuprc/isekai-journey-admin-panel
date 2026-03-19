@@ -1,4 +1,6 @@
 import { Elysia, t } from 'elysia';
+import { songServiceCreateSong, songServiceDeleteSong, songServiceGetSong, songServiceSearchSongs, songServiceUpdateSong } from '../../generated';
+import type { SongAttributeValue, SongTypeValue } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
@@ -15,17 +17,16 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/search',
     async ({ query, credential }) => {
       return resolveApiResponse(
-        await createAuthClient(credential).GET('/songs/search', {
-          params: {
-            query: {
-              title: query.title || undefined,
-              type: query.type,
-              attribute: query.attribute,
-              sort: query.sort ?? 'order_no',
-              order: query.order ?? 'asc',
-              page: query.page ?? 1,
-              per_page: query.per_page ?? 25,
-            },
+        await songServiceSearchSongs({
+          client: createAuthClient(credential),
+          query: {
+            title: query.title || undefined,
+            type: query.type as SongTypeValue | undefined,
+            attribute: query.attribute as SongAttributeValue | undefined,
+            sort: query.sort ?? 'order_no',
+            order: query.order ?? 'asc',
+            page: query.page ?? 1,
+            per_page: query.per_page ?? 25,
           },
         }),
       );
@@ -45,15 +46,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .get(
     '/:songId',
     async ({ params: { songId }, credential }) => {
-      return resolveApiResponse(
-        await createAuthClient(credential).GET('/songs/{songId}', {
-          params: {
-            path: {
-              songId,
-            },
-          },
-        }),
-      );
+      return resolveApiResponse(await songServiceGetSong({ client: createAuthClient(credential), path: { songId } }));
     },
     {
       params: t.Object({
@@ -68,7 +61,8 @@ export const songs = new Elysia({ prefix: '/songs' })
       credential,
     }) => {
       return resolveApiResponse(
-        await createAuthClient(credential).POST('/songs', {
+        await songServiceCreateSong({
+          client: createAuthClient(credential),
           body: {
             title,
             description,
@@ -101,12 +95,9 @@ export const songs = new Elysia({ prefix: '/songs' })
       credential,
     }) => {
       return resolveApiResponse(
-        await createAuthClient(credential).PUT('/songs/{songId}', {
-          params: {
-            path: {
-              songId: songId,
-            },
-          },
+        await songServiceUpdateSong({
+          client: createAuthClient(credential),
+          path: { songId },
           body: {
             title,
             description,
@@ -139,15 +130,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .delete(
     '/:songId',
     async ({ params: { songId }, credential }) => {
-      resolveApiResponse(
-        await createAuthClient(credential).DELETE('/songs/{songId}', {
-          params: {
-            path: {
-              songId,
-            },
-          },
-        }),
-      );
+      resolveApiResponse(await songServiceDeleteSong({ client: createAuthClient(credential), path: { songId } }));
     },
     {
       params: t.Object({

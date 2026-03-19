@@ -1,6 +1,4 @@
 import { treaty } from '@elysiajs/eden';
-import baseClient from 'openapi-fetch';
-import type { paths } from '../generated/schema';
 import type { App } from '../server';
 
 const getCookie = (name: string): string | undefined => {
@@ -23,12 +21,3 @@ export const client = treaty<App>(import.meta.env.PUBLIC_APP_URL, {
     return csrfToken ? { 'x-csrf-token': csrfToken } : {};
   },
 });
-
-export const createClient = (request: Request) => {
-  return baseClient<paths>({
-    baseUrl: import.meta.env.PUBLIC_API_URL,
-    headers: {
-      cookie: request.headers.get('cookie') ?? '',
-    },
-  });
-};

@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Elysia, t } from 'elysia';
+import { authenticateServiceLogin } from '../../generated';
 import { client } from '../client';
 import { SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
@@ -12,14 +13,7 @@ const generateRandomBytes = (): string => {
 export const auth = new Elysia({ prefix: '/auth' }).post(
   '/login',
   async ({ body: { email, password }, cookie: { session, csrf } }) => {
-    const data = resolveApiResponse(
-      await client.POST('/auth/login', {
-        body: {
-          email,
-          password,
-        },
-      }),
-    );
+    const data = resolveApiResponse(await authenticateServiceLogin({ client: client, body: { email, password } }));
 
     const sessionId = generateRandomBytes();
     const csrfToken = generateRandomBytes();
