@@ -8,7 +8,7 @@ interface SongTagRepositoryInterface
 {
     public function findByName(SongTagName $name): ?SongTag;
 
-    public function save(SongTag $songTag): SongTag;
+    public function save(SongTag $tag): SongTag;
 
     public function getMaxOrderNo(): int;
 }
