@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, CreatorServiceCreateCreatorData, CreatorServiceCreateCreatorErrors, CreatorServiceCreateCreatorResponses, CreatorServiceDeleteCreatorData, CreatorServiceDeleteCreatorErrors, CreatorServiceDeleteCreatorResponses, CreatorServiceGetCreatorData, CreatorServiceGetCreatorErrors, CreatorServiceGetCreatorResponses, CreatorServiceListCreatorsData, CreatorServiceListCreatorsErrors, CreatorServiceListCreatorsResponses, CreatorServiceSearchCreatorsData, CreatorServiceSearchCreatorsErrors, CreatorServiceSearchCreatorsResponses, CreatorServiceUpdateCreatorData, CreatorServiceUpdateCreatorErrors, CreatorServiceUpdateCreatorResponses, PerformerServiceCreatePerformerData, PerformerServiceCreatePerformerErrors, PerformerServiceCreatePerformerResponses, PerformerServiceDeletePerformerData, PerformerServiceDeletePerformerErrors, PerformerServiceDeletePerformerResponses, PerformerServiceGetPerformerData, PerformerServiceGetPerformerErrors, PerformerServiceGetPerformerResponses, PerformerServiceListPerformersData, PerformerServiceListPerformersErrors, PerformerServiceListPerformersResponses, PerformerServiceSearchPerformersData, PerformerServiceSearchPerformersErrors, PerformerServiceSearchPerformersResponses, PerformerServiceUpdatePerformerData, PerformerServiceUpdatePerformerErrors, PerformerServiceUpdatePerformerResponses, SongAttributeServiceListSongAttributesData, SongAttributeServiceListSongAttributesErrors, SongAttributeServiceListSongAttributesResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
+import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, CreatorServiceCreateCreatorData, CreatorServiceCreateCreatorErrors, CreatorServiceCreateCreatorResponses, CreatorServiceDeleteCreatorData, CreatorServiceDeleteCreatorErrors, CreatorServiceDeleteCreatorResponses, CreatorServiceGetCreatorData, CreatorServiceGetCreatorErrors, CreatorServiceGetCreatorResponses, CreatorServiceListCreatorsData, CreatorServiceListCreatorsErrors, CreatorServiceListCreatorsResponses, CreatorServiceSearchCreatorsData, CreatorServiceSearchCreatorsErrors, CreatorServiceSearchCreatorsResponses, CreatorServiceUpdateCreatorData, CreatorServiceUpdateCreatorErrors, CreatorServiceUpdateCreatorResponses, PerformerServiceCreatePerformerData, PerformerServiceCreatePerformerErrors, PerformerServiceCreatePerformerResponses, PerformerServiceDeletePerformerData, PerformerServiceDeletePerformerErrors, PerformerServiceDeletePerformerResponses, PerformerServiceGetPerformerData, PerformerServiceGetPerformerErrors, PerformerServiceGetPerformerResponses, PerformerServiceListPerformersData, PerformerServiceListPerformersErrors, PerformerServiceListPerformersResponses, PerformerServiceSearchPerformersData, PerformerServiceSearchPerformersErrors, PerformerServiceSearchPerformersResponses, PerformerServiceUpdatePerformerData, PerformerServiceUpdatePerformerErrors, PerformerServiceUpdatePerformerResponses, SongAttributeServiceListSongAttributesData, SongAttributeServiceListSongAttributesErrors, SongAttributeServiceListSongAttributesResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -170,6 +170,19 @@ export const songAttributeServiceListSongAttributes = <ThrowOnError extends bool
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/song-attributes',
     ...options
+});
+
+/**
+ * 楽曲タグ作成API
+ */
+export const songTagServiceCreateSongTag = <ThrowOnError extends boolean = false>(options: Options<SongTagServiceCreateSongTagData, ThrowOnError>) => (options.client ?? client).post<SongTagServiceCreateSongTagResponses, SongTagServiceCreateSongTagErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/song-tags',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 /**
