@@ -235,6 +235,20 @@ export type SongSummary = {
     orderNo: OrderNo;
 };
 
+export type SongTag = {
+    songTagId: SongTagId;
+    name: SongTagName;
+    orderNo: OrderNo;
+};
+
+export type SongTagCreateRequest = {
+    name: SongTagName;
+};
+
+export type SongTagCreateResponse = {
+    tag: SongTag;
+};
+
 export type SongType = {
     name: SongTypeName;
     value: SongTypeValue;
@@ -369,6 +383,16 @@ export type SongAttributeName = string;
  * 楽曲ID
  */
 export type SongId = string;
+
+/**
+ * 楽曲タグID
+ */
+export type SongTagId = string;
+
+/**
+ * 楽曲タグ名
+ */
+export type SongTagName = string;
 
 /**
  * 楽曲種別名
@@ -1087,6 +1111,55 @@ export type SongAttributeServiceListSongAttributesResponses = {
 };
 
 export type SongAttributeServiceListSongAttributesResponse = SongAttributeServiceListSongAttributesResponses[keyof SongAttributeServiceListSongAttributesResponses];
+
+export type SongTagServiceCreateSongTagData = {
+    body: SongTagCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/song-tags';
+};
+
+export type SongTagServiceCreateSongTagErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type SongTagServiceCreateSongTagError = SongTagServiceCreateSongTagErrors[keyof SongTagServiceCreateSongTagErrors];
+
+export type SongTagServiceCreateSongTagResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: SongTagCreateResponse;
+};
+
+export type SongTagServiceCreateSongTagResponse = SongTagServiceCreateSongTagResponses[keyof SongTagServiceCreateSongTagResponses];
 
 export type SongTypeServiceListSongTypesData = {
     body?: never;

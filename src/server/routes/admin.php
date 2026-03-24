@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
+use App\Http\Controllers\Api\SongTag\CreateSongTagController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
 use Song\Route\SongAttributeRouteMap;
 use Song\Route\SongRouteMap;
+use Song\Route\SongTagRouteMap;
 use Song\Route\SongTypeRouteMap;
 
 Route::get('/user', function (Request $request) {
@@ -75,6 +77,10 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
                     Route::get('/search', [SearchSongController::class, 'handle'])->name(SongRouteMap::Search);
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
+                });
+
+                Route::prefix('song-tags')->group(function () {
+                    Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
                 });
 
                 Route::prefix('song-types')->group(function () {
