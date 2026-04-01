@@ -18,6 +18,16 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
     }
 
     #[Override]
+    public function all(): array
+    {
+        return ModelsSongTag::query()
+            ->orderBy('order_no')
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    #[Override]
     public function findByName(SongTagName $name): ?SongTag
     {
         $found = ModelsSongTag::query()
