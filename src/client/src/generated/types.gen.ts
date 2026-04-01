@@ -253,6 +253,16 @@ export type SongTagListResponse = {
     tags: Array<SongTag>;
 };
 
+export type SongTagSearchResponse = {
+    tags: Array<SongTag>;
+    maxPage: number;
+};
+
+/**
+ * 楽曲タグ検索のソート条件
+ */
+export type SongTagSearchSortBy = 'name' | 'order_no';
+
 export type SongType = {
     name: SongTypeName;
     value: SongTypeValue;
@@ -1203,6 +1213,51 @@ export type SongTagServiceCreateSongTagResponses = {
 };
 
 export type SongTagServiceCreateSongTagResponse = SongTagServiceCreateSongTagResponses[keyof SongTagServiceCreateSongTagResponses];
+
+export type SongTagServiceSearchSongTagsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        name?: string;
+        sort?: SongTagSearchSortBy;
+        order?: SortOrder;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/song-tags/search';
+};
+
+export type SongTagServiceSearchSongTagsErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type SongTagServiceSearchSongTagsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: SongTagSearchResponse;
+};
+
+export type SongTagServiceSearchSongTagsResponse = SongTagServiceSearchSongTagsResponses[keyof SongTagServiceSearchSongTagsResponses];
 
 export type SongTypeServiceListSongTypesData = {
     body?: never;
