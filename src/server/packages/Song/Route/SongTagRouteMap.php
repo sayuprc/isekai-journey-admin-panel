@@ -8,5 +8,7 @@ enum SongTagRouteMap: string
 {
     case List = 'song-tags';
 
+    case Search = 'song-tags.search';
+
     case Create = 'song-tags.create';
 }
