@@ -14,6 +14,7 @@ use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\Tag\CreateInteractor as CreateTagInteractor;
+use Song\Application\Interactors\Tag\ListInteractor as ListTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -26,6 +27,7 @@ use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
 use Song\Application\UseCase\Tag\Create\CreateInputData as CreateTagInputData;
 use Song\Application\UseCase\Tag\Create\CreateUseCaseInterface as CreateTagUseCaseInterface;
+use Song\Application\UseCase\Tag\List\ListUseCaseInterface as ListTagUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -95,6 +97,8 @@ class SongServiceProvider extends EnvServiceProvider
     {
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
         $this->app->bind(SongTagFactoryInterface::class, SongTagFactory::class);
+
+        $this->app->bind(ListTagUseCaseInterface::class, ListTagInteractor::class);
         $this->app->bind(CreateTagUseCaseInterface::class, CreateTagInteractor::class);
 
         $this->app->bind(CreateTagInputData::class, function (): CreateTagInputData {

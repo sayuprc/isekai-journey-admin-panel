@@ -70,6 +70,33 @@ class SongTagRepositoryTest extends DatabaseTestCase
         $this->assertSame(0, $this->getInstance()->getMaxOrderNo());
     }
 
+    #[Test]
+    public function all(): void
+    {
+        $repository = $this->getInstance();
+
+        $tag1 = $this->createSongTag($this->generateUuid(), 'バラード', 30);
+        $tag2 = $this->createSongTag($this->generateUuid(), 'ロック', 10);
+        $tag3 = $this->createSongTag($this->generateUuid(), 'ポップ', 20);
+
+        $repository->save($tag1);
+        $repository->save($tag2);
+        $repository->save($tag3);
+
+        $result = $repository->all();
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($tag2, $result[0]);
+        $this->assertEquals($tag3, $result[1]);
+        $this->assertEquals($tag1, $result[2]);
+    }
+
+    #[Test]
+    public function allWhenEmpty(): void
+    {
+        $this->assertSame([], $this->getInstance()->all());
+    }
+
     private function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
     {
         return new SongTag(
