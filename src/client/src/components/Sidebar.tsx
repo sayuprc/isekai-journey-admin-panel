@@ -119,7 +119,7 @@ const navSections: NavSection[] = [
     title: '楽曲',
     items: [
       { href: '/songs', label: '楽曲', icon: MusicNoteIcon },
-      { href: '/song-tags/create', label: '楽曲タグ', icon: TagIcon },
+      { href: '/song-tags', label: '楽曲タグ', icon: TagIcon },
       { href: '/song-types', label: '楽曲種別', icon: TagIcon },
       { href: '/song-attributes', label: '楽曲属性', icon: SwatchIcon },
     ],
