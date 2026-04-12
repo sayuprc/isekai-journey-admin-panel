@@ -14,8 +14,11 @@ use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\Tag\CreateInteractor as CreateTagInteractor;
+use Song\Application\Interactors\Tag\DeleteInteractor as DeleteTagInteractor;
+use Song\Application\Interactors\Tag\GetInteractor as GetTagInteractor;
 use Song\Application\Interactors\Tag\ListInteractor as ListTagInteractor;
 use Song\Application\Interactors\Tag\SearchInteractor as SearchTagInteractor;
+use Song\Application\Interactors\Tag\UpdateInteractor as UpdateTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongTagQueryServiceInterface;
@@ -29,9 +32,15 @@ use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
 use Song\Application\UseCase\Tag\Create\CreateInputData as CreateTagInputData;
 use Song\Application\UseCase\Tag\Create\CreateUseCaseInterface as CreateTagUseCaseInterface;
+use Song\Application\UseCase\Tag\Delete\DeleteInputData as DeleteTagInputData;
+use Song\Application\UseCase\Tag\Delete\DeleteUseCaseInterface as DeleteTagUseCaseInterface;
+use Song\Application\UseCase\Tag\Get\GetInputData as GetTagInputData;
+use Song\Application\UseCase\Tag\Get\GetUseCaseInterface as GetTagUseCaseInterface;
 use Song\Application\UseCase\Tag\List\ListUseCaseInterface as ListTagUseCaseInterface;
 use Song\Application\UseCase\Tag\Search\SearchInputData as SearchTagInputData;
 use Song\Application\UseCase\Tag\Search\SearchUseCaseInterface as SearchTagUseCaseInterface;
+use Song\Application\UseCase\Tag\Update\UpdateInputData as UpdateTagInputData;
+use Song\Application\UseCase\Tag\Update\UpdateUseCaseInterface as UpdateTagUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -107,6 +116,9 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(ListTagUseCaseInterface::class, ListTagInteractor::class);
         $this->app->bind(SearchTagUseCaseInterface::class, SearchTagInteractor::class);
         $this->app->bind(CreateTagUseCaseInterface::class, CreateTagInteractor::class);
+        $this->app->bind(GetTagUseCaseInterface::class, GetTagInteractor::class);
+        $this->app->bind(UpdateTagUseCaseInterface::class, UpdateTagInteractor::class);
+        $this->app->bind(DeleteTagUseCaseInterface::class, DeleteTagInteractor::class);
 
         $this->app->bind(SearchTagInputData::class, function (): SearchTagInputData {
             $request = $this->app->make(Request::class);
@@ -118,6 +130,31 @@ class SongServiceProvider extends EnvServiceProvider
             $request = $this->app->make(Request::class);
 
             return $this->getMapper()->map(CreateTagInputData::class, $request->all());
+        });
+
+        $this->app->bind(GetTagInputData::class, function (): GetTagInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(GetTagInputData::class, [
+                'songTagId' => $request->route('songTagId'),
+            ]);
+        });
+
+        $this->app->bind(UpdateTagInputData::class, function (): UpdateTagInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(UpdateTagInputData::class, [
+                'songTagId' => $request->route('songTagId'),
+                ...$request->all(),
+            ]);
+        });
+
+        $this->app->bind(DeleteTagInputData::class, function (): DeleteTagInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(DeleteTagInputData::class, [
+                'songTagId' => $request->route('songTagId'),
+            ]);
         });
     }
 
