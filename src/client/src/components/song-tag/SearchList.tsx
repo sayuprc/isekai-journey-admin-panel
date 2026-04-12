@@ -171,6 +171,7 @@ export const SearchList = () => {
             <tr>
               <th>タグ名</th>
               <th>表示順</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -185,6 +186,9 @@ export const SearchList = () => {
                       <td>
                         <div class="skeleton h-4 w-8" />
                       </td>
+                      <td>
+                        <div class="skeleton h-6 w-10" />
+                      </td>
                     </tr>
                   )}
                 </For>
@@ -192,7 +196,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="2" class="py-8 text-center text-error">
+                    <td colspan="3" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -202,9 +206,14 @@ export const SearchList = () => {
                 {result => (
                   <For each={result().tags}>
                     {tag => (
-                      <tr>
+                      <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{tag.name}</td>
                         <td>{tag.orderNo}</td>
+                        <td>
+                          <a href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                            編集
+                          </a>
+                        </td>
                       </tr>
                     )}
                   </For>
