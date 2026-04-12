@@ -53,6 +53,29 @@ class SongTagRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function find(): void
+    {
+        $repository = $this->getInstance();
+
+        $tag = $this->createSongTag($this->generateUuid(), 'ロック', 10);
+
+        $repository->save($tag);
+
+        $found = $repository->find($tag->songTagId);
+
+        $this->assertNotNull($found);
+        $this->assertEquals($tag, $found);
+    }
+
+    #[Test]
+    public function findNotFound(): void
+    {
+        $found = $this->getInstance()->find(SongTagId::reconstruct($this->generateUuid()));
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
     public function getMaxOrderNo(): void
     {
         $repository = $this->getInstance();
@@ -95,6 +118,19 @@ class SongTagRepositoryTest extends DatabaseTestCase
     public function allWhenEmpty(): void
     {
         $this->assertSame([], $this->getInstance()->all());
+    }
+
+    #[Test]
+    public function deleteTag(): void
+    {
+        $repository = $this->getInstance();
+
+        $tag = $this->createSongTag($this->generateUuid(), 'ロック', 10);
+
+        $repository->save($tag);
+        $repository->delete($tag->songTagId);
+
+        $this->assertNull($repository->find($tag->songTagId));
     }
 
     private function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
