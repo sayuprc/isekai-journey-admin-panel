@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidSecurity;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -46,9 +47,10 @@ class OpenApiValidator
     public function handle(Request $request, Closure $next): Response
     {
         $psrRequest = $this->psrHttpFactory->createRequest($request);
+        $operationAddress = $this->resolveOperationAddress($request);
 
         try {
-            $this->builder->getRequestValidator()->validate($psrRequest);
+            $this->builder->getRoutedRequestValidator()->validate($operationAddress, $psrRequest);
         } catch (InvalidSecurity) {
             return response()->json([], 401);
         } catch (ValidationFailed $e) {
@@ -61,10 +63,7 @@ class OpenApiValidator
         $psrResponse = $this->psrHttpFactory->createResponse($response);
 
         try {
-            $this->builder->getResponseValidator()->validate(
-                new OperationAddress($request->getPathInfo(), strtolower($request->getMethod())),
-                $psrResponse,
-            );
+            $this->builder->getResponseValidator()->validate($operationAddress, $psrResponse);
         } catch (ValidationFailed $e) {
             $this->logger->error('レスポンスバリデーションエラー', [
                 'content' => $response->getContent(),
@@ -75,6 +74,20 @@ class OpenApiValidator
         }
 
         return $response;
+    }
+
+    private function resolveOperationAddress(Request $request): OperationAddress
+    {
+        /** @var Route|null $route */
+        $route = $request->route();
+
+        if (is_null($route)) {
+            return new OperationAddress($request->getPathInfo(), strtolower($request->getMethod()));
+        }
+
+        $specPath = preg_replace('#^admin/[^/]+#', '', $route->uri()) ?? $route->uri();
+
+        return new OperationAddress('/' . ltrim($specPath, '/'), strtolower($request->getMethod()));
     }
 
     private function handleValidationFailed(ValidationFailed $exception): JsonResponse
