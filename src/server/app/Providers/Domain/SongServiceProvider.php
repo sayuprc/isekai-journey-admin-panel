@@ -47,6 +47,7 @@ use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Tag\SongTagFactoryInterface;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Song\Domain\Services\SongTagUsageCheckerInterface;
 use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
 use Song\Infrastructures\SongQueryService;
@@ -54,6 +55,7 @@ use Song\Infrastructures\SongRepository;
 use Song\Infrastructures\SongTagFactory;
 use Song\Infrastructures\SongTagQueryService;
 use Song\Infrastructures\SongTagRepository;
+use Song\Infrastructures\SongTagUsageChecker;
 
 class SongServiceProvider extends EnvServiceProvider
 {
@@ -112,6 +114,7 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
         $this->app->bind(SongTagFactoryInterface::class, SongTagFactory::class);
         $this->app->bind(SongTagQueryServiceInterface::class, SongTagQueryService::class);
+        $this->app->bind(SongTagUsageCheckerInterface::class, SongTagUsageChecker::class);
 
         $this->app->bind(ListTagUseCaseInterface::class, ListTagInteractor::class);
         $this->app->bind(SearchTagUseCaseInterface::class, SearchTagInteractor::class);

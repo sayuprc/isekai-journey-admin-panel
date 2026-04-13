@@ -13,6 +13,7 @@ use Override;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\Tag\SongTagId;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
 readonly class SongRepository implements SongRepositoryInterface
@@ -43,6 +44,12 @@ readonly class SongRepository implements SongRepositoryInterface
         return SongLyricist::query()->where('creator_id', $id)->exists()
             || SongComposer::query()->where('creator_id', $id)->exists()
             || SongArranger::query()->where('creator_id', $id)->exists();
+    }
+
+    #[Override]
+    public function isSongTagUsed(SongTagId $songTagId): bool
+    {
+        return false;
     }
 
     #[Override]

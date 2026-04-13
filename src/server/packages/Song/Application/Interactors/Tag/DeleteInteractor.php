@@ -14,8 +14,10 @@ use Song\Application\UseCase\Tag\Delete\DeleteInputData;
 use Song\Application\UseCase\Tag\Delete\DeleteUseCaseInterface;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Song\Domain\Services\SongTagUsageCheckerInterface;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -24,6 +26,7 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
     public function __construct(
         private AuthContext $context,
         private SongTagRepositoryInterface $repository,
+        private SongTagUsageCheckerInterface $usageChecker,
     ) {
     }
 
@@ -43,6 +46,10 @@ readonly class DeleteInteractor implements DeleteUseCaseInterface
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
             ->andThen(function (SongTagId $songTagId): Result {
+                if ($this->usageChecker->isUsed($songTagId)) {
+                    return new Err(new BusinessLogicError('この楽曲タグは楽曲に使用されているため削除できません'));
+                }
+
                 $this->repository->delete($songTagId);
 
                 return new Ok(null);

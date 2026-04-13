@@ -9,6 +9,7 @@ use Override;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\Tag\SongTagId;
 use Support\Contracts\MapperInterface;
 use Support\DebugInfrastructures\Repository\DebugConfig;
 use Support\DebugInfrastructures\Repository\JsonFileStore;
@@ -52,6 +53,12 @@ readonly class FileSongRepository implements SongRepositoryInterface
             }
         }
 
+        return false;
+    }
+
+    #[Override]
+    public function isSongTagUsed(SongTagId $songTagId): bool
+    {
         return false;
     }
 
