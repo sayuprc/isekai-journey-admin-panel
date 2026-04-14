@@ -2,8 +2,8 @@
 
 ## プロジェクト概要
 
-isekai-terrarium の管理画面プロジェクト。
-`src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS)、`src/contracts` (TypeSpec, git submodule) で構成。
+isekai-terrarium のプロジェクト。
+`src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS/ElysiaJS)、`src/client` (Astro/SolidJS)、`src/contracts` (TypeSpec) で構成。
 
 ## 検証
 
@@ -11,7 +11,7 @@ isekai-terrarium の管理画面プロジェクト。
 
 ## ADR
 
-アーキテクチャ決定記録は `docs/adr/` にあります（`mise run adr:pull` で取得・更新）。
+アーキテクチャ決定記録は `docs/adr/` にあります。
 
 ## 禁止事項
 
