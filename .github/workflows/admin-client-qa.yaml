@@ -12,8 +12,9 @@ env:
   MISE_ENV: ci
 
 jobs:
-  check:
-    name: Admin Client QA
+  diff:
+    name: Generated Code Diff Check
+
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +22,6 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.ref }}
-          submodules: true
 
       - name: Setup mise
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
@@ -40,8 +40,58 @@ jobs:
       - name: Check generate code has diff
         run: mise run generate:client
 
+  lint:
+    name: ESLint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: src/admin/node_modules
+          key: node-modules-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run bun:install
+
       - name: Run ESLint
         run: mise run lint
+
+  style:
+    name: Stylelint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: src/admin/node_modules
+          key: node-modules-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run bun:install
 
       - name: Run Stylelint
         run: mise run style
