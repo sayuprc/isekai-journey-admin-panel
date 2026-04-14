@@ -2,6 +2,8 @@ name: Client QA
 
 on:
   pull_request:
+    paths:
+      - 'src/client/**'
   push:
     branches:
       - dev

@@ -2,6 +2,8 @@ name: Contracts QA
 
 on:
   pull_request:
+    paths:
+      - 'src/contracts/**'
   push:
     branches:
       - dev
