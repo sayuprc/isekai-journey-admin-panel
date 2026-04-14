@@ -269,18 +269,3 @@ run = "bun run tcm:watch"
 description = "Prism のモックサーバーを起動する"
 dir = "src/client"
 run = "bun run prism"
-
-[tasks."adr:pull"]
-description = "ADR リポジトリを docs/adr/ に clone または pull する"
-run = '''
-repo="https://github.com/sayuprc/isekai-terrarium-adr.git"
-if [ -n "${ADR_PAT}" ]; then
-  repo="https://${ADR_PAT}@github.com/sayuprc/isekai-terrarium-adr.git"
-fi
-
-if [ -d docs/adr/.git ]; then
-  git -C docs/adr pull --ff-only
-else
-  git clone "$repo" docs/adr
-fi
-'''
