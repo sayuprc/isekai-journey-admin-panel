@@ -9,6 +9,10 @@ file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")
 
 [ -z "$file" ] && exit 0
 
+repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+hook_state_dir="$repo_root/.git/copilot-hooks"
+contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
+
 # 自動生成ファイルはスキップ
 case "$file" in
   */Generated/*|*/generated/*|*/vendor/*|*/node_modules/*|*/.astro/*|*/dist/*)
@@ -17,8 +21,14 @@ case "$file" in
 esac
 
 case "$file" in
+  src/contracts/*.tsp|*/src/contracts/*.tsp|src/contracts/scripts/*.ts|*/src/contracts/scripts/*.ts|src/contracts/scripts/*.js|*/src/contracts/scripts/*.js|src/contracts/package.json|*/src/contracts/package.json|src/contracts/bun.lock|*/src/contracts/bun.lock|src/contracts/mise.toml|*/src/contracts/mise.toml|src/contracts/tspconfig.yaml|*/src/contracts/tspconfig.yaml)
+    mkdir -p "$hook_state_dir"
+    : > "$contracts_stop_marker"
+    ;;
+esac
+
+case "$file" in
   */src/server/*.php)
-    repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
     cd "$repo_root"
 
     # Docker コンテナが起動していなければエラーフィードバック
@@ -63,9 +73,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.ts|*/src/client/*.tsx|*/src/client/*.js|*/src/client/*.jsx|*/src/client/*.mjs)
-    repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
-    cd "$repo_root/src/client"
+  */src/admin/*.ts|*/src/admin/*.tsx|*/src/admin/*.js|*/src/admin/*.jsx|*/src/admin/*.mjs)
+    cd "$repo_root/src/admin"
 
     # Oxlint 自動修正
     bunx oxlint --fix "$file" >/dev/null 2>&1 || true
@@ -83,9 +92,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.astro)
-    repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
-    cd "$repo_root/src/client"
+  */src/admin/*.astro)
+    cd "$repo_root/src/admin"
 
     # ESLint
     bunx eslint --fix "$file" >/dev/null 2>&1 || true
@@ -113,9 +121,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.css)
-    repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
-    cd "$repo_root/src/client"
+  */src/admin/*.css)
+    cd "$repo_root/src/admin"
 
     # Stylelint 自動修正
     bunx stylelint --fix "$file" >/dev/null 2>&1 || true
@@ -128,6 +135,23 @@ case "$file" in
         hookSpecificOutput: {
           hookEventName: "PostToolUse",
           additionalContext: $msg
+        }
+      }'
+    fi
+    ;;
+
+  src/contracts/*.tsp|*/src/contracts/*.tsp)
+    cd "$repo_root/src/contracts"
+
+    mise run format:fix >/dev/null 2>&1 || true
+
+    if ! diag="$(mise run format:check 2>&1)"; then
+      diag="$(printf '%s\n' "$diag" | head -20)"
+
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: ("TypeSpec format violations:\n" + $msg)
         }
       }'
     fi

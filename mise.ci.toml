@@ -92,7 +92,7 @@ _.file = "src/server/.env"
 
 [tasks."generate:client"]
 description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
-dir = "src/client"
+dir = "src/admin"
 run = '''
 bun run generate:api
 if [ -n "$(git status --porcelain)" ]; then

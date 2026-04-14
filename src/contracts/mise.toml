@@ -1,0 +1,42 @@
+[tools]
+bun = "1.3.9"
+lefthook = "2.1.4"
+
+[tasks.install]
+description = "パッケージをインストールする"
+run = "bun install"
+
+[tasks."format:check"]
+description = "フォーマットチェックをする"
+run = "bun run format:check"
+
+[tasks."format:fix"]
+description = "フォーマット修正をする"
+run = "bun run format:fix"
+
+[tasks."compile:all"]
+description = "oas を生成する"
+run = [{ tasks = ["compile:client", "compile:admin"] }]
+
+[tasks."compile:client"]
+description = "クライアント向け oas を生成する"
+run = "bun run compile:client"
+
+[tasks."compile:client:watch"]
+description = "クライアント向け oas を生成する(watch)"
+run = "bun run compile:client:watch"
+
+[tasks."compile:admin"]
+description = "管理画面向け oas を生成する"
+run = "bun run compile:admin"
+
+[tasks."compile:admin:watch"]
+description = "管理画面向け oas を生成する(watch)"
+run = "bun run compile:admin:watch"
+
+[tasks.re-compile]
+description = "oas を生成し直す"
+run = '''
+rm -rf generated/oas
+mise run compile:all
+'''

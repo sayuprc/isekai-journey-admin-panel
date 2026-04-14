@@ -15,11 +15,22 @@ pre-commit:
       run: docker exec isekai-terrarium-admin-php vendor/bin/phpstan analyze --no-progress -- {staged_files}
 
     eslint:
-      root: "src/client/"
+      root: "src/admin/"
       glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
       run: bunx eslint {staged_files}
 
     stylelint:
-      root: "src/client/"
+      root: "src/admin/"
       glob: "src/**/*.{css,astro}"
       run: bunx stylelint {staged_files}
+
+    tsp-format:
+      root: "src/contracts/"
+      glob: "src/**/*.tsp"
+      run: bun run format:check
+
+    tsp-test:
+      root: "src/contracts/"
+      glob: "scripts/**/*.ts"
+      run: bun test
+

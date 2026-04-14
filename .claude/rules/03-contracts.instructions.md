@@ -1,0 +1,1 @@
+../../.github/instructions/03-contracts.instructions.md

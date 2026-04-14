@@ -1,0 +1,34 @@
+---
+import { SongList, SongTypeSelect, SongOrderSelect, SearchInput } from '../components/SongList';
+import Layout from '../layouts/Layout.astro';
+import { type Song } from '../schemas/song';
+
+const url = `${import.meta.env.API_URL}/api/songs`;
+
+const response = await fetch(url);
+const songs: Song[] = await response.json();
+---
+
+<Layout pageTitle="楽曲">
+  <div>
+    <div>
+      ヰ世界情緒が今まで歌ってきた楽曲の一覧です。(V.W.Pやコラボを含む)<br />
+      サムネイルをクリックすることで動画が再生されます。
+    </div>
+    <div>
+      <SongOrderSelect client:load />
+      <SongTypeSelect client:load />
+      <SearchInput client:load />
+    </div>
+    <div class="song-list">
+      <SongList songs={songs} client:load />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .song-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+</style>

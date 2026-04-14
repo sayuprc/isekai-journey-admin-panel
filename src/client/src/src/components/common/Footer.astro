@@ -1,0 +1,64 @@
+---
+interface Props {
+  siteTitle: string;
+}
+
+const { siteTitle } = Astro.props;
+---
+
+<footer>
+  <div class="footer-inner">
+    <div class="site-title">{siteTitle}</div>
+    <div class="footer-contents">
+      <div class="site-links">
+        <ul>
+          <li><a href="/site-policy">サイトポリシー</a></li>
+          <li><a href="/privacy-policy">プライバシーポリシー</a></li>
+          <li><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSeO0TtKEd3k1WAmi7zbBHBM4sg9DPmBJP5cqmnEO_OHwJ2aNA/viewform?usp=header">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div class="sns-links">
+        <ul>
+          <li><a href="/">Twitter</a></li>
+          <li><a href="/">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  * {
+    color: #f0f8ff;
+  }
+
+  footer {
+    position: sticky;
+    top: 100vh;
+    height: 300px;
+    background-color: #018be4;
+  }
+
+  .footer-inner {
+    width: 1260px;
+    height: inherit;
+    margin: 0 auto;
+  }
+
+  .site-title {
+    padding: 20px 0;
+    font-size: 2rem;
+  }
+
+  .footer-contents {
+    display: flex;
+  }
+
+  .site-links {
+    width: 50%;
+  }
+
+  .sns-links {
+    width: 50%;
+  }
+</style>

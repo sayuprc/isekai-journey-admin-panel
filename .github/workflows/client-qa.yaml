@@ -1,50 +1,68 @@
 name: Client QA
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
   pull_request:
   push:
     branches:
       - dev
 
-env:
-  MISE_ENV: ci
-
 jobs:
-  check:
-    name: Client QA
+  none:
+    name: None
+
     runs-on: ubuntu-latest
 
+    # TODO 将来的に整備する
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: ${{ github.ref }}
-          submodules: true
+      - run: echo 1
 
-      - name: Setup mise
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+  # check:
+  #   name: Check (Node ${{ matrix.node-versions }})
 
-      - name: Cache node modules
-        id: cache-node-modules
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: src/client/node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+  #   runs-on: ubuntu-latest
 
-      - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node-versions: ["22"]
 
-      - name: Check generate code has diff
-        run: mise run generate:client
+  #   steps:
+  #     - name: Checkout the code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ github.ref }}
 
-      - name: Run ESLint
-        run: mise run lint
+  #     - name: npm cache
+  #       id: npm-cache
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ./src/node_modules
+  #         key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-package-
 
-      - name: Run Stylelint
-        run: mise run style
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ matrix.node-versions }}
+
+  #     - name: Install packages
+  #       if: steps.npm-cache.outputs.cache-hit != 'true'
+  #       run: |
+  #         cd src
+  #         npm i
+
+  #     - name: Run ESLint
+  #       run: |
+  #         cd src
+  #         npm run lint
+
+  #     - name: Run Stylelint
+  #       run: |
+  #         cd src
+  #         npm run style
 
       # - name: Run Build
-      #   run: bun run build
+      #   run: |
+      #     cd src
+      #     npm run build

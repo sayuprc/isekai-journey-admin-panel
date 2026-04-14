@@ -1,0 +1,144 @@
+[tasks."adr:new"]
+description = "新規 ADR を作成する"
+depends_post = ["adr:index"]
+usage = '''
+arg "<title>" help="ADR のタイトル"
+arg "[applies_to]" help="適用対象（カンマ区切り例: api,batch）"
+'''
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 連番を決定
+MAX_NUM=$(ls ADR-*.md 2>/dev/null \
+  | sed 's|.*/ADR-||' \
+  | grep -oE '^[0-9]+' \
+  | sort -n \
+  | tail -1 || true)
+NEXT=$(printf "%04d" $(( ${MAX_NUM:-0} + 1 )))
+
+# タイトル → ケバブケース
+SLUG=$(echo "${usage_title}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd '[:alnum:]-')
+
+FILENAME="ADR-${NEXT}-${SLUG}.md"
+
+# applies_to を YAML 配列形式に変換
+if [ -n "${usage_applies_to:-}" ]; then
+  APPLIES_YAML="[$(echo "${usage_applies_to}" | sed 's/,/, /g')]"
+else
+  APPLIES_YAML="[]"
+fi
+
+sed \
+  -e "s/^id: <id>/id: ADR-${NEXT}/" \
+  -e "s|^status: <status>.*|status: proposed|" \
+  -e "s|^# <title>|# ${usage_title}|" \
+  template.md \
+| awk -v applies="${APPLIES_YAML}" \
+    '/^applies_to:/{print "applies_to: " applies; next} {print}' \
+> "$FILENAME"
+
+echo "Created: $FILENAME"
+"""
+
+[tasks."adr:status"]
+description = "ADR のステータスを変更する"
+depends_post = ["adr:index"]
+usage = '''
+arg "<id>" help="ADR の ID(例: ADR-0001 または 1)"
+arg "<status>" help="新しいステータス" {
+  choices "proposed" "accepted" "deprecated" "superseded"
+}
+arg "[superseded_by]" help="後継 ADR の ID(superseded の場合必須)"
+'''
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+ID="${usage_id}"
+STATUS="${usage_status}"
+SUPERSEDED_BY="${usage_superseded_by:-}"
+
+# ID の正規化 (1 や 0001 → ADR-0001)
+if [[ "$ID" =~ ^[0-9]+$ ]]; then
+  ID="ADR-$(printf '%04d' "$ID")"
+fi
+
+FILE=$(ls "${ID}-"*.md 2>/dev/null | head -1 || true)
+if [ -z "$FILE" ]; then
+  echo "Error: ADR が見つかりません: $ID" >&2
+  exit 1
+fi
+
+if [ "$STATUS" = "superseded" ] && [ -z "$SUPERSEDED_BY" ]; then
+  echo "Error: superseded には後継 ADR の ID が必要です" >&2
+  exit 1
+fi
+
+sed -i "s/^status: .*/status: $STATUS/" "$FILE"
+
+if [ "$STATUS" = "superseded" ] && [ -n "$SUPERSEDED_BY" ]; then
+  if [[ "$SUPERSEDED_BY" =~ ^[0-9]+$ ]]; then
+    SUPERSEDED_BY="ADR-$(printf '%04d' "$SUPERSEDED_BY")"
+  fi
+  sed -i "s/^superseded_by: .*/superseded_by: $SUPERSEDED_BY/" "$FILE"
+fi
+
+echo "Updated: $FILE"
+printf "  status: %s\n" "$STATUS"
+[ "$STATUS" = "superseded" ] && printf "  superseded_by: %s\n" "$SUPERSEDED_BY"
+"""
+
+[tasks."adr:index"]
+description = "INDEX.md を再生成する"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+INDEX="INDEX.md"
+
+{
+  echo "# ADR Index"
+  echo ""
+  echo "<!-- このファイルは adr:index タスクにより自動生成されます。直接編集しないでください。 -->"
+  echo ""
+  echo "| ID | Status | Title | Applies To |"
+  echo "|----|--------|-------|------------|"
+
+  if ls ADR-*.md &>/dev/null; then
+    while IFS= read -r f; do
+      ID=$(grep      '^id:'          "$f" | awk '{print $2}' || true)
+      STATUS=$(grep  '^status:'      "$f" | awk '{print $2}' || true)
+      TITLE=$(grep   '^# '          "$f" | head -1 | sed 's/^# //' || true)
+      APPLIES=$(grep '^applies_to:' "$f" | sed 's/^applies_to: //' || true)
+      echo "| ${ID} | ${STATUS} | ${TITLE} | ${APPLIES} |"
+    done < <(ls ADR-*.md | sort)
+  fi
+} > "$INDEX"
+
+echo "Generated: $INDEX"
+"""
+
+[tasks."adr:list"]
+description = "ADR 一覧を表示する"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! ls ADR-*.md &>/dev/null; then
+  echo "ADR がまだ存在しません。"
+  exit 0
+fi
+
+printf "%-12s %-12s %s\n" "ID" "Status" "Title"
+printf "%-12s %-12s %s\n" "------------" "------------" "------------------------------"
+
+while IFS= read -r f; do
+  BASENAME=$(basename "$f" .md)
+  ID=$(echo "$BASENAME" | grep -oE '^ADR-[0-9]+')
+  SLUG=$(echo "$BASENAME" | sed "s/^ADR-[0-9]*-//")
+  TITLE=$(echo "$SLUG" | tr '-' ' ')
+  STATUS=$(grep '^status:' "$f" | awk '{print $2}')
+  printf "%-12s %-12s %s\n" "$ID" "$STATUS" "$TITLE"
+done < <(ls ADR-*.md)
+"""
