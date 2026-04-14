@@ -6,6 +6,9 @@ on:
     - cron: '0 0 1,15 * *'
   workflow_dispatch:
 
+env:
+  PINACT_VERSION: v3.9.0
+
 jobs:
   pinact:
     runs-on: ubuntu-latest
@@ -20,10 +23,11 @@ jobs:
 
       - name: Install pinact
         run: |
-          version=v3.9.0
-          curl -fsSL "https://github.com/suzuki-shunsuke/pinact/releases/download/${version}/pinact_linux_amd64.tar.gz" \
+          mkdir -p "${HOME}/.local/bin"
+          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
+          curl -fsSL "https://github.com/suzuki-shunsuke/pinact/releases/download/${PINACT_VERSION}/pinact_linux_amd64.tar.gz" \
             | tar -xz pinact
-          install -m 0755 pinact /usr/local/bin/pinact
+          install -m 0755 pinact "${HOME}/.local/bin/pinact"
 
       - name: Update action versions
         env:
