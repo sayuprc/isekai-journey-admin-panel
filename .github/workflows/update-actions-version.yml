@@ -6,9 +6,6 @@ on:
     - cron: '0 0 1,15 * *'
   workflow_dispatch:
 
-env:
-  PINACT_VERSION: v3.9.0
-
 jobs:
   pinact:
     runs-on: ubuntu-latest
@@ -21,13 +18,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Install pinact
-        run: |
-          mkdir -p "${HOME}/.local/bin"
-          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
-          curl -fsSL "https://github.com/suzuki-shunsuke/pinact/releases/download/${PINACT_VERSION}/pinact_linux_amd64.tar.gz" \
-            | tar -xz pinact
-          install -m 0755 pinact "${HOME}/.local/bin/pinact"
+      - name: Setup mise
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
 
       - name: Update action versions
         env:
