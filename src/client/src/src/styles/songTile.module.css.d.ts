@@ -1,0 +1,21 @@
+declare const styles: {
+  readonly collaboration: string;
+  readonly cover: string;
+  readonly creators: string;
+  readonly creatorsList: string;
+  readonly embed: string;
+  readonly item: string;
+  readonly link: string;
+  readonly original: string;
+  readonly otherLinks: string;
+  readonly playIcon: string;
+  readonly releasedOn: string;
+  readonly songType: string;
+  readonly summary: string;
+  readonly title: string;
+  readonly unit: string;
+  readonly videoLink: string;
+  readonly youtubeEmbed: string;
+  readonly youtubeWrapper: string;
+};
+export = styles;

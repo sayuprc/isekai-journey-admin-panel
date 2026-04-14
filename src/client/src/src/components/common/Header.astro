@@ -1,0 +1,64 @@
+---
+interface Props {
+  siteTitle: string;
+}
+
+const { siteTitle } = Astro.props;
+---
+
+<header>
+  <div class="header-inner">
+    <div class="site-title">{siteTitle}</div>
+    <nav>
+      <ul>
+        <li><a href="/song">Song</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    height: 80px;
+    color: #f0f8ff;
+    background-color: #018be4;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1260px;
+    height: inherit;
+    margin: 0 auto;
+  }
+
+  .site-title {
+    margin-left: 10px;
+    font-size: 2rem;
+  }
+
+  nav {
+    margin-right: 10px;
+  }
+
+  ul {
+    display: flex;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  a {
+    font-size: 1.2rem;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  a:visited {
+    color: #f0f8ff;
+  }
+</style>

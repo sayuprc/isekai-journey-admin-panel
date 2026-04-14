@@ -1,0 +1,68 @@
+name: Client QA
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  none:
+    name: None
+
+    runs-on: ubuntu-latest
+
+    # TODO 将来的に整備する
+    steps:
+      - run: echo 1
+
+  # check:
+  #   name: Check (Node ${{ matrix.node-versions }})
+
+  #   runs-on: ubuntu-latest
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node-versions: ["22"]
+
+  #   steps:
+  #     - name: Checkout the code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ github.ref }}
+
+  #     - name: npm cache
+  #       id: npm-cache
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ./src/node_modules
+  #         key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-package-
+
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ matrix.node-versions }}
+
+  #     - name: Install packages
+  #       if: steps.npm-cache.outputs.cache-hit != 'true'
+  #       run: |
+  #         cd src
+  #         npm i
+
+  #     - name: Run ESLint
+  #       run: |
+  #         cd src
+  #         npm run lint
+
+  #     - name: Run Stylelint
+  #       run: |
+  #         cd src
+  #         npm run style
+
+      # - name: Run Build
+      #   run: |
+      #     cd src
+      #     npm run build
