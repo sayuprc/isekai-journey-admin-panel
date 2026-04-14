@@ -1,0 +1,49 @@
+name: Contracts QA
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  qa:
+    name: Contracts QA
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/contracts
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run install
+
+      - name: Check format
+        run: mise run format:check
+
+      - name: Check generate code has diff
+        run: |
+          mise run compile:all
+          if [ -n "$(git status --porcelain | grep generated)" ]; then
+            echo "自動生成コードに差分があります"
+            git status
+            exit 1
+          fi

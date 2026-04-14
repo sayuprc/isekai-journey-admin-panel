@@ -23,3 +23,14 @@ pre-commit:
       root: "src/client/"
       glob: "src/**/*.{css,astro}"
       run: bunx stylelint {staged_files}
+
+    tsp-format:
+      root: "src/contracts/"
+      glob: "src/**/*.tsp"
+      run: bun run format:check
+
+    tsp-test:
+      root: "src/contracts/"
+      glob: "scripts/**/*.ts"
+      run: bun test
+

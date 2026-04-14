@@ -12,6 +12,12 @@
         "type": "command",
         "bash": ".github/hooks/post-lint.sh"
       }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/stop-verify.sh"
+      }
     ]
   }
 }
