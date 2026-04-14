@@ -199,7 +199,7 @@ docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} gene
 
 [tasks."generate:client"]
 description = "OAS からクライアントのコードを生成する"
-dir = "src/client"
+dir = "src/admin"
 run = '''
 rm -rf src/generated
 
@@ -228,7 +228,7 @@ cp ${caroot_pem} docker/php/certs/
 
 [tasks."bun:install"]
 description = "bun のパッケージをインストールする"
-dir = "src/client"
+dir = "src/admin"
 run = "bun install"
 
 [tasks.format]
@@ -237,35 +237,35 @@ depends = ["lint:fix", "style:fix"]
 
 [tasks.lint]
 description = "ESLint を実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run lint"
 
 [tasks."lint:fix"]
 description = "ESLint を --fix オプション付きで実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run lint:fix"
 
 [tasks.style]
 description = "Stylelint を実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run style"
 
 [tasks."style:fix"]
 description = "Stylelint を --fix オプション付きで実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run style:fix"
 
 [tasks.tcm]
 description = "tcm を実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run tcm"
 
 [tasks."tcm:watch"]
 description = "tcm を --watch オプション付きで実行する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run tcm:watch"
 
 [tasks.prism]
 description = "Prism のモックサーバーを起動する"
-dir = "src/client"
+dir = "src/admin"
 run = "bun run prism"

@@ -1,10 +1,10 @@
 ---
-applyTo: 'src/client/**'
+applyTo: 'src/admin**'
 paths:
-  - 'src/client/**'
+  - 'src/admin/**'
 ---
 
-# クライアント規約
+# 管理画面クライアント規約
 
 ## パッケージマネージャー
 

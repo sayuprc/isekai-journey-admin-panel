@@ -1,4 +1,4 @@
-name: Client QA
+name: Admin Client QA
 
 on:
   schedule:
@@ -13,7 +13,7 @@ env:
 
 jobs:
   check:
-    name: Client QA
+    name: Admin Client QA
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: src/client/node_modules
+          path: src/admin/node_modules
           key: node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages

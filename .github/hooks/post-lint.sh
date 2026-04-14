@@ -73,8 +73,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.ts|*/src/client/*.tsx|*/src/client/*.js|*/src/client/*.jsx|*/src/client/*.mjs)
-    cd "$repo_root/src/client"
+  */src/admin/*.ts|*/src/admin/*.tsx|*/src/admin/*.js|*/src/admin/*.jsx|*/src/admin/*.mjs)
+    cd "$repo_root/src/admin"
 
     # Oxlint 自動修正
     bunx oxlint --fix "$file" >/dev/null 2>&1 || true
@@ -92,8 +92,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.astro)
-    cd "$repo_root/src/client"
+  */src/admin/*.astro)
+    cd "$repo_root/src/admin"
 
     # ESLint
     bunx eslint --fix "$file" >/dev/null 2>&1 || true
@@ -121,8 +121,8 @@ case "$file" in
     fi
     ;;
 
-  */src/client/*.css)
-    cd "$repo_root/src/client"
+  */src/admin/*.css)
+    cd "$repo_root/src/admin"
 
     # Stylelint 自動修正
     bunx stylelint --fix "$file" >/dev/null 2>&1 || true

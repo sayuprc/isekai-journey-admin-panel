@@ -3,7 +3,7 @@
 ## プロジェクト概要
 
 isekai-terrarium の管理画面プロジェクト。
-`src/server` (PHP/Laravel)、`src/client` (Astro/SolidJS)、`src/contracts` (TypeSpec, git submodule) で構成。
+`src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS)、`src/contracts` (TypeSpec, git submodule) で構成。
 
 ## 検証
 
@@ -16,6 +16,6 @@ isekai-terrarium の管理画面プロジェクト。
 ## 禁止事項
 
 - リンター・フォーマッター設定ファイルの変更（コードを修正すること）
-- `src/server/Generated/`, `src/client/src/generated/` の手動編集
+- `src/server/Generated/`, `src/admin/src/generated/` の手動編集
 - `git commit --no-verify` の使用
 - `npm`, `yarn`, `pnpm` の使用（`bun` を使うこと）
