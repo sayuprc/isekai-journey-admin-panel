@@ -59,8 +59,8 @@ class PerformerServiceProvider extends EnvServiceProvider
             return $this->getMapper()->map(
                 UpdateInputData::class,
                 [
-                    'performerId' => $request->route('performerId'),
                     ...$request->all(),
+                    'performerId' => $request->route('performerId'),
                 ],
             );
         });

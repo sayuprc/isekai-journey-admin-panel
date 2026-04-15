@@ -38,6 +38,29 @@ class UpdateCreatorTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function routeCreatorIdIsPrioritizedOverBodyCreatorId(): void
+    {
+        $routeCreatorId = $this->generateUuid();
+        $bodyCreatorId = $this->generateUuid();
+
+        $this->app->make(CreatorRepository::class)->save($this->createCreator($routeCreatorId, 'クリエイター', 10));
+
+        $this->withAuth()
+            ->putJson(route(CreatorRouteMap::Update, $routeCreatorId), [
+                'creatorId' => $bodyCreatorId,
+                'name' => 'ヰ世界情緒',
+                'orderNo' => 20,
+            ])->assertStatus(200)
+            ->assertExactJson([
+                'creator' => [
+                    'creatorId' => $routeCreatorId,
+                    'name' => 'ヰ世界情緒',
+                    'orderNo' => 20,
+                ],
+            ]);
+    }
+
+    #[Test]
     public function updateFails(): void
     {
         $this->markTestSkipped('TODO 実装する');
