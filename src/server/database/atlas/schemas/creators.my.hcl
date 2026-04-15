@@ -45,4 +45,9 @@ table "creators" {
   index "idx_creators_name_lower" {
     columns = [column.name_lower]
   }
+
+  index "creators_name_unique" {
+    unique  = true
+    columns = [column.name]
+  }
 }

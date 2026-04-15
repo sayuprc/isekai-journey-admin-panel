@@ -45,4 +45,9 @@ table "performers" {
   index "idx_performers_name_lower" {
     columns = [column.name_lower]
   }
+
+  index "performers_name_unique" {
+    unique  = true
+    columns = [column.name]
+  }
 }
