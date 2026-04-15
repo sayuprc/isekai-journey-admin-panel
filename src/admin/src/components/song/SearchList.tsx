@@ -1,5 +1,4 @@
-import { Show, createResource, createSignal, For, Match, Switch, onMount } from 'solid-js';
-import type { SongType, SongAttribute } from '../../generated';
+import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import { client } from '../../utils/client';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
@@ -22,9 +21,6 @@ const getInitialParams = () => {
 export const SearchList = () => {
   const initial = getInitialParams();
 
-  const [types, setTypes] = createSignal<SongType[]>([]);
-  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
-
   const [title, setTitle] = createSignal(initial.title);
   const [type, setType] = createSignal(initial.type);
   const [attribute, setAttribute] = createSignal(initial.attribute);
@@ -40,21 +36,6 @@ export const SearchList = () => {
   const [inputSort, setInputSort] = createSignal(initial.sort);
   const [inputOrder, setInputOrder] = createSignal(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
-
-  onMount(async () => {
-    const [typesRes, attributesRes] = await Promise.all([
-      client.api['song-types'].get(),
-      client.api['song-attributes'].get(),
-    ]);
-
-    if (typesRes.data) {
-      setTypes(typesRes.data.types);
-    }
-
-    if (attributesRes.data) {
-      setAttributes(attributesRes.data.attributes);
-    }
-  });
 
   const updateUrl = (params: {
     title: string;
@@ -184,7 +165,9 @@ export const SearchList = () => {
             <option value="" selected={inputType() === undefined}>
               すべて
             </option>
-            <For each={types()}>{t => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}</For>
+            <For each={data()?.types ?? []}>
+              {t => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}
+            </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -201,7 +184,9 @@ export const SearchList = () => {
             <option value="" selected={inputAttribute() === undefined}>
               すべて
             </option>
-            <For each={attributes()}>{a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}</For>
+            <For each={data()?.attributes ?? []}>
+              {a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}
+            </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">

@@ -13,7 +13,7 @@ type CreatorEntry = {
 };
 
 interface Props {
-  data?: { song: Song };
+  data?: { song: Song; creators: Creator[]; types: SongType[]; attributes: SongAttribute[] };
   status: number;
 }
 
@@ -30,9 +30,9 @@ export const EditableForm = (props: Props) => {
   })();
   const listUrl = `/songs${listQuery}`;
 
-  const [creators, setCreators] = createSignal<Creator[]>([]);
-  const [types, setTypes] = createSignal<SongType[]>([]);
-  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
+  const [creators] = createSignal<Creator[]>(props.data?.creators ?? []);
+  const [types] = createSignal<SongType[]>(props.data?.types ?? []);
+  const [attributes] = createSignal<SongAttribute[]>(props.data?.attributes ?? []);
 
   const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
     (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
@@ -44,25 +44,7 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
-  onMount(async () => {
-    const [creatorsRes, typesRes, attributesRes] = await Promise.all([
-      client.api.creators.get(),
-      client.api['song-types'].get(),
-      client.api['song-attributes'].get(),
-    ]);
-
-    if (creatorsRes.data) {
-      setCreators(creatorsRes.data.creators);
-    }
-
-    if (typesRes.data) {
-      setTypes(typesRes.data.types);
-    }
-
-    if (attributesRes.data) {
-      setAttributes(attributesRes.data.attributes);
-    }
-
+  onMount(() => {
     if (props.status === 404) {
       setFlash('データがない');
       window.location.href = listUrl;
