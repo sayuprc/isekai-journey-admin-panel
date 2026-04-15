@@ -4,7 +4,7 @@ import "../auth";
 
 using Http;
 
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
 
 @doc("楽曲検索のソート条件")
 enum SongSearchSortBy {

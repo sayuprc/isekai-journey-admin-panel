@@ -4,7 +4,7 @@ import "../auth";
 
 using Http;
 
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
 
 @tag("AdminUser")
 @route("/admin-users")

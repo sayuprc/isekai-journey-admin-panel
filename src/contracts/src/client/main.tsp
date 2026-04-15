@@ -4,16 +4,16 @@ import "@typespec/versioning";
 using Http;
 using Versioning;
 
-@service(#{ title: "ヰ世界のテラリウム API" })
+@service(#{ title: "ヰ世界観測所 API" })
 @server(
-  "https://local.api.terrarium.isekaijoucho.fan/{version}",
+  "https://local.api.isekaijoucho.fan/{version}",
   "ローカル環境",
   {
     version: Version,
   }
 )
 @versioned(Version)
-namespace IsekaiTerrarium.Client;
+namespace IsekaiObservatory.Client;
 
 enum Version {
   v1,

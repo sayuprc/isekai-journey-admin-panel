@@ -3,7 +3,7 @@ import "../lib";
 
 using Http;
 
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
 
 @tag("Authenticate")
 @route("/auth")

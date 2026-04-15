@@ -1,7 +1,7 @@
 services:
   proxy:
     image: ${PROXY_IMAGE}
-    container_name: isekai-terrarium-proxy
+    container_name: isekai-observatory-proxy
     environment:
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
@@ -17,7 +17,7 @@ services:
 
   php:
     image: ${SERVER_IMAGE}
-    container_name: isekai-terrarium-admin-php
+    container_name: isekai-observatory-api
     environment:
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
@@ -30,10 +30,10 @@ services:
 
   mysql:
     image: ${MYSQL_IMAGE}
-    container_name: isekai-terrarium-mysql
+    container_name: isekai-observatory-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: isekai_terrarium
+      MYSQL_DATABASE: isekai_observatory
       MYSQL_USER: app
       MYSQL_PASSWORD: secret
       TZ: Asia/Tokyo

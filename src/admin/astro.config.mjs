@@ -7,7 +7,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   output: 'server',
   server: {
-    allowedHosts: ['local.admin.terrarium.isekaijoucho.fan'],
+    allowedHosts: ['local.admin.isekaijoucho.fan'],
   },
   security: {
     checkOrigin: false,

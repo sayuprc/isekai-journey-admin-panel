@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   server: {
-    allowedHosts: ['local.terrarium.isekaijoucho.fan'],
+    allowedHosts: ['local.isekaijoucho.fan'],
   },
   integrations: [solidJs()],
 });

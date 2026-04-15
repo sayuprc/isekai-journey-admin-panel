@@ -1,4 +1,4 @@
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
 
 model AdminUserListResponse {
   adminUsers: AdminUser[];

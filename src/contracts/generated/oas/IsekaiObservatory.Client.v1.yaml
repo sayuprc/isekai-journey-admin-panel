@@ -1,12 +1,12 @@
 openapi: 3.1.0
 info:
-  title: ヰ世界のテラリウム API
+  title: ヰ世界観測所 API
   version: v1
 tags: []
 paths: {}
 components:
   schemas:
-    IsekaiTerrarium.Client.Version:
+    IsekaiObservatory.Client.Version:
       type: string
       enum:
         - v1
@@ -15,7 +15,7 @@ components:
       enum:
         - v1
 servers:
-  - url: https://local.api.terrarium.isekaijoucho.fan/{version}
+  - url: https://local.api.isekaijoucho.fan/{version}
     description: ローカル環境
     variables:
       version:
