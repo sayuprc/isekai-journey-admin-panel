@@ -46,7 +46,7 @@ table "performers" {
     columns = [column.name_lower]
   }
 
-  index "idx_performers_name_unique" {
+  index "performers_name_unique" {
     unique  = true
     columns = [column.name]
   }
