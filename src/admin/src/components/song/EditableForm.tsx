@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, Show } from 'solid-js';
+import { createEffect, createSignal, For, Show } from 'solid-js';
 import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue, Song, Arranger } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -44,7 +44,7 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
-  onMount(() => {
+  createEffect(() => {
     if (props.status === 404) {
       setFlash('データがない');
       window.location.href = listUrl;
