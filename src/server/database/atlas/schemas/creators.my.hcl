@@ -46,7 +46,7 @@ table "creators" {
     columns = [column.name_lower]
   }
 
-  index "creators_name_unique" {
+  index "idx_creators_name_unique" {
     unique  = true
     columns = [column.name]
   }
