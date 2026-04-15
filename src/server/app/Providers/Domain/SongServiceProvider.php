@@ -66,8 +66,8 @@ class SongServiceProvider extends EnvServiceProvider
             return $this->getMapper()->map(
                 UpdateInputData::class,
                 [
-                    'songId' => $request->route('songId'),
                     ...$request->all(),
+                    'songId' => $request->route('songId'),
                 ],
             );
         });

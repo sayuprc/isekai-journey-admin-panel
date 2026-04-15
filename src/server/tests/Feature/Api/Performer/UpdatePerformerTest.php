@@ -38,6 +38,29 @@ class UpdatePerformerTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function routePerformerIdIsPrioritizedOverBodyPerformerId(): void
+    {
+        $routePerformerId = $this->generateUuid();
+        $bodyPerformerId = $this->generateUuid();
+
+        $this->app->make(PerformerRepository::class)->save($this->createPerformer($routePerformerId, '共演者', 1));
+
+        $this->withAuth()
+            ->putJson(route(PerformerRouteMap::Update, $routePerformerId), [
+                'performerId' => $bodyPerformerId,
+                'name' => 'ヰ世界情緒',
+                'orderNo' => 2,
+            ])->assertStatus(200)
+            ->assertExactJson([
+                'performer' => [
+                    'performerId' => $routePerformerId,
+                    'name' => 'ヰ世界情緒',
+                    'orderNo' => 2,
+                ],
+            ]);
+    }
+
+    #[Test]
     public function updateFails(): void
     {
         $this->markTestSkipped('TODO 実装する');

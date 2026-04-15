@@ -59,8 +59,8 @@ class CreatorServiceProvider extends EnvServiceProvider
             return $this->getMapper()->map(
                 UpdateInputData::class,
                 [
-                    'creatorId' => $request->route('creatorId'),
                     ...$request->all(),
+                    'creatorId' => $request->route('creatorId'),
                 ],
             );
         });
