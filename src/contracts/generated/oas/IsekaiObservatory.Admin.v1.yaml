@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: ヰ世界のテラリウム 管理画面向け API
+  title: ヰ世界観測所 管理画面向け API
   version: v1
 tags:
   - name: AdminUser
@@ -1060,7 +1060,7 @@ components:
       properties:
         message:
           type: string
-    IsekaiTerrarium.Admin.Version:
+    IsekaiObservatory.Admin.Version:
       type: string
       enum:
         - v1
@@ -1635,7 +1635,7 @@ components:
       type: http
       scheme: Bearer
 servers:
-  - url: https://local.api.terrarium.isekaijoucho.fan/admin/{version}
+  - url: https://local.api.isekaijoucho.fan/admin/{version}
     description: ローカル環境
     variables:
       version:

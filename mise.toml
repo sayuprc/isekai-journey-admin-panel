@@ -10,7 +10,7 @@ server_tag = "8.5"
 proxy_tag = "1.27"
 openapi_tag = "7.18.0"
 mysql_tag = "8.4"
-server_container = "isekai-terrarium-admin-php"
+server_container = "isekai-observatory-api"
 uid = "`id -u`"
 user_name = "`id -un`"
 gid = "`id -g`"
@@ -20,12 +20,12 @@ group_name = "`id -gn`"
 SERVER_TAG = "{{vars.server_tag}}"
 PROXY_TAG = "{{vars.proxy_tag}}"
 OPENAPI_TAG = "{{vars.openapi_tag}}"
-SERVER_IMAGE = "isekai-terrarium-admin-php:{{vars.server_tag}}"
-PROXY_IMAGE = "isekai-terrarium-proxy:{{vars.proxy_tag}}"
+SERVER_IMAGE = "isekai-observatory-api:{{vars.server_tag}}"
+PROXY_IMAGE = "isekai-observatory-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
-MYSQL_IMAGE = "isekai-terrarium-mysql:{{vars.mysql_tag}}"
+MYSQL_IMAGE = "isekai-observatory-mysql:{{vars.mysql_tag}}"
 NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
-OAS_FILE = "IsekaiTerrarium.Admin.v1.yaml"
+OAS_FILE = "IsekaiObservatory.Admin.v1.yaml"
 
 [tasks.setup]
 description = "環境構築をする"
@@ -215,9 +215,9 @@ mkcert \
   --cert-file docker/nginx/certs/server.crt \
   localhost \
   127.0.0.1 \
-  local.admin.terrarium.isekaijoucho.fan \
-  local.api.terrarium.isekaijoucho.fan \
-  local.terrarium.isekaijoucho.fan
+  local.admin.isekaijoucho.fan \
+  local.api.isekaijoucho.fan \
+  local.isekaijoucho.fan
 '''
 
 [tasks."cert:copy-pem"]

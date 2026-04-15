@@ -141,7 +141,7 @@ export const Sidebar = () => {
     <aside class="bg-base-200 flex min-h-screen w-56 flex-col border-r border-base-300">
       <div class="border-b border-base-300 px-4 py-5">
         <a href="/" class="text-lg font-bold">
-          ヰ世界のテラリウム
+          ヰ世界観測所
         </a>
       </div>
       <nav class="flex-1 px-2 py-4">

@@ -2,7 +2,7 @@
 
 ## プロジェクト概要
 
-isekai-terrarium のプロジェクト。
+isekai-observatory のプロジェクト。
 `src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS/ElysiaJS)、`src/client` (Astro/SolidJS)、`src/contracts` (TypeSpec) で構成。
 
 ## 検証

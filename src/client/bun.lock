@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "isekai-terrarium",
+      "name": "isekai-observator",
       "dependencies": {
         "@astrojs/solid-js": "^5.0.7",
         "astro": "^5.12.9",

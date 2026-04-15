@@ -4,7 +4,7 @@ import "../auth";
 
 using Http;
 
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
 
 @doc("クリエイター検索のソート条件")
 enum CreatorSearchSortBy {

@@ -1,7 +1,7 @@
 {
-  "name": "sayuprc/isekai-terrarium-admin-panel",
+  "name": "sayuprc/isekai-observatory-api",
   "type": "project",
-  "description": "Management screen for journey of Isekaijoucho.",
+  "description": "API for Isekaijoucho.",
   "keywords": [
     "isekaijoucho"
   ],

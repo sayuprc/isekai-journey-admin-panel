@@ -1,3 +1,3 @@
 import "../songs";
 
-namespace IsekaiTerrarium.Admin;
+namespace IsekaiObservatory.Admin;
