@@ -30,9 +30,9 @@ export const EditableForm = (props: Props) => {
   })();
   const listUrl = `/songs${listQuery}`;
 
-  const [creators] = createSignal<Creator[]>(props.data?.creators ?? []);
-  const [types] = createSignal<SongType[]>(props.data?.types ?? []);
-  const [attributes] = createSignal<SongAttribute[]>(props.data?.attributes ?? []);
+  const creators = props.data?.creators ?? [];
+  const types = props.data?.types ?? [];
+  const attributes = props.data?.attributes ?? [];
 
   const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
     (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
@@ -143,7 +143,7 @@ export const EditableForm = (props: Props) => {
     handleError(status, error);
   });
 
-  const creatorOptions = () => creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
+  const creatorOptions = () => creators.map(creator => ({ value: creator.creatorId, label: creator.name }));
 
   const CreatorList = (listProps: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
     <div class="mt-4">
@@ -236,7 +236,7 @@ export const EditableForm = (props: Props) => {
             <option value="" disabled>
               選択してください
             </option>
-            <For each={types()}>
+            <For each={types}>
               {type => (
                 <option value={type.value} selected={type.value === props.data?.song.type.value}>
                   {type.name}
@@ -248,7 +248,7 @@ export const EditableForm = (props: Props) => {
           <label class="label">楽曲属性</label>
           <select class="select select-bordered w-full" name="attributeValue">
             <option value="">選択してください</option>
-            <For each={attributes()}>
+            <For each={attributes}>
               {attribute => (
                 <option value={attribute.value} selected={attribute.value === props.data?.song.attribute?.value}>
                   {attribute.name}
