@@ -1192,7 +1192,7 @@ export type SongServiceSearchSongsData = {
         title?: string;
         type?: SongTypeValue;
         attribute?: SongAttributeValue;
-        isDisplay?: boolean;
+        is_display?: boolean;
         sort?: SongSearchSortBy;
         order?: SortOrder;
         page?: Page;

@@ -1211,7 +1211,7 @@ class SongApi
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $is_display,
-            'isDisplay', // param base name
+            'is_display', // param base name
             'boolean', // openApiType
             'form', // style
             false, // explode
