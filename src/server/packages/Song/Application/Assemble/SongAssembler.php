@@ -54,6 +54,7 @@ class SongAssembler
             $song->attribute?->getName(),
             $song->attribute?->value,
             $song->orderNo->value,
+            $song->isDisplay,
             $song->lyricists->toGeneric()->map($toAssembled)->toArray(),
             $song->composers->toGeneric()->map($toAssembled)->toArray(),
             $song->arrangers->toGeneric()->map($toAssembled)->toArray(),

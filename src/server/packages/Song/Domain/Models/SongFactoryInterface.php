@@ -18,6 +18,7 @@ interface SongFactoryInterface
         SongType $type,
         ?SongAttribute $attribute,
         OrderNo $orderNo,
+        bool $isDisplay = true,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,

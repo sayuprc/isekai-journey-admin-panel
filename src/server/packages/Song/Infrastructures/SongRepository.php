@@ -63,6 +63,7 @@ readonly class SongRepository implements SongRepositoryInterface
                 'type' => $data['type'],
                 'attribute' => $data['attribute'],
                 'order_no' => $data['order_no'],
+                'is_display' => $data['is_display'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -73,6 +74,7 @@ readonly class SongRepository implements SongRepositoryInterface
                 'type',
                 'attribute',
                 'order_no',
+                'is_display',
                 'updated_at',
             ],
         );
@@ -146,6 +148,7 @@ readonly class SongRepository implements SongRepositoryInterface
             $lyricists,
             $composers,
             $arrangers,
+            $model->is_display,
             $model->attribute,
         );
     }

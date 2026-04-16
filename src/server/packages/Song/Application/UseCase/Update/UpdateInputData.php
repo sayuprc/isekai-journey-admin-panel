@@ -20,6 +20,7 @@ readonly class UpdateInputData
         public array $lyricists,
         public array $composers,
         public array $arrangers,
+        public bool $isDisplay = true,
         // TODO デフォルト null をどうにかする
         public ?int $attributeValue = null,
     ) {

@@ -17,6 +17,7 @@ use Override;
  * @property int             $type        種別
  * @property int|null        $attribute   属性
  * @property int             $order_no    表示順
+ * @property bool            $is_display  表示可否
  * @property CarbonImmutable $created_at  作成日時
  * @property CarbonImmutable $updated_at  更新日時
  * @property-read Collection<int, SongArranger> $arrangers
@@ -53,6 +54,7 @@ class Song extends Model
         return [
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
+            'is_display' => 'bool',
         ];
     }
 

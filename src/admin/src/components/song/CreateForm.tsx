@@ -62,18 +62,19 @@ export const CreateForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { data, error, status } = await client.api.songs.post({
-      title: formData.get('title')?.toString() ?? '',
-      description: formData.get('description')?.toString() ?? '',
-      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
-      attributeValue:
-        formData.get('attributeValue') !== ''
-          ? (Number(formData.get('attributeValue')) as SongAttributeValue)
-          : undefined,
-      arrangers: arrangers(),
-      composers: composers(),
-      lyricists: lyricists(),
-    });
+      const { data, error, status } = await client.api.songs.post({
+        title: formData.get('title')?.toString() ?? '',
+        description: formData.get('description')?.toString() ?? '',
+        typeValue: Number(formData.get('typeValue')) as SongTypeValue,
+        attributeValue:
+          formData.get('attributeValue') !== ''
+            ? (Number(formData.get('attributeValue')) as SongAttributeValue)
+            : undefined,
+        isDisplay: formData.get('isDisplay') === 'on',
+        arrangers: arrangers(),
+        composers: composers(),
+        lyricists: lyricists(),
+      });
 
     if (data) {
       setFlash('作成しました');
@@ -173,6 +174,11 @@ export const CreateForm = () => {
           </option>
           <For each={attributes()}>{attribute => <option value={attribute.value}>{attribute.name}</option>}</For>
         </select>
+
+        <label class="label cursor-pointer justify-start gap-3">
+          <input type="checkbox" class="checkbox" name="isDisplay" checked />
+          <span>表示する</span>
+        </label>
 
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
         <CreatorList label="作曲者" entries={composers} setter={setComposers} />

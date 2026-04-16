@@ -141,6 +141,7 @@ export const EditableForm = (props: Props) => {
           ? (Number(formData.get('attributeValue')) as SongAttributeValue)
           : undefined,
       orderNo: Number(formData.get('orderNo')),
+      isDisplay: formData.get('isDisplay') === 'on',
       arrangers: arrangers(),
       composers: composers(),
       lyricists: lyricists(),
@@ -277,6 +278,11 @@ export const EditableForm = (props: Props) => {
 
           <label class="label">表示順</label>
           <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.song.orderNo} />
+
+          <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" class="checkbox" name="isDisplay" checked={props.data?.song.isDisplay ?? true} />
+            <span>表示する</span>
+          </label>
 
           <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
           <CreatorList label="作曲者" entries={composers} setter={setComposers} />

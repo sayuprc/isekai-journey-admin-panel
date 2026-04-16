@@ -13,6 +13,9 @@ scalar title extends string;
 @doc("楽曲の説明")
 scalar description extends string;
 
+@doc("公開状態（true: 表示する）")
+scalar isDisplay extends boolean;
+
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "描き続けた君へ",
@@ -31,6 +34,7 @@ model Song {
   type: SongType;
   attribute?: SongAttribute;
   orderNo: orderNo;
+  isDisplay: isDisplay;
   lyricists: Lyricist[];
   composers: Composer[];
   arrangers: Arranger[];
@@ -84,6 +88,7 @@ model SongSummary {
   type: SongType;
   attribute?: SongAttribute;
   orderNo: orderNo;
+  isDisplay: isDisplay;
 }
 
 model SongCreator {

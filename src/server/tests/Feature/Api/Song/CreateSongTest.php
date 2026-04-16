@@ -48,6 +48,7 @@ class CreateSongTest extends DatabaseTestCase
                                 'value' => SongType::Original->value,
                             ])
                             ->where('orderNo', 10)
+                            ->where('isDisplay', true)
                             ->where('lyricists', [[
                                 'creatorId' => $creator1->creatorId->value,
                                 'name' => $creator1->name->value,

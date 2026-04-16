@@ -20,6 +20,7 @@ readonly class AssembledSong
         public ?string $attributeName,
         public ?int $attributeValue,
         public int $orderNo,
+        public bool $isDisplay,
         public array $lyricists,
         public array $composers,
         public array $arrangers,

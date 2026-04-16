@@ -50,7 +50,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
     private function buildQuery(SongSearchCriteria $criteria): Builder
     {
         $query = Song::query()
-            ->select(['song_id', 'title', 'type', 'attribute', 'order_no']);
+            ->select(['song_id', 'title', 'type', 'attribute', 'order_no', 'is_display']);
 
         if ($criteria->title->isPresent()) {
             // 前方一致検索でインデックスを活用
@@ -78,6 +78,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             SongType::from($model->type),
             is_null($model->attribute) ? null : SongAttribute::from($model->attribute),
             $model->order_no,
+            $model->is_display,
         );
     }
 }

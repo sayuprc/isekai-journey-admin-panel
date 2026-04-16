@@ -18,6 +18,7 @@ readonly class Song
         public SongType $type,
         public ?SongAttribute $attribute,
         public OrderNo $orderNo,
+        public bool $isDisplay,
         public Lyricists $lyricists,
         public Composers $composers,
         public Arrangers $arrangers,
@@ -38,6 +39,7 @@ readonly class Song
         array $lyricists,
         array $composers,
         array $arrangers,
+        bool $isDisplay = true,
         // TODO デフォルト null をどうにかする
         ?int $attribute = null,
     ): self {
@@ -48,6 +50,7 @@ readonly class Song
             SongType::from($type),
             is_null($attribute) ? null : SongAttribute::from($attribute),
             OrderNo::reconstruct($orderNo),
+            $isDisplay,
             Lyricists::reconstruct($lyricists),
             Composers::reconstruct($composers),
             Arrangers::reconstruct($arrangers),
@@ -55,7 +58,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, attribute: value-of<SongAttribute>|null, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, attribute: value-of<SongAttribute>|null, order_no: int, is_display: bool, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>}
      */
     public function toArray(): array
     {
@@ -66,6 +69,7 @@ readonly class Song
             'type' => $this->type->value,
             'attribute' => $this->attribute?->value,
             'order_no' => $this->orderNo->value,
+            'is_display' => $this->isDisplay,
             'lyricists' => $this->lyricists->toArray(),
             'composers' => $this->composers->toArray(),
             'arrangers' => $this->arrangers->toArray(),

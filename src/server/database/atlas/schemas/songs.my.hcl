@@ -44,6 +44,12 @@ table "songs" {
     unsigned = true
     comment  = "表示順"
   }
+  column "is_display" {
+    null    = false
+    type    = bool
+    default = true
+    comment = "表示可否"
+  }
   column "created_at" {
     null    = false
     type    = datetime
