@@ -16,7 +16,7 @@ if (typeof id !== 'string') {
   throw new Error('URL が不正');
 }
 
-const { data, status } = await client.api.songs({ songId: id }).get({
+const { data, status } = await client.api.songs({ songId: id })['edit-form'].get({
   headers: {
     'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
     'cookie': Astro.request.headers.get('cookie') ?? '',

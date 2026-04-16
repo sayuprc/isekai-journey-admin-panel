@@ -1,14 +1,11 @@
 import { Elysia, t } from 'elysia';
-import { performerServiceCreatePerformer, performerServiceDeletePerformer, performerServiceGetPerformer, performerServiceListPerformers, performerServiceSearchPerformers, performerServiceUpdatePerformer } from '../../generated';
+import { performerServiceCreatePerformer, performerServiceDeletePerformer, performerServiceGetPerformer, performerServiceSearchPerformers, performerServiceUpdatePerformer } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 export const performers = new Elysia({ prefix: '/performers' })
   .use(authGuard)
-  .get('/', async ({ credential }) => {
-    return resolveApiResponse(await performerServiceListPerformers({ client: createAuthClient(credential) }));
-  })
   .get(
     '/search',
     async ({ query, credential }) => {

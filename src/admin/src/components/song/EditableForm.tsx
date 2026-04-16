@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, Show } from 'solid-js';
+import { createEffect, createSignal, For, Show } from 'solid-js';
 import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue, Song, Arranger } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -13,7 +13,7 @@ type CreatorEntry = {
 };
 
 interface Props {
-  data?: { song: Song };
+  data?: { song: Song; creators: Creator[]; types: SongType[]; attributes: SongAttribute[] };
   status: number;
 }
 
@@ -30,9 +30,9 @@ export const EditableForm = (props: Props) => {
   })();
   const listUrl = `/songs${listQuery}`;
 
-  const [creators, setCreators] = createSignal<Creator[]>([]);
-  const [types, setTypes] = createSignal<SongType[]>([]);
-  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
+  const creators = props.data?.creators ?? [];
+  const types = props.data?.types ?? [];
+  const attributes = props.data?.attributes ?? [];
 
   const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
     (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
@@ -44,25 +44,7 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
-  onMount(async () => {
-    const [creatorsRes, typesRes, attributesRes] = await Promise.all([
-      client.api.creators.get(),
-      client.api['song-types'].get(),
-      client.api['song-attributes'].get(),
-    ]);
-
-    if (creatorsRes.data) {
-      setCreators(creatorsRes.data.creators);
-    }
-
-    if (typesRes.data) {
-      setTypes(typesRes.data.types);
-    }
-
-    if (attributesRes.data) {
-      setAttributes(attributesRes.data.attributes);
-    }
-
+  createEffect(() => {
     if (props.status === 404) {
       setFlash('データがない');
       window.location.href = listUrl;
@@ -161,7 +143,7 @@ export const EditableForm = (props: Props) => {
     handleError(status, error);
   });
 
-  const creatorOptions = () => creators().map(creator => ({ value: creator.creatorId, label: creator.name }));
+  const creatorOptions = () => creators.map(creator => ({ value: creator.creatorId, label: creator.name }));
 
   const CreatorList = (listProps: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
     <div class="mt-4">
@@ -254,7 +236,7 @@ export const EditableForm = (props: Props) => {
             <option value="" disabled>
               選択してください
             </option>
-            <For each={types()}>
+            <For each={types}>
               {type => (
                 <option value={type.value} selected={type.value === props.data?.song.type.value}>
                   {type.name}
@@ -266,7 +248,7 @@ export const EditableForm = (props: Props) => {
           <label class="label">楽曲属性</label>
           <select class="select select-bordered w-full" name="attributeValue">
             <option value="">選択してください</option>
-            <For each={attributes()}>
+            <For each={attributes}>
               {attribute => (
                 <option value={attribute.value} selected={attribute.value === props.data?.song.attribute?.value}>
                   {attribute.name}

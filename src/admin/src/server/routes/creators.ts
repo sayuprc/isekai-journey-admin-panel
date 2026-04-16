@@ -1,14 +1,11 @@
 import { Elysia, t } from 'elysia';
-import { creatorServiceCreateCreator, creatorServiceDeleteCreator, creatorServiceGetCreator, creatorServiceListCreators, creatorServiceSearchCreators, creatorServiceUpdateCreator } from '../../generated';
+import { creatorServiceCreateCreator, creatorServiceDeleteCreator, creatorServiceGetCreator, creatorServiceSearchCreators, creatorServiceUpdateCreator } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 export const creators = new Elysia({ prefix: '/creators' })
   .use(authGuard)
-  .get('/', async ({ credential }) => {
-    return resolveApiResponse(await creatorServiceListCreators({ client: createAuthClient(credential) }));
-  })
   .get(
     '/search',
     async ({ query, credential }) => {

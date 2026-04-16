@@ -24,22 +24,11 @@ export const CreateForm = () => {
   const { isSubmitting, withSubmitting } = createSubmitting();
 
   onMount(async () => {
-    const [creatorsRes, typesRes, attributesRes] = await Promise.all([
-      client.api.creators.get(),
-      client.api['song-types'].get(),
-      client.api['song-attributes'].get(),
-    ]);
-
-    if (creatorsRes.data) {
-      setCreators(creatorsRes.data.creators);
-    }
-
-    if (typesRes.data) {
-      setTypes(typesRes.data.types);
-    }
-
-    if (attributesRes.data) {
-      setAttributes(attributesRes.data.attributes);
+    const { data } = await client.api.songs['create-form'].get();
+    if (data) {
+      setCreators(data.creators);
+      setTypes(data.types);
+      setAttributes(data.attributes);
     }
   });
 
