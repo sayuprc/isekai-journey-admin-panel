@@ -8,7 +8,7 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
-  const isDisplayRaw = params.get('isDisplay');
+  const isDisplayRaw = params.get('is_display');
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
@@ -74,7 +74,7 @@ export const SearchList = () => {
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', String(params.type));
     if (params.attribute) searchParams.set('attribute', String(params.attribute));
-    if (params.isDisplay !== undefined) searchParams.set('isDisplay', String(params.isDisplay));
+    if (params.isDisplay !== undefined) searchParams.set('is_display', String(params.isDisplay));
     if (params.sort) searchParams.set('sort', params.sort);
     if (params.order) searchParams.set('order', params.order);
     searchParams.set('page', String(params.page));
@@ -103,7 +103,7 @@ export const SearchList = () => {
           title: params.title,
           type: params.type,
           attribute: params.attribute,
-          isDisplay: params.isDisplay,
+          is_display: params.isDisplay,
           sort: params.sort,
           order: params.order,
           page: params.page,

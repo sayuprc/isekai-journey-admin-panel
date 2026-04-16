@@ -157,7 +157,7 @@ class SearchSongTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->get(route(SongRouteMap::Search, ['isDisplay' => 'false']))
+            ->get(route(SongRouteMap::Search, ['is_display' => 'false']))
             ->assertStatus(200)
             ->assertExactJson([
                 'songs' => [

@@ -22,7 +22,7 @@ interface SongService {
     @query title?: string,
     @query type?: SongTypeValue,
     @query attribute?: SongAttributeValue,
-    @query isDisplay?: boolean,
+    @query("is_display") isDisplay?: boolean,
     @query sort?: SongSearchSortBy = SongSearchSortBy.orderNo,
     @query order?: SortOrder = SortOrder.asc,
     @query page?: page = 1,
