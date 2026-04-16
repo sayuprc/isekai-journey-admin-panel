@@ -8,10 +8,12 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
+  const isDisplayRaw = params.get('isDisplay');
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
     attribute: Number(params.get('attribute') ?? 0) || undefined,
+    isDisplay: isDisplayRaw === null ? undefined : isDisplayRaw === 'true',
     sort: params.get('sort') ?? 'order_no',
     order: params.get('order') ?? 'asc',
     page: Number(params.get('page') ?? '1') || 1,
@@ -28,6 +30,7 @@ export const SearchList = () => {
   const [title, setTitle] = createSignal(initial.title);
   const [type, setType] = createSignal(initial.type);
   const [attribute, setAttribute] = createSignal(initial.attribute);
+  const [isDisplay, setIsDisplay] = createSignal(initial.isDisplay);
   const [sort, setSort] = createSignal(initial.sort);
   const [order, setOrder] = createSignal(initial.order);
   const [page, setPage] = createSignal(initial.page);
@@ -37,6 +40,7 @@ export const SearchList = () => {
   const [inputTitle, setInputTitle] = createSignal(initial.title);
   const [inputType, setInputType] = createSignal(initial.type);
   const [inputAttribute, setInputAttribute] = createSignal(initial.attribute);
+  const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);
   const [inputSort, setInputSort] = createSignal(initial.sort);
   const [inputOrder, setInputOrder] = createSignal(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
@@ -60,6 +64,7 @@ export const SearchList = () => {
     title: string;
     type?: number;
     attribute?: number;
+    isDisplay?: boolean;
     sort: string;
     order: string;
     page: number;
@@ -69,6 +74,7 @@ export const SearchList = () => {
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', String(params.type));
     if (params.attribute) searchParams.set('attribute', String(params.attribute));
+    if (params.isDisplay !== undefined) searchParams.set('isDisplay', String(params.isDisplay));
     if (params.sort) searchParams.set('sort', params.sort);
     if (params.order) searchParams.set('order', params.order);
     searchParams.set('page', String(params.page));
@@ -83,6 +89,7 @@ export const SearchList = () => {
       title: title(),
       type: type(),
       attribute: attribute(),
+      isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
       page: page(),
@@ -96,6 +103,7 @@ export const SearchList = () => {
           title: params.title,
           type: params.type,
           attribute: params.attribute,
+          isDisplay: params.isDisplay,
           sort: params.sort,
           order: params.order,
           page: params.page,
@@ -126,6 +134,7 @@ export const SearchList = () => {
     setTitle(inputTitle());
     setType(inputType());
     setAttribute(inputAttribute());
+    setIsDisplay(inputIsDisplay());
     setSort(inputSort());
     setOrder(inputOrder());
     setPerPage(inputPerPage());
@@ -134,6 +143,7 @@ export const SearchList = () => {
       title: inputTitle(),
       type: inputType(),
       attribute: inputAttribute(),
+      isDisplay: inputIsDisplay(),
       sort: inputSort(),
       order: inputOrder(),
       page: newPage,
@@ -147,6 +157,7 @@ export const SearchList = () => {
       title: title(),
       type: type(),
       attribute: attribute(),
+      isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
       page: page,
@@ -202,6 +213,30 @@ export const SearchList = () => {
               すべて
             </option>
             <For each={attributes()}>{a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}</For>
+          </select>
+        </fieldset>
+        <fieldset class="fieldset">
+          <label class="fieldset-label" for="isDisplay">
+            表示設定
+          </label>
+          <select
+            id="isDisplay"
+            name="isDisplay"
+            class="select select-bordered select-sm"
+            onChange={(e) => {
+              const v = e.currentTarget.value;
+              setInputIsDisplay(v === '' ? undefined : v === 'true');
+            }}
+          >
+            <option value="" selected={inputIsDisplay() === undefined}>
+              すべて
+            </option>
+            <option value="true" selected={inputIsDisplay() === true}>
+              表示
+            </option>
+            <option value="false" selected={inputIsDisplay() === false}>
+              非表示
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
