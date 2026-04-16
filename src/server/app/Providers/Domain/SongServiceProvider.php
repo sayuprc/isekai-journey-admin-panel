@@ -58,8 +58,8 @@ class SongServiceProvider extends EnvServiceProvider
             $request = $this->app->make(Request::class);
 
             return $this->getMapper()->map(CreateInputData::class, [
-                'isDisplay' => true,
                 ...$request->all(),
+                'isDisplay' => $request->boolean('isDisplay', true),
             ]);
         });
 
@@ -69,8 +69,8 @@ class SongServiceProvider extends EnvServiceProvider
             return $this->getMapper()->map(
                 UpdateInputData::class,
                 [
-                    'isDisplay' => true,
                     ...$request->all(),
+                    'isDisplay' => $request->boolean('isDisplay', true),
                     'songId' => $request->route('songId'),
                 ],
             );
