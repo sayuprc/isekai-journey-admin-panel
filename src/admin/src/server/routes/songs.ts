@@ -23,6 +23,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             title: query.title || undefined,
             type: query.type as SongTypeValue | undefined,
             attribute: query.attribute as SongAttributeValue | undefined,
+            isDisplay: query.isDisplay,
             sort: query.sort ?? 'order_no',
             order: query.order ?? 'asc',
             page: query.page ?? 1,
@@ -36,6 +37,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         title: t.String(),
         type: t.Optional(t.Number()),
         attribute: t.Optional(t.Number()),
+        isDisplay: t.Optional(t.Boolean()),
         sort: t.Optional(t.Union([t.Literal('title'), t.Literal('order_no')])),
         order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
         page: t.Optional(t.Number()),
@@ -57,7 +59,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .post(
     '/',
     async ({
-      body: { title, description, typeValue, attributeValue, lyricists, composers, arrangers },
+      body: { title, description, typeValue, attributeValue, isDisplay, lyricists, composers, arrangers },
       credential,
     }) => {
       return resolveApiResponse(
@@ -68,6 +70,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             description,
             typeValue,
             attributeValue,
+            isDisplay,
             lyricists,
             composers,
             arrangers,
@@ -81,6 +84,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         description: t.String(),
         typeValue: SongTypeValueSchema,
         attributeValue: t.Optional(SongAttributeValueSchema),
+        isDisplay: t.Boolean(),
         lyricists: CreatorRefSchema,
         composers: CreatorRefSchema,
         arrangers: CreatorRefSchema,
@@ -91,7 +95,7 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/:songId',
     async ({
       params: { songId },
-      body: { title, description, typeValue, attributeValue, orderNo, composers, lyricists, arrangers },
+      body: { title, description, typeValue, attributeValue, isDisplay, orderNo, composers, lyricists, arrangers },
       credential,
     }) => {
       return resolveApiResponse(
@@ -103,6 +107,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             description,
             typeValue,
             attributeValue,
+            isDisplay,
             orderNo,
             lyricists,
             composers,
@@ -120,6 +125,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         description: t.String(),
         typeValue: SongTypeValueSchema,
         attributeValue: t.Optional(SongAttributeValueSchema),
+        isDisplay: t.Boolean(),
         orderNo: t.Number(),
         lyricists: CreatorRefSchema,
         composers: CreatorRefSchema,
