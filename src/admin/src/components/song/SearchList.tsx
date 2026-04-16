@@ -1,4 +1,12 @@
-import { Show, createResource, createSignal, For, Match, Switch, onMount } from 'solid-js';
+import {
+  For,
+  Match,
+  Show,
+  Switch,
+  createResource,
+  createSignal,
+  onMount,
+} from 'solid-js';
 import type { SongType, SongAttribute } from '../../generated';
 import { client } from '../../utils/client';
 

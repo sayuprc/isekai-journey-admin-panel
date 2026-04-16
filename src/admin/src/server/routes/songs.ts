@@ -1,5 +1,11 @@
 import { Elysia, t } from 'elysia';
-import { songServiceCreateSong, songServiceDeleteSong, songServiceGetSong, songServiceSearchSongs, songServiceUpdateSong } from '../../generated';
+import {
+  songServiceCreateSong,
+  songServiceDeleteSong,
+  songServiceGetSong,
+  songServiceSearchSongs,
+  songServiceUpdateSong,
+} from '../../generated';
 import type { SongAttributeValue, SongTypeValue } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -10,12 +16,19 @@ const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
 const SongAttributeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5)]);
 
 const CreatorRefSchema = t.Array(t.Object({ creatorId: t.String() }));
+const parseOptionalBoolean = (value: boolean | string | undefined) => {
+  if (value === true || value === 'true') return true;
+  if (value === false || value === 'false') return false;
+  return undefined;
+};
 
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
   .get(
     '/search',
     async ({ query, credential }) => {
+      const isDisplay = parseOptionalBoolean(query.is_display);
+
       return resolveApiResponse(
         await songServiceSearchSongs({
           client: createAuthClient(credential),
@@ -23,7 +36,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             title: query.title || undefined,
             type: query.type as SongTypeValue | undefined,
             attribute: query.attribute as SongAttributeValue | undefined,
-            is_display: query.is_display,
+            is_display: isDisplay,
             sort: query.sort ?? 'order_no',
             order: query.order ?? 'asc',
             page: query.page ?? 1,
