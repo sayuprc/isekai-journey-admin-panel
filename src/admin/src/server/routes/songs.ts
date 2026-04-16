@@ -16,7 +16,7 @@ const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
 const SongAttributeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5)]);
 
 const CreatorRefSchema = t.Array(t.Object({ creatorId: t.String() }));
-const parseOptionalBoolean = (value: boolean | string | undefined) => {
+const normalizeQueryBoolean = (value: boolean | string | undefined) => {
   if (value === true || value === 'true') return true;
   if (value === false || value === 'false') return false;
   return undefined;
@@ -27,7 +27,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .get(
     '/search',
     async ({ query, credential }) => {
-      const isDisplay = parseOptionalBoolean(query.is_display);
+      const isDisplay = normalizeQueryBoolean(query.is_display);
 
       return resolveApiResponse(
         await songServiceSearchSongs({
