@@ -1,5 +1,5 @@
 {
-  "name": "isekai-observatory-contracts",
+  "name": "contracts",
   "version": "0.1.0",
   "type": "module",
   "peerDependencies": {
