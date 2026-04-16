@@ -62,19 +62,19 @@ export const CreateForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-      const { data, error, status } = await client.api.songs.post({
-        title: formData.get('title')?.toString() ?? '',
-        description: formData.get('description')?.toString() ?? '',
-        typeValue: Number(formData.get('typeValue')) as SongTypeValue,
-        attributeValue:
+    const { data, error, status } = await client.api.songs.post({
+      title: formData.get('title')?.toString() ?? '',
+      description: formData.get('description')?.toString() ?? '',
+      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
+      attributeValue:
           formData.get('attributeValue') !== ''
             ? (Number(formData.get('attributeValue')) as SongAttributeValue)
             : undefined,
-        isDisplay: formData.get('isDisplay') === 'on',
-        arrangers: arrangers(),
-        composers: composers(),
-        lyricists: lyricists(),
-      });
+      isDisplay: formData.get('isDisplay') === 'on',
+      arrangers: arrangers(),
+      composers: composers(),
+      lyricists: lyricists(),
+    });
 
     if (data) {
       setFlash('作成しました');

@@ -63,6 +63,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => '\OpenAPI\Client\Model\SongType',
         'attribute' => '\OpenAPI\Client\Model\SongAttribute',
         'order_no' => 'int',
+        'is_display' => 'bool',
         'lyricists' => '\OpenAPI\Client\Model\Lyricist[]',
         'composers' => '\OpenAPI\Client\Model\Composer[]',
         'arrangers' => '\OpenAPI\Client\Model\Arranger[]'
@@ -82,6 +83,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => null,
         'attribute' => null,
         'order_no' => 'int32',
+        'is_display' => null,
         'lyricists' => null,
         'composers' => null,
         'arrangers' => null
@@ -99,6 +101,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => false,
         'attribute' => false,
         'order_no' => false,
+        'is_display' => false,
         'lyricists' => false,
         'composers' => false,
         'arrangers' => false
@@ -196,6 +199,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'type',
         'attribute' => 'attribute',
         'order_no' => 'orderNo',
+        'is_display' => 'isDisplay',
         'lyricists' => 'lyricists',
         'composers' => 'composers',
         'arrangers' => 'arrangers'
@@ -213,6 +217,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'setType',
         'attribute' => 'setAttribute',
         'order_no' => 'setOrderNo',
+        'is_display' => 'setIsDisplay',
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
         'arrangers' => 'setArrangers'
@@ -230,6 +235,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'getType',
         'attribute' => 'getAttribute',
         'order_no' => 'getOrderNo',
+        'is_display' => 'getIsDisplay',
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
         'arrangers' => 'getArrangers'
@@ -298,6 +304,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('attribute', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
@@ -353,6 +360,9 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
+        if ($this->container['is_display'] === null) {
+            $invalidProperties[] = "'is_display' can't be null";
+        }
         if ($this->container['lyricists'] === null) {
             $invalidProperties[] = "'lyricists' can't be null";
         }
@@ -545,6 +555,33 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_display
+     *
+     * @return bool
+     */
+    public function getIsDisplay()
+    {
+        return $this->container['is_display'];
+    }
+
+    /**
+     * Sets is_display
+     *
+     * @param bool $is_display 公開状態（true: 表示する）
+     *
+     * @return self
+     */
+    public function setIsDisplay($is_display)
+    {
+        if (is_null($is_display)) {
+            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
+        }
+        $this->container['is_display'] = $is_display;
 
         return $this;
     }

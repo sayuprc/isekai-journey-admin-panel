@@ -174,6 +174,7 @@ export type Song = {
     type: SongType;
     attribute?: SongAttribute;
     orderNo: OrderNo;
+    isDisplay: IsDisplay;
     lyricists: Array<Lyricist>;
     composers: Array<Composer>;
     arrangers: Array<Arranger>;
@@ -198,6 +199,7 @@ export type SongCreateRequest = {
     description: Description;
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
+    isDisplay?: IsDisplay;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
@@ -233,6 +235,7 @@ export type SongSummary = {
     type: SongType;
     attribute?: SongAttribute;
     orderNo: OrderNo;
+    isDisplay: IsDisplay;
 };
 
 export type SongType = {
@@ -255,6 +258,7 @@ export type SongUpdateRequest = {
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
     orderNo: OrderNo;
+    isDisplay?: IsDisplay;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
@@ -319,6 +323,11 @@ export type Description = string;
  * メールアドレス
  */
 export type Email = string;
+
+/**
+ * 公開状態（true: 表示する）
+ */
+export type IsDisplay = boolean;
 
 /**
  * 表示順

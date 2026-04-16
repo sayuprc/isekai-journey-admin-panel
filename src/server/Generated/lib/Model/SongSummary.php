@@ -61,7 +61,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'string',
         'type' => '\OpenAPI\Client\Model\SongType',
         'attribute' => '\OpenAPI\Client\Model\SongAttribute',
-        'order_no' => 'int'
+        'order_no' => 'int',
+        'is_display' => 'bool'
     ];
 
     /**
@@ -76,7 +77,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => null,
         'type' => null,
         'attribute' => null,
-        'order_no' => 'int32'
+        'order_no' => 'int32',
+        'is_display' => null
     ];
 
     /**
@@ -89,7 +91,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'type' => false,
         'attribute' => false,
-        'order_no' => false
+        'order_no' => false,
+        'is_display' => false
     ];
 
     /**
@@ -182,7 +185,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'title',
         'type' => 'type',
         'attribute' => 'attribute',
-        'order_no' => 'orderNo'
+        'order_no' => 'orderNo',
+        'is_display' => 'isDisplay'
     ];
 
     /**
@@ -195,7 +199,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'setTitle',
         'type' => 'setType',
         'attribute' => 'setAttribute',
-        'order_no' => 'setOrderNo'
+        'order_no' => 'setOrderNo',
+        'is_display' => 'setIsDisplay'
     ];
 
     /**
@@ -208,7 +213,8 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'getTitle',
         'type' => 'getType',
         'attribute' => 'getAttribute',
-        'order_no' => 'getOrderNo'
+        'order_no' => 'getOrderNo',
+        'is_display' => 'getIsDisplay'
     ];
 
     /**
@@ -273,6 +279,7 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('attribute', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('is_display', $data ?? [], null);
     }
 
     /**
@@ -322,6 +329,9 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
+        if ($this->container['is_display'] === null) {
+            $invalidProperties[] = "'is_display' can't be null";
+        }
         return $invalidProperties;
     }
 
@@ -478,6 +488,33 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_display
+     *
+     * @return bool
+     */
+    public function getIsDisplay()
+    {
+        return $this->container['is_display'];
+    }
+
+    /**
+     * Sets is_display
+     *
+     * @param bool $is_display 公開状態（true: 表示する）
+     *
+     * @return self
+     */
+    public function setIsDisplay($is_display)
+    {
+        if (is_null($is_display)) {
+            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
+        }
+        $this->container['is_display'] = $is_display;
 
         return $this;
     }

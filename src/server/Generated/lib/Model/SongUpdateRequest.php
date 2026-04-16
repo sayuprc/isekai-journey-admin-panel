@@ -62,6 +62,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => '\OpenAPI\Client\Model\SongTypeValue',
         'attribute_value' => '\OpenAPI\Client\Model\SongAttributeValue',
         'order_no' => 'int',
+        'is_display' => 'bool',
         'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
         'composers' => '\OpenAPI\Client\Model\RequestComposer[]',
         'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]'
@@ -80,6 +81,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => null,
         'attribute_value' => null,
         'order_no' => 'int32',
+        'is_display' => null,
         'lyricists' => null,
         'composers' => null,
         'arrangers' => null
@@ -96,6 +98,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => false,
         'attribute_value' => false,
         'order_no' => false,
+        'is_display' => false,
         'lyricists' => false,
         'composers' => false,
         'arrangers' => false
@@ -192,6 +195,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => 'typeValue',
         'attribute_value' => 'attributeValue',
         'order_no' => 'orderNo',
+        'is_display' => 'isDisplay',
         'lyricists' => 'lyricists',
         'composers' => 'composers',
         'arrangers' => 'arrangers'
@@ -208,6 +212,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => 'setTypeValue',
         'attribute_value' => 'setAttributeValue',
         'order_no' => 'setOrderNo',
+        'is_display' => 'setIsDisplay',
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
         'arrangers' => 'setArrangers'
@@ -224,6 +229,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'type_value' => 'getTypeValue',
         'attribute_value' => 'getAttributeValue',
         'order_no' => 'getOrderNo',
+        'is_display' => 'getIsDisplay',
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
         'arrangers' => 'getArrangers'
@@ -291,6 +297,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('attribute_value', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
@@ -508,6 +515,33 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         }
 
         $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_display
+     *
+     * @return bool|null
+     */
+    public function getIsDisplay()
+    {
+        return $this->container['is_display'];
+    }
+
+    /**
+     * Sets is_display
+     *
+     * @param bool|null $is_display 公開状態（true: 表示する）
+     *
+     * @return self
+     */
+    public function setIsDisplay($is_display)
+    {
+        if (is_null($is_display)) {
+            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
+        }
+        $this->container['is_display'] = $is_display;
 
         return $this;
     }

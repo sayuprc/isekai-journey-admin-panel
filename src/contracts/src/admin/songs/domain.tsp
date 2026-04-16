@@ -23,6 +23,7 @@ scalar isDisplay extends boolean;
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
   orderNo: 1,
+  isDisplay: true,
   lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   arrangers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
@@ -81,6 +82,7 @@ model SongAttribute {
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
   orderNo: 1,
+  isDisplay: true,
 })
 model SongSummary {
   songId: songId;

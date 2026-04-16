@@ -1261,6 +1261,7 @@ components:
         - description
         - type
         - orderNo
+        - isDisplay
         - lyricists
         - composers
         - arrangers
@@ -1277,6 +1278,8 @@ components:
           $ref: '#/components/schemas/SongAttribute'
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        isDisplay:
+          $ref: '#/components/schemas/isDisplay'
         lyricists:
           type: array
           items:
@@ -1300,6 +1303,7 @@ components:
             name: コラボ
             value: 1
           orderNo: 1
+          isDisplay: true
           lyricists:
             - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
@@ -1362,6 +1366,10 @@ components:
           $ref: '#/components/schemas/SongTypeValue'
         attributeValue:
           $ref: '#/components/schemas/SongAttributeValue'
+        isDisplay:
+          allOf:
+            - $ref: '#/components/schemas/isDisplay'
+          default: true
         lyricists:
           type: array
           items:
@@ -1427,6 +1435,7 @@ components:
         - title
         - type
         - orderNo
+        - isDisplay
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -1438,6 +1447,8 @@ components:
           $ref: '#/components/schemas/SongAttribute'
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        isDisplay:
+          $ref: '#/components/schemas/isDisplay'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -1448,6 +1459,7 @@ components:
             name: コラボ
             value: 1
           orderNo: 1
+          isDisplay: true
     SongType:
       type: object
       required:
@@ -1498,6 +1510,10 @@ components:
           $ref: '#/components/schemas/SongAttributeValue'
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        isDisplay:
+          allOf:
+            - $ref: '#/components/schemas/isDisplay'
+          default: true
         lyricists:
           type: array
           items:
@@ -1576,6 +1592,9 @@ components:
       type: string
       format: email
       description: メールアドレス
+    isDisplay:
+      type: boolean
+      description: '公開状態（true: 表示する）'
     orderNo:
       type: integer
       format: int32
