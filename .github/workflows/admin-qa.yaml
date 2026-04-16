@@ -1,4 +1,4 @@
-name: Admin Client QA
+name: Admin QA
 
 on:
   schedule:

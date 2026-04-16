@@ -1,4 +1,4 @@
-name: Client QA
+name: Viewer QA
 
 on:
   pull_request:
