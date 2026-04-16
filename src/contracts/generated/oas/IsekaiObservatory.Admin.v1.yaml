@@ -1354,6 +1354,7 @@ components:
         - title
         - description
         - typeValue
+        - isDisplay
         - lyricists
         - composers
         - arrangers
@@ -1367,9 +1368,7 @@ components:
         attributeValue:
           $ref: '#/components/schemas/SongAttributeValue'
         isDisplay:
-          allOf:
-            - $ref: '#/components/schemas/isDisplay'
-          default: true
+          $ref: '#/components/schemas/isDisplay'
         lyricists:
           type: array
           items:
@@ -1496,6 +1495,7 @@ components:
         - description
         - typeValue
         - orderNo
+        - isDisplay
         - lyricists
         - composers
         - arrangers
@@ -1511,9 +1511,7 @@ components:
         orderNo:
           $ref: '#/components/schemas/orderNo'
         isDisplay:
-          allOf:
-            - $ref: '#/components/schemas/isDisplay'
-          default: true
+          $ref: '#/components/schemas/isDisplay'
         lyricists:
           type: array
           items:

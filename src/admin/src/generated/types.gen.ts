@@ -199,7 +199,7 @@ export type SongCreateRequest = {
     description: Description;
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
-    isDisplay?: IsDisplay;
+    isDisplay: IsDisplay;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
@@ -258,7 +258,7 @@ export type SongUpdateRequest = {
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
     orderNo: OrderNo;
-    isDisplay?: IsDisplay;
+    isDisplay: IsDisplay;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;

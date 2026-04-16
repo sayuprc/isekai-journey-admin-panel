@@ -336,6 +336,9 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         if ($this->container['type_value'] === null) {
             $invalidProperties[] = "'type_value' can't be null";
         }
+        if ($this->container['is_display'] === null) {
+            $invalidProperties[] = "'is_display' can't be null";
+        }
         if ($this->container['lyricists'] === null) {
             $invalidProperties[] = "'lyricists' can't be null";
         }
@@ -476,7 +479,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Gets is_display
      *
-     * @return bool|null
+     * @return bool
      */
     public function getIsDisplay()
     {
@@ -486,7 +489,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Sets is_display
      *
-     * @param bool|null $is_display 公開状態（true: 表示する）
+     * @param bool $is_display 公開状態（true: 表示する）
      *
      * @return self
      */
