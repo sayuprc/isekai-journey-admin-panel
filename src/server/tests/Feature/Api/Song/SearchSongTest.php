@@ -25,7 +25,7 @@ class SearchSongTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
         );
 
         $this->withAuth()
@@ -55,8 +55,8 @@ class SearchSongTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], true),
         );
 
         $this->withAuth()
@@ -86,8 +86,8 @@ class SearchSongTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], true),
         );
 
         $this->withAuth()
@@ -117,8 +117,8 @@ class SearchSongTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'コラボ楽曲', SongType::Original, SongAttribute::Collaboration, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'オリジナル楽曲', SongType::Original, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'コラボ楽曲', SongType::Original, SongAttribute::Collaboration, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'オリジナル楽曲', SongType::Original, null, 2, [], [], [], true),
         );
 
         $this->withAuth()
@@ -151,7 +151,7 @@ class SearchSongTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
         );
 
         $this->withAuth()

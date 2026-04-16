@@ -78,6 +78,7 @@ class CreateInteractorTest extends TestCase
                     $lyricists,
                     $composers,
                     $arrangers,
+                    true,
                 )),
             )
             ->once();

@@ -51,6 +51,7 @@ class SongAssemblerTest extends TestCase
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
+            true,
         );
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -110,6 +111,7 @@ class SongAssemblerTest extends TestCase
             [],
             [],
             [],
+            true,
         );
 
         $this->creatorRepository->shouldReceive('findByIds')->never();

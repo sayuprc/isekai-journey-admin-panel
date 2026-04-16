@@ -55,6 +55,7 @@ class GetInteractorTest extends TestCase
             [['creatorId' => $lyricistId, 'orderNo' => 1]],
             [['creatorId' => $composerId, 'orderNo' => 1]],
             [['creatorId' => $arrangerId, 'orderNo' => 1]],
+            true,
         );
 
         $this->repository->shouldReceive('find')

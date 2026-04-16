@@ -33,6 +33,7 @@ class CreatorUsageCheckerTest extends DatabaseTestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
+            true,
         ));
 
         $result = $this->getInstance()->isUsed(CreatorId::reconstruct($creatorId));

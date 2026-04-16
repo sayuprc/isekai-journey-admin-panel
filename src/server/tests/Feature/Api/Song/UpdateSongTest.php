@@ -43,6 +43,7 @@ class UpdateSongTest extends DatabaseTestCase
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                true,
             ),
         );
 
@@ -113,6 +114,7 @@ class UpdateSongTest extends DatabaseTestCase
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                true,
             ),
         );
 

@@ -49,6 +49,7 @@ class DeleteCreatorTest extends DatabaseTestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
+            true,
         ));
 
         $this->withAuth()

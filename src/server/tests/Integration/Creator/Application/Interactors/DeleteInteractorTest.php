@@ -51,6 +51,7 @@ class DeleteInteractorTest extends DatabaseTestCase
             [['creatorId' => $creatorId, 'orderNo' => 1]],
             [],
             [],
+            true,
         ));
 
         $result = $this->getInstance()->handle(new DeleteInputData($creatorId));

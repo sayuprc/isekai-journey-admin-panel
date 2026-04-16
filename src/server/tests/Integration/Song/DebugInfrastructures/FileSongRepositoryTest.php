@@ -34,6 +34,7 @@ class FileSongRepositoryTest extends TestCase
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                true,
             ),
         );
 
@@ -56,6 +57,7 @@ class FileSongRepositoryTest extends TestCase
             [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+            true,
         );
 
         $this->getInstance()->save($song);
@@ -80,6 +82,7 @@ class FileSongRepositoryTest extends TestCase
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
                 [['creatorId' => $this->generateUuid(), 'orderNo' => 1]],
+                true,
             ),
         );
 
@@ -100,9 +103,9 @@ class FileSongRepositoryTest extends TestCase
 
         // データを追加
         $this->storeSongs(
-            $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, null, 10, [], [], []),
-            $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, null, 30, [], [], []),
-            $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, null, 20, [], [], []),
+            $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, null, 10, [], [], [], true),
+            $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, null, 30, [], [], [], true),
+            $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, null, 20, [], [], [], true),
         );
 
         // 最大値が返ることを確認
@@ -125,6 +128,7 @@ class FileSongRepositoryTest extends TestCase
                 [],
                 [],
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
+                true,
             ),
         );
 
@@ -147,6 +151,7 @@ class FileSongRepositoryTest extends TestCase
                 [],
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
                 [],
+                true,
             ),
         );
 
@@ -169,6 +174,7 @@ class FileSongRepositoryTest extends TestCase
                 [['creatorId' => $creatorId, 'orderNo' => 1]],
                 [],
                 [],
+                true,
             ),
         );
 

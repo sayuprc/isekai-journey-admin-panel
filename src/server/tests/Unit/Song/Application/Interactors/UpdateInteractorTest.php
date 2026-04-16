@@ -78,6 +78,7 @@ class UpdateInteractorTest extends TestCase
                     $lyricists,
                     $composers,
                     $arrangers,
+                    true,
                 )),
             )
             ->once();
