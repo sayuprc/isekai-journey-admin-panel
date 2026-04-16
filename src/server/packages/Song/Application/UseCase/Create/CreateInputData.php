@@ -18,7 +18,7 @@ readonly class CreateInputData
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        public bool $isDisplay = true,
+        public bool $isDisplay,
         // TODO デフォルト null をどうにかする
         public ?int $attributeValue = null,
     ) {
