@@ -1,0 +1,20 @@
+name: リファクタリングの提案
+description: リファクタリングを提案する場合
+
+title: ""
+
+labels:
+  - "refactoring"
+
+projects:
+  - "sayuprc/18"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: リファクタリングの概要
+    validations:
+      required: true
