@@ -1,7 +1,7 @@
 name: バグレポート
 description: 意図しない挙動が発生した場合
 
-title: "[Bug]: "
+title: ""
 
 labels:
   - "bug"
