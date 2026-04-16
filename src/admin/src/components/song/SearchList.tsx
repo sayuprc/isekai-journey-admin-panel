@@ -9,6 +9,7 @@ import {
 } from 'solid-js';
 import type { SongType, SongAttribute } from '../../generated';
 import { client } from '../../utils/client';
+import { parseBooleanQuery } from '../../utils/query';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -16,12 +17,11 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
-  const isDisplayRaw = params.get('is_display');
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
     attribute: Number(params.get('attribute') ?? 0) || undefined,
-    isDisplay: isDisplayRaw === null ? undefined : isDisplayRaw === 'true',
+    isDisplay: parseBooleanQuery(params.get('is_display')),
     sort: params.get('sort') ?? 'order_no',
     order: params.get('order') ?? 'asc',
     page: Number(params.get('page') ?? '1') || 1,
@@ -232,8 +232,7 @@ export const SearchList = () => {
             name="isDisplay"
             class="select select-bordered select-sm"
             onChange={(e) => {
-              const v = e.currentTarget.value;
-              setInputIsDisplay(v === '' ? undefined : v === 'true');
+              setInputIsDisplay(parseBooleanQuery(e.currentTarget.value));
             }}
           >
             <option value="" selected={inputIsDisplay() === undefined}>
