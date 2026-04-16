@@ -100,6 +100,24 @@ class SongQueryServiceTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function searchWithIsDisplay(): void
+    {
+        $uuid1 = $this->generateUuid();
+        $uuid2 = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], false),
+        );
+
+        $results = $this->getInstance()->search($this->criteria(isDisplay: new Some(false)));
+
+        $this->assertCount(1, $results);
+        $this->assertSame($uuid2, $results[0]->songId);
+        $this->assertFalse($results[0]->isDisplay);
+    }
+
+    #[Test]
     public function searchNotFound(): void
     {
         $uuid = $this->generateUuid();
@@ -139,12 +157,14 @@ class SongQueryServiceTest extends DatabaseTestCase
         mixed $title = null,
         mixed $type = null,
         mixed $attribute = null,
+        mixed $isDisplay = null,
         PerPage $perPage = PerPage::Fifty,
     ): SongSearchCriteria {
         return new SongSearchCriteria(
             $title ?? new None(),
             $type ?? new None(),
             $attribute ?? new None(),
+            $isDisplay ?? new None(),
             Sort::OrderNo,
             Order::Asc,
             1,

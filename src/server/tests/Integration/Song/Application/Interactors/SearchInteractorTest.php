@@ -106,6 +106,28 @@ class SearchInteractorTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function searchWithIsDisplay(): void
+    {
+        $uuid1 = $this->generateUuid();
+        $uuid2 = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], false),
+        );
+
+        $result = $this->getInstance()->handle(new SearchInputData(isDisplay: false));
+
+        $this->assertTrue($result->isOk());
+
+        $output = $result->unwrap();
+
+        $this->assertCount(1, $output->songs);
+        $this->assertSame($uuid2, $output->songs[0]->songId);
+        $this->assertFalse($output->songs[0]->isDisplay);
+    }
+
+    #[Test]
     public function searchWithTitleNotFound(): void
     {
         $uuid = $this->generateUuid();

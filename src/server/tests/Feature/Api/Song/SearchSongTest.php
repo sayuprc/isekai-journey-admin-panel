@@ -146,6 +146,37 @@ class SearchSongTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function searchByIsDisplay(): void
+    {
+        $uuid1 = $this->generateUuid();
+        $uuid2 = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], [], true),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], false),
+        );
+
+        $this->withAuth()
+            ->get(route(SongRouteMap::Search, ['isDisplay' => 'false']))
+            ->assertStatus(200)
+            ->assertExactJson([
+                'songs' => [
+                    [
+                        'songId' => $uuid2,
+                        'title' => '全部夢だった！',
+                        'type' => [
+                            'name' => 'カバー曲',
+                            'value' => 2,
+                        ],
+                        'orderNo' => 2,
+                        'isDisplay' => false,
+                    ],
+                ],
+                'maxPage' => 1,
+            ]);
+    }
+
+    #[Test]
     public function searchByTitleNotFound(): void
     {
         $uuid = $this->generateUuid();
