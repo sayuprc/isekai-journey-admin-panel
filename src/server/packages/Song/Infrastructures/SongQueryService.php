@@ -67,6 +67,10 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $query = $query->where('attribute', $criteria->attribute->get());
         }
 
+        if ($criteria->isDisplay->isPresent()) {
+            $query = $query->where('is_display', $criteria->isDisplay->get());
+        }
+
         return $query;
     }
 
