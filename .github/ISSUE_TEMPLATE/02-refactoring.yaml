@@ -1,8 +1,6 @@
 name: リファクタリングの提案
 description: リファクタリングを提案する場合
 
-title: ""
-
 labels:
   - "refactoring"
 
