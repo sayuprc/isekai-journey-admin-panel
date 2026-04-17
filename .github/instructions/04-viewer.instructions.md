@@ -1,10 +1,10 @@
 ---
-applyTo: 'src/admin/**'
+applyTo: 'src/viewer/**'
 paths:
-  - 'src/admin/**'
+  - 'src/viewer/**'
 ---
 
-# 管理画面クライアント規約
+# ビューア規約
 
 ## パッケージマネージャー
 
@@ -14,9 +14,9 @@ paths:
 
 - ページ・レイアウト: Astro (`.astro`)
 - インタラクティブコンポーネント: SolidJS (`.tsx`)
-- BFF: Elysia (`src/server/`)
 
 ## 規約
 
-- `src/generated/` は `mise run generate:client` / `bun run generate:api` で自動生成する。手動編集しない
+- `generated/` 配下のファイルは `bun run proto:generate` で自動生成する。手動編集しない
+- `src/styles/*.module.css.d.ts` は `bun run tcm` で自動生成する。手動編集しない
 - 変更後は既存の `bun run lint` / `bun run style` など、影響範囲に応じたスクリプトで検証する
