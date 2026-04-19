@@ -1,33 +1,29 @@
-[tasks.install]
-description = "パッケージをインストールする"
-run = "bun install"
+[tasks.format]
+description = "フォーマット修正をする"
+run = "bun run format"
 
 [tasks."format:check"]
 description = "フォーマットチェックをする"
 run = "bun run format:check"
 
-[tasks."format:fix"]
-description = "フォーマット修正をする"
-run = "bun run format:fix"
-
 [tasks."compile:all"]
 description = "oas を生成する"
-run = [{ tasks = ["compile:client", "compile:admin"] }]
+run = [{ tasks = ["compile:viewer", "compile:admin"] }]
 
-[tasks."compile:client"]
-description = "クライアント向け oas を生成する"
-run = "bun run compile:client"
+[tasks."compile:viewer"]
+description = "Viewer 用 oas を生成する"
+run = "bun run compile:viewer"
 
-[tasks."compile:client:watch"]
-description = "クライアント向け oas を生成する(watch)"
-run = "bun run compile:client:watch"
+[tasks."compile:viewer:watch"]
+description = "Viewer 用 oas を生成する(watch)"
+run = "bun run compile:viewer:watch"
 
 [tasks."compile:admin"]
-description = "管理画面向け oas を生成する"
+description = "Admin 用 oas を生成する"
 run = "bun run compile:admin"
 
 [tasks."compile:admin:watch"]
-description = "管理画面向け oas を生成する(watch)"
+description = "Admin 用 oas を生成する(watch)"
 run = "bun run compile:admin:watch"
 
 [tasks.re-compile]

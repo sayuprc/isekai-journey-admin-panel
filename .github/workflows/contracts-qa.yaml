@@ -14,7 +14,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/contracts
+        working-directory: src
 
     steps:
       - name: Checkout the code
@@ -29,15 +29,17 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: ./node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+          path: |
+            node_modules
+            contracts/node_modules
+          key: contracts-node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run install
+        run: bun i --frozen-lockfile
 
       - name: Check format
-        run: mise run format:check
+        run: bun --filter contracts format:check
 
   diff:
     name: Generated Code Diff Check
@@ -46,7 +48,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/contracts
+        working-directory: src
 
     steps:
       - name: Checkout the code
@@ -61,16 +63,19 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: ./node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+          path: |
+            node_modules
+            contracts/node_modules
+          key: contracts-node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run install
+        run: bun i --frozen-lockfile
 
       - name: Check generate code has diff
         run: |
-          mise run compile:all
+          bun --filter contracts compile:viewer
+          bun --filter contracts compile:admin
           if [ -n "$(git status --porcelain | grep generated)" ]; then
             echo "自動生成コードに差分があります"
             git status

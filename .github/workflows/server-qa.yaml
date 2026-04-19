@@ -240,7 +240,7 @@ jobs:
         run: mise run setup:env
 
       - name: Run migration
-        run: mise run migrate
+        run: mise run migrate:local --auto-approve
 
       - name: Run PHPUnit
         run: mise run test:all

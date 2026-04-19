@@ -25,7 +25,8 @@ PROXY_IMAGE = "isekai-observatory-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
 MYSQL_IMAGE = "isekai-observatory-mysql:{{vars.mysql_tag}}"
 NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
-OAS_FILE = "IsekaiObservatory.Admin.v1.yaml"
+ADMIN_OAS_FILE = "IsekaiObservatory.Admin.v1.yaml"
+VIEWER_OAS_FILE = "IsekaiObservatory.Viewer.v1.yaml"
 
 [tasks.setup]
 description = "環境構築をする"
@@ -192,14 +193,23 @@ run = '''
 rm -rf ./src/server/Generated
 
 docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
-  -i /local/src/contracts/generated/oas/${OAS_FILE} \
+  -i /local/src/contracts/generated/oas/${ADMIN_OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
   -o /local/src/server/Generated
 '''
 
-[tasks."generate:client"]
-description = "OAS からクライアントのコードを生成する"
+[tasks."generate:client:viewer"]
+description = "OAS から Viewer のコードを生成する"
+dir = "src/viewer"
+run = '''
+rm -rf src/generated
+
+bun run generate:api
+'''
+
+[tasks."generate:client:admin"]
+description = "OAS から Admin のコードを生成する"
 dir = "src/admin"
 run = '''
 rm -rf src/generated
@@ -229,7 +239,7 @@ cp ${caroot_pem} docker/php/certs/
 
 [tasks."bun:install"]
 description = "bun のパッケージをインストールする"
-dir = "src/admin"
+dir = "src"
 run = "bun install"
 
 [tasks.format]
@@ -238,35 +248,35 @@ depends = ["lint:fix", "style:fix"]
 
 [tasks.lint]
 description = "ESLint を実行する"
-dir = "src/admin"
-run = "bun run lint"
+dir = "src"
+run = "bun --filter admin lint:check"
 
 [tasks."lint:fix"]
 description = "ESLint を --fix オプション付きで実行する"
-dir = "src/admin"
-run = "bun run lint:fix"
+dir = "src"
+run = "bun --filter admin lint"
 
 [tasks.style]
 description = "Stylelint を実行する"
-dir = "src/admin"
-run = "bun run style"
+dir = "src"
+run = "bun --filter admin style:check"
 
 [tasks."style:fix"]
 description = "Stylelint を --fix オプション付きで実行する"
-dir = "src/admin"
-run = "bun run style:fix"
+dir = "src"
+run = "bun --filter admin style"
 
 [tasks.tcm]
 description = "tcm を実行する"
-dir = "src/admin"
-run = "bun run tcm"
+dir = "src"
+run = "bun --filter admin tcm"
 
 [tasks."tcm:watch"]
 description = "tcm を --watch オプション付きで実行する"
-dir = "src/admin"
-run = "bun run tcm:watch"
+dir = "src"
+run = "bun --filter admin tcm:watch"
 
 [tasks.prism]
 description = "Prism のモックサーバーを起動する"
-dir = "src/admin"
-run = "bun run prism"
+dir = "src"
+run = "bun --filter admin prism"
