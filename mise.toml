@@ -10,12 +10,15 @@ server_tag = "8.5"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
 mysql_tag = "8.4"
+# Keep the current developer-facing ports in the main worktree.
 root_proxy_http_port = 80
 root_proxy_https_port = 443
 root_php_port = 8080
 root_mysql_port = 3306
 root_redis_port = 6379
 root_redis_http_port = 8079
+# Offset additional worktrees into high port ranges so they do not clash with
+# the main worktree or common local defaults.
 worktree_proxy_http_port_base = 10080
 worktree_proxy_https_port_base = 10443
 worktree_php_port_base = 18080
@@ -87,6 +90,7 @@ run = "docker build -t ${MYSQL_IMAGE} ./docker/mysql --build-arg TAG={{vars.mysq
 description = "コンテナを起動する"
 run = '''
 worktree_root=$(git rev-parse --show-toplevel)
+main_worktree_root=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
 worktree_name=$(basename "$worktree_root")
 root_proxy_http_port={{vars.root_proxy_http_port}}
 root_proxy_https_port={{vars.root_proxy_https_port}}
@@ -102,7 +106,7 @@ worktree_redis_port_base={{vars.worktree_redis_port_base}}
 worktree_redis_http_port_base={{vars.worktree_redis_http_port_base}}
 worktree_port_offset_range={{vars.worktree_port_offset_range}}
 
-if [ "$worktree_name" = "isekai-observatory" ]; then
+if [ "$worktree_root" = "$main_worktree_root" ]; then
   proxy_http_port=$root_proxy_http_port
   proxy_https_port=$root_proxy_https_port
   php_port=$root_php_port
@@ -135,6 +139,7 @@ echo "php:           http://127.0.0.1:$php_port"
 echo "mysql:         127.0.0.1:$mysql_port"
 echo "redis:         127.0.0.1:$redis_port"
 echo "redis-http:    http://127.0.0.1:$redis_http_port"
+echo "If any of these ports are already in use, rename the worktree directory or override the *_PORT environment variables before running docker compose."
 '''
 
 [tasks.down]
