@@ -75,22 +75,36 @@ description = "コンテナを起動する"
 run = '''
 worktree_root=$(git rev-parse --show-toplevel)
 worktree_name=$(basename "$worktree_root")
+root_proxy_http_port=80
+root_proxy_https_port=443
+root_php_port=8080
+root_mysql_port=3306
+root_redis_port=6379
+root_redis_http_port=8079
+worktree_proxy_http_port_base=10080
+worktree_proxy_https_port_base=10443
+worktree_php_port_base=18080
+worktree_mysql_port_base=13306
+worktree_redis_port_base=16379
+worktree_redis_http_port_base=18079
 
 if [ "$worktree_name" = "isekai-observatory" ]; then
-  proxy_http_port=80
-  proxy_https_port=443
-  php_port=8080
-  mysql_port=3306
-  redis_port=6379
-  redis_http_port=8079
+  proxy_http_port=$root_proxy_http_port
+  proxy_https_port=$root_proxy_https_port
+  php_port=$root_php_port
+  mysql_port=$root_mysql_port
+  redis_port=$root_redis_port
+  redis_http_port=$root_redis_http_port
 else
+  # Use a deterministic 0-999 offset per worktree directory name so each
+  # additional worktree gets stable, non-conflicting high ports.
   port_offset=$(python -c 'import os, sys, zlib; print(zlib.crc32(os.path.basename(sys.argv[1]).encode()) % 1000)' "$worktree_root")
-  proxy_http_port=$((10080 + port_offset))
-  proxy_https_port=$((10443 + port_offset))
-  php_port=$((18080 + port_offset))
-  mysql_port=$((13306 + port_offset))
-  redis_port=$((16379 + port_offset))
-  redis_http_port=$((18079 + port_offset))
+  proxy_http_port=$((worktree_proxy_http_port_base + port_offset))
+  proxy_https_port=$((worktree_proxy_https_port_base + port_offset))
+  php_port=$((worktree_php_port_base + port_offset))
+  mysql_port=$((worktree_mysql_port_base + port_offset))
+  redis_port=$((worktree_redis_port_base + port_offset))
+  redis_http_port=$((worktree_redis_http_port_base + port_offset))
 fi
 
 PROXY_HTTP_PORT=$proxy_http_port \

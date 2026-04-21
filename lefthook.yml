@@ -7,12 +7,12 @@ pre-commit:
     php-ecs:
       root: "src/server/"
       glob: "{app,bootstrap,config,database,packages,routes,tests,tools}/**/*.php"
-      run: docker compose -f ../../compose.yaml exec -T php vendor/bin/ecs check --no-progress-bar -- {staged_files}
+      run: docker compose -f "$(git rev-parse --show-toplevel)/compose.yaml" exec -T php vendor/bin/ecs check --no-progress-bar -- {staged_files}
 
     php-phpstan:
       root: "src/server/"
       glob: "{app,bootstrap,packages}/**/*.php"
-      run: docker compose -f ../../compose.yaml exec -T php vendor/bin/phpstan analyze --no-progress -- {staged_files}
+      run: docker compose -f "$(git rev-parse --show-toplevel)/compose.yaml" exec -T php vendor/bin/phpstan analyze --no-progress -- {staged_files}
 
     eslint:
       root: "src/admin/"
