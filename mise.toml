@@ -114,7 +114,7 @@ if [ "$worktree_root" = "$main_worktree_root" ]; then
   redis_port=$root_redis_port
   redis_http_port=$root_redis_http_port
 else
-  # Use a deterministic 0-999 offset based on the worktree directory name hash to assign stable high ports; collisions are still possible when names hash to the same offset.
+  # Use a deterministic 0-999 offset based on the worktree directory name hash to assign stable high ports; if a collision still happens, rename the worktree directory or rerun with explicit *_PORT overrides.
   port_offset=$(printf '%s' "$worktree_name" | cksum | awk '{ print $1 % '"$worktree_port_offset_range"' }')
   proxy_http_port=$((worktree_proxy_http_port_base + port_offset))
   proxy_https_port=$((worktree_proxy_https_port_base + port_offset))
@@ -139,7 +139,7 @@ echo "php:           http://127.0.0.1:$php_port"
 echo "mysql:         127.0.0.1:$mysql_port"
 echo "redis:         127.0.0.1:$redis_port"
 echo "redis-http:    http://127.0.0.1:$redis_http_port"
-echo "If any of these ports are already in use, rename the worktree directory or override the *_PORT environment variables before running docker compose."
+echo "If startup ever fails because one of these ports is already in use, rename the worktree directory or rerun with explicit *_PORT overrides."
 '''
 
 [tasks.down]
