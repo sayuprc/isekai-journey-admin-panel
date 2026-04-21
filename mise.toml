@@ -10,7 +10,6 @@ server_tag = "8.5"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
 mysql_tag = "8.4"
-server_container = "isekai-observatory-api"
 uid = "`id -u`"
 user_name = "`id -un`"
 gid = "`id -g`"
@@ -73,7 +72,43 @@ run = "docker build -t ${MYSQL_IMAGE} ./docker/mysql --build-arg TAG={{vars.mysq
 
 [tasks.up]
 description = "コンテナを起動する"
-run = "docker compose up -d"
+run = '''
+worktree_root=$(git rev-parse --show-toplevel)
+worktree_name=$(basename "$worktree_root")
+
+if [ "$worktree_name" = "isekai-observatory" ]; then
+  proxy_http_port=80
+  proxy_https_port=443
+  php_port=8080
+  mysql_port=3306
+  redis_port=6379
+  redis_http_port=8079
+else
+  port_offset=$(python -c 'import os, sys, zlib; print(zlib.crc32(os.path.basename(sys.argv[1]).encode()) % 1000)' "$worktree_root")
+  proxy_http_port=$((10080 + port_offset))
+  proxy_https_port=$((10443 + port_offset))
+  php_port=$((18080 + port_offset))
+  mysql_port=$((13306 + port_offset))
+  redis_port=$((16379 + port_offset))
+  redis_http_port=$((18079 + port_offset))
+fi
+
+PROXY_HTTP_PORT=$proxy_http_port \
+PROXY_HTTPS_PORT=$proxy_https_port \
+PHP_PORT=$php_port \
+MYSQL_PORT=$mysql_port \
+REDIS_PORT=$redis_port \
+REDIS_HTTP_PORT=$redis_http_port \
+docker compose up -d
+
+echo "worktree: $worktree_name"
+echo "proxy (http):  http://127.0.0.1:$proxy_http_port"
+echo "proxy (https): https://127.0.0.1:$proxy_https_port"
+echo "php:           http://127.0.0.1:$php_port"
+echo "mysql:         127.0.0.1:$mysql_port"
+echo "redis:         127.0.0.1:$redis_port"
+echo "redis-http:    http://127.0.0.1:$redis_http_port"
+'''
 
 [tasks.down]
 description = "コンテナを削除する"
@@ -81,7 +116,7 @@ run = "docker compose down"
 
 [tasks.php]
 description = "php コンテナの中に入る"
-run = "docker exec -it {{vars.server_container}} bash"
+run = "docker compose exec php bash"
 
 [tasks."composer:install"]
 description = "composer パッケージをインストールする"
@@ -90,60 +125,60 @@ run = "docker compose run --rm php composer install"
 [tasks.phpstan]
 description = "PHPStan を実行する"
 usage = 'arg "[path]" var=#true help="静的解析対象パス"'
-run = "docker exec {{vars.server_container}} composer phpstan ${usage_path}"
+run = "docker compose exec -T php composer phpstan ${usage_path}"
 
 [tasks."phpstan:clear-cache"]
 description = "PHPStan のキャッシュを削除する"
-run = "docker exec {{vars.server_container}} composer phpstan-clear-cache"
+run = "docker compose exec -T php composer phpstan-clear-cache"
 
 [tasks.arkitect]
 description = "PHPArkitect を実行する"
-run = "docker exec {{vars.server_container}} composer arkitect"
+run = "docker compose exec -T php composer arkitect"
 
 [tasks.ecs]
 description = "ECS を実行し、コードフォーマットをチェックする"
 usage = 'arg "[path]" var=#true help="フォーマットチェック対象パス"'
-run = "docker exec {{vars.server_container}} composer ecs ${usage_path}"
+run = "docker compose exec -T php composer ecs ${usage_path}"
 
 [tasks."ecs:fix"]
 description = "ECS を実行し、フォーマットを自動修正する"
 usage = 'arg "[path]" var=#true help="フォーマット自動修正対象パス"'
-run = "docker exec {{vars.server_container}} composer ecs-fix ${usage_path}"
+run = "docker compose exec -T php composer ecs-fix ${usage_path}"
 
 [tasks.test]
 description = "テストを実行する"
 usage = '''
 arg "[path]" var=#true help="テスト対象パス"
 '''
-run = "docker exec {{vars.server_container}} ./vendor/bin/paratest ${usage_path}"
+run = "docker compose exec -T php ./vendor/bin/paratest ${usage_path}"
 
 [tasks."test:all"]
 description = "すべてのテストを実行する"
-run = "docker exec {{vars.server_container}} composer test-all"
+run = "docker compose exec -T php composer test-all"
 
 [tasks."test:unit"]
 description = "Unit テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-unit"
+run = "docker compose exec -T php composer test-unit"
 
 [tasks."test:integration"]
 description = "Integration テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-integration"
+run = "docker compose exec -T php composer test-integration"
 
 [tasks."test:feature"]
 description = "Feature テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-feature"
+run = "docker compose exec -T php composer test-feature"
 
 [tasks.coverage]
 description = "テストカバレッジを出力する"
-run = "docker exec {{vars.server_container}} composer coverage"
+run = "docker compose exec -T php composer coverage"
 
 [tasks.infection]
 description = "ミューテーションテストを実行する"
-run = "docker exec {{vars.server_container}} composer infection"
+run = "docker compose exec -T php composer infection"
 
 [tasks.metrics]
 description = "コードメトリクスを出力する"
-run = "docker exec {{vars.server_container}} composer metrics"
+run = "docker compose exec -T php composer metrics"
 
 [tasks.migrate]
 description = "スキーマをデータベースに適用する"
@@ -176,11 +211,11 @@ _.file = "src/server/.env"
 
 [tasks.tinker]
 description = "Laravel tinker を実行する"
-run = "docker exec {{vars.server_container}} php artisan tinker"
+run = "docker compose exec php php artisan tinker"
 
 [tasks."ide:doc"]
 description = "Eloquent にカラム情報を書き込む"
-run = "docker exec {{vars.server_container}} php artisan ide-helper:models -RW -n"
+run = "docker compose exec -T php php artisan ide-helper:models -RW -n"
 
 [tasks.generate]
 description = "OAS からコードを生成する"

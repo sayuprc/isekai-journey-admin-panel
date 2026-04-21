@@ -57,7 +57,7 @@ run = "docker compose up -d php mysql"
 
 [tasks."composer:install"]
 description = "CI 環境で composer install を実行する"
-run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
+run = "docker compose exec -T php composer install -n --prefer-dist"
 
 [tasks."generate:server"]
 description = "CI 環境でコード生成を行い、差分をチェックする"
@@ -79,7 +79,7 @@ fi
 description = "CI 環境の環境変数をセットアップする"
 run = '''
 cp src/server/.env.example src/server/.env
-docker exec {{vars.server_container}} php artisan key:generate
+docker compose exec -T php php artisan key:generate
 '''
 
 [tasks.migrate]
