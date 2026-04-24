@@ -18,7 +18,6 @@
 
 - Docker / Docker Compose
 - `mise`
-- `mkcert`
 
 最初のセットアップ:
 
