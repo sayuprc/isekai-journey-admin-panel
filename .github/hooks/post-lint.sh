@@ -21,7 +21,7 @@ case "$file" in
 esac
 
 case "$file" in
-  src/contracts/*.tsp|*/src/contracts/*.tsp|src/contracts/scripts/*.ts|*/src/contracts/scripts/*.ts|src/contracts/scripts/*.js|*/src/contracts/scripts/*.js|src/contracts/package.json|*/src/contracts/package.json|src/contracts/bun.lock|*/src/contracts/bun.lock|src/contracts/mise.toml|*/src/contracts/mise.toml|src/contracts/tspconfig.yaml|*/src/contracts/tspconfig.yaml)
+  src/contracts/*.tsp|*/src/contracts/*.tsp|src/contracts/scripts/*.ts|*/src/contracts/scripts/*.ts|src/contracts/scripts/*.js|*/src/contracts/scripts/*.js|src/contracts/package.json|*/src/contracts/package.json|src/contracts/bun.lock|*/src/contracts/bun.lock|src/contracts/tspconfig.yaml|*/src/contracts/tspconfig.yaml)
     mkdir -p "$hook_state_dir"
     : > "$contracts_stop_marker"
     ;;
@@ -141,11 +141,11 @@ case "$file" in
     ;;
 
   src/contracts/*.tsp|*/src/contracts/*.tsp)
-    cd "$repo_root/src/contracts"
+    cd "$repo_root"
 
-    mise run format:fix >/dev/null 2>&1 || true
+    mise run contract:format >/dev/null 2>&1 || true
 
-    if ! diag="$(mise run format:check 2>&1)"; then
+    if ! diag="$(mise run contract:format:check 2>&1)"; then
       diag="$(printf '%s\n' "$diag" | head -20)"
 
       jq -n --arg msg "$diag" '{

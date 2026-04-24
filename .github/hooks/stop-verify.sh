@@ -8,15 +8,15 @@ contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
 [ -f "$contracts_stop_marker" ] || exit 0
 rm -f "$contracts_stop_marker"
 
-cd "$repo_root/src/contracts"
+cd "$repo_root"
 
 result=""
 
-if ! format_output="$(mise run format:check 2>&1)"; then
+if ! format_output="$(mise run contract:format:check 2>&1)"; then
   result="フォーマット違反あり:\n$(printf '%s\n' "$format_output" | head -40)"
 fi
 
-if ! test_output="$(bun test 2>&1)"; then
+if ! test_output="$(mise run contract:test 2>&1)"; then
   result="${result:+$result\n\n}テスト失敗:\n$(printf '%s\n' "$test_output" | head -40)"
 fi
 
