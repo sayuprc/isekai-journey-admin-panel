@@ -13,7 +13,7 @@ using Versioning;
   }
 )
 @versioned(Version)
-namespace IsekaiObservatory.Client;
+namespace IsekaiObservatory.Viewer;
 
 enum Version {
   v1,

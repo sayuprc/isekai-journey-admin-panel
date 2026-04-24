@@ -20,13 +20,20 @@ const defaultRules = {
       allow: 'single-line',
     },
   ],
+  '@stylistic/brace-style': ['error', '1tbs'],
+  '@typescript-eslint/consistent-type-imports': [
+    'error',
+    {
+      fixStyle: 'separate-type-imports',
+    },
+  ],
 };
 
 export default [
   {
     plugins: {
       '@stylistic': stylistic,
-      'import': importPlugin,
+      import: importPlugin,
     },
   },
   eslint.configs.recommended,
@@ -37,10 +44,7 @@ export default [
     semi: true,
   }),
   {
-    ignores: [
-      '.astro/**',
-      'dist/**',
-    ],
+    ignores: ['.astro/**', 'dist/**', 'src/generated/**'],
   },
   {
     files: ['**/*.{js,mjs,ts,jsx,tsx,astro}'],

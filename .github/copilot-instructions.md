@@ -3,7 +3,7 @@
 ## プロジェクト概要
 
 isekai-observatory のプロジェクト。
-`src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS/ElysiaJS)、`src/client` (Astro/SolidJS)、`src/contracts` (TypeSpec) で構成。
+`src/server` (PHP/Laravel)、`src/admin` (Astro/SolidJS/ElysiaJS)、`src/viewer` (Astro/SolidJS)、`src/contracts` (TypeSpec) で構成。
 
 ## 検証
 

@@ -1,0 +1,10 @@
+{
+  "extends": ["../biome.json"],
+  "root": false,
+  "files": { "includes": ["**", "!src/generated"] },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}

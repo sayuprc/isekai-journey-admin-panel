@@ -30,15 +30,17 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: src/admin/node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+          path: |
+            src/node_modules
+            src/admin/node_modules
+          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run bun:install
 
       - name: Check generate code has diff
-        run: mise run generate:client
+        run: mise run generate:client:admin
 
   lint:
     name: ESLint
@@ -58,8 +60,10 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: src/admin/node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+          path: |
+            src/node_modules
+            src/admin/node_modules
+          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -86,8 +90,10 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
-          path: src/admin/node_modules
-          key: node-modules-${{ hashFiles('**/bun.lock') }}
+          path: |
+            src/node_modules
+            src/admin/node_modules
+          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'

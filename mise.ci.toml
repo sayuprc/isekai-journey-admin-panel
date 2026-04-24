@@ -63,7 +63,7 @@ run = "docker exec {{vars.server_container}} composer install -n --prefer-dist"
 description = "CI 環境でコード生成を行い、差分をチェックする"
 run = '''
 docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
-  -i /local/src/contracts/generated/oas/${OAS_FILE} \
+  -i /local/src/contracts/generated/oas/${ADMIN_OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
   -o /local/src/server/Generated
@@ -90,14 +90,18 @@ run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --auto-appr
 [tasks.migrate.env]
 _.file = "src/server/.env"
 
-[tasks."generate:client"]
+[tasks."generate:client:admin"]
 description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
-dir = "src/admin"
+dir = "src"
 run = '''
-bun run generate:api
+bun --filter admin generate:api
 if [ -n "$(git status --porcelain)" ]; then
   echo "自動生成コードに差分があります"
   git status
   exit 1
 fi
 '''
+
+[tasks."bun:install"]
+dir = "src"
+run = "bun i --frozen-lockfile"

@@ -6,7 +6,7 @@ tags: []
 paths: {}
 components:
   schemas:
-    IsekaiObservatory.Client.Version:
+    IsekaiObservatory.Viewer.Version:
       type: string
       enum:
         - v1
