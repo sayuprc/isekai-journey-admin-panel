@@ -85,7 +85,7 @@
 
 | 変更したいもの | 最初に触る場所 | 続けて触る場所 | 代表的な確認 |
 |---|---|---|---|
-| API の request / response 形状 | `src/contracts` | `mise run generate` の影響先 | `cd src && bun --filter contracts format:check`, `test`, `compile:*` |
+| API の request / response 形状 | `src/contracts` | `mise run generate` の影響先 | `mise run contract:format:check`, `contract:test`, `contract:compile:*` |
 | サーバーの業務ロジック | `src/server` | 必要なら `src/contracts` | `mise run ecs`, `phpstan`, `arkitect`, `test` |
 | 管理画面の UI / BFF | `src/admin` | 必要なら `src/contracts` | `cd src && bun --filter admin lint:check`, `style:check`, `build` |
 | 閲覧サイトの UI | `src/viewer` | 必要なら `src/contracts` | `cd src && bun --filter viewer lint:check`, `style:check`, `build` |

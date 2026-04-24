@@ -12,7 +12,9 @@ paths:
 
 - 依存管理とスクリプト実行には `bun` を使う
 - `src/` は `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
-- `contracts` の script は `src/` で `bun --filter contracts <script>` として実行する
+- 契約まわりの共通タスクはリポジトリ root の `mise.toml` で `mise run contract:<task>` として実行する
+- root の `contract:*` task は内部で `cd src && bun --filter contracts <script>` を使う
+- package script を直接叩く場合は `cd src && bun --filter contracts <script>` を使う
 
 ## 構成
 
@@ -30,6 +32,6 @@ paths:
 
 ## 検証
 
-- `cd src && bun --filter contracts format:check`
-- `cd src && bun --filter contracts test`
-- 影響範囲に応じて `cd src && bun --filter contracts compile:admin` または `cd src && bun --filter contracts compile:viewer`
+- `mise run contract:format:check`
+- `mise run contract:test`
+- 影響範囲に応じて `mise run contract:compile:admin` または `mise run contract:compile:viewer`

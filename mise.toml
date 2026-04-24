@@ -243,6 +243,54 @@ description = "bun のパッケージをインストールする"
 dir = "src"
 run = "bun install"
 
+[tasks."contract:format"]
+description = "TypeSpec をフォーマットする"
+dir = "src"
+run = "bun --filter contracts format"
+
+[tasks."contract:format:check"]
+description = "TypeSpec のフォーマットを検証する"
+dir = "src"
+run = "bun --filter contracts format:check"
+
+[tasks."contract:test"]
+description = "contracts のテストを実行する"
+dir = "src"
+run = "bun --filter contracts test"
+
+[tasks."contract:compile:all"]
+description = "contracts の OAS を一括生成する"
+depends = ["contract:compile:viewer", "contract:compile:admin"]
+
+[tasks."contract:compile:viewer"]
+description = "Viewer 用 OAS を生成する"
+dir = "src"
+run = "bun --filter contracts compile:viewer"
+
+[tasks."contract:compile:viewer:watch"]
+description = "Viewer 用 OAS を監視付きで生成する"
+dir = "src"
+run = "bun --filter contracts compile:viewer:watch"
+
+[tasks."contract:compile:admin"]
+description = "Admin 用 OAS を生成する"
+dir = "src"
+run = "bun --filter contracts compile:admin"
+
+[tasks."contract:compile:admin:watch"]
+description = "Admin 用 OAS を監視付きで生成する"
+dir = "src"
+run = "bun --filter contracts compile:admin:watch"
+
+[tasks."contract:re-compile"]
+description = "contracts の OAS を生成し直す"
+dir = "src"
+run = '''
+rm -rf contracts/generated/oas
+bun --filter contracts compile:viewer
+bun --filter contracts compile:admin
+'''
+
 [tasks.format]
 description = "ESLint と Stylelint を --fix オプション付きで実行する"
 depends = ["lint:fix", "style:fix"]
