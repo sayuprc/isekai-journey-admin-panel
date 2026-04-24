@@ -1,4 +1,6 @@
 ---
+name: 'Server Instructions'
+description: 'Use when editing PHP/Laravel code in src/server, implementing API endpoints, changing domain logic, repositories, or writing server-side tests. Covers ADOP layering, ResultType, generated files, and validation.'
 applyTo: 'src/server/**'
 paths:
   - 'src/server/**'
@@ -6,30 +8,34 @@ paths:
 
 # サーバー規約
 
-## パッケージマネージャー
+## 実行環境
 
-composer。Docker コンテナ内で実行する。
+- Composer / artisan / テスト / 静的解析は Docker コンテナ経由で実行する
+- 共通コマンドの入口には `mise` を使う
 
-## アーキテクチャ
+## 構成
 
-DDD/ヘキサゴナルアーキテクチャ。依存方向は `mise run arkitect` で機械的に検証される。
+- `app/`: Laravel のエントリポイント、HTTP、Console、Provider などのフレームワーク接続
+- `packages/{Package}/Domain`: ビジネスルール。ほかのレイヤーに依存しない
+- `packages/{Package}/Application`: ユースケース。Domain にのみ依存する
+- `packages/{Package}/Infrastructures`: 永続化や外部接続。Domain に依存し、Application には依存しない
+- `packages/{Package}/DebugInfrastructures`: テスト用のファイルベース実装
+- `Generated/`: OpenAPI から生成されたコード
 
-- `packages/{Package}/Domain` → 他レイヤーに依存しない
-- `packages/{Package}/Application` → Domain のみに依存
-- `packages/{Package}/Infrastructures` → Domain に依存（Application には依存しない）
-- `packages/{Package}/DebugInfrastructures` → テスト用ファイルベースリポジトリ実装
+## 実装規約
 
-## エラーハンドリング
-
-ドメイン/アプリケーションロジックの結果には `ResultType\Ok` と `ResultType\Err` を使用する。
-期待されるビジネスロジックの失敗に対して例外をスローしない。
+- 期待される業務エラーは例外ではなく `ResultType\Ok` / `ResultType\Err` で返す
+- API 契約が変わる変更は `src/contracts` を起点に考える
+- `src/server/Generated/` は手動編集しない
 
 ## テスト
 
-テストを作成する際は以下の Skill を使用する。
+- Unit テスト: `php-unit-test-creator`
+- Integration テスト: `php-integration-test-creator`
+- Feature テスト: `php-feature-test-creator`
+- Feature / Integration テストでは `DebugInfrastructures` を優先する
 
-- `php-unit-test-creator`: Unit テスト作成用
-- `php-integration-test-creator`: Integration テスト作成用
-- `php-feature-test-creator`: Feature テスト (API/Console) 作成用
+## 検証
 
-Feature/Integration テストでは `DebugInfrastructures` 配下のファイルベースリポジトリを使用する。
+- 変更に最も近いタスクから実行する
+- 代表例: `mise run ecs`, `mise run phpstan`, `mise run arkitect`, `mise run test`

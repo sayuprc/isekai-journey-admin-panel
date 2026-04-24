@@ -1,22 +1,36 @@
 ---
-applyTo: 'src/admin**'
+name: 'Admin Instructions'
+description: 'Use when editing Astro pages, SolidJS components, Elysia BFF routes, or generated API clients in src/admin. Covers admin-specific structure, regeneration flow, and validation.'
+applyTo: 'src/admin/**'
 paths:
   - 'src/admin/**'
 ---
 
-# 管理画面クライアント規約
+# 管理画面規約
 
-## パッケージマネージャー
+## 実行環境
 
-**bun** を使用する。`npm`, `yarn`, `pnpm` は使用しない。
+- 依存管理とスクリプト実行には `bun` を使う
+- `src/` は `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
+- 共有タスクは `mise`、パッケージ固有タスクは `src/` で `bun --filter admin <script>` として実行する
 
-## フレームワーク構成
+## 構成
 
-- ページ・レイアウト: Astro (`.astro`)
-- インタラクティブコンポーネント: SolidJS (`.tsx`)
-- BFF: Elysia (`src/server/`)
+- `src/pages`: Astro のページとルーティング
+- `src/layouts`: ページレイアウト
+- `src/components`: SolidJS コンポーネント
+- `src/server`: 管理画面専用の BFF / サーバー側処理
+- `src/schemas`: フォームや入出力のスキーマ
+- `src/generated`: OpenAPI から生成された API クライアント
 
-## 規約
+## 実装規約
 
-- `src/generated/` は `mise generate` で自動生成。手動編集しない
-- コーディング規約は ESLint / Stylelint で機械的に強制される
+- ページ責務は `.astro` に保ち、対話的な UI は `.tsx` に分離する
+- API クライアントや型は `src/generated/` を Source of Truth とし、手動編集しない
+- API shape を変える場合は `src/contracts` を更新してから `mise run generate:client:admin` を使う
+
+## 検証
+
+- `cd src && bun --filter admin lint:check`
+- `cd src && bun --filter admin style:check`
+- `cd src && bun --filter admin build`
