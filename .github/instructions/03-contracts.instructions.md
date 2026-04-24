@@ -1,4 +1,6 @@
 ---
+name: 'Contracts Instructions'
+description: 'Use when editing TypeSpec contracts, API shapes, versioned endpoints, or OpenAPI generation in src/contracts. Covers entrypoints, generated outputs, and validation.'
 applyTo: 'src/contracts/**'
 paths:
   - 'src/contracts/**'
@@ -6,16 +8,28 @@ paths:
 
 # コントラクト規約
 
-## パッケージマネージャー
+## 実行環境
 
-**bun** を使用する。`npm`, `yarn`, `pnpm` は使用しない。
+- 依存管理とスクリプト実行には `bun` を使う
+- `src/` は `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
+- `contracts` の script は `src/` で `bun --filter contracts <script>` として実行する
 
-## プロジェクト構成
+## 構成
 
-- TypeSpec で API 仕様を管理する
-- OpenAPI 3.1 を生成してクライアント・管理画面・API サーバーで共有する
+- `src/admin/main.tsp`: 管理画面向け API のエントリポイント
+- `src/viewer/main.tsp`: 閲覧サイト向け API のエントリポイント
+- `generated/oas/`: 生成された OpenAPI Specification
+- `scripts/fix-enum-types.ts`: OpenAPI 生成後の補正スクリプト
 
-## 規約
+## 実装規約
 
-- `generated/` 配下のファイルを直接編集しない（`bun run compile:*` で自動生成される）
-- `tspconfig.yaml` を承認なしに変更しない（出力先・エミッタ設定の変更は全体に影響する）
+- TypeSpec を API 契約の Source of Truth とする
+- 仕様変更時は生成物ではなく `.tsp` を編集する
+- `generated/` は手動編集しない
+- `tspconfig.yaml` の変更は出力先とエミッタ全体に影響するため慎重に扱う
+
+## 検証
+
+- `cd src && bun --filter contracts format:check`
+- `cd src && bun --filter contracts test`
+- 影響範囲に応じて `cd src && bun --filter contracts compile:admin` または `cd src && bun --filter contracts compile:viewer`
