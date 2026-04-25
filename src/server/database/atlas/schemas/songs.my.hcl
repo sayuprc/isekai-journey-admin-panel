@@ -41,7 +41,6 @@ table "songs" {
   column "is_display" {
     null    = false
     type    = bool
-    default = true
     comment = "表示するか"
   }
   column "order_no" {

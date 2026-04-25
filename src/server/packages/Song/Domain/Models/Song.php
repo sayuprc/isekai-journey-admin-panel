@@ -39,7 +39,7 @@ readonly class Song
         array $lyricists,
         array $composers,
         array $arrangers,
-        bool $isDisplay = true,
+        bool $isDisplay,
         // TODO デフォルト null をどうにかする
         ?int $attribute = null,
     ): self {
