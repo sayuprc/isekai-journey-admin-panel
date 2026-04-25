@@ -12,6 +12,11 @@
 - `adr/INDEX.md`: 採用済み ADR の一覧
 - `design-docs/INDEX.md`: 継続的な設計原則の一覧
 
+## Key Design Docs
+
+- `design-docs/subproject-boundaries.md`: `contracts` / `server` / `admin` / `viewer` の責務境界
+- `design-docs/local-runtime-topology.md`: ローカル開発時のサービス構成と URL
+
 ## Working Records
 
 - `product-specs/INDEX.md`: 機能や施策の仕様メモ

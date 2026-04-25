@@ -16,17 +16,17 @@ paths:
 
 ## 構成
 
-- `src/pages`: Astro のページとルーティング
-- `src/layouts`: ページレイアウト
-- `src/components`: SolidJS コンポーネント
-- `src/server`: 管理画面専用の BFF / サーバー側処理
-- `src/schemas`: フォームや入出力のスキーマ
-- `src/generated`: OpenAPI から生成された API クライアント
+- `src/admin/src/pages/`: Astro のページとルーティング
+- `src/admin/src/layouts/`: ページレイアウト
+- `src/admin/src/components/`: SolidJS コンポーネント
+- `src/admin/src/server/`: 管理画面専用の BFF / サーバー側処理
+- `src/admin/src/schemas/`: フォームや入出力のスキーマ
+- `src/admin/src/generated/`: OpenAPI から生成された API クライアント
 
 ## 実装規約
 
 - ページ責務は `.astro` に保ち、対話的な UI は `.tsx` に分離する
-- API クライアントや型は `src/generated/` を Source of Truth とし、手動編集しない
+- API クライアントや型は `src/admin/src/generated/` を Source of Truth とし、手動編集しない
 - API shape を変える場合は `src/contracts` を更新してから `mise run generate:client:admin` を使う
 
 ## 検証
