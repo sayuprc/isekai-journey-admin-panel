@@ -54,6 +54,9 @@ readonly class SearchInteractor implements SearchUseCaseInterface
             $inputData->attribute === Arg::Optional
                 ? new None()
                 : new Some(SongAttribute::from($inputData->attribute)),
+            $inputData->isDisplay === Arg::Optional
+                ? new None()
+                : new Some($inputData->isDisplay),
             $inputData->sort,
             $inputData->order,
             $inputData->page,

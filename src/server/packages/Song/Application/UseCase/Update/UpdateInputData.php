@@ -16,6 +16,7 @@ readonly class UpdateInputData
         public string $title,
         public string $description,
         public int $typeValue,
+        public bool $isDisplay,
         public int $orderNo,
         public array $lyricists,
         public array $composers,

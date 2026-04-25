@@ -16,11 +16,13 @@ readonly class SongSearchCriteria
      * @param Optional<string>        $title
      * @param Optional<SongType>      $type
      * @param Optional<SongAttribute> $attribute
+     * @param Optional<bool>          $isDisplay
      */
     public function __construct(
         public Optional $title,
         public Optional $type,
         public Optional $attribute,
+        public Optional $isDisplay,
         public Sort $sort = Sort::OrderNo,
         public Order $order = Order::Asc,
         public int $page = 1,

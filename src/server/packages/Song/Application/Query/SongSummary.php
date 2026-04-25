@@ -14,6 +14,7 @@ readonly class SongSummary
         public string $title,
         public SongType $type,
         public ?SongAttribute $attribute,
+        public bool $isDisplay,
         public int $orderNo,
     ) {
     }

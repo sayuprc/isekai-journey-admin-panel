@@ -31,6 +31,7 @@ class CreateSongTest extends DatabaseTestCase
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
                 'typeValue' => SongType::Original->value,
+                'isDisplay' => true,
                 'lyricists' => [['creatorId' => $creator1->creatorId->value]],
                 'composers' => [['creatorId' => $creator2->creatorId->value]],
                 'arrangers' => [['creatorId' => $creator3->creatorId->value]],
@@ -47,6 +48,7 @@ class CreateSongTest extends DatabaseTestCase
                                 'name' => SongType::Original->getName(),
                                 'value' => SongType::Original->value,
                             ])
+                            ->where('isDisplay', true)
                             ->where('orderNo', 10)
                             ->where('lyricists', [[
                                 'creatorId' => $creator1->creatorId->value,

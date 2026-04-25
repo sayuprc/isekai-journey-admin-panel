@@ -38,6 +38,12 @@ table "songs" {
     unsigned = true
     comment  = "属性"
   }
+  column "is_display" {
+    null    = false
+    type    = bool
+    default = true
+    comment = "表示するか"
+  }
   column "order_no" {
     null     = false
     type     = int

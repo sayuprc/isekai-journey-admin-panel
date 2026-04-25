@@ -7,10 +7,12 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
+  const isDisplayRaw = params.get('is_display');
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
     attribute: Number(params.get('attribute') ?? 0) || undefined,
+    isDisplay: isDisplayRaw === 'true' ? true : isDisplayRaw === 'false' ? false : undefined,
     sort: params.get('sort') ?? 'order_no',
     order: params.get('order') ?? 'asc',
     page: Number(params.get('page') ?? '1') || 1,
@@ -24,6 +26,7 @@ export const SearchList = () => {
   const [title, setTitle] = createSignal(initial.title);
   const [type, setType] = createSignal(initial.type);
   const [attribute, setAttribute] = createSignal(initial.attribute);
+  const [isDisplay, setIsDisplay] = createSignal(initial.isDisplay);
   const [sort, setSort] = createSignal(initial.sort);
   const [order, setOrder] = createSignal(initial.order);
   const [page, setPage] = createSignal(initial.page);
@@ -33,6 +36,7 @@ export const SearchList = () => {
   const [inputTitle, setInputTitle] = createSignal(initial.title);
   const [inputType, setInputType] = createSignal(initial.type);
   const [inputAttribute, setInputAttribute] = createSignal(initial.attribute);
+  const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);
   const [inputSort, setInputSort] = createSignal(initial.sort);
   const [inputOrder, setInputOrder] = createSignal(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
@@ -41,6 +45,7 @@ export const SearchList = () => {
     title: string;
     type?: number;
     attribute?: number;
+    isDisplay?: boolean;
     sort: string;
     order: string;
     page: number;
@@ -50,6 +55,7 @@ export const SearchList = () => {
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', String(params.type));
     if (params.attribute) searchParams.set('attribute', String(params.attribute));
+    if (params.isDisplay !== undefined) searchParams.set('is_display', String(params.isDisplay));
     if (params.sort) searchParams.set('sort', params.sort);
     if (params.order) searchParams.set('order', params.order);
     searchParams.set('page', String(params.page));
@@ -64,6 +70,7 @@ export const SearchList = () => {
       title: title(),
       type: type(),
       attribute: attribute(),
+      isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
       page: page(),
@@ -77,6 +84,7 @@ export const SearchList = () => {
           title: params.title,
           type: params.type,
           attribute: params.attribute,
+          is_display: params.isDisplay,
           sort: params.sort,
           order: params.order,
           page: params.page,
@@ -107,6 +115,7 @@ export const SearchList = () => {
     setTitle(inputTitle());
     setType(inputType());
     setAttribute(inputAttribute());
+    setIsDisplay(inputIsDisplay());
     setSort(inputSort());
     setOrder(inputOrder());
     setPerPage(inputPerPage());
@@ -115,6 +124,7 @@ export const SearchList = () => {
       title: inputTitle(),
       type: inputType(),
       attribute: inputAttribute(),
+      isDisplay: inputIsDisplay(),
       sort: inputSort(),
       order: inputOrder(),
       page: newPage,
@@ -128,6 +138,7 @@ export const SearchList = () => {
       title: title(),
       type: type(),
       attribute: attribute(),
+      isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
       page: page,
@@ -187,6 +198,27 @@ export const SearchList = () => {
             <For each={data()?.attributes ?? []}>
               {a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}
             </For>
+          </select>
+        </fieldset>
+        <fieldset class="fieldset">
+          <label class="fieldset-label" for="isDisplay">
+            表示設定
+          </label>
+          <select
+            id="isDisplay"
+            name="isDisplay"
+            class="select select-bordered select-sm"
+            onChange={e => setInputIsDisplay(e.currentTarget.value === '' ? undefined : e.currentTarget.value === 'true')}
+          >
+            <option value="" selected={inputIsDisplay() === undefined}>
+              すべて
+            </option>
+            <option value="true" selected={inputIsDisplay() === true}>
+              表示する
+            </option>
+            <option value="false" selected={inputIsDisplay() === false}>
+              表示しない
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -254,6 +286,7 @@ export const SearchList = () => {
               <th>楽曲名</th>
               <th>楽曲種別</th>
               <th>楽曲属性</th>
+              <th>表示設定</th>
               <th>表示順</th>
               <th>操作</th>
             </tr>
@@ -274,6 +307,9 @@ export const SearchList = () => {
                         <div class="skeleton h-6 w-10" />
                       </td>
                       <td>
+                        <div class="skeleton h-4 w-16" />
+                      </td>
+                      <td>
                         <div class="skeleton h-4 w-8" />
                       </td>
                       <td>
@@ -286,7 +322,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="5" class="py-8 text-center text-error">
+                    <td colspan="6" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -300,6 +336,7 @@ export const SearchList = () => {
                         <td>{song.title}</td>
                         <td>{song.type.name}</td>
                         <td>{song.attribute?.name ?? '-'}</td>
+                        <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
                         <td>{song.orderNo}</td>
                         <td>
                           <a href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">

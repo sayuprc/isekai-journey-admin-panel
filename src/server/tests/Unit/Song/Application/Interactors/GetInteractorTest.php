@@ -73,6 +73,7 @@ class GetInteractorTest extends TestCase
                     $song->type->value,
                     null,
                     null,
+                    $song->isDisplay,
                     $song->orderNo->value,
                     [new AssembledCreator($lyricistId, '作詞者A', 1)],
                     [new AssembledCreator($composerId, '作曲者A', 1)],
@@ -92,6 +93,7 @@ class GetInteractorTest extends TestCase
         $this->assertSame('オリジナル楽曲', $response->song->description);
         $this->assertSame(SongType::Original->getName(), $response->song->typeName);
         $this->assertSame(SongType::Original->value, $response->song->typeValue);
+        $this->assertTrue($response->song->isDisplay);
         $this->assertSame(1, $response->song->orderNo);
 
         $this->assertCount(1, $response->song->lyricists);

@@ -59,6 +59,7 @@ export const CreateForm = () => {
         formData.get('attributeValue') !== ''
           ? (Number(formData.get('attributeValue')) as SongAttributeValue)
           : undefined,
+      isDisplay: formData.get('isDisplay') === 'true',
       arrangers: arrangers(),
       composers: composers(),
       lyricists: lyricists(),
@@ -161,6 +162,14 @@ export const CreateForm = () => {
             選択してください
           </option>
           <For each={attributes()}>{attribute => <option value={attribute.value}>{attribute.name}</option>}</For>
+        </select>
+
+        <label class="label">表示設定</label>
+        <select class="select select-bordered w-full" name="isDisplay">
+          <option value="true" selected>
+            表示する
+          </option>
+          <option value="false">表示しない</option>
         </select>
 
         <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />

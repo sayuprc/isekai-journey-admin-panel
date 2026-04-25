@@ -15,6 +15,7 @@ readonly class CreateInputData
         public string $title,
         public string $description,
         public int $typeValue,
+        public bool $isDisplay,
         public array $lyricists,
         public array $composers,
         public array $arrangers,

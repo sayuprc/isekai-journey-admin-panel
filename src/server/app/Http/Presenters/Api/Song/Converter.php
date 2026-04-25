@@ -19,11 +19,14 @@ readonly class Converter
 {
     public function toOpenApiSong(AssembledSong $song): OpenApiSong
     {
-        $openApiSong = new OpenApiSong()
+        $openApiSong = new OpenApiSong();
+
+        $openApiSong
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setDescription($song->description)
             ->setType($this->toOpenApiSongType($song))
+            ->setIsDisplay($song->isDisplay)
             ->setOrderNo($song->orderNo)
             ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
             ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))
@@ -38,21 +41,27 @@ readonly class Converter
 
     private function toOpenApiSongType(AssembledSong $song): OpenApiSongType
     {
-        return new OpenApiSongType()
+        $type = new OpenApiSongType();
+
+        return $type
             ->setName($song->typeName)
             ->setValue(SongTypeValue::from($song->typeValue));
     }
 
     private function toOpenApiSongAttribute(string $name, int $value): OpenApiSongAttribute
     {
-        return new OpenApiSongAttribute()
+        $attribute = new OpenApiSongAttribute();
+
+        return $attribute
             ->setName($name)
             ->setValue(SongAttributeValue::from($value));
     }
 
     private function toOpenApiLyricist(AssembledCreator $creator): OpenApiLyricist
     {
-        return new OpenApiLyricist()
+        $lyricist = new OpenApiLyricist();
+
+        return $lyricist
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
@@ -60,7 +69,9 @@ readonly class Converter
 
     private function toOpenApiComposer(AssembledCreator $creator): OpenApiComposer
     {
-        return new OpenApiComposer()
+        $composer = new OpenApiComposer();
+
+        return $composer
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
@@ -68,7 +79,9 @@ readonly class Converter
 
     private function toOpenApiArranger(AssembledCreator $creator): OpenApiArranger
     {
-        return new OpenApiArranger()
+        $arranger = new OpenApiArranger();
+
+        return $arranger
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);

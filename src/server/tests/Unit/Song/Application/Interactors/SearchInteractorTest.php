@@ -46,16 +46,17 @@ class SearchInteractorTest extends TestCase
             '描き続けた君へ',
             SongType::Original,
             null,
+            true,
             1,
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -77,6 +78,7 @@ class SearchInteractorTest extends TestCase
             '描き続けた君へ',
             SongType::Original,
             null,
+            true,
             1,
         );
 
@@ -107,6 +109,7 @@ class SearchInteractorTest extends TestCase
             '描き続けた君へ',
             SongType::Original,
             null,
+            true,
             1,
         );
 
@@ -137,6 +140,7 @@ class SearchInteractorTest extends TestCase
             '描き続けた君へ',
             SongType::Original,
             SongAttribute::Collaboration,
+            true,
             1,
         );
 
@@ -157,6 +161,37 @@ class SearchInteractorTest extends TestCase
         $output = $result->unwrap();
         $this->assertCount(1, $output->songs);
         $this->assertSame(SongAttribute::Collaboration, $output->songs[0]->attribute);
+    }
+
+    #[Test]
+    public function searchWithIsDisplay(): void
+    {
+        $summary = new SongSummary(
+            'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+            '描き続けた君へ',
+            SongType::Original,
+            null,
+            false,
+            1,
+        );
+
+        $this->query->shouldReceive('search')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
+            ->andReturn([$summary])
+            ->once();
+
+        $this->query->shouldReceive('maxPage')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
+            ->andReturn(1)
+            ->once();
+
+        $result = $this->getInstance()->handle(new SearchInputData(isDisplay: false));
+
+        $this->assertTrue($result->isOk());
+
+        $output = $result->unwrap();
+        $this->assertCount(1, $output->songs);
+        $this->assertFalse($output->songs[0]->isDisplay);
     }
 
     #[Test]

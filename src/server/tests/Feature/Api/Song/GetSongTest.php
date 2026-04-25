@@ -54,13 +54,14 @@ class GetSongTest extends DatabaseTestCase
                     'songId' => $songId,
                     'title' => '描き続けた君へ',
                     'description' => 'オリジナル楽曲',
-                    'type' => [
-                        'name' => 'オリジナル曲',
-                        'value' => 1,
-                    ],
-                    'orderNo' => 1,
-                    'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
-                    'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
+                     'type' => [
+                         'name' => 'オリジナル曲',
+                         'value' => 1,
+                     ],
+                     'isDisplay' => true,
+                     'orderNo' => 1,
+                     'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
+                     'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
                     'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
                 ],
             ]);
