@@ -21,6 +21,20 @@
 2. `mise run setup`
 3. 必要な追加タスクは `mise tasks` で確認する
 
+worktree ごとに Docker 環境を並列起動したい場合は、各 worktree のリポジトリ直下に未追跡の `.env` を置き、`COMPOSE_PROJECT_NAME` と公開ポートをずらす。
+
+```dotenv
+COMPOSE_PROJECT_NAME=isekai-observatory-feature-a
+PROXY_HTTP_PORT=18080
+PROXY_HTTPS_PORT=18443
+PHP_HTTP_PORT=18000
+MYSQL_PORT=13306
+REDIS_PORT=16379
+REDIS_HTTP_PORT=18079
+```
+
+`php` / `mysql` / `redis` は Compose の service 名で相互接続されるため、worktree ごとに project 名とホスト公開ポートを分ければコンテナ同士が干渉しない。
+
 TypeScript 関連: `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する
 
 ## ドキュメント
