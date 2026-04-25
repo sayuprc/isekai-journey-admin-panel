@@ -6,7 +6,7 @@ server {
     server_name local.admin.isekaijoucho.fan;
 
     location / {
-        proxy_pass http://host.docker.internal:4321;
+        proxy_pass http://host.docker.internal:${ADMIN_PORT};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -38,7 +38,7 @@ server {
     server_name local.isekaijoucho.fan;
 
     location / {
-        proxy_pass http://host.docker.internal:3000;
+        proxy_pass http://host.docker.internal:${VIEWER_PORT};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

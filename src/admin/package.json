@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev --host",
+    "dev": "astro dev --host --port ${ADMIN_PORT:-4321}",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
