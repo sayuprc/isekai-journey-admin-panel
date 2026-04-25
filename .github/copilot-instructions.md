@@ -1,46 +1,16 @@
-# Project Guidelines
+# GitHub Copilot Instructions
 
-## Project Overview
+このファイルは GitHub Copilot 向けの薄い入口です。共通のリポジトリ地図、変更ルート、文書配置、共有ルールは `AGENTS.md` を参照してください。
 
-`isekai-observatory` はモノレポです。
+## まず見る入口
 
-- `src/server`: PHP 8.5 / Laravel API
-- `src/admin`: Astro / SolidJS / Elysia による管理画面
-- `src/viewer`: Astro / SolidJS による閲覧サイト
-- `src/contracts`: TypeSpec で管理する API コントラクト
-
-タスク開始時は次の短い入口を優先してください。
-
+- `AGENTS.md`: 共通の地図と変更の入口
 - `README.md`: セットアップと主要コマンド
-- `ARCHITECTURE.md`: 責務分割と変更ルート
-- `FRONTEND.md`: 管理画面 / 閲覧サイトの UI 実装方針
-- `PLANS.md`: 実行計画を書く基準と運用方法
-- `docs/INDEX.md`: リポジトリ内ドキュメントの索引
-- `docs/adr/INDEX.md`: 採用済みアーキテクチャ判断
+- `ARCHITECTURE.md`: Source of Truth と変更ルート
 
-## Workflow
+## Copilot 向けの追加入口
 
-- まず変更対象のサブプロジェクトを 1 つに絞って作業する
-- 仕様が曖昧な非自明な変更は `docs/product-specs/` に先に整理する
-- 複数ステップの変更は `docs/exec-plans/active/` に計画を残してから進める
-- 繰り返し参照される判断や運用ルールは、会話ではなくリポジトリ内ドキュメントに残す
-- 既存の ADR や `docs/` と矛盾する変更を行う場合は、コードだけでなく関連文書も更新する
+- パス別の詳細ルールは `.github/instructions/` の `*.instructions.md` を使う
+- 文書更新時は `.github/instructions/04-docs.instructions.md` に従い、入口文書は短く、詳細は下位文書へ分ける
 
-## Build And Test
-
-- 開発環境の起動と共通タスクは `mise` を使う
-- `src/` 配下の TypeScript プロジェクトは `bun workspace` で管理する
-- 各 Bun package の script は `src/` で `bun --filter <package> <script>` として実行する
-- PHP 関連のコマンドは Docker コンテナ経由で実行する
-- 変更後は `mise tasks` で関連タスクを確認し、変更箇所に最も近い検証を優先する
-
-## Conventions
-
-- リンター・フォーマッター設定を変えてエラーを回避しない
-- 生成物は手動編集しない
-  - `src/server/Generated/`
-  - `src/admin/src/generated/`
-  - `src/viewer/src/generated/`
-  - `src/contracts/generated/`
-- `npm` / `yarn` / `pnpm` は使わず、`bun` を使う
-- `git commit --no-verify` は使わない
+このファイルに共通ルールを複写せず、必要な内容は `AGENTS.md` か該当の instructions に集約します。

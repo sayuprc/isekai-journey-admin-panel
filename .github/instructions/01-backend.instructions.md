@@ -15,12 +15,12 @@ paths:
 
 ## 構成
 
-- `app/`: Laravel のエントリポイント、HTTP、Console、Provider などのフレームワーク接続
-- `packages/{Package}/Domain`: ビジネスルール。ほかのレイヤーに依存しない
-- `packages/{Package}/Application`: ユースケース。Domain にのみ依存する
-- `packages/{Package}/Infrastructures`: 永続化や外部接続。Domain に依存し、Application には依存しない
-- `packages/{Package}/DebugInfrastructures`: テスト用のファイルベース実装
-- `Generated/`: OpenAPI から生成されたコード
+- `src/server/app/`: Laravel のエントリポイント、HTTP、Console、Provider などのフレームワーク接続
+- `src/server/packages/{Package}/Domain`: ビジネスルール。ほかのレイヤーに依存しない
+- `src/server/packages/{Package}/Application`: ユースケース。Domain にのみ依存する
+- `src/server/packages/{Package}/Infrastructures`: 永続化や外部接続。Domain に依存し、Application には依存しない
+- `src/server/packages/{Package}/DebugInfrastructures`: テスト用のファイルベース実装
+- `src/server/Generated/`: OpenAPI から生成されたコード
 
 ## 実装規約
 

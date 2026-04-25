@@ -13,14 +13,9 @@
 - 既存スタックで解けるなら依存を増やしすぎない。
 - `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する。
 
-## ファイル境界
+## 境界の参照先
 
-- `src/pages/`: ルーティング、ページ構成、ページ単位の責務
-- `src/layouts/`: レイアウトと共通のページ骨格
-- `src/components/`: 再利用する UI と対話的な部品
-- `src/schemas/`: フォームや入出力のスキーマ
-- `src/server/`: 管理画面専用の BFF とサーバー側処理
-- `src/generated/`: OpenAPI 由来の生成クライアント。手動編集しない
+- `src/admin` / `src/viewer` のディレクトリ境界は `docs/design-docs/subproject-boundaries.md` を参照する
 
 ## UI 品質の最低条件
 
