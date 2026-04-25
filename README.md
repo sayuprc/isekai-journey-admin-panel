@@ -35,12 +35,12 @@ ADMIN_PORT=14321
 VIEWER_PORT=13000
 ```
 
-`php` / `mysql` / `redis` は Compose の service 名で相互接続され、`proxy` は `ADMIN_PORT` / `VIEWER_PORT` で host 上の Astro dev server を見にいく。worktree ごとに project 名と公開ポートを分ければコンテナ同士が干渉しない。
+`php` / `mysql` / `redis` は Compose の service 名で相互接続され、`proxy` は `ADMIN_PORT` / `VIEWER_PORT` でホスト上の Astro dev server を見にいく。worktree ごとに project 名と公開ポートを分ければコンテナ同士が干渉しない。
 
 admin / viewer を worktree ごとに起動するときは、同じ `.env` を見たうえで次のように実行する。
 
-- `cd /home/runner/work/isekai-observatory/isekai-observatory/src && bun --filter admin dev`
-- `cd /home/runner/work/isekai-observatory/isekai-observatory/src && bun --filter viewer dev`
+- `cd src && bun --filter admin dev`
+- `cd src && bun --filter viewer dev`
 
 TypeScript 関連: `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する
 
