@@ -1,7 +1,6 @@
 ---
-name: 'Admin Instructions'
-description: 'Use when editing Astro pages, SolidJS components, Elysia BFF routes, or generated API clients in src/admin. Covers admin-specific structure, regeneration flow, and validation.'
-applyTo: 'src/admin/**'
+paths:
+  - "src/admin/**"
 ---
 
 # 管理画面規約

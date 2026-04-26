@@ -1,7 +1,6 @@
 ---
-name: 'Server Instructions'
-description: 'Use when editing PHP/Laravel code in src/server, implementing API endpoints, changing domain logic, repositories, or writing server-side tests. Covers ADOP layering, ResultType, generated files, and validation.'
-applyTo: 'src/server/**'
+paths:
+  - "src/server/**"
 ---
 
 # サーバー規約

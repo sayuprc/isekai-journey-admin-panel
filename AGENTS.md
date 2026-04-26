@@ -1,29 +1,14 @@
-# AGENTS.md
+# Codex Instructions
 
-エージェント向けの短い入口です。詳細は参照先に置き、このファイルは地図として保ちます。
+このファイルは Codex 向けの薄い入口です。共通のリポジトリ地図、変更ルート、文書配置は `docs/agent-map.md` を参照してください。
 
-## まず見る文書
+## まず見る入口
 
-- `README.md`
-- `ARCHITECTURE.md`
-- `docs/INDEX.md`
+- `docs/agent-map.md`: 共通の地図と変更の入口
+- `README.md`: セットアップと主要コマンド
+- `ARCHITECTURE.md`: Source of Truth と変更ルート
 
-## 触り始め
+## Codex 向けの追加入口
 
-- API の request / response / version: `src/contracts`
-- サーバー側の業務ロジック: `src/server`
-- 管理画面 UI / BFF: `src/admin`
-- 閲覧サイト UI: `src/viewer`
-- それ以外の変更ルート: `ARCHITECTURE.md`
-
-## 文書の置き場所
-
-- `docs/INDEX.md`
-
-## ツール別の詳細入口
-
-- GitHub Copilot: `.github/copilot-instructions.md`, `.github/instructions/`
-- Claude: `CLAUDE.md`, `.claude/rules/`
-- 背景メモ: `docs/references/harness-engineering-notes.md`
-
-詳細ルールはこのファイルに足さず、参照先を更新します。
+- Codex 固有の agent / skill 配置は `.codex/` と `.agents/` を使う
+- 共通ルールをこのファイルへ複写せず、必要な内容は `docs/agent-map.md` か下位文書に集約する

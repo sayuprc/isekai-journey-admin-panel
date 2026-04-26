@@ -1,7 +1,6 @@
 ---
-name: 'Documentation Instructions'
-description: 'Use when updating README, ARCHITECTURE.md, FRONTEND.md, PLANS.md, ADRs, product specs, references, exec plans, or other Markdown docs. Covers repository-as-record-system conventions and document placement.'
-applyTo: '**/*.md'
+paths:
+  - "**/*.md"
 ---
 
 # 文書規約
