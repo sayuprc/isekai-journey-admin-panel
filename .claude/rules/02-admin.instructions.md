@@ -1,1 +1,0 @@
-../../.github/instructions/02-admin.instructions.md

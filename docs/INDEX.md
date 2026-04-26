@@ -6,6 +6,7 @@
 
 ## Maps
 
+- `agent-map.md`: エージェント向けの共通地図
 - `../ARCHITECTURE.md`: リポジトリ全体の地図
 - `../FRONTEND.md`: 管理画面と閲覧サイトの UI 方針
 - `../PLANS.md`: 実行計画の運用ルール

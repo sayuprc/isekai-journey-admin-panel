@@ -1,1 +1,0 @@
-../../.github/instructions/04-docs.instructions.md

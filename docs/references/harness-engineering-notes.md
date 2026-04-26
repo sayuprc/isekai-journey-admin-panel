@@ -12,14 +12,14 @@ OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約し�
 
 ## このリポジトリ向けの補足
 
-- `AGENTS.md` は共通の短い地図として置き、`.github/copilot-instructions.md` と `CLAUDE.md` は薄いツール別入口にとどめる
+- `docs/agent-map.md` を共通の短い入口として置き、共通知識はそこから下位文書へ辿れる形にする
 - この repo では `docs/` を内部向けの記録システムとして使っている
 - API の Source of Truth は `src/contracts` の TypeSpec であり、文書はその変更フローを補助する
 
 ## いまはまだやらないこと
 
-- 巨大な `AGENTS.md` を育てること
-- `AGENTS.md` に tool-specific な詳細ルールまで複写して二重管理すること
+- 巨大な `docs/agent-map.md` を育てること
+- `AGENTS.md` や `CLAUDE.md` に共通ルールや tool-specific な詳細ルールまで複写して二重管理すること
 - まだ困っていない段階で文書の置き場をさらに増やすこと
 - ドキュメントだけで解決できる問題に、先回りして専用ツールを増やすこと
 

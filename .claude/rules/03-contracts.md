@@ -1,7 +1,6 @@
 ---
-name: 'Contracts Instructions'
-description: 'Use when editing TypeSpec contracts, API shapes, versioned endpoints, or OpenAPI generation in src/contracts. Covers entrypoints, generated outputs, and validation.'
-applyTo: 'src/contracts/**'
+paths:
+  - "src/contracts/**"
 ---
 
 # コントラクト規約

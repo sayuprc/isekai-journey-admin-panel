@@ -19,7 +19,7 @@ agents: []
 ## 制約
 
 - コードの挙動を想像で書かない
-- `AGENTS.md` を共通入口として扱い、`.github/copilot-instructions.md` や `CLAUDE.md` にはツール固有の差分だけを置く
+- `docs/agent-map.md` を共通入口として扱い、共通知識はそこから下位文書へ辿れる形にする
 - 一時的な TODO を恒久文書に混ぜない
 - ADR INDEX のような自動生成物は手動編集しない
 

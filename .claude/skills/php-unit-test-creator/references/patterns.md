@@ -45,7 +45,7 @@ use Tests\Support\Domain\EntityFactory;
 class MyTest extends TestCase
 {
     use EntityFactory;
-    
+
     // ...
     $song = $this->createSong(...);
 }
