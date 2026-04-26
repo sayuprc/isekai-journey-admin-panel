@@ -16,10 +16,10 @@ variable "table_schemas" {
 
 env "local" {
   src = var.table_schemas
-  url = "mysql://${getenv("DB_USERNAME")}:${getenv("DB_PASSWORD")}@localhost:${getenv("DB_PORT")}/${getenv("DB_DATABASE")}"
+  url = "mysql://${getenv("DB_USERNAME")}:${getenv("DB_PASSWORD")}@localhost:${getenv("ATLAS_DB_PORT")}/${getenv("DB_DATABASE")}"
 }
 
 env "testing" {
   src = var.table_schemas
-  url = "mysql://${getenv("DB_USERNAME")}:${getenv("DB_PASSWORD")}@localhost:${getenv("DB_PORT")}/${getenv("DB_DATABASE")}"
+  url = "mysql://${getenv("DB_USERNAME")}:${getenv("DB_PASSWORD")}@localhost:${getenv("ATLAS_DB_PORT")}/${getenv("DB_DATABASE")}"
 }

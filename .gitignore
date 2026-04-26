@@ -1,6 +1,7 @@
 mise.*.toml
 !mise.ci.toml
-package-lock.json
+
+.worktree/
 
 # APM dependencies
 apm_modules/
