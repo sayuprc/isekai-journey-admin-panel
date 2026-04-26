@@ -1,0 +1,39 @@
+lockfile_version: '1'
+generated_at: '2026-04-26T01:59:24.805263+00:00'
+dependencies: []
+local_deployed_files:
+- .agents/skills/code-reviewer
+- .agents/skills/php-feature-test-creator
+- .agents/skills/php-integration-test-creator
+- .agents/skills/php-unit-test-creator
+- .claude/agents/docs-curator.md
+- .claude/rules/01-backend.md
+- .claude/rules/02-admin.md
+- .claude/rules/03-contracts.md
+- .claude/rules/04-docs.md
+- .claude/skills/code-reviewer
+- .claude/skills/php-feature-test-creator
+- .claude/skills/php-integration-test-creator
+- .claude/skills/php-unit-test-creator
+- .codex/agents/docs-curator.toml
+- .github/agents/docs-curator.agent.md
+- .github/instructions/01-backend.instructions.md
+- .github/instructions/02-admin.instructions.md
+- .github/instructions/03-contracts.instructions.md
+- .github/instructions/04-docs.instructions.md
+- .github/skills/code-reviewer
+- .github/skills/php-feature-test-creator
+- .github/skills/php-integration-test-creator
+- .github/skills/php-unit-test-creator
+local_deployed_file_hashes:
+  .claude/agents/docs-curator.md: sha256:758435d58e2c0c78f0675adddd14ab8d668a36ab4bdbff9923924391bfe4de4a
+  .claude/rules/01-backend.md: sha256:463789f43c5cafc1ef9ea78b2b69febef216092adc6375928efe19d29af16196
+  .claude/rules/02-admin.md: sha256:664661673c27d756fddf2b2dcc86495eb980aeaaa02f0475c88081fd40147385
+  .claude/rules/03-contracts.md: sha256:b5898112b84449b1315226336fd664e77cb4814eee69a3f26de065037b67283d
+  .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+  .codex/agents/docs-curator.toml: sha256:fe106ca5778794bcc5f771e68d98a2cdbaa4e461b5deb5da3ceca982b364c4e0
+  .github/agents/docs-curator.agent.md: sha256:758435d58e2c0c78f0675adddd14ab8d668a36ab4bdbff9923924391bfe4de4a
+  .github/instructions/01-backend.instructions.md: sha256:7a32a499ce6aa9a27674eb5c8b4e4543081c25edbb524c65b348a6f9f5050df0
+  .github/instructions/02-admin.instructions.md: sha256:1210c1249aef40d8f4ef04f5f3a794af8a96b927b8cd931b44c2ceaf69013be8
+  .github/instructions/03-contracts.instructions.md: sha256:e1e0b368d5c57711033b47166629e61f455524eee7e870dccba861776d09acbb
+  .github/instructions/04-docs.instructions.md: sha256:bd052f95e8b9b6ac5308dd9f17084b014d08b0a49edd859471665c0775c8459c
