@@ -219,7 +219,7 @@ jobs:
       - name: Wait for MySQL
         run: |
           for i in $(seq 1 30); do
-            if docker exec isekai-observatory-mysql mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; then
+            if docker compose exec -T mysql mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; then
               echo "MySQL is ready"
               exit 0
             fi

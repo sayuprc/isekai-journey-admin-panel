@@ -21,6 +21,8 @@
 2. `mise run setup`
 3. 必要な追加タスクは `mise tasks` で確認する
 
+`git worktree` を使うローカル開発運用は `docs/design-docs/local-runtime-topology.md` を参照する。
+
 TypeScript 関連: `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する
 
 ## ドキュメント

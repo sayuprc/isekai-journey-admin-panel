@@ -11,7 +11,6 @@ server_tag = "8.5"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
 mysql_tag = "8.4"
-server_container = "isekai-observatory-api"
 uid = "`id -u`"
 user_name = "`id -un`"
 gid = "`id -g`"
@@ -83,7 +82,7 @@ run = "docker compose down"
 
 [tasks.php]
 description = "php コンテナの中に入る"
-run = "docker exec -it {{vars.server_container}} bash"
+run = "docker compose exec php bash"
 
 [tasks."composer:install"]
 description = "composer パッケージをインストールする"
@@ -92,60 +91,60 @@ run = "docker compose run --rm php composer install"
 [tasks.phpstan]
 description = "PHPStan を実行する"
 usage = 'arg "[path]" var=#true help="静的解析対象パス"'
-run = "docker exec {{vars.server_container}} composer phpstan ${usage_path}"
+run = "docker compose exec php composer phpstan ${usage_path}"
 
 [tasks."phpstan:clear-cache"]
 description = "PHPStan のキャッシュを削除する"
-run = "docker exec {{vars.server_container}} composer phpstan-clear-cache"
+run = "docker compose exec php composer phpstan-clear-cache"
 
 [tasks.arkitect]
 description = "PHPArkitect を実行する"
-run = "docker exec {{vars.server_container}} composer arkitect"
+run = "docker compose exec php composer arkitect"
 
 [tasks.ecs]
 description = "ECS を実行し、コードフォーマットをチェックする"
 usage = 'arg "[path]" var=#true help="フォーマットチェック対象パス"'
-run = "docker exec {{vars.server_container}} composer ecs ${usage_path}"
+run = "docker compose exec php composer ecs ${usage_path}"
 
 [tasks."ecs:fix"]
 description = "ECS を実行し、フォーマットを自動修正する"
 usage = 'arg "[path]" var=#true help="フォーマット自動修正対象パス"'
-run = "docker exec {{vars.server_container}} composer ecs-fix ${usage_path}"
+run = "docker compose exec php composer ecs-fix ${usage_path}"
 
 [tasks.test]
 description = "テストを実行する"
 usage = '''
 arg "[path]" var=#true help="テスト対象パス"
 '''
-run = "docker exec {{vars.server_container}} ./vendor/bin/paratest ${usage_path}"
+run = "docker compose exec php ./vendor/bin/paratest ${usage_path}"
 
 [tasks."test:all"]
 description = "すべてのテストを実行する"
-run = "docker exec {{vars.server_container}} composer test-all"
+run = "docker compose exec php composer test-all"
 
 [tasks."test:unit"]
 description = "Unit テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-unit"
+run = "docker compose exec php composer test-unit"
 
 [tasks."test:integration"]
 description = "Integration テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-integration"
+run = "docker compose exec php composer test-integration"
 
 [tasks."test:feature"]
 description = "Feature テストを実行する"
-run = "docker exec {{vars.server_container}} composer test-feature"
+run = "docker compose exec php composer test-feature"
 
 [tasks.coverage]
 description = "テストカバレッジを出力する"
-run = "docker exec {{vars.server_container}} composer coverage"
+run = "docker compose exec php composer coverage"
 
 [tasks.infection]
 description = "ミューテーションテストを実行する"
-run = "docker exec {{vars.server_container}} composer infection"
+run = "docker compose exec php composer infection"
 
 [tasks.metrics]
 description = "コードメトリクスを出力する"
-run = "docker exec {{vars.server_container}} composer metrics"
+run = "docker compose exec php composer metrics"
 
 [tasks.migrate]
 description = "スキーマをデータベースに適用する"
@@ -178,11 +177,29 @@ _.file = "src/server/.env"
 
 [tasks.tinker]
 description = "Laravel tinker を実行する"
-run = "docker exec {{vars.server_container}} php artisan tinker"
+run = "docker compose exec php php artisan tinker"
 
 [tasks."ide:doc"]
 description = "Eloquent にカラム情報を書き込む"
-run = "docker exec {{vars.server_container}} php artisan ide-helper:models -RW -n"
+run = "docker compose exec php php artisan ide-helper:models -RW -n"
+
+[tasks."worktree:init"]
+description = "worktree ごとのローカル実行設定を生成する"
+run = "./tools/worktree/init.sh"
+
+[tasks."worktree:status"]
+description = "現在の worktree に割り当てられたポートと URL を表示する"
+run = "./tools/worktree/init.sh --status"
+
+[tasks."dev:admin"]
+description = "Admin の dev サーバーを worktree 専用ポートで起動する"
+dir = "src"
+run = "bun --filter admin dev -- --host 0.0.0.0 --port \"${WORKTREE_ADMIN_PORT:-4321}\""
+
+[tasks."dev:viewer"]
+description = "Viewer の dev サーバーを worktree 専用ポートで起動する"
+dir = "src"
+run = "bun --filter viewer dev -- --host 0.0.0.0 --port \"${WORKTREE_VIEWER_PORT:-3000}\""
 
 [tasks.generate]
 description = "OAS からコードを生成する"
