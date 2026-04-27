@@ -19,9 +19,21 @@ readonly class Converter
 {
     public function toOpenApiSong(AssembledSong $song): OpenApiSong
     {
-        $openApiSong = new OpenApiSong();
+        if ($song->hasAttribute()) {
+            return new OpenApiSong()
+                ->setSongId($song->songId)
+                ->setTitle($song->title)
+                ->setDescription($song->description)
+                ->setType($this->toOpenApiSongType($song))
+                ->setIsDisplay($song->isDisplay)
+                ->setOrderNo($song->orderNo)
+                ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
+                ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))
+                ->setArrangers(array_map($this->toOpenApiArranger(...), $song->arrangers))
+                ->setAttribute($this->toOpenApiSongAttribute($song->attributeName, $song->attributeValue));
+        }
 
-        $openApiSong
+        return new OpenApiSong()
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setDescription($song->description)
@@ -31,37 +43,25 @@ readonly class Converter
             ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
             ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))
             ->setArrangers(array_map($this->toOpenApiArranger(...), $song->arrangers));
-
-        if ($song->hasAttribute()) {
-            $openApiSong->setAttribute($this->toOpenApiSongAttribute($song->attributeName, $song->attributeValue));
-        }
-
-        return $openApiSong;
     }
 
     private function toOpenApiSongType(AssembledSong $song): OpenApiSongType
     {
-        $type = new OpenApiSongType();
-
-        return $type
+        return new OpenApiSongType()
             ->setName($song->typeName)
             ->setValue(SongTypeValue::from($song->typeValue));
     }
 
     private function toOpenApiSongAttribute(string $name, int $value): OpenApiSongAttribute
     {
-        $attribute = new OpenApiSongAttribute();
-
-        return $attribute
+        return new OpenApiSongAttribute()
             ->setName($name)
             ->setValue(SongAttributeValue::from($value));
     }
 
     private function toOpenApiLyricist(AssembledCreator $creator): OpenApiLyricist
     {
-        $lyricist = new OpenApiLyricist();
-
-        return $lyricist
+        return new OpenApiLyricist()
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
@@ -69,9 +69,7 @@ readonly class Converter
 
     private function toOpenApiComposer(AssembledCreator $creator): OpenApiComposer
     {
-        $composer = new OpenApiComposer();
-
-        return $composer
+        return new OpenApiComposer()
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
@@ -79,9 +77,7 @@ readonly class Converter
 
     private function toOpenApiArranger(AssembledCreator $creator): OpenApiArranger
     {
-        $arranger = new OpenApiArranger();
-
-        return $arranger
+        return new OpenApiArranger()
             ->setCreatorId($creator->creatorId)
             ->setName($creator->name)
             ->setOrderNo($creator->orderNo);
