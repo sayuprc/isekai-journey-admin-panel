@@ -55,6 +55,7 @@ class CreateInteractorTest extends TestCase
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
         $typeValue = SongType::Original->value;
+        $isDisplay = true;
         $orderNo = 1;
         $lyricists = [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
         $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
@@ -66,7 +67,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $typeValue, null, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $typeValue, null, $isDisplay, $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -78,6 +79,7 @@ class CreateInteractorTest extends TestCase
                     $lyricists,
                     $composers,
                     $arrangers,
+                    $isDisplay,
                 )),
             )
             ->once();
@@ -88,6 +90,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->title->value === $title
                     && $arg->description->value === $description
                     && $arg->type->value === $typeValue
+                    && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -108,6 +111,7 @@ class CreateInteractorTest extends TestCase
                     && $arg->title->value === $title
                     && $arg->description->value === $description
                     && $arg->type->value === $typeValue
+                    && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -128,6 +132,7 @@ class CreateInteractorTest extends TestCase
                     $song->type->value,
                     null,
                     null,
+                    $song->isDisplay,
                     $song->orderNo->value,
                     [new AssembledCreator($lyricistId, '作詞者', 1)],
                     [new AssembledCreator($composerId, '作曲者', 1)],
@@ -141,6 +146,7 @@ class CreateInteractorTest extends TestCase
                 $title,
                 $description,
                 $typeValue,
+                $isDisplay,
                 $lyricists,
                 $composers,
                 $arrangers,
@@ -156,6 +162,7 @@ class CreateInteractorTest extends TestCase
         $title = '曲名';
         $description = '説明';
         $typeValue = 1;
+        $isDisplay = true;
         $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
         $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
         $arrangers = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
@@ -166,7 +173,7 @@ class CreateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $typeValue, null, $lyricists, $composers, $arrangers)
+            ->with($title, $description, $typeValue, null, $isDisplay, $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -175,6 +182,7 @@ class CreateInteractorTest extends TestCase
                 $title,
                 $description,
                 $typeValue,
+                $isDisplay,
                 $lyricists,
                 $composers,
                 $arrangers,

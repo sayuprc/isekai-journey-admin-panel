@@ -61,6 +61,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'string',
         'type_value' => '\OpenAPI\Client\Model\SongTypeValue',
         'attribute_value' => '\OpenAPI\Client\Model\SongAttributeValue',
+        'is_display' => 'bool',
         'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
         'composers' => '\OpenAPI\Client\Model\RequestComposer[]',
         'arrangers' => '\OpenAPI\Client\Model\RequestArranger[]'
@@ -78,6 +79,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => null,
         'type_value' => null,
         'attribute_value' => null,
+        'is_display' => null,
         'lyricists' => null,
         'composers' => null,
         'arrangers' => null
@@ -93,6 +95,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => false,
         'type_value' => false,
         'attribute_value' => false,
+        'is_display' => false,
         'lyricists' => false,
         'composers' => false,
         'arrangers' => false
@@ -188,6 +191,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'description',
         'type_value' => 'typeValue',
         'attribute_value' => 'attributeValue',
+        'is_display' => 'isDisplay',
         'lyricists' => 'lyricists',
         'composers' => 'composers',
         'arrangers' => 'arrangers'
@@ -203,6 +207,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'setDescription',
         'type_value' => 'setTypeValue',
         'attribute_value' => 'setAttributeValue',
+        'is_display' => 'setIsDisplay',
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
         'arrangers' => 'setArrangers'
@@ -218,6 +223,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'description' => 'getDescription',
         'type_value' => 'getTypeValue',
         'attribute_value' => 'getAttributeValue',
+        'is_display' => 'getIsDisplay',
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
         'arrangers' => 'getArrangers'
@@ -284,6 +290,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('attribute_value', $data ?? [], null);
+        $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
@@ -328,6 +335,9 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         }
         if ($this->container['type_value'] === null) {
             $invalidProperties[] = "'type_value' can't be null";
+        }
+        if ($this->container['is_display'] === null) {
+            $invalidProperties[] = "'is_display' can't be null";
         }
         if ($this->container['lyricists'] === null) {
             $invalidProperties[] = "'lyricists' can't be null";
@@ -462,6 +472,33 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable attribute_value cannot be null');
         }
         $this->container['attribute_value'] = $attribute_value;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_display
+     *
+     * @return bool
+     */
+    public function getIsDisplay()
+    {
+        return $this->container['is_display'];
+    }
+
+    /**
+     * Sets is_display
+     *
+     * @param bool $is_display is_display
+     *
+     * @return self
+     */
+    public function setIsDisplay($is_display)
+    {
+        if (is_null($is_display)) {
+            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
+        }
+        $this->container['is_display'] = $is_display;
 
         return $this;
     }

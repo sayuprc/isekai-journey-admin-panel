@@ -26,11 +26,12 @@ readonly class SongFactory implements SongFactoryInterface
         Description $description,
         SongType $type,
         ?SongAttribute $attribute,
+        bool $isDisplay,
         OrderNo $orderNo,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
     ): Song {
-        return new Song($songId, $title, $description, $type, $attribute, $orderNo, $lyricists, $composers, $arrangers);
+        return new Song($songId, $title, $description, $type, $attribute, $isDisplay, $orderNo, $lyricists, $composers, $arrangers);
     }
 }

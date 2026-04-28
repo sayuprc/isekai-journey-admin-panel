@@ -32,6 +32,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 Song::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
@@ -42,6 +43,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 true,
             ],
@@ -55,6 +57,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 Song::reconstruct(
                     '11111111-1111-1111-1111-111111111111',
@@ -65,6 +68,7 @@ class SongTest extends TestCase
                     self::creators('dddddddd-dddd-dddd-dddd-dddddddddddd'),
                     self::creators('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'),
                     self::creators('ffffffff-ffff-ffff-ffff-ffffffffffff'),
+                    false,
                 ),
                 true,
             ],
@@ -78,6 +82,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 Song::reconstruct(
                     '22222222-2222-2222-2222-222222222222',
@@ -88,6 +93,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 false,
             ],
@@ -101,6 +107,7 @@ class SongTest extends TestCase
                     self::creators('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
                     self::creators('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
                     self::creators('cccccccc-cccc-cccc-cccc-cccccccccccc'),
+                    true,
                 ),
                 Song::reconstruct(
                     '22222222-2222-2222-2222-222222222222',
@@ -111,6 +118,7 @@ class SongTest extends TestCase
                     self::creators('dddddddd-dddd-dddd-dddd-dddddddddddd'),
                     self::creators('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'),
                     self::creators('ffffffff-ffff-ffff-ffff-ffffffffffff'),
+                    false,
                 ),
                 false,
             ],

@@ -27,6 +27,7 @@ class SongFactoryTest extends TestCase
             Description::reconstruct('オリジナル楽曲'),
             SongType::Original,
             null,
+            true,
             OrderNo::reconstruct(1),
             Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
             Composers::fromArray([['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]])->unwrap(),
@@ -37,6 +38,7 @@ class SongFactoryTest extends TestCase
         $this->assertSame('描き続けた君へ', $song->title->value);
         $this->assertSame('オリジナル楽曲', $song->description->value);
         $this->assertSame(SongType::Original, $song->type);
+        $this->assertTrue($song->isDisplay);
         $this->assertSame(1, $song->orderNo->value);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $song->lyricists[0]->creatorId->value);

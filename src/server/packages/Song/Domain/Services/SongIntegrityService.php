@@ -52,6 +52,7 @@ class SongIntegrityService
         string $description,
         int $type,
         ?int $attribute,
+        bool $isDisplay,
         array $lyricists,
         array $composers,
         array $arrangers,
@@ -78,6 +79,7 @@ class SongIntegrityService
             $description,
             $type,
             $attribute,
+            $isDisplay,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
             ...$creators,
@@ -97,6 +99,7 @@ class SongIntegrityService
         string $description,
         int $type,
         ?int $attribute,
+        bool $isDisplay,
         int $orderNo,
         array $lyricists,
         array $composers,
@@ -124,6 +127,7 @@ class SongIntegrityService
             $description,
             $type,
             $attribute,
+            $isDisplay,
             $orderNo,
             ...$creators,
         );
@@ -138,17 +142,19 @@ class SongIntegrityService
         string $description,
         int $type,
         ?int $attribute,
+        bool $isDisplay,
         int $orderNo,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
     ): Result {
-        return Result::collect6(
+        return Result::collect7(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
             $this->toSongType($type),
             $this->toSongAttribute($attribute),
+            new Ok($isDisplay),
             OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {

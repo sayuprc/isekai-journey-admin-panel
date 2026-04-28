@@ -55,6 +55,7 @@ class UpdateInteractorTest extends TestCase
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
         $typeValue = SongType::Original->value;
+        $isDisplay = false;
         $orderNo = 1;
         $lyricists = [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
         $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
@@ -66,7 +67,7 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, null, $orderNo, $lyricists, $composers, $arrangers)
+            ->with($songId, $title, $description, $typeValue, null, $isDisplay, $orderNo, $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -78,6 +79,7 @@ class UpdateInteractorTest extends TestCase
                     $lyricists,
                     $composers,
                     $arrangers,
+                    $isDisplay,
                 )),
             )
             ->once();
@@ -88,6 +90,7 @@ class UpdateInteractorTest extends TestCase
                     && $arg->title->value === $title
                     && $arg->description->value === $description
                     && $arg->type->value === $typeValue
+                    && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -108,6 +111,7 @@ class UpdateInteractorTest extends TestCase
                     && $arg->title->value === $title
                     && $arg->description->value === $description
                     && $arg->type->value === $typeValue
+                    && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
                     && $arg->lyricists->count() === 1
                     && $arg->lyricists[0]->creatorId->value === $lyricistId
@@ -128,6 +132,7 @@ class UpdateInteractorTest extends TestCase
                     $song->type->value,
                     null,
                     null,
+                    $song->isDisplay,
                     $song->orderNo->value,
                     [new AssembledCreator($lyricistId, '作詞者', 1)],
                     [new AssembledCreator($composerId, '作曲者', 1)],
@@ -142,6 +147,7 @@ class UpdateInteractorTest extends TestCase
                 $title,
                 $description,
                 $typeValue,
+                $isDisplay,
                 $orderNo,
                 $lyricists,
                 $composers,
@@ -159,6 +165,7 @@ class UpdateInteractorTest extends TestCase
         $title = '曲名';
         $description = '説明';
         $typeValue = 1;
+        $isDisplay = false;
         $orderNo = 1;
         $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]];
         $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]];
@@ -170,7 +177,7 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, null, $orderNo, $lyricists, $composers, $arrangers)
+            ->with($songId, $title, $description, $typeValue, null, $isDisplay, $orderNo, $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -180,6 +187,7 @@ class UpdateInteractorTest extends TestCase
                 $title,
                 $description,
                 $typeValue,
+                $isDisplay,
                 $orderNo,
                 $lyricists,
                 $composers,

@@ -32,6 +32,7 @@ class CreateInteractorTest extends DatabaseTestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original->value,
+                true,
                 [['creatorId' => $creator1->creatorId->value]],
                 [['creatorId' => $creator2->creatorId->value]],
                 [['creatorId' => $creator3->creatorId->value]],
@@ -46,6 +47,7 @@ class CreateInteractorTest extends DatabaseTestCase
         $this->assertSame('描き続けた君へ', $song->title);
         $this->assertSame('オリジナル楽曲', $song->description);
         $this->assertSame(SongType::Original->value, $song->type);
+        $this->assertTrue($song->is_display);
         $this->assertSame(10, $song->order_no);
         $this->assertCount(1, $song->lyricists);
         $this->assertSame($creator1->creatorId->value, $this->toUuid($song->lyricists->first()->creator_id));

@@ -19,6 +19,7 @@ scalar description extends string;
   description: "オリジナル楽曲",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
+  isDisplay: true,
   orderNo: 1,
   lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
@@ -30,6 +31,7 @@ model Song {
   description: description;
   type: SongType;
   attribute?: SongAttribute;
+  isDisplay: boolean;
   orderNo: orderNo;
   lyricists: Lyricist[];
   composers: Composer[];
@@ -76,6 +78,7 @@ model SongAttribute {
   title: "描き続けた君へ",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
+  isDisplay: true,
   orderNo: 1,
 })
 model SongSummary {
@@ -83,6 +86,7 @@ model SongSummary {
   title: title;
   type: SongType;
   attribute?: SongAttribute;
+  isDisplay: boolean;
   orderNo: orderNo;
 }
 

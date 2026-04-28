@@ -24,6 +24,7 @@ readonly class Converter
             ->setTitle($song->title)
             ->setDescription($song->description)
             ->setType($this->toOpenApiSongType($song))
+            ->setIsDisplay($song->isDisplay)
             ->setOrderNo($song->orderNo)
             ->setLyricists(array_map($this->toOpenApiLyricist(...), $song->lyricists))
             ->setComposers(array_map($this->toOpenApiComposer(...), $song->composers))

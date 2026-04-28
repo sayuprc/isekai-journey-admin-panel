@@ -46,6 +46,7 @@ class SearchPresenter
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setType($this->toOpenApiSongType($song->type))
+            ->setIsDisplay($song->isDisplay)
             ->setOrderNo($song->orderNo);
 
         if (! is_null($song->attribute)) {

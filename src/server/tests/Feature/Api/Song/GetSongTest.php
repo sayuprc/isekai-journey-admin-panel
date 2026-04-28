@@ -58,6 +58,7 @@ class GetSongTest extends DatabaseTestCase
                         'name' => 'オリジナル曲',
                         'value' => 1,
                     ],
+                    'isDisplay' => true,
                     'orderNo' => 1,
                     'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
                     'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],

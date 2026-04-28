@@ -40,6 +40,7 @@ class SearchSongTest extends DatabaseTestCase
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
+                        'isDisplay' => true,
                         'orderNo' => 1,
                     ],
                 ],
@@ -70,6 +71,7 @@ class SearchSongTest extends DatabaseTestCase
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
+                        'isDisplay' => true,
                         'orderNo' => 1,
                     ],
                 ],
@@ -100,6 +102,7 @@ class SearchSongTest extends DatabaseTestCase
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
+                        'isDisplay' => true,
                         'orderNo' => 1,
                     ],
                 ],
@@ -134,7 +137,39 @@ class SearchSongTest extends DatabaseTestCase
                             'name' => 'コラボ',
                             'value' => 1,
                         ],
+                        'isDisplay' => true,
                         'orderNo' => 1,
+                    ],
+                ],
+                'maxPage' => 1,
+            ]);
+    }
+
+    #[Test]
+    public function searchByIsDisplay(): void
+    {
+        $displaySongId = $this->generateUuid();
+        $hiddenSongId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($displaySongId, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($hiddenSongId, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], false),
+        );
+
+        $this->withAuth()
+            ->get(route(SongRouteMap::Search, ['is_display' => false]))
+            ->assertStatus(200)
+            ->assertExactJson([
+                'songs' => [
+                    [
+                        'songId' => $hiddenSongId,
+                        'title' => '全部夢だった！',
+                        'type' => [
+                            'name' => 'カバー曲',
+                            'value' => 2,
+                        ],
+                        'isDisplay' => false,
+                        'orderNo' => 2,
                     ],
                 ],
                 'maxPage' => 1,

@@ -122,6 +122,7 @@ export const EditableForm = (props: Props) => {
         formData.get('attributeValue') !== ''
           ? (Number(formData.get('attributeValue')) as SongAttributeValue)
           : undefined,
+      isDisplay: formData.get('isDisplay') === 'true',
       orderNo: Number(formData.get('orderNo')),
       arrangers: arrangers(),
       composers: composers(),
@@ -255,6 +256,16 @@ export const EditableForm = (props: Props) => {
                 </option>
               )}
             </For>
+          </select>
+
+          <label class="label">表示設定</label>
+          <select class="select select-bordered w-full" name="isDisplay">
+            <option value="true" selected={props.data?.song.isDisplay === true}>
+              表示する
+            </option>
+            <option value="false" selected={props.data?.song.isDisplay === false}>
+              表示しない
+            </option>
           </select>
 
           <label class="label">表示順</label>

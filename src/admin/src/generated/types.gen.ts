@@ -173,6 +173,7 @@ export type Song = {
     description: Description;
     type: SongType;
     attribute?: SongAttribute;
+    isDisplay: boolean;
     orderNo: OrderNo;
     lyricists: Array<Lyricist>;
     composers: Array<Composer>;
@@ -198,6 +199,7 @@ export type SongCreateRequest = {
     description: Description;
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
+    isDisplay: boolean;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
@@ -232,6 +234,7 @@ export type SongSummary = {
     title: Title;
     type: SongType;
     attribute?: SongAttribute;
+    isDisplay: boolean;
     orderNo: OrderNo;
 };
 
@@ -254,6 +257,7 @@ export type SongUpdateRequest = {
     description: Description;
     typeValue: SongTypeValue;
     attributeValue?: SongAttributeValue;
+    isDisplay: boolean;
     orderNo: OrderNo;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
@@ -1183,6 +1187,7 @@ export type SongServiceSearchSongsData = {
         title?: string;
         type?: SongTypeValue;
         attribute?: SongAttributeValue;
+        is_display?: boolean;
         sort?: SongSearchSortBy;
         order?: SortOrder;
         page?: Page;

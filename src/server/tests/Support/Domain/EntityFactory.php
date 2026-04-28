@@ -67,6 +67,7 @@ trait EntityFactory
         array $lyricists,
         array $composers,
         array $arrangers,
+        bool $isDisplay = true,
     ): Song {
         return new Song(
             SongId::reconstruct($songId),
@@ -74,6 +75,7 @@ trait EntityFactory
             Description::reconstruct($description),
             $type,
             $attribute,
+            $isDisplay,
             OrderNo::reconstruct($orderNo),
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),

@@ -51,6 +51,7 @@ class UpdateSongTest extends DatabaseTestCase
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
                 'typeValue' => SongType::Cover->value,
+                'isDisplay' => false,
                 'orderNo' => 2,
                 'lyricists' => [],
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
@@ -65,6 +66,7 @@ class UpdateSongTest extends DatabaseTestCase
                         'name' => SongType::Cover->getName(),
                         'value' => SongType::Cover->value,
                     ],
+                    'isDisplay' => false,
                     'orderNo' => 2,
                     'lyricists' => [],
                     'composers' => [
@@ -120,6 +122,7 @@ class UpdateSongTest extends DatabaseTestCase
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
                 'typeValue' => SongType::Cover->value,
+                'isDisplay' => false,
                 'orderNo' => 2,
                 'lyricists' => [],
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
@@ -134,6 +137,7 @@ class UpdateSongTest extends DatabaseTestCase
                         'name' => SongType::Cover->getName(),
                         'value' => SongType::Cover->value,
                     ],
+                    'isDisplay' => false,
                     'orderNo' => 2,
                     'lyricists' => [],
                     'composers' => [

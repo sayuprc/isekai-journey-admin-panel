@@ -724,6 +724,12 @@ paths:
           schema:
             $ref: '#/components/schemas/SongAttributeValue'
           explode: false
+        - name: is_display
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
         - name: sort
           in: query
           required: false
@@ -1260,6 +1266,7 @@ components:
         - title
         - description
         - type
+        - isDisplay
         - orderNo
         - lyricists
         - composers
@@ -1275,6 +1282,8 @@ components:
           $ref: '#/components/schemas/SongType'
         attribute:
           $ref: '#/components/schemas/SongAttribute'
+        isDisplay:
+          type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
         lyricists:
@@ -1299,6 +1308,7 @@ components:
           attribute:
             name: コラボ
             value: 1
+          isDisplay: true
           orderNo: 1
           lyricists:
             - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
@@ -1350,6 +1360,7 @@ components:
         - title
         - description
         - typeValue
+        - isDisplay
         - lyricists
         - composers
         - arrangers
@@ -1362,6 +1373,8 @@ components:
           $ref: '#/components/schemas/SongTypeValue'
         attributeValue:
           $ref: '#/components/schemas/SongAttributeValue'
+        isDisplay:
+          type: boolean
         lyricists:
           type: array
           items:
@@ -1426,6 +1439,7 @@ components:
         - songId
         - title
         - type
+        - isDisplay
         - orderNo
       properties:
         songId:
@@ -1436,6 +1450,8 @@ components:
           $ref: '#/components/schemas/SongType'
         attribute:
           $ref: '#/components/schemas/SongAttribute'
+        isDisplay:
+          type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
       examples:
@@ -1447,6 +1463,7 @@ components:
           attribute:
             name: コラボ
             value: 1
+          isDisplay: true
           orderNo: 1
     SongType:
       type: object
@@ -1483,6 +1500,7 @@ components:
         - title
         - description
         - typeValue
+        - isDisplay
         - orderNo
         - lyricists
         - composers
@@ -1496,6 +1514,8 @@ components:
           $ref: '#/components/schemas/SongTypeValue'
         attributeValue:
           $ref: '#/components/schemas/SongAttributeValue'
+        isDisplay:
+          type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
         lyricists:
