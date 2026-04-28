@@ -148,12 +148,13 @@ class SongIntegrityService
         Composers $composers,
         Arrangers $arrangers,
     ): Result {
-        return Result::collect6(
+        return Result::collect7(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
             $this->toSongType($type),
             $this->toSongAttribute($attribute),
+            new Ok($isDisplay),
             OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {
@@ -167,18 +168,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => $this->factory->create(
-                $values[0],
-                $values[1],
-                $values[2],
-                $values[3],
-                $values[4],
-                $isDisplay,
-                $values[5],
-                $lyricists,
-                $composers,
-                $arrangers,
-            ));
+            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $lyricists, $composers, $arrangers]));
     }
 
     /**

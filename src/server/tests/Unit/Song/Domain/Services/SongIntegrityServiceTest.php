@@ -56,6 +56,7 @@ class SongIntegrityServiceTest extends TestCase
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $type = SongType::Original->value;
         $attribute = null;
+        $isDisplay = true;
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
         $description = '説明';
@@ -107,6 +108,7 @@ class SongIntegrityServiceTest extends TestCase
                     Description $descriptionArg,
                     SongType $typeArg,
                     ?SongAttribute $attributeArg,
+                    bool $isDisplayArg,
                     OrderNo $orderNoArg,
                     Lyricists $lyricistsArg,
                     Composers $composersArg,
@@ -116,6 +118,7 @@ class SongIntegrityServiceTest extends TestCase
                     && $descriptionArg->value === $description
                     && $typeArg->value === $type
                     && $attributeArg === $attribute
+                    && $isDisplayArg === $isDisplay
                     && $orderNoArg->value === $expectedOrderNo
                     && $lyricistsArg->count() === 1
                     && $lyricistsArg[0]->creatorId->value === $lyricistId
@@ -135,6 +138,7 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $type,
             $attribute,
+            $isDisplay,
             [['creatorId' => $lyricistId]],
             [['creatorId' => $composerId]],
             [['creatorId' => $arrangerId]],
@@ -150,6 +154,7 @@ class SongIntegrityServiceTest extends TestCase
         $title = '描き続けた君へ';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $type = SongType::Original->value;
+        $isDisplay = true;
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
         $description = '説明';
@@ -176,6 +181,7 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $type,
             null,
+            $isDisplay,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
             [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
             [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
@@ -191,6 +197,7 @@ class SongIntegrityServiceTest extends TestCase
         $title = '描き続けた君へ';
         $description = '説明';
         $type = SongType::Original->value;
+        $isDisplay = true;
         $orderNo = 1;
 
         $expectedSong = $this->createSong(
@@ -230,6 +237,7 @@ class SongIntegrityServiceTest extends TestCase
                     Description $descriptionArg,
                     SongType $typeArg,
                     ?SongAttribute $attributeArg,
+                    bool $isDisplayArg,
                     OrderNo $orderNoArg,
                     Lyricists $lyricistsArg,
                     Composers $composersArg,
@@ -239,6 +247,7 @@ class SongIntegrityServiceTest extends TestCase
                     && $descriptionArg->value === $description
                     && $typeArg->value === $type
                     && $attributeArg === null
+                    && $isDisplayArg === $isDisplay
                     && $orderNoArg->value === $orderNo
                     && $lyricistsArg->count() === 1
                     && $lyricistsArg[0]->creatorId->value === $lyricistId
@@ -259,6 +268,7 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $type,
             null,
+            $isDisplay,
             $orderNo,
             [['creatorId' => $lyricistId]],
             [['creatorId' => $composerId]],
@@ -276,6 +286,7 @@ class SongIntegrityServiceTest extends TestCase
         $title = '描き続けた君へ';
         $description = '説明';
         $type = SongType::Original->value;
+        $isDisplay = true;
         $orderNo = 1;
 
         $this->creatorRepository->shouldReceive('findByIds')
@@ -300,6 +311,7 @@ class SongIntegrityServiceTest extends TestCase
             $description,
             $type,
             null,
+            $isDisplay,
             $orderNo,
             [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
             [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
