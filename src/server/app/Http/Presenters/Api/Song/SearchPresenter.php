@@ -28,12 +28,16 @@ class SearchPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (SearchOutputData $outputData) => [
-                new SongSearchResponse()
-                    ->setSongs(array_map($this->toOpenApiSongSummary(...), $outputData->songs))
-                    ->setMaxPage($outputData->maxPage),
-                200,
-            ],
+            function (SearchOutputData $outputData) {
+                $response = new SongSearchResponse();
+
+                return [
+                    $response
+                        ->setSongs(array_map($this->toOpenApiSongSummary(...), $outputData->songs))
+                        ->setMaxPage($outputData->maxPage),
+                    200,
+                ];
+            },
             fn (UseCaseError $error) => $this->resolveError($error),
         );
 
@@ -42,34 +46,36 @@ class SearchPresenter
 
     private function toOpenApiSongSummary(SongSummary $song): OpenApiSongSummary
     {
-        if (! is_null($song->attribute)) {
-            return new OpenApiSongSummary()
-                ->setSongId($song->songId)
-                ->setTitle($song->title)
-                ->setType($this->toOpenApiSongType($song->type))
-                ->setIsDisplay($song->isDisplay)
-                ->setOrderNo($song->orderNo)
-                ->setAttribute($this->toOpenApiSongAttribute($song->attribute->getName(), $song->attribute->value));
-        }
+        $summary = new OpenApiSongSummary();
 
-        return new OpenApiSongSummary()
+        $summary
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setType($this->toOpenApiSongType($song->type))
             ->setIsDisplay($song->isDisplay)
             ->setOrderNo($song->orderNo);
+
+        if (! is_null($song->attribute)) {
+            $summary = $summary->setAttribute($this->toOpenApiSongAttribute($song->attribute->getName(), $song->attribute->value));
+        }
+
+        return $summary;
     }
 
     private function toOpenApiSongType(SongType $type): OpenApiSongType
     {
-        return new OpenApiSongType()
+        $openApiType = new OpenApiSongType();
+
+        return $openApiType
             ->setName($type->getName())
             ->setValue(SongTypeValue::from($type->value));
     }
 
     private function toOpenApiSongAttribute(string $name, int $value): OpenApiSongAttribute
     {
-        return new OpenApiSongAttribute()
+        $attribute = new OpenApiSongAttribute();
+
+        return $attribute
             ->setName($name)
             ->setValue(SongAttributeValue::from($value));
     }
