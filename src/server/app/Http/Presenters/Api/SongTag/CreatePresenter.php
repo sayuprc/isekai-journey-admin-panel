@@ -25,12 +25,10 @@ class CreatePresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            function (CreateOutputData $outputData) {
-                return [
-                    new SongTagCreateResponse()->setTag($this->converter->toOpenApiSongTag($outputData->tag)),
-                    200,
-                ];
-            },
+            fn (CreateOutputData $outputData) => [
+                new SongTagCreateResponse()->setTag($this->converter->toOpenApiSongTag($outputData->tag)),
+                200,
+            ],
             fn (UseCaseError $error) => $this->resolveError($error),
         );
 

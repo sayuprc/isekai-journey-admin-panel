@@ -84,8 +84,8 @@ class SongServiceProvider extends EnvServiceProvider
             );
         });
 
-        $this->registerSongTag();
         $this->registerSongAttribute();
+
         $this->registerSongType();
 
         $this->registerSongTag();

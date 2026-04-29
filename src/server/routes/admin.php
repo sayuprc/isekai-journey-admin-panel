@@ -80,10 +80,6 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
                 });
 
-                Route::prefix('song-tags')->group(function () {
-                    Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
-                });
-
                 Route::prefix('song-types')->group(function () {
                     Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
                 });
@@ -93,6 +89,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                 });
 
                 Route::prefix('song-tags')->group(function () {
+                    Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
                     Route::get('/search', [SearchSongTagController::class, 'handle'])->name(SongTagRouteMap::Search);
                 });
             });
