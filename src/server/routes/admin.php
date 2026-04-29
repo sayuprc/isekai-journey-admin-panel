@@ -94,9 +94,9 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                 Route::prefix('song-tags')->group(function () {
                     Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
                     Route::get('/', [ListSongTagController::class, 'handle'])->name(SongTagRouteMap::List);
+                    Route::put('/{songTagId}', [UpdateSongTagController::class, 'handle'])->name(SongTagRouteMap::Update);
                     Route::get('/search', [SearchSongTagController::class, 'handle'])->name(SongTagRouteMap::Search);
                     Route::get('/{songTagId}', [GetSongTagController::class, 'handle'])->name(SongTagRouteMap::Get);
-                    Route::put('/{songTagId}', [UpdateSongTagController::class, 'handle'])->name(SongTagRouteMap::Update);
                 });
             });
         });
