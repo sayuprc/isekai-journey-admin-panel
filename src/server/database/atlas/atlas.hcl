@@ -7,6 +7,7 @@ variable "table_schemas" {
     "file://schemas/creators.my.hcl",
     "file://schemas/performers.my.hcl",
     "file://schemas/songs.my.hcl",
+    "file://schemas/song-tags.my.hcl",
     "file://schemas/song-lyricists.my.hcl",
     "file://schemas/song-composers.my.hcl",
     "file://schemas/song-arrangers.my.hcl",
