@@ -15,7 +15,9 @@ use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\SearchTagInteractor;
 use Song\Application\Interactors\Tag\CreateInteractor as CreateTagInteractor;
+use Song\Application\Interactors\Tag\GetInteractor as GetTagInteractor;
 use Song\Application\Interactors\Tag\ListTagInteractor;
+use Song\Application\Interactors\Tag\UpdateInteractor as UpdateTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -31,6 +33,9 @@ use Song\Application\UseCase\SearchTag\SearchInputData as SearchTagInputData;
 use Song\Application\UseCase\SearchTag\SearchUseCaseInterface as SearchTagUseCaseInterface;
 use Song\Application\UseCase\Tag\Create\CreateInputData as CreateSongTagInputData;
 use Song\Application\UseCase\Tag\Create\CreateUseCaseInterface as CreateSongTagUseCaseInterface;
+use Song\Application\UseCase\Tag\Get\GetUseCaseInterface as GetSongTagUseCaseInterface;
+use Song\Application\UseCase\Tag\Update\UpdateInputData as UpdateSongTagInputData;
+use Song\Application\UseCase\Tag\Update\UpdateUseCaseInterface as UpdateSongTagUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -121,6 +126,22 @@ class SongServiceProvider extends EnvServiceProvider
             $request = $this->app->make(Request::class);
 
             return $this->getMapper()->map(CreateSongTagInputData::class, $request->all());
+        });
+
+        $this->app->bind(GetSongTagUseCaseInterface::class, GetTagInteractor::class);
+
+        $this->app->bind(UpdateSongTagUseCaseInterface::class, UpdateTagInteractor::class);
+
+        $this->app->bind(UpdateSongTagInputData::class, function (): UpdateSongTagInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(
+                UpdateSongTagInputData::class,
+                [
+                    ...$request->all(),
+                    'songTagId' => $request->route('songTagId'),
+                ],
+            );
         });
     }
 }

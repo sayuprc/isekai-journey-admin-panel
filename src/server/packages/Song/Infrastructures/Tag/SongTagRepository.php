@@ -8,6 +8,7 @@ use App\Models\Song\SongTag as ModelsSongTag;
 use Override;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
@@ -60,6 +61,20 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
         }
 
         return (int)ceil($query->count() / $criteria->perPage->value);
+    }
+
+    #[Override]
+    public function find(SongTagId $songTagId): ?SongTag
+    {
+        $found = ModelsSongTag::query()
+            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
     }
 
     #[Override]

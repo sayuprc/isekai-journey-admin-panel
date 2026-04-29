@@ -762,6 +762,48 @@ paths:
       security:
         - BearerAuth: []
   /song-tags/{songTagId}:
+    get:
+      operationId: SongTagService_getSongTag
+      description: 楽曲タグ取得API
+      parameters:
+        - name: songTagId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongTagGetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - SongTag
+      security:
+        - BearerAuth: []
     put:
       operationId: SongTagService_updateSongTag
       description: 楽曲タグ更新API
@@ -1713,6 +1755,13 @@ components:
         name:
           $ref: '#/components/schemas/songTagName'
     SongTagCreateResponse:
+      type: object
+      required:
+        - tag
+      properties:
+        tag:
+          $ref: '#/components/schemas/SongTag'
+    SongTagGetResponse:
       type: object
       required:
         - tag

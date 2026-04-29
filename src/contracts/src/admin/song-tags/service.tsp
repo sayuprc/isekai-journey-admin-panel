@@ -29,6 +29,15 @@ interface SongTagService {
     @query("per_page") perPage?: PerPage = PerPage.fifty,
   ): Ok<SongTagSearchResponse> | Unauthorized | Forbidden | ServerError;
 
+  @doc("楽曲タグ取得API")
+  getSongTag(@path songTagId: uuid):
+    | Ok<SongTagGetResponse>
+    | Unauthorized
+    | Forbidden
+    | NotFound
+    | Unprocessable
+    | ServerError;
+
   @doc("楽曲タグ作成API")
   createSongTag(@body request: SongTagCreateRequest):
     | Ok<SongTagCreateResponse>

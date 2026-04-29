@@ -9,6 +9,10 @@ model SongTagSearchResponse {
   maxPage: int32;
 }
 
+model SongTagGetResponse {
+  tag: SongTag;
+}
+
 model SongTagCreateRequest {
   name: songTagName;
 }

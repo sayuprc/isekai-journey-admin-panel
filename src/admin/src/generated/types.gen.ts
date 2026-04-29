@@ -252,6 +252,10 @@ export type SongTagCreateResponse = {
     tag: SongTag;
 };
 
+export type SongTagGetResponse = {
+    tag: SongTag;
+};
+
 export type SongTagListResponse = {
     tags: Array<SongTag>;
 };
@@ -1322,6 +1326,57 @@ export type SongTagServiceDeleteSongTagResponses = {
 };
 
 export type SongTagServiceDeleteSongTagResponse = SongTagServiceDeleteSongTagResponses[keyof SongTagServiceDeleteSongTagResponses];
+
+export type SongTagServiceGetSongTagData = {
+    body?: never;
+    path: {
+        songTagId: Uuid;
+    };
+    query?: never;
+    url: '/song-tags/{songTagId}';
+};
+
+export type SongTagServiceGetSongTagErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type SongTagServiceGetSongTagError = SongTagServiceGetSongTagErrors[keyof SongTagServiceGetSongTagErrors];
+
+export type SongTagServiceGetSongTagResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: SongTagGetResponse;
+};
+
+export type SongTagServiceGetSongTagResponse = SongTagServiceGetSongTagResponses[keyof SongTagServiceGetSongTagResponses];
 
 export type SongTagServiceUpdateSongTagData = {
     body: SongTagUpdateRequest;
