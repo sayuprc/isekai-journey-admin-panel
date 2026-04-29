@@ -23,6 +23,7 @@ export const app = new Elysia({ prefix: '/api' })
   .use(songTags)
   .use(songTypes)
   .use(songAttributes)
+  .use(songTags)
   .use(songs);
 
 export type App = typeof app;

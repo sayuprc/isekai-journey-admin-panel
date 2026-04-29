@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { songTagServiceSearchSongTags } from '../../generated';
+import { songTagServiceSearchSongTags,songTagServiceCreateSongTag } from '../../generated';
 import type { PerPage, SongTagSearchSortBy, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -30,6 +30,16 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
         order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
         page: t.Optional(t.Number()),
         per_page: t.Optional(t.Number()),
+      })
+    })
+  .post(
+    '/',
+    async ({ body: { name }, credential }) => {
+      return resolveApiResponse(await songTagServiceCreateSongTag({ client: createAuthClient(credential), body: { name } }));
+    },
+    {
+      body: t.Object({
+        name: t.String(),
       }),
     },
   );
