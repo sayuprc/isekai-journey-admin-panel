@@ -717,7 +717,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/SongTagSearchSortBy'
-            default: name
+            default: order_no
           explode: false
         - name: order
           in: query
@@ -1693,14 +1693,18 @@ components:
       required:
         - songTagId
         - name
+        - orderNo
       properties:
         songTagId:
           $ref: '#/components/schemas/songTagId'
         name:
           $ref: '#/components/schemas/songTagName'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
       examples:
         - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           name: 派生曲
+          orderNo: 10
     SongTagCreateRequest:
       type: object
       required:
@@ -1741,14 +1745,18 @@ components:
       type: string
       enum:
         - name
+        - order_no
       description: 楽曲タグ検索のソート条件
     SongTagUpdateRequest:
       type: object
       required:
         - name
+        - orderNo
       properties:
         name:
           $ref: '#/components/schemas/songTagName'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
     SongTagUpdateResponse:
       type: object
       required:

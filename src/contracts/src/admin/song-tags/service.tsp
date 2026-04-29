@@ -9,6 +9,7 @@ namespace IsekaiObservatory.Admin;
 @doc("楽曲タグ検索のソート条件")
 enum SongTagSearchSortBy {
   name: "name",
+  orderNo: "order_no",
 }
 
 @tag("SongTag")
@@ -22,7 +23,7 @@ interface SongTagService {
   @route("/search")
   searchSongTags(
     @query name?: string,
-    @query sort?: SongTagSearchSortBy = SongTagSearchSortBy.name,
+    @query sort?: SongTagSearchSortBy = SongTagSearchSortBy.orderNo,
     @query order?: SortOrder = SortOrder.asc,
     @query page?: page = 1,
     @query("per_page") perPage?: PerPage = PerPage.fifty,

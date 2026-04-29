@@ -19,6 +19,7 @@ model SongTagCreateResponse {
 
 model SongTagUpdateRequest {
   name: songTagName;
+  orderNo: orderNo;
 }
 
 model SongTagUpdateResponse {

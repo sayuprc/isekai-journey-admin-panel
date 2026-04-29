@@ -241,6 +241,7 @@ export type SongSummary = {
 export type SongTag = {
     songTagId: SongTagId;
     name: SongTagName;
+    orderNo: OrderNo;
 };
 
 export type SongTagCreateRequest = {
@@ -263,10 +264,11 @@ export type SongTagSearchResponse = {
 /**
  * 楽曲タグ検索のソート条件
  */
-export type SongTagSearchSortBy = 'name';
+export type SongTagSearchSortBy = 'name' | 'order_no';
 
 export type SongTagUpdateRequest = {
     name: SongTagName;
+    orderNo: OrderNo;
 };
 
 export type SongTagUpdateResponse = {
