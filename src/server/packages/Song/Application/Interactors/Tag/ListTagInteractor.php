@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Application\Interactors;
+namespace Song\Application\Interactors\Tag;
 
 use AdminUser\Domain\Models\Permission;
 use Auth\Domain\Models\AuthContext;
@@ -20,7 +20,7 @@ readonly class ListTagInteractor implements ListTagUseCaseInterface
 {
     public function __construct(
         private AuthContext $context,
-        private SongTagRepositoryInterface $songTagRepository,
+        private SongTagRepositoryInterface $repository,
     ) {
     }
 
@@ -37,6 +37,6 @@ readonly class ListTagInteractor implements ListTagUseCaseInterface
             return new Err(new AuthorizationError());
         }
 
-        return new Ok(new ListTagOutputData($this->songTagRepository->list()));
+        return new Ok(new ListTagOutputData($this->repository->all()));
     }
 }

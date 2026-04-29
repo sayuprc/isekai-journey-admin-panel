@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\SongTagListResponse;
 use ResultType\Result;
 use Song\Application\UseCase\ListTag\ListTagOutputData;
-use Song\Domain\Models\Tag\SongTag;
 use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
@@ -29,7 +28,7 @@ class ListPresenter
             fn (ListTagOutputData $outputData) => [
                 new SongTagListResponse()->setTags(
                     array_map(
-                        fn (SongTag $tag) => $this->converter->toOpenApiSongTag($tag),
+                        $this->converter->toOpenApiSongTag(...),
                         $outputData->tags,
                     ),
                 ),

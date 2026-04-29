@@ -63,4 +63,15 @@ class ListSongTagTest extends DatabaseTestCase
     {
         $this->get(route(SongTagRouteMap::List))->assertStatus(401);
     }
+
+    #[Test]
+    public function showEmptyList(): void
+    {
+        $this->withAuth()
+            ->get(route(SongTagRouteMap::List))
+            ->assertStatus(200)
+            ->assertExactJson([
+                'tags' => [],
+            ]);
+    }
 }

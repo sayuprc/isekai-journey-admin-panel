@@ -11,11 +11,11 @@ use Song\Application\Interactors\CreateInteractor;
 use Song\Application\Interactors\DeleteInteractor;
 use Song\Application\Interactors\GetInteractor;
 use Song\Application\Interactors\ListAttributeInteractor;
-use Song\Application\Interactors\ListTagInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\SearchTagInteractor;
 use Song\Application\Interactors\Tag\CreateInteractor as CreateTagInteractor;
+use Song\Application\Interactors\Tag\ListTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -87,7 +87,6 @@ class SongServiceProvider extends EnvServiceProvider
         });
 
         $this->registerSongAttribute();
-        $this->registerSongTag();
 
         $this->registerSongType();
 
