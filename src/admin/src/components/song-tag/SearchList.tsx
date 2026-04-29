@@ -202,13 +202,13 @@ export const SearchList = () => {
                 {result => (
                   <Show
                     when={result().tags.length > 0}
-                    fallback={
+                    fallback={(
                       <tr>
                         <td colspan="2" class="py-8 text-center text-base-content/60">
                           条件に一致する楽曲タグはありません。
                         </td>
                       </tr>
-                    }
+                    )}
                   >
                     <For each={result().tags}>
                       {tag => (

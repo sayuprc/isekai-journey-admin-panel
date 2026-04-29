@@ -22,8 +22,8 @@ use App\Http\Controllers\Api\Song\DeleteSongController;
 use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
-use App\Http\Controllers\Api\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
+use App\Http\Controllers\Api\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
@@ -34,8 +34,8 @@ use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
 use Song\Route\SongAttributeRouteMap;
 use Song\Route\SongRouteMap;
-use Song\Route\Tag\SongTagRouteMap;
 use Song\Route\SongTypeRouteMap;
+use Song\Route\Tag\SongTagRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();

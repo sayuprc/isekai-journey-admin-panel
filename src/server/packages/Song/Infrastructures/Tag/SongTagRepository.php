@@ -58,7 +58,7 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
             $query = $query->whereLike('name_lower', $keyword . '%');
         }
 
-        return (int) ceil($query->count() / $criteria->perPage->value);
+        return (int)ceil($query->count() / $criteria->perPage->value);
     }
 
     #[Override]
