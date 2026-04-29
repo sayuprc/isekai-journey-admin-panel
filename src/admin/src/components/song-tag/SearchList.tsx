@@ -165,6 +165,11 @@ export const SearchList = () => {
           検索
         </button>
       </form>
+      <div class="mb-4 flex justify-end">
+        <a href={`/song-tags/create?back=${encodeURIComponent(window.location.search)}`} class="btn btn-primary btn-sm">
+          新規作成
+        </a>
+      </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
         <table class="table table-zebra">
           <thead>
