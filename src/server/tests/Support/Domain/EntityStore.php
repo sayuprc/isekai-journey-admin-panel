@@ -20,6 +20,8 @@ use Performer\Domain\Models\PerformerRepositoryInterface;
 use Song\DebugInfrastructures\FileSongRepository;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 
 trait EntityStore
 {
@@ -66,6 +68,12 @@ trait EntityStore
 
         $repository = $this->makeRepository(SongRepositoryInterface::class);
         array_map(fn (Song $item) => $repository->save($item), $items);
+    }
+
+    protected function storeSongTags(SongTag ...$items): void
+    {
+        $repository = $this->makeRepository(SongTagRepositoryInterface::class);
+        array_map(fn (SongTag $item) => $repository->save($item), $items);
     }
 
     protected function storeAdminUsers(AdminUser ...$items): void

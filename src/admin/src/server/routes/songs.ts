@@ -9,7 +9,7 @@ import {
   songServiceUpdateSong,
   songTypeServiceListSongTypes,
 } from '../../generated';
-import type { SongAttributeValue, SongTypeValue } from '../../generated';
+import type { PerPage, SongAttributeValue, SongSearchSortBy, SongTypeValue, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
@@ -48,10 +48,10 @@ export const songs = new Elysia({ prefix: '/songs' })
             type: query.type as SongTypeValue | undefined,
             attribute: query.attribute as SongAttributeValue | undefined,
             is_display: query.is_display,
-            sort: query.sort ?? 'order_no',
-            order: query.order ?? 'asc',
+            sort: (query.sort ?? 'order_no') as SongSearchSortBy,
+            order: (query.order ?? 'asc') as SortOrder,
             page: query.page ?? 1,
-            per_page: query.per_page ?? 25,
+            per_page: (query.per_page ?? 25) as PerPage,
           },
         }),
         songTypeServiceListSongTypes({ client: authClient }),

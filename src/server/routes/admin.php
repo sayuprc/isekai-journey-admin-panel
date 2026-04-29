@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
+use App\Http\Controllers\Api\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
@@ -34,6 +35,7 @@ use Performer\Route\PerformerRouteMap;
 use Song\Route\SongAttributeRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
+use Song\Route\Tag\SongTagRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -83,6 +85,10 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('song-attributes')->group(function () {
                     Route::get('/', [ListSongAttributeController::class, 'handle'])->name(SongAttributeRouteMap::List);
+                });
+
+                Route::prefix('song-tags')->group(function () {
+                    Route::get('/search', [SearchSongTagController::class, 'handle'])->name(SongTagRouteMap::Search);
                 });
             });
         });
