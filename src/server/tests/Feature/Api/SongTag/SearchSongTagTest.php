@@ -18,6 +18,13 @@ class SearchSongTagTest extends DatabaseTestCase
     use WithAuth;
 
     #[Test]
+    public function returnUnauthorizedWhenUnauthenticated(): void
+    {
+        $this->get(route(SongTagRouteMap::Search))
+            ->assertStatus(401);
+    }
+
+    #[Test]
     public function searchAll(): void
     {
         $songTagId = $this->generateUuid();
