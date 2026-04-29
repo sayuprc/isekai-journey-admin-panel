@@ -15,6 +15,7 @@ use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\Interactors\SearchTagInteractor;
 use Song\Application\Interactors\Tag\CreateInteractor as CreateTagInteractor;
+use Song\Application\Interactors\Tag\ListTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -22,6 +23,7 @@ use Song\Application\UseCase\Create\CreateUseCaseInterface;
 use Song\Application\UseCase\Delete\DeleteUseCaseInterface;
 use Song\Application\UseCase\Get\GetUseCaseInterface;
 use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
+use Song\Application\UseCase\ListTag\ListTagUseCaseInterface;
 use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
 use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
@@ -103,6 +105,8 @@ class SongServiceProvider extends EnvServiceProvider
 
     private function registerSongTag(): void
     {
+        $this->app->bind(ListTagUseCaseInterface::class, ListTagInteractor::class);
+
         $this->app->bind(SearchTagUseCaseInterface::class, SearchTagInteractor::class);
 
         $this->app->bind(SearchTagInputData::class, function (): SearchTagInputData {
