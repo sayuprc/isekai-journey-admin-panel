@@ -9,11 +9,11 @@ use Song\Domain\Models\Tag\SongTag;
 
 class Converter
 {
-    public function toOpenApiSongTag(SongTag $songTag): OpenApiSongTag
+    public function toOpenApiSongTag(SongTag $tag): OpenApiSongTag
     {
         return new OpenApiSongTag()
-            ->setSongTagId($songTag->songTagId->value)
-            ->setName($songTag->name->value)
-            ->setOrderNo($songTag->orderNo->value);
+            ->setSongTagId($tag->songTagId->value)
+            ->setName($tag->name->value)
+            ->setOrderNo($tag->orderNo->value);
     }
 }

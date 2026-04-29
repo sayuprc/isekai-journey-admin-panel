@@ -8,6 +8,7 @@ use App\Models\Song\SongTag as ModelsSongTag;
 use Override;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
@@ -62,12 +63,26 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
     }
 
     #[Override]
-    public function save(SongTag $songTag): SongTag
+    public function findByName(SongTagName $name): ?SongTag
+    {
+        $found = ModelsSongTag::query()
+            ->where('name', $name->value)
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
+    }
+
+    #[Override]
+    public function save(SongTag $tag): SongTag
     {
         ModelsSongTag::query()->upsert(
             [
-                ...$songTag->toArray(),
-                'song_tag_id' => $this->converter->toBin($songTag->songTagId->value),
+                ...$tag->toArray(),
+                'song_tag_id' => $this->converter->toBin($tag->songTagId->value),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -79,15 +94,22 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
             ],
         );
 
-        return $songTag;
+        return $tag;
     }
 
-    private function hydrate(ModelsSongTag $row): SongTag
+    #[Override]
+    public function getMaxOrderNo(): int
+    {
+        /** @var int */
+        return ModelsSongTag::query()->max('order_no') ?? 0;
+    }
+
+    private function hydrate(ModelsSongTag $model): SongTag
     {
         return SongTag::reconstruct(
-            $this->converter->toUuid($row->song_tag_id),
-            $row->name,
-            $row->order_no,
+            $this->converter->toUuid($model->song_tag_id),
+            $model->name,
+            $model->order_no,
         );
     }
 }
