@@ -42,6 +42,7 @@
       "JourneyLogLinkType\\": "packages/JourneyLogLinkType/",
       "Support\\": "packages/Support/",
       "Song\\": "packages/Song/",
+      "SongTag\\": "packages/SongTag/",
       "Creator\\": "packages/Creator/",
       "AdminUser\\": "packages/AdminUser/",
       "Performer\\": "packages/Performer/",

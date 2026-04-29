@@ -29,6 +29,9 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag;
+use Song\Domain\Models\TagId;
+use Song\Domain\Models\TagName;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -48,6 +51,15 @@ trait EntityFactory
         return new Performer(
             PerformerId::reconstruct($performerId),
             PerformerName::reconstruct($name),
+            OrderNo::reconstruct($orderNo),
+        );
+    }
+
+    protected function createSongTag(string $tagId, string $name, int $orderNo): Tag
+    {
+        return new Tag(
+            TagId::reconstruct($tagId),
+            TagName::reconstruct($name),
             OrderNo::reconstruct($orderNo),
         );
     }
