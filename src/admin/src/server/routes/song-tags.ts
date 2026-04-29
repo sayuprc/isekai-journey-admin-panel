@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { songTagServiceSearchSongTags, songTagServiceCreateSongTag } from '../../generated';
+import { songTagServiceSearchSongTags, songTagServiceCreateSongTag, songTagServiceListSongTags } from '../../generated';
 import type { PerPage, SongTagSearchSortBy, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -7,6 +7,9 @@ import { authGuard } from '../middleware';
 
 export const songTags = new Elysia({ prefix: '/song-tags' })
   .use(authGuard)
+  .get('/', async ({ credential }) => {
+    return resolveApiResponse(await songTagServiceListSongTags({ client: createAuthClient(credential) }));
+  })
   .get(
     '/search',
     async ({ query, credential }) => {

@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
 use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
 use App\Http\Controllers\Api\SongTag\CreateSongTagController;
+use App\Http\Controllers\Api\SongTag\ListSongTagController;
 use App\Http\Controllers\Api\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Middleware\Authenticate;
@@ -90,6 +91,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('song-tags')->group(function () {
                     Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
+                    Route::get('/', [ListSongTagController::class, 'handle'])->name(SongTagRouteMap::List);
                     Route::get('/search', [SearchSongTagController::class, 'handle'])->name(SongTagRouteMap::Search);
                 });
             });
