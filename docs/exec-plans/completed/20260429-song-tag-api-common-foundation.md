@@ -16,8 +16,7 @@
 
 ## Scope
 
-- `src/server/packages/Song/{Domain,Infrastructures,Route}` に `SongTag` 用の共通土台を追加し、後続 API 実装が `Song` パッケージ内で同じモデル・リポジトリ契約・ルート名を共有できるようにする
-- `src/server/app/Providers/Domain/SongServiceProvider.php` に `SongTag` の Repository / Factory interface binding を追加し、後続タスクが共通 interface をそのまま注入できるようにする
+- `src/server/packages/Song/{Domain,Route}` に `SongTag` 用の共通土台を追加し、後続 API 実装が `Song` パッケージ内で同じモデル・ルート名を共有できるようにする
 - `src/server/database/atlas/atlas.hcl` と `src/server/database/atlas/schemas/*.my.hcl` に `song-tags` および必要なら関連テーブルのスキーマ定義を追加し、`Song` ドメイン配下の永続化前提を Atlas で管理できるようにする
 - `src/server/app/Models/Song` に `SongTag` および必要な関連 Model を追加し、後続 API 実装が既存の Eloquent 利用パターンに沿って永続化へアクセスできるようにする
 
@@ -29,9 +28,8 @@
 
 ## Acceptance Criteria
 
-- `song-tags` のドメイン実装は `src/server/packages/Song` 配下に置かれ、後続 API 実装が共有できる `SongTag` のモデル・Repository 契約・Factory・検索条件などの共通型が定義されている
+- `song-tags` のドメイン実装は `src/server/packages/Song` 配下に置かれ、後続 API 実装が共有できる `SongTag` のモデル・値オブジェクト・検索条件などの共通型が定義されている
 - `src/server/packages/Song/Route/SongTagRouteMap.php` に契約済みの list/search/create/update/delete エンドポイント名が定義され、後続タスクが同じ route 名を共有できる
-- `src/server/app/Providers/Domain/SongServiceProvider.php` に `SongTagRepositoryInterface` と `SongTagFactoryInterface` の binding が追加され、後続タスクが共通 interface を直接注入できる
 - `src/server/database/atlas/atlas.hcl` と追加した `song-tags` 系スキーマ定義から、楽曲タグ API 実装に必要なテーブル構造を管理できる
 - `src/server/app/Models/Song` に追加した `SongTag` 関連 Model が、既存の `Song` / `Creator` / `Performer` Model と同じ薄い Eloquent モデルの責務で定義されている
 - 今回の変更だけで `song-tags` API 実装担当が DB・Eloquent Model・Domain 契約・Route 名を共有しながら、HTTP 層や UseCase 実装を別タスクで並列着手できる
@@ -40,23 +38,21 @@
 
 1. ✅ `src/server/database/atlas/atlas.hcl` に `song-tags` 用 schema ファイルを追加し、`src/server/database/atlas/schemas/song-tags.my.hcl` を新設して `song_tags` テーブル定義を追加する。列は契約と生成済み OpenAPI に合わせて最低限 `song_tag_id`, `name`, `name_lower`, `order_no`, `created_at`, `updated_at` を持たせ、検索で必要な lower-case index と表示順用 index の有無もここで既存マスタと比較して決める。
 2. ✅ `src/server/app/Models/Song/SongTag.php` を追加し、既存 `App\Models\Creator\Creator` / `App\Models\Performer\Performer` と同じ薄い Eloquent Model として primary key, key type, casts だけを定義する。`song-tags` 共通基盤の対象を CRUD 本体に必要な `song_tags` マスタへ絞り、`song_taggings` のような関連テーブルは今回の Scope 外として追加しない。
-3. ✅ `src/server/packages/Song/Domain` に `SongTag` 集約の基礎型を追加する。少なくとも `Domain/Models/SongTag.php`, `SongTagId.php`, `SongTagName.php`, `SongTagFactoryInterface.php`, `SongTagRepositoryInterface.php` と、検索 API の入口で共有する `Domain/Criteria/SongTagSearchCriteria.php`, `SongTagSort.php` を追加し、後続タスクが同じ型を前提に実装できるようにする。
-4. ✅ `src/server/packages/Song/Infrastructures` に共通土台を追加する。`SongTagFactory.php`, `SongTagRepository.php` と、必要なら検索専用の `SongTagQueryServiceInterface.php` / `SongTagQueryService.php` を追加し、Atlas で定義した `song_tags` と `App\Models\Song\SongTag` を使う共通の永続化アクセスポイントを先に固定する。
-5. ✅ `src/server/packages/Song/Route/SongTagRouteMap.php` を追加し、後続タスクが共有する `List`, `Search`, `Create`, `Update`, `Delete` の route 名を定義する。`routes/admin.php` や Controller 実装はこのタスクでは追加せず、契約済み API 名称の共通定数だけを先に揃える。
-6. ✅ `src/server/app/Providers/Domain/SongServiceProvider.php` に `SongTagRepositoryInterface` と `SongTagFactoryInterface` の binding を追加し、後続タスクが `Song` ドメインの共通 interface を直接注入できるようにする。`InputData` や UseCase の binding はこのタスクでは追加しない。
-7. ✅ 実装後は `mise run phpstan` と `mise run ecs:fix` または同等の server 側静的検査を実行し、必要なら Atlas schema 差分を確認する。差分確認では `docs/exec-plans/active/20260429-song-tag-api-common-foundation.md` を除き、変更が `src/server/app/Models`, `src/server/packages/Song`, `src/server/database/atlas`, `src/server/app/Providers/Domain/SongServiceProvider.php` に閉じていることを確認する。
+3. ✅ `src/server/packages/Song/Domain` に `SongTag` 集約の基礎型を追加する。少なくとも `Domain/Models/Tag/SongTag.php`, `SongTagId.php`, `SongTagName.php` と、検索 API の入口で共有する `Domain/Criteria/Tag/SongTagSearchCriteria.php`, `SongTagSort.php` を追加し、後続タスクが同じ型を前提に実装できるようにする。
+4. ✅ `src/server/packages/Song/Route/Tag/SongTagRouteMap.php` を追加し、後続タスクが共有する `List`, `Search`, `Create`, `Update`, `Delete` の route 名を定義する。`routes/admin.php` や Controller 実装はこのタスクでは追加せず、契約済み API 名称の共通定数だけを先に揃える。
+5. ✅ 実装後は `mise run phpstan` と `mise run ecs:fix` または同等の server 側静的検査を実行し、必要なら Atlas schema 差分を確認する。差分確認では `docs/exec-plans/active/20260429-song-tag-api-common-foundation.md` を除き、変更が `src/server/app/Models`, `src/server/packages/Song`, `src/server/database/atlas` に閉じていることを確認する。
 
 ## Decision Log
 
-- 2026-04-29: 実装順は HTTP 入口からではなく、Atlas schema と Eloquent Model を先に整えてから Domain / Infrastructure / Route 定数の順にする。後続の API 個別実装がこれらの土台に依存するため。
+- 2026-04-29: 実装順は HTTP 入口からではなく、Atlas schema と Eloquent Model を先に整えてから Domain / Route 定数の順にする。後続の API 個別実装がこれらの土台に依存するため。
 - 2026-04-29: `song-tags` のドメイン実装は `src/server/packages/Song` に集約し、`SongTag` 専用 package や service provider は追加しない。Issue の Goal と Acceptance Criteria を優先し、既存 `SongType` / `SongAttribute` の配置ルールに合わせる。
 - 2026-04-29: 今回の共通基盤では `song_tags` マスタを対象にし、`song_taggings` など楽曲との関連テーブルまでは広げない。CRUD API の受け口と永続化土台を先に安定させ、関連付けは別タスクへ分離する。
 - 2026-04-29: `InputData`、Interactor、UseCaseInterface、Controller、Presenter、Feature Test は API ごとの差分が大きく別タスクで並列に持てるため、この共通基盤タスクには含めない。
 - 2026-04-29: Route については `routes/admin.php` の配線までは行わず、`SongTagRouteMap` の共通定数だけを先に固定する。ルート配線は実際の Controller 実装タスクで追加する。
-- 2026-04-29: ただし後続タスクが interface 注入を前提にすぐ実装へ入れるよう、`SongServiceProvider` には `SongTagRepositoryInterface` / `SongTagFactoryInterface` の最小限の binding だけを追加する。
+- 2026-04-29: Infrastructure 実装や interface 契約は API ごとの差分を先に凍らせやすいため、この共通基盤タスクには含めない。
 
 ## Validation
 
-- `mise run phpstan` を実行し、`Song` package 配下の新規型、Repository / Factory 実装、`App\Models\Song\SongTag`、`SongServiceProvider` の binding 追加に静的解析エラーがないことを確認する。
-- `mise run ecs:fix` もしくは同等の code style コマンドを実行し、新規 Model / Domain / Infrastructure / RouteMap ファイルが既存 server コード規約に従うことを確認する。
+- `mise run phpstan` を実行し、`Song` package 配下の新規型、`App\Models\Song\SongTag`、RouteMap に静的解析エラーがないことを確認する。
+- `mise run ecs:fix` もしくは同等の code style コマンドを実行し、新規 Model / Domain / RouteMap ファイルが既存 server コード規約に従うことを確認する。
 - Atlas schema 差分を確認し、`song_tags` 以外の既存テーブル定義を意図せず変更していないことを確認する。
