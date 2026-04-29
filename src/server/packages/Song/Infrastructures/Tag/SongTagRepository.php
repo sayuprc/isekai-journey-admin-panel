@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Song\Infrastructures;
+namespace Song\Infrastructures\Tag;
 
 use App\Models\Song\SongTag as ModelsSongTag;
 use Override;
-use Song\Domain\Criteria\SongTagSearchCriteria;
-use Song\Domain\Models\SongTag;
-use Song\Domain\Models\SongTagId;
-use Song\Domain\Models\SongTagName;
-use Song\Domain\Models\SongTagRepositoryInterface;
+use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagId;
+use Song\Domain\Models\Tag\SongTagName;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
 

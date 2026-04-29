@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Criteria;
+namespace Song\Domain\Criteria\Tag;
 
 use Support\Domain\SearchCriteria\Order;
 use Support\Domain\SearchCriteria\PerPage;

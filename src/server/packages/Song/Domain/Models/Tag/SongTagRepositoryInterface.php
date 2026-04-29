@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Models;
+namespace Song\Domain\Models\Tag;
 
-use Song\Domain\Criteria\SongTagSearchCriteria;
+use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 
 interface SongTagRepositoryInterface
 {

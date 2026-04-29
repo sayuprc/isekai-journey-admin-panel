@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Route;
+namespace Song\Route\Tag;
 
 enum SongTagRouteMap: string
 {

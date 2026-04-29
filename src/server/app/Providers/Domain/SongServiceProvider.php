@@ -27,14 +27,14 @@ use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
-use Song\Domain\Models\SongTagFactoryInterface;
-use Song\Domain\Models\SongTagRepositoryInterface;
+use Song\Domain\Models\Tag\SongTagFactoryInterface;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;
 use Song\Infrastructures\SongFactory;
 use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
-use Song\Infrastructures\SongTagFactory;
-use Song\Infrastructures\SongTagRepository;
+use Song\Infrastructures\Tag\SongTagFactory;
+use Song\Infrastructures\Tag\SongTagRepository;
 
 class SongServiceProvider extends EnvServiceProvider
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Song\Infrastructures;
+namespace Song\Infrastructures\Tag;
 
 use Override;
-use Song\Domain\Models\SongTag;
-use Song\Domain\Models\SongTagFactoryInterface;
-use Song\Domain\Models\SongTagId;
-use Song\Domain\Models\SongTagName;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagFactoryInterface;
+use Song\Domain\Models\Tag\SongTagId;
+use Song\Domain\Models\Tag\SongTagName;
 use Support\Domain\ValueObjects\OrderNo;
 
 readonly class SongTagFactory implements SongTagFactoryInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Criteria;
+namespace Song\Domain\Criteria\Tag;
 
 enum SongTagSort: string
 {
