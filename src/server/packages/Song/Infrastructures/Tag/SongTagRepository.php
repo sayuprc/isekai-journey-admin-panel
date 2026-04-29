@@ -113,6 +113,14 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
     }
 
     #[Override]
+    public function delete(SongTagId $songTagId): void
+    {
+        ModelsSongTag::query()
+            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
+            ->delete();
+    }
+
+    #[Override]
     public function getMaxOrderNo(): int
     {
         /** @var int */
