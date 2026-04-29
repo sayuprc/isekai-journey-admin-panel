@@ -29,6 +29,9 @@ use Song\Domain\Models\Song;
 use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagId;
+use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -80,6 +83,15 @@ trait EntityFactory
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
             Arrangers::fromArray($arrangers)->unwrap(),
+        );
+    }
+
+    protected function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
+    {
+        return new SongTag(
+            SongTagId::reconstruct($songTagId),
+            SongTagName::reconstruct($name),
+            OrderNo::reconstruct($orderNo),
         );
     }
 

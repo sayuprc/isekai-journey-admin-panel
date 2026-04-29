@@ -3,18 +3,31 @@ import { client } from '../../utils/client';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
+type Sort = 'title' | 'order_no';
+type Order = 'asc' | 'desc';
 
-const getInitialParams = () => {
+const getInitialParams = (): {
+  title: string;
+  type?: number;
+  attribute?: number;
+  isDisplay?: boolean;
+  sort: Sort;
+  order: Order;
+  page: number;
+  perPage: PerPage;
+} => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
   const isDisplayRaw = params.get('is_display');
+  const sort = params.get('sort');
+  const order = params.get('order');
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
     attribute: Number(params.get('attribute') ?? 0) || undefined,
     isDisplay: isDisplayRaw === 'true' ? true : isDisplayRaw === 'false' ? false : undefined,
-    sort: params.get('sort') ?? 'order_no',
-    order: params.get('order') ?? 'asc',
+    sort: sort === 'title' || sort === 'order_no' ? sort : 'order_no',
+    order: order === 'asc' || order === 'desc' ? order : 'asc',
     page: Number(params.get('page') ?? '1') || 1,
     perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
   };
@@ -27,8 +40,8 @@ export const SearchList = () => {
   const [type, setType] = createSignal(initial.type);
   const [attribute, setAttribute] = createSignal(initial.attribute);
   const [isDisplay, setIsDisplay] = createSignal(initial.isDisplay);
-  const [sort, setSort] = createSignal(initial.sort);
-  const [order, setOrder] = createSignal(initial.order);
+  const [sort, setSort] = createSignal<Sort>(initial.sort);
+  const [order, setOrder] = createSignal<Order>(initial.order);
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
@@ -37,8 +50,8 @@ export const SearchList = () => {
   const [inputType, setInputType] = createSignal(initial.type);
   const [inputAttribute, setInputAttribute] = createSignal(initial.attribute);
   const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);
-  const [inputSort, setInputSort] = createSignal(initial.sort);
-  const [inputOrder, setInputOrder] = createSignal(initial.order);
+  const [inputSort, setInputSort] = createSignal<Sort>(initial.sort);
+  const [inputOrder, setInputOrder] = createSignal<Order>(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
 
   const updateUrl = (params: {
@@ -46,8 +59,8 @@ export const SearchList = () => {
     type?: number;
     attribute?: number;
     isDisplay?: boolean;
-    sort: string;
-    order: string;
+    sort: Sort;
+    order: Order;
     page: number;
     perPage: number;
   }) => {
@@ -229,7 +242,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={e => setInputSort(e.currentTarget.value)}
+            onChange={e => setInputSort(e.currentTarget.value as Sort)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -247,7 +260,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={e => setInputOrder(e.currentTarget.value)}
+            onChange={e => setInputOrder(e.currentTarget.value as Order)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順

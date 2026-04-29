@@ -3,14 +3,18 @@ import { client } from '../../utils/client';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
+type Sort = 'name' | 'order_no';
+type Order = 'asc' | 'desc';
 
-const getInitialParams = () => {
+const getInitialParams = (): { name: string; sort: Sort; order: Order; page: number; perPage: PerPage } => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
+  const sort = params.get('sort');
+  const order = params.get('order');
   return {
     name: params.get('name') ?? '',
-    sort: params.get('sort') ?? 'order_no',
-    order: params.get('order') ?? 'asc',
+    sort: sort === 'name' || sort === 'order_no' ? sort : 'order_no',
+    order: order === 'asc' || order === 'desc' ? order : 'asc',
     page: Number(params.get('page') ?? '1') || 1,
     perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
   };
@@ -20,18 +24,18 @@ export const SearchList = () => {
   const initial = getInitialParams();
 
   const [name, setName] = createSignal(initial.name);
-  const [sort, setSort] = createSignal(initial.sort);
-  const [order, setOrder] = createSignal(initial.order);
+  const [sort, setSort] = createSignal<Sort>(initial.sort);
+  const [order, setOrder] = createSignal<Order>(initial.order);
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
   // 検索フォームの一時入力値（Submit前）
   const [inputName, setInputName] = createSignal(initial.name);
-  const [inputSort, setInputSort] = createSignal(initial.sort);
-  const [inputOrder, setInputOrder] = createSignal(initial.order);
+  const [inputSort, setInputSort] = createSignal<Sort>(initial.sort);
+  const [inputOrder, setInputOrder] = createSignal<Order>(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
 
-  const updateUrl = (params: { name: string; sort: string; order: string; page: number; perPage: number }) => {
+  const updateUrl = (params: { name: string; sort: Sort; order: Order; page: number; perPage: number }) => {
     const searchParams = new URLSearchParams();
     if (params.name) searchParams.set('name', params.name);
     if (params.sort) searchParams.set('sort', params.sort);
@@ -116,7 +120,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={e => setInputSort(e.currentTarget.value)}
+            onChange={e => setInputSort(e.currentTarget.value as Sort)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -134,7 +138,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={e => setInputOrder(e.currentTarget.value)}
+            onChange={e => setInputOrder(e.currentTarget.value as Order)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順

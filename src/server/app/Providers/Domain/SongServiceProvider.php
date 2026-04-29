@@ -13,6 +13,7 @@ use Song\Application\Interactors\GetInteractor;
 use Song\Application\Interactors\ListAttributeInteractor;
 use Song\Application\Interactors\ListTypeInteractor;
 use Song\Application\Interactors\SearchInteractor;
+use Song\Application\Interactors\SearchTagInteractor;
 use Song\Application\Interactors\UpdateInteractor;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
@@ -23,6 +24,8 @@ use Song\Application\UseCase\ListAttribute\ListAttributeUseCaseInterface;
 use Song\Application\UseCase\ListType\ListTypeUseCaseInterface;
 use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
+use Song\Application\UseCase\SearchTag\SearchInputData as SearchTagInputData;
+use Song\Application\UseCase\SearchTag\SearchUseCaseInterface as SearchTagUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
 use Song\Domain\Models\SongFactoryInterface;
@@ -81,6 +84,8 @@ class SongServiceProvider extends EnvServiceProvider
         $this->registerSongAttribute();
 
         $this->registerSongType();
+
+        $this->registerSongTag();
     }
 
     private function registerSongAttribute(): void
@@ -91,5 +96,16 @@ class SongServiceProvider extends EnvServiceProvider
     private function registerSongType(): void
     {
         $this->app->bind(ListTypeUseCaseInterface::class, ListTypeInteractor::class);
+    }
+
+    private function registerSongTag(): void
+    {
+        $this->app->bind(SearchTagUseCaseInterface::class, SearchTagInteractor::class);
+
+        $this->app->bind(SearchTagInputData::class, function (): SearchTagInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(SearchTagInputData::class, $request->query());
+        });
     }
 }

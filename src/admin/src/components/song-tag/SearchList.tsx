@@ -16,7 +16,7 @@ const getInitialParams = (): { name: string; sort: Sort; order: Order; page: num
     sort: sort === 'name' || sort === 'order_no' ? sort : 'order_no',
     order: order === 'asc' || order === 'desc' ? order : 'asc',
     page: Number(params.get('page') ?? '1') || 1,
-    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
+    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 50) as PerPage,
   };
 };
 
@@ -52,7 +52,7 @@ export const SearchList = () => {
     async (params) => {
       setFetchError(null);
 
-      const { data, status } = await client.api.performers.search.get({
+      const { data, status } = await client.api['song-tags'].search.get({
         query: {
           name: params.name,
           sort: params.sort,
@@ -100,7 +100,7 @@ export const SearchList = () => {
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
           <label class="fieldset-label" for="name">
-            共演者名
+            楽曲タグ名
           </label>
           <input
             type="text"
@@ -109,7 +109,7 @@ export const SearchList = () => {
             value={inputName()}
             onInput={e => setInputName(e.currentTarget.value)}
             class="input input-bordered input-sm"
-            placeholder="共演者名で検索"
+            placeholder="楽曲タグ名で検索"
           />
         </fieldset>
         <fieldset class="fieldset">
@@ -126,7 +126,7 @@ export const SearchList = () => {
               表示順
             </option>
             <option value="name" selected={inputSort() === 'name'}>
-              共演者名
+              楽曲タグ名
             </option>
           </select>
         </fieldset>
@@ -165,18 +165,12 @@ export const SearchList = () => {
           検索
         </button>
       </form>
-      <div class="mb-4 flex justify-end">
-        <a href="/performers/create" class="btn btn-primary btn-sm">
-          新規作成
-        </a>
-      </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
         <table class="table table-zebra">
           <thead>
             <tr>
-              <th>共演者名</th>
+              <th>楽曲タグ名</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -191,9 +185,6 @@ export const SearchList = () => {
                       <td>
                         <div class="skeleton h-4 w-8" />
                       </td>
-                      <td>
-                        <div class="skeleton h-6 w-10" />
-                      </td>
                     </tr>
                   )}
                 </For>
@@ -201,7 +192,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="3" class="py-8 text-center text-error">
+                    <td colspan="2" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -209,19 +200,25 @@ export const SearchList = () => {
               </Match>
               <Match when={data()}>
                 {result => (
-                  <For each={result().performers}>
-                    {performer => (
-                      <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{performer.name}</td>
-                        <td>{performer.orderNo}</td>
-                        <td>
-                          <a href={`/performers/${performer.performerId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
-                            編集
-                          </a>
+                  <Show
+                    when={result().tags.length > 0}
+                    fallback={
+                      <tr>
+                        <td colspan="2" class="py-8 text-center text-base-content/60">
+                          条件に一致する楽曲タグはありません。
                         </td>
                       </tr>
-                    )}
-                  </For>
+                    }
+                  >
+                    <For each={result().tags}>
+                      {tag => (
+                        <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
+                          <td>{tag.name}</td>
+                          <td>{tag.orderNo}</td>
+                        </tr>
+                      )}
+                    </For>
+                  </Show>
                 )}
               </Match>
             </Switch>
