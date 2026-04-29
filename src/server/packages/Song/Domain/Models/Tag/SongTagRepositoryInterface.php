@@ -20,6 +20,8 @@ interface SongTagRepositoryInterface
 
     public function maxPage(SongTagSearchCriteria $criteria): int;
 
+    public function find(SongTagId $songTagId): ?SongTag;
+
     public function findByName(SongTagName $name): ?SongTag;
 
     public function save(SongTag $tag): SongTag;

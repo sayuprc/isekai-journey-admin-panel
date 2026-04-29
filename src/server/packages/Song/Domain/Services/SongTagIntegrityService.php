@@ -56,6 +56,26 @@ class SongTagIntegrityService
     /**
      * @return Result<SongTag, DomainError>
      */
+    public function prepareForUpdate(string $songTagId, string $name, int $orderNo): Result
+    {
+        $result = $this->build($songTagId, $name, $orderNo);
+
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $tag = $result->unwrap();
+
+        if (! is_null($found = $this->repository->findByName($tag->name)) && ! $found->equals($tag)) {
+            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
+        }
+
+        return new Ok($tag);
+    }
+
+    /**
+     * @return Result<SongTag, DomainError>
+     */
     private function build(string $songTagId, string $name, int $orderNo): Result
     {
         return Result::collect3(

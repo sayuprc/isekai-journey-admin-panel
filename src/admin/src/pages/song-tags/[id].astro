@@ -1,0 +1,30 @@
+---
+import { EditableForm } from '../../components/song-tag/EditableForm';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  throw new Error('URL が不正');
+}
+
+const { data, status } = await client.api['song-tags']({ songTagId: id }).get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
+---
+
+<Layout pageTitle="楽曲タグ詳細">
+  <div>
+    <EditableForm data={data ?? undefined} status={status} client:only="solid-js" />
+  </div>
+</Layout>

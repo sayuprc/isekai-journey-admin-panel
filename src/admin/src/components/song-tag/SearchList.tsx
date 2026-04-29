@@ -95,6 +95,17 @@ export const SearchList = () => {
     updateUrl({ name: name(), sort: sort(), order: order(), page: page, perPage: perPage() });
   };
 
+  const openDetail = (songTagId: string) => {
+    window.location.href = `/song-tags/${songTagId}?back=${encodeURIComponent(window.location.search)}`;
+  };
+
+  const handleRowKeyDown = (e: KeyboardEvent, songTagId: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openDetail(songTagId);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
@@ -217,7 +228,12 @@ export const SearchList = () => {
                   >
                     <For each={result().tags}>
                       {tag => (
-                        <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
+                        <tr
+                          class="cursor-pointer hover:bg-primary/30 focus-within:bg-primary/30 transition-colors"
+                          onClick={() => openDetail(tag.songTagId)}
+                          onKeyDown={e => handleRowKeyDown(e, tag.songTagId)}
+                          tabIndex={0}
+                        >
                           <td>{tag.name}</td>
                           <td>{tag.orderNo}</td>
                         </tr>

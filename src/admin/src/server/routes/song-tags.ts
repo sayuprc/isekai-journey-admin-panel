@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { songTagServiceSearchSongTags, songTagServiceCreateSongTag, songTagServiceListSongTags } from '../../generated';
+import { songTagServiceCreateSongTag, songTagServiceGetSongTag, songTagServiceListSongTags, songTagServiceSearchSongTags, songTagServiceUpdateSongTag } from '../../generated';
 import type { PerPage, SongTagSearchSortBy, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -10,6 +10,17 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
   .get('/', async ({ credential }) => {
     return resolveApiResponse(await songTagServiceListSongTags({ client: createAuthClient(credential) }));
   })
+  .get(
+    '/:songTagId',
+    async ({ params: { songTagId }, credential }) => {
+      return resolveApiResponse(await songTagServiceGetSongTag({ client: createAuthClient(credential), path: { songTagId } }));
+    },
+    {
+      params: t.Object({
+        songTagId: t.String(),
+      }),
+    },
+  )
   .get(
     '/search',
     async ({ query, credential }) => {
@@ -44,6 +55,21 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
     {
       body: t.Object({
         name: t.String(),
+      }),
+    },
+  )
+  .put(
+    '/:songTagId',
+    async ({ params: { songTagId }, body: { name, orderNo }, credential }) => {
+      return resolveApiResponse(await songTagServiceUpdateSongTag({ client: createAuthClient(credential), path: { songTagId }, body: { name, orderNo } }));
+    },
+    {
+      params: t.Object({
+        songTagId: t.String(),
+      }),
+      body: t.Object({
+        name: t.String(),
+        orderNo: t.Number(),
       }),
     },
   );

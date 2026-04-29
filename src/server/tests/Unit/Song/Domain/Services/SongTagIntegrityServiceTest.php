@@ -119,6 +119,66 @@ class SongTagIntegrityServiceTest extends TestCase
         $this->assertSame('すでに使われている名前です "派生曲"', $error->message);
     }
 
+    #[Test]
+    public function prepareForUpdate(): void
+    {
+        $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $name = '派生曲';
+        $orderNo = 20;
+
+        $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
+
+        $this->factory->shouldReceive('create')
+            ->withArgs(
+                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $songTagId
+                    && $nameArg->value === $name
+                    && $orderNoArg->value === $orderNo,
+            )
+            ->andReturn($expectedTag)
+            ->once();
+
+        $this->repository->shouldReceive('findByName')
+            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->andReturn($expectedTag)
+            ->once();
+
+        $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($expectedTag, $result->unwrap());
+    }
+
+    #[Test]
+    public function prepareForUpdateDuplicateName(): void
+    {
+        $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $name = '派生曲';
+        $orderNo = 20;
+
+        $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
+
+        $this->factory->shouldReceive('create')
+            ->withArgs(
+                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $songTagId
+                    && $nameArg->value === $name
+                    && $orderNoArg->value === $orderNo,
+            )
+            ->andReturn($expectedTag)
+            ->once();
+
+        $this->repository->shouldReceive('findByName')
+            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, 10))
+            ->once();
+
+        $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
+
+        $this->assertTrue($result->isErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
+        $this->assertSame('すでに使われている名前です "派生曲"', $error->message);
+    }
+
     private function getInstance(): SongTagIntegrityService
     {
         return new SongTagIntegrityService(
