@@ -26,5 +26,7 @@ interface SongTagRepositoryInterface
 
     public function save(SongTag $tag): SongTag;
 
+    public function delete(SongTagId $songTagId): void;
+
     public function getMaxOrderNo(): int;
 }

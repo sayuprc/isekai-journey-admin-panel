@@ -65,6 +65,33 @@ export const EditableForm = (props: Props) => {
     handleError(status, error);
   });
 
+  const handleDelete = withSubmitting(async (e: Event) => {
+    e.preventDefault();
+
+    if (!window.confirm('削除します。よろしいですか？')) {
+      return;
+    }
+
+    clearErrors();
+
+    const songTagId = props.data?.tag.songTagId;
+
+    if (!songTagId) {
+      setFormError('削除対象の楽曲タグIDを取得できませんでした');
+      return;
+    }
+
+    const { error, status } = await client.api['song-tags']({ songTagId }).delete();
+
+    if (error) {
+      handleError(status, error);
+      return;
+    }
+
+    setFlash('削除しました');
+    window.location.href = listUrl;
+  });
+
   onMount(() => {
     if (props.status === 404) {
       setFlash('データがありません');
@@ -114,6 +141,18 @@ export const EditableForm = (props: Props) => {
           </div>
         </fieldset>
       </form>
+
+      <div class="divider max-w-lg" />
+
+      <div class="max-w-lg rounded-box border border-error/20 bg-error/5 p-6">
+        <h3 class="font-semibold text-error">危険な操作</h3>
+        <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
+        <div class="mt-4">
+          <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
+            {isSubmitting() ? '削除中...' : 'この楽曲タグを削除する'}
+          </button>
+        </div>
+      </div>
     </Show>
   );
 };
