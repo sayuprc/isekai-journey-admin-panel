@@ -307,18 +307,23 @@ export const EditableForm = (props: Props) => {
             </For>
           </select>
 
-          <label class="label">表示設定</label>
-          <select class="select select-bordered w-full" name="isDisplay">
-            <option value="true" selected={props.data?.song.isDisplay === true}>
-              表示する
-            </option>
-            <option value="false" selected={props.data?.song.isDisplay === false}>
-              表示しない
-            </option>
-          </select>
-
-          <label class="label">表示順</label>
-          <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.song.orderNo} />
+          <div class="flex gap-4">
+            <div class="flex flex-1 flex-col">
+              <label class="label">表示設定</label>
+              <select class="select select-bordered w-full" name="isDisplay">
+                <option value="true" selected={props.data?.song.isDisplay === true}>
+                  表示する
+                </option>
+                <option value="false" selected={props.data?.song.isDisplay === false}>
+                  表示しない
+                </option>
+              </select>
+            </div>
+            <div class="flex flex-1 flex-col">
+              <label class="label">表示順</label>
+              <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.song.orderNo} />
+            </div>
+          </div>
 
           <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
           <CreatorList label="作曲者" entries={composers} setter={setComposers} />
