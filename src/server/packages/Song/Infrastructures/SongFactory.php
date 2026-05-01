@@ -14,6 +14,7 @@ use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -31,7 +32,8 @@ readonly class SongFactory implements SongFactoryInterface
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
+        SongTagReferences $tags,
     ): Song {
-        return new Song($songId, $title, $description, $type, $attribute, $isDisplay, $orderNo, $lyricists, $composers, $arrangers);
+        return new Song($songId, $title, $description, $type, $attribute, $isDisplay, $orderNo, $lyricists, $composers, $arrangers, $tags);
     }
 }

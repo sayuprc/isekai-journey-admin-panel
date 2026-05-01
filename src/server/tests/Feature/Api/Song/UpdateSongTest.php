@@ -8,6 +8,7 @@ use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
+use Song\Infrastructures\Tag\SongTagRepository;
 use Song\Route\SongRouteMap;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -29,6 +30,9 @@ class UpdateSongTest extends DatabaseTestCase
         $creatorRepo->save($creator1);
         $creatorRepo->save($creator2);
         $creatorRepo->save($creator3);
+        $tagRepo = $this->app->make(SongTagRepository::class);
+        $tagRepo->save($oldTag = $this->createSongTag($this->generateUuid(), '旧タグ', 10));
+        $tagRepo->save($newTag = $this->createSongTag($this->generateUuid(), '新タグ', 20));
 
         $songId = $this->generateUuid();
 
@@ -43,6 +47,8 @@ class UpdateSongTest extends DatabaseTestCase
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                true,
+                [['songTagId' => $oldTag->songTagId->value, 'orderNo' => 1]],
             ),
         );
 
@@ -56,6 +62,7 @@ class UpdateSongTest extends DatabaseTestCase
                 'lyricists' => [],
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 'arrangers' => [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                'tags' => [['songTagId' => $newTag->songTagId->value]],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -80,6 +87,13 @@ class UpdateSongTest extends DatabaseTestCase
                         [
                             'creatorId' => $creator3->creatorId->value,
                             'name' => $creator3->name->value,
+                            'orderNo' => 1,
+                        ],
+                    ],
+                    'tags' => [
+                        [
+                            'songTagId' => $newTag->songTagId->value,
+                            'name' => $newTag->name->value,
                             'orderNo' => 1,
                         ],
                     ],
@@ -127,6 +141,7 @@ class UpdateSongTest extends DatabaseTestCase
                 'lyricists' => [],
                 'composers' => [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 'arrangers' => [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                'tags' => [],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -154,14 +169,61 @@ class UpdateSongTest extends DatabaseTestCase
                             'orderNo' => 1,
                         ],
                     ],
+                    'tags' => [],
                 ],
             ]);
     }
 
     #[Test]
-    public function updateFails(): void
+    public function updateFailsWithNotExistsSongTag(): void
     {
-        $this->markTestSkipped('TODO 実装する');
+        $songId = $this->generateUuid();
+
+        $this->app->make(SongRepository::class)->save(
+            $this->createSong($songId, '曲名', '説明', SongType::Original, null, 1, [], [], []),
+        );
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'typeValue' => SongType::Original->value,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'lyricists' => [],
+                'composers' => [],
+                'arrangers' => [],
+                'tags' => [['songTagId' => $this->generateUuid()]],
+            ])->assertStatus(400);
+    }
+
+    #[Test]
+    public function updateFailsWithDuplicateSongTag(): void
+    {
+        $songId = $this->generateUuid();
+
+        $this->app->make(SongRepository::class)->save(
+            $this->createSong($songId, '曲名', '説明', SongType::Original, null, 1, [], [], []),
+        );
+
+        $tagRepo = $this->app->make(SongTagRepository::class);
+        $tagRepo->save($tag = $this->createSongTag($this->generateUuid(), 'タグA', 10));
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'typeValue' => SongType::Original->value,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'lyricists' => [],
+                'composers' => [],
+                'arrangers' => [],
+                'tags' => [
+                    ['songTagId' => $tag->songTagId->value],
+                    ['songTagId' => $tag->songTagId->value],
+                ],
+            ])->assertStatus(422);
     }
 
     #[Test]

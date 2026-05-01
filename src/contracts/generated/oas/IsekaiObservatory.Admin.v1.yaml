@@ -7,9 +7,9 @@ tags:
   - name: Authenticate
   - name: Creator
   - name: Performer
+  - name: SongTag
   - name: Song
   - name: SongAttribute
-  - name: SongTag
   - name: SongType
 paths:
   /admin-users:
@@ -1503,6 +1503,14 @@ components:
         creatorId:
           $ref: '#/components/schemas/creatorId'
       description: The template for picking properties.
+    RequestSongTag:
+      type: object
+      required:
+        - songTagId
+      properties:
+        songTagId:
+          $ref: '#/components/schemas/songTagId'
+      description: The template for picking properties.
     Role:
       type: object
       required:
@@ -1536,6 +1544,7 @@ components:
         - lyricists
         - composers
         - arrangers
+        - tags
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -1563,6 +1572,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Arranger'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongTag'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -1587,6 +1600,10 @@ components:
             - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
               orderNo: 1
+          tags:
+            - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+              name: 派生曲
+              orderNo: 10
     SongAttribute:
       type: object
       required:
@@ -1629,6 +1646,7 @@ components:
         - lyricists
         - composers
         - arrangers
+        - tags
       properties:
         title:
           $ref: '#/components/schemas/title'
@@ -1652,6 +1670,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RequestArranger'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestSongTag'
     SongCreateResponse:
       type: object
       required:
@@ -1853,6 +1875,7 @@ components:
         - lyricists
         - composers
         - arrangers
+        - tags
       properties:
         title:
           $ref: '#/components/schemas/title'
@@ -1878,6 +1901,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RequestArranger'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestSongTag'
     SongUpdateResponse:
       type: object
       required:

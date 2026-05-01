@@ -14,6 +14,7 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -24,12 +25,15 @@ class SongAssemblerTest extends TestCase
 
     private CreatorRepositoryInterface&MockInterface $creatorRepository;
 
+    private MockInterface&SongTagRepositoryInterface $songTagRepository;
+
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
     }
 
     #[Test]
@@ -129,6 +133,6 @@ class SongAssemblerTest extends TestCase
 
     private function getInstance(): SongAssembler
     {
-        return new SongAssembler($this->creatorRepository);
+        return new SongAssembler($this->creatorRepository, $this->songTagRepository);
     }
 }

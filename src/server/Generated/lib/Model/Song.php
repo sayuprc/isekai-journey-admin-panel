@@ -66,7 +66,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => 'int',
         'lyricists' => '\OpenAPI\Client\Model\Lyricist[]',
         'composers' => '\OpenAPI\Client\Model\Composer[]',
-        'arrangers' => '\OpenAPI\Client\Model\Arranger[]'
+        'arrangers' => '\OpenAPI\Client\Model\Arranger[]',
+        'tags' => '\OpenAPI\Client\Model\SongTag[]'
     ];
 
     /**
@@ -86,7 +87,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => 'int32',
         'lyricists' => null,
         'composers' => null,
-        'arrangers' => null
+        'arrangers' => null,
+        'tags' => null
     ];
 
     /**
@@ -104,7 +106,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => false,
         'lyricists' => false,
         'composers' => false,
-        'arrangers' => false
+        'arrangers' => false,
+        'tags' => false
     ];
 
     /**
@@ -202,7 +205,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => 'orderNo',
         'lyricists' => 'lyricists',
         'composers' => 'composers',
-        'arrangers' => 'arrangers'
+        'arrangers' => 'arrangers',
+        'tags' => 'tags'
     ];
 
     /**
@@ -220,7 +224,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => 'setOrderNo',
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
-        'arrangers' => 'setArrangers'
+        'arrangers' => 'setArrangers',
+        'tags' => 'setTags'
     ];
 
     /**
@@ -238,7 +243,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'order_no' => 'getOrderNo',
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
-        'arrangers' => 'getArrangers'
+        'arrangers' => 'getArrangers',
+        'tags' => 'getTags'
     ];
 
     /**
@@ -308,6 +314,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('lyricists', $data ?? [], null);
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
+        $this->setIfExists('tags', $data ?? [], null);
     }
 
     /**
@@ -371,6 +378,9 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['arrangers'] === null) {
             $invalidProperties[] = "'arrangers' can't be null";
+        }
+        if ($this->container['tags'] === null) {
+            $invalidProperties[] = "'tags' can't be null";
         }
         return $invalidProperties;
     }
@@ -663,6 +673,33 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable arrangers cannot be null');
         }
         $this->container['arrangers'] = $arrangers;
+
+        return $this;
+    }
+
+    /**
+     * Gets tags
+     *
+     * @return \OpenAPI\Client\Model\SongTag[]
+     */
+    public function getTags()
+    {
+        return $this->container['tags'];
+    }
+
+    /**
+     * Sets tags
+     *
+     * @param \OpenAPI\Client\Model\SongTag[] $tags tags
+     *
+     * @return self
+     */
+    public function setTags($tags)
+    {
+        if (is_null($tags)) {
+            throw new \InvalidArgumentException('non-nullable tags cannot be null');
+        }
+        $this->container['tags'] = $tags;
 
         return $this;
     }

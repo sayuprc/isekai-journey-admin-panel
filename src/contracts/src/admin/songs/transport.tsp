@@ -18,6 +18,7 @@ model SongCreateRequest {
   lyricists: RequestLyricist[];
   composers: RequestComposer[];
   arrangers: RequestArranger[];
+  tags: RequestSongTag[];
 }
 
 model SongCreateResponse {
@@ -34,6 +35,7 @@ model SongUpdateRequest {
   lyricists: RequestLyricist[];
   composers: RequestComposer[];
   arrangers: RequestArranger[];
+  tags: RequestSongTag[];
 }
 
 model SongUpdateResponse {
@@ -45,3 +47,5 @@ model RequestLyricist is PickProperties<Lyricist, "creatorId">;
 model RequestComposer is PickProperties<Composer, "creatorId">;
 
 model RequestArranger is PickProperties<Arranger, "creatorId">;
+
+model RequestSongTag is PickProperties<SongTag, "songTagId">;

@@ -32,6 +32,7 @@ use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTag;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -59,6 +60,7 @@ trait EntityFactory
      * @param array<array{creatorId: string, orderNo: int}> $lyricists
      * @param array<array{creatorId: string, orderNo: int}> $composers
      * @param array<array{creatorId: string, orderNo: int}> $arrangers
+     * @param array<array{songTagId: string, orderNo: int}> $tags
      */
     protected function createSong(
         string $songId,
@@ -71,6 +73,7 @@ trait EntityFactory
         array $composers,
         array $arrangers,
         bool $isDisplay = true,
+        array $tags = [],
     ): Song {
         return new Song(
             SongId::reconstruct($songId),
@@ -83,6 +86,7 @@ trait EntityFactory
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
             Arrangers::fromArray($arrangers)->unwrap(),
+            SongTagReferences::fromArray($tags)->unwrap(),
         );
     }
 

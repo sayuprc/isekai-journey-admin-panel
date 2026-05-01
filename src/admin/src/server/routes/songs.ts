@@ -7,6 +7,7 @@ import {
   songServiceGetSong,
   songServiceSearchSongs,
   songServiceUpdateSong,
+  songTagServiceListSongTags,
   songTypeServiceListSongTypes,
 } from '../../generated';
 import type { PerPage, SongAttributeValue, SongSearchSortBy, SongTypeValue, SortOrder } from '../../generated';
@@ -19,21 +20,24 @@ const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
 const SongAttributeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5)]);
 
 const CreatorRefSchema = t.Array(t.Object({ creatorId: t.String() }));
+const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
 
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
   .get('/create-form', async ({ credential }) => {
     const authClient = createAuthClient(credential);
-    const [creators, types, attributes] = await Promise.all([
+    const [creators, types, attributes, tags] = await Promise.all([
       creatorServiceListCreators({ client: authClient }),
       songTypeServiceListSongTypes({ client: authClient }),
       songAttributeServiceListSongAttributes({ client: authClient }),
+      songTagServiceListSongTags({ client: authClient }),
     ]);
 
     return {
       creators: resolveApiResponse(creators).creators,
       types: resolveApiResponse(types).types,
       attributes: resolveApiResponse(attributes).attributes,
+      tags: resolveApiResponse(tags).tags,
     };
   })
   .get(
@@ -81,11 +85,12 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/:songId/edit-form',
     async ({ params: { songId }, credential }) => {
       const authClient = createAuthClient(credential);
-      const [song, creators, types, attributes] = await Promise.all([
+      const [song, creators, types, attributes, tags] = await Promise.all([
         songServiceGetSong({ client: authClient, path: { songId } }),
         creatorServiceListCreators({ client: authClient }),
         songTypeServiceListSongTypes({ client: authClient }),
         songAttributeServiceListSongAttributes({ client: authClient }),
+        songTagServiceListSongTags({ client: authClient }),
       ]);
 
       return {
@@ -93,6 +98,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         creators: resolveApiResponse(creators).creators,
         types: resolveApiResponse(types).types,
         attributes: resolveApiResponse(attributes).attributes,
+        tags: resolveApiResponse(tags).tags,
       };
     },
     {
@@ -115,7 +121,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .post(
     '/',
     async ({
-      body: { title, description, typeValue, attributeValue, isDisplay, lyricists, composers, arrangers },
+      body: { title, description, typeValue, attributeValue, isDisplay, lyricists, composers, arrangers, tags },
       credential,
     }) => {
       return resolveApiResponse(
@@ -130,6 +136,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             lyricists,
             composers,
             arrangers,
+            tags,
           },
         }),
       );
@@ -144,6 +151,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         lyricists: CreatorRefSchema,
         composers: CreatorRefSchema,
         arrangers: CreatorRefSchema,
+        tags: SongTagRefSchema,
       }),
     },
   )
@@ -151,7 +159,7 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/:songId',
     async ({
       params: { songId },
-      body: { title, description, typeValue, attributeValue, isDisplay, orderNo, composers, lyricists, arrangers },
+      body: { title, description, typeValue, attributeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags },
       credential,
     }) => {
       return resolveApiResponse(
@@ -168,6 +176,7 @@ export const songs = new Elysia({ prefix: '/songs' })
             lyricists,
             composers,
             arrangers,
+            tags,
           },
         }),
       );
@@ -186,6 +195,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         lyricists: CreatorRefSchema,
         composers: CreatorRefSchema,
         arrangers: CreatorRefSchema,
+        tags: SongTagRefSchema,
       }),
     },
   )

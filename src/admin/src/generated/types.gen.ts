@@ -157,6 +157,13 @@ export type RequestLyricist = {
     creatorId: CreatorId;
 };
 
+/**
+ * The template for picking properties.
+ */
+export type RequestSongTag = {
+    songTagId: SongTagId;
+};
+
 export type Role = {
     name: RoleName;
     value: RoleValue;
@@ -178,6 +185,7 @@ export type Song = {
     lyricists: Array<Lyricist>;
     composers: Array<Composer>;
     arrangers: Array<Arranger>;
+    tags: Array<SongTag>;
 };
 
 export type SongAttribute = {
@@ -203,6 +211,7 @@ export type SongCreateRequest = {
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
+    tags: Array<RequestSongTag>;
 };
 
 export type SongCreateResponse = {
@@ -303,6 +312,7 @@ export type SongUpdateRequest = {
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
     arrangers: Array<RequestArranger>;
+    tags: Array<RequestSongTag>;
 };
 
 export type SongUpdateResponse = {

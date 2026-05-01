@@ -23,6 +23,7 @@ use Override;
  * @property-read Collection<int, SongArranger> $arrangers
  * @property-read Collection<int, SongComposer> $composers
  * @property-read Collection<int, SongLyricist> $lyricists
+ * @property-read Collection<int, SongTagging> $taggings
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newQuery()
@@ -46,6 +47,7 @@ class Song extends Model
         'lyricists',
         'composers',
         'arrangers',
+        'taggings',
     ];
 
     #[Override]
@@ -80,5 +82,13 @@ class Song extends Model
     public function arrangers(): HasMany
     {
         return $this->hasMany(SongArranger::class, 'song_id', 'song_id');
+    }
+
+    /**
+     * @return HasMany<SongTagging, $this>
+     */
+    public function taggings(): HasMany
+    {
+        return $this->hasMany(SongTagging::class, 'song_id', 'song_id');
     }
 }

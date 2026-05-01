@@ -64,6 +64,7 @@ readonly class UpdateInteractor implements UpdateUseCaseInterface
                 $inputData->lyricists,
                 $inputData->composers,
                 $inputData->arrangers,
+                $inputData->tags,
             );
 
             if ($result->isErr()) {

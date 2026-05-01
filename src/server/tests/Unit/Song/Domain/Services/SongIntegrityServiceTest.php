@@ -19,6 +19,7 @@ use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Models\Title;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
@@ -38,6 +39,8 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&SongRepositoryInterface $songRepository;
 
+    private MockInterface&SongTagRepositoryInterface $songTagRepository;
+
     #[Override]
     protected function setUp(): void
     {
@@ -47,6 +50,7 @@ class SongIntegrityServiceTest extends TestCase
         $this->factory = Mockery::mock(SongFactoryInterface::class);
         $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
+        $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
     }
 
     #[Test]
@@ -328,6 +332,7 @@ class SongIntegrityServiceTest extends TestCase
             $this->factory,
             $this->songRepository,
             $this->creatorRepository,
+            $this->songTagRepository,
         );
     }
 }
