@@ -95,17 +95,6 @@ export const SearchList = () => {
     updateUrl({ name: name(), sort: sort(), order: order(), page: page, perPage: perPage() });
   };
 
-  const openDetail = (songTagId: string) => {
-    window.location.href = `/song-tags/${songTagId}?back=${encodeURIComponent(window.location.search)}`;
-  };
-
-  const handleRowKeyDown = (e: KeyboardEvent, songTagId: string) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openDetail(songTagId);
-    }
-  };
-
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
@@ -187,6 +176,7 @@ export const SearchList = () => {
             <tr>
               <th>楽曲タグ名</th>
               <th>表示順</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -201,6 +191,9 @@ export const SearchList = () => {
                       <td>
                         <div class="skeleton h-4 w-8" />
                       </td>
+                      <td>
+                        <div class="skeleton h-6 w-10" />
+                      </td>
                     </tr>
                   )}
                 </For>
@@ -208,7 +201,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="2" class="py-8 text-center text-error">
+                    <td colspan="3" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -220,7 +213,7 @@ export const SearchList = () => {
                     when={result().tags.length > 0}
                     fallback={(
                       <tr>
-                        <td colspan="2" class="py-8 text-center text-base-content/60">
+                        <td colspan="3" class="py-8 text-center text-base-content/60">
                           条件に一致する楽曲タグはありません。
                         </td>
                       </tr>
@@ -228,14 +221,14 @@ export const SearchList = () => {
                   >
                     <For each={result().tags}>
                       {tag => (
-                        <tr
-                          class="cursor-pointer hover:bg-primary/30 focus-within:bg-primary/30 transition-colors"
-                          onClick={() => openDetail(tag.songTagId)}
-                          onKeyDown={e => handleRowKeyDown(e, tag.songTagId)}
-                          tabIndex={0}
-                        >
+                        <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                           <td>{tag.name}</td>
                           <td>{tag.orderNo}</td>
+                          <td>
+                            <a href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                              編集
+                            </a>
+                          </td>
                         </tr>
                       )}
                     </For>
