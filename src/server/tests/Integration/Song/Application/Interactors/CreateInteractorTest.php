@@ -33,6 +33,7 @@ class CreateInteractorTest extends DatabaseTestCase
                 'オリジナル楽曲',
                 SongType::Original->value,
                 true,
+                [],
                 [['creatorId' => $creator1->creatorId->value]],
                 [['creatorId' => $creator2->creatorId->value]],
                 [['creatorId' => $creator3->creatorId->value]],

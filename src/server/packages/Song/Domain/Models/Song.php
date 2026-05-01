@@ -19,30 +19,30 @@ readonly class Song
         public SongType $type,
         public bool $isDisplay,
         public OrderNo $orderNo,
+        public SongTagReferences $tags,
         public Lyricists $lyricists,
         public Composers $composers,
         public Arrangers $arrangers,
-        public SongTagReferences $tags,
     ) {
     }
 
     /**
+     * @param list<array{songTagId: string, orderNo: int}> $tags
      * @param list<array{creatorId: string, orderNo: int}> $lyricists
      * @param list<array{creatorId: string, orderNo: int}> $composers
      * @param list<array{creatorId: string, orderNo: int}> $arrangers
-     * @param list<array{songTagId: string, orderNo: int}> $tags
      */
     public static function reconstruct(
         string $songId,
         string $title,
         string $description,
         int $type,
+        bool $isDisplay,
         int $orderNo,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
-        bool $isDisplay,
-        array $tags = [],
     ): self {
         return new self(
             SongId::reconstruct($songId),
@@ -51,10 +51,10 @@ readonly class Song
             SongType::from($type),
             $isDisplay,
             OrderNo::reconstruct($orderNo),
+            SongTagReferences::reconstruct($tags),
             Lyricists::reconstruct($lyricists),
             Composers::reconstruct($composers),
             Arrangers::reconstruct($arrangers),
-            SongTagReferences::reconstruct($tags),
         );
     }
 

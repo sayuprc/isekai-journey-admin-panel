@@ -55,23 +55,17 @@ trait EntityFactory
         );
     }
 
-    /**
-     * @param array<array{creatorId: string, orderNo: int}> $lyricists
-     * @param array<array{creatorId: string, orderNo: int}> $composers
-     * @param array<array{creatorId: string, orderNo: int}> $arrangers
-     * @param array<array{songTagId: string, orderNo: int}> $tags
-     */
     protected function createSong(
         string $songId,
         string $title,
         string $description,
         SongType $type,
-        int $orderNo,
-        array $lyricists,
-        array $composers,
-        array $arrangers,
         bool $isDisplay = true,
+        int $orderNo = 1,
         array $tags = [],
+        array $lyricists = [],
+        array $composers = [],
+        array $arrangers = [],
     ): Song {
         return new Song(
             SongId::reconstruct($songId),
@@ -80,10 +74,10 @@ trait EntityFactory
             $type,
             $isDisplay,
             OrderNo::reconstruct($orderNo),
+            SongTagReferences::fromArray($tags)->unwrap(),
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
             Arrangers::fromArray($arrangers)->unwrap(),
-            SongTagReferences::fromArray($tags)->unwrap(),
         );
     }
 

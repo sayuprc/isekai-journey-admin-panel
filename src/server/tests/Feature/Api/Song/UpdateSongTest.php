@@ -42,12 +42,12 @@ class UpdateSongTest extends DatabaseTestCase
                 '曲名',
                 '説明',
                 SongType::Original,
+                true,
                 1,
+                [['songTagId' => $oldTag->songTagId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
-                true,
-                [['songTagId' => $oldTag->songTagId->value, 'orderNo' => 1]],
             ),
         );
 
@@ -121,7 +121,9 @@ class UpdateSongTest extends DatabaseTestCase
                 '曲名',
                 '説明',
                 SongType::Original,
+                true,
                 1,
+                [],
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
@@ -178,7 +180,7 @@ class UpdateSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '曲名', '説明', SongType::Original, 1, [], [], []),
+            $this->createSong($songId, '曲名', '説明', SongType::Original, true, 1, [], [], [], []),
         );
 
         $this->withAuth()
@@ -201,7 +203,7 @@ class UpdateSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '曲名', '説明', SongType::Original, 1, [], [], []),
+            $this->createSong($songId, '曲名', '説明', SongType::Original, true, 1, [], [], [], []),
         );
 
         $tagRepo = $this->app->make(SongTagRepository::class);

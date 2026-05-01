@@ -29,8 +29,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, true, 2, [], [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria());
@@ -51,8 +51,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, true, 2, [], [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(title: new Some('描き続けた君へ')));
@@ -69,8 +69,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, true, 2, [], [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(type: new Some(SongType::Original)));
@@ -86,7 +86,7 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(title: new Some('存在しないタイトル')));
@@ -101,8 +101,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], [], false),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, false, 2, [], [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(isDisplay: new Some(false)));
@@ -118,7 +118,7 @@ class SongQueryServiceTest extends DatabaseTestCase
         $songs = [];
 
         for ($i = 1; $i <= 26; $i++) {
-            $songs[] = $this->createSong($this->generateUuid(), "楽曲{$i}", '説明', SongType::Original, $i, [], [], []);
+            $songs[] = $this->createSong($this->generateUuid(), "楽曲{$i}", '説明', SongType::Original, true, $i, [], [], [], []);
         }
 
         $this->storeSongs(...$songs);

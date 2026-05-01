@@ -41,12 +41,12 @@ class GetSongTest extends DatabaseTestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
+                true,
                 1,
+                [['songTagId' => $tag->songTagId->value, 'orderNo' => 1]],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
                 [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $arrangerId, 'orderNo' => 1]],
-                true,
-                [['songTagId' => $tag->songTagId->value, 'orderNo' => 1]],
             ),
         );
 

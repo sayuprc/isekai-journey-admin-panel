@@ -23,7 +23,7 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData());
@@ -45,8 +45,8 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, true, 2, [], [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '描き続けた君へ'));
@@ -67,8 +67,8 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, true, 2, [], [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(type: SongType::Original->value));
@@ -88,7 +88,7 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, true, 1, [], [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '存在しないタイトル'));
