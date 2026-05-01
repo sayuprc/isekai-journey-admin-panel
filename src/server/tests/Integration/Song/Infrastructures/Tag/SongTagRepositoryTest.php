@@ -7,6 +7,8 @@ namespace Tests\Integration\Song\Infrastructures\Tag;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Criteria\Tag\SongTagSort;
+use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTagId;
 use Song\Infrastructures\Tag\SongTagRepository;
 use Support\Domain\SearchCriteria\Order;
 use Support\Domain\SearchCriteria\PerPage;
@@ -14,10 +16,12 @@ use Support\Optional\None;
 use Support\Optional\Some;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 
 class SongTagRepositoryTest extends DatabaseTestCase
 {
     use EntityFactory;
+    use EntityStore;
 
     #[Test]
     public function all(): void
@@ -179,6 +183,42 @@ class SongTagRepositoryTest extends DatabaseTestCase
         $criteria = new SongTagSearchCriteria(new None());
 
         $this->assertSame(0, $this->getInstance()->maxPage($criteria));
+    }
+
+    #[Test]
+    public function isUsed(): void
+    {
+        $songTagId = $this->generateUuid();
+
+        $this->storeSongTags($this->createSongTag($songTagId, '派生曲', 1));
+        $this->storeSongs($this->createSong(
+            $this->generateUuid(),
+            '曲名',
+            '説明',
+            SongType::Original,
+            null,
+            1,
+            [],
+            [],
+            [],
+            true,
+            [['songTagId' => $songTagId, 'orderNo' => 1]],
+        ));
+
+        $result = $this->getInstance()->isUsed(SongTagId::reconstruct($songTagId));
+
+        $this->assertTrue($result);
+    }
+
+    #[Test]
+    public function isNotUsed(): void
+    {
+        $songTagId = $this->generateUuid();
+
+        $this->storeSongTags($this->createSongTag($songTagId, '派生曲', 1));
+
+        $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($songTagId)));
+        $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($this->generateUuid())));
     }
 
     private function getInstance(): SongTagRepository
