@@ -17,7 +17,6 @@ use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongSummary;
 use Song\Application\UseCase\Search\SearchInputData;
 use Song\Domain\Criteria\SongSearchCriteria;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
@@ -45,18 +44,17 @@ class SearchInteractorTest extends TestCase
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
             SongType::Original,
-            null,
             true,
             1,
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty() && $criteria->isDisplay->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->attribute->isEmpty() && $criteria->isDisplay->isEmpty())
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -77,7 +75,6 @@ class SearchInteractorTest extends TestCase
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
             SongType::Original,
-            null,
             true,
             1,
         );
@@ -108,7 +105,6 @@ class SearchInteractorTest extends TestCase
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
             SongType::Original,
-            null,
             true,
             1,
         );
@@ -133,44 +129,12 @@ class SearchInteractorTest extends TestCase
     }
 
     #[Test]
-    public function searchWithAttribute(): void
-    {
-        $summary = new SongSummary(
-            'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            '描き続けた君へ',
-            SongType::Original,
-            SongAttribute::Collaboration,
-            true,
-            1,
-        );
-
-        $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
-            ->andReturn([$summary])
-            ->once();
-
-        $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->attribute->isPresent() && $criteria->attribute->get() === SongAttribute::Collaboration)
-            ->andReturn(1)
-            ->once();
-
-        $result = $this->getInstance()->handle(new SearchInputData(attribute: SongAttribute::Collaboration->value));
-
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
-        $this->assertCount(1, $output->songs);
-        $this->assertSame(SongAttribute::Collaboration, $output->songs[0]->attribute);
-    }
-
-    #[Test]
     public function searchWithIsDisplay(): void
     {
         $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
             '描き続けた君へ',
             SongType::Original,
-            null,
             false,
             1,
         );

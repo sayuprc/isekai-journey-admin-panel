@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Song\Application\Query;
 
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 
 readonly class SongSummary
@@ -13,7 +12,6 @@ readonly class SongSummary
         public string $songId,
         public string $title,
         public SongType $type,
-        public ?SongAttribute $attribute,
         public bool $isDisplay,
         public int $orderNo,
     ) {

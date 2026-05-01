@@ -179,7 +179,6 @@ export type Song = {
     title: Title;
     description: Description;
     type: SongType;
-    attribute?: SongAttribute;
     isDisplay: boolean;
     orderNo: OrderNo;
     lyricists: Array<Lyricist>;
@@ -188,25 +187,10 @@ export type Song = {
     tags: Array<SongTag>;
 };
 
-export type SongAttribute = {
-    name: SongAttributeName;
-    value: SongAttributeValue;
-};
-
-export type SongAttributeListResponse = {
-    attributes: Array<SongAttribute>;
-};
-
-/**
- * 楽曲属性の値
- */
-export type SongAttributeValue = 1 | 2 | 3 | 4 | 5;
-
 export type SongCreateRequest = {
     title: Title;
     description: Description;
     typeValue: SongTypeValue;
-    attributeValue?: SongAttributeValue;
     isDisplay: boolean;
     lyricists: Array<RequestLyricist>;
     composers: Array<RequestComposer>;
@@ -242,7 +226,6 @@ export type SongSummary = {
     songId: SongId;
     title: Title;
     type: SongType;
-    attribute?: SongAttribute;
     isDisplay: boolean;
     orderNo: OrderNo;
 };
@@ -306,7 +289,6 @@ export type SongUpdateRequest = {
     title: Title;
     description: Description;
     typeValue: SongTypeValue;
-    attributeValue?: SongAttributeValue;
     isDisplay: boolean;
     orderNo: OrderNo;
     lyricists: Array<RequestLyricist>;
@@ -414,11 +396,6 @@ export type RefreshToken = string;
  * 役割名
  */
 export type RoleName = string;
-
-/**
- * 楽曲属性名
- */
-export type SongAttributeName = string;
 
 /**
  * 楽曲ID
@@ -1114,45 +1091,6 @@ export type PerformerServiceUpdatePerformerResponses = {
 
 export type PerformerServiceUpdatePerformerResponse = PerformerServiceUpdatePerformerResponses[keyof PerformerServiceUpdatePerformerResponses];
 
-export type SongAttributeServiceListSongAttributesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/song-attributes';
-};
-
-export type SongAttributeServiceListSongAttributesErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type SongAttributeServiceListSongAttributesResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: SongAttributeListResponse;
-};
-
-export type SongAttributeServiceListSongAttributesResponse = SongAttributeServiceListSongAttributesResponses[keyof SongAttributeServiceListSongAttributesResponses];
-
 export type SongTagServiceListSongTagsData = {
     body?: never;
     path?: never;
@@ -1537,7 +1475,6 @@ export type SongServiceSearchSongsData = {
     query?: {
         title?: string;
         type?: SongTypeValue;
-        attribute?: SongAttributeValue;
         is_display?: boolean;
         sort?: SongSearchSortBy;
         order?: SortOrder;

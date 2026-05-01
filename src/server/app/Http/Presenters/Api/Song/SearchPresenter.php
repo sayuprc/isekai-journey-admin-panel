@@ -6,8 +6,6 @@ namespace App\Http\Presenters\Api\Song;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\SongAttribute as OpenApiSongAttribute;
-use OpenAPI\Client\Model\SongAttributeValue;
 use OpenAPI\Client\Model\SongSearchResponse;
 use OpenAPI\Client\Model\SongSummary as OpenApiSongSummary;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
@@ -42,18 +40,12 @@ class SearchPresenter
 
     private function toOpenApiSongSummary(SongSummary $song): OpenApiSongSummary
     {
-        $summary = new OpenApiSongSummary()
+        return new OpenApiSongSummary()
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setType($this->toOpenApiSongType($song->type))
             ->setIsDisplay($song->isDisplay)
             ->setOrderNo($song->orderNo);
-
-        if (! is_null($song->attribute)) {
-            $summary = $summary->setAttribute($this->toOpenApiSongAttribute($song->attribute->getName(), $song->attribute->value));
-        }
-
-        return $summary;
     }
 
     private function toOpenApiSongType(SongType $type): OpenApiSongType
@@ -61,12 +53,5 @@ class SearchPresenter
         return new OpenApiSongType()
             ->setName($type->getName())
             ->setValue(SongTypeValue::from($type->value));
-    }
-
-    private function toOpenApiSongAttribute(string $name, int $value): OpenApiSongAttribute
-    {
-        return new OpenApiSongAttribute()
-            ->setName($name)
-            ->setValue(SongAttributeValue::from($value));
     }
 }

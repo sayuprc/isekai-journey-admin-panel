@@ -22,7 +22,6 @@ use App\Http\Controllers\Api\Song\DeleteSongController;
 use App\Http\Controllers\Api\Song\GetSongController;
 use App\Http\Controllers\Api\Song\SearchSongController;
 use App\Http\Controllers\Api\Song\UpdateSongController;
-use App\Http\Controllers\Api\SongAttribute\ListSongAttributeController;
 use App\Http\Controllers\Api\SongTag\CreateSongTagController;
 use App\Http\Controllers\Api\SongTag\DeleteSongTagController;
 use App\Http\Controllers\Api\SongTag\GetSongTagController;
@@ -37,7 +36,6 @@ use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
-use Song\Route\SongAttributeRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
@@ -86,10 +84,6 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('song-types')->group(function () {
                     Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
-                });
-
-                Route::prefix('song-attributes')->group(function () {
-                    Route::get('/', [ListSongAttributeController::class, 'handle'])->name(SongAttributeRouteMap::List);
                 });
 
                 Route::prefix('song-tags')->group(function () {

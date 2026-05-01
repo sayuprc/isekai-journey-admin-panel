@@ -9,7 +9,6 @@ type Order = 'asc' | 'desc';
 const getInitialParams = (): {
   title: string;
   type?: number;
-  attribute?: number;
   isDisplay?: boolean;
   sort: Sort;
   order: Order;
@@ -24,7 +23,6 @@ const getInitialParams = (): {
   return {
     title: params.get('title') ?? '',
     type: Number(params.get('type') ?? 0) || undefined,
-    attribute: Number(params.get('attribute') ?? 0) || undefined,
     isDisplay: isDisplayRaw === 'true' ? true : isDisplayRaw === 'false' ? false : undefined,
     sort: sort === 'title' || sort === 'order_no' ? sort : 'order_no',
     order: order === 'asc' || order === 'desc' ? order : 'asc',
@@ -38,7 +36,6 @@ export const SearchList = () => {
 
   const [title, setTitle] = createSignal(initial.title);
   const [type, setType] = createSignal(initial.type);
-  const [attribute, setAttribute] = createSignal(initial.attribute);
   const [isDisplay, setIsDisplay] = createSignal(initial.isDisplay);
   const [sort, setSort] = createSignal<Sort>(initial.sort);
   const [order, setOrder] = createSignal<Order>(initial.order);
@@ -48,7 +45,6 @@ export const SearchList = () => {
   // 検索フォームの一時入力値（Submit前）
   const [inputTitle, setInputTitle] = createSignal(initial.title);
   const [inputType, setInputType] = createSignal(initial.type);
-  const [inputAttribute, setInputAttribute] = createSignal(initial.attribute);
   const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);
   const [inputSort, setInputSort] = createSignal<Sort>(initial.sort);
   const [inputOrder, setInputOrder] = createSignal<Order>(initial.order);
@@ -57,7 +53,6 @@ export const SearchList = () => {
   const updateUrl = (params: {
     title: string;
     type?: number;
-    attribute?: number;
     isDisplay?: boolean;
     sort: Sort;
     order: Order;
@@ -67,7 +62,6 @@ export const SearchList = () => {
     const searchParams = new URLSearchParams();
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', String(params.type));
-    if (params.attribute) searchParams.set('attribute', String(params.attribute));
     if (params.isDisplay !== undefined) searchParams.set('is_display', String(params.isDisplay));
     if (params.sort) searchParams.set('sort', params.sort);
     if (params.order) searchParams.set('order', params.order);
@@ -82,7 +76,6 @@ export const SearchList = () => {
     () => ({
       title: title(),
       type: type(),
-      attribute: attribute(),
       isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
@@ -96,7 +89,6 @@ export const SearchList = () => {
         query: {
           title: params.title,
           type: params.type,
-          attribute: params.attribute,
           is_display: params.isDisplay,
           sort: params.sort,
           order: params.order,
@@ -127,7 +119,6 @@ export const SearchList = () => {
 
     setTitle(inputTitle());
     setType(inputType());
-    setAttribute(inputAttribute());
     setIsDisplay(inputIsDisplay());
     setSort(inputSort());
     setOrder(inputOrder());
@@ -136,7 +127,6 @@ export const SearchList = () => {
     updateUrl({
       title: inputTitle(),
       type: inputType(),
-      attribute: inputAttribute(),
       isDisplay: inputIsDisplay(),
       sort: inputSort(),
       order: inputOrder(),
@@ -150,7 +140,6 @@ export const SearchList = () => {
     updateUrl({
       title: title(),
       type: type(),
-      attribute: attribute(),
       isDisplay: isDisplay(),
       sort: sort(),
       order: order(),
@@ -191,25 +180,6 @@ export const SearchList = () => {
             </option>
             <For each={data()?.types ?? []}>
               {t => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}
-            </For>
-          </select>
-        </fieldset>
-        <fieldset class="fieldset">
-          <label class="fieldset-label" for="attribute">
-            楽曲属性
-          </label>
-          <select
-            id="attribute"
-            name="attribute"
-            class="select select-bordered select-sm"
-            onChange={e =>
-              setInputAttribute(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
-          >
-            <option value="" selected={inputAttribute() === undefined}>
-              すべて
-            </option>
-            <For each={data()?.attributes ?? []}>
-              {a => <option value={a.value} selected={inputAttribute() === a.value}>{a.name}</option>}
             </For>
           </select>
         </fieldset>
@@ -298,7 +268,6 @@ export const SearchList = () => {
             <tr>
               <th>楽曲名</th>
               <th>楽曲種別</th>
-              <th>楽曲属性</th>
               <th>表示設定</th>
               <th>表示順</th>
               <th>操作</th>
@@ -317,9 +286,6 @@ export const SearchList = () => {
                         <div class="skeleton h-4 w-8" />
                       </td>
                       <td>
-                        <div class="skeleton h-6 w-10" />
-                      </td>
-                      <td>
                         <div class="skeleton h-4 w-16" />
                       </td>
                       <td>
@@ -335,7 +301,7 @@ export const SearchList = () => {
               <Match when={fetchError()}>
                 {message => (
                   <tr>
-                    <td colspan="6" class="py-8 text-center text-error">
+                    <td colspan="5" class="py-8 text-center text-error">
                       {message()}
                     </td>
                   </tr>
@@ -348,7 +314,6 @@ export const SearchList = () => {
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
                         <td>{song.type.name}</td>
-                        <td>{song.attribute?.name ?? '-'}</td>
                         <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
                         <td>{song.orderNo}</td>
                         <td>

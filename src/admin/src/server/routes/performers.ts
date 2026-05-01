@@ -1,5 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { performerServiceCreatePerformer, performerServiceDeletePerformer, performerServiceGetPerformer, performerServiceSearchPerformers, performerServiceUpdatePerformer } from '../../generated';
+import type { PerPage, PerformerSearchSortBy, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
@@ -14,10 +15,10 @@ export const performers = new Elysia({ prefix: '/performers' })
           client: createAuthClient(credential),
           query: {
             name: query.name || undefined,
-            sort: query.sort ?? 'order_no',
-            order: query.order ?? 'asc',
+            sort: (query.sort ?? 'order_no') as PerformerSearchSortBy,
+            order: (query.order ?? 'asc') as SortOrder,
             page: query.page ?? 1,
-            per_page: query.per_page ?? 25,
+            per_page: (query.per_page ?? 25) as PerPage,
           },
         }),
       );

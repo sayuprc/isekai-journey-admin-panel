@@ -17,7 +17,6 @@ readonly class Song
         public Title $title,
         public Description $description,
         public SongType $type,
-        public ?SongAttribute $attribute,
         public bool $isDisplay,
         public OrderNo $orderNo,
         public Lyricists $lyricists,
@@ -43,8 +42,6 @@ readonly class Song
         array $composers,
         array $arrangers,
         bool $isDisplay,
-        // TODO デフォルト null をどうにかする
-        ?int $attribute = null,
         array $tags = [],
     ): self {
         return new self(
@@ -52,7 +49,6 @@ readonly class Song
             Title::reconstruct($title),
             Description::reconstruct($description),
             SongType::from($type),
-            is_null($attribute) ? null : SongAttribute::from($attribute),
             $isDisplay,
             OrderNo::reconstruct($orderNo),
             Lyricists::reconstruct($lyricists),
@@ -63,7 +59,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, attribute: value-of<SongAttribute>|null, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string, order_no: int}>}
      */
     public function toArray(): array
     {
@@ -72,7 +68,6 @@ readonly class Song
             'title' => $this->title->value,
             'description' => $this->description->value,
             'type' => $this->type->value,
-            'attribute' => $this->attribute?->value,
             'is_display' => $this->isDisplay,
             'order_no' => $this->orderNo->value,
             'lyricists' => $this->lyricists->toArray(),

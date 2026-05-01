@@ -9,7 +9,6 @@ tags:
   - name: Performer
   - name: SongTag
   - name: Song
-  - name: SongAttribute
   - name: SongType
 paths:
   /admin-users:
@@ -606,32 +605,6 @@ paths:
         - Performer
       security:
         - BearerAuth: []
-  /song-attributes:
-    get:
-      operationId: SongAttributeService_listSongAttributes
-      description: 楽曲属性一覧取得API
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SongAttributeListResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - SongAttribute
-      security:
-        - BearerAuth: []
   /song-tags:
     get:
       operationId: SongTagService_listSongTags
@@ -982,12 +955,6 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/SongTypeValue'
-          explode: false
-        - name: attribute
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/SongAttributeValue'
           explode: false
         - name: is_display
           in: query
@@ -1554,8 +1521,6 @@ components:
           $ref: '#/components/schemas/description'
         type:
           $ref: '#/components/schemas/SongType'
-        attribute:
-          $ref: '#/components/schemas/SongAttribute'
         isDisplay:
           type: boolean
         orderNo:
@@ -1583,9 +1548,6 @@ components:
           type:
             name: オリジナル曲
             value: 1
-          attribute:
-            name: コラボ
-            value: 1
           isDisplay: true
           orderNo: 1
           lyricists:
@@ -1604,38 +1566,6 @@ components:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
               orderNo: 10
-    SongAttribute:
-      type: object
-      required:
-        - name
-        - value
-      properties:
-        name:
-          $ref: '#/components/schemas/songAttributeName'
-        value:
-          $ref: '#/components/schemas/SongAttributeValue'
-      examples:
-        - name: コラボ
-          value: 1
-    SongAttributeListResponse:
-      type: object
-      required:
-        - attributes
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/SongAttribute'
-    SongAttributeValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-      description: 楽曲属性の値
     SongCreateRequest:
       type: object
       required:
@@ -1654,8 +1584,6 @@ components:
           $ref: '#/components/schemas/description'
         typeValue:
           $ref: '#/components/schemas/SongTypeValue'
-        attributeValue:
-          $ref: '#/components/schemas/SongAttributeValue'
         isDisplay:
           type: boolean
         lyricists:
@@ -1735,8 +1663,6 @@ components:
           $ref: '#/components/schemas/title'
         type:
           $ref: '#/components/schemas/SongType'
-        attribute:
-          $ref: '#/components/schemas/SongAttribute'
         isDisplay:
           type: boolean
         orderNo:
@@ -1746,9 +1672,6 @@ components:
           title: 描き続けた君へ
           type:
             name: オリジナル曲
-            value: 1
-          attribute:
-            name: コラボ
             value: 1
           isDisplay: true
           orderNo: 1
@@ -1883,8 +1806,6 @@ components:
           $ref: '#/components/schemas/description'
         typeValue:
           $ref: '#/components/schemas/SongTypeValue'
-        attributeValue:
-          $ref: '#/components/schemas/SongAttributeValue'
         isDisplay:
           type: boolean
         orderNo:
@@ -2005,10 +1926,6 @@ components:
       type: string
       minLength: 1
       description: 役割名
-    songAttributeName:
-      type: string
-      minLength: 1
-      description: 楽曲属性名
     songId:
       type: string
       format: uuid

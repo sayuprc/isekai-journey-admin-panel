@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Song\Domain\Criteria;
 
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\Domain\SearchCriteria\Order;
 use Support\Domain\SearchCriteria\PerPage;
@@ -13,15 +12,13 @@ use Support\Optional\Optional;
 readonly class SongSearchCriteria
 {
     /**
-     * @param Optional<string>        $title
-     * @param Optional<SongType>      $type
-     * @param Optional<SongAttribute> $attribute
-     * @param Optional<bool>          $isDisplay
+     * @param Optional<string>   $title
+     * @param Optional<SongType> $type
+     * @param Optional<bool>     $isDisplay
      */
     public function __construct(
         public Optional $title,
         public Optional $type,
-        public Optional $attribute,
         public Optional $isDisplay,
         public Sort $sort = Sort::OrderNo,
         public Order $order = Order::Asc,

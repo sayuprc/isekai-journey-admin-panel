@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
-import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue, SongTag } from '../../generated';
+import type { Creator, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -18,7 +18,6 @@ type SongTagEntry = {
 export const CreateForm = () => {
   const [creators, setCreators] = createSignal<Creator[]>([]);
   const [types, setTypes] = createSignal<SongType[]>([]);
-  const [attributes, setAttributes] = createSignal<SongAttribute[]>([]);
   const [availableTags, setAvailableTags] = createSignal<SongTag[]>([]);
 
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
@@ -34,7 +33,6 @@ export const CreateForm = () => {
     if (data) {
       setCreators(data.creators);
       setTypes(data.types);
-      setAttributes(data.attributes);
       setAvailableTags(data.tags);
     }
   });
@@ -74,10 +72,6 @@ export const CreateForm = () => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
-      attributeValue:
-        formData.get('attributeValue') !== ''
-          ? (Number(formData.get('attributeValue')) as SongAttributeValue)
-          : undefined,
       isDisplay: formData.get('isDisplay') === 'true',
       arrangers: arrangers(),
       composers: composers(),
@@ -219,14 +213,6 @@ export const CreateForm = () => {
             選択してください
           </option>
           <For each={types()}>{type => <option value={type.value}>{type.name}</option>}</For>
-        </select>
-
-        <label class="label">楽曲属性</label>
-        <select class="select select-bordered w-full" name="attributeValue">
-          <option value="" selected>
-            選択してください
-          </option>
-          <For each={attributes()}>{attribute => <option value={attribute.value}>{attribute.name}</option>}</For>
         </select>
 
         <label class="label">表示設定</label>

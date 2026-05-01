@@ -27,7 +27,6 @@ class SongFactoryTest extends TestCase
             Title::reconstruct('描き続けた君へ'),
             Description::reconstruct('オリジナル楽曲'),
             SongType::Original,
-            null,
             true,
             OrderNo::reconstruct(1),
             Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),

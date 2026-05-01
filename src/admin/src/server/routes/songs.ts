@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia';
 import {
   creatorServiceListCreators,
-  songAttributeServiceListSongAttributes,
   songServiceCreateSong,
   songServiceDeleteSong,
   songServiceGetSong,
@@ -10,14 +9,12 @@ import {
   songTagServiceListSongTags,
   songTypeServiceListSongTypes,
 } from '../../generated';
-import type { PerPage, SongAttributeValue, SongSearchSortBy, SongTypeValue, SortOrder } from '../../generated';
+import type { PerPage, SongSearchSortBy, SongTypeValue, SortOrder } from '../../generated';
 import { createAuthClient } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
-
-const SongAttributeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5)]);
 
 const CreatorRefSchema = t.Array(t.Object({ creatorId: t.String() }));
 const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
@@ -26,17 +23,15 @@ export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
   .get('/create-form', async ({ credential }) => {
     const authClient = createAuthClient(credential);
-    const [creators, types, attributes, tags] = await Promise.all([
+    const [creators, types, tags] = await Promise.all([
       creatorServiceListCreators({ client: authClient }),
       songTypeServiceListSongTypes({ client: authClient }),
-      songAttributeServiceListSongAttributes({ client: authClient }),
       songTagServiceListSongTags({ client: authClient }),
     ]);
 
     return {
       creators: resolveApiResponse(creators).creators,
       types: resolveApiResponse(types).types,
-      attributes: resolveApiResponse(attributes).attributes,
       tags: resolveApiResponse(tags).tags,
     };
   })
@@ -44,13 +39,12 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/search',
     async ({ query, credential }) => {
       const authClient = createAuthClient(credential);
-      const [searchResult, types, attributes] = await Promise.all([
+      const [searchResult, types] = await Promise.all([
         songServiceSearchSongs({
           client: authClient,
           query: {
             title: query.title || undefined,
             type: query.type as SongTypeValue | undefined,
-            attribute: query.attribute as SongAttributeValue | undefined,
             is_display: query.is_display,
             sort: (query.sort ?? 'order_no') as SongSearchSortBy,
             order: (query.order ?? 'asc') as SortOrder,
@@ -59,20 +53,17 @@ export const songs = new Elysia({ prefix: '/songs' })
           },
         }),
         songTypeServiceListSongTypes({ client: authClient }),
-        songAttributeServiceListSongAttributes({ client: authClient }),
       ]);
 
       return {
         ...resolveApiResponse(searchResult),
         types: resolveApiResponse(types).types,
-        attributes: resolveApiResponse(attributes).attributes,
       };
     },
     {
       query: t.Object({
         title: t.String(),
         type: t.Optional(t.Number()),
-        attribute: t.Optional(t.Number()),
         is_display: t.Optional(t.Boolean()),
         sort: t.Optional(t.Union([t.Literal('title'), t.Literal('order_no')])),
         order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
@@ -85,11 +76,10 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/:songId/edit-form',
     async ({ params: { songId }, credential }) => {
       const authClient = createAuthClient(credential);
-      const [song, creators, types, attributes, tags] = await Promise.all([
+      const [song, creators, types, tags] = await Promise.all([
         songServiceGetSong({ client: authClient, path: { songId } }),
         creatorServiceListCreators({ client: authClient }),
         songTypeServiceListSongTypes({ client: authClient }),
-        songAttributeServiceListSongAttributes({ client: authClient }),
         songTagServiceListSongTags({ client: authClient }),
       ]);
 
@@ -97,7 +87,6 @@ export const songs = new Elysia({ prefix: '/songs' })
         ...resolveApiResponse(song),
         creators: resolveApiResponse(creators).creators,
         types: resolveApiResponse(types).types,
-        attributes: resolveApiResponse(attributes).attributes,
         tags: resolveApiResponse(tags).tags,
       };
     },
@@ -120,10 +109,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .post(
     '/',
-    async ({
-      body: { title, description, typeValue, attributeValue, isDisplay, lyricists, composers, arrangers, tags },
-      credential,
-    }) => {
+    async ({ body: { title, description, typeValue, isDisplay, lyricists, composers, arrangers, tags }, credential }) => {
       return resolveApiResponse(
         await songServiceCreateSong({
           client: createAuthClient(credential),
@@ -131,7 +117,6 @@ export const songs = new Elysia({ prefix: '/songs' })
             title,
             description,
             typeValue,
-            attributeValue,
             isDisplay,
             lyricists,
             composers,
@@ -146,7 +131,6 @@ export const songs = new Elysia({ prefix: '/songs' })
         title: t.String(),
         description: t.String(),
         typeValue: SongTypeValueSchema,
-        attributeValue: t.Optional(SongAttributeValueSchema),
         isDisplay: t.Boolean(),
         lyricists: CreatorRefSchema,
         composers: CreatorRefSchema,
@@ -157,11 +141,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .put(
     '/:songId',
-    async ({
-      params: { songId },
-      body: { title, description, typeValue, attributeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags },
-      credential,
-    }) => {
+    async ({ params: { songId }, body: { title, description, typeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags }, credential }) => {
       return resolveApiResponse(
         await songServiceUpdateSong({
           client: createAuthClient(credential),
@@ -170,7 +150,6 @@ export const songs = new Elysia({ prefix: '/songs' })
             title,
             description,
             typeValue,
-            attributeValue,
             isDisplay,
             orderNo,
             lyricists,
@@ -189,7 +168,6 @@ export const songs = new Elysia({ prefix: '/songs' })
         title: t.String(),
         description: t.String(),
         typeValue: SongTypeValueSchema,
-        attributeValue: t.Optional(SongAttributeValueSchema),
         isDisplay: t.Boolean(),
         orderNo: t.Number(),
         lyricists: CreatorRefSchema,

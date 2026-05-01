@@ -7,7 +7,6 @@ namespace Tests\Integration\Song\Infrastructures;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Criteria\Sort;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongQueryService;
 use Support\Domain\SearchCriteria\Order;
@@ -30,8 +29,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria());
@@ -40,7 +39,6 @@ class SongQueryServiceTest extends DatabaseTestCase
         $this->assertSame($uuid1, $results[0]->songId);
         $this->assertSame('描き続けた君へ', $results[0]->title);
         $this->assertSame(SongType::Original, $results[0]->type);
-        $this->assertNull($results[0]->attribute);
         $this->assertTrue($results[0]->isDisplay);
         $this->assertSame(1, $results[0]->orderNo);
         $this->assertSame($uuid2, $results[1]->songId);
@@ -53,8 +51,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(title: new Some('描き続けた君へ')));
@@ -71,8 +69,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(type: new Some(SongType::Original)));
@@ -83,30 +81,12 @@ class SongQueryServiceTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function searchWithAttribute(): void
-    {
-        $uuid1 = $this->generateUuid();
-        $uuid2 = $this->generateUuid();
-
-        $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'コラボ楽曲', SongType::Original, SongAttribute::Collaboration, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'オリジナル楽曲', SongType::Original, null, 2, [], [], []),
-        );
-
-        $results = $this->getInstance()->search($this->criteria(attribute: new Some(SongAttribute::Collaboration)));
-
-        $this->assertCount(1, $results);
-        $this->assertSame($uuid1, $results[0]->songId);
-        $this->assertSame(SongAttribute::Collaboration, $results[0]->attribute);
-    }
-
-    #[Test]
     public function searchNotFound(): void
     {
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
         );
 
         $results = $this->getInstance()->search($this->criteria(title: new Some('存在しないタイトル')));
@@ -121,8 +101,8 @@ class SongQueryServiceTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], [], false),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], [], false),
         );
 
         $results = $this->getInstance()->search($this->criteria(isDisplay: new Some(false)));
@@ -138,7 +118,7 @@ class SongQueryServiceTest extends DatabaseTestCase
         $songs = [];
 
         for ($i = 1; $i <= 26; $i++) {
-            $songs[] = $this->createSong($this->generateUuid(), "楽曲{$i}", '説明', SongType::Original, null, $i, [], [], []);
+            $songs[] = $this->createSong($this->generateUuid(), "楽曲{$i}", '説明', SongType::Original, $i, [], [], []);
         }
 
         $this->storeSongs(...$songs);
@@ -157,14 +137,12 @@ class SongQueryServiceTest extends DatabaseTestCase
     private function criteria(
         mixed $title = null,
         mixed $type = null,
-        mixed $attribute = null,
         mixed $isDisplay = null,
         PerPage $perPage = PerPage::Fifty,
     ): SongSearchCriteria {
         return new SongSearchCriteria(
             $title ?? new None(),
             $type ?? new None(),
-            $attribute ?? new None(),
             $isDisplay ?? new None(),
             Sort::OrderNo,
             Order::Asc,

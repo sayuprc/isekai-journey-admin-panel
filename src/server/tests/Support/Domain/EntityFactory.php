@@ -26,7 +26,6 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTag;
@@ -67,7 +66,6 @@ trait EntityFactory
         string $title,
         string $description,
         SongType $type,
-        ?SongAttribute $attribute,
         int $orderNo,
         array $lyricists,
         array $composers,
@@ -80,7 +78,6 @@ trait EntityFactory
             Title::reconstruct($title),
             Description::reconstruct($description),
             $type,
-            $attribute,
             $isDisplay,
             OrderNo::reconstruct($orderNo),
             Lyricists::fromArray($lyricists)->unwrap(),

@@ -60,7 +60,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'string',
         'title' => 'string',
         'type' => '\OpenAPI\Client\Model\SongType',
-        'attribute' => '\OpenAPI\Client\Model\SongAttribute',
         'is_display' => 'bool',
         'order_no' => 'int'
     ];
@@ -76,7 +75,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'uuid',
         'title' => null,
         'type' => null,
-        'attribute' => null,
         'is_display' => null,
         'order_no' => 'int32'
     ];
@@ -90,7 +88,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => false,
         'title' => false,
         'type' => false,
-        'attribute' => false,
         'is_display' => false,
         'order_no' => false
     ];
@@ -184,7 +181,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'songId',
         'title' => 'title',
         'type' => 'type',
-        'attribute' => 'attribute',
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo'
     ];
@@ -198,7 +194,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'setSongId',
         'title' => 'setTitle',
         'type' => 'setType',
-        'attribute' => 'setAttribute',
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo'
     ];
@@ -212,7 +207,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'getSongId',
         'title' => 'getTitle',
         'type' => 'getType',
-        'attribute' => 'getAttribute',
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo'
     ];
@@ -277,7 +271,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('song_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('attribute', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
@@ -429,33 +422,6 @@ class SongSummary implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable type cannot be null');
         }
         $this->container['type'] = $type;
-
-        return $this;
-    }
-
-    /**
-     * Gets attribute
-     *
-     * @return \OpenAPI\Client\Model\SongAttribute|null
-     */
-    public function getAttribute()
-    {
-        return $this->container['attribute'];
-    }
-
-    /**
-     * Sets attribute
-     *
-     * @param \OpenAPI\Client\Model\SongAttribute|null $attribute attribute
-     *
-     * @return self
-     */
-    public function setAttribute($attribute)
-    {
-        if (is_null($attribute)) {
-            throw new \InvalidArgumentException('non-nullable attribute cannot be null');
-        }
-        $this->container['attribute'] = $attribute;
 
         return $this;
     }
