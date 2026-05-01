@@ -60,7 +60,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'string',
         'description' => 'string',
         'type_value' => '\OpenAPI\Client\Model\SongTypeValue',
-        'attribute_value' => '\OpenAPI\Client\Model\SongAttributeValue',
         'is_display' => 'bool',
         'order_no' => 'int',
         'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
@@ -80,7 +79,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => null,
         'description' => null,
         'type_value' => null,
-        'attribute_value' => null,
         'is_display' => null,
         'order_no' => 'int32',
         'lyricists' => null,
@@ -98,7 +96,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => false,
         'description' => false,
         'type_value' => false,
-        'attribute_value' => false,
         'is_display' => false,
         'order_no' => false,
         'lyricists' => false,
@@ -196,7 +193,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'title',
         'description' => 'description',
         'type_value' => 'typeValue',
-        'attribute_value' => 'attributeValue',
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo',
         'lyricists' => 'lyricists',
@@ -214,7 +210,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'setTitle',
         'description' => 'setDescription',
         'type_value' => 'setTypeValue',
-        'attribute_value' => 'setAttributeValue',
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo',
         'lyricists' => 'setLyricists',
@@ -232,7 +227,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'title' => 'getTitle',
         'description' => 'getDescription',
         'type_value' => 'getTypeValue',
-        'attribute_value' => 'getAttributeValue',
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo',
         'lyricists' => 'getLyricists',
@@ -301,7 +295,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('type_value', $data ?? [], null);
-        $this->setIfExists('attribute_value', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
@@ -469,33 +462,6 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable type_value cannot be null');
         }
         $this->container['type_value'] = $type_value;
-
-        return $this;
-    }
-
-    /**
-     * Gets attribute_value
-     *
-     * @return \OpenAPI\Client\Model\SongAttributeValue|null
-     */
-    public function getAttributeValue()
-    {
-        return $this->container['attribute_value'];
-    }
-
-    /**
-     * Sets attribute_value
-     *
-     * @param \OpenAPI\Client\Model\SongAttributeValue|null $attribute_value attribute_value
-     *
-     * @return self
-     */
-    public function setAttributeValue($attribute_value)
-    {
-        if (is_null($attribute_value)) {
-            throw new \InvalidArgumentException('non-nullable attribute_value cannot be null');
-        }
-        $this->container['attribute_value'] = $attribute_value;
 
         return $this;
     }

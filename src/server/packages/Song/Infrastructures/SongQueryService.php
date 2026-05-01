@@ -10,7 +10,6 @@ use Override;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\Query\SongSummary;
 use Song\Domain\Criteria\SongSearchCriteria;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
@@ -50,7 +49,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
     private function buildQuery(SongSearchCriteria $criteria): Builder
     {
         $query = Song::query()
-            ->select(['song_id', 'title', 'type', 'attribute', 'is_display', 'order_no']);
+            ->select(['song_id', 'title', 'type', 'is_display', 'order_no']);
 
         if ($criteria->title->isPresent()) {
             // 前方一致検索でインデックスを活用
@@ -61,10 +60,6 @@ readonly class SongQueryService implements SongQueryServiceInterface
 
         if ($criteria->type->isPresent()) {
             $query = $query->where('type', $criteria->type->get());
-        }
-
-        if ($criteria->attribute->isPresent()) {
-            $query = $query->where('attribute', $criteria->attribute->get());
         }
 
         if ($criteria->isDisplay->isPresent()) {
@@ -80,7 +75,6 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $this->converter->toUuid($model->song_id),
             $model->title,
             SongType::from($model->type),
-            is_null($model->attribute) ? null : SongAttribute::from($model->attribute),
             $model->is_display,
             $model->order_no,
         );

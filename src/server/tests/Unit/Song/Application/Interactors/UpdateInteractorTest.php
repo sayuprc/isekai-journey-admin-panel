@@ -67,14 +67,13 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, null, $isDisplay, $orderNo, $lyricists, $composers, $arrangers, [])
+            ->with($songId, $title, $description, $typeValue, $isDisplay, $orderNo, $lyricists, $composers, $arrangers, [])
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
                     $title,
                     $description,
                     SongType::from($typeValue),
-                    null,
                     $orderNo,
                     $lyricists,
                     $composers,
@@ -130,8 +129,6 @@ class UpdateInteractorTest extends TestCase
                     $song->description->value,
                     $song->type->name,
                     $song->type->value,
-                    null,
-                    null,
                     $song->isDisplay,
                     $song->orderNo->value,
                     [new AssembledCreator($lyricistId, '作詞者', 1)],
@@ -177,7 +174,7 @@ class UpdateInteractorTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, null, $isDisplay, $orderNo, $lyricists, $composers, $arrangers, [])
+            ->with($songId, $title, $description, $typeValue, $isDisplay, $orderNo, $lyricists, $composers, $arrangers, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 

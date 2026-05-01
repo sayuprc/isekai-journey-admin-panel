@@ -7,7 +7,6 @@ namespace Tests\Integration\Song\Application\Interactors;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Interactors\SearchInteractor;
 use Song\Application\UseCase\Search\SearchInputData;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -24,7 +23,7 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData());
@@ -46,8 +45,8 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '描き続けた君へ'));
@@ -68,8 +67,8 @@ class SearchInteractorTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, null, 2, [], [], []),
+            $this->createSong($uuid1, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid2, '全部夢だった！', 'カバー楽曲', SongType::Cover, 2, [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(type: SongType::Original->value));
@@ -84,34 +83,12 @@ class SearchInteractorTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function searchWithAttribute(): void
-    {
-        $uuid1 = $this->generateUuid();
-        $uuid2 = $this->generateUuid();
-
-        $this->storeSongs(
-            $this->createSong($uuid1, '描き続けた君へ', 'コラボ楽曲', SongType::Original, SongAttribute::Collaboration, 1, [], [], []),
-            $this->createSong($uuid2, '全部夢だった！', 'オリジナル楽曲', SongType::Original, null, 2, [], [], []),
-        );
-
-        $result = $this->getInstance()->handle(new SearchInputData(attribute: SongAttribute::Collaboration->value));
-
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
-
-        $this->assertCount(1, $output->songs);
-        $this->assertSame($uuid1, $output->songs[0]->songId);
-        $this->assertSame(SongAttribute::Collaboration, $output->songs[0]->attribute);
-    }
-
-    #[Test]
     public function searchWithTitleNotFound(): void
     {
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, null, 1, [], [], []),
+            $this->createSong($uuid, '描き続けた君へ', 'オリジナル楽曲', SongType::Original, 1, [], [], []),
         );
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '存在しないタイトル'));

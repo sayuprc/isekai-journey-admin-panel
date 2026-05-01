@@ -7,7 +7,6 @@ namespace Tests\Integration\Song\Infrastructures;
 use Creator\Domain\Models\CreatorId;
 use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
@@ -23,7 +22,7 @@ class SongRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, null, 1, [], [], []);
+        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, 1, [], [], []);
 
         $repository->save($song);
 
@@ -55,7 +54,6 @@ class SongRepositoryTest extends DatabaseTestCase
             '曲名',
             '説明',
             SongType::Original,
-            SongAttribute::Collaboration,
             1,
             [['creatorId' => $creator->creatorId->value, 'orderNo' => 1]],
             [['creatorId' => $creator->creatorId->value, 'orderNo' => 1]],
@@ -84,7 +82,6 @@ class SongRepositoryTest extends DatabaseTestCase
             '曲名',
             '説明',
             SongType::Original,
-            null,
             1,
             [['creatorId' => $creator->creatorId->value, 'orderNo' => 1]],
             [],
@@ -107,7 +104,7 @@ class SongRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, null, 1, [], [], []);
+        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, 1, [], [], []);
 
         $repository->save($song);
 
@@ -122,10 +119,10 @@ class SongRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $song = $this->createSong($this->generateUuid(), '旧タイトル', '旧説明', SongType::Original, null, 1, [], [], []);
+        $song = $this->createSong($this->generateUuid(), '旧タイトル', '旧説明', SongType::Original, 1, [], [], []);
         $repository->save($song);
 
-        $updated = $this->createSong($song->songId->value, '新タイトル', '新説明', SongType::Cover, null, 2, [], [], []);
+        $updated = $this->createSong($song->songId->value, '新タイトル', '新説明', SongType::Cover, 2, [], [], []);
         $repository->save($updated);
 
         $found = $repository->find($song->songId);
@@ -139,7 +136,7 @@ class SongRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, null, 1, [], [], []);
+        $song = $this->createSong($this->generateUuid(), '曲名', '説明', SongType::Original, 1, [], [], []);
 
         $repository->save($song);
         $repository->delete($song->songId);
@@ -154,9 +151,9 @@ class SongRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $song1 = $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, null, 10, [], [], []);
-        $song2 = $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, null, 30, [], [], []);
-        $song3 = $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, null, 20, [], [], []);
+        $song1 = $this->createSong($this->generateUuid(), '曲1', '説明', SongType::Original, 10, [], [], []);
+        $song2 = $this->createSong($this->generateUuid(), '曲2', '説明', SongType::Original, 30, [], [], []);
+        $song3 = $this->createSong($this->generateUuid(), '曲3', '説明', SongType::Original, 20, [], [], []);
 
         $repository->save($song1);
         $repository->save($song2);

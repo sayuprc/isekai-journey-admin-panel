@@ -30,7 +30,6 @@ class SongAssemblerTest extends DatabaseTestCase
             $title,
             $description,
             $type,
-            null,
             $orderNo,
             [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
             [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],

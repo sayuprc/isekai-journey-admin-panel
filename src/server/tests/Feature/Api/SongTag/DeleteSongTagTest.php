@@ -47,7 +47,6 @@ class DeleteSongTagTest extends DatabaseTestCase
             '曲名',
             '説明',
             SongType::Original,
-            null,
             1,
             [],
             [],

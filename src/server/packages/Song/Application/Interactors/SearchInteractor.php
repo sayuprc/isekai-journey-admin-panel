@@ -15,7 +15,6 @@ use Song\Application\UseCase\Search\SearchInputData;
 use Song\Application\UseCase\Search\SearchOutputData;
 use Song\Application\UseCase\Search\SearchUseCaseInterface;
 use Song\Domain\Criteria\SongSearchCriteria;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongType;
 use Support\Optional\Arg;
 use Support\Optional\None;
@@ -51,9 +50,6 @@ readonly class SearchInteractor implements SearchUseCaseInterface
             $inputData->type === Arg::Optional
                 ? new None()
                 : new Some(SongType::from($inputData->type)),
-            $inputData->attribute === Arg::Optional
-                ? new None()
-                : new Some(SongAttribute::from($inputData->attribute)),
             $inputData->isDisplay === Arg::Optional
                 ? new None()
                 : new Some($inputData->isDisplay),

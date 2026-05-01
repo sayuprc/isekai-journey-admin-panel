@@ -22,8 +22,6 @@ readonly class UpdateInputData
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        // TODO デフォルト null をどうにかする
-        public ?int $attributeValue = null,
         public array $tags = [],
     ) {
     }

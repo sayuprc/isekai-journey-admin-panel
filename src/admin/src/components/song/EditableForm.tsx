@@ -1,14 +1,5 @@
 import { createEffect, createSignal, For, Show } from 'solid-js';
-import type {
-  Creator,
-  SongType,
-  SongTypeValue,
-  SongAttribute,
-  SongAttributeValue,
-  Song,
-  Arranger,
-  SongTag,
-} from '../../generated';
+import type { Arranger, Creator, Song, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -26,7 +17,7 @@ type SongTagEntry = {
 };
 
 interface Props {
-  data?: { song: Song; creators: Creator[]; types: SongType[]; attributes: SongAttribute[]; tags: SongTag[] };
+  data?: { song: Song; creators: Creator[]; types: SongType[]; tags: SongTag[] };
   status: number;
 }
 
@@ -45,7 +36,6 @@ export const EditableForm = (props: Props) => {
 
   const creators = props.data?.creators ?? [];
   const types = props.data?.types ?? [];
-  const attributes = props.data?.attributes ?? [];
   const availableTags = props.data?.tags ?? [];
 
   const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
@@ -147,10 +137,6 @@ export const EditableForm = (props: Props) => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
-      attributeValue:
-        formData.get('attributeValue') !== ''
-          ? (Number(formData.get('attributeValue')) as SongAttributeValue)
-          : undefined,
       isDisplay: formData.get('isDisplay') === 'true',
       orderNo: Number(formData.get('orderNo')),
       arrangers: arrangers(),
@@ -316,18 +302,6 @@ export const EditableForm = (props: Props) => {
               {type => (
                 <option value={type.value} selected={type.value === props.data?.song.type.value}>
                   {type.name}
-                </option>
-              )}
-            </For>
-          </select>
-
-          <label class="label">楽曲属性</label>
-          <select class="select select-bordered w-full" name="attributeValue">
-            <option value="">選択してください</option>
-            <For each={attributes}>
-              {attribute => (
-                <option value={attribute.value} selected={attribute.value === props.data?.song.attribute?.value}>
-                  {attribute.name}
                 </option>
               )}
             </For>

@@ -14,7 +14,6 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -56,7 +55,6 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
         array $lyricists,
         array $composers,
@@ -89,7 +87,6 @@ class SongIntegrityService
             $title,
             $description,
             $type,
-            $attribute,
             $isDisplay,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
@@ -113,7 +110,6 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
         int $orderNo,
         array $lyricists,
@@ -147,7 +143,6 @@ class SongIntegrityService
             $title,
             $description,
             $type,
-            $attribute,
             $isDisplay,
             $orderNo,
             $lyricists,
@@ -165,7 +160,6 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
         int $orderNo,
         Lyricists $lyricists,
@@ -173,12 +167,11 @@ class SongIntegrityService
         Arrangers $arrangers,
         SongTagReferences $tags,
     ): Result {
-        return Result::collect7(
+        return Result::collect6(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
             $this->toSongType($type),
-            $this->toSongAttribute($attribute),
             new Ok($isDisplay),
             OrderNo::create($orderNo),
         )
@@ -205,24 +198,6 @@ class SongIntegrityService
 
         if (is_null($result)) {
             return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$type}"));
-        }
-
-        return new Ok($result);
-    }
-
-    /**
-     * @return Result<SongAttribute|null, DomainError>
-     */
-    private function toSongAttribute(?int $attribute): Result
-    {
-        if (is_null($attribute)) {
-            return new Ok(null);
-        }
-
-        $result = SongAttribute::tryFrom($attribute);
-
-        if (is_null($result)) {
-            return new Err(new EntityRuleViolationError(SongAttribute::class, "不正な楽曲属性です: {$attribute}"));
         }
 
         return new Ok($result);

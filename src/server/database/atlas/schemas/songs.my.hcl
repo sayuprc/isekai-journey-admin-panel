@@ -32,12 +32,6 @@ table "songs" {
     unsigned = true
     comment  = "種別"
   }
-  column "attribute" {
-    null     = true
-    type     = tinyint
-    unsigned = true
-    comment  = "属性"
-  }
   column "is_display" {
     null    = false
     type    = bool
