@@ -24,6 +24,11 @@ interface SongTagRepositoryInterface
 
     public function findByName(SongTagName $name): ?SongTag;
 
+    /**
+     * @return array<SongTag>
+     */
+    public function findByIds(SongTagId ...$songTagIds): array;
+
     public function save(SongTag $tag): SongTag;
 
     public function delete(SongTagId $songTagId): void;

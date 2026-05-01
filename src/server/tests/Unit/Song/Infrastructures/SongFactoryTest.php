@@ -11,6 +11,7 @@ use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Song\Infrastructures\SongFactory;
 use Support\Domain\ValueObjects\OrderNo;
@@ -32,6 +33,7 @@ class SongFactoryTest extends TestCase
             Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
             Composers::fromArray([['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]])->unwrap(),
             Arrangers::fromArray([['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]])->unwrap(),
+            SongTagReferences::fromArray([])->unwrap(),
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $song->songId->value);

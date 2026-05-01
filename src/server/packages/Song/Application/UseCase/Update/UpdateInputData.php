@@ -10,6 +10,7 @@ readonly class UpdateInputData
      * @param list<array{creatorId: string}> $lyricists
      * @param list<array{creatorId: string}> $composers
      * @param list<array{creatorId: string}> $arrangers
+     * @param list<array{songTagId: string}> $tags
      */
     public function __construct(
         public string $songId,
@@ -23,6 +24,7 @@ readonly class UpdateInputData
         public array $arrangers,
         // TODO デフォルト null をどうにかする
         public ?int $attributeValue = null,
+        public array $tags = [],
     ) {
     }
 }

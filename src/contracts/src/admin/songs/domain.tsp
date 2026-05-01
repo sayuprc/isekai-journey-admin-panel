@@ -1,5 +1,6 @@
 import "../lib";
 import "../creators";
+import "../song-tags";
 
 namespace IsekaiObservatory.Admin;
 
@@ -24,6 +25,7 @@ scalar description extends string;
   lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   arrangers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
+  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲", orderNo: 10 }],
 })
 model Song {
   songId: songId;
@@ -36,6 +38,7 @@ model Song {
   lyricists: Lyricist[];
   composers: Composer[];
   arrangers: Arranger[];
+  tags: SongTag[];
 }
 
 @doc("楽曲種別名")

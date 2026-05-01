@@ -92,6 +92,19 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
     }
 
     #[Override]
+    public function findByIds(SongTagId ...$songTagIds): array
+    {
+        return ModelsSongTag::query()
+            ->whereIn(
+                'song_tag_id',
+                array_map(fn (SongTagId $songTagId): string => $this->converter->toBin($songTagId->value), $songTagIds),
+            )
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    #[Override]
     public function save(SongTag $tag): SongTag
     {
         ModelsSongTag::query()->upsert(
