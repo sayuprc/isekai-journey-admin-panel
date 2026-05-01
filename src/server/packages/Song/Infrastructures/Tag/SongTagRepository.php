@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\Infrastructures\Tag;
 
 use App\Models\Song\SongTag as ModelsSongTag;
+use App\Models\Song\SongTagging;
 use Override;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Models\Tag\SongTag;
@@ -123,6 +124,14 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
         );
 
         return $tag;
+    }
+
+    #[Override]
+    public function isUsed(SongTagId $songTagId): bool
+    {
+        return SongTagging::query()
+            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
+            ->exists();
     }
 
     #[Override]
