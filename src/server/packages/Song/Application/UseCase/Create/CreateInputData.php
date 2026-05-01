@@ -7,20 +7,20 @@ namespace Song\Application\UseCase\Create;
 readonly class CreateInputData
 {
     /**
+     * @param list<array{songTagId: string}> $tags
      * @param list<array{creatorId: string}> $lyricists
      * @param list<array{creatorId: string}> $composers
      * @param list<array{creatorId: string}> $arrangers
-     * @param list<array{songTagId: string}> $tags
      */
     public function __construct(
         public string $title,
         public string $description,
         public int $typeValue,
         public bool $isDisplay,
+        public array $tags,
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        public array $tags = [],
     ) {
     }
 }

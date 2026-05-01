@@ -47,12 +47,12 @@ class DeleteSongTagTest extends DatabaseTestCase
             '曲名',
             '説明',
             SongType::Original,
-            1,
-            [],
-            [],
-            [],
             true,
+            1,
             [['songTagId' => $songTagId, 'orderNo' => 1]],
+            [],
+            [],
+            [],
         ));
 
         $this->withAuth()

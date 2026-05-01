@@ -169,12 +169,12 @@ readonly class SongRepository implements SongRepositoryInterface
             $model->title,
             $model->description,
             $model->type,
+            $model->is_display,
             $model->order_no,
+            $tags,
             $lyricists,
             $composers,
             $arrangers,
-            $model->is_display,
-            $tags,
         );
     }
 }

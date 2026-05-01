@@ -23,7 +23,7 @@ class DeleteSongTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '', '', SongType::Original, true, 1, [], [], [], []),
         );
 
         $this->withAuth()

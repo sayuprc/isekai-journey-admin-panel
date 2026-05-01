@@ -19,9 +19,9 @@ interface SongFactoryInterface
         SongType $type,
         bool $isDisplay,
         OrderNo $orderNo,
+        SongTagReferences $tags,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
-        SongTagReferences $tags,
     ): Song;
 }

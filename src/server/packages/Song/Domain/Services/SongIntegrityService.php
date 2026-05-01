@@ -44,10 +44,10 @@ class SongIntegrityService
     }
 
     /**
+     * @param list<songTag> $tags
      * @param list<creator> $lyricists
      * @param list<creator> $composers
      * @param list<creator> $arrangers
-     * @param list<songTag> $tags
      *
      * @return Result<Song, DomainError>
      */
@@ -56,10 +56,10 @@ class SongIntegrityService
         string $description,
         int $type,
         bool $isDisplay,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
-        array $tags = [],
     ): Result {
         $result = Result::collect4(
             Lyricists::fromArray($lyricists),
@@ -98,10 +98,10 @@ class SongIntegrityService
     }
 
     /**
+     * @param list<songTag> $tags
      * @param list<creator> $lyricists
      * @param list<creator> $composers
      * @param list<creator> $arrangers
-     * @param list<songTag> $tags
      *
      * @return Result<Song, DomainError>
      */
@@ -112,10 +112,10 @@ class SongIntegrityService
         int $type,
         bool $isDisplay,
         int $orderNo,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
-        array $tags = [],
     ): Result {
         $result = Result::collect4(
             Lyricists::fromArray($lyricists),
@@ -186,7 +186,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $lyricists, $composers, $arrangers, $tags]));
+            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $tags, $lyricists, $composers, $arrangers]));
     }
 
     /**

@@ -29,10 +29,10 @@ class SongFactoryTest extends TestCase
             SongType::Original,
             true,
             OrderNo::reconstruct(1),
+            SongTagReferences::fromArray([])->unwrap(),
             Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
             Composers::fromArray([['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]])->unwrap(),
             Arrangers::fromArray([['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]])->unwrap(),
-            SongTagReferences::fromArray([])->unwrap(),
         );
 
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $song->songId->value);

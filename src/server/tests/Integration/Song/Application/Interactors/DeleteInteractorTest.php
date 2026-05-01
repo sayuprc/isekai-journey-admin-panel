@@ -24,7 +24,7 @@ class DeleteInteractorTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($uuid, '', '', SongType::Original, 1, [], [], []),
+            $this->createSong($uuid, '', '', SongType::Original, true, 1, [], [], [], []),
         );
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
