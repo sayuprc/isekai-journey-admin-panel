@@ -14,11 +14,12 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
@@ -29,6 +30,7 @@ use Support\Domain\ValueObjects\OrderNo;
 
 /**
  * @phpstan-type creator array{creatorId: string}
+ * @phpstan-type songTag array{songTagId: string}
  */
 class SongIntegrityService
 {
@@ -37,10 +39,12 @@ class SongIntegrityService
         private readonly SongFactoryInterface $factory,
         private readonly SongRepositoryInterface $songRepository,
         private readonly CreatorRepositoryInterface $creatorRepository,
+        private readonly SongTagRepositoryInterface $songTagRepository,
     ) {
     }
 
     /**
+     * @param list<songTag> $tags
      * @param list<creator> $lyricists
      * @param list<creator> $composers
      * @param list<creator> $arrangers
@@ -51,26 +55,31 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
     ): Result {
-        $result = Result::collect3(
+        $result = Result::collect4(
             Lyricists::fromArray($lyricists),
             Composers::fromArray($composers),
             Arrangers::fromArray($arrangers),
+            SongTagReferences::fromArray($tags),
         );
 
         if ($result->isErr()) {
             return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
-        $creators = $result->unwrap();
+        [$lyricists, $composers, $arrangers, $tags] = $result->unwrap();
 
-        if (! $this->existsCreators(...$creators)) {
+        if (! $this->existsCreators($lyricists, $composers, $arrangers)) {
             return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
+        }
+
+        if (! $this->existsSongTags($tags)) {
+            return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
         }
 
         return $this->build(
@@ -78,15 +87,18 @@ class SongIntegrityService
             $title,
             $description,
             $type,
-            $attribute,
             $isDisplay,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
-            ...$creators,
+            $lyricists,
+            $composers,
+            $arrangers,
+            $tags,
         );
     }
 
     /**
+     * @param list<songTag> $tags
      * @param list<creator> $lyricists
      * @param list<creator> $composers
      * @param list<creator> $arrangers
@@ -98,27 +110,32 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
         int $orderNo,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
     ): Result {
-        $result = Result::collect3(
+        $result = Result::collect4(
             Lyricists::fromArray($lyricists),
             Composers::fromArray($composers),
             Arrangers::fromArray($arrangers),
+            SongTagReferences::fromArray($tags),
         );
 
         if ($result->isErr()) {
             return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
-        $creators = $result->unwrap();
+        [$lyricists, $composers, $arrangers, $tags] = $result->unwrap();
 
-        if (! $this->existsCreators(...$creators)) {
+        if (! $this->existsCreators($lyricists, $composers, $arrangers)) {
             return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
+        }
+
+        if (! $this->existsSongTags($tags)) {
+            return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
         }
 
         return $this->build(
@@ -126,10 +143,12 @@ class SongIntegrityService
             $title,
             $description,
             $type,
-            $attribute,
             $isDisplay,
             $orderNo,
-            ...$creators,
+            $lyricists,
+            $composers,
+            $arrangers,
+            $tags,
         );
     }
 
@@ -141,19 +160,18 @@ class SongIntegrityService
         string $title,
         string $description,
         int $type,
-        ?int $attribute,
         bool $isDisplay,
         int $orderNo,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
+        SongTagReferences $tags,
     ): Result {
-        return Result::collect7(
+        return Result::collect6(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
             $this->toSongType($type),
-            $this->toSongAttribute($attribute),
             new Ok($isDisplay),
             OrderNo::create($orderNo),
         )
@@ -168,7 +186,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $lyricists, $composers, $arrangers]));
+            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $tags, $lyricists, $composers, $arrangers]));
     }
 
     /**
@@ -180,24 +198,6 @@ class SongIntegrityService
 
         if (is_null($result)) {
             return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$type}"));
-        }
-
-        return new Ok($result);
-    }
-
-    /**
-     * @return Result<SongAttribute|null, DomainError>
-     */
-    private function toSongAttribute(?int $attribute): Result
-    {
-        if (is_null($attribute)) {
-            return new Ok(null);
-        }
-
-        $result = SongAttribute::tryFrom($attribute);
-
-        if (is_null($result)) {
-            return new Err(new EntityRuleViolationError(SongAttribute::class, "不正な楽曲属性です: {$attribute}"));
         }
 
         return new Ok($result);
@@ -239,5 +239,24 @@ class SongIntegrityService
         $founds = $this->creatorRepository->findByIds(...array_values($creatorIds));
 
         return count($creatorIds) === count($founds);
+    }
+
+    private function existsSongTags(SongTagReferences $tags): bool
+    {
+        $songTagIds = [];
+
+        foreach ($tags as $tag) {
+            if (! isset($songTagIds[$tag->songTagId->value])) {
+                $songTagIds[$tag->songTagId->value] = $tag->songTagId;
+            }
+        }
+
+        if ($songTagIds === []) {
+            return true;
+        }
+
+        $founds = $this->songTagRepository->findByIds(...array_values($songTagIds));
+
+        return count($songTagIds) === count($founds);
     }
 }

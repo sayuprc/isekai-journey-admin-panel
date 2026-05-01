@@ -7,6 +7,7 @@ namespace Song\Application\UseCase\Create;
 readonly class CreateInputData
 {
     /**
+     * @param list<array{songTagId: string}> $tags
      * @param list<array{creatorId: string}> $lyricists
      * @param list<array{creatorId: string}> $composers
      * @param list<array{creatorId: string}> $arrangers
@@ -16,11 +17,10 @@ readonly class CreateInputData
         public string $description,
         public int $typeValue,
         public bool $isDisplay,
+        public array $tags,
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        // TODO デフォルト null をどうにかする
-        public ?int $attributeValue = null,
     ) {
     }
 }

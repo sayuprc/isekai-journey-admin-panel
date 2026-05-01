@@ -1,4 +1,5 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
+import type { CreatorSearchSortBy, SortOrder } from '../../generated';
 import { client } from '../../utils/client';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
@@ -9,8 +10,8 @@ const getInitialParams = () => {
   const perPageRaw = Number(params.get('per_page'));
   return {
     name: params.get('name') ?? '',
-    sort: params.get('sort') ?? 'order_no',
-    order: params.get('order') ?? 'asc',
+    sort: (params.get('sort') ?? 'order_no') as CreatorSearchSortBy,
+    order: (params.get('order') ?? 'asc') as SortOrder,
     page: Number(params.get('page') ?? '1') || 1,
     perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
   };
@@ -31,7 +32,7 @@ export const SearchList = () => {
   const [inputOrder, setInputOrder] = createSignal(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
 
-  const updateUrl = (params: { name: string; sort: string; order: string; page: number; perPage: number }) => {
+  const updateUrl = (params: { name: string; sort: CreatorSearchSortBy; order: SortOrder; page: number; perPage: number }) => {
     const searchParams = new URLSearchParams();
     if (params.name) searchParams.set('name', params.name);
     if (params.sort) searchParams.set('sort', params.sort);
@@ -116,7 +117,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={e => setInputSort(e.currentTarget.value)}
+            onChange={e => setInputSort(e.currentTarget.value as CreatorSearchSortBy)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -134,7 +135,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={e => setInputOrder(e.currentTarget.value)}
+            onChange={e => setInputOrder(e.currentTarget.value as SortOrder)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順

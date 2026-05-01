@@ -1,5 +1,5 @@
 import { createEffect, createSignal, For, Show } from 'solid-js';
-import type { Creator, SongType, SongTypeValue, SongAttribute, SongAttributeValue, Song, Arranger } from '../../generated';
+import type { Arranger, Creator, Song, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -12,8 +12,12 @@ type CreatorEntry = {
   orderNo: number;
 };
 
+type SongTagEntry = {
+  songTagId: string;
+};
+
 interface Props {
-  data?: { song: Song; creators: Creator[]; types: SongType[]; attributes: SongAttribute[] };
+  data?: { song: Song; creators: Creator[]; types: SongType[]; tags: SongTag[] };
   status: number;
 }
 
@@ -32,7 +36,7 @@ export const EditableForm = (props: Props) => {
 
   const creators = props.data?.creators ?? [];
   const types = props.data?.types ?? [];
-  const attributes = props.data?.attributes ?? [];
+  const availableTags = props.data?.tags ?? [];
 
   const toEntries = (items: Arranger[] | undefined): CreatorEntry[] =>
     (items ?? []).map(item => ({ creatorId: item.creatorId, orderNo: item.orderNo }));
@@ -40,6 +44,9 @@ export const EditableForm = (props: Props) => {
   const [lyricists, setLyricists] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.lyricists));
   const [composers, setComposers] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.composers));
   const [arrangers, setArrangers] = createSignal<CreatorEntry[]>(toEntries(props.data?.song.arrangers));
+  const [tags, setTags] = createSignal<SongTagEntry[]>(
+    (props.data?.song.tags ?? []).map(tag => ({ songTagId: tag.songTagId })),
+  );
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
@@ -69,6 +76,18 @@ export const EditableForm = (props: Props) => {
     value: string | number,
   ) => {
     setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+  };
+
+  const addTagEntry = () => {
+    setTags(prev => [...prev, { songTagId: '' }]);
+  };
+
+  const removeTagEntry = (index: number) => {
+    setTags(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const updateTagEntry = (index: number, value: string) => {
+    setTags(prev => prev.map((entry, i) => (i === index ? { ...entry, songTagId: value } : entry)));
   };
 
   const handleSubmit = async (e: Event) => {
@@ -118,15 +137,12 @@ export const EditableForm = (props: Props) => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
-      attributeValue:
-        formData.get('attributeValue') !== ''
-          ? (Number(formData.get('attributeValue')) as SongAttributeValue)
-          : undefined,
       isDisplay: formData.get('isDisplay') === 'true',
       orderNo: Number(formData.get('orderNo')),
       arrangers: arrangers(),
       composers: composers(),
       lyricists: lyricists(),
+      tags: tags(),
     });
 
     if (data) {
@@ -145,6 +161,7 @@ export const EditableForm = (props: Props) => {
   });
 
   const creatorOptions = () => creators.map(creator => ({ value: creator.creatorId, label: creator.name }));
+  const tagOptions = () => availableTags.map(tag => ({ value: tag.songTagId, label: tag.name }));
 
   const CreatorList = (listProps: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
     <div class="mt-4">
@@ -179,6 +196,50 @@ export const EditableForm = (props: Props) => {
               type="button"
               class="btn btn-ghost btn-xs btn-square text-error"
               onclick={() => removeEntry(listProps.setter, index())}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+
+  const TagList = () => (
+    <div class="mt-4">
+      <div class="flex items-center gap-2">
+        <span class="label">楽曲タグ</span>
+        <button type="button" class="btn btn-xs btn-outline" onclick={addTagEntry}>
+          + 追加
+        </button>
+      </div>
+      <For each={tags()}>
+        {(entry, index) => (
+          <div class="mt-2 flex items-center gap-3">
+            <SearchableSelect
+              options={tagOptions()}
+              value={entry.songTagId}
+              onChange={value => updateTagEntry(index(), value)}
+              placeholder="楽曲タグを検索..."
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-ghost btn-xs btn-square text-error"
+              onclick={() => removeTagEntry(index())}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -246,18 +307,6 @@ export const EditableForm = (props: Props) => {
             </For>
           </select>
 
-          <label class="label">楽曲属性</label>
-          <select class="select select-bordered w-full" name="attributeValue">
-            <option value="">選択してください</option>
-            <For each={attributes}>
-              {attribute => (
-                <option value={attribute.value} selected={attribute.value === props.data?.song.attribute?.value}>
-                  {attribute.name}
-                </option>
-              )}
-            </For>
-          </select>
-
           <label class="label">表示設定</label>
           <select class="select select-bordered w-full" name="isDisplay">
             <option value="true" selected={props.data?.song.isDisplay === true}>
@@ -274,6 +323,7 @@ export const EditableForm = (props: Props) => {
           <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
           <CreatorList label="作曲者" entries={composers} setter={setComposers} />
           <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
+          <TagList />
 
           <div class="mt-6 flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>

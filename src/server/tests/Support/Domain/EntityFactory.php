@@ -26,9 +26,12 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagId;
+use Song\Domain\Models\Tag\SongTagName;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -52,34 +55,38 @@ trait EntityFactory
         );
     }
 
-    /**
-     * @param array<array{creatorId: string, orderNo: int}> $lyricists
-     * @param array<array{creatorId: string, orderNo: int}> $composers
-     * @param array<array{creatorId: string, orderNo: int}> $arrangers
-     */
     protected function createSong(
         string $songId,
         string $title,
         string $description,
         SongType $type,
-        ?SongAttribute $attribute,
-        int $orderNo,
-        array $lyricists,
-        array $composers,
-        array $arrangers,
         bool $isDisplay = true,
+        int $orderNo = 1,
+        array $tags = [],
+        array $lyricists = [],
+        array $composers = [],
+        array $arrangers = [],
     ): Song {
         return new Song(
             SongId::reconstruct($songId),
             Title::reconstruct($title),
             Description::reconstruct($description),
             $type,
-            $attribute,
             $isDisplay,
             OrderNo::reconstruct($orderNo),
+            SongTagReferences::fromArray($tags)->unwrap(),
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
             Arrangers::fromArray($arrangers)->unwrap(),
+        );
+    }
+
+    protected function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
+    {
+        return new SongTag(
+            SongTagId::reconstruct($songTagId),
+            SongTagName::reconstruct($name),
+            OrderNo::reconstruct($orderNo),
         );
     }
 

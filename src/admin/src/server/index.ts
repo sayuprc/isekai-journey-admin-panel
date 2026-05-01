@@ -4,7 +4,7 @@ import { adminUsers } from './routes/admin-users';
 import { auth } from './routes/auth';
 import { creators } from './routes/creators';
 import { performers } from './routes/performers';
-import { songAttributes } from './routes/song-attributes';
+import { songTags } from './routes/song-tags';
 import { songTypes } from './routes/song-types';
 import { songs } from './routes/songs';
 
@@ -20,7 +20,7 @@ export const app = new Elysia({ prefix: '/api' })
   .use(creators)
   .use(performers)
   .use(songTypes)
-  .use(songAttributes)
+  .use(songTags)
   .use(songs);
 
 export type App = typeof app;

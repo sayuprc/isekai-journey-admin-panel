@@ -10,10 +10,10 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongAttribute;
 use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Domain\ValueObjects\OrderNo;
 
@@ -25,13 +25,13 @@ readonly class SongFactory implements SongFactoryInterface
         Title $title,
         Description $description,
         SongType $type,
-        ?SongAttribute $attribute,
         bool $isDisplay,
         OrderNo $orderNo,
+        SongTagReferences $tags,
         Lyricists $lyricists,
         Composers $composers,
         Arrangers $arrangers,
     ): Song {
-        return new Song($songId, $title, $description, $type, $attribute, $isDisplay, $orderNo, $lyricists, $composers, $arrangers);
+        return new Song($songId, $title, $description, $type, $isDisplay, $orderNo, $tags, $lyricists, $composers, $arrangers);
     }
 }

@@ -8,6 +8,7 @@ use Creator\Infrastructures\CreatorRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
+use Song\Infrastructures\Tag\SongTagRepository;
 use Song\Route\SongRouteMap;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -29,6 +30,8 @@ class GetSongTest extends DatabaseTestCase
         $creatorRepo->save($lyricist);
         $creatorRepo->save($composer);
         $creatorRepo->save($arranger);
+        $tagRepo = $this->app->make(SongTagRepository::class);
+        $tagRepo->save($tag = $this->createSongTag($this->generateUuid(), 'タグA', 10));
 
         $songId = $this->generateUuid();
 
@@ -38,8 +41,9 @@ class GetSongTest extends DatabaseTestCase
                 '描き続けた君へ',
                 'オリジナル楽曲',
                 SongType::Original,
-                null,
+                true,
                 1,
+                [['songTagId' => $tag->songTagId->value, 'orderNo' => 1]],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
                 [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $arrangerId, 'orderNo' => 1]],
@@ -63,6 +67,7 @@ class GetSongTest extends DatabaseTestCase
                     'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
                     'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
                     'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
+                    'tags' => [['songTagId' => $tag->songTagId->value, 'name' => 'タグA', 'orderNo' => 1]],
                 ],
             ]);
     }

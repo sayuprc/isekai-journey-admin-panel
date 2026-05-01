@@ -1,5 +1,6 @@
 import "../lib";
 import "../creators";
+import "../song-tags";
 
 namespace IsekaiObservatory.Admin;
 
@@ -18,24 +19,24 @@ scalar description extends string;
   title: "描き続けた君へ",
   description: "オリジナル楽曲",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
-  attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
   isDisplay: true,
   orderNo: 1,
   lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   arrangers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
+  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲", orderNo: 10 }],
 })
 model Song {
   songId: songId;
   title: title;
   description: description;
   type: SongType;
-  attribute?: SongAttribute;
   isDisplay: boolean;
   orderNo: orderNo;
   lyricists: Lyricist[];
   composers: Composer[];
   arrangers: Arranger[];
+  tags: SongTag[];
 }
 
 @doc("楽曲種別名")
@@ -54,30 +55,10 @@ model SongType {
   value: SongTypeValue;
 }
 
-@doc("楽曲属性名")
-@minLength(1)
-scalar songAttributeName extends string;
-
-@doc("楽曲属性の値")
-enum SongAttributeValue {
-  Collaboration: 1,
-  Lineage: 2,
-  Derivative: 3,
-  Amplified: 4,
-  Isotope: 5,
-}
-
-@example(#{ name: "コラボ", value: SongAttributeValue.Collaboration })
-model SongAttribute {
-  name: songAttributeName;
-  value: SongAttributeValue;
-}
-
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "描き続けた君へ",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
-  attribute: #{ name: "コラボ", value: SongAttributeValue.Collaboration },
   isDisplay: true,
   orderNo: 1,
 })
@@ -85,7 +66,6 @@ model SongSummary {
   songId: songId;
   title: title;
   type: SongType;
-  attribute?: SongAttribute;
   isDisplay: boolean;
   orderNo: orderNo;
 }

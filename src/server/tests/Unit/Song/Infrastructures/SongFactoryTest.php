@@ -11,6 +11,7 @@ use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Song\Infrastructures\SongFactory;
 use Support\Domain\ValueObjects\OrderNo;
@@ -26,9 +27,9 @@ class SongFactoryTest extends TestCase
             Title::reconstruct('描き続けた君へ'),
             Description::reconstruct('オリジナル楽曲'),
             SongType::Original,
-            null,
             true,
             OrderNo::reconstruct(1),
+            SongTagReferences::fromArray([])->unwrap(),
             Lyricists::fromArray([['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]])->unwrap(),
             Composers::fromArray([['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]])->unwrap(),
             Arrangers::fromArray([['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]])->unwrap(),

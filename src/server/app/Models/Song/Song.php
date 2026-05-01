@@ -15,7 +15,6 @@ use Override;
  * @property string          $title       楽曲名
  * @property string          $description 説明
  * @property int             $type        種別
- * @property int|null        $attribute   属性
  * @property bool            $is_display  表示フラグ
  * @property int             $order_no    表示順
  * @property CarbonImmutable $created_at  作成日時
@@ -23,6 +22,7 @@ use Override;
  * @property-read Collection<int, SongArranger> $arrangers
  * @property-read Collection<int, SongComposer> $composers
  * @property-read Collection<int, SongLyricist> $lyricists
+ * @property-read Collection<int, SongTagging> $taggings
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newQuery()
@@ -46,6 +46,7 @@ class Song extends Model
         'lyricists',
         'composers',
         'arrangers',
+        'taggings',
     ];
 
     #[Override]
@@ -80,5 +81,13 @@ class Song extends Model
     public function arrangers(): HasMany
     {
         return $this->hasMany(SongArranger::class, 'song_id', 'song_id');
+    }
+
+    /**
+     * @return HasMany<SongTagging, $this>
+     */
+    public function taggings(): HasMany
+    {
+        return $this->hasMany(SongTagging::class, 'song_id', 'song_id');
     }
 }

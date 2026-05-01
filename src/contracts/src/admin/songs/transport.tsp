@@ -13,11 +13,11 @@ model SongCreateRequest {
   title: title;
   description: description;
   typeValue: SongTypeValue;
-  attributeValue?: SongAttributeValue;
   isDisplay: boolean;
   lyricists: RequestLyricist[];
   composers: RequestComposer[];
   arrangers: RequestArranger[];
+  tags: RequestSongTag[];
 }
 
 model SongCreateResponse {
@@ -28,12 +28,12 @@ model SongUpdateRequest {
   title: title;
   description: description;
   typeValue: SongTypeValue;
-  attributeValue?: SongAttributeValue;
   isDisplay: boolean;
   orderNo: orderNo;
   lyricists: RequestLyricist[];
   composers: RequestComposer[];
   arrangers: RequestArranger[];
+  tags: RequestSongTag[];
 }
 
 model SongUpdateResponse {
@@ -45,3 +45,5 @@ model RequestLyricist is PickProperties<Lyricist, "creatorId">;
 model RequestComposer is PickProperties<Composer, "creatorId">;
 
 model RequestArranger is PickProperties<Arranger, "creatorId">;
+
+model RequestSongTag is PickProperties<SongTag, "songTagId">;

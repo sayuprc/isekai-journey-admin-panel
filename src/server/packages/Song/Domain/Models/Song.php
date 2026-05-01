@@ -7,6 +7,7 @@ namespace Song\Domain\Models;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
+use Song\Domain\Models\Tags\SongTagReferences;
 use Support\Domain\ValueObjects\OrderNo;
 
 readonly class Song
@@ -16,9 +17,9 @@ readonly class Song
         public Title $title,
         public Description $description,
         public SongType $type,
-        public ?SongAttribute $attribute,
         public bool $isDisplay,
         public OrderNo $orderNo,
+        public SongTagReferences $tags,
         public Lyricists $lyricists,
         public Composers $composers,
         public Arrangers $arrangers,
@@ -26,6 +27,7 @@ readonly class Song
     }
 
     /**
+     * @param list<array{songTagId: string, orderNo: int}> $tags
      * @param list<array{creatorId: string, orderNo: int}> $lyricists
      * @param list<array{creatorId: string, orderNo: int}> $composers
      * @param list<array{creatorId: string, orderNo: int}> $arrangers
@@ -35,22 +37,21 @@ readonly class Song
         string $title,
         string $description,
         int $type,
+        bool $isDisplay,
         int $orderNo,
+        array $tags,
         array $lyricists,
         array $composers,
         array $arrangers,
-        bool $isDisplay,
-        // TODO デフォルト null をどうにかする
-        ?int $attribute = null,
     ): self {
         return new self(
             SongId::reconstruct($songId),
             Title::reconstruct($title),
             Description::reconstruct($description),
             SongType::from($type),
-            is_null($attribute) ? null : SongAttribute::from($attribute),
             $isDisplay,
             OrderNo::reconstruct($orderNo),
+            SongTagReferences::reconstruct($tags),
             Lyricists::reconstruct($lyricists),
             Composers::reconstruct($composers),
             Arrangers::reconstruct($arrangers),
@@ -58,7 +59,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, attribute: value-of<SongAttribute>|null, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string, order_no: int}>}
      */
     public function toArray(): array
     {
@@ -67,12 +68,12 @@ readonly class Song
             'title' => $this->title->value,
             'description' => $this->description->value,
             'type' => $this->type->value,
-            'attribute' => $this->attribute?->value,
             'is_display' => $this->isDisplay,
             'order_no' => $this->orderNo->value,
             'lyricists' => $this->lyricists->toArray(),
             'composers' => $this->composers->toArray(),
             'arrangers' => $this->arrangers->toArray(),
+            'tags' => $this->tags->toArray(),
         ];
     }
 

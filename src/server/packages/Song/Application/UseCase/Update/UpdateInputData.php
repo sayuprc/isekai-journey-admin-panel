@@ -7,6 +7,7 @@ namespace Song\Application\UseCase\Update;
 readonly class UpdateInputData
 {
     /**
+     * @param list<array{songTagId: string}> $tags
      * @param list<array{creatorId: string}> $lyricists
      * @param list<array{creatorId: string}> $composers
      * @param list<array{creatorId: string}> $arrangers
@@ -18,11 +19,10 @@ readonly class UpdateInputData
         public int $typeValue,
         public bool $isDisplay,
         public int $orderNo,
+        public array $tags,
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        // TODO デフォルト null をどうにかする
-        public ?int $attributeValue = null,
     ) {
     }
 }
