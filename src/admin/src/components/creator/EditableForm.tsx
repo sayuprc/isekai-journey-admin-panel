@@ -57,7 +57,7 @@ export const EditableForm = (props: Props) => {
     }
 
     if (status === 404) {
-      setFlash('データがありません');
+      setFlash('データがありません', 'error');
       window.location.href = listUrl;
       return;
     }
@@ -94,10 +94,10 @@ export const EditableForm = (props: Props) => {
 
   onMount(() => {
     if (props.status === 404) {
-      setFlash('データがありません');
+      setFlash('データがありません', 'error');
       window.location.href = listUrl;
     } else if (props.status === 422) {
-      setFlash('不正なリクエストです');
+      setFlash('不正なリクエストです', 'error');
       window.location.href = listUrl;
     } else if (!props.data) {
       setFormError('予期しないエラーが発生しました');

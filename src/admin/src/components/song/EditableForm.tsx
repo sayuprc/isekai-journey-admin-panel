@@ -53,10 +53,10 @@ export const EditableForm = (props: Props) => {
 
   createEffect(() => {
     if (props.status === 404) {
-      setFlash('データがない');
+      setFlash('データがありません', 'error');
       window.location.href = listUrl;
     } else if (props.status === 422) {
-      setFlash('リクエストがおかしい');
+      setFlash('不正なリクエストです', 'error');
       window.location.href = listUrl;
     }
   });
@@ -152,7 +152,7 @@ export const EditableForm = (props: Props) => {
     }
 
     if (status === 404) {
-      setFlash('データがありません');
+      setFlash('データがありません', 'error');
       window.location.href = listUrl;
       return;
     }
