@@ -182,10 +182,10 @@ export const SearchList = () => {
             <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-sm">
+        <button type="submit" class="btn btn-primary btn-sm mb-1">
           検索
         </button>
-        <button type="button" class="btn btn-ghost btn-sm" onClick={handleReset}>
+        <button type="button" class="btn btn-ghost btn-sm mb-1" onClick={handleReset}>
           リセット
         </button>
       </form>
