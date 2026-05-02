@@ -136,9 +136,21 @@ const navSections: NavSection[] = [
   },
 ];
 
-export const Sidebar = () => {
+interface Props {
+  currentPath: string;
+}
+
+const isActivePath = (currentPath: string, href: string): boolean => {
+  if (href === '/') {
+    return currentPath === href;
+  }
+
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+};
+
+export const Sidebar = (props: Props) => {
   return (
-    <aside class="bg-base-200 flex min-h-screen w-56 flex-col border-r border-base-300">
+    <aside class="bg-base-200 sticky top-0 flex h-screen w-56 shrink-0 flex-col overflow-y-auto border-r border-base-300">
       <div class="border-b border-base-300 px-4 py-5">
         <a href="/" class="text-lg font-bold">
           ヰ世界観測所
@@ -151,7 +163,15 @@ export const Sidebar = () => {
             <ul class="menu menu-sm gap-1">
               {section.items.map(item => (
                 <li>
-                  <a href={item.href}>
+                  <a
+                    href={item.href}
+                    class={
+                      isActivePath(props.currentPath, item.href)
+                        ? 'active border-l-4 border-primary pl-[calc(theme(spacing.3)-4px)] font-semibold'
+                        : 'border-l-4 border-transparent'
+                    }
+                    aria-current={isActivePath(props.currentPath, item.href) ? 'page' : undefined}
+                  >
                     {item.icon()}
                     {item.label}
                   </a>
