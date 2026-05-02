@@ -1,6 +1,7 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import type { CreatorSearchSortBy, SortOrder } from '../../generated';
 import { client } from '../../utils/client';
+import { ListState } from '../ListState';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -44,7 +45,7 @@ export const SearchList = () => {
 
   const [fetchError, setFetchError] = createSignal<string | null>(null);
 
-  const [data] = createResource(
+  const [data, { refetch }] = createResource(
     () => ({ name: name(), sort: sort(), order: order(), page: page(), perPage: perPage() }),
     async (params) => {
       setFetchError(null);
@@ -179,30 +180,13 @@ export const SearchList = () => {
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <For each={Array.from({ length: 5 })}>
-                  {() => (
-                    <tr>
-                      <td>
-                        <div class="skeleton h-4 w-32" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-4 w-8" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-6 w-10" />
-                      </td>
-                    </tr>
-                  )}
-                </For>
+                <ListState state="loading" colSpan={3} />
               </Match>
               <Match when={fetchError()}>
-                {message => (
-                  <tr>
-                    <td colspan="3" class="py-8 text-center text-error">
-                      {message()}
-                    </td>
-                  </tr>
-                )}
+                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+              </Match>
+              <Match when={data() && data()!.creators.length === 0}>
+                <ListState state="empty" colSpan={3} />
               </Match>
               <Match when={data()}>
                 {result => (
