@@ -8,7 +8,6 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTag;
-use Song\Domain\Models\Tag\SongTagFactoryInterface;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
@@ -23,7 +22,6 @@ class SongTagIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
-        private readonly SongTagFactoryInterface $factory,
         private readonly SongTagRepositoryInterface $repository,
     ) {
     }
@@ -94,6 +92,6 @@ class SongTagIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): SongTag => $this->factory->create(...$values));
+            ->map(fn (array $values): SongTag => new SongTag(...$values));
     }
 }

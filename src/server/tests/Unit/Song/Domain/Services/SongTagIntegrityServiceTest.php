@@ -8,14 +8,11 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Domain\Models\Tag\SongTagFactoryInterface;
-use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -25,8 +22,6 @@ class SongTagIntegrityServiceTest extends TestCase
 
     private MockInterface&UuidGeneratorInterface $generator;
 
-    private MockInterface&SongTagFactoryInterface $factory;
-
     private MockInterface&SongTagRepositoryInterface $repository;
 
     #[Override]
@@ -35,7 +30,6 @@ class SongTagIntegrityServiceTest extends TestCase
         parent::setUp();
 
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->factory = Mockery::mock(SongTagFactoryInterface::class);
         $this->repository = Mockery::mock(SongTagRepositoryInterface::class);
     }
 
@@ -58,15 +52,6 @@ class SongTagIntegrityServiceTest extends TestCase
 
         $expectedTag = $this->createSongTag($uuid, $name, $maxOrderNo + 10);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $maxOrderNo + 10,
-            )
-            ->andReturn($expectedTag)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturnNull()
@@ -75,7 +60,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedTag, $result->unwrap());
+        $this->assertEquals($expectedTag, $result->unwrap());
     }
 
     #[Test]
@@ -96,15 +81,6 @@ class SongTagIntegrityServiceTest extends TestCase
             ->once();
 
         $expectedTag = $this->createSongTag($uuid, $name, $maxOrderNo + 10);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $maxOrderNo + 10,
-            )
-            ->andReturn($expectedTag)
-            ->once();
 
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
@@ -128,15 +104,6 @@ class SongTagIntegrityServiceTest extends TestCase
 
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $songTagId
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedTag)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturn($expectedTag)
@@ -145,7 +112,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedTag, $result->unwrap());
+        $this->assertEquals($expectedTag, $result->unwrap());
     }
 
     #[Test]
@@ -156,15 +123,6 @@ class SongTagIntegrityServiceTest extends TestCase
         $orderNo = 20;
 
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (SongTagId $songTagIdArg, SongTagName $nameArg, OrderNo $orderNoArg): bool => $songTagIdArg->value === $songTagId
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedTag)
-            ->once();
 
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
@@ -183,7 +141,6 @@ class SongTagIntegrityServiceTest extends TestCase
     {
         return new SongTagIntegrityService(
             $this->generator,
-            $this->factory,
             $this->repository,
         );
     }

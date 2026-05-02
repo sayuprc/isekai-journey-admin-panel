@@ -14,7 +14,6 @@ use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\Song;
-use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
@@ -36,7 +35,6 @@ class SongIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
-        private readonly SongFactoryInterface $factory,
         private readonly SongRepositoryInterface $songRepository,
         private readonly CreatorRepositoryInterface $creatorRepository,
         private readonly SongTagRepositoryInterface $songTagRepository,
@@ -186,7 +184,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => $this->factory->create(...[...$values, $tags, $lyricists, $composers, $arrangers]));
+            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $lyricists, $composers, $arrangers]));
     }
 
     /**

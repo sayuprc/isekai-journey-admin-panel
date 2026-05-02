@@ -7,15 +7,12 @@ namespace Tests\Unit\Performer\Domain\Services;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
-use Performer\Domain\Models\PerformerFactoryInterface;
-use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerIntegrityService;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -25,8 +22,6 @@ class PerformerIntegrityServiceTest extends TestCase
 
     private MockInterface&UuidGeneratorInterface $generator;
 
-    private MockInterface&PerformerFactoryInterface $factory;
-
     private MockInterface&PerformerRepositoryInterface $repository;
 
     #[Override]
@@ -35,7 +30,6 @@ class PerformerIntegrityServiceTest extends TestCase
         parent::setUp();
 
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->factory = Mockery::mock(PerformerFactoryInterface::class);
         $this->repository = Mockery::mock(PerformerRepositoryInterface::class);
     }
 
@@ -59,19 +53,6 @@ class PerformerIntegrityServiceTest extends TestCase
 
         $expectedPerformer = $this->createPerformer($uuid, $name, $expectedOrderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    PerformerId $performerIdArg,
-                    PerformerName $nameArg,
-                    OrderNo $orderNoArg,
-                ): bool => $performerIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $expectedOrderNo,
-            )
-            ->andReturn($expectedPerformer)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturnNull()
@@ -80,7 +61,7 @@ class PerformerIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedPerformer, $result->unwrap());
+        $this->assertEquals($expectedPerformer, $result->unwrap());
     }
 
     #[Test]
@@ -102,19 +83,6 @@ class PerformerIntegrityServiceTest extends TestCase
             ->once();
 
         $expectedPerformer = $this->createPerformer($uuid, $name, $expectedOrderNo);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    PerformerId $performerIdArg,
-                    PerformerName $nameArg,
-                    OrderNo $orderNoArg,
-                ): bool => $performerIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $expectedOrderNo,
-            )
-            ->andReturn($expectedPerformer)
-            ->once();
 
         $existingPerformer = $this->createPerformer('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, $expectedOrderNo);
 
@@ -140,19 +108,6 @@ class PerformerIntegrityServiceTest extends TestCase
 
         $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    PerformerId $performerIdArg,
-                    PerformerName $nameArg,
-                    OrderNo $orderNoArg,
-                ): bool => $performerIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedPerformer)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturnNull()
@@ -161,7 +116,7 @@ class PerformerIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedPerformer, $result->unwrap());
+        $this->assertEquals($expectedPerformer, $result->unwrap());
     }
 
     #[Test]
@@ -173,19 +128,6 @@ class PerformerIntegrityServiceTest extends TestCase
 
         $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    PerformerId $performerIdArg,
-                    PerformerName $nameArg,
-                    OrderNo $orderNoArg,
-                ): bool => $performerIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedPerformer)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (PerformerName $arg): bool => $arg->value === $name)
             ->andReturn($expectedPerformer)
@@ -194,7 +136,7 @@ class PerformerIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedPerformer, $result->unwrap());
+        $this->assertEquals($expectedPerformer, $result->unwrap());
     }
 
     #[Test]
@@ -206,19 +148,6 @@ class PerformerIntegrityServiceTest extends TestCase
         $orderNo = 1;
 
         $expectedPerformer = $this->createPerformer($uuid, $name, $orderNo);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    PerformerId $performerIdArg,
-                    PerformerName $nameArg,
-                    OrderNo $orderNoArg,
-                ): bool => $performerIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedPerformer)
-            ->once();
 
         $otherPerformer = $this->createPerformer($otherUuid, $name, $orderNo);
 
@@ -239,7 +168,6 @@ class PerformerIntegrityServiceTest extends TestCase
     {
         return new PerformerIntegrityService(
             $this->generator,
-            $this->factory,
             $this->repository,
         );
     }

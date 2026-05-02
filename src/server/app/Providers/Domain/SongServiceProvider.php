@@ -38,15 +38,11 @@ use Song\Application\UseCase\Tag\Update\UpdateInputData as UpdateSongTagInputDat
 use Song\Application\UseCase\Tag\Update\UpdateUseCaseInterface as UpdateSongTagUseCaseInterface;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCaseInterface;
-use Song\Domain\Models\SongFactoryInterface;
 use Song\Domain\Models\SongRepositoryInterface;
-use Song\Domain\Models\Tag\SongTagFactoryInterface;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Infrastructures\CreatorUsageChecker;
-use Song\Infrastructures\SongFactory;
 use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
-use Song\Infrastructures\Tag\SongTagFactory;
 use Song\Infrastructures\Tag\SongTagRepository;
 
 class SongServiceProvider extends EnvServiceProvider
@@ -55,9 +51,7 @@ class SongServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
-        $this->app->bind(SongFactoryInterface::class, SongFactory::class);
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
-        $this->app->bind(SongTagFactoryInterface::class, SongTagFactory::class);
         $this->app->bind(CreatorUsageCheckerInterface::class, CreatorUsageChecker::class);
 
         $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);

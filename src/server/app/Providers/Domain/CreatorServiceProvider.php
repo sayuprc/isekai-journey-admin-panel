@@ -19,9 +19,7 @@ use Creator\Application\UseCase\Search\SearchInputData;
 use Creator\Application\UseCase\Search\SearchUseCaseInterface;
 use Creator\Application\UseCase\Update\UpdateInputData;
 use Creator\Application\UseCase\Update\UpdateUseCaseInterface;
-use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorRepositoryInterface;
-use Creator\Infrastructures\CreatorFactory;
 use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Http\Request;
 use Override;
@@ -32,7 +30,6 @@ class CreatorServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(CreatorRepositoryInterface::class, CreatorRepository::class);
-        $this->app->bind(CreatorFactoryInterface::class, CreatorFactory::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
         $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);

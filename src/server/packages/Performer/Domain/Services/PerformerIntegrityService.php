@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Performer\Domain\Services;
 
 use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
 use Performer\Domain\Models\PerformerRepositoryInterface;
@@ -23,7 +22,6 @@ class PerformerIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
-        private readonly PerformerFactoryInterface $factory,
         private readonly PerformerRepositoryInterface $repository,
     ) {
     }
@@ -94,6 +92,6 @@ class PerformerIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Performer => $this->factory->create(...$values));
+            ->map(fn (array $values): Performer => new Performer(...$values));
     }
 }

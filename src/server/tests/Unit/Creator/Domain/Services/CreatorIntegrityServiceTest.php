@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Creator\Domain\Services;
 
-use Creator\Domain\Models\CreatorFactoryInterface;
-use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorIntegrityService;
@@ -15,7 +13,6 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -25,8 +22,6 @@ class CreatorIntegrityServiceTest extends TestCase
 
     private MockInterface&UuidGeneratorInterface $generator;
 
-    private CreatorFactoryInterface&MockInterface $factory;
-
     private CreatorRepositoryInterface&MockInterface $repository;
 
     #[Override]
@@ -35,7 +30,6 @@ class CreatorIntegrityServiceTest extends TestCase
         parent::setUp();
 
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->factory = Mockery::mock(CreatorFactoryInterface::class);
         $this->repository = Mockery::mock(CreatorRepositoryInterface::class);
     }
 
@@ -58,15 +52,6 @@ class CreatorIntegrityServiceTest extends TestCase
 
         $expectedCreator = $this->createCreator($uuid, $name, $maxOrderNo + 10);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $nameArg, OrderNo $orderNoArg): bool => $creatorIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $maxOrderNo + 10,
-            )
-            ->andReturn($expectedCreator)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturnNull()
@@ -75,7 +60,7 @@ class CreatorIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($name);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedCreator, $result->unwrap());
+        $this->assertEquals($expectedCreator, $result->unwrap());
     }
 
     #[Test]
@@ -96,15 +81,6 @@ class CreatorIntegrityServiceTest extends TestCase
             ->once();
 
         $expectedCreator = $this->createCreator($uuid, $name, $maxOrderNo + 10);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $nameArg, OrderNo $orderNoArg): bool => $creatorIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $maxOrderNo + 10,
-            )
-            ->andReturn($expectedCreator)
-            ->once();
 
         $existingCreator = $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, $maxOrderNo + 10);
 
@@ -130,15 +106,6 @@ class CreatorIntegrityServiceTest extends TestCase
 
         $expectedCreator = $this->createCreator($uuid, $name, $orderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $nameArg, OrderNo $orderNoArg): bool => $creatorIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedCreator)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturnNull()
@@ -147,7 +114,7 @@ class CreatorIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedCreator, $result->unwrap());
+        $this->assertEquals($expectedCreator, $result->unwrap());
     }
 
     #[Test]
@@ -159,15 +126,6 @@ class CreatorIntegrityServiceTest extends TestCase
 
         $expectedCreator = $this->createCreator($uuid, $name, $orderNo);
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $nameArg, OrderNo $orderNoArg): bool => $creatorIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedCreator)
-            ->once();
-
         $this->repository->shouldReceive('findByName')
             ->withArgs(fn (CreatorName $arg): bool => $arg->value === $name)
             ->andReturn($expectedCreator)
@@ -176,7 +134,7 @@ class CreatorIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForUpdate($uuid, $name, $orderNo);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedCreator, $result->unwrap());
+        $this->assertEquals($expectedCreator, $result->unwrap());
     }
 
     #[Test]
@@ -188,15 +146,6 @@ class CreatorIntegrityServiceTest extends TestCase
         $orderNo = 1;
 
         $expectedCreator = $this->createCreator($uuid, $name, $orderNo);
-
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (CreatorId $creatorIdArg, CreatorName $nameArg, OrderNo $orderNoArg): bool => $creatorIdArg->value === $uuid
-                    && $nameArg->value === $name
-                    && $orderNoArg->value === $orderNo,
-            )
-            ->andReturn($expectedCreator)
-            ->once();
 
         $otherCreator = $this->createCreator($otherUuid, $name, $orderNo);
 
@@ -217,7 +166,6 @@ class CreatorIntegrityServiceTest extends TestCase
     {
         return new CreatorIntegrityService(
             $this->generator,
-            $this->factory,
             $this->repository,
         );
     }

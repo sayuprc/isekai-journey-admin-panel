@@ -9,7 +9,6 @@ use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
-use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use ResultType\Err;
 use ResultType\Ok;
@@ -28,7 +27,6 @@ class RefreshTokenIssueService
         private readonly ClockInterface $clock,
         private readonly UuidGeneratorInterface $uuidGenerator,
         private readonly RandomTokenGeneratorInterface $randomTokenGenerator,
-        private readonly RefreshTokenFactoryInterface $factory,
         private readonly TokenHasherInterface $tokenHasher,
     ) {
     }
@@ -46,7 +44,7 @@ class RefreshTokenIssueService
             AdminUserId::create($adminUserId),
             HashedTokenValue::create($hashedToken),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
-        )->map(fn (array $values): RefreshToken => $this->factory->create(...[...$values, ConsumptionStatus::Unused]));
+        )->map(fn (array $values): RefreshToken => new RefreshToken(...[...$values, ConsumptionStatus::Unused]));
 
         if ($result->isErr()) {
             $messages = [];

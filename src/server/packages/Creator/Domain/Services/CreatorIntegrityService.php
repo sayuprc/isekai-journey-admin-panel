@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Creator\Domain\Services;
 
 use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorFactoryInterface;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorName;
 use Creator\Domain\Models\CreatorRepositoryInterface;
@@ -23,7 +22,6 @@ class CreatorIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
-        private readonly CreatorFactoryInterface $factory,
         private readonly CreatorRepositoryInterface $repository,
     ) {
     }
@@ -94,6 +92,6 @@ class CreatorIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Creator => $this->factory->create(...$values));
+            ->map(fn (array $values): Creator => new Creator(...$values));
     }
 }

@@ -21,9 +21,7 @@ use Performer\Application\UseCase\Search\SearchInputData;
 use Performer\Application\UseCase\Search\SearchUseCaseInterface;
 use Performer\Application\UseCase\Update\UpdateInputData;
 use Performer\Application\UseCase\Update\UpdateUseCaseInterface;
-use Performer\Domain\Models\PerformerFactoryInterface;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use Performer\Infrastructures\PerformerFactory;
 use Performer\Infrastructures\PerformerRepository;
 
 class PerformerServiceProvider extends EnvServiceProvider
@@ -32,7 +30,6 @@ class PerformerServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(PerformerRepositoryInterface::class, PerformerRepository::class);
-        $this->app->bind(PerformerFactoryInterface::class, PerformerFactory::class);
 
         $this->app->bind(ListUseCaseInterface::class, ListInteractor::class);
         $this->app->bind(SearchUseCaseInterface::class, SearchInteractor::class);
