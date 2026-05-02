@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, onCleanup, onMount, Show } from 'solid-js';
+import { createEffect, createSignal, createUniqueId, For, onCleanup, onMount, Show } from 'solid-js';
 
 export type SelectOption = {
   value: string;
@@ -17,6 +17,8 @@ export const SearchableSelect = (props: Props) => {
   const [query, setQuery] = createSignal('');
   const [open, setOpen] = createSignal(false);
   const [activeIndex, setActiveIndex] = createSignal(-1);
+  const listboxId = createUniqueId();
+  const inputId = createUniqueId();
   let containerRef: HTMLDivElement | undefined;
 
   const selectedLabel = () => props.options.find(option => option.value === props.value)?.label ?? '';
@@ -27,6 +29,11 @@ export const SearchableSelect = (props: Props) => {
       return props.options;
     }
     return props.options.filter(o => o.label.toLowerCase().includes(loweredQuery));
+  };
+
+  const activeDescendant = () => {
+    const index = activeIndex();
+    return index >= 0 && index < filtered().length ? `${listboxId}-option-${index}` : undefined;
   };
 
   const selectOption = (value: string) => {
@@ -110,37 +117,60 @@ export const SearchableSelect = (props: Props) => {
   return (
     <div ref={containerRef} class="relative w-full" onFocusOut={handleBlur}>
       <input
+        id={inputId}
         type="text"
         class="input input-bordered w-full"
         placeholder={props.placeholder ?? '検索...'}
         value={query()}
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls={listboxId}
+        aria-expanded={open()}
+        aria-activedescendant={activeDescendant()}
         onInput={(e) => {
           setQuery(e.currentTarget.value);
           setOpen(true);
           setActiveIndex(-1);
         }}
         onFocus={handleFocus}
+        onClick={() => {
+          setOpen(true);
+          setActiveIndex(-1);
+        }}
         onKeyDown={handleKeyDown}
       />
       {props.required && <input type="text" class="hidden" value={props.value} required tabIndex={-1} />}
-      <Show when={open() && filtered().length > 0}>
-        <ul class="menu bg-base-100 rounded-box shadow-lg absolute z-50 mt-1 max-h-48 w-full overflow-y-auto border border-base-300 p-1">
-          <For each={filtered()}>
-            {(option, index) => (
-              <li>
-                <button
-                  type="button"
-                  class={index() === activeIndex() ? 'active' : ''}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    selectOption(option.value);
-                  }}
-                >
-                  {option.label}
-                </button>
-              </li>
-            )}
-          </For>
+      <Show when={open()}>
+        <ul
+          id={listboxId}
+          role="listbox"
+          aria-labelledby={inputId}
+          class="menu bg-base-100 rounded-box shadow-lg absolute z-50 mt-1 max-h-48 w-full overflow-y-auto border border-base-300 p-1"
+        >
+          <Show
+            when={filtered().length > 0}
+            fallback={<li class="px-3 py-2 text-sm text-base-content/60" aria-live="polite">候補が見つかりません</li>}
+          >
+            <For each={filtered()}>
+              {(option, index) => (
+                <li>
+                  <button
+                    id={`${listboxId}-option-${index()}`}
+                    type="button"
+                    class={index() === activeIndex() ? 'active' : ''}
+                    role="option"
+                    aria-selected={index() === activeIndex()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      selectOption(option.value);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                </li>
+              )}
+            </For>
+          </Show>
         </ul>
       </Show>
     </div>
