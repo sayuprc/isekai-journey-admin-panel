@@ -7,17 +7,25 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 type Sort = 'name' | 'order_no';
 type Order = 'asc' | 'desc';
 
+const DEFAULT_PARAMS = {
+  name: '',
+  sort: 'order_no' as Sort,
+  order: 'asc' as Order,
+  page: 1,
+  perPage: 50 as PerPage,
+};
+
 const getInitialParams = (): { name: string; sort: Sort; order: Order; page: number; perPage: PerPage } => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
   const sort = params.get('sort');
   const order = params.get('order');
   return {
-    name: params.get('name') ?? '',
-    sort: sort === 'name' || sort === 'order_no' ? sort : 'order_no',
-    order: order === 'asc' || order === 'desc' ? order : 'asc',
-    page: Number(params.get('page') ?? '1') || 1,
-    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 50) as PerPage,
+    name: params.get('name') ?? DEFAULT_PARAMS.name,
+    sort: sort === 'name' || sort === 'order_no' ? sort : DEFAULT_PARAMS.sort,
+    order: order === 'asc' || order === 'desc' ? order : DEFAULT_PARAMS.order,
+    page: Number(params.get('page') ?? String(DEFAULT_PARAMS.page)) || DEFAULT_PARAMS.page,
+    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : DEFAULT_PARAMS.perPage) as PerPage,
   };
 };
 
@@ -96,6 +104,21 @@ export const SearchList = () => {
     updateUrl({ name: name(), sort: sort(), order: order(), page: page, perPage: perPage() });
   };
 
+  const handleReset = () => {
+    setInputName(DEFAULT_PARAMS.name);
+    setInputSort(DEFAULT_PARAMS.sort);
+    setInputOrder(DEFAULT_PARAMS.order);
+    setInputPerPage(DEFAULT_PARAMS.perPage);
+
+    setName(DEFAULT_PARAMS.name);
+    setSort(DEFAULT_PARAMS.sort);
+    setOrder(DEFAULT_PARAMS.order);
+    setPage(DEFAULT_PARAMS.page);
+    setPerPage(DEFAULT_PARAMS.perPage);
+
+    updateUrl(DEFAULT_PARAMS);
+  };
+
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
@@ -164,6 +187,9 @@ export const SearchList = () => {
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
           検索
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" onClick={handleReset}>
+          リセット
         </button>
       </form>
       <div class="mb-4 flex justify-end">

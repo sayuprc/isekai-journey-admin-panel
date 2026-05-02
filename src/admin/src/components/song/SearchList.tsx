@@ -7,6 +7,16 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 type Sort = 'title' | 'order_no';
 type Order = 'asc' | 'desc';
 
+const DEFAULT_PARAMS = {
+  title: '',
+  type: undefined,
+  isDisplay: undefined,
+  sort: 'order_no' as Sort,
+  order: 'asc' as Order,
+  page: 1,
+  perPage: 25 as PerPage,
+};
+
 const getInitialParams = (): {
   title: string;
   type?: number;
@@ -22,13 +32,13 @@ const getInitialParams = (): {
   const sort = params.get('sort');
   const order = params.get('order');
   return {
-    title: params.get('title') ?? '',
+    title: params.get('title') ?? DEFAULT_PARAMS.title,
     type: Number(params.get('type') ?? 0) || undefined,
     isDisplay: isDisplayRaw === 'true' ? true : isDisplayRaw === 'false' ? false : undefined,
-    sort: sort === 'title' || sort === 'order_no' ? sort : 'order_no',
-    order: order === 'asc' || order === 'desc' ? order : 'asc',
-    page: Number(params.get('page') ?? '1') || 1,
-    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
+    sort: sort === 'title' || sort === 'order_no' ? sort : DEFAULT_PARAMS.sort,
+    order: order === 'asc' || order === 'desc' ? order : DEFAULT_PARAMS.order,
+    page: Number(params.get('page') ?? String(DEFAULT_PARAMS.page)) || DEFAULT_PARAMS.page,
+    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : DEFAULT_PARAMS.perPage) as PerPage,
   };
 };
 
@@ -149,6 +159,25 @@ export const SearchList = () => {
     });
   };
 
+  const handleReset = () => {
+    setInputTitle(DEFAULT_PARAMS.title);
+    setInputType(DEFAULT_PARAMS.type);
+    setInputIsDisplay(DEFAULT_PARAMS.isDisplay);
+    setInputSort(DEFAULT_PARAMS.sort);
+    setInputOrder(DEFAULT_PARAMS.order);
+    setInputPerPage(DEFAULT_PARAMS.perPage);
+
+    setTitle(DEFAULT_PARAMS.title);
+    setType(DEFAULT_PARAMS.type);
+    setIsDisplay(DEFAULT_PARAMS.isDisplay);
+    setSort(DEFAULT_PARAMS.sort);
+    setOrder(DEFAULT_PARAMS.order);
+    setPerPage(DEFAULT_PARAMS.perPage);
+    setPage(DEFAULT_PARAMS.page);
+
+    updateUrl(DEFAULT_PARAMS);
+  };
+
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
@@ -256,6 +285,9 @@ export const SearchList = () => {
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm">
           検索
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" onClick={handleReset}>
+          リセット
         </button>
       </form>
       <div class="mb-4 flex justify-end">
