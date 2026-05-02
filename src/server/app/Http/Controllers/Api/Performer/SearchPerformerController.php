@@ -8,18 +8,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Performer\SearchPresenter;
 use Illuminate\Http\JsonResponse;
 use Performer\Application\UseCase\Search\SearchInputData;
-use Performer\Application\UseCase\Search\SearchUseCaseInterface;
+use Performer\Application\UseCase\Search\SearchUseCase;
 
 class SearchPerformerController extends Controller
 {
     public function __construct(
-        private readonly SearchUseCaseInterface $interactor,
+        private readonly SearchUseCase $useCase,
         private readonly SearchPresenter $presenter,
     ) {
     }
 
     public function handle(SearchInputData $inputData): JsonResponse
     {
-        return $this->presenter->present($this->interactor->handle($inputData));
+        return $this->presenter->present($this->useCase->handle($inputData));
     }
 }

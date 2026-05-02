@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Auth\Application\Interactors\AuthenticateInteractor;
-use Auth\Application\Interactors\LoginInteractor;
-use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
-use Auth\Application\UseCase\Login\LoginUseCaseInterface;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
@@ -39,9 +35,6 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
 
         $this->app->scoped(AuthContext::class);
-
-        $this->app->bind(LoginUseCaseInterface::class, LoginInteractor::class);
-        $this->app->bind(AuthenticateUseCaseInterface::class, AuthenticateInteractor::class);
 
         $this->app->bind(
             JwtConfig::class,

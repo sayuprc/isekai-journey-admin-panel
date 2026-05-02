@@ -8,18 +8,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Performer\DeletePresenter;
 use Illuminate\Http\JsonResponse;
 use Performer\Application\UseCase\Delete\DeleteInputData;
-use Performer\Application\UseCase\Delete\DeleteUseCaseInterface;
+use Performer\Application\UseCase\Delete\DeleteUseCase;
 
 class DeletePerformerController extends Controller
 {
     public function __construct(
-        private readonly DeleteUseCaseInterface $interactor,
+        private readonly DeleteUseCase $useCase,
         private readonly DeletePresenter $presenter,
     ) {
     }
 
     public function handle(string $performerId): JsonResponse
     {
-        return $this->presenter->present($this->interactor->handle(new DeleteInputData($performerId)));
+        return $this->presenter->present($this->useCase->handle(new DeleteInputData($performerId)));
     }
 }
