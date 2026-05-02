@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { pageTitle } = Astro.props;
+const currentPath = Astro.url.pathname;
 
 const siteTitle = '管理画面';
 
@@ -28,7 +29,7 @@ const title = generateTitle(pageTitle);
   </head>
   <body>
     <div class="flex min-h-screen">
-      <Sidebar />
+      <Sidebar currentPath={currentPath} />
       <div class="flex flex-1 flex-col">
         {pageTitle && (
           <header class="bg-base-100 border-base-300 border-b px-6 py-4">

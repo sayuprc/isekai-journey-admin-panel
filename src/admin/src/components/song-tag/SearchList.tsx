@@ -1,10 +1,19 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import { client } from '../../utils/client';
+import { ListState } from '../ListState';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 type Sort = 'name' | 'order_no';
 type Order = 'asc' | 'desc';
+
+const DEFAULT_PARAMS = {
+  name: '',
+  sort: 'order_no' as Sort,
+  order: 'asc' as Order,
+  page: 1,
+  perPage: 50 as PerPage,
+};
 
 const getInitialParams = (): { name: string; sort: Sort; order: Order; page: number; perPage: PerPage } => {
   const params = new URLSearchParams(window.location.search);
@@ -12,11 +21,11 @@ const getInitialParams = (): { name: string; sort: Sort; order: Order; page: num
   const sort = params.get('sort');
   const order = params.get('order');
   return {
-    name: params.get('name') ?? '',
-    sort: sort === 'name' || sort === 'order_no' ? sort : 'order_no',
-    order: order === 'asc' || order === 'desc' ? order : 'asc',
-    page: Number(params.get('page') ?? '1') || 1,
-    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 50) as PerPage,
+    name: params.get('name') ?? DEFAULT_PARAMS.name,
+    sort: sort === 'name' || sort === 'order_no' ? sort : DEFAULT_PARAMS.sort,
+    order: order === 'asc' || order === 'desc' ? order : DEFAULT_PARAMS.order,
+    page: Number(params.get('page') ?? String(DEFAULT_PARAMS.page)) || DEFAULT_PARAMS.page,
+    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : DEFAULT_PARAMS.perPage) as PerPage,
   };
 };
 
@@ -47,7 +56,7 @@ export const SearchList = () => {
 
   const [fetchError, setFetchError] = createSignal<string | null>(null);
 
-  const [data] = createResource(
+  const [data, { refetch }] = createResource(
     () => ({ name: name(), sort: sort(), order: order(), page: page(), perPage: perPage() }),
     async (params) => {
       setFetchError(null);
@@ -93,6 +102,21 @@ export const SearchList = () => {
   const handlePageChange = (page: number) => {
     setPage(page);
     updateUrl({ name: name(), sort: sort(), order: order(), page: page, perPage: perPage() });
+  };
+
+  const handleReset = () => {
+    setInputName(DEFAULT_PARAMS.name);
+    setInputSort(DEFAULT_PARAMS.sort);
+    setInputOrder(DEFAULT_PARAMS.order);
+    setInputPerPage(DEFAULT_PARAMS.perPage);
+
+    setName(DEFAULT_PARAMS.name);
+    setSort(DEFAULT_PARAMS.sort);
+    setOrder(DEFAULT_PARAMS.order);
+    setPage(DEFAULT_PARAMS.page);
+    setPerPage(DEFAULT_PARAMS.perPage);
+
+    updateUrl(DEFAULT_PARAMS);
   };
 
   return (
@@ -161,8 +185,11 @@ export const SearchList = () => {
             <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-sm">
+        <button type="submit" class="btn btn-primary btn-sm mb-1">
           検索
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm mb-1" onClick={handleReset}>
+          リセット
         </button>
       </form>
       <div class="mb-4 flex justify-end">
@@ -182,57 +209,29 @@ export const SearchList = () => {
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <For each={Array.from({ length: 5 })}>
-                  {() => (
-                    <tr>
-                      <td>
-                        <div class="skeleton h-4 w-32" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-4 w-8" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-6 w-10" />
-                      </td>
-                    </tr>
-                  )}
-                </For>
+                <ListState state="loading" colSpan={3} />
               </Match>
               <Match when={fetchError()}>
-                {message => (
-                  <tr>
-                    <td colspan="3" class="py-8 text-center text-error">
-                      {message()}
-                    </td>
-                  </tr>
-                )}
+                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+              </Match>
+              <Match when={data() && data()!.tags.length === 0}>
+                <ListState state="empty" colSpan={3} message="条件に一致する楽曲タグはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
-                  <Show
-                    when={result().tags.length > 0}
-                    fallback={(
-                      <tr>
-                        <td colspan="3" class="py-8 text-center text-base-content/60">
-                          条件に一致する楽曲タグはありません。
+                  <For each={result().tags}>
+                    {tag => (
+                      <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
+                        <td>{tag.name}</td>
+                        <td>{tag.orderNo}</td>
+                        <td>
+                          <a href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                            編集
+                          </a>
                         </td>
                       </tr>
                     )}
-                  >
-                    <For each={result().tags}>
-                      {tag => (
-                        <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                          <td>{tag.name}</td>
-                          <td>{tag.orderNo}</td>
-                          <td>
-                            <a href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
-                              編集
-                            </a>
-                          </td>
-                        </tr>
-                      )}
-                    </For>
-                  </Show>
+                  </For>
                 )}
               </Match>
             </Switch>

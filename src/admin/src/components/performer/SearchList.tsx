@@ -1,19 +1,28 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import type { PerformerSearchSortBy, SortOrder } from '../../generated';
 import { client } from '../../utils/client';
+import { ListState } from '../ListState';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
+
+const DEFAULT_PARAMS = {
+  name: '',
+  sort: 'order_no' as PerformerSearchSortBy,
+  order: 'asc' as SortOrder,
+  page: 1,
+  perPage: 25 as PerPage,
+};
 
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
   return {
-    name: params.get('name') ?? '',
-    sort: (params.get('sort') ?? 'order_no') as PerformerSearchSortBy,
-    order: (params.get('order') ?? 'asc') as SortOrder,
-    page: Number(params.get('page') ?? '1') || 1,
-    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : 25) as PerPage,
+    name: params.get('name') ?? DEFAULT_PARAMS.name,
+    sort: (params.get('sort') ?? DEFAULT_PARAMS.sort) as PerformerSearchSortBy,
+    order: (params.get('order') ?? DEFAULT_PARAMS.order) as SortOrder,
+    page: Number(params.get('page') ?? String(DEFAULT_PARAMS.page)) || DEFAULT_PARAMS.page,
+    perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : DEFAULT_PARAMS.perPage) as PerPage,
   };
 };
 
@@ -44,7 +53,7 @@ export const SearchList = () => {
 
   const [fetchError, setFetchError] = createSignal<string | null>(null);
 
-  const [data] = createResource(
+  const [data, { refetch }] = createResource(
     () => ({ name: name(), sort: sort(), order: order(), page: page(), perPage: perPage() }),
     async (params) => {
       setFetchError(null);
@@ -90,6 +99,21 @@ export const SearchList = () => {
   const handlePageChange = (page: number) => {
     setPage(page);
     updateUrl({ name: name(), sort: sort(), order: order(), page: page, perPage: perPage() });
+  };
+
+  const handleReset = () => {
+    setInputName(DEFAULT_PARAMS.name);
+    setInputSort(DEFAULT_PARAMS.sort);
+    setInputOrder(DEFAULT_PARAMS.order);
+    setInputPerPage(DEFAULT_PARAMS.perPage);
+
+    setName(DEFAULT_PARAMS.name);
+    setSort(DEFAULT_PARAMS.sort);
+    setOrder(DEFAULT_PARAMS.order);
+    setPage(DEFAULT_PARAMS.page);
+    setPerPage(DEFAULT_PARAMS.perPage);
+
+    updateUrl(DEFAULT_PARAMS);
   };
 
   return (
@@ -158,8 +182,11 @@ export const SearchList = () => {
             <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
           </select>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-sm">
+        <button type="submit" class="btn btn-primary btn-sm mb-1">
           検索
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm mb-1" onClick={handleReset}>
+          リセット
         </button>
       </form>
       <div class="mb-4 flex justify-end">
@@ -179,30 +206,13 @@ export const SearchList = () => {
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <For each={Array.from({ length: 5 })}>
-                  {() => (
-                    <tr>
-                      <td>
-                        <div class="skeleton h-4 w-32" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-4 w-8" />
-                      </td>
-                      <td>
-                        <div class="skeleton h-6 w-10" />
-                      </td>
-                    </tr>
-                  )}
-                </For>
+                <ListState state="loading" colSpan={3} />
               </Match>
               <Match when={fetchError()}>
-                {message => (
-                  <tr>
-                    <td colspan="3" class="py-8 text-center text-error">
-                      {message()}
-                    </td>
-                  </tr>
-                )}
+                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+              </Match>
+              <Match when={data() && data()!.performers.length === 0}>
+                <ListState state="empty" colSpan={3} />
               </Match>
               <Match when={data()}>
                 {result => (
