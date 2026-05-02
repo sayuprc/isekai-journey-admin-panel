@@ -24,6 +24,7 @@ class CreateCommand extends Command
 
     public function handle(CreateUseCaseInterface $interactor): int
     {
+        // comment
         $name = $this->argument('name');
 
         if (mb_trim($name) === '') {
