@@ -12,8 +12,54 @@ env:
   MISE_ENV: ci
 
 jobs:
+  changes:
+    name: Detect related changes
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.filter.outputs.should_run }}
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: filter
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$base_sha" = "0000000000000000000000000000000000000000" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed_files="$(git diff --name-only "$base_sha" "$head_sha")"
+          echo "$changed_files"
+
+          if echo "$changed_files" | grep -Eq '^(src/server/|src/contracts/|docker/|compose\.yaml$|mise(\.ci|\.local)?\.toml$|\.github/workflows/server-qa\.yaml$)'; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
   setup:
     name: Setup server
+    needs: changes
+    if: needs.changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     outputs:
       vendor-key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
@@ -94,10 +140,20 @@ jobs:
         run: mise run generate:server
 
   arkitect:
-    needs: setup
+    needs:
+      - changes
+      - setup
+    if: always() && needs.changes.outputs.should_run == 'true'
     name: Arkitect
     runs-on: ubuntu-latest
     steps:
+      - name: Validate setup
+        run: |
+          if [ "${{ needs.setup.result }}" != "success" ]; then
+            echo "Setup server failed"
+            exit 1
+          fi
+
       - name: Checkout the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -127,10 +183,20 @@ jobs:
         run: mise run arkitect
 
   ecs:
-    needs: setup
+    needs:
+      - changes
+      - setup
+    if: always() && needs.changes.outputs.should_run == 'true'
     name: EasyCodingStandard
     runs-on: ubuntu-latest
     steps:
+      - name: Validate setup
+        run: |
+          if [ "${{ needs.setup.result }}" != "success" ]; then
+            echo "Setup server failed"
+            exit 1
+          fi
+
       - name: Checkout the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -160,10 +226,20 @@ jobs:
         run: mise run ecs
 
   phpstan:
-    needs: setup
+    needs:
+      - changes
+      - setup
+    if: always() && needs.changes.outputs.should_run == 'true'
     name: PHPStan
     runs-on: ubuntu-latest
     steps:
+      - name: Validate setup
+        run: |
+          if [ "${{ needs.setup.result }}" != "success" ]; then
+            echo "Setup server failed"
+            exit 1
+          fi
+
       - name: Checkout the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -193,10 +269,20 @@ jobs:
         run: mise run phpstan
 
   phpunit:
-    needs: setup
+    needs:
+      - changes
+      - setup
+    if: always() && needs.changes.outputs.should_run == 'true'
     name: PHPUnit
     runs-on: ubuntu-latest
     steps:
+      - name: Validate setup
+        run: |
+          if [ "${{ needs.setup.result }}" != "success" ]; then
+            echo "Setup server failed"
+            exit 1
+          fi
+
       - name: Checkout the code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
