@@ -35,23 +35,26 @@ export const CreateForm = () => {
         ← 一覧に戻る
       </a>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-lg border p-6">
-        <label class="label">クリエイター名</label>
-        <input
-          type="text"
-          class="input w-full"
-          name="name"
-          required
-          classList={{ 'input-error': !!getFieldError('name') }}
-        />
-        <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+      <div class="max-w-4xl space-y-6">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
+          <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
+          <label class="label">クリエイター名</label>
+          <input
+            type="text"
+            class="input w-full"
+            name="name"
+            required
+            classList={{ 'input-error': !!getFieldError('name') }}
+          />
+          <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-        <div class="mt-6 flex flex justify-end">
-          <button class="btn btn-primary" disabled={isSubmitting()}>
-            {isSubmitting() ? '作成中...' : '作成'}
-          </button>
-        </div>
-      </fieldset>
+          <div class="mt-6 flex justify-end">
+            <button class="btn btn-primary" disabled={isSubmitting()}>
+              {isSubmitting() ? '作成中...' : '作成'}
+            </button>
+          </div>
+        </fieldset>
+      </div>
     </form>
   );
 };
