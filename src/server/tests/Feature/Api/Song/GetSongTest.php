@@ -31,7 +31,8 @@ class GetSongTest extends DatabaseTestCase
         $creatorRepo->save($composer);
         $creatorRepo->save($arranger);
         $tagRepo = $this->app->make(SongTagRepository::class);
-        $tagRepo->save($tag = $this->createSongTag($this->generateUuid(), 'タグA', 10));
+        $tagRepo->save($tagA = $this->createSongTag($this->generateUuid(), 'タグA', 20));
+        $tagRepo->save($tagB = $this->createSongTag($this->generateUuid(), 'タグB', 10));
 
         $songId = $this->generateUuid();
 
@@ -43,7 +44,10 @@ class GetSongTest extends DatabaseTestCase
                 SongType::Original,
                 true,
                 1,
-                [['songTagId' => $tag->songTagId->value, 'orderNo' => 1]],
+                [
+                    ['songTagId' => $tagA->songTagId->value],
+                    ['songTagId' => $tagB->songTagId->value],
+                ],
                 [['creatorId' => $lyricistId, 'orderNo' => 1]],
                 [['creatorId' => $composerId, 'orderNo' => 1]],
                 [['creatorId' => $arrangerId, 'orderNo' => 1]],
@@ -67,7 +71,10 @@ class GetSongTest extends DatabaseTestCase
                     'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
                     'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
                     'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
-                    'tags' => [['songTagId' => $tag->songTagId->value, 'name' => 'タグA', 'orderNo' => 1]],
+                    'tags' => [
+                        ['songTagId' => $tagB->songTagId->value, 'name' => 'タグB'],
+                        ['songTagId' => $tagA->songTagId->value, 'name' => 'タグA'],
+                    ],
                 ],
             ]);
     }

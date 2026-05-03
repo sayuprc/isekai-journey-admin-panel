@@ -65,9 +65,7 @@ readonly class UpdateUseCase
                 return new Err($this->handleError($result->unwrapErr()));
             }
 
-            $song = $result->unwrap();
-
-            $this->repository->save($song);
+            $song = $this->repository->save($result->unwrap());
 
             return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
         });

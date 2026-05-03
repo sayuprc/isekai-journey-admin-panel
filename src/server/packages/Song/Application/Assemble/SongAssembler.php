@@ -69,7 +69,6 @@ class SongAssembler
             return new AssembledTag(
                 $tag->songTagId->value,
                 $found->name->value,
-                $tag->orderNo->value,
             );
         };
 

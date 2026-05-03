@@ -24,7 +24,7 @@ scalar description extends string;
   lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
   arrangers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
-  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲", orderNo: 10 }],
+  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲" }],
 })
 model Song {
   songId: songId;
@@ -36,7 +36,7 @@ model Song {
   lyricists: Lyricist[];
   composers: Composer[];
   arrangers: Arranger[];
-  tags: SongTag[];
+  tags: SongAttachedTag[];
 }
 
 @doc("楽曲種別名")
@@ -74,6 +74,11 @@ model SongCreator {
   creatorId: creatorId;
   name: creatorName;
   orderNo: orderNo;
+}
+
+model SongAttachedTag {
+  songTagId: songTagId;
+  name: songTagName;
 }
 
 @example(#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 })

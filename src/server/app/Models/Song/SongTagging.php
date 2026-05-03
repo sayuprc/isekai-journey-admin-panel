@@ -10,7 +10,6 @@ use Override;
 /**
  * @property string $song_id     楽曲ID
  * @property string $song_tag_id 楽曲タグID
- * @property int    $order_no    表示順
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SongTagging newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SongTagging newQuery()

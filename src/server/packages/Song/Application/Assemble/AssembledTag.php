@@ -9,7 +9,6 @@ readonly class AssembledTag
     public function __construct(
         public string $songTagId,
         public string $name,
-        public int $orderNo,
     ) {
     }
 }

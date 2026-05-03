@@ -14,12 +14,17 @@ use Override;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
+use Song\Domain\Models\Tag\SongTag;
+use Song\Domain\Models\Tag\SongTagId;
+use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
 readonly class SongRepository implements SongRepositoryInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    public function __construct(
+        private UuidConverterInterface $converter,
+        private SongTagRepositoryInterface $songTagRepository,
+    ) {
     }
 
     #[Override]
@@ -100,7 +105,7 @@ readonly class SongRepository implements SongRepositoryInterface
             SongTagging::query()->insert($tags);
         }
 
-        return $song;
+        return $this->find($song->songId) ?? $song;
     }
 
     /**
@@ -118,16 +123,15 @@ readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * @param array{song_tag_id: string, order_no: int} $row
+     * @param array{song_tag_id: string} $row
      *
-     * @return array{song_id: string, song_tag_id: string, order_no: int}
+     * @return array{song_id: string, song_tag_id: string}
      */
     private function toTaggingRecord(string $binId, array $row): array
     {
         return [
             'song_id' => $binId,
             'song_tag_id' => $this->converter->toBin($row['song_tag_id']),
-            'order_no' => $row['order_no'],
         ];
     }
 
@@ -152,7 +156,6 @@ readonly class SongRepository implements SongRepositoryInterface
         ];
         $toTag = fn (SongTagging $row): array => [
             'songTagId' => $this->converter->toUuid($row->song_tag_id),
-            'orderNo' => $row->order_no,
         ];
 
         /** @var list<array{creatorId: string, orderNo: int}> */
@@ -161,8 +164,8 @@ readonly class SongRepository implements SongRepositoryInterface
         $composers = $model->composers->map($fn)->all();
         /** @var list<array{creatorId: string, orderNo: int}> */
         $arrangers = $model->arrangers->map($fn)->all();
-        /** @var list<array{songTagId: string, orderNo: int}> */
-        $tags = $model->taggings->sortBy('order_no')->map($toTag)->values()->all();
+        /** @var list<array{songTagId: string}> */
+        $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));
 
         return Song::reconstruct(
             $this->converter->toUuid($model->song_id),
@@ -176,5 +179,29 @@ readonly class SongRepository implements SongRepositoryInterface
             $composers,
             $arrangers,
         );
+    }
+
+    /**
+     * @param list<array{songTagId: string}> $tags
+     *
+     * @return list<array{songTagId: string}>
+     */
+    private function sortTagsByMasterOrder(array $tags): array
+    {
+        if ($tags === []) {
+            return [];
+        }
+
+        $foundTags = $this->songTagRepository->findByIds(
+            ...array_map(
+                fn (array $tag): SongTagId => SongTagId::reconstruct($tag['songTagId']),
+                $tags,
+            ),
+        );
+
+        return array_map(
+            fn (SongTag $tag): array => ['songTagId' => $tag->songTagId->value],
+            $foundTags,
+        ) |> array_values(...);
     }
 }

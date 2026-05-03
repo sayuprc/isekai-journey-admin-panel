@@ -5,29 +5,25 @@ declare(strict_types=1);
 namespace Song\Domain\Models\Tags;
 
 use Song\Domain\Models\Tag\SongTagId;
-use Support\Domain\ValueObjects\OrderNo;
 
 readonly class SongTagReference
 {
-    public function __construct(
-        public SongTagId $songTagId,
-        public OrderNo $orderNo,
-    ) {
+    public function __construct(public SongTagId $songTagId)
+    {
     }
 
-    public static function reconstruct(string $songTagId, int $orderNo): self
+    public static function reconstruct(string $songTagId): self
     {
-        return new self(SongTagId::reconstruct($songTagId), OrderNo::reconstruct($orderNo));
+        return new self(SongTagId::reconstruct($songTagId));
     }
 
     /**
-     * @return array{song_tag_id: string, order_no: int}
+     * @return array{song_tag_id: string}
      */
     public function toArray(): array
     {
         return [
             'song_tag_id' => $this->songTagId->value,
-            'order_no' => $this->orderNo->value,
         ];
     }
 }
