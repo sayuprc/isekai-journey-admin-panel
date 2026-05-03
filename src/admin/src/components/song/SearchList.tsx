@@ -1,6 +1,12 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
+import type { SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
+
+const SONG_TYPE_BADGE_CLASS: Record<SongTypeValue, string> = {
+  1: 'badge-warning',
+  2: 'badge-info',
+};
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -323,8 +329,14 @@ export const SearchList = () => {
                     {song => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
-                        <td>{song.type.name}</td>
-                        <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
+                        <td>
+                          <span class={`badge badge-sm badge-soft ${SONG_TYPE_BADGE_CLASS[song.type.value]}`}>{song.type.name}</span>
+                        </td>
+                        <td>
+                          <span class={`badge badge-sm ${song.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
+                            {song.isDisplay ? '表示する' : '表示しない'}
+                          </span>
+                        </td>
                         <td>{song.orderNo}</td>
                         <td>
                           <a href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
