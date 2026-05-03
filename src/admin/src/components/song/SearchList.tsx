@@ -1,15 +1,12 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
+import type { SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
 
-const SONG_TYPE_BADGE_COLORS = ['badge-primary', 'badge-secondary', 'badge-accent', 'badge-info'] as const;
-
-const songTypeBadgeClass = (value: number): string => {
-  const normalized = Math.max(0, Math.floor(value));
-  return SONG_TYPE_BADGE_COLORS[normalized % SONG_TYPE_BADGE_COLORS.length];
+const SONG_TYPE_BADGE_CLASS: Record<SongTypeValue, string> = {
+  1: 'badge-primary',
+  2: 'badge-secondary',
 };
-
-const isDisplayBadgeClass = (isDisplay: boolean): string => (isDisplay ? 'badge-success badge-soft' : 'badge-ghost');
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -333,10 +330,12 @@ export const SearchList = () => {
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
                         <td>
-                          <span class={`badge badge-sm badge-soft ${songTypeBadgeClass(song.type.value)}`}>{song.type.name}</span>
+                          <span class={`badge badge-sm badge-soft ${SONG_TYPE_BADGE_CLASS[song.type.value]}`}>{song.type.name}</span>
                         </td>
                         <td>
-                          <span class={`badge badge-sm ${isDisplayBadgeClass(song.isDisplay)}`}>{song.isDisplay ? '表示する' : '表示しない'}</span>
+                          <span class={`badge badge-sm ${song.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
+                            {song.isDisplay ? '表示する' : '表示しない'}
+                          </span>
                         </td>
                         <td>{song.orderNo}</td>
                         <td>
