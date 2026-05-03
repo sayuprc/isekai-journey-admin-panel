@@ -74,13 +74,11 @@ class CreateSongTest extends DatabaseTestCase
                                 'orderNo' => 1,
                             ]])
                             ->where('tags', [[
-                                'songTagId' => $tag2->songTagId->value,
-                                'name' => $tag2->name->value,
-                                'orderNo' => 1,
-                            ], [
                                 'songTagId' => $tag1->songTagId->value,
                                 'name' => $tag1->name->value,
-                                'orderNo' => 2,
+                            ], [
+                                'songTagId' => $tag2->songTagId->value,
+                                'name' => $tag2->name->value,
                             ]]),
                     ),
             );

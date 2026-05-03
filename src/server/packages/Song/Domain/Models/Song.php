@@ -27,7 +27,7 @@ readonly class Song
     }
 
     /**
-     * @param list<array{songTagId: string, orderNo: int}> $tags
+     * @param list<array{songTagId: string}>               $tags
      * @param list<array{creatorId: string, orderNo: int}> $lyricists
      * @param list<array{creatorId: string, orderNo: int}> $composers
      * @param list<array{creatorId: string, orderNo: int}> $arrangers
@@ -59,7 +59,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string}>}
      */
     public function toArray(): array
     {

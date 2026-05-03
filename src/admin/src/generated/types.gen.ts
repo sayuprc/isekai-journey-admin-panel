@@ -184,7 +184,12 @@ export type Song = {
     lyricists: Array<Lyricist>;
     composers: Array<Composer>;
     arrangers: Array<Arranger>;
-    tags: Array<SongTag>;
+    tags: Array<SongAttachedTag>;
+};
+
+export type SongAttachedTag = {
+    songTagId: SongTagId;
+    name: SongTagName;
 };
 
 export type SongCreateRequest = {

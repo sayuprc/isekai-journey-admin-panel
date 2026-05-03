@@ -66,7 +66,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => '\OpenAPI\Client\Model\Lyricist[]',
         'composers' => '\OpenAPI\Client\Model\Composer[]',
         'arrangers' => '\OpenAPI\Client\Model\Arranger[]',
-        'tags' => '\OpenAPI\Client\Model\SongTag[]'
+        'tags' => '\OpenAPI\Client\Model\SongAttachedTag[]'
     ];
 
     /**
@@ -646,7 +646,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets tags
      *
-     * @return \OpenAPI\Client\Model\SongTag[]
+     * @return \OpenAPI\Client\Model\SongAttachedTag[]
      */
     public function getTags()
     {
@@ -656,7 +656,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets tags
      *
-     * @param \OpenAPI\Client\Model\SongTag[] $tags tags
+     * @param \OpenAPI\Client\Model\SongAttachedTag[] $tags tags
      *
      * @return self
      */

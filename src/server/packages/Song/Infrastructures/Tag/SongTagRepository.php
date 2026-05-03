@@ -100,6 +100,7 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
                 'song_tag_id',
                 array_map(fn (SongTagId $songTagId): string => $this->converter->toBin($songTagId->value), $songTagIds),
             )
+            ->orderBy('order_no')
             ->get()
             ->map($this->hydrate(...))
             ->all();

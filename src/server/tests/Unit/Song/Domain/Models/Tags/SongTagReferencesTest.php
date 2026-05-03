@@ -25,9 +25,7 @@ class SongTagReferencesTest extends TestCase
 
         $this->assertCount(2, $tags);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $tags[0]->songTagId->value);
-        $this->assertSame(1, $tags[0]->orderNo->value);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $tags[1]->songTagId->value);
-        $this->assertSame(2, $tags[1]->orderNo->value);
     }
 
     #[Test]

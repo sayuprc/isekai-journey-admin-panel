@@ -44,7 +44,7 @@ class UpdateSongTest extends DatabaseTestCase
                 SongType::Original,
                 true,
                 1,
-                [['songTagId' => $oldTag->songTagId->value, 'orderNo' => 1]],
+                [['songTagId' => $oldTag->songTagId->value]],
                 [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
                 [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
@@ -93,7 +93,6 @@ class UpdateSongTest extends DatabaseTestCase
                         [
                             'songTagId' => $newTag->songTagId->value,
                             'name' => $newTag->name->value,
-                            'orderNo' => 1,
                         ],
                     ],
                 ],

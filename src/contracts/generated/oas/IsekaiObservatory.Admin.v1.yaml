@@ -1540,7 +1540,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/SongTag'
+            $ref: '#/components/schemas/SongAttachedTag'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -1565,7 +1565,16 @@ components:
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
-              orderNo: 10
+    SongAttachedTag:
+      type: object
+      required:
+        - songTagId
+        - name
+      properties:
+        songTagId:
+          $ref: '#/components/schemas/songTagId'
+        name:
+          $ref: '#/components/schemas/songTagName'
     SongCreateRequest:
       type: object
       required:

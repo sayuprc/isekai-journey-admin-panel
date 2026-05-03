@@ -8,7 +8,7 @@ use OpenAPI\Client\Model\Arranger as OpenApiArranger;
 use OpenAPI\Client\Model\Composer as OpenApiComposer;
 use OpenAPI\Client\Model\Lyricist as OpenApiLyricist;
 use OpenAPI\Client\Model\Song as OpenApiSong;
-use OpenAPI\Client\Model\SongTag as OpenApiSongTag;
+use OpenAPI\Client\Model\SongAttachedTag as OpenApiSongAttachedTag;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
 use OpenAPI\Client\Model\SongTypeValue;
 use Song\Application\Assemble\AssembledCreator;
@@ -63,11 +63,10 @@ readonly class Converter
             ->setOrderNo($creator->orderNo);
     }
 
-    private function toOpenApiSongTag(AssembledTag $tag): OpenApiSongTag
+    private function toOpenApiSongTag(AssembledTag $tag): OpenApiSongAttachedTag
     {
-        return new OpenApiSongTag()
+        return new OpenApiSongAttachedTag()
             ->setSongTagId($tag->songTagId)
-            ->setName($tag->name)
-            ->setOrderNo($tag->orderNo);
+            ->setName($tag->name);
     }
 }

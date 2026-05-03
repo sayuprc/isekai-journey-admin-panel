@@ -10,8 +10,6 @@ use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Support\Collection\ImmutableCollection;
 use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
-use Support\Domain\ValueObjects\OrderNo;
 
 /**
  * @extends ImmutableCollection<int, SongTagReference>
@@ -28,20 +26,15 @@ readonly class SongTagReferences extends ImmutableCollection
         $tags = [];
         $seen = [];
 
-        foreach ($items as $index => $item) {
-            $result = Result::collect(
-                SongTagId::create($item['songTagId']),
-                OrderNo::create($index + 1),
-            )->map(fn (array $values) => new SongTagReference(...$values));
+        foreach ($items as $item) {
+            $result = SongTagId::create($item['songTagId'])
+                ->map(fn (SongTagId $songTagId) => new SongTagReference($songTagId));
 
             if ($result->isErr()) {
                 $messages = [];
-                foreach ($result->unwrapErr() as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+                $error = $result->unwrapErr();
+                $messages[$error->field] = [];
+                $messages[$error->field][] = $error->message;
 
                 return new Err(new DomainValidationError($messages));
             }
@@ -62,7 +55,7 @@ readonly class SongTagReferences extends ImmutableCollection
     }
 
     /**
-     * @param list<array{songTagId: string, orderNo: int}> $items
+     * @param list<array{songTagId: string}> $items
      */
     public static function reconstruct(array $items): self
     {
@@ -70,7 +63,7 @@ readonly class SongTagReferences extends ImmutableCollection
     }
 
     /**
-     * @return list<array{song_tag_id: string, order_no: int}>
+     * @return list<array{song_tag_id: string}>
      */
     public function toArray(): array
     {

@@ -12,12 +12,6 @@ table "song_taggings" {
     type    = binary(16)
     comment = "楽曲タグID"
   }
-  column "order_no" {
-    null     = false
-    type     = int
-    unsigned = true
-    comment  = "表示順"
-  }
 
   primary_key {
     columns = [column.song_id, column.song_tag_id]

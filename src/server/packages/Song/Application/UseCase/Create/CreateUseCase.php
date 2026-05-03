@@ -63,9 +63,7 @@ readonly class CreateUseCase
                 return new Err($this->handleError($result->unwrapErr()));
             }
 
-            $song = $result->unwrap();
-
-            $this->repository->save($song);
+            $song = $this->repository->save($result->unwrap());
 
             return new Ok(new CreateOutputData($this->assembler->assemble($song)));
         });
