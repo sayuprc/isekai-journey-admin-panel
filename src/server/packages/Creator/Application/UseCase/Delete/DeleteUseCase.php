@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Creator\Application\UseCase\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use Creator\Domain\Models\CreatorId;
 use Creator\Domain\Models\CreatorRepositoryInterface;
 use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -21,7 +19,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class DeleteUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private CreatorRepositoryInterface $repository,
         private CreatorUsageCheckerInterface $usageChecker,
     ) {
@@ -32,16 +30,15 @@ readonly class DeleteUseCase
      */
     public function handle(DeleteInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::WriteCreator)
+            ->andThen(fn () => $this->deleteCreator($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::WriteCreator)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<null, UseCaseError>
+     */
+    private function deleteCreator(DeleteInputData $inputData): Result
+    {
         return CreatorId::create($inputData->creatorId)
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['creatorId' => ['IDが不正です']]))
             ->andThen(function (CreatorId $creatorId): Result {

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -20,7 +18,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class DeleteUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private SongTagRepositoryInterface $repository,
     ) {
     }
@@ -30,16 +28,15 @@ readonly class DeleteUseCase
      */
     public function handle(DeleteInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::WriteSong)
+            ->andThen(fn () => $this->deleteSongTag($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::WriteSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<null, UseCaseError>
+     */
+    private function deleteSongTag(DeleteInputData $inputData): Result
+    {
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
             ->andThen(function (SongTagId $songTagId): Result {

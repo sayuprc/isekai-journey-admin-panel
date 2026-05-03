@@ -68,7 +68,7 @@ class GetUseCaseTest extends TestCase
     private function getInstance(): GetUseCase
     {
         return new GetUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->repository,
         );
     }

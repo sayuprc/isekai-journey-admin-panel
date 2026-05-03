@@ -73,7 +73,7 @@ class DeleteUseCaseTest extends TestCase
     private function getInstance(): DeleteUseCase
     {
         return new DeleteUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->repository,
             $this->usageChecker,
         );

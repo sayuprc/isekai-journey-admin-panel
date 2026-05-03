@@ -14,6 +14,7 @@ use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Auth\Infrastructures\Auth\AuthAdminUserRepository;
 use Auth\Infrastructures\Auth\AuthUserProvider;
+use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
@@ -21,6 +22,7 @@ use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
 use Illuminate\Support\Facades\Auth;
 use Override;
+use Support\UseCase\Authorizer\AuthorizationContextInterface;
 
 class AuthServiceProvider extends EnvServiceProvider
 {
@@ -33,6 +35,7 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(TokenHasherInterface::class, TokenHasher::class);
         $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
         $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
+        $this->app->bind(AuthorizationContextInterface::class, UseCaseAuthorizationContext::class);
 
         $this->app->scoped(AuthContext::class);
 

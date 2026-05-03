@@ -5,23 +5,20 @@ declare(strict_types=1);
 namespace Performer\Application\UseCase\Search;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use Performer\Domain\Criteria\PerformerSearchCriteria;
 use Performer\Domain\Models\PerformerRepositoryInterface;
-use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private PerformerRepositoryInterface $repository,
     ) {
     }
@@ -31,16 +28,15 @@ readonly class SearchUseCase
      */
     public function handle(SearchInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::ReadPerformer)
+            ->andThen(fn () => $this->searchPerformers($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::ReadPerformer)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<SearchOutputData, UseCaseError>
+     */
+    private function searchPerformers(SearchInputData $inputData): Result
+    {
         $criteria = new PerformerSearchCriteria(
             $inputData->name === Arg::Optional
                 ? new None()

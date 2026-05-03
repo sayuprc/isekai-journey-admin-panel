@@ -195,7 +195,7 @@ class CreateUseCaseTest extends TestCase
     private function getInstance(): CreateUseCase
     {
         return new CreateUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->transaction,
             $this->repository,
             $this->service,

@@ -23,7 +23,11 @@ return [
     new Define(SupportComponent::Contracts),
     new Define(SupportComponent::Optional),
     new Define(SupportComponent::Collection),
-    new Define(SupportComponent::UseCase),
+    new Define(SupportComponent::UseCase, [
+        SupportComponent::UseCase,
+        AdminUserComponent::Domain,
+        LibraryComponent::ResultType,
+    ]),
 
     new Define(AdminUserComponent::Domain, [
         AdminUserComponent::Domain,

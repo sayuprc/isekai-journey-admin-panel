@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Search;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
-use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
@@ -14,14 +12,13 @@ use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private SongTagRepositoryInterface $repository,
     ) {
     }
@@ -31,16 +28,15 @@ readonly class SearchUseCase
      */
     public function handle(SearchInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::ReadSong)
+            ->andThen(fn () => $this->searchSongTags($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::ReadSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<SearchOutputData, UseCaseError>
+     */
+    private function searchSongTags(SearchInputData $inputData): Result
+    {
         $criteria = new SongTagSearchCriteria(
             $inputData->name === Arg::Optional
                 ? new None()

@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Get;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
@@ -21,7 +19,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class GetUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private SongTagRepositoryInterface $repository,
     ) {
     }
@@ -31,16 +29,15 @@ readonly class GetUseCase
      */
     public function handle(GetInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::ReadSong)
+            ->andThen(fn () => $this->getSongTag($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::ReadSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<GetOutputData, UseCaseError>
+     */
+    private function getSongTag(GetInputData $inputData): Result
+    {
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (SongTagId $songTagId): Result {

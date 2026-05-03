@@ -70,7 +70,7 @@ class ListUseCaseTest extends TestCase
     private function getInstance(): ListUseCase
     {
         return new ListUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->repository,
         );
     }

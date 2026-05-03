@@ -24,6 +24,6 @@ class ListUseCaseTest extends TestCase
 
     private function getInstance(): ListUseCase
     {
-        return new ListUseCase($this->privilegedContext());
+        return new ListUseCase($this->authorizer());
     }
 }
