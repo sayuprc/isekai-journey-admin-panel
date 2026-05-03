@@ -21,10 +21,10 @@
   - [ ] Domain と UI を分離するために InputData/OutputData や Assembler を使用しているか。
 - **Infrastructures Layer**:
   - [ ] Repository Interface を実装しているか。
-  - [ ] Eloquent モデルや FileStore のロジックが含まれているか。
+  - [ ] Eloquent モデルのロジックが含まれているか。
   - [ ] 外部 API クライアントが含まれているか。
 
 ## テスト
 - [ ] **Unit Tests**: Mockery を使用して Domain/Application ロジックをテストしているか。
-- [ ] **Integration Tests**: FileStore などの実体を使用して Infrastructure の実装をテストしているか。
-- [ ] **Feature Tests**: API エンドポイントやコンソールコマンドをテストしているか。
+- [ ] **Integration Tests**: `DatabaseTestCase` を継承し、実際の DB を使って Infrastructure の実装をテストしているか。
+- [ ] **Feature Tests**: `DatabaseTestCase` を継承し、API エンドポイントやコンソールコマンドをテストしているか。

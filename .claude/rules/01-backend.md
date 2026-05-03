@@ -16,7 +16,6 @@ paths:
 - `src/server/packages/{Package}/Domain`: ビジネスルール。ほかのレイヤーに依存しない
 - `src/server/packages/{Package}/Application`: ユースケース。Domain にのみ依存する
 - `src/server/packages/{Package}/Infrastructures`: 永続化や外部接続。Domain に依存し、Application には依存しない
-- `src/server/packages/{Package}/DebugInfrastructures`: テスト用のファイルベース実装
 - `src/server/Generated/`: OpenAPI から生成されたコード
 
 ## 実装規約
@@ -30,7 +29,7 @@ paths:
 - Unit テスト: `php-unit-test-creator`
 - Integration テスト: `php-integration-test-creator`
 - Feature テスト: `php-feature-test-creator`
-- Feature / Integration テストでは `DebugInfrastructures` を優先する
+- Feature / Integration テストは `DatabaseTestCase` を継承し、実際の DB を使う
 
 ## 検証
 
