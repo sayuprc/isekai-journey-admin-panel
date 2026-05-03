@@ -7,4 +7,6 @@ namespace Auth\Route;
 enum AuthRouteMap: string
 {
     case Login = 'login';
+
+    case Refresh = 'refresh';
 }

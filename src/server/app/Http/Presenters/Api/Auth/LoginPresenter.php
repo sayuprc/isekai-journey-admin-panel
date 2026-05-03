@@ -26,6 +26,7 @@ class LoginPresenter
             fn (LoginOutputData $output) => [
                 new LoginResponse()
                     ->setAccessToken($output->accessToken->jwt->value)
+                    ->setRefreshTokenId($output->refreshTokenId)
                     ->setRefreshToken($output->plainRefreshToken),
                 200,
             ],

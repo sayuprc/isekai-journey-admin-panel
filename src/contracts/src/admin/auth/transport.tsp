@@ -12,5 +12,17 @@ model LoginRequest {
 
 model LoginResponse {
   accessToken: accessToken;
+  refreshTokenId: refreshTokenId;
+  refreshToken: refreshToken;
+}
+
+model RefreshTokenRequest {
+  refreshTokenId: refreshTokenId;
+  refreshToken: refreshToken;
+}
+
+model RefreshTokenResponse {
+  accessToken: accessToken;
+  refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
 }

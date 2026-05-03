@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { creatorServiceCreateCreator, creatorServiceDeleteCreator, creatorServiceGetCreator, creatorServiceSearchCreators, creatorServiceUpdateCreator } from '../../generated';
 import type { CreatorSearchSortBy, PerPage, SortOrder } from '../../generated';
-import { createAuthClient } from '../client';
+import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
@@ -9,19 +9,21 @@ export const creators = new Elysia({ prefix: '/creators' })
   .use(authGuard)
   .get(
     '/search',
-    async ({ query, credential }) => {
-      return resolveApiResponse(
-        await creatorServiceSearchCreators({
-          client: createAuthClient(credential),
-          query: {
-            name: query.name || undefined,
-            sort: (query.sort ?? 'order_no') as CreatorSearchSortBy,
-            order: (query.order ?? 'asc') as SortOrder,
-            page: query.page ?? 1,
-            per_page: (query.per_page ?? 25) as PerPage,
-          },
-        }),
-      );
+    async ({ query, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(
+          await creatorServiceSearchCreators({
+            client,
+            query: {
+              name: query.name || undefined,
+              sort: (query.sort ?? 'order_no') as CreatorSearchSortBy,
+              order: (query.order ?? 'asc') as SortOrder,
+              page: query.page ?? 1,
+              per_page: (query.per_page ?? 25) as PerPage,
+            },
+          }),
+        );
+      });
     },
     {
       query: t.Object({
@@ -35,8 +37,10 @@ export const creators = new Elysia({ prefix: '/creators' })
   )
   .get(
     '/:creatorId',
-    async ({ params: { creatorId }, credential }) => {
-      return resolveApiResponse(await creatorServiceGetCreator({ client: createAuthClient(credential), path: { creatorId } }));
+    async ({ params: { creatorId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await creatorServiceGetCreator({ client, path: { creatorId } }));
+      });
     },
     {
       params: t.Object({
@@ -46,8 +50,10 @@ export const creators = new Elysia({ prefix: '/creators' })
   )
   .post(
     '/',
-    async ({ body: { name }, credential }) => {
-      return resolveApiResponse(await creatorServiceCreateCreator({ client: createAuthClient(credential), body: { name } }));
+    async ({ body: { name }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await creatorServiceCreateCreator({ client, body: { name } }));
+      });
     },
     {
       body: t.Object({
@@ -57,8 +63,10 @@ export const creators = new Elysia({ prefix: '/creators' })
   )
   .put(
     '/:creatorId',
-    async ({ params: { creatorId }, body: { name, orderNo }, credential }) => {
-      return resolveApiResponse(await creatorServiceUpdateCreator({ client: createAuthClient(credential), path: { creatorId }, body: { name, orderNo } }));
+    async ({ params: { creatorId }, body: { name, orderNo }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await creatorServiceUpdateCreator({ client, path: { creatorId }, body: { name, orderNo } }));
+      });
     },
     {
       params: t.Object({
@@ -72,8 +80,10 @@ export const creators = new Elysia({ prefix: '/creators' })
   )
   .delete(
     '/:creatorId',
-    async ({ params: { creatorId }, credential }) => {
-      resolveApiResponse(await creatorServiceDeleteCreator({ client: createAuthClient(credential), path: { creatorId } }));
+    async ({ params: { creatorId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        resolveApiResponse(await creatorServiceDeleteCreator({ client, path: { creatorId } }));
+      });
     },
     {
       params: t.Object({

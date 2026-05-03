@@ -5,6 +5,7 @@ declare(strict_types=1);
 use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RefreshController;
 use App\Http\Controllers\Api\Creator\CreateCreatorController;
 use App\Http\Controllers\Api\Creator\DeleteCreatorController;
 use App\Http\Controllers\Api\Creator\GetCreatorController;
@@ -49,6 +50,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
         Route::prefix('v1')->group(function () {
             Route::prefix('auth')->group(function () {
                 Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
+                Route::post('/refresh', [RefreshController::class, 'handle'])->name(AuthRouteMap::Refresh);
             });
 
             Route::middleware(Authenticate::class)->group(function () {

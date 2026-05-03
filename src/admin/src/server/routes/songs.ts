@@ -10,7 +10,7 @@ import {
   songTypeServiceListSongTypes,
 } from '../../generated';
 import type { PerPage, SongSearchSortBy, SongTypeValue, SortOrder } from '../../generated';
-import { createAuthClient } from '../client';
+import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
@@ -22,44 +22,46 @@ const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
 
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
-  .get('/create-form', async ({ credential }) => {
-    const authClient = createAuthClient(credential);
-    const [creators, types, tags] = await Promise.all([
-      creatorServiceListCreators({ client: authClient }),
-      songTypeServiceListSongTypes({ client: authClient }),
-      songTagServiceListSongTags({ client: authClient }),
-    ]);
-
-    return {
-      creators: resolveApiResponse(creators).creators,
-      types: resolveApiResponse(types).types,
-      tags: resolveApiResponse(tags).tags,
-    };
-  })
-  .get(
-    '/search',
-    async ({ query, credential }) => {
-      const authClient = createAuthClient(credential);
-      const [searchResult, types] = await Promise.all([
-        songServiceSearchSongs({
-          client: authClient,
-          query: {
-            title: query.title || undefined,
-            type: query.type as SongTypeValue | undefined,
-            is_display: query.is_display,
-            sort: (query.sort ?? 'order_no') as SongSearchSortBy,
-            order: (query.order ?? 'asc') as SortOrder,
-            page: query.page ?? 1,
-            per_page: (query.per_page ?? 25) as PerPage,
-          },
-        }),
-        songTypeServiceListSongTypes({ client: authClient }),
+  .get('/create-form', async ({ authSession }) => {
+    return withAuthRetry(authSession, async (client) => {
+      const [creators, types, tags] = await Promise.all([
+        creatorServiceListCreators({ client }),
+        songTypeServiceListSongTypes({ client }),
+        songTagServiceListSongTags({ client }),
       ]);
 
       return {
-        ...resolveApiResponse(searchResult),
+        creators: resolveApiResponse(creators).creators,
         types: resolveApiResponse(types).types,
+        tags: resolveApiResponse(tags).tags,
       };
+    });
+  })
+  .get(
+    '/search',
+    async ({ query, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        const [searchResult, types] = await Promise.all([
+          songServiceSearchSongs({
+            client,
+            query: {
+              title: query.title || undefined,
+              type: query.type as SongTypeValue | undefined,
+              is_display: query.is_display,
+              sort: (query.sort ?? 'order_no') as SongSearchSortBy,
+              order: (query.order ?? 'asc') as SortOrder,
+              page: query.page ?? 1,
+              per_page: (query.per_page ?? 25) as PerPage,
+            },
+          }),
+          songTypeServiceListSongTypes({ client }),
+        ]);
+
+        return {
+          ...resolveApiResponse(searchResult),
+          types: resolveApiResponse(types).types,
+        };
+      });
     },
     {
       query: t.Object({
@@ -75,21 +77,22 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .get(
     '/:songId/edit-form',
-    async ({ params: { songId }, credential }) => {
-      const authClient = createAuthClient(credential);
-      const [song, creators, types, tags] = await Promise.all([
-        songServiceGetSong({ client: authClient, path: { songId } }),
-        creatorServiceListCreators({ client: authClient }),
-        songTypeServiceListSongTypes({ client: authClient }),
-        songTagServiceListSongTags({ client: authClient }),
-      ]);
+    async ({ params: { songId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        const [song, creators, types, tags] = await Promise.all([
+          songServiceGetSong({ client, path: { songId } }),
+          creatorServiceListCreators({ client }),
+          songTypeServiceListSongTypes({ client }),
+          songTagServiceListSongTags({ client }),
+        ]);
 
-      return {
-        ...resolveApiResponse(song),
-        creators: resolveApiResponse(creators).creators,
-        types: resolveApiResponse(types).types,
-        tags: resolveApiResponse(tags).tags,
-      };
+        return {
+          ...resolveApiResponse(song),
+          creators: resolveApiResponse(creators).creators,
+          types: resolveApiResponse(types).types,
+          tags: resolveApiResponse(tags).tags,
+        };
+      });
     },
     {
       params: t.Object({
@@ -99,8 +102,10 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .get(
     '/:songId',
-    async ({ params: { songId }, credential }) => {
-      return resolveApiResponse(await songServiceGetSong({ client: createAuthClient(credential), path: { songId } }));
+    async ({ params: { songId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await songServiceGetSong({ client, path: { songId } }));
+      });
     },
     {
       params: t.Object({
@@ -110,23 +115,24 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .post(
     '/',
-    async ({ body: { title, description, lyricsLink, typeValue, isDisplay, lyricists, composers, arrangers, tags }, credential }) => {
-      return resolveApiResponse(
-        await songServiceCreateSong({
-          client: createAuthClient(credential),
-          body: {
-            title,
-            description,
-            lyricsLink,
-            typeValue,
-            isDisplay,
-            lyricists,
-            composers,
-            arrangers,
-            tags,
-          },
-        }),
-      );
+    async ({ body: { title, description, lyricsLink, typeValue, isDisplay, lyricists, composers, arrangers, tags }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(
+          await songServiceCreateSong({
+            client,
+            body: {
+              title,
+              description, lyricsLink,
+              typeValue,
+              isDisplay,
+              lyricists,
+              composers,
+              arrangers,
+              tags,
+            },
+          }),
+        );
+      });
     },
     {
       body: t.Object({
@@ -144,25 +150,26 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .put(
     '/:songId',
-    async ({ params: { songId }, body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags }, credential }) => {
-      return resolveApiResponse(
-        await songServiceUpdateSong({
-          client: createAuthClient(credential),
-          path: { songId },
-          body: {
-            title,
-            description,
-            lyricsLink,
-            typeValue,
-            isDisplay,
-            orderNo,
-            lyricists,
-            composers,
-            arrangers,
-            tags,
-          },
-        }),
-      );
+    async ({ params: { songId }, body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(
+          await songServiceUpdateSong({
+            client,
+            path: { songId },
+            body: {
+              title,
+              description, lyricsLink,
+              typeValue,
+              isDisplay,
+              orderNo,
+              lyricists,
+              composers,
+              arrangers,
+              tags,
+            },
+          }),
+        );
+      });
     },
     {
       params: t.Object({
@@ -184,8 +191,10 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .delete(
     '/:songId',
-    async ({ params: { songId }, credential }) => {
-      resolveApiResponse(await songServiceDeleteSong({ client: createAuthClient(credential), path: { songId } }));
+    async ({ params: { songId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        resolveApiResponse(await songServiceDeleteSong({ client, path: { songId } }));
+      });
     },
     {
       params: t.Object({

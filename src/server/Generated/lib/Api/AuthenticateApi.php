@@ -77,6 +77,9 @@ class AuthenticateApi
         'authenticateServiceLogin' => [
             'application/json',
         ],
+        'authenticateServiceRefresh' => [
+            'application/json',
+        ],
     ];
 
     /**
@@ -365,6 +368,279 @@ class AuthenticateApi
                 $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_request));
             } else {
                 $httpBody = $login_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRefresh
+     *
+     * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request refresh_token_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRefresh'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\RefreshTokenResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRefresh($refresh_token_request, string $contentType = self::contentTypes['authenticateServiceRefresh'][0])
+    {
+        list($response) = $this->authenticateServiceRefreshWithHttpInfo($refresh_token_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRefreshWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRefresh'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\RefreshTokenResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRefreshWithHttpInfo($refresh_token_request, string $contentType = self::contentTypes['authenticateServiceRefresh'][0])
+    {
+        $request = $this->authenticateServiceRefreshRequest($refresh_token_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\RefreshTokenResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\RefreshTokenResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\RefreshTokenResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRefreshAsync
+     *
+     * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRefresh'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRefreshAsync($refresh_token_request, string $contentType = self::contentTypes['authenticateServiceRefresh'][0])
+    {
+        return $this->authenticateServiceRefreshAsyncWithHttpInfo($refresh_token_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRefreshAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRefresh'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRefreshAsyncWithHttpInfo($refresh_token_request, string $contentType = self::contentTypes['authenticateServiceRefresh'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\RefreshTokenResponse';
+        $request = $this->authenticateServiceRefreshRequest($refresh_token_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRefresh'
+     *
+     * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRefresh'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRefreshRequest($refresh_token_request, string $contentType = self::contentTypes['authenticateServiceRefresh'][0])
+    {
+
+        // verify the required parameter 'refresh_token_request' is set
+        if ($refresh_token_request === null || (is_array($refresh_token_request) && count($refresh_token_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $refresh_token_request when calling authenticateServiceRefresh'
+            );
+        }
+
+
+        $resourcePath = '/auth/refresh';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($refresh_token_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($refresh_token_request));
+            } else {
+                $httpBody = $refresh_token_request;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {

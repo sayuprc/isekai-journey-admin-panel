@@ -1,9 +1,11 @@
 import Elysia from 'elysia';
 import { songTypeServiceListSongTypes } from '../../generated';
-import { createAuthClient } from '../client';
+import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
-export const songTypes = new Elysia({ prefix: '/song-types' }).use(authGuard).get('/', async ({ credential }) => {
-  return resolveApiResponse(await songTypeServiceListSongTypes({ client: createAuthClient(credential) }));
+export const songTypes = new Elysia({ prefix: '/song-types' }).use(authGuard).get('/', async ({ authSession }) => {
+  return withAuthRetry(authSession, async (client) => {
+    return resolveApiResponse(await songTypeServiceListSongTypes({ client }));
+  });
 });

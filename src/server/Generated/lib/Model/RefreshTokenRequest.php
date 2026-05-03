@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginResponse
+ * RefreshTokenRequest
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginResponse Class Doc Comment
+ * RefreshTokenRequest Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class RefreshTokenRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginResponse';
+    protected static $openAPIModelName = 'RefreshTokenRequest';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,7 +57,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'access_token' => 'string',
         'refresh_token_id' => 'string',
         'refresh_token' => 'string'
     ];
@@ -70,7 +69,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'access_token' => 'password',
         'refresh_token_id' => 'uuid',
         'refresh_token' => 'password'
     ];
@@ -81,7 +79,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'access_token' => false,
         'refresh_token_id' => false,
         'refresh_token' => false
     ];
@@ -172,7 +169,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'access_token' => 'accessToken',
         'refresh_token_id' => 'refreshTokenId',
         'refresh_token' => 'refreshToken'
     ];
@@ -183,7 +179,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'access_token' => 'setAccessToken',
         'refresh_token_id' => 'setRefreshTokenId',
         'refresh_token' => 'setRefreshToken'
     ];
@@ -194,7 +189,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'access_token' => 'getAccessToken',
         'refresh_token_id' => 'getRefreshTokenId',
         'refresh_token' => 'getRefreshToken'
     ];
@@ -256,7 +250,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('access_token', $data ?? [], null);
         $this->setIfExists('refresh_token_id', $data ?? [], null);
         $this->setIfExists('refresh_token', $data ?? [], null);
     }
@@ -288,9 +281,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['access_token'] === null) {
-            $invalidProperties[] = "'access_token' can't be null";
-        }
         if ($this->container['refresh_token_id'] === null) {
             $invalidProperties[] = "'refresh_token_id' can't be null";
         }
@@ -311,33 +301,6 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
         return count($this->listInvalidProperties()) === 0;
     }
 
-
-    /**
-     * Gets access_token
-     *
-     * @return string
-     */
-    public function getAccessToken()
-    {
-        return $this->container['access_token'];
-    }
-
-    /**
-     * Sets access_token
-     *
-     * @param string $access_token アクセストークン(JWT)
-     *
-     * @return self
-     */
-    public function setAccessToken($access_token)
-    {
-        if (is_null($access_token)) {
-            throw new \InvalidArgumentException('non-nullable access_token cannot be null');
-        }
-        $this->container['access_token'] = $access_token;
-
-        return $this;
-    }
 
     /**
      * Gets refresh_token_id

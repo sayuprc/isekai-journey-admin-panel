@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginResponse
+ * RefreshTokenResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginResponse Class Doc Comment
+ * RefreshTokenResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class RefreshTokenResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginResponse';
+    protected static $openAPIModelName = 'RefreshTokenResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
