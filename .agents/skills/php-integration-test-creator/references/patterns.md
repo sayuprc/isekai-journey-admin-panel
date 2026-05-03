@@ -1,24 +1,34 @@
 # PHP インテグレーションテストパターン
 
-このプロジェクトでは、ファイルベースのデバッグ用インフラストラクチャを使用したインテグレーションテストを実施しています。
+このプロジェクトでは、実際のデータベースを使用したインテグレーションテストを実施しています。
 
 ## 一般的な構造
 
 - **場所**: `src/server/tests/Integration/` に配置されます。ディレクトリ構造は対象クラスと一致させます。
-- **トレイト**: 常に `Tests\Support\FileRepositoryTransaction` と `Tests\Support\Domain\EntityFactory` を使用します。
+- **基底クラス**: `Tests\Support\DatabaseTestCase` を継承します。
+- **トレイト**: `Tests\Support\Domain\EntityFactory` と `Tests\Support\Domain\EntityStore` を使用します。
 - **テストケース**: Unit テストがある場合、ハッピーパスのみを記述してください。
 
 ## データ準備 (シード)
 
-テスト実行前に必要なデータを `factory` メソッドを使用して準備します。
+テスト実行前に必要なデータを `EntityFactory` で生成し、`EntityStore` または実際のリポジトリで保存します。
 
 ```php
-// エンティティの作成
-$creator = $this->createCreator($this->generateUuid(), '名前');
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
 
-// ファイルストアへの保存 (factory メソッドを使用)
-// 第1引数には DebugInfrastructures 配下のファイルリポジトリクラスを指定します
-$this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creator);
+class MyTest extends DatabaseTestCase
+{
+    use EntityFactory;
+    use EntityStore;
+
+    // EntityStore のヘルパーを使う
+    $creator = $this->createCreator($this->generateUuid(), '名前');
+    $this->storeCreators($creator);
+
+    // または直接リポジトリを使う
+    $this->app->make(CreatorRepository::class)->save($creator);
+}
 ```
 
 ## インスタンス化
@@ -26,27 +36,25 @@ $this->factory(FileCreatorRepository::class, $creator->creatorId->value, $creato
 モックではなく、Laravel のサービスコンテナから実体を解決します。
 
 ```php
-private function getInstance(): CreateInteractor
+private function getInstance(): CreateUseCase
 {
-    return $this->app->make(CreateInteractor::class);
+    return $this->app->make(CreateUseCase::class);
 }
 ```
 
 ## 検証 (アサーション)
 
-戻り値の検証に加え、リポジトリ（ファイルストア）の状態を検証します。
+戻り値の検証に加え、リポジトリの状態を確認します。
 
 ```php
 // 結果の確認
 $this->assertTrue($result->isOk());
 
 // 永続化されたデータの確認
-/** @var array<Song> */
-$songs = $this->getAll(FileSongRepository::class);
+$songs = $this->app->make(SongRepository::class)->all();
 $this->assertCount(1, $songs);
 ```
 
 ## 注意点
 
-- 実際のデータベースではなく `storage/app/tests` 配下のファイルを使用するため、`DebugInfrastructures` のリポジトリクラスを使用してください。
-- `FileRepositoryTransaction` が `setUp` で環境を整え、`tearDown` でファイルを削除します。
+- `DatabaseTestCase` が `DatabaseTransactions` トレイトを持ち、各テスト後にロールバックします。

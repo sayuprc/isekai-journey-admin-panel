@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Auth\Application\UseCase\Authenticate\AuthenticateInputData;
-use Auth\Application\UseCase\Authenticate\AuthenticateUseCaseInterface;
+use Auth\Application\UseCase\Authenticate\AuthenticateUseCase;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate
 {
-    public function __construct(private readonly AuthenticateUseCaseInterface $interactor)
+    public function __construct(private readonly AuthenticateUseCase $useCase)
     {
     }
 
@@ -27,7 +27,7 @@ class Authenticate
             return response()->json(status: 401);
         }
 
-        $result = $this->interactor->handle(new AuthenticateInputData($accessToken));
+        $result = $this->useCase->handle(new AuthenticateInputData($accessToken));
 
         if ($result->isErr()) {
             return response()->json(status: 401);

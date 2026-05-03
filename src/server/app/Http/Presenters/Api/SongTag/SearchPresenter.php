@@ -8,7 +8,7 @@ use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\SongTagSearchResponse;
 use ResultType\Result;
-use Song\Application\UseCase\SearchTag\SearchOutputData;
+use Song\Application\UseCase\Tag\Search\SearchOutputData;
 use Song\Domain\Models\Tag\SongTag;
 use Support\UseCase\Error\UseCaseError;
 

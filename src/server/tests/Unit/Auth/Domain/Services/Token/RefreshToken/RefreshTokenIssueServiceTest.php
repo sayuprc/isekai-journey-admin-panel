@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Domain\Services\Token\RefreshToken;
 
-use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
-use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
-use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
-use Auth\Domain\Models\Token\RefreshToken\RefreshTokenFactoryInterface;
-use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
@@ -33,8 +28,6 @@ class RefreshTokenIssueServiceTest extends TestCase
 
     private MockInterface&RandomTokenGeneratorInterface $randomTokenGenerator;
 
-    private MockInterface&RefreshTokenFactoryInterface $factory;
-
     private MockInterface&TokenHasherInterface $tokenHasher;
 
     #[Override]
@@ -45,7 +38,6 @@ class RefreshTokenIssueServiceTest extends TestCase
         $this->clock = Mockery::mock(ClockInterface::class);
         $this->uuidGenerator = Mockery::mock(UuidGeneratorInterface::class);
         $this->randomTokenGenerator = Mockery::mock(RandomTokenGeneratorInterface::class);
-        $this->factory = Mockery::mock(RefreshTokenFactoryInterface::class);
         $this->tokenHasher = Mockery::mock(TokenHasherInterface::class);
     }
 
@@ -88,23 +80,6 @@ class RefreshTokenIssueServiceTest extends TestCase
             ConsumptionStatus::Unused,
         );
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    RefreshTokenId $id,
-                    AdminUserId $adminUserIdArg,
-                    HashedTokenValue $token,
-                    ExpiredAt $expiredAt,
-                    ConsumptionStatus $status,
-                ): bool => $id->value === $generatedUuid
-                    && $adminUserIdArg->value === $adminUserId
-                    && $token->value === $hashedToken
-                    && $expiredAt->value->getTimestamp() === $expectedExpiredAt->getTimestamp()
-                    && $status === ConsumptionStatus::Unused,
-            )
-            ->andReturn($expectedRefreshToken)
-            ->once();
-
         $result = $this->getInstance()->issue($adminUserId);
 
         $this->assertTrue($result->isOk());
@@ -112,7 +87,7 @@ class RefreshTokenIssueServiceTest extends TestCase
         $this->assertIsArray($unwrapped);
         $this->assertArrayHasKey('token', $unwrapped);
         $this->assertArrayHasKey('plainToken', $unwrapped);
-        $this->assertSame($expectedRefreshToken, $unwrapped['token']);
+        $this->assertEquals($expectedRefreshToken, $unwrapped['token']);
         $this->assertSame($generatedToken, $unwrapped['plainToken']);
     }
 
@@ -122,7 +97,6 @@ class RefreshTokenIssueServiceTest extends TestCase
             $this->clock,
             $this->uuidGenerator,
             $this->randomTokenGenerator,
-            $this->factory,
             $this->tokenHasher,
         );
     }

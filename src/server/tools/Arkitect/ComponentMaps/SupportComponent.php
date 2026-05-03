@@ -13,4 +13,8 @@ enum SupportComponent: string implements ComponentMap
     case Contracts = 'Support\Contracts\*';
 
     case Optional = 'Support\Optional\*';
+
+    case Collection = 'Support\Collection\*';
+
+    case UseCase = 'Support\UseCase\*';
 }

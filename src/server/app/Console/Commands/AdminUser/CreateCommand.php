@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\AdminUser;
 
 use AdminUser\Application\UseCase\Create\CreateInputData;
-use AdminUser\Application\UseCase\Create\CreateUseCaseInterface;
+use AdminUser\Application\UseCase\Create\CreateUseCase;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
@@ -22,7 +22,7 @@ class CreateCommand extends Command
     #[Override]
     protected $description = '管理ユーザーを作成する';
 
-    public function handle(CreateUseCaseInterface $interactor): int
+    public function handle(CreateUseCase $useCase): int
     {
         $name = $this->argument('name');
 
@@ -64,7 +64,7 @@ class CreateCommand extends Command
             }
         }
 
-        $result = $interactor->handle(new CreateInputData($name, $email, $password, $role->value, $permissions));
+        $result = $useCase->handle(new CreateInputData($name, $email, $password, $role->value, $permissions));
 
         if ($result->isErr()) {
             $this->error($this->resolveErrorMessage($result->unwrapErr()));

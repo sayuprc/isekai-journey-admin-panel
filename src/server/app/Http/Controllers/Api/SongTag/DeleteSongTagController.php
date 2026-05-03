@@ -8,18 +8,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\SongTag\DeletePresenter;
 use Illuminate\Http\JsonResponse;
 use Song\Application\UseCase\Tag\Delete\DeleteInputData;
-use Song\Application\UseCase\Tag\Delete\DeleteUseCaseInterface;
+use Song\Application\UseCase\Tag\Delete\DeleteUseCase;
 
 class DeleteSongTagController extends Controller
 {
     public function __construct(
-        private readonly DeleteUseCaseInterface $interactor,
+        private readonly DeleteUseCase $useCase,
         private readonly DeletePresenter $presenter,
     ) {
     }
 
     public function handle(string $songTagId): JsonResponse
     {
-        return $this->presenter->present($this->interactor->handle(new DeleteInputData($songTagId)));
+        return $this->presenter->present($this->useCase->handle(new DeleteInputData($songTagId)));
     }
 }

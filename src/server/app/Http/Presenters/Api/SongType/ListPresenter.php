@@ -8,7 +8,7 @@ use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Client\Model\SongTypeListResponse;
 use ResultType\Result;
-use Song\Application\UseCase\ListType\ListTypeOutputData;
+use Song\Application\UseCase\Type\ListOutputData;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\UseCaseError;
 
@@ -21,12 +21,12 @@ class ListPresenter
     }
 
     /**
-     * @param Result<ListTypeOutputData, UseCaseError> $result
+     * @param Result<ListOutputData, UseCaseError> $result
      */
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (ListTypeOutputData $outputData) => [
+            fn (ListOutputData $outputData) => [
                 new SongTypeListResponse()->setTypes(
                     array_map(
                         fn (SongType $type) => $this->converter->toOpenApiSongType($type),

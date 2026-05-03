@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AdminUser\Domain\Services;
 
 use AdminUser\Domain\Models\AdminUser;
-use AdminUser\Domain\Models\AdminUserFactoryInterface;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -29,7 +28,6 @@ class AdminUserIntegrityService
     public function __construct(
         private readonly ClockInterface $clock,
         private readonly UuidGeneratorInterface $generator,
-        private readonly AdminUserFactoryInterface $factory,
         private readonly AdminUserRepositoryInterface $repository,
     ) {
     }
@@ -88,7 +86,7 @@ class AdminUserIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): AdminUser => $this->factory->create(...$values));
+            ->map(fn (array $values): AdminUser => new AdminUser(...$values));
     }
 
     /**

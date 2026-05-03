@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Domain\Services;
 
-use AdminUser\Domain\Models\AdminUserFactoryInterface;
-use AdminUser\Domain\Models\AdminUserId;
-use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use DateTimeImmutable;
@@ -32,8 +27,6 @@ class AdminUserIntegrityServiceTest extends TestCase
 
     private MockInterface&UuidGeneratorInterface $generator;
 
-    private AdminUserFactoryInterface&MockInterface $factory;
-
     private AdminUserRepositoryInterface&MockInterface $repository;
 
     #[Override]
@@ -43,7 +36,6 @@ class AdminUserIntegrityServiceTest extends TestCase
 
         $this->clock = Mockery::mock(ClockInterface::class);
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->factory = Mockery::mock(AdminUserFactoryInterface::class);
         $this->repository = Mockery::mock(AdminUserRepositoryInterface::class);
     }
 
@@ -69,18 +61,6 @@ class AdminUserIntegrityServiceTest extends TestCase
 
         $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (AdminUserName $arg): bool => $arg->value === $adminUserName),
-                Mockery::on(fn (Email $arg): bool => $arg->value === $email),
-                Mockery::on(fn (CreatedAt $arg): bool => $arg->value === $now),
-                Mockery::on(fn (Role $arg): bool => $arg === $role),
-                Mockery::on(fn (Permissions $arg): bool => $arg->toArray() === $permissions),
-            )
-            ->andReturn($expectedUser)
-            ->once();
-
         $this->repository->shouldReceive('findByEmail')
             ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
             ->andReturnNull()
@@ -89,7 +69,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate($adminUserName, $email, $role->value, $permissions);
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedUser, $result->unwrap());
+        $this->assertEquals($expectedUser, $result->unwrap());
     }
 
     #[Test]
@@ -114,18 +94,6 @@ class AdminUserIntegrityServiceTest extends TestCase
 
         $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
 
-        $this->factory->shouldReceive('create')
-            ->with(
-                Mockery::on(fn (AdminUserId $arg): bool => $arg->value === $uuid),
-                Mockery::on(fn (AdminUserName $arg): bool => $arg->value === $adminUserName),
-                Mockery::on(fn (Email $arg): bool => $arg->value === $email),
-                Mockery::on(fn (CreatedAt $arg): bool => $arg->value === $now),
-                Mockery::on(fn (Role $arg): bool => $arg === $role),
-                Mockery::on(fn (Permissions $arg): bool => $arg->toArray() === $permissions),
-            )
-            ->andReturn($expectedUser)
-            ->once();
-
         $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmail')
@@ -146,7 +114,6 @@ class AdminUserIntegrityServiceTest extends TestCase
         return new AdminUserIntegrityService(
             $this->clock,
             $this->generator,
-            $this->factory,
             $this->repository,
         );
     }

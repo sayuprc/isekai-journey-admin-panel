@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Auth\LoginPresenter;
 use Auth\Application\UseCase\Login\LoginInputData;
-use Auth\Application\UseCase\Login\LoginUseCaseInterface;
+use Auth\Application\UseCase\Login\LoginUseCase;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class LoginController extends Controller
 {
     public function __construct(
         private readonly AuthManager $authManager,
-        private readonly LoginUseCaseInterface $interactor,
+        private readonly LoginUseCase $useCase,
         private readonly LoginPresenter $presenter,
     ) {
     }
@@ -36,6 +36,6 @@ class LoginController extends Controller
             return response()->json(status: 500);
         }
 
-        return $this->presenter->present($this->interactor->handle(new LoginInputData($identifier)));
+        return $this->presenter->present($this->useCase->handle(new LoginInputData($identifier)));
     }
 }

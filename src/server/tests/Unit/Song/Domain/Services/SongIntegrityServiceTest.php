@@ -10,20 +10,11 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Domain\Models\Creators\Arrangers;
-use Song\Domain\Models\Creators\Composers;
-use Song\Domain\Models\Creators\Lyricists;
-use Song\Domain\Models\Description;
-use Song\Domain\Models\SongFactoryInterface;
-use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Song\Domain\Models\Tags\SongTagReferences;
-use Song\Domain\Models\Title;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\ValueObjects\OrderNo;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -32,8 +23,6 @@ class SongIntegrityServiceTest extends TestCase
     use EntityFactory;
 
     private MockInterface&UuidGeneratorInterface $generator;
-
-    private MockInterface&SongFactoryInterface $factory;
 
     private CreatorRepositoryInterface&MockInterface $creatorRepository;
 
@@ -47,7 +36,6 @@ class SongIntegrityServiceTest extends TestCase
         parent::setUp();
 
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->factory = Mockery::mock(SongFactoryInterface::class);
         $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
         $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
         $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
@@ -104,39 +92,6 @@ class SongIntegrityServiceTest extends TestCase
             ->andReturn($currentMaxOrderNo)
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    SongId $songIdArg,
-                    Title $titleArg,
-                    Description $descriptionArg,
-                    SongType $typeArg,
-                    bool $isDisplayArg,
-                    OrderNo $orderNoArg,
-                    SongTagReferences $tagsArg,
-                    Lyricists $lyricistsArg,
-                    Composers $composersArg,
-                    Arrangers $arrangersArg,
-                ): bool => $songIdArg->value === $uuid
-                    && $titleArg->value === $title
-                    && $descriptionArg->value === $description
-                    && $typeArg->value === $type
-                    && $isDisplayArg === $isDisplay
-                    && $orderNoArg->value === $expectedOrderNo
-                    && $tagsArg->count() === 0
-                    && $lyricistsArg->count() === 1
-                    && $lyricistsArg[0]->creatorId->value === $lyricistId
-                    && $lyricistsArg[0]->orderNo->value === 1
-                    && $composersArg->count() === 1
-                    && $composersArg[0]->creatorId->value === $composerId
-                    && $composersArg[0]->orderNo->value === 1
-                    && $arrangersArg->count() === 1
-                    && $arrangersArg[0]->creatorId->value === $arrangerId
-                    && $arrangersArg[0]->orderNo->value === 1,
-            )
-            ->andReturn($expectedSong)
-            ->once();
-
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
@@ -149,7 +104,7 @@ class SongIntegrityServiceTest extends TestCase
         );
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedSong, $result->unwrap());
+        $this->assertEquals($expectedSong, $result->unwrap());
     }
 
     #[Test]
@@ -234,39 +189,6 @@ class SongIntegrityServiceTest extends TestCase
             ])
             ->once();
 
-        $this->factory->shouldReceive('create')
-            ->withArgs(
-                fn (
-                    SongId $songIdArg,
-                    Title $titleArg,
-                    Description $descriptionArg,
-                    SongType $typeArg,
-                    bool $isDisplayArg,
-                    OrderNo $orderNoArg,
-                    SongTagReferences $tagsArg,
-                    Lyricists $lyricistsArg,
-                    Composers $composersArg,
-                    Arrangers $arrangersArg,
-                ): bool => $songIdArg->value === $songId
-                    && $titleArg->value === $title
-                    && $descriptionArg->value === $description
-                    && $typeArg->value === $type
-                    && $isDisplayArg === $isDisplay
-                    && $orderNoArg->value === $orderNo
-                    && $tagsArg->count() === 0
-                    && $lyricistsArg->count() === 1
-                    && $lyricistsArg[0]->creatorId->value === $lyricistId
-                    && $lyricistsArg[0]->orderNo->value === 1
-                    && $composersArg->count() === 1
-                    && $composersArg[0]->creatorId->value === $composerId
-                    && $composersArg[0]->orderNo->value === 1
-                    && $arrangersArg->count() === 1
-                    && $arrangersArg[0]->creatorId->value === $arrangerId
-                    && $arrangersArg[0]->orderNo->value === 1,
-            )
-            ->andReturn($expectedSong)
-            ->once();
-
         $result = $this->getInstance()->prepareForUpdate(
             $songId,
             $title,
@@ -281,7 +203,7 @@ class SongIntegrityServiceTest extends TestCase
         );
 
         $this->assertTrue($result->isOk());
-        $this->assertSame($expectedSong, $result->unwrap());
+        $this->assertEquals($expectedSong, $result->unwrap());
     }
 
     #[Test]
@@ -330,7 +252,6 @@ class SongIntegrityServiceTest extends TestCase
     {
         return new SongIntegrityService(
             $this->generator,
-            $this->factory,
             $this->songRepository,
             $this->creatorRepository,
             $this->songTagRepository,
