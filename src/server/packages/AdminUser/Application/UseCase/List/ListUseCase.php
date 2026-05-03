@@ -6,18 +6,15 @@ namespace AdminUser\Application\UseCase\List;
 
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
-use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class ListUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private AdminUserRepositoryInterface $repository,
     ) {
     }
@@ -27,16 +24,15 @@ readonly class ListUseCase
      */
     public function handle(): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::ReadAdminUser)
+            ->andThen(fn () => $this->listAdminUsers());
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::ReadAdminUser)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<ListOutputData, UseCaseError>
+     */
+    private function listAdminUsers(): Result
+    {
         return new Ok(new ListOutputData($this->repository->all()));
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Update;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -18,8 +17,7 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
@@ -28,7 +26,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class UpdateUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
         private SongTagIntegrityService $service,
@@ -40,16 +38,15 @@ readonly class UpdateUseCase
      */
     public function handle(UpdateInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::WriteSong)
+            ->andThen(fn () => $this->updateSongTag($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::WriteSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<UpdateOutputData, UseCaseError>
+     */
+    private function updateSongTag(UpdateInputData $inputData): Result
+    {
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($inputData, $songTagId): Result {

@@ -88,6 +88,6 @@ class ListUseCaseTest extends TestCase
 
     private function getInstance(AuthContext $context): ListUseCase
     {
-        return new ListUseCase($context, $this->repository);
+        return new ListUseCase($this->authorizer($context), $this->repository);
     }
 }

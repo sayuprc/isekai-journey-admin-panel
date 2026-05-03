@@ -7,10 +7,12 @@ namespace Tests;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
+use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use DateTimeImmutable;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -38,5 +40,10 @@ abstract class TestCase extends BaseTestCase
         ));
 
         return $context;
+    }
+
+    protected function authorizer(?AuthContext $context = null): UseCaseAuthorizer
+    {
+        return new UseCaseAuthorizer(new UseCaseAuthorizationContext($context ?? $this->privilegedContext()));
     }
 }

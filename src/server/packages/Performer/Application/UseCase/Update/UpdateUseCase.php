@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Performer\Application\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use LogicException;
 use Performer\Domain\Models\PerformerRepositoryInterface;
 use Performer\Domain\Services\PerformerIntegrityService;
@@ -17,8 +16,7 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -26,7 +24,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class UpdateUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private TransactionInterface $transaction,
         private PerformerRepositoryInterface $repository,
         private PerformerIntegrityService $service,
@@ -38,16 +36,15 @@ readonly class UpdateUseCase
      */
     public function handle(UpdateInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::WritePerformer)
+            ->andThen(fn () => $this->updatePerformer($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::WritePerformer)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<UpdateOutputData, UseCaseError>
+     */
+    private function updatePerformer(UpdateInputData $inputData): Result
+    {
         return $this->transaction->scope(function () use ($inputData): Result {
             $result = $this->service->prepareForUpdate($inputData->performerId, $inputData->name, $inputData->orderNo);
 

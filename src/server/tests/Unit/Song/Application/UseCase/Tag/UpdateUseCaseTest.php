@@ -133,7 +133,7 @@ class UpdateUseCaseTest extends TestCase
     private function getInstance(): UpdateUseCase
     {
         return new UpdateUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->transaction,
             $this->repository,
             $this->service,

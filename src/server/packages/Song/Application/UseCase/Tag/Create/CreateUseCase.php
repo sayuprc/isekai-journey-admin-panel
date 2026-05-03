@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Create;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -17,8 +16,7 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -26,7 +24,7 @@ use Support\UseCase\Error\UseCaseError;
 readonly class CreateUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
         private SongTagIntegrityService $service,
@@ -38,16 +36,15 @@ readonly class CreateUseCase
      */
     public function handle(CreateInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::WriteSong)
+            ->andThen(fn () => $this->createSongTag($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::WriteSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<CreateOutputData, UseCaseError>
+     */
+    private function createSongTag(CreateInputData $inputData): Result
+    {
         return $this->transaction->scope(function () use ($inputData): Result {
             $result = $this->service->prepareForCreate($inputData->name);
 

@@ -120,7 +120,7 @@ class DeleteUseCaseTest extends TestCase
     private function getInstance(?AuthContext $context = null): DeleteUseCase
     {
         return new DeleteUseCase(
-            $context ?? $this->privilegedContext(),
+            $context ? $this->authorizer($context) : $this->authorizer(),
             $this->repository,
         );
     }

@@ -88,7 +88,7 @@ class SearchUseCaseTest extends TestCase
 
         $context = $this->app->make(AuthContext::class);
 
-        $result = new SearchUseCase($context, $this->repository)->handle(new SearchInputData());
+        $result = new SearchUseCase($this->authorizer($context), $this->repository)->handle(new SearchInputData());
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
@@ -97,7 +97,7 @@ class SearchUseCaseTest extends TestCase
     private function getInstance(): SearchUseCase
     {
         return new SearchUseCase(
-            $this->privilegedContext(),
+            $this->authorizer(),
             $this->repository,
         );
     }

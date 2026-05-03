@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Search;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
-use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Application\Query\SongQueryServiceInterface;
@@ -15,14 +13,13 @@ use Song\Domain\Models\SongType;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
     public function __construct(
-        private AuthContext $context,
+        private UseCaseAuthorizer $authorizer,
         private SongQueryServiceInterface $query,
     ) {
     }
@@ -32,16 +29,15 @@ readonly class SearchUseCase
      */
     public function handle(SearchInputData $inputData): Result
     {
-        $user = $this->context->get();
+        return $this->authorizer->require(Permission::ReadSong)
+            ->andThen(fn () => $this->searchSongs($inputData));
+    }
 
-        if (is_null($user)) {
-            return new Err(new AuthenticationError());
-        }
-
-        if (! $user->can(Permission::ReadSong)) {
-            return new Err(new AuthorizationError());
-        }
-
+    /**
+     * @return Result<SearchOutputData, UseCaseError>
+     */
+    private function searchSongs(SearchInputData $inputData): Result
+    {
         $criteria = new SongSearchCriteria(
             $inputData->title === Arg::Optional
                 ? new None()
