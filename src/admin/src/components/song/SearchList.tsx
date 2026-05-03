@@ -4,8 +4,8 @@ import { client } from '../../utils/client';
 import { ListState } from '../ListState';
 
 const SONG_TYPE_BADGE_CLASS: Record<SongTypeValue, string> = {
-  1: 'badge-primary',
-  2: 'badge-secondary',
+  1: 'badge-warning',
+  2: 'badge-info',
 };
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
