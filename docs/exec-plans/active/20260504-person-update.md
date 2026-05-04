@@ -4,7 +4,7 @@ Person Update 実装
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -36,9 +36,9 @@ planned
 
 ## Steps
 
-1. update use case と input / output を追加する。
-2. controller / presenter / provider / route を更新する。
-3. feature / integration テストで update を確認する。
+1. update use case と input / output を追加した。
+2. controller / presenter / provider / route を更新した。
+3. feature / integration テストで update を確認した。
 
 ## Decision Log
 
@@ -46,5 +46,5 @@ planned
 
 ## Validation
 
-- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/UpdatePersonTest.php`
-- `docker compose exec php ./vendor/bin/paratest tests/Integration/Person/Application/UseCase/Update`
+- `mise run api:ecs app/Http/Controllers/Api/Person/UpdatePersonController.php app/Http/Presenters/Api/Person/UpdatePresenter.php app/Providers/Domain/PersonServiceProvider.php packages/Person/Application/UseCase/Update packages/Person/Domain/Services/PersonIntegrityService.php packages/Person/Route/PersonRouteMap.php routes/admin.php tests/Feature/Api/Person/UpdatePersonTest.php tests/Integration/Person/Application/UseCase/Update/UpdateUseCaseTest.php`
+- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/UpdatePersonTest.php tests/Integration/Person/Application/UseCase/Update/UpdateUseCaseTest.php`
