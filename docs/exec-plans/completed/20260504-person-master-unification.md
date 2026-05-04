@@ -4,7 +4,7 @@ Person マスタ統合
 
 ## Status
 
-blocked
+completed
 
 ## Background
 
@@ -37,15 +37,15 @@ blocked
 
 ## Split Plans
 
-- `feature/person` を土台ブランチとして保持し、`feature/person-foundation`: [20260504-person-foundation.md](/tmp/person/docs/exec-plans/active/20260504-person-foundation.md)
+- `feature/person` を土台ブランチとして保持し、`feature/person-foundation`: [20260504-person-foundation.md](/tmp/person/docs/exec-plans/completed/20260504-person-foundation.md)
   契約、DB、pure domain 定義、生成物のみを扱う。runtime 実装は含めない。
-- `feature/person-create`: [20260504-person-create.md](/tmp/person/docs/exec-plans/active/20260504-person-create.md)
-- `feature/person-read`: [20260504-person-read.md](/tmp/person/docs/exec-plans/active/20260504-person-read.md)
-- `feature/person-update`: [20260504-person-update.md](/tmp/person/docs/exec-plans/active/20260504-person-update.md)
-- `feature/person-delete`: [20260504-person-delete.md](/tmp/person/docs/exec-plans/active/20260504-person-delete.md)
-- `feature/person-song-relations`: [20260504-song-person-relations.md](/tmp/person/docs/exec-plans/active/20260504-song-person-relations.md)
-- `feature/person-admin`: [20260504-person-admin.md](/tmp/person/docs/exec-plans/active/20260504-person-admin.md)
-- `feature/remove-creator-performer`: [20260504-remove-creator-performer.md](/tmp/person/docs/exec-plans/active/20260504-remove-creator-performer.md)
+- `feature/person-create`: [20260504-person-create.md](/tmp/person/docs/exec-plans/completed/20260504-person-create.md)
+- `feature/person-read`: [20260504-person-read.md](/tmp/person/docs/exec-plans/completed/20260504-person-read.md)
+- `feature/person-update`: [20260504-person-update.md](/tmp/person/docs/exec-plans/completed/20260504-person-update.md)
+- `feature/person-delete`: [20260504-person-delete.md](/tmp/person/docs/exec-plans/completed/20260504-person-delete.md)
+- `feature/person-song-relations`: [20260504-song-person-relations.md](/tmp/person/docs/exec-plans/completed/20260504-song-person-relations.md)
+- `feature/person-admin`: [20260504-person-admin.md](/tmp/person/docs/exec-plans/completed/20260504-person-admin.md)
+- `feature/remove-creator-performer`: [20260504-remove-creator-performer.md](/tmp/person/docs/exec-plans/completed/20260504-remove-creator-performer.md)
 
 ## Steps
 
@@ -67,6 +67,7 @@ blocked
 - 2026-05-04: admin 導線は `/persons` を唯一の人物管理画面にし、`/creators` / `/performers` 画面は残さない。削除方針と UI 導線を揃え、重複メンテナンスをなくすため。
 - 2026-05-04: レビュー容易性を優先し、この計画は umbrella plan として保持し、実装は `feature/person` を土台にした 4 本の PR に分割する。
 - 2026-05-04: 最初の `feature/person-foundation` は runtime 実装を含めず、後続 PR が依存する静的定義だけに絞る。CRUD ごとの責務分離を明確にするため。
+- 2026-05-04: `Person` 削除は最終的に楽曲での使用中ガードまで含めて完了とする。API 利用者に DB 例外を漏らさないため。
 
 ## Validation
 
@@ -75,8 +76,10 @@ blocked
 - `mise run admin:generate`
 - `mise run migrate:dry-run`
 - `mise run migrate:testing`
-- `mise run api:test -- src/server/tests/Feature/Api/Person src/server/tests/Feature/Api/Song`
-- `mise run api:test -- src/server/tests/Integration/Person src/server/tests/Integration/Song`
-- `mise run api:test -- src/server/tests/Unit/Person src/server/tests/Unit/Song`
+- `mise run api:test -- tests/Feature/Api/Person`
+- `mise run api:test -- tests/Feature/Api/Song`
+- `mise run api:test -- tests/Integration/Person`
+- `mise run api:test -- tests/Integration/Song`
+- `mise run api:test -- tests/Unit/Person/Application/UseCase/DeleteUseCaseTest.php`
 - `(cd src/admin && bunx tsc --noEmit)`
 - 管理画面で `/persons` から作成した 1 人を楽曲編集画面で複数 role に割り当てても、保存後の取得結果が `personId` と `role` の組み合わせで一致することを手動確認する
