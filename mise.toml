@@ -38,6 +38,7 @@ run = [
   { task = "build" },
   { tasks = ["api:composer:install", "bun:install"] },
   { task = "up" },
+  "lefthook install",
 ]
 
 [tasks.build]
