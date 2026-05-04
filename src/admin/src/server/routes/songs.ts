@@ -15,6 +15,7 @@ import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
+const NullableStringSchema = t.Union([t.String(), t.Null()]);
 
 const CreatorRefSchema = t.Array(t.Object({ creatorId: t.String() }));
 const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
@@ -109,13 +110,14 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .post(
     '/',
-    async ({ body: { title, description, typeValue, isDisplay, lyricists, composers, arrangers, tags }, credential }) => {
+    async ({ body: { title, description, lyricsLink, typeValue, isDisplay, lyricists, composers, arrangers, tags }, credential }) => {
       return resolveApiResponse(
         await songServiceCreateSong({
           client: createAuthClient(credential),
           body: {
             title,
             description,
+            lyricsLink,
             typeValue,
             isDisplay,
             lyricists,
@@ -130,6 +132,7 @@ export const songs = new Elysia({ prefix: '/songs' })
       body: t.Object({
         title: t.String(),
         description: t.String(),
+        lyricsLink: NullableStringSchema,
         typeValue: SongTypeValueSchema,
         isDisplay: t.Boolean(),
         lyricists: CreatorRefSchema,
@@ -141,7 +144,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .put(
     '/:songId',
-    async ({ params: { songId }, body: { title, description, typeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags }, credential }) => {
+    async ({ params: { songId }, body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, composers, lyricists, arrangers, tags }, credential }) => {
       return resolveApiResponse(
         await songServiceUpdateSong({
           client: createAuthClient(credential),
@@ -149,6 +152,7 @@ export const songs = new Elysia({ prefix: '/songs' })
           body: {
             title,
             description,
+            lyricsLink,
             typeValue,
             isDisplay,
             orderNo,
@@ -167,6 +171,7 @@ export const songs = new Elysia({ prefix: '/songs' })
       body: t.Object({
         title: t.String(),
         description: t.String(),
+        lyricsLink: NullableStringSchema,
         typeValue: SongTypeValueSchema,
         isDisplay: t.Boolean(),
         orderNo: t.Number(),

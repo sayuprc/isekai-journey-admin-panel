@@ -67,6 +67,7 @@ readonly class SongRepository implements SongRepositoryInterface
                 'song_id' => $id,
                 'title' => $data['title'],
                 'description' => $data['description'],
+                'lyrics_link' => $data['lyrics_link'],
                 'type' => $data['type'],
                 'is_display' => $data['is_display'],
                 'order_no' => $data['order_no'],
@@ -77,6 +78,7 @@ readonly class SongRepository implements SongRepositoryInterface
             [
                 'title',
                 'description',
+                'lyrics_link',
                 'type',
                 'is_display',
                 'order_no',
@@ -171,6 +173,7 @@ readonly class SongRepository implements SongRepositoryInterface
             $this->converter->toUuid($model->song_id),
             $model->title,
             $model->description,
+            $model->lyrics_link,
             $model->type,
             $model->is_display,
             $model->order_no,

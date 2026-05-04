@@ -34,6 +34,7 @@ class CreateSongTest extends DatabaseTestCase
             ->postJson(route(SongRouteMap::Create), [
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
+                'lyricsLink' => 'https://example.com/lyrics',
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
                 'lyricists' => [['creatorId' => $creator1->creatorId->value]],
@@ -52,6 +53,7 @@ class CreateSongTest extends DatabaseTestCase
                             ->whereType('songId', 'string')
                             ->where('title', '描き続けた君へ')
                             ->where('description', 'オリジナル楽曲')
+                            ->where('lyricsLink', 'https://example.com/lyrics')
                             ->where('type', [
                                 'name' => SongType::Original->getName(),
                                 'value' => SongType::Original->value,
@@ -85,12 +87,31 @@ class CreateSongTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canCreateWithNullLyricsLink(): void
+    {
+        $this->withAuth()
+            ->postJson(route(SongRouteMap::Create), [
+                'title' => '描き続けた君へ',
+                'description' => 'オリジナル楽曲',
+                'lyricsLink' => null,
+                'typeValue' => SongType::Original->value,
+                'isDisplay' => true,
+                'lyricists' => [],
+                'composers' => [],
+                'arrangers' => [],
+                'tags' => [],
+            ])->assertStatus(200)
+            ->assertJsonPath('song.lyricsLink', null);
+    }
+
+    #[Test]
     public function createFailsWithNotExistsSongTag(): void
     {
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
+                'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
                 'lyricists' => [],
@@ -110,6 +131,7 @@ class CreateSongTest extends DatabaseTestCase
             ->postJson(route(SongRouteMap::Create), [
                 'title' => '描き続けた君へ',
                 'description' => 'オリジナル楽曲',
+                'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
                 'lyricists' => [],

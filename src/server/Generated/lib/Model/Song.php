@@ -60,6 +60,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'string',
         'title' => 'string',
         'description' => 'string',
+        'lyrics_link' => 'string',
         'type' => '\OpenAPI\Client\Model\SongType',
         'is_display' => 'bool',
         'order_no' => 'int',
@@ -80,6 +81,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'uuid',
         'title' => null,
         'description' => null,
+        'lyrics_link' => 'uri',
         'type' => null,
         'is_display' => null,
         'order_no' => 'int32',
@@ -98,6 +100,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => false,
         'title' => false,
         'description' => false,
+        'lyrics_link' => true,
         'type' => false,
         'is_display' => false,
         'order_no' => false,
@@ -196,6 +199,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'songId',
         'title' => 'title',
         'description' => 'description',
+        'lyrics_link' => 'lyricsLink',
         'type' => 'type',
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo',
@@ -214,6 +218,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'setSongId',
         'title' => 'setTitle',
         'description' => 'setDescription',
+        'lyrics_link' => 'setLyricsLink',
         'type' => 'setType',
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo',
@@ -232,6 +237,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'song_id' => 'getSongId',
         'title' => 'getTitle',
         'description' => 'getDescription',
+        'lyrics_link' => 'getLyricsLink',
         'type' => 'getType',
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo',
@@ -301,6 +307,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('song_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('lyrics_link', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
@@ -349,6 +356,9 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
 
         if ($this->container['description'] === null) {
             $invalidProperties[] = "'description' can't be null";
+        }
+        if ($this->container['lyrics_link'] === null) {
+            $invalidProperties[] = "'lyrics_link' can't be null";
         }
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
@@ -472,6 +482,40 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable description cannot be null');
         }
         $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets lyrics_link
+     *
+     * @return string
+     */
+    public function getLyricsLink()
+    {
+        return $this->container['lyrics_link'];
+    }
+
+    /**
+     * Sets lyrics_link
+     *
+     * @param string $lyrics_link 歌詞リンク
+     *
+     * @return self
+     */
+    public function setLyricsLink($lyrics_link)
+    {
+        if (is_null($lyrics_link)) {
+            array_push($this->openAPINullablesSetToNull, 'lyrics_link');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('lyrics_link', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['lyrics_link'] = $lyrics_link;
 
         return $this;
     }

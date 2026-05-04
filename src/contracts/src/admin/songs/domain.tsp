@@ -14,10 +14,15 @@ scalar title extends string;
 @doc("楽曲の説明")
 scalar description extends string;
 
+@doc("歌詞リンク")
+@format("uri")
+scalar lyricsLink extends string;
+
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "描き続けた君へ",
   description: "オリジナル楽曲",
+  lyricsLink: "https://example.com/lyrics",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   isDisplay: true,
   orderNo: 1,
@@ -30,6 +35,7 @@ model Song {
   songId: songId;
   title: title;
   description: description;
+  lyricsLink: lyricsLink | null;
   type: SongType;
   isDisplay: boolean;
   orderNo: orderNo;

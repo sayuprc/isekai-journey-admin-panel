@@ -29,6 +29,12 @@ export const CreateForm = () => {
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
+  const normalizeOptionalString = (value: FormDataEntryValue | null): string | null => {
+    const normalized = value?.toString().trim() ?? '';
+
+    return normalized === '' ? null : normalized;
+  };
+
   onMount(async () => {
     const { data } = await client.api.songs['create-form'].get();
     if (data) {
@@ -73,6 +79,7 @@ export const CreateForm = () => {
     const { data, error, status } = await client.api.songs.post({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
+      lyricsLink: normalizeOptionalString(formData.get('lyricsLink')),
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
       isDisplay: formData.get('isDisplay') === 'true',
       arrangers: arrangers(),
@@ -235,6 +242,20 @@ export const CreateForm = () => {
                   classList={{ 'input-error': !!getFieldError('description') }}
                 />
                 <Show when={getFieldError('description')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="label">歌詞リンク</label>
+                <input
+                  type="url"
+                  class="input w-full"
+                  name="lyricsLink"
+                  placeholder="https://example.com/lyrics"
+                  classList={{ 'input-error': !!getFieldError('lyricsLink') }}
+                />
+                <Show when={getFieldError('lyricsLink')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>

@@ -16,6 +16,7 @@ readonly class Song
         public SongId $songId,
         public Title $title,
         public Description $description,
+        public ?LyricsLink $lyricsLink,
         public SongType $type,
         public bool $isDisplay,
         public OrderNo $orderNo,
@@ -36,6 +37,7 @@ readonly class Song
         string $songId,
         string $title,
         string $description,
+        ?string $lyricsLink,
         int $type,
         bool $isDisplay,
         int $orderNo,
@@ -48,6 +50,7 @@ readonly class Song
             SongId::reconstruct($songId),
             Title::reconstruct($title),
             Description::reconstruct($description),
+            is_null($lyricsLink) ? null : LyricsLink::reconstruct($lyricsLink),
             SongType::from($type),
             $isDisplay,
             OrderNo::reconstruct($orderNo),
@@ -59,7 +62,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string}>}
+     * @return array{song_id: string, title: string, description: string, lyrics_link: string|null, type: value-of<SongType>, is_display: bool, order_no: int, lyricists: array<int, array{creator_id: string, order_no: int}>, composers: array<int, array{creator_id: string, order_no: int}>, arrangers: array<int, array{creator_id: string, order_no: int}>, tags: array<int, array{song_tag_id: string}>}
      */
     public function toArray(): array
     {
@@ -67,6 +70,7 @@ readonly class Song
             'song_id' => $this->songId->value,
             'title' => $this->title->value,
             'description' => $this->description->value,
+            'lyrics_link' => $this->lyricsLink?->value,
             'type' => $this->type->value,
             'is_display' => $this->isDisplay,
             'order_no' => $this->orderNo->value,

@@ -54,6 +54,7 @@ class CreateUseCaseTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
+        $lyricsLink = 'https://example.com/lyrics';
         $typeValue = SongType::Original->value;
         $isDisplay = true;
         $orderNo = 1;
@@ -67,12 +68,13 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
                     $title,
                     $description,
+                    $lyricsLink,
                     SongType::from($typeValue),
                     $isDisplay,
                     $orderNo,
@@ -89,6 +91,7 @@ class CreateUseCaseTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
+                    && $arg->lyricsLink?->value === $lyricsLink
                     && $arg->type->value === $typeValue
                     && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
@@ -110,6 +113,7 @@ class CreateUseCaseTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
+                    && $arg->lyricsLink?->value === $lyricsLink
                     && $arg->type->value === $typeValue
                     && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
@@ -128,6 +132,7 @@ class CreateUseCaseTest extends TestCase
                     $song->songId->value,
                     $song->title->value,
                     $song->description->value,
+                    $song->lyricsLink?->value,
                     $song->type->name,
                     $song->type->value,
                     $song->isDisplay,
@@ -143,6 +148,7 @@ class CreateUseCaseTest extends TestCase
             new CreateInputData(
                 $title,
                 $description,
+                $lyricsLink,
                 $typeValue,
                 $isDisplay,
                 [],
@@ -160,6 +166,7 @@ class CreateUseCaseTest extends TestCase
     {
         $title = '曲名';
         $description = '説明';
+        $lyricsLink = null;
         $typeValue = 1;
         $isDisplay = true;
         $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
@@ -172,7 +179,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -180,6 +187,7 @@ class CreateUseCaseTest extends TestCase
             new CreateInputData(
                 $title,
                 $description,
+                $lyricsLink,
                 $typeValue,
                 $isDisplay,
                 [],

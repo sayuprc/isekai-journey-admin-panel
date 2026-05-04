@@ -14,6 +14,7 @@ use Override;
  * @property string          $song_id     楽曲ID
  * @property string          $title       楽曲名
  * @property string          $description 説明
+ * @property string|null     $lyrics_link 歌詞リンク
  * @property int             $type        種別
  * @property bool            $is_display  表示フラグ
  * @property int             $order_no    表示順

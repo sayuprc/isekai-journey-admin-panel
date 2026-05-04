@@ -31,6 +31,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             new CreateInputData(
                 '描き続けた君へ',
                 'オリジナル楽曲',
+                'https://example.com/lyrics',
                 SongType::Original->value,
                 true,
                 [],
@@ -47,6 +48,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $song = array_first($songs);
         $this->assertSame('描き続けた君へ', $song->title);
         $this->assertSame('オリジナル楽曲', $song->description);
+        $this->assertSame('https://example.com/lyrics', $song->lyrics_link);
         $this->assertSame(SongType::Original->value, $song->type);
         $this->assertTrue($song->is_display);
         $this->assertSame(10, $song->order_no);

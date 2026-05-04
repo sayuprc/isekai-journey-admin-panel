@@ -52,6 +52,7 @@ readonly class UpdateUseCase
                 $inputData->songId,
                 $inputData->title,
                 $inputData->description,
+                $inputData->lyricsLink,
                 $inputData->typeValue,
                 $inputData->isDisplay,
                 $inputData->orderNo,

@@ -16,6 +16,7 @@ readonly class UpdateInputData
         public string $songId,
         public string $title,
         public string $description,
+        public ?string $lyricsLink,
         public int $typeValue,
         public bool $isDisplay,
         public int $orderNo,

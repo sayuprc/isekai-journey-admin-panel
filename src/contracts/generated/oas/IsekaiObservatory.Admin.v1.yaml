@@ -1505,6 +1505,7 @@ components:
         - songId
         - title
         - description
+        - lyricsLink
         - type
         - isDisplay
         - orderNo
@@ -1519,6 +1520,10 @@ components:
           $ref: '#/components/schemas/title'
         description:
           $ref: '#/components/schemas/description'
+        lyricsLink:
+          anyOf:
+            - $ref: '#/components/schemas/lyricsLink'
+            - type: 'null'
         type:
           $ref: '#/components/schemas/SongType'
         isDisplay:
@@ -1545,6 +1550,7 @@ components:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
           description: オリジナル楽曲
+          lyricsLink: https://example.com/lyrics
           type:
             name: オリジナル曲
             value: 1
@@ -1580,6 +1586,7 @@ components:
       required:
         - title
         - description
+        - lyricsLink
         - typeValue
         - isDisplay
         - lyricists
@@ -1591,6 +1598,10 @@ components:
           $ref: '#/components/schemas/title'
         description:
           $ref: '#/components/schemas/description'
+        lyricsLink:
+          anyOf:
+            - $ref: '#/components/schemas/lyricsLink'
+            - type: 'null'
         typeValue:
           $ref: '#/components/schemas/SongTypeValue'
         isDisplay:
@@ -1801,6 +1812,7 @@ components:
       required:
         - title
         - description
+        - lyricsLink
         - typeValue
         - isDisplay
         - orderNo
@@ -1813,6 +1825,10 @@ components:
           $ref: '#/components/schemas/title'
         description:
           $ref: '#/components/schemas/description'
+        lyricsLink:
+          anyOf:
+            - $ref: '#/components/schemas/lyricsLink'
+            - type: 'null'
         typeValue:
           $ref: '#/components/schemas/SongTypeValue'
         isDisplay:
@@ -1901,6 +1917,10 @@ components:
       type: string
       format: email
       description: メールアドレス
+    lyricsLink:
+      type: string
+      format: uri
+      description: 歌詞リンク
     orderNo:
       type: integer
       format: int32

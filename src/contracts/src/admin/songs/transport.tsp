@@ -12,6 +12,7 @@ model SongGetResponse {
 model SongCreateRequest {
   title: title;
   description: description;
+  lyricsLink: lyricsLink | null;
   typeValue: SongTypeValue;
   isDisplay: boolean;
   lyricists: RequestLyricist[];
@@ -27,6 +28,7 @@ model SongCreateResponse {
 model SongUpdateRequest {
   title: title;
   description: description;
+  lyricsLink: lyricsLink | null;
   typeValue: SongTypeValue;
   isDisplay: boolean;
   orderNo: orderNo;

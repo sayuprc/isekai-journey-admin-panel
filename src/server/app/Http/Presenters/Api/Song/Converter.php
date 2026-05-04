@@ -19,7 +19,7 @@ readonly class Converter
 {
     public function toOpenApiSong(AssembledSong $song): OpenApiSong
     {
-        return new OpenApiSong()
+        return new OpenApiSong(['lyrics_link' => $song->lyricsLink])
             ->setSongId($song->songId)
             ->setTitle($song->title)
             ->setDescription($song->description)

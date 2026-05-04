@@ -41,6 +41,7 @@ class GetSongTest extends DatabaseTestCase
                 $songId,
                 '描き続けた君へ',
                 'オリジナル楽曲',
+                'https://example.com/lyrics',
                 SongType::Original,
                 true,
                 1,
@@ -62,6 +63,7 @@ class GetSongTest extends DatabaseTestCase
                     'songId' => $songId,
                     'title' => '描き続けた君へ',
                     'description' => 'オリジナル楽曲',
+                    'lyricsLink' => 'https://example.com/lyrics',
                     'type' => [
                         'name' => 'オリジナル曲',
                         'value' => 1,
@@ -77,6 +79,21 @@ class GetSongTest extends DatabaseTestCase
                     ],
                 ],
             ]);
+    }
+
+    #[Test]
+    public function returnsNullLyricsLinkWhenUnset(): void
+    {
+        $songId = $this->generateUuid();
+
+        $this->app->make(SongRepository::class)->save(
+            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], [], [], []),
+        );
+
+        $this->withAuth()
+            ->get(route(SongRouteMap::Get, $songId))
+            ->assertStatus(200)
+            ->assertJsonPath('song.lyricsLink', null);
     }
 
     #[Test]

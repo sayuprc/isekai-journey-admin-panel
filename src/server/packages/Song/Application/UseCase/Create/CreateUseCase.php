@@ -51,6 +51,7 @@ readonly class CreateUseCase
             $result = $this->service->prepareForCreate(
                 $inputData->title,
                 $inputData->description,
+                $inputData->lyricsLink,
                 $inputData->typeValue,
                 $inputData->isDisplay,
                 $inputData->tags,

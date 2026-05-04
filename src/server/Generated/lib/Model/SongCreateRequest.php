@@ -59,6 +59,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static $openAPITypes = [
         'title' => 'string',
         'description' => 'string',
+        'lyrics_link' => 'string',
         'type_value' => '\OpenAPI\Client\Model\SongTypeValue',
         'is_display' => 'bool',
         'lyricists' => '\OpenAPI\Client\Model\RequestLyricist[]',
@@ -77,6 +78,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static $openAPIFormats = [
         'title' => null,
         'description' => null,
+        'lyrics_link' => 'uri',
         'type_value' => null,
         'is_display' => null,
         'lyricists' => null,
@@ -93,6 +95,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static array $openAPINullables = [
         'title' => false,
         'description' => false,
+        'lyrics_link' => true,
         'type_value' => false,
         'is_display' => false,
         'lyricists' => false,
@@ -189,6 +192,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static $attributeMap = [
         'title' => 'title',
         'description' => 'description',
+        'lyrics_link' => 'lyricsLink',
         'type_value' => 'typeValue',
         'is_display' => 'isDisplay',
         'lyricists' => 'lyricists',
@@ -205,6 +209,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static $setters = [
         'title' => 'setTitle',
         'description' => 'setDescription',
+        'lyrics_link' => 'setLyricsLink',
         'type_value' => 'setTypeValue',
         'is_display' => 'setIsDisplay',
         'lyricists' => 'setLyricists',
@@ -221,6 +226,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     protected static $getters = [
         'title' => 'getTitle',
         'description' => 'getDescription',
+        'lyrics_link' => 'getLyricsLink',
         'type_value' => 'getTypeValue',
         'is_display' => 'getIsDisplay',
         'lyricists' => 'getLyricists',
@@ -288,6 +294,7 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('lyrics_link', $data ?? [], null);
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('lyricists', $data ?? [], null);
@@ -332,6 +339,9 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
 
         if ($this->container['description'] === null) {
             $invalidProperties[] = "'description' can't be null";
+        }
+        if ($this->container['lyrics_link'] === null) {
+            $invalidProperties[] = "'lyrics_link' can't be null";
         }
         if ($this->container['type_value'] === null) {
             $invalidProperties[] = "'type_value' can't be null";
@@ -421,6 +431,40 @@ class SongCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable description cannot be null');
         }
         $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets lyrics_link
+     *
+     * @return string
+     */
+    public function getLyricsLink()
+    {
+        return $this->container['lyrics_link'];
+    }
+
+    /**
+     * Sets lyrics_link
+     *
+     * @param string $lyrics_link 歌詞リンク
+     *
+     * @return self
+     */
+    public function setLyricsLink($lyrics_link)
+    {
+        if (is_null($lyrics_link)) {
+            array_push($this->openAPINullablesSetToNull, 'lyrics_link');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('lyrics_link', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['lyrics_link'] = $lyrics_link;
 
         return $this;
     }

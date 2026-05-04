@@ -178,6 +178,7 @@ export type Song = {
     songId: SongId;
     title: Title;
     description: Description;
+    lyricsLink: LyricsLink | null;
     type: SongType;
     isDisplay: boolean;
     orderNo: OrderNo;
@@ -195,6 +196,7 @@ export type SongAttachedTag = {
 export type SongCreateRequest = {
     title: Title;
     description: Description;
+    lyricsLink: LyricsLink | null;
     typeValue: SongTypeValue;
     isDisplay: boolean;
     lyricists: Array<RequestLyricist>;
@@ -293,6 +295,7 @@ export type SongTypeValue = 1 | 2;
 export type SongUpdateRequest = {
     title: Title;
     description: Description;
+    lyricsLink: LyricsLink | null;
     typeValue: SongTypeValue;
     isDisplay: boolean;
     orderNo: OrderNo;
@@ -361,6 +364,11 @@ export type Description = string;
  * メールアドレス
  */
 export type Email = string;
+
+/**
+ * 歌詞リンク
+ */
+export type LyricsLink = string;
 
 /**
  * 表示順
