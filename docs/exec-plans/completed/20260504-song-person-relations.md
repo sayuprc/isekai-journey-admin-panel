@@ -4,7 +4,7 @@ Song Person 関係統合
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -51,6 +51,7 @@ planned
 ## Decision Log
 
 - 2026-05-04: role は song 専用 Enum としてまず導入し、人物一般の role 体系へは広げない。変更面積を song ドメイン内に閉じるため。
+- 2026-05-04: admin の楽曲編集 UI は role ごとに入力欄を分けつつ、保存契約は `personId + role + orderNo` の単一配列に統一する。運用導線と API モデルを分離して保つため。
 
 ## Validation
 
@@ -59,6 +60,6 @@ planned
 - `mise run admin:generate`
 - `mise run migrate:dry-run`
 - `mise run migrate:testing`
-- `mise run api:test -- src/server/tests/Feature/Api/Song`
-- `mise run api:test -- src/server/tests/Integration/Song`
-- `mise run api:test -- src/server/tests/Unit/Song`
+- `mise run api:test -- tests/Feature/Api/Song`
+- `mise run api:test -- tests/Integration/Song`
+- `mise run api:test -- tests/Unit/Song`

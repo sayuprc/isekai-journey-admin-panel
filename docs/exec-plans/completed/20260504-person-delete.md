@@ -25,19 +25,20 @@ completed
 
 ## Non-Scope
 
-- song relation を考慮した利用中チェック
 - `Person` の create / read / update
 - admin の `/persons` 画面追加
 
 ## Acceptance Criteria
 
 - `/admin/v1/persons/{personId}` の DELETE で未使用 `Person` を削除できる
+- 楽曲で使用中の `Person` は business logic error で削除を拒否する
 - 不正 ID は validation error になる
 
 ## Steps
 
 1. delete use case を追加した。
 2. controller / presenter / route を追加した。
+3. 楽曲で使用中の `Person` を削除しようとしたときのガードを追加した。
 3. feature / integration テストで delete を確認した。
 
 ## Decision Log
