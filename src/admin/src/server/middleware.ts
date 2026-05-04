@@ -1,6 +1,13 @@
 import { Elysia, t } from 'elysia';
 import { ApiError } from './errors';
-import { redis } from './redis';
+import {
+  acquireSessionRefreshLock,
+  clearSessionCredential,
+  getSessionCredential,
+  releaseSessionRefreshLock,
+  replaceSessionCredential,
+  waitForSessionCredentialUpdate,
+} from './session';
 import type { Credential } from './types';
 
 export const authGuard = new Elysia({ name: 'authGuard' })
@@ -17,11 +24,13 @@ export const authGuard = new Elysia({ name: 'authGuard' })
       throw new ApiError(401, {});
     }
 
+    const sessionId = String(session.value);
+
     if (!headers['x-csrf-token']) {
       throw new ApiError(403, {});
     }
 
-    const credential = await redis.get<Credential>(`session:${session.value}`);
+    const credential = await getSessionCredential(sessionId);
 
     if (!credential) {
       throw new ApiError(401, {});
@@ -31,6 +40,17 @@ export const authGuard = new Elysia({ name: 'authGuard' })
       throw new ApiError(403, {});
     }
 
-    return { credential };
+    return {
+      authSession: {
+        credential,
+        storeCredential: (nextCredential: Credential) => replaceSessionCredential(sessionId, nextCredential),
+        clearCredential: async () => {
+          await clearSessionCredential(sessionId);
+        },
+        acquireRefreshLock: () => acquireSessionRefreshLock(sessionId),
+        waitForCredentialUpdate: (previousAccessToken: string) => waitForSessionCredentialUpdate(sessionId, previousAccessToken),
+        releaseRefreshLock: () => releaseSessionRefreshLock(sessionId),
+      },
+    };
   })
   .as('scoped');

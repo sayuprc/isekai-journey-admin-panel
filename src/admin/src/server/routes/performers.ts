@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { performerServiceCreatePerformer, performerServiceDeletePerformer, performerServiceGetPerformer, performerServiceSearchPerformers, performerServiceUpdatePerformer } from '../../generated';
 import type { PerPage, PerformerSearchSortBy, SortOrder } from '../../generated';
-import { createAuthClient } from '../client';
+import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
@@ -9,19 +9,21 @@ export const performers = new Elysia({ prefix: '/performers' })
   .use(authGuard)
   .get(
     '/search',
-    async ({ query, credential }) => {
-      return resolveApiResponse(
-        await performerServiceSearchPerformers({
-          client: createAuthClient(credential),
-          query: {
-            name: query.name || undefined,
-            sort: (query.sort ?? 'order_no') as PerformerSearchSortBy,
-            order: (query.order ?? 'asc') as SortOrder,
-            page: query.page ?? 1,
-            per_page: (query.per_page ?? 25) as PerPage,
-          },
-        }),
-      );
+    async ({ query, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(
+          await performerServiceSearchPerformers({
+            client,
+            query: {
+              name: query.name || undefined,
+              sort: (query.sort ?? 'order_no') as PerformerSearchSortBy,
+              order: (query.order ?? 'asc') as SortOrder,
+              page: query.page ?? 1,
+              per_page: (query.per_page ?? 25) as PerPage,
+            },
+          }),
+        );
+      });
     },
     {
       query: t.Object({
@@ -35,8 +37,10 @@ export const performers = new Elysia({ prefix: '/performers' })
   )
   .get(
     '/:performerId',
-    async ({ params: { performerId }, credential }) => {
-      return resolveApiResponse(await performerServiceGetPerformer({ client: createAuthClient(credential), path: { performerId } }));
+    async ({ params: { performerId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await performerServiceGetPerformer({ client, path: { performerId } }));
+      });
     },
     {
       params: t.Object({
@@ -46,8 +50,10 @@ export const performers = new Elysia({ prefix: '/performers' })
   )
   .post(
     '/',
-    async ({ body: { name }, credential }) => {
-      return resolveApiResponse(await performerServiceCreatePerformer({ client: createAuthClient(credential), body: { name } }));
+    async ({ body: { name }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await performerServiceCreatePerformer({ client, body: { name } }));
+      });
     },
     {
       body: t.Object({
@@ -57,8 +63,10 @@ export const performers = new Elysia({ prefix: '/performers' })
   )
   .put(
     '/:performerId',
-    async ({ params: { performerId }, body: { name, orderNo }, credential }) => {
-      return resolveApiResponse(await performerServiceUpdatePerformer({ client: createAuthClient(credential), path: { performerId }, body: { name, orderNo } }));
+    async ({ params: { performerId }, body: { name, orderNo }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await performerServiceUpdatePerformer({ client, path: { performerId }, body: { name, orderNo } }));
+      });
     },
     {
       params: t.Object({
@@ -72,8 +80,10 @@ export const performers = new Elysia({ prefix: '/performers' })
   )
   .delete(
     '/:performerId',
-    async ({ params: { performerId }, credential }) => {
-      resolveApiResponse(await performerServiceDeletePerformer({ client: createAuthClient(credential), path: { performerId } }));
+    async ({ params: { performerId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        resolveApiResponse(await performerServiceDeletePerformer({ client, path: { performerId } }));
+      });
     },
     {
       params: t.Object({

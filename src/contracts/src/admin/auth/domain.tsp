@@ -13,3 +13,6 @@ scalar accessToken extends string;
 @doc("リフレッシュトークン")
 @secret
 scalar refreshToken extends string;
+
+@doc("リフレッシュトークンID")
+scalar refreshTokenId extends uuid;

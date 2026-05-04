@@ -46,7 +46,7 @@ readonly class LoginUseCase
 
             $this->refreshTokenRepository->save($refreshToken);
 
-            return new Ok(new LoginOutputData($accessToken, $plainToken));
+            return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
     }
 

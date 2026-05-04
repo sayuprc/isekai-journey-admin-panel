@@ -77,6 +77,40 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
+  /auth/refresh:
+    post:
+      operationId: AuthenticateService_refresh
+      description: アクセストークン再発行API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
   /creators:
     get:
       operationId: CreatorService_listCreators
@@ -1316,10 +1350,13 @@ components:
       type: object
       required:
         - accessToken
+        - refreshTokenId
         - refreshToken
       properties:
         accessToken:
           $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
     Lyricist:
@@ -1446,6 +1483,29 @@ components:
         - read_song
         - write_song
       description: 権限の値
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshTokenId
+        - refreshToken
+      properties:
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
+    RefreshTokenResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshTokenId
+        - refreshToken
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
     RequestArranger:
       type: object
       required:
@@ -1951,6 +2011,10 @@ components:
       type: string
       format: password
       description: リフレッシュトークン
+    refreshTokenId:
+      type: string
+      format: uuid
+      description: リフレッシュトークンID
     roleName:
       type: string
       minLength: 1

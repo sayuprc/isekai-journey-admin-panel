@@ -75,6 +75,7 @@ export type LoginRequest = {
 
 export type LoginResponse = {
     accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
 };
 
@@ -135,6 +136,17 @@ export type Permission = {
  * 権限の値
  */
 export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_creator' | 'write_creator' | 'read_performer' | 'write_performer' | 'read_song' | 'write_song';
+
+export type RefreshTokenRequest = {
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type RefreshTokenResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
 
 /**
  * The template for picking properties.
@@ -406,6 +418,11 @@ export type PermissionName = string;
 export type RefreshToken = string;
 
 /**
+ * リフレッシュトークンID
+ */
+export type RefreshTokenId = string;
+
+/**
  * 役割名
  */
 export type RoleName = string;
@@ -523,6 +540,47 @@ export type AuthenticateServiceLoginResponses = {
 };
 
 export type AuthenticateServiceLoginResponse = AuthenticateServiceLoginResponses[keyof AuthenticateServiceLoginResponses];
+
+export type AuthenticateServiceRefreshData = {
+    body: RefreshTokenRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/refresh';
+};
+
+export type AuthenticateServiceRefreshErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRefreshError = AuthenticateServiceRefreshErrors[keyof AuthenticateServiceRefreshErrors];
+
+export type AuthenticateServiceRefreshResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RefreshTokenResponse;
+};
+
+export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
 
 export type CreatorServiceListCreatorsData = {
     body?: never;

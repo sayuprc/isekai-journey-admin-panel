@@ -36,9 +36,11 @@ class LoginTest extends DatabaseTestCase
         ])->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) => $json->has('accessToken')
+                    ->has('refreshTokenId')
                     ->has('refreshToken')
                     ->whereAllType([
                         'accessToken' => 'string',
+                        'refreshTokenId' => 'string',
                         'refreshToken' => 'string',
                     ])
                     ->etc(),

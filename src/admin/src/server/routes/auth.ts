@@ -4,7 +4,7 @@ import { authenticateServiceLogin } from '../../generated';
 import { client } from '../client';
 import { SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
-import { redis } from '../redis';
+import { storeSessionCredential } from '../session';
 
 const generateRandomBytes = (): string => {
   return randomBytes(32).toString('base64url');
@@ -18,7 +18,7 @@ export const auth = new Elysia({ prefix: '/auth' }).post(
     const sessionId = generateRandomBytes();
     const csrfToken = generateRandomBytes();
 
-    await redis.set(`session:${sessionId}`, { ...data, csrfToken }, { ex: SESSION_TTL_SECONDS });
+    await storeSessionCredential(sessionId, { ...data, csrfToken });
 
     await session?.set({
       value: sessionId,

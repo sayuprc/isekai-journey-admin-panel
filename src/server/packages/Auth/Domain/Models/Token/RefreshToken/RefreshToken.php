@@ -58,4 +58,15 @@ readonly class RefreshToken
     {
         return $this->status->isAvailable() && ! $this->expiredAt->isExpired($now);
     }
+
+    public function consume(): self
+    {
+        return new self(
+            $this->refreshTokenId,
+            $this->adminUserId,
+            $this->token,
+            $this->expiredAt,
+            ConsumptionStatus::Consumed,
+        );
+    }
 }

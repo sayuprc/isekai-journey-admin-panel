@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth\Application\UseCase\Login;
+namespace Auth\Application\UseCase\Refresh;
 
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 
-readonly class LoginOutputData
+readonly class RefreshOutputData
 {
     public function __construct(
         public AccessToken $accessToken,
