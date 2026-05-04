@@ -52,6 +52,12 @@ export const EditableForm = (props: Props) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
+  const normalizeOptionalString = (value: FormDataEntryValue | null): string | null => {
+    const normalized = value?.toString().trim() ?? '';
+
+    return normalized === '' ? null : normalized;
+  };
+
   createEffect(() => {
     if (props.status === 404) {
       setFlash('データがありません', 'error');
@@ -138,6 +144,7 @@ export const EditableForm = (props: Props) => {
     const { data, error, status } = await client.api.songs({ songId: songId }).put({
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
+      lyricsLink: normalizeOptionalString(formData.get('lyricsLink')),
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
       isDisplay: formData.get('isDisplay') === 'true',
       orderNo: Number(formData.get('orderNo')),
@@ -327,6 +334,21 @@ export const EditableForm = (props: Props) => {
                     classList={{ 'input-error': !!getFieldError('description') }}
                   />
                   <Show when={getFieldError('description')}>
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  </Show>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="label">歌詞リンク</label>
+                  <input
+                    type="url"
+                    class="input w-full"
+                    name="lyricsLink"
+                    value={props.data?.song.lyricsLink ?? ''}
+                    placeholder="https://example.com/lyrics"
+                    classList={{ 'input-error': !!getFieldError('lyricsLink') }}
+                  />
+                  <Show when={getFieldError('lyricsLink')}>
                     {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                   </Show>
                 </div>

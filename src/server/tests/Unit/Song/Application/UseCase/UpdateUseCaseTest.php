@@ -54,6 +54,7 @@ class UpdateUseCaseTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
         $description = 'オリジナル楽曲';
+        $lyricsLink = 'https://example.com/lyrics';
         $typeValue = SongType::Original->value;
         $isDisplay = false;
         $orderNo = 1;
@@ -67,12 +68,13 @@ class UpdateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, $isDisplay, $orderNo, [], $lyricists, $composers, $arrangers)
+            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $lyricists, $composers, $arrangers)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
                     $title,
                     $description,
+                    $lyricsLink,
                     SongType::from($typeValue),
                     $isDisplay,
                     $orderNo,
@@ -89,6 +91,7 @@ class UpdateUseCaseTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
+                    && $arg->lyricsLink?->value === $lyricsLink
                     && $arg->type->value === $typeValue
                     && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
@@ -110,6 +113,7 @@ class UpdateUseCaseTest extends TestCase
                 fn (Song $arg): bool => $arg->songId->value === $songId
                     && $arg->title->value === $title
                     && $arg->description->value === $description
+                    && $arg->lyricsLink?->value === $lyricsLink
                     && $arg->type->value === $typeValue
                     && $arg->isDisplay === $isDisplay
                     && $arg->orderNo->value === $orderNo
@@ -128,6 +132,7 @@ class UpdateUseCaseTest extends TestCase
                     $song->songId->value,
                     $song->title->value,
                     $song->description->value,
+                    $song->lyricsLink?->value,
                     $song->type->name,
                     $song->type->value,
                     $song->isDisplay,
@@ -144,6 +149,7 @@ class UpdateUseCaseTest extends TestCase
                 $songId,
                 $title,
                 $description,
+                $lyricsLink,
                 $typeValue,
                 $isDisplay,
                 $orderNo,
@@ -163,6 +169,7 @@ class UpdateUseCaseTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '曲名';
         $description = '説明';
+        $lyricsLink = null;
         $typeValue = 1;
         $isDisplay = false;
         $orderNo = 1;
@@ -176,7 +183,7 @@ class UpdateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $typeValue, $isDisplay, $orderNo, [], $lyricists, $composers, $arrangers)
+            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $lyricists, $composers, $arrangers)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -185,6 +192,7 @@ class UpdateUseCaseTest extends TestCase
                 $songId,
                 $title,
                 $description,
+                $lyricsLink,
                 $typeValue,
                 $isDisplay,
                 $orderNo,

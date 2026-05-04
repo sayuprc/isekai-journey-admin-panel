@@ -95,6 +95,7 @@ class SongIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
+            null,
             $type,
             $isDisplay,
             [],
@@ -138,6 +139,7 @@ class SongIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
+            null,
             $type,
             $isDisplay,
             [],
@@ -193,6 +195,7 @@ class SongIntegrityServiceTest extends TestCase
             $songId,
             $title,
             $description,
+            null,
             $type,
             $isDisplay,
             $orderNo,
@@ -236,6 +239,7 @@ class SongIntegrityServiceTest extends TestCase
             $songId,
             $title,
             $description,
+            null,
             $type,
             $isDisplay,
             $orderNo,

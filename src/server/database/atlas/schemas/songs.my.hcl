@@ -26,6 +26,11 @@ table "songs" {
     type    = text
     comment = "説明"
   }
+  column "lyrics_link" {
+    null    = true
+    type    = text
+    comment = "歌詞リンク"
+  }
   column "type" {
     null     = false
     type     = tinyint

@@ -25,6 +25,7 @@ use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\LyricsLink;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
@@ -59,25 +60,49 @@ trait EntityFactory
         string $songId,
         string $title,
         string $description,
-        SongType $type,
-        bool $isDisplay = true,
-        int $orderNo = 1,
-        array $tags = [],
-        array $lyricists = [],
-        array $composers = [],
-        array $arrangers = [],
+        mixed $lyricsLinkOrType,
+        mixed $typeOrIsDisplay = null,
+        mixed $isDisplayOrOrderNo = true,
+        mixed $orderNoOrTags = 1,
+        mixed $tagsOrLyricists = [],
+        mixed $lyricistsOrComposers = [],
+        mixed $composersOrArrangers = [],
+        mixed $arrangers = [],
     ): Song {
+        if ($lyricsLinkOrType instanceof SongType) {
+            $lyricsLink = null;
+            $type = $lyricsLinkOrType;
+            $isDisplay = is_bool($typeOrIsDisplay) ? $typeOrIsDisplay : true;
+            $orderNo = is_int($isDisplayOrOrderNo) ? $isDisplayOrOrderNo : 1;
+            $tags = is_array($orderNoOrTags) ? $orderNoOrTags : [];
+            $lyricists = is_array($tagsOrLyricists) ? $tagsOrLyricists : [];
+            $composers = is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [];
+            $arrangerItems = is_array($composersOrArrangers) ? $composersOrArrangers : [];
+        } else {
+            $lyricsLink = is_string($lyricsLinkOrType) ? $lyricsLinkOrType : null;
+            $type = $typeOrIsDisplay;
+            $isDisplay = is_bool($isDisplayOrOrderNo) ? $isDisplayOrOrderNo : true;
+            $orderNo = is_int($orderNoOrTags) ? $orderNoOrTags : 1;
+            $tags = is_array($tagsOrLyricists) ? $tagsOrLyricists : [];
+            $lyricists = is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [];
+            $composers = is_array($composersOrArrangers) ? $composersOrArrangers : [];
+            $arrangerItems = is_array($arrangers) ? $arrangers : [];
+        }
+
+        assert($type instanceof SongType);
+
         return new Song(
             SongId::reconstruct($songId),
             Title::reconstruct($title),
             Description::reconstruct($description),
+            is_null($lyricsLink) ? null : LyricsLink::reconstruct($lyricsLink),
             $type,
             $isDisplay,
             OrderNo::reconstruct($orderNo),
             SongTagReferences::fromArray($tags)->unwrap(),
             Lyricists::fromArray($lyricists)->unwrap(),
             Composers::fromArray($composers)->unwrap(),
-            Arrangers::fromArray($arrangers)->unwrap(),
+            Arrangers::fromArray($arrangerItems)->unwrap(),
         );
     }
 

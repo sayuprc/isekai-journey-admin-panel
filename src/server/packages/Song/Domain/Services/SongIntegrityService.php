@@ -13,6 +13,7 @@ use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
+use Song\Domain\Models\LyricsLink;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -52,6 +53,7 @@ class SongIntegrityService
     public function prepareForCreate(
         string $title,
         string $description,
+        ?string $lyricsLink,
         int $type,
         bool $isDisplay,
         array $tags,
@@ -84,6 +86,7 @@ class SongIntegrityService
             $this->generator->generate(),
             $title,
             $description,
+            $lyricsLink,
             $type,
             $isDisplay,
             // 更新時に同じ値になることを防ぐために +10 で採番
@@ -107,6 +110,7 @@ class SongIntegrityService
         string $songId,
         string $title,
         string $description,
+        ?string $lyricsLink,
         int $type,
         bool $isDisplay,
         int $orderNo,
@@ -140,6 +144,7 @@ class SongIntegrityService
             $songId,
             $title,
             $description,
+            $lyricsLink,
             $type,
             $isDisplay,
             $orderNo,
@@ -157,6 +162,7 @@ class SongIntegrityService
         string $songId,
         string $title,
         string $description,
+        ?string $lyricsLink,
         int $type,
         bool $isDisplay,
         int $orderNo,
@@ -165,10 +171,16 @@ class SongIntegrityService
         Arrangers $arrangers,
         SongTagReferences $tags,
     ): Result {
-        return Result::collect6(
+        $normalizedLyricsLink = $this->normalizeOptionalString($lyricsLink);
+        $lyricsLinkResult = is_null($normalizedLyricsLink)
+            ? new Ok(null)
+            : LyricsLink::create($normalizedLyricsLink);
+
+        return Result::collect7(
             SongId::create($songId),
             Title::create($title),
             Description::create($description),
+            $lyricsLinkResult,
             $this->toSongType($type),
             new Ok($isDisplay),
             OrderNo::create($orderNo),
@@ -256,5 +268,16 @@ class SongIntegrityService
         $founds = $this->songTagRepository->findByIds(...array_values($songTagIds));
 
         return count($songTagIds) === count($founds);
+    }
+
+    private function normalizeOptionalString(?string $value): ?string
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed === '' ? null : $trimmed;
     }
 }
