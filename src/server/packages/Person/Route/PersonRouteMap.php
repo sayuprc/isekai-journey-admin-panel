@@ -13,4 +13,6 @@ enum PersonRouteMap: string
     case Search = 'persons.search';
 
     case Get = 'persons.get';
+
+    case Update = 'persons.update';
 }
