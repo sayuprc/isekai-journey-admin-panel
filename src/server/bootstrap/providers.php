@@ -7,6 +7,7 @@ return [
     App\Providers\DatabaseServiceProvider::class,
     App\Providers\Domain\AuthServiceProvider::class,
     App\Providers\Domain\CreatorServiceProvider::class,
+    App\Providers\Domain\PersonServiceProvider::class,
     App\Providers\Domain\PerformerServiceProvider::class,
     App\Providers\Domain\SongServiceProvider::class,
     App\Providers\Domain\SupportServiceProvider::class,

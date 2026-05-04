@@ -39,6 +39,10 @@ blocked
 
 - `feature/person` を土台ブランチとして保持し、`feature/person-foundation`: [20260504-person-foundation.md](/tmp/person/docs/exec-plans/active/20260504-person-foundation.md)
   契約、DB、pure domain 定義、生成物のみを扱う。runtime 実装は含めない。
+- `feature/person-create`: [20260504-person-create.md](/tmp/person/docs/exec-plans/active/20260504-person-create.md)
+- `feature/person-read`: [20260504-person-read.md](/tmp/person/docs/exec-plans/active/20260504-person-read.md)
+- `feature/person-update`: [20260504-person-update.md](/tmp/person/docs/exec-plans/active/20260504-person-update.md)
+- `feature/person-delete`: [20260504-person-delete.md](/tmp/person/docs/exec-plans/active/20260504-person-delete.md)
 - `feature/person-song-relations`: [20260504-song-person-relations.md](/tmp/person/docs/exec-plans/active/20260504-song-person-relations.md)
 - `feature/person-admin`: [20260504-person-admin.md](/tmp/person/docs/exec-plans/active/20260504-person-admin.md)
 - `feature/remove-creator-performer`: [20260504-remove-creator-performer.md](/tmp/person/docs/exec-plans/active/20260504-remove-creator-performer.md)

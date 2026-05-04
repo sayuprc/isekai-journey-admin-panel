@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Performer\GetPerformerController;
 use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\SearchPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
+use App\Http\Controllers\Api\Person\CreatePersonController;
 use App\Http\Controllers\Api\Song\CreateSongController;
 use App\Http\Controllers\Api\Song\DeleteSongController;
 use App\Http\Controllers\Api\Song\GetSongController;
@@ -37,6 +38,7 @@ use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Performer\Route\PerformerRouteMap;
+use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
@@ -65,6 +67,10 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
                     Route::get('/search', [SearchCreatorController::class, 'handle'])->name(CreatorRouteMap::Search);
                     Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
+                });
+
+                Route::prefix('persons')->group(function () {
+                    Route::post('/', [CreatePersonController::class, 'handle'])->name(PersonRouteMap::Create);
                 });
 
                 Route::prefix('performers')->group(function () {

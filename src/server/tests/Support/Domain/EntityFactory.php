@@ -21,6 +21,9 @@ use DateTimeImmutable;
 use Performer\Domain\Models\Performer;
 use Performer\Domain\Models\PerformerId;
 use Performer\Domain\Models\PerformerName;
+use Person\Domain\Models\Person;
+use Person\Domain\Models\PersonId;
+use Person\Domain\Models\PersonName;
 use Song\Domain\Models\Creators\Arrangers;
 use Song\Domain\Models\Creators\Composers;
 use Song\Domain\Models\Creators\Lyricists;
@@ -52,6 +55,15 @@ trait EntityFactory
         return new Performer(
             PerformerId::reconstruct($performerId),
             PerformerName::reconstruct($name),
+            OrderNo::reconstruct($orderNo),
+        );
+    }
+
+    protected function createPerson(string $personId, string $name, int $orderNo): Person
+    {
+        return new Person(
+            PersonId::reconstruct($personId),
+            PersonName::reconstruct($name),
             OrderNo::reconstruct($orderNo),
         );
     }
