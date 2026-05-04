@@ -88,10 +88,10 @@ jobs:
 
       - name: Composer install
         if: steps.cache-composer.outputs.cache-hit != 'true'
-        run: mise run composer:install
+        run: mise run api:composer:install
 
       - name: Check generate code has diff
-        run: mise run generate:server
+        run: mise run api:generate
 
   arkitect:
     needs: setup
@@ -124,7 +124,7 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Check Layer
-        run: mise run arkitect
+        run: mise run api:arkitect
 
   ecs:
     needs: setup
@@ -157,7 +157,7 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Run ecs
-        run: mise run ecs
+        run: mise run api:ecs
 
   phpstan:
     needs: setup
@@ -190,7 +190,7 @@ jobs:
           key: ${{ needs.setup.outputs.vendor-key }}
 
       - name: Run PHPStan
-        run: mise run phpstan
+        run: mise run api:phpstan
 
   phpunit:
     needs: setup
@@ -243,4 +243,4 @@ jobs:
         run: mise run migrate:local --auto-approve
 
       - name: Run PHPUnit
-        run: mise run test:all
+        run: mise run api:test:all

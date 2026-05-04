@@ -41,7 +41,7 @@
 1. ベースブランチを最新化する
 2. タスクごとに `git worktree add <path> <branch>` で worktree を作る
 3. 各 worktree で `mise run worktree:init` を実行する
-4. 必要に応じて `mise run up`、`mise run dev:admin`、`mise run dev:viewer` を起動する
+4. 必要に応じて `mise run up`、`mise run admin:dev`、`mise run viewer:dev` を起動する
 5. `mise run worktree:status` で URL とポートの衝突がないことを確認する
 6. タスクごとの局所検証を回しながら実装を進める
 7. 依存元の変更が進んだら、他 worktree はベースブランチまたは owner worktree の結果を再取り込みする
@@ -77,7 +77,7 @@
 ## Minimum Validation
 
 - `src/contracts`: `mise run contract:format:check`, `mise run contract:test`
-- `src/server`: `mise run ecs`, `mise run phpstan`, `mise run test`
+- `src/server`: `mise run api:ecs`, `mise run api:phpstan`, `mise run api:test`
 - `src/admin`: `cd src && bun --filter admin lint:check`, `cd src && bun --filter admin build`
 - `src/viewer`: `cd src && bun --filter viewer lint:check`, `cd src && bun --filter viewer build`
 - 開発基盤: `mise run worktree:status` と対象サービスの起動確認

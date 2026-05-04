@@ -55,11 +55,11 @@ run = "docker compose up -d php"
 description = "CI 環境でテスト用コンテナを起動する"
 run = "docker compose up -d php mysql"
 
-[tasks."composer:install"]
+[tasks."api:composer:install"]
 description = "CI 環境で composer install を実行する"
 run = "docker compose exec -T php composer install -n --prefer-dist"
 
-[tasks."generate:server"]
+[tasks."api:generate"]
 description = "CI 環境でコード生成を行い、差分をチェックする"
 run = '''
 docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
@@ -90,7 +90,7 @@ run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --auto-appr
 [tasks.migrate.env]
 _.file = "src/server/.env"
 
-[tasks."generate:client:admin"]
+[tasks."admin:generate"]
 description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
 dir = "src"
 run = '''
