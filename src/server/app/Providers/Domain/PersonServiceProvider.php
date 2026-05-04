@@ -7,6 +7,7 @@ namespace App\Providers\Domain;
 use Illuminate\Http\Request;
 use Override;
 use Person\Application\UseCase\Create\CreateInputData;
+use Person\Application\UseCase\Search\SearchInputData;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Infrastructures\PersonRepository;
 
@@ -16,6 +17,12 @@ class PersonServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
+
+        $this->app->bind(SearchInputData::class, function (): SearchInputData {
+            $request = $this->app->make(Request::class);
+
+            return $this->getMapper()->map(SearchInputData::class, $request->query());
+        });
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {
             $request = $this->app->make(Request::class);
