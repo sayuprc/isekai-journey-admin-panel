@@ -26,5 +26,7 @@ interface PersonRepositoryInterface
 
     public function save(Person $person): Person;
 
+    public function delete(PersonId $personId): void;
+
     public function getMaxOrderNo(): int;
 }
