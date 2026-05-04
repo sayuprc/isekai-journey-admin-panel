@@ -71,6 +71,19 @@ class PersonRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function deleting(): void
+    {
+        $repository = $this->getInstance();
+
+        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+
+        $repository->save($person);
+        $repository->delete($person->personId);
+
+        $this->assertNull($repository->find($person->personId));
+    }
+
+    #[Test]
     public function searchWithoutName(): void
     {
         $repository = $this->getInstance();

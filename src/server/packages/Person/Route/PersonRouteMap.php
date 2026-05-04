@@ -15,4 +15,6 @@ enum PersonRouteMap: string
     case Get = 'persons.get';
 
     case Update = 'persons.update';
+
+    case Delete = 'persons.delete';
 }

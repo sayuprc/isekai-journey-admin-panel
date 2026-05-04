@@ -4,7 +4,7 @@ Person Delete 実装
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -36,9 +36,9 @@ planned
 
 ## Steps
 
-1. delete use case を追加する。
-2. controller / presenter / route を追加する。
-3. feature / integration テストで delete を確認する。
+1. delete use case を追加した。
+2. controller / presenter / route を追加した。
+3. feature / integration テストで delete を確認した。
 
 ## Decision Log
 
@@ -46,5 +46,5 @@ planned
 
 ## Validation
 
-- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/DeletePersonTest.php`
-- `docker compose exec php ./vendor/bin/paratest tests/Integration/Person/Application/UseCase/Delete`
+- `mise run api:ecs app/Http/Controllers/Api/Person/DeletePersonController.php app/Http/Presenters/Api/Person/DeletePresenter.php packages/Person/Application/UseCase/Delete packages/Person/Domain/Models/PersonRepositoryInterface.php packages/Person/Infrastructures/PersonRepository.php packages/Person/Route/PersonRouteMap.php routes/admin.php tests/Feature/Api/Person/DeletePersonTest.php tests/Integration/Person/Application/UseCase/Delete/DeleteUseCaseTest.php tests/Integration/Person/Infrastructures/PersonRepositoryTest.php`
+- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/DeletePersonTest.php tests/Integration/Person/Application/UseCase/Delete/DeleteUseCaseTest.php tests/Integration/Person/Infrastructures/PersonRepositoryTest.php`

@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Performer\ListPerformerController;
 use App\Http\Controllers\Api\Performer\SearchPerformerController;
 use App\Http\Controllers\Api\Performer\UpdatePerformerController;
 use App\Http\Controllers\Api\Person\CreatePersonController;
+use App\Http\Controllers\Api\Person\DeletePersonController;
 use App\Http\Controllers\Api\Person\GetPersonController;
 use App\Http\Controllers\Api\Person\ListPersonController;
 use App\Http\Controllers\Api\Person\SearchPersonController;
@@ -77,6 +78,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::post('/', [CreatePersonController::class, 'handle'])->name(PersonRouteMap::Create);
                     Route::get('/', [ListPersonController::class, 'handle'])->name(PersonRouteMap::List);
                     Route::put('/{personId}', [UpdatePersonController::class, 'handle'])->name(PersonRouteMap::Update);
+                    Route::delete('/{personId}', [DeletePersonController::class, 'handle'])->name(PersonRouteMap::Delete);
                     Route::get('/search', [SearchPersonController::class, 'handle'])->name(PersonRouteMap::Search);
                     Route::get('/{personId}', [GetPersonController::class, 'handle'])->name(PersonRouteMap::Get);
                 });

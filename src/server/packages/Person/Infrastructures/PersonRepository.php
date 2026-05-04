@@ -113,6 +113,12 @@ readonly class PersonRepository implements PersonRepositoryInterface
     }
 
     #[Override]
+    public function delete(PersonId $personId): void
+    {
+        ModelsPerson::query()->where('person_id', $this->converter->toBin($personId->value))->delete();
+    }
+
+    #[Override]
     public function getMaxOrderNo(): int
     {
         /** @var int */
