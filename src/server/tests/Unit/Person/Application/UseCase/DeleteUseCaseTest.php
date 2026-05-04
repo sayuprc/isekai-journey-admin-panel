@@ -11,8 +11,8 @@ use Person\Application\UseCase\Delete\DeleteInputData;
 use Person\Application\UseCase\Delete\DeleteUseCase;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
+use Person\Domain\Services\PersonUsageCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Domain\Models\SongRepositoryInterface;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Tests\TestCase;
@@ -21,7 +21,7 @@ class DeleteUseCaseTest extends TestCase
 {
     private MockInterface&PersonRepositoryInterface $repository;
 
-    private MockInterface&SongRepositoryInterface $songRepository;
+    private MockInterface&PersonUsageCheckerInterface $usageChecker;
 
     #[Override]
     protected function setUp(): void
@@ -29,13 +29,13 @@ class DeleteUseCaseTest extends TestCase
         parent::setUp();
 
         $this->repository = Mockery::mock(PersonRepositoryInterface::class);
-        $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
+        $this->usageChecker = Mockery::mock(PersonUsageCheckerInterface::class);
     }
 
     #[Test]
     public function deletePerson(): void
     {
-        $this->songRepository->shouldReceive('isPersonUsed')
+        $this->usageChecker->shouldReceive('isUsed')
             ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(false)
             ->once();
@@ -52,7 +52,7 @@ class DeleteUseCaseTest extends TestCase
     #[Test]
     public function cannotDeleteWhenUsedInSong(): void
     {
-        $this->songRepository->shouldReceive('isPersonUsed')
+        $this->usageChecker->shouldReceive('isUsed')
             ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(true)
             ->once();
@@ -70,7 +70,7 @@ class DeleteUseCaseTest extends TestCase
     #[Test]
     public function invalidPersonId(): void
     {
-        $this->songRepository->shouldNotReceive('isPersonUsed');
+        $this->usageChecker->shouldNotReceive('isUsed');
         $this->repository->shouldNotReceive('delete');
 
         $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
@@ -84,7 +84,7 @@ class DeleteUseCaseTest extends TestCase
         return new DeleteUseCase(
             $this->authorizer(),
             $this->repository,
-            $this->songRepository,
+            $this->usageChecker,
         );
     }
 }
