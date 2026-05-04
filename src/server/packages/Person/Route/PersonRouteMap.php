@@ -7,4 +7,10 @@ namespace Person\Route;
 enum PersonRouteMap: string
 {
     case Create = 'persons.create';
+
+    case List = 'persons.list';
+
+    case Search = 'persons.search';
+
+    case Get = 'persons.get';
 }

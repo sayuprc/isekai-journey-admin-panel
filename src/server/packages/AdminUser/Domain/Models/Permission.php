@@ -14,6 +14,8 @@ enum Permission: string
 
     case WriteCreator = 'write_creator';
 
+    case ReadPerson = 'read_person';
+
     case WritePerson = 'write_person';
 
     case ReadPerformer = 'read_performer';
@@ -31,6 +33,7 @@ enum Permission: string
             self::WriteAdminUser => '管理ユーザー編集',
             self::ReadCreator => 'クリエイター閲覧',
             self::WriteCreator => 'クリエイター編集',
+            self::ReadPerson => '人物閲覧',
             self::WritePerson => '人物編集',
             self::ReadPerformer => '共演者閲覧',
             self::WritePerformer => '共演者編集',

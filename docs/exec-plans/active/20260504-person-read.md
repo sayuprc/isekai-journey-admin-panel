@@ -4,7 +4,7 @@ Person Read 実装
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -36,10 +36,10 @@ planned
 
 ## Steps
 
-1. `Person` の criteria と list / search / get use case を追加する。
-2. controller / presenter を追加する。
-3. route と provider を read 導線へ拡張する。
-4. feature / integration テストで list / search / get を確認する。
+1. `Person` の criteria と list / search / get use case を追加した。
+2. controller / presenter を追加した。
+3. route と provider を read 導線へ拡張した。
+4. feature / integration テストで list / search / get を確認した。
 
 ## Decision Log
 
@@ -47,6 +47,5 @@ planned
 
 ## Validation
 
-- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/ListPersonTest.php`
-- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/SearchPersonTest.php`
-- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/GetPersonTest.php`
+- `mise run api:ecs app/Http/Controllers/Api/Person app/Http/Presenters/Api/Person app/Providers/Domain/PersonServiceProvider.php packages/Person routes/admin.php tests/Feature/Api/Person tests/Integration/Person tests/Support/Domain/EntityStore.php`
+- `docker compose exec php php artisan test --env=testing tests/Feature/Api/Person/ListPersonTest.php tests/Feature/Api/Person/SearchPersonTest.php tests/Feature/Api/Person/GetPersonTest.php tests/Integration/Person/Application/UseCase/List/ListUseCaseTest.php tests/Integration/Person/Application/UseCase/Search/SearchUseCaseTest.php tests/Integration/Person/Application/UseCase/Get/GetUseCaseTest.php tests/Integration/Person/Infrastructures/PersonRepositoryTest.php`
