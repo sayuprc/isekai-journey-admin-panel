@@ -38,6 +38,7 @@ blocked
 ## Split Plans
 
 - `feature/person` を土台ブランチとして保持し、`feature/person-foundation`: [20260504-person-foundation.md](/tmp/person/docs/exec-plans/active/20260504-person-foundation.md)
+  契約、DB、pure domain 定義、生成物のみを扱う。runtime 実装は含めない。
 - `feature/person-song-relations`: [20260504-song-person-relations.md](/tmp/person/docs/exec-plans/active/20260504-song-person-relations.md)
 - `feature/person-admin`: [20260504-person-admin.md](/tmp/person/docs/exec-plans/active/20260504-person-admin.md)
 - `feature/remove-creator-performer`: [20260504-remove-creator-performer.md](/tmp/person/docs/exec-plans/active/20260504-remove-creator-performer.md)
@@ -61,6 +62,7 @@ blocked
 - 2026-05-04: 楽曲 API の公開契約も `creatorId` 系の分割配列を維持せず、`personId` と `role` を持つ単一構造へ更新する。今回の変更は破壊的だが、データモデルと API の不整合を残さないことを優先する。
 - 2026-05-04: admin 導線は `/persons` を唯一の人物管理画面にし、`/creators` / `/performers` 画面は残さない。削除方針と UI 導線を揃え、重複メンテナンスをなくすため。
 - 2026-05-04: レビュー容易性を優先し、この計画は umbrella plan として保持し、実装は `feature/person` を土台にした 4 本の PR に分割する。
+- 2026-05-04: 最初の `feature/person-foundation` は runtime 実装を含めず、後続 PR が依存する静的定義だけに絞る。CRUD ごとの責務分離を明確にするため。
 
 ## Validation
 
