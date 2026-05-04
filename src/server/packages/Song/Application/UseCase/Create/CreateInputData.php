@@ -7,8 +7,8 @@ namespace Song\Application\UseCase\Create;
 readonly class CreateInputData
 {
     /**
-     * @param list<array{songTagId: string}>                            $tags
-     * @param list<array{personId: string, role: string, orderNo: int}> $persons
+     * @param list<array{songTagId: string}>                         $tags
+     * @param list<array{personId: string, role: int, orderNo: int}> $persons
      */
     public function __construct(
         public string $title,

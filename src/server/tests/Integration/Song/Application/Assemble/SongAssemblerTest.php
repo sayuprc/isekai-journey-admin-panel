@@ -6,6 +6,7 @@ namespace Tests\Integration\Song\Application\Assemble;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -38,9 +39,9 @@ class SongAssemblerTest extends DatabaseTestCase
             $orderNo,
             [],
             [
-                ['personId' => $lyricistId, 'role' => 'lyricist', 'orderNo' => 1],
-                ['personId' => $composerId, 'role' => 'composer', 'orderNo' => 2],
-                ['personId' => $arrangerId, 'role' => 'arranger', 'orderNo' => 3],
+                ['personId' => $lyricistId, 'role' => 1, 'orderNo' => 1],
+                ['personId' => $composerId, 'role' => 2, 'orderNo' => 2],
+                ['personId' => $arrangerId, 'role' => 3, 'orderNo' => 3],
             ],
         );
 
@@ -61,11 +62,11 @@ class SongAssemblerTest extends DatabaseTestCase
         $this->assertCount(3, $assembled->persons);
         $this->assertSame($lyricistId, $assembled->persons[0]->personId);
         $this->assertSame('作詞者', $assembled->persons[0]->name);
-        $this->assertSame('lyricist', $assembled->persons[0]->role);
+        $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
         $this->assertSame($composerId, $assembled->persons[1]->personId);
-        $this->assertSame('composer', $assembled->persons[1]->role);
+        $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);
         $this->assertSame($arrangerId, $assembled->persons[2]->personId);
-        $this->assertSame('arranger', $assembled->persons[2]->role);
+        $this->assertSame(SongPersonRole::Arranger, $assembled->persons[2]->role);
     }
 
     private function getInstance(): SongAssembler

@@ -13,6 +13,7 @@ use Person\Domain\Models\PersonName;
 use Person\Domain\Models\PersonRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Domain\ValueObjects\OrderNo;
@@ -54,9 +55,9 @@ class SongAssemblerTest extends TestCase
             $orderNo,
             [],
             [
-                ['personId' => $lyricistId = $this->generateUuid(), 'role' => 'lyricist', 'orderNo' => 1],
-                ['personId' => $composerId = $this->generateUuid(), 'role' => 'composer', 'orderNo' => 2],
-                ['personId' => $arrangerId = $this->generateUuid(), 'role' => 'arranger', 'orderNo' => 3],
+                ['personId' => $lyricistId = $this->generateUuid(), 'role' => 1, 'orderNo' => 1],
+                ['personId' => $composerId = $this->generateUuid(), 'role' => 2, 'orderNo' => 2],
+                ['personId' => $arrangerId = $this->generateUuid(), 'role' => 3, 'orderNo' => 3],
             ],
         );
 
@@ -87,11 +88,11 @@ class SongAssemblerTest extends TestCase
         $this->assertCount(3, $assembled->persons);
         $this->assertSame($lyricistId, $assembled->persons[0]->personId);
         $this->assertSame('作詞者', $assembled->persons[0]->name);
-        $this->assertSame('lyricist', $assembled->persons[0]->role);
+        $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
         $this->assertSame($composerId, $assembled->persons[1]->personId);
-        $this->assertSame('composer', $assembled->persons[1]->role);
+        $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);
         $this->assertSame($arrangerId, $assembled->persons[2]->personId);
-        $this->assertSame('arranger', $assembled->persons[2]->role);
+        $this->assertSame(SongPersonRole::Arranger, $assembled->persons[2]->role);
     }
 
     #[Test]

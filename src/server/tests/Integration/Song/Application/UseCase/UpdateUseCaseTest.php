@@ -39,9 +39,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 1,
                 [],
                 [
-                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
             ),
         );
@@ -57,8 +57,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 2,
                 [],
                 [
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 1],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 2],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 1],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
             ),
         );
@@ -76,9 +76,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame(2, $song->order_no);
         $this->assertCount(2, $song->persons);
         $this->assertSame($person2->personId->value, $this->toUuid($song->persons[0]->person_id));
-        $this->assertSame('composer', $song->persons[0]->role);
+        $this->assertSame(2, $song->persons[0]->role);
         $this->assertSame($person3->personId->value, $this->toUuid($song->persons[1]->person_id));
-        $this->assertSame('arranger', $song->persons[1]->role);
+        $this->assertSame(3, $song->persons[1]->role);
     }
 
     private function getInstance(): UpdateUseCase

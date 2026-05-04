@@ -26,6 +26,7 @@ use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
@@ -127,7 +128,7 @@ trait EntityFactory
      * @param list<array<string, mixed>> $arrangersOrLegacyComposers
      * @param list<array<string, mixed>> $legacyArrangers
      *
-     * @return list<array{personId: string, role: string, orderNo: int}>
+     * @return list<array{personId: string, role: int, orderNo: int}>
      */
     private function normalizeSongPersons(
         array $personsOrLyricists,
@@ -136,21 +137,21 @@ trait EntityFactory
         array $legacyArrangers,
     ): array {
         if ($personsOrLyricists === [] || array_key_exists('personId', $personsOrLyricists[0] ?? [])) {
-            /** @var list<array{personId: string, role: string, orderNo: int}> */
+            /** @var list<array{personId: string, role: int, orderNo: int}> */
             return $personsOrLyricists;
         }
 
-        $toPerson = fn (array $item, string $role): array => [
+        $toPerson = fn (array $item, SongPersonRole $role): array => [
             'personId' => (string)$item['creatorId'],
-            'role' => $role,
+            'role' => $role->value,
             'orderNo' => (int)$item['orderNo'],
         ];
 
         return [
-            ...array_map(fn (array $item): array => $toPerson($item, 'lyricist'), $personsOrLyricists),
-            ...array_map(fn (array $item): array => $toPerson($item, 'composer'), $composersOrLegacyLyricists),
-            ...array_map(fn (array $item): array => $toPerson($item, 'arranger'), $arrangersOrLegacyComposers),
-            ...array_map(fn (array $item): array => $toPerson($item, 'arranger'), $legacyArrangers),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Lyricist), $personsOrLyricists),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Composer), $composersOrLegacyLyricists),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $arrangersOrLegacyComposers),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $legacyArrangers),
         ];
     }
 

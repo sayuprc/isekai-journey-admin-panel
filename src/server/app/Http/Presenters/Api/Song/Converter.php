@@ -7,6 +7,7 @@ namespace App\Http\Presenters\Api\Song;
 use OpenAPI\Client\Model\Song as OpenApiSong;
 use OpenAPI\Client\Model\SongAttachedTag as OpenApiSongAttachedTag;
 use OpenAPI\Client\Model\SongPerson as OpenApiSongPerson;
+use OpenAPI\Client\Model\SongPersonRole as OpenApiSongPersonRole;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
 use OpenAPI\Client\Model\SongTypeValue;
 use Song\Application\Assemble\AssembledPerson;
@@ -40,7 +41,7 @@ readonly class Converter
         return new OpenApiSongPerson()
             ->setPersonId($person->personId)
             ->setName($person->name)
-            ->setRole($person->role)
+            ->setRole(OpenApiSongPersonRole::from($person->role->value))
             ->setOrderNo($person->orderNo);
     }
 

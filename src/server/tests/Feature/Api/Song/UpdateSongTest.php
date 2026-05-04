@@ -47,9 +47,9 @@ class UpdateSongTest extends DatabaseTestCase
                 1,
                 [['songTagId' => $oldTag->songTagId->value]],
                 [
-                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
             ),
         );
@@ -63,8 +63,8 @@ class UpdateSongTest extends DatabaseTestCase
                 'isDisplay' => false,
                 'orderNo' => 2,
                 'persons' => [
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 1],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 2],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 1],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
                 'tags' => [['songTagId' => $newTag->songTagId->value]],
             ])->assertStatus(200)
@@ -84,13 +84,13 @@ class UpdateSongTest extends DatabaseTestCase
                         [
                             'personId' => $person2->personId->value,
                             'name' => $person2->name->value,
-                            'role' => 'composer',
+                            'role' => 2,
                             'orderNo' => 1,
                         ],
                         [
                             'personId' => $person3->personId->value,
                             'name' => $person3->name->value,
-                            'role' => 'arranger',
+                            'role' => 3,
                             'orderNo' => 2,
                         ],
                     ],
@@ -163,9 +163,9 @@ class UpdateSongTest extends DatabaseTestCase
                 1,
                 [],
                 [
-                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
             ),
         );
@@ -180,8 +180,8 @@ class UpdateSongTest extends DatabaseTestCase
                 'isDisplay' => false,
                 'orderNo' => 2,
                 'persons' => [
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 1],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 2],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 1],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
                 'tags' => [],
             ])->assertStatus(200)
@@ -201,13 +201,13 @@ class UpdateSongTest extends DatabaseTestCase
                         [
                             'personId' => $person2->personId->value,
                             'name' => $person2->name->value,
-                            'role' => 'composer',
+                            'role' => 2,
                             'orderNo' => 1,
                         ],
                         [
                             'personId' => $person3->personId->value,
                             'name' => $person3->name->value,
-                            'role' => 'arranger',
+                            'role' => 3,
                             'orderNo' => 2,
                         ],
                     ],

@@ -104,9 +104,9 @@ readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * @param array{person_id: string, role: string, order_no: int} $row
+     * @param array{person_id: string, role: int, order_no: int} $row
      *
-     * @return array{song_id: string, person_id: string, role: string, order_no: int}
+     * @return array{song_id: string, person_id: string, role: int, order_no: int}
      */
     private function toPersonRecord(string $binId, array $row): array
     {
@@ -155,7 +155,7 @@ readonly class SongRepository implements SongRepositoryInterface
             'songTagId' => $this->converter->toUuid($row->song_tag_id),
         ];
 
-        /** @var list<array{personId: string, role: string, orderNo: int}> */
+        /** @var list<array{personId: string, role: int, orderNo: int}> */
         $persons = $model->persons->sortBy('order_no')->map($fn)->values()->all();
         /** @var list<array{songTagId: string}> */
         $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));

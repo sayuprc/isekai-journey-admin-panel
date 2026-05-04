@@ -27,7 +27,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
- * @phpstan-type person array{personId: string, role: string, orderNo: int}
+ * @phpstan-type person array{personId: string, role: int, orderNo: int}
  * @phpstan-type songTag array{songTagId: string}
  */
 class SongIntegrityService

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Song\Application\Assemble;
 
+use Song\Domain\Models\Persons\SongPersonRole;
+
 readonly class AssembledPerson
 {
     public function __construct(
         public string $personId,
         public string $name,
-        public string $role,
+        public SongPersonRole $role,
         public int $orderNo,
     ) {
     }

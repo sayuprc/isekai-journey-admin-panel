@@ -50,9 +50,9 @@ class GetSongTest extends DatabaseTestCase
                     ['songTagId' => $tagB->songTagId->value],
                 ],
                 [
-                    ['personId' => $lyricistId, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $composerId, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $arrangerId, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $lyricistId, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $composerId, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $arrangerId, 'role' => 3, 'orderNo' => 3],
                 ],
             ),
         );
@@ -73,9 +73,9 @@ class GetSongTest extends DatabaseTestCase
                     'isDisplay' => true,
                     'orderNo' => 1,
                     'persons' => [
-                        ['personId' => $lyricistId, 'name' => '作詞者A', 'role' => 'lyricist', 'orderNo' => 1],
-                        ['personId' => $composerId, 'name' => '作曲者A', 'role' => 'composer', 'orderNo' => 2],
-                        ['personId' => $arrangerId, 'name' => '編曲者A', 'role' => 'arranger', 'orderNo' => 3],
+                        ['personId' => $lyricistId, 'name' => '作詞者A', 'role' => 1, 'orderNo' => 1],
+                        ['personId' => $composerId, 'name' => '作曲者A', 'role' => 2, 'orderNo' => 2],
+                        ['personId' => $arrangerId, 'name' => '編曲者A', 'role' => 3, 'orderNo' => 3],
                     ],
                     'tags' => [
                         ['songTagId' => $tagB->songTagId->value, 'name' => 'タグB'],

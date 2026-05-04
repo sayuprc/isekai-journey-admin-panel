@@ -1923,11 +1923,11 @@ components:
           persons:
             - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
-              role: lyricist
+              role: 1
               orderNo: 1
             - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
-              role: composer
+              role: 2
               orderNo: 2
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
@@ -2004,11 +2004,12 @@ components:
         orderNo:
           $ref: '#/components/schemas/orderNo'
     SongPersonRole:
-      type: string
+      type: integer
+      format: int32
       enum:
-        - lyricist
-        - composer
-        - arranger
+        - 1
+        - 2
+        - 3
     SongSearchResponse:
       type: object
       required:

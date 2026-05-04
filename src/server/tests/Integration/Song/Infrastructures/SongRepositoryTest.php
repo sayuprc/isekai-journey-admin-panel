@@ -60,9 +60,9 @@ class SongRepositoryTest extends DatabaseTestCase
             1,
             [],
             [
-                ['personId' => $person->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                ['personId' => $person->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                ['personId' => $person->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                ['personId' => $person->personId->value, 'role' => 1, 'orderNo' => 1],
+                ['personId' => $person->personId->value, 'role' => 2, 'orderNo' => 2],
+                ['personId' => $person->personId->value, 'role' => 3, 'orderNo' => 3],
             ],
         );
 
@@ -90,7 +90,7 @@ class SongRepositoryTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['personId' => $person->personId->value, 'role' => 'lyricist', 'orderNo' => 1]],
+            [['personId' => $person->personId->value, 'role' => 1, 'orderNo' => 1]],
         );
 
         $repository->save($song);

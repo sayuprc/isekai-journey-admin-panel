@@ -13,9 +13,10 @@ table "song_persons" {
     comment = "人物ID"
   }
   column "role" {
-    null    = false
-    type    = varchar(20)
-    comment = "役割"
+    null     = false
+    type     = tinyint
+    unsigned = true
+    comment  = "役割"
   }
   column "order_no" {
     null     = false

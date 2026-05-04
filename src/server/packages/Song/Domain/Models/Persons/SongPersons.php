@@ -19,7 +19,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class SongPersons extends ImmutableCollection
 {
     /**
-     * @param list<array{personId: string, role: string, orderNo: int}> $items
+     * @param list<array{personId: string, role: int, orderNo: int}> $items
      *
      * @return Result<self, DomainValidationError>
      */
@@ -64,7 +64,7 @@ readonly class SongPersons extends ImmutableCollection
     }
 
     /**
-     * @param list<array{personId: string, role: string, orderNo: int}> $items
+     * @param list<array{personId: string, role: int, orderNo: int}> $items
      */
     public static function reconstruct(array $items): self
     {
@@ -76,15 +76,19 @@ readonly class SongPersons extends ImmutableCollection
      */
     public function toArray(): array
     {
-        return $this->toGeneric()
-            ->map(fn (SongPerson $item): array => $item->toArray())
-            ->toList();
+        $items = [];
+
+        foreach ($this->items as $item) {
+            $items[] = $item->toArray();
+        }
+
+        return $items;
     }
 
     /**
      * @return Result<SongPersonRole, EntityRuleViolationError>
      */
-    private static function toRole(string $role): Result
+    private static function toRole(int $role): Result
     {
         $found = SongPersonRole::tryFrom($role);
 

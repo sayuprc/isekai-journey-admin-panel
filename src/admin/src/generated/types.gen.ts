@@ -251,7 +251,7 @@ export type SongPerson = {
     orderNo: OrderNo;
 };
 
-export type SongPersonRole = 'lyricist' | 'composer' | 'arranger';
+export type SongPersonRole = 1 | 2 | 3;
 
 export type SongSearchResponse = {
     songs: Array<SongSummary>;

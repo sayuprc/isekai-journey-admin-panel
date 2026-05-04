@@ -14,9 +14,9 @@ class SongPersonsTest extends TestCase
     public function fromArray(): void
     {
         $result = SongPersons::fromArray([
-            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 'lyricist', 'orderNo' => 1],
-            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'composer', 'orderNo' => 2],
-            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'arranger', 'orderNo' => 3],
+            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 1],
+            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 2, 'orderNo' => 2],
+            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 3, 'orderNo' => 3],
         ]);
 
         $this->assertTrue($result->isOk());
@@ -24,12 +24,12 @@ class SongPersonsTest extends TestCase
 
         $this->assertCount(3, $persons);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $persons[0]->personId->value);
-        $this->assertSame('lyricist', $persons[0]->role->value);
+        $this->assertSame(1, $persons[0]->role->value);
         $this->assertSame(1, $persons[0]->orderNo->value);
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $persons[1]->personId->value);
-        $this->assertSame('composer', $persons[1]->role->value);
+        $this->assertSame(2, $persons[1]->role->value);
         $this->assertSame('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', $persons[2]->personId->value);
-        $this->assertSame('arranger', $persons[2]->role->value);
+        $this->assertSame(3, $persons[2]->role->value);
     }
 
     #[Test]
@@ -45,8 +45,8 @@ class SongPersonsTest extends TestCase
     public function fromArrayFailsWhenSameRoleIsDuplicatedForSamePerson(): void
     {
         $result = SongPersons::fromArray([
-            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 'lyricist', 'orderNo' => 1],
-            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 'lyricist', 'orderNo' => 2],
+            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 1],
+            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 2],
         ]);
 
         $this->assertTrue($result->isErr());

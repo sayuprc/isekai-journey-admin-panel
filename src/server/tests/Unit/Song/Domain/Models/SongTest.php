@@ -63,9 +63,9 @@ class SongTest extends TestCase
             $orderNo,
             [],
             [
-                ['personId' => 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'role' => 'lyricist', 'orderNo' => 1],
-                ['personId' => 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'role' => 'composer', 'orderNo' => 2],
-                ['personId' => 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'role' => 'arranger', 'orderNo' => 3],
+                ['personId' => 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'role' => 1, 'orderNo' => 1],
+                ['personId' => 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'role' => 2, 'orderNo' => 2],
+                ['personId' => 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'role' => 3, 'orderNo' => 3],
             ],
         );
     }

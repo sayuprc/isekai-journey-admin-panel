@@ -36,9 +36,9 @@ class CreateUseCaseTest extends DatabaseTestCase
                 true,
                 [],
                 [
-                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
             ),
         );
@@ -56,13 +56,13 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertSame(10, $song->order_no);
         $this->assertCount(3, $song->persons);
         $this->assertSame($person1->personId->value, $this->toUuid($song->persons[0]->person_id));
-        $this->assertSame('lyricist', $song->persons[0]->role);
+        $this->assertSame(1, $song->persons[0]->role);
         $this->assertSame(1, $song->persons[0]->order_no);
         $this->assertSame($person2->personId->value, $this->toUuid($song->persons[1]->person_id));
-        $this->assertSame('composer', $song->persons[1]->role);
+        $this->assertSame(2, $song->persons[1]->role);
         $this->assertSame(2, $song->persons[1]->order_no);
         $this->assertSame($person3->personId->value, $this->toUuid($song->persons[2]->person_id));
-        $this->assertSame('arranger', $song->persons[2]->role);
+        $this->assertSame(3, $song->persons[2]->role);
         $this->assertSame(3, $song->persons[2]->order_no);
     }
 

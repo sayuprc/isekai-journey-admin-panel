@@ -37,16 +37,16 @@ use \OpenAPI\Client\ObjectSerializer;
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-enum SongPersonRole: string
+enum SongPersonRole: int
 {
     /**
      * Possible values of this enum
      */
-    case LYRICIST = 'lyricist';
+    case NUMBER_1 = 1;
 
-    case COMPOSER = 'composer';
+    case NUMBER_2 = 2;
 
-    case ARRANGER = 'arranger';
+    case NUMBER_3 = 3;
 
 }
 

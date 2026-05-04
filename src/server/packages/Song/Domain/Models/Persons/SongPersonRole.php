@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Song\Domain\Models\Persons;
 
-enum SongPersonRole: string
+enum SongPersonRole: int
 {
-    case Lyricist = 'lyricist';
+    case Lyricist = 1;
 
-    case Composer = 'composer';
+    case Composer = 2;
 
-    case Arranger = 'arranger';
+    case Arranger = 3;
 }

@@ -54,7 +54,7 @@ class SongAssembler
             return new AssembledPerson(
                 $person->personId->value,
                 $found->name->value,
-                $person->role->value,
+                $person->role,
                 $person->orderNo->value,
             );
         };

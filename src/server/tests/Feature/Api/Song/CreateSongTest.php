@@ -38,9 +38,9 @@ class CreateSongTest extends DatabaseTestCase
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
                 'persons' => [
-                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
-                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
-                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
                 'tags' => [
                     ['songTagId' => $tag2->songTagId->value],
@@ -65,17 +65,17 @@ class CreateSongTest extends DatabaseTestCase
                             ->where('persons', [[
                                 'personId' => $person1->personId->value,
                                 'name' => $person1->name->value,
-                                'role' => 'lyricist',
+                                'role' => 1,
                                 'orderNo' => 1,
                             ], [
                                 'personId' => $person2->personId->value,
                                 'name' => $person2->name->value,
-                                'role' => 'composer',
+                                'role' => 2,
                                 'orderNo' => 2,
                             ], [
                                 'personId' => $person3->personId->value,
                                 'name' => $person3->name->value,
-                                'role' => 'arranger',
+                                'role' => 3,
                                 'orderNo' => 3,
                             ]])
                             ->where('tags', [[

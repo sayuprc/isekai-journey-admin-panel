@@ -81,9 +81,9 @@ model SongSummary {
 }
 
 enum SongPersonRole {
-  Lyricist: "lyricist",
-  Composer: "composer",
-  Arranger: "arranger",
+  Lyricist: 1,
+  Composer: 2,
+  Arranger: 3,
 }
 
 model SongPerson {

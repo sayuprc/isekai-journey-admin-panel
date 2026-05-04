@@ -16,6 +16,7 @@ use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCase;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
@@ -59,9 +60,9 @@ class CreateUseCaseTest extends TestCase
         $isDisplay = true;
         $orderNo = 1;
         $persons = [
-            ['personId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
-            ['personId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
-            ['personId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+            ['personId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 1, 'orderNo' => 1],
+            ['personId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 2, 'orderNo' => 2],
+            ['personId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 3, 'orderNo' => 3],
         ];
 
         $this->transaction->shouldReceive('scope')
@@ -104,9 +105,9 @@ class CreateUseCaseTest extends TestCase
                     $song->isDisplay,
                     $song->orderNo->value,
                     [
-                        new AssembledPerson($lyricistId, '作詞者', 'lyricist', 1),
-                        new AssembledPerson($composerId, '作曲者', 'composer', 2),
-                        new AssembledPerson($arrangerId, '編曲者', 'arranger', 3),
+                        new AssembledPerson($lyricistId, '作詞者', SongPersonRole::Lyricist, 1),
+                        new AssembledPerson($composerId, '作曲者', SongPersonRole::Composer, 2),
+                        new AssembledPerson($arrangerId, '編曲者', SongPersonRole::Arranger, 3),
                     ],
                 ),
             )
@@ -136,9 +137,9 @@ class CreateUseCaseTest extends TestCase
         $typeValue = 1;
         $isDisplay = true;
         $persons = [
-            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
-            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
-            ['personId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 1, 'orderNo' => 1],
+            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 2, 'orderNo' => 2],
+            ['personId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 3, 'orderNo' => 3],
         ];
 
         $this->transaction->shouldReceive('scope')

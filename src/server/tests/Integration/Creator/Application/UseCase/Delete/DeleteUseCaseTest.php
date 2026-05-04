@@ -50,7 +50,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['personId' => $creatorId, 'role' => 'lyricist', 'orderNo' => 1]],
+            [['personId' => $creatorId, 'role' => 1, 'orderNo' => 1]],
         ));
 
         $result = $this->getInstance()->handle(new DeleteInputData($creatorId));

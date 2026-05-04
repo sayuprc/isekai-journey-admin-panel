@@ -48,7 +48,7 @@ class DeleteCreatorTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['personId' => $creatorId, 'role' => 'lyricist', 'orderNo' => 1]],
+            [['personId' => $creatorId, 'role' => 1, 'orderNo' => 1]],
         ));
 
         $this->withAuth()
