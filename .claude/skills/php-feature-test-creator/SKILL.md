@@ -29,10 +29,10 @@ description: プロジェクトのフィーチャーテスト規約（API testin
    - **検証**:
      - API: `assertStatus()`, `assertJson()` 等。
      - Console: `expectsOutput()`, `assertSuccessful()`, `assertFailed()` 等。
-   - コードのフォーマットは `mise run ecs:fix` で適宜フォーマット修正を実行します。
+   - コードのフォーマットは `mise run api:ecs:fix` で適宜フォーマット修正を実行します。
 
 5. **テストの実行**:
-   - テストの実行は `mise run test:feature` または `mise run test 作成したテストのパス` を利用します。
+   - テストの実行は `mise run api:test:feature` または `mise run api:test 作成したテストのパス` を利用します。
 
 ## リファレンス
 

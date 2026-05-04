@@ -40,7 +40,7 @@ jobs:
         run: mise run bun:install
 
       - name: Check generate code has diff
-        run: mise run generate:client:admin
+        run: mise run admin:generate
 
   lint:
     name: ESLint
@@ -70,7 +70,7 @@ jobs:
         run: mise run bun:install
 
       - name: Run ESLint
-        run: mise run lint
+        run: mise run admin:lint
 
   style:
     name: Stylelint
@@ -100,7 +100,7 @@ jobs:
         run: mise run bun:install
 
       - name: Run Stylelint
-        run: mise run style
+        run: mise run admin:style
 
       # - name: Run Build
       #   run: bun run build

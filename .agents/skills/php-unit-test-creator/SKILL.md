@@ -32,10 +32,10 @@ description: プロジェクトのテスト規約に従って、Laravel/PHP の�
      - **異常系**: 無効な入力、依存先の失敗（例: リポジトリが `Err` を返す場合）。
    - Mockery のエクスペクテーション（`shouldReceive`, `once`, `andReturn`）を使用します。
    - `$this->assertTrue($result->isOk())` または標準的な PHPUnit のアサーションを使用して結果を検証します。
-   - コードのフォーマットは `mise run ecs:fix` で適宜フォーマット修正を実行します。
+   - コードのフォーマットは `mise run api:ecs:fix` で適宜フォーマット修正を実行します。
 
 5. **テストの実行**:
-   - テストの実行は `mise run test:unit` または `mise run test 作成したテストのパス` を利用します。
+   - テストの実行は `mise run api:test:unit` または `mise run api:test 作成したテストのパス` を利用します。
 
 ## リファレンス
 

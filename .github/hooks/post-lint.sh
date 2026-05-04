@@ -46,10 +46,10 @@ case "$file" in
     container_path="${file#*src/server/}"
 
     # 自動修正
-    mise run ecs:fix -- "$container_path" >/dev/null 2>&1 || true
+    mise run api:ecs:fix -- "$container_path" >/dev/null 2>&1 || true
 
     # 残った違反をチェック
-    diag="$(mise run ecs -- "$container_path" 2>&1 | head -30)" || true
+    diag="$(mise run api:ecs -- "$container_path" 2>&1 | head -30)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|found'; then
       jq -n --arg msg "$diag" '{

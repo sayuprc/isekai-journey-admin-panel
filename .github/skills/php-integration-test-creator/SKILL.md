@@ -28,10 +28,10 @@ description: プロジェクトのインテグレーションテスト規約に�
    - **検証**:
      - 戻り値（`ResultType` など）をアサートします。
      - `getAll()` メソッドを使用して、ファイルストアに正しく永続化されたかを確認します。
-   - コードのフォーマットは `mise run ecs:fix` で適宜フォーマット修正を実行します。
+   - コードのフォーマットは `mise run api:ecs:fix` で適宜フォーマット修正を実行します。
 
 5. **テストの実行**:
-   - テストの実行は `mise run test:integration` または `mise run test 作成したテストのパス` を利用します。
+   - テストの実行は `mise run api:test:integration` または `mise run api:test 作成したテストのパス` を利用します。
 
 ## リファレンス
 

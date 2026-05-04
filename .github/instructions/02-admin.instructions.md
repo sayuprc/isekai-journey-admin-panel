@@ -25,7 +25,7 @@ applyTo: 'src/admin/**'
 
 - ページ責務は `.astro` に保ち、対話的な UI は `.tsx` に分離する
 - API クライアントや型は `src/admin/src/generated/` を Source of Truth とし、手動編集しない
-- API shape を変える場合は `src/contracts` を更新してから `mise run generate:client:admin` を使う
+- API shape を変える場合は `src/contracts` を更新してから `mise run admin:generate` を使う
 
 ## 検証
 

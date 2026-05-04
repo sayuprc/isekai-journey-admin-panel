@@ -35,4 +35,4 @@ applyTo: 'src/server/**'
 ## 検証
 
 - 変更に最も近いタスクから実行する
-- 代表例: `mise run ecs`, `mise run phpstan`, `mise run arkitect`, `mise run test`
+- 代表例: `mise run api:ecs`, `mise run api:phpstan`, `mise run api:arkitect`, `mise run api:test`
