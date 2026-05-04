@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Song\Domain\Models;
 
-use Creator\Domain\Models\CreatorId;
 use Person\Domain\Models\PersonId;
 
 interface SongRepositoryInterface
@@ -12,8 +11,6 @@ interface SongRepositoryInterface
     public function find(SongId $songId): ?Song;
 
     public function isPersonUsed(PersonId $personId): bool;
-
-    public function isCreatorUsed(CreatorId $creatorId): bool;
 
     public function save(Song $song): Song;
 

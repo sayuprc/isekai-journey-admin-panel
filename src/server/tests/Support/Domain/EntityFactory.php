@@ -14,13 +14,7 @@ use Auth\Domain\Models\Token\RefreshToken\ExpiredAt;
 use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
 use DateTimeImmutable;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerId;
-use Performer\Domain\Models\PerformerName;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
@@ -40,24 +34,6 @@ use Support\Domain\ValueObjects\OrderNo;
 
 trait EntityFactory
 {
-    protected function createCreator(string $creatorId, string $name, int $orderNo): Creator
-    {
-        return new Creator(
-            CreatorId::reconstruct($creatorId),
-            CreatorName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
-        );
-    }
-
-    protected function createPerformer(string $performerId, string $name, int $orderNo): Performer
-    {
-        return new Performer(
-            PerformerId::reconstruct($performerId),
-            PerformerName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
-        );
-    }
-
     protected function createPerson(string $personId, string $name, int $orderNo): Person
     {
         return new Person(
@@ -142,7 +118,7 @@ trait EntityFactory
         }
 
         $toPerson = fn (array $item, SongPersonRole $role): array => [
-            'personId' => (string)$item['creatorId'],
+            'personId' => (string)$item['personId'],
             'role' => $role->value,
             'orderNo' => (int)$item['orderNo'],
         ];

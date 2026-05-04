@@ -6,18 +6,6 @@ use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RefreshController;
-use App\Http\Controllers\Api\Creator\CreateCreatorController;
-use App\Http\Controllers\Api\Creator\DeleteCreatorController;
-use App\Http\Controllers\Api\Creator\GetCreatorController;
-use App\Http\Controllers\Api\Creator\ListCreatorController;
-use App\Http\Controllers\Api\Creator\SearchCreatorController;
-use App\Http\Controllers\Api\Creator\UpdateCreatorController;
-use App\Http\Controllers\Api\Performer\CreatePerformerController;
-use App\Http\Controllers\Api\Performer\DeletePerformerController;
-use App\Http\Controllers\Api\Performer\GetPerformerController;
-use App\Http\Controllers\Api\Performer\ListPerformerController;
-use App\Http\Controllers\Api\Performer\SearchPerformerController;
-use App\Http\Controllers\Api\Performer\UpdatePerformerController;
 use App\Http\Controllers\Api\Person\CreatePersonController;
 use App\Http\Controllers\Api\Person\DeletePersonController;
 use App\Http\Controllers\Api\Person\GetPersonController;
@@ -39,10 +27,8 @@ use App\Http\Controllers\Api\SongType\ListSongTypeController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
-use Creator\Route\CreatorRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Performer\Route\PerformerRouteMap;
 use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
@@ -65,15 +51,6 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::get('/', [ListAdminUserController::class, 'handle'])->name(AdminUserRouteMap::List);
                 });
 
-                Route::prefix('creators')->group(function () {
-                    Route::post('/', [CreateCreatorController::class, 'handle'])->name(CreatorRouteMap::Create);
-                    Route::get('/', [ListCreatorController::class, 'handle'])->name(CreatorRouteMap::List);
-                    Route::put('/{creatorId}', [UpdateCreatorController::class, 'handle'])->name(CreatorRouteMap::Update);
-                    Route::delete('/{creatorId}', [DeleteCreatorController::class, 'handle'])->name(CreatorRouteMap::Delete);
-                    Route::get('/search', [SearchCreatorController::class, 'handle'])->name(CreatorRouteMap::Search);
-                    Route::get('/{creatorId}', [GetCreatorController::class, 'handle'])->name(CreatorRouteMap::Get);
-                });
-
                 Route::prefix('persons')->group(function () {
                     Route::post('/', [CreatePersonController::class, 'handle'])->name(PersonRouteMap::Create);
                     Route::get('/', [ListPersonController::class, 'handle'])->name(PersonRouteMap::List);
@@ -81,15 +58,6 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::delete('/{personId}', [DeletePersonController::class, 'handle'])->name(PersonRouteMap::Delete);
                     Route::get('/search', [SearchPersonController::class, 'handle'])->name(PersonRouteMap::Search);
                     Route::get('/{personId}', [GetPersonController::class, 'handle'])->name(PersonRouteMap::Get);
-                });
-
-                Route::prefix('performers')->group(function () {
-                    Route::post('/', [CreatePerformerController::class, 'handle'])->name(PerformerRouteMap::Create);
-                    Route::get('/', [ListPerformerController::class, 'handle'])->name(PerformerRouteMap::List);
-                    Route::put('/{performerId}', [UpdatePerformerController::class, 'handle'])->name(PerformerRouteMap::Update);
-                    Route::delete('/{performerId}', [DeletePerformerController::class, 'handle'])->name(PerformerRouteMap::Delete);
-                    Route::get('/search', [SearchPerformerController::class, 'handle'])->name(PerformerRouteMap::Search);
-                    Route::get('/{performerId}', [GetPerformerController::class, 'handle'])->name(PerformerRouteMap::Get);
                 });
 
                 Route::prefix('songs')->group(function () {

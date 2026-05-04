@@ -9,10 +9,6 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\HashedPassword;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorRepositoryInterface;
-use Performer\Domain\Models\Performer;
-use Performer\Domain\Models\PerformerRepositoryInterface;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Song\Domain\Models\Song;
@@ -22,18 +18,6 @@ use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 
 trait EntityStore
 {
-    protected function storeCreators(Creator ...$items): void
-    {
-        $repository = $this->makeRepository(CreatorRepositoryInterface::class);
-        array_map(fn (Creator $item) => $repository->save($item), $items);
-    }
-
-    protected function storePerformers(Performer ...$items): void
-    {
-        $repository = $this->makeRepository(PerformerRepositoryInterface::class);
-        array_map(fn (Performer $item) => $repository->save($item), $items);
-    }
-
     protected function storePersons(Person ...$items): void
     {
         $repository = $this->makeRepository(PersonRepositoryInterface::class);
