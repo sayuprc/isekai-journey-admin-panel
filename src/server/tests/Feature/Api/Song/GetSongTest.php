@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
-use Creator\Infrastructures\CreatorRepository;
+use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
@@ -22,14 +22,14 @@ class GetSongTest extends DatabaseTestCase
     #[Test]
     public function found(): void
     {
-        $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
+        $lyricist = $this->createPerson($lyricistId = $this->generateUuid(), '作詞者A', 1);
+        $composer = $this->createPerson($composerId = $this->generateUuid(), '作曲者A', 1);
+        $arranger = $this->createPerson($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $creatorRepo = $this->app->make(CreatorRepository::class);
-        $creatorRepo->save($lyricist);
-        $creatorRepo->save($composer);
-        $creatorRepo->save($arranger);
+        $personRepo = $this->app->make(PersonRepository::class);
+        $personRepo->save($lyricist);
+        $personRepo->save($composer);
+        $personRepo->save($arranger);
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($tagA = $this->createSongTag($this->generateUuid(), 'タグA', 20));
         $tagRepo->save($tagB = $this->createSongTag($this->generateUuid(), 'タグB', 10));
@@ -49,9 +49,11 @@ class GetSongTest extends DatabaseTestCase
                     ['songTagId' => $tagA->songTagId->value],
                     ['songTagId' => $tagB->songTagId->value],
                 ],
-                [['creatorId' => $lyricistId, 'orderNo' => 1]],
-                [['creatorId' => $composerId, 'orderNo' => 1]],
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
+                [
+                    ['personId' => $lyricistId, 'role' => 'lyricist', 'orderNo' => 1],
+                    ['personId' => $composerId, 'role' => 'composer', 'orderNo' => 2],
+                    ['personId' => $arrangerId, 'role' => 'arranger', 'orderNo' => 3],
+                ],
             ),
         );
 
@@ -70,9 +72,11 @@ class GetSongTest extends DatabaseTestCase
                     ],
                     'isDisplay' => true,
                     'orderNo' => 1,
-                    'lyricists' => [['creatorId' => $lyricistId, 'name' => '作詞者A', 'orderNo' => 1]],
-                    'composers' => [['creatorId' => $composerId, 'name' => '作曲者A', 'orderNo' => 1]],
-                    'arrangers' => [['creatorId' => $arrangerId, 'name' => '編曲者A', 'orderNo' => 1]],
+                    'persons' => [
+                        ['personId' => $lyricistId, 'name' => '作詞者A', 'role' => 'lyricist', 'orderNo' => 1],
+                        ['personId' => $composerId, 'name' => '作曲者A', 'role' => 'composer', 'orderNo' => 2],
+                        ['personId' => $arrangerId, 'name' => '編曲者A', 'role' => 'arranger', 'orderNo' => 3],
+                    ],
                     'tags' => [
                         ['songTagId' => $tagB->songTagId->value, 'name' => 'タグB'],
                         ['songTagId' => $tagA->songTagId->value, 'name' => 'タグA'],
@@ -87,7 +91,7 @@ class GetSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], []),
         );
 
         $this->withAuth()

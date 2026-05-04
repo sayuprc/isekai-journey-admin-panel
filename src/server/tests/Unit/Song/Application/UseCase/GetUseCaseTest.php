@@ -8,7 +8,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Application\Assemble\AssembledCreator;
+use Song\Application\Assemble\AssembledPerson;
 use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Application\UseCase\Get\GetInputData;
@@ -53,9 +53,11 @@ class GetUseCaseTest extends TestCase
             true,
             1,
             [],
-            [['creatorId' => $lyricistId, 'orderNo' => 1]],
-            [['creatorId' => $composerId, 'orderNo' => 1]],
-            [['creatorId' => $arrangerId, 'orderNo' => 1]],
+            [
+                ['personId' => $lyricistId, 'role' => 'lyricist', 'orderNo' => 1],
+                ['personId' => $composerId, 'role' => 'composer', 'orderNo' => 2],
+                ['personId' => $arrangerId, 'role' => 'arranger', 'orderNo' => 3],
+            ],
         );
 
         $this->repository->shouldReceive('find')
@@ -75,9 +77,11 @@ class GetUseCaseTest extends TestCase
                     $song->type->value,
                     $song->isDisplay,
                     $song->orderNo->value,
-                    [new AssembledCreator($lyricistId, '作詞者A', 1)],
-                    [new AssembledCreator($composerId, '作曲者A', 1)],
-                    [new AssembledCreator($arrangerId, '編曲者A', 1)],
+                    [
+                        new AssembledPerson($lyricistId, '作詞者A', 'lyricist', 1),
+                        new AssembledPerson($composerId, '作曲者A', 'composer', 2),
+                        new AssembledPerson($arrangerId, '編曲者A', 'arranger', 3),
+                    ],
                 ),
             )
             ->once();
@@ -96,17 +100,14 @@ class GetUseCaseTest extends TestCase
         $this->assertTrue($response->song->isDisplay);
         $this->assertSame(1, $response->song->orderNo);
 
-        $this->assertCount(1, $response->song->lyricists);
-        $this->assertSame($lyricistId, $response->song->lyricists[0]->creatorId);
-        $this->assertSame('作詞者A', $response->song->lyricists[0]->name);
-
-        $this->assertCount(1, $response->song->composers);
-        $this->assertSame($composerId, $response->song->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->song->composers[0]->name);
-
-        $this->assertCount(1, $response->song->arrangers);
-        $this->assertSame($arrangerId, $response->song->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->song->arrangers[0]->name);
+        $this->assertCount(3, $response->song->persons);
+        $this->assertSame($lyricistId, $response->song->persons[0]->personId);
+        $this->assertSame('作詞者A', $response->song->persons[0]->name);
+        $this->assertSame('lyricist', $response->song->persons[0]->role);
+        $this->assertSame($composerId, $response->song->persons[1]->personId);
+        $this->assertSame('composer', $response->song->persons[1]->role);
+        $this->assertSame($arrangerId, $response->song->persons[2]->personId);
+        $this->assertSame('arranger', $response->song->persons[2]->role);
     }
 
     #[Test]

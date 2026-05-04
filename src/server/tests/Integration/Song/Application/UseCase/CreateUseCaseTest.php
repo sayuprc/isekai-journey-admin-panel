@@ -21,11 +21,11 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function create(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1);
-        $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
-        $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
 
-        $this->storeCreators($creator1, $creator2, $creator3);
+        $this->storePersons($person1, $person2, $person3);
 
         $result = $this->getInstance()->handle(
             new CreateInputData(
@@ -35,9 +35,11 @@ class CreateUseCaseTest extends DatabaseTestCase
                 SongType::Original->value,
                 true,
                 [],
-                [['creatorId' => $creator1->creatorId->value]],
-                [['creatorId' => $creator2->creatorId->value]],
-                [['creatorId' => $creator3->creatorId->value]],
+                [
+                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                ],
             ),
         );
 
@@ -52,15 +54,16 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertSame(SongType::Original->value, $song->type);
         $this->assertTrue($song->is_display);
         $this->assertSame(10, $song->order_no);
-        $this->assertCount(1, $song->lyricists);
-        $this->assertSame($creator1->creatorId->value, $this->toUuid($song->lyricists->first()->creator_id));
-        $this->assertSame(1, $song->lyricists->first()->order_no);
-        $this->assertCount(1, $song->composers);
-        $this->assertSame($creator2->creatorId->value, $this->toUuid($song->composers->first()->creator_id));
-        $this->assertSame(1, $song->composers->first()->order_no);
-        $this->assertCount(1, $song->arrangers);
-        $this->assertSame($creator3->creatorId->value, $this->toUuid($song->arrangers->first()->creator_id));
-        $this->assertSame(1, $song->arrangers->first()->order_no);
+        $this->assertCount(3, $song->persons);
+        $this->assertSame($person1->personId->value, $this->toUuid($song->persons[0]->person_id));
+        $this->assertSame('lyricist', $song->persons[0]->role);
+        $this->assertSame(1, $song->persons[0]->order_no);
+        $this->assertSame($person2->personId->value, $this->toUuid($song->persons[1]->person_id));
+        $this->assertSame('composer', $song->persons[1]->role);
+        $this->assertSame(2, $song->persons[1]->order_no);
+        $this->assertSame($person3->personId->value, $this->toUuid($song->persons[2]->person_id));
+        $this->assertSame('arranger', $song->persons[2]->role);
+        $this->assertSame(3, $song->persons[2]->order_no);
     }
 
     private function getInstance(): CreateUseCase

@@ -17,10 +17,6 @@ export type AdminUserListResponse = {
     adminUsers: Array<AdminUser>;
 };
 
-export type Arranger = SongCreator;
-
-export type Composer = SongCreator;
-
 export type Creator = {
     creatorId: CreatorId;
     name: CreatorName;
@@ -78,8 +74,6 @@ export type LoginResponse = {
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
 };
-
-export type Lyricist = SongCreator;
 
 /**
  * 1ページあたりの件数
@@ -192,22 +186,10 @@ export type RefreshTokenResponse = {
 /**
  * The template for picking properties.
  */
-export type RequestArranger = {
-    creatorId: CreatorId;
-};
-
-/**
- * The template for picking properties.
- */
-export type RequestComposer = {
-    creatorId: CreatorId;
-};
-
-/**
- * The template for picking properties.
- */
-export type RequestLyricist = {
-    creatorId: CreatorId;
+export type RequestSongPerson = {
+    personId: PersonId;
+    role: SongPersonRole;
+    orderNo: OrderNo;
 };
 
 /**
@@ -235,9 +217,7 @@ export type Song = {
     type: SongType;
     isDisplay: boolean;
     orderNo: OrderNo;
-    lyricists: Array<Lyricist>;
-    composers: Array<Composer>;
-    arrangers: Array<Arranger>;
+    persons: Array<SongPerson>;
     tags: Array<SongAttachedTag>;
 };
 
@@ -252,9 +232,7 @@ export type SongCreateRequest = {
     lyricsLink: LyricsLink | null;
     typeValue: SongTypeValue;
     isDisplay: boolean;
-    lyricists: Array<RequestLyricist>;
-    composers: Array<RequestComposer>;
-    arrangers: Array<RequestArranger>;
+    persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
 };
 
@@ -262,15 +240,18 @@ export type SongCreateResponse = {
     song: Song;
 };
 
-export type SongCreator = {
-    creatorId: CreatorId;
-    name: CreatorName;
-    orderNo: OrderNo;
-};
-
 export type SongGetResponse = {
     song: Song;
 };
+
+export type SongPerson = {
+    personId: PersonId;
+    name: PersonName;
+    role: SongPersonRole;
+    orderNo: OrderNo;
+};
+
+export type SongPersonRole = 'lyricist' | 'composer' | 'arranger';
 
 export type SongSearchResponse = {
     songs: Array<SongSummary>;
@@ -352,9 +333,7 @@ export type SongUpdateRequest = {
     typeValue: SongTypeValue;
     isDisplay: boolean;
     orderNo: OrderNo;
-    lyricists: Array<RequestLyricist>;
-    composers: Array<RequestComposer>;
-    arrangers: Array<RequestArranger>;
+    persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
 };
 

@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Song\Domain\Services;
 
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorRepositoryInterface;
+use Person\Domain\Models\PersonId;
+use Person\Domain\Models\PersonRepositoryInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Song\Domain\Models\Creators\Arrangers;
-use Song\Domain\Models\Creators\Composers;
-use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
+use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -29,7 +27,7 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
- * @phpstan-type creator array{creatorId: string}
+ * @phpstan-type person array{personId: string, role: string, orderNo: int}
  * @phpstan-type songTag array{songTagId: string}
  */
 class SongIntegrityService
@@ -37,16 +35,14 @@ class SongIntegrityService
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
         private readonly SongRepositoryInterface $songRepository,
-        private readonly CreatorRepositoryInterface $creatorRepository,
+        private readonly PersonRepositoryInterface $personRepository,
         private readonly SongTagRepositoryInterface $songTagRepository,
     ) {
     }
 
     /**
      * @param list<songTag> $tags
-     * @param list<creator> $lyricists
-     * @param list<creator> $composers
-     * @param list<creator> $arrangers
+     * @param list<person>  $persons
      *
      * @return Result<Song, DomainError>
      */
@@ -57,14 +53,10 @@ class SongIntegrityService
         int $type,
         bool $isDisplay,
         array $tags,
-        array $lyricists,
-        array $composers,
-        array $arrangers,
+        array $persons,
     ): Result {
-        $result = Result::collect4(
-            Lyricists::fromArray($lyricists),
-            Composers::fromArray($composers),
-            Arrangers::fromArray($arrangers),
+        $result = Result::collect(
+            SongPersons::fromArray($persons),
             SongTagReferences::fromArray($tags),
         );
 
@@ -72,10 +64,10 @@ class SongIntegrityService
             return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
-        [$lyricists, $composers, $arrangers, $tags] = $result->unwrap();
+        [$persons, $tags] = $result->unwrap();
 
-        if (! $this->existsCreators($lyricists, $composers, $arrangers)) {
-            return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
+        if (! $this->existsPersons($persons)) {
+            return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
         }
 
         if (! $this->existsSongTags($tags)) {
@@ -91,18 +83,14 @@ class SongIntegrityService
             $isDisplay,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->songRepository->getMaxOrderNo() + 10,
-            $lyricists,
-            $composers,
-            $arrangers,
+            $persons,
             $tags,
         );
     }
 
     /**
      * @param list<songTag> $tags
-     * @param list<creator> $lyricists
-     * @param list<creator> $composers
-     * @param list<creator> $arrangers
+     * @param list<person>  $persons
      *
      * @return Result<Song, DomainError>
      */
@@ -115,14 +103,10 @@ class SongIntegrityService
         bool $isDisplay,
         int $orderNo,
         array $tags,
-        array $lyricists,
-        array $composers,
-        array $arrangers,
+        array $persons,
     ): Result {
-        $result = Result::collect4(
-            Lyricists::fromArray($lyricists),
-            Composers::fromArray($composers),
-            Arrangers::fromArray($arrangers),
+        $result = Result::collect(
+            SongPersons::fromArray($persons),
             SongTagReferences::fromArray($tags),
         );
 
@@ -130,10 +114,10 @@ class SongIntegrityService
             return new Err($this->mergeValidationErrors($result->unwrapErr()));
         }
 
-        [$lyricists, $composers, $arrangers, $tags] = $result->unwrap();
+        [$persons, $tags] = $result->unwrap();
 
-        if (! $this->existsCreators($lyricists, $composers, $arrangers)) {
-            return new Err(new BusinessRuleViolationError('指定されたクリエイターの一部が存在しません。'));
+        if (! $this->existsPersons($persons)) {
+            return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
         }
 
         if (! $this->existsSongTags($tags)) {
@@ -148,9 +132,7 @@ class SongIntegrityService
             $type,
             $isDisplay,
             $orderNo,
-            $lyricists,
-            $composers,
-            $arrangers,
+            $persons,
             $tags,
         );
     }
@@ -166,9 +148,7 @@ class SongIntegrityService
         int $type,
         bool $isDisplay,
         int $orderNo,
-        Lyricists $lyricists,
-        Composers $composers,
-        Arrangers $arrangers,
+        SongPersons $persons,
         SongTagReferences $tags,
     ): Result {
         $normalizedLyricsLink = $this->normalizeOptionalString($lyricsLink);
@@ -196,7 +176,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $lyricists, $composers, $arrangers]));
+            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $persons]));
     }
 
     /**
@@ -234,21 +214,19 @@ class SongIntegrityService
         return new DomainValidationError($messages);
     }
 
-    private function existsCreators(Lyricists $lyricists, Composers $composers, Arrangers $arrangers): bool
+    private function existsPersons(SongPersons $persons): bool
     {
-        $creatorIds = [];
+        $personIds = [];
 
-        foreach ([$lyricists, $composers, $arrangers] as $items) {
-            foreach ($items as $item) {
-                if (! isset($creatorIds[$item->creatorId->value])) {
-                    $creatorIds[$item->creatorId->value] = $item->creatorId;
-                }
+        foreach ($persons as $item) {
+            if (! isset($personIds[$item->personId->value])) {
+                $personIds[$item->personId->value] = $item->personId;
             }
         }
 
-        $founds = $this->creatorRepository->findByIds(...array_values($creatorIds));
+        $founds = $this->personRepository->findByIds(...array_values($personIds));
 
-        return count($creatorIds) === count($founds);
+        return count($personIds) === count($founds);
     }
 
     private function existsSongTags(SongTagReferences $tags): bool

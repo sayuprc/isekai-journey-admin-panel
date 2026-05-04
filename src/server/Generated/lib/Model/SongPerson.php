@@ -1,6 +1,6 @@
 <?php
 /**
- * Lyricist
+ * SongPerson
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * Lyricist Class Doc Comment
+ * SongPerson Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongPerson implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'Lyricist';
+    protected static $openAPIModelName = 'SongPerson';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'creator_id' => 'string',
+        'person_id' => 'string',
         'name' => 'string',
+        'role' => '\OpenAPI\Client\Model\SongPersonRole',
         'order_no' => 'int'
     ];
 
@@ -70,8 +71,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'creator_id' => 'uuid',
+        'person_id' => 'uuid',
         'name' => null,
+        'role' => null,
         'order_no' => 'int32'
     ];
 
@@ -81,8 +83,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'creator_id' => false,
+        'person_id' => false,
         'name' => false,
+        'role' => false,
         'order_no' => false
     ];
 
@@ -172,8 +175,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'creator_id' => 'creatorId',
+        'person_id' => 'personId',
         'name' => 'name',
+        'role' => 'role',
         'order_no' => 'orderNo'
     ];
 
@@ -183,8 +187,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'creator_id' => 'setCreatorId',
+        'person_id' => 'setPersonId',
         'name' => 'setName',
+        'role' => 'setRole',
         'order_no' => 'setOrderNo'
     ];
 
@@ -194,8 +199,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'creator_id' => 'getCreatorId',
+        'person_id' => 'getPersonId',
         'name' => 'getName',
+        'role' => 'getRole',
         'order_no' => 'getOrderNo'
     ];
 
@@ -256,8 +262,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('creator_id', $data ?? [], null);
+        $this->setIfExists('person_id', $data ?? [], null);
         $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('role', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
 
@@ -288,8 +295,8 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['creator_id'] === null) {
-            $invalidProperties[] = "'creator_id' can't be null";
+        if ($this->container['person_id'] === null) {
+            $invalidProperties[] = "'person_id' can't be null";
         }
         if ($this->container['name'] === null) {
             $invalidProperties[] = "'name' can't be null";
@@ -298,6 +305,9 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
+        if ($this->container['role'] === null) {
+            $invalidProperties[] = "'role' can't be null";
+        }
         if ($this->container['order_no'] === null) {
             $invalidProperties[] = "'order_no' can't be null";
         }
@@ -321,28 +331,28 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets creator_id
+     * Gets person_id
      *
      * @return string
      */
-    public function getCreatorId()
+    public function getPersonId()
     {
-        return $this->container['creator_id'];
+        return $this->container['person_id'];
     }
 
     /**
-     * Sets creator_id
+     * Sets person_id
      *
-     * @param string $creator_id クリエイターID
+     * @param string $person_id 人物ID
      *
      * @return self
      */
-    public function setCreatorId($creator_id)
+    public function setPersonId($person_id)
     {
-        if (is_null($creator_id)) {
-            throw new \InvalidArgumentException('non-nullable creator_id cannot be null');
+        if (is_null($person_id)) {
+            throw new \InvalidArgumentException('non-nullable person_id cannot be null');
         }
-        $this->container['creator_id'] = $creator_id;
+        $this->container['person_id'] = $person_id;
 
         return $this;
     }
@@ -360,7 +370,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name クリエイター名
+     * @param string $name 人物名
      *
      * @return self
      */
@@ -371,10 +381,37 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         if ((mb_strlen($name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $name when calling Lyricist., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid length for $name when calling SongPerson., must be bigger than or equal to 1.');
         }
 
         $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets role
+     *
+     * @return \OpenAPI\Client\Model\SongPersonRole
+     */
+    public function getRole()
+    {
+        return $this->container['role'];
+    }
+
+    /**
+     * Sets role
+     *
+     * @param \OpenAPI\Client\Model\SongPersonRole $role role
+     *
+     * @return self
+     */
+    public function setRole($role)
+    {
+        if (is_null($role)) {
+            throw new \InvalidArgumentException('non-nullable role cannot be null');
+        }
+        $this->container['role'] = $role;
 
         return $this;
     }
@@ -403,7 +440,7 @@ class Lyricist implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling Lyricist., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for $order_no when calling SongPerson., must be bigger than or equal to 1.');
         }
 
         $this->container['order_no'] = $order_no;

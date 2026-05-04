@@ -21,11 +21,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function canUpdate(): void
     {
-        $creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1);
-        $creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1);
-        $creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
 
-        $this->storeCreators($creator1, $creator2, $creator3);
+        $this->storePersons($person1, $person2, $person3);
 
         $songId = $this->generateUuid();
 
@@ -38,9 +38,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 true,
                 1,
                 [],
-                [['creatorId' => $creator1->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                [
+                    ['personId' => $person1->personId->value, 'role' => 'lyricist', 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 3],
+                ],
             ),
         );
 
@@ -54,9 +56,10 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 false,
                 2,
                 [],
-                [],
-                [['creatorId' => $creator2->creatorId->value, 'orderNo' => 1]],
-                [['creatorId' => $creator3->creatorId->value, 'orderNo' => 1]],
+                [
+                    ['personId' => $person2->personId->value, 'role' => 'composer', 'orderNo' => 1],
+                    ['personId' => $person3->personId->value, 'role' => 'arranger', 'orderNo' => 2],
+                ],
             ),
         );
 
@@ -71,11 +74,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame(SongType::Cover->value, $song->type);
         $this->assertFalse($song->is_display);
         $this->assertSame(2, $song->order_no);
-        $this->assertCount(0, $song->lyricists);
-        $this->assertCount(1, $song->composers);
-        $this->assertSame($creator2->creatorId->value, $this->toUuid($song->composers->first()->creator_id));
-        $this->assertCount(1, $song->arrangers);
-        $this->assertSame($creator3->creatorId->value, $this->toUuid($song->arrangers->first()->creator_id));
+        $this->assertCount(2, $song->persons);
+        $this->assertSame($person2->personId->value, $this->toUuid($song->persons[0]->person_id));
+        $this->assertSame('composer', $song->persons[0]->role);
+        $this->assertSame($person3->personId->value, $this->toUuid($song->persons[1]->person_id));
+        $this->assertSame('arranger', $song->persons[1]->role);
     }
 
     private function getInstance(): UpdateUseCase

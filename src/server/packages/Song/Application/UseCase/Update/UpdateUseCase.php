@@ -57,9 +57,7 @@ readonly class UpdateUseCase
                 $inputData->isDisplay,
                 $inputData->orderNo,
                 $inputData->tags,
-                $inputData->lyricists,
-                $inputData->composers,
-                $inputData->arrangers,
+                $inputData->persons,
             );
 
             if ($result->isErr()) {

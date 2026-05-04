@@ -1491,22 +1491,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdminUser'
-    Arranger:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
-    Composer:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
     Creator:
       type: object
       required:
@@ -1624,14 +1608,6 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
-    Lyricist:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
     PerPage:
       type: integer
       format: int32
@@ -1854,29 +1830,19 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
-    RequestArranger:
+    RequestSongPerson:
       type: object
       required:
-        - creatorId
+        - personId
+        - role
+        - orderNo
       properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-      description: The template for picking properties.
-    RequestComposer:
-      type: object
-      required:
-        - creatorId
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-      description: The template for picking properties.
-    RequestLyricist:
-      type: object
-      required:
-        - creatorId
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
+        personId:
+          $ref: '#/components/schemas/personId'
+        role:
+          $ref: '#/components/schemas/SongPersonRole'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
       description: The template for picking properties.
     RequestSongTag:
       type: object
@@ -1917,9 +1883,7 @@ components:
         - type
         - isDisplay
         - orderNo
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         songId:
@@ -1938,18 +1902,10 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/Lyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Composer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Arranger'
+            $ref: '#/components/schemas/SongPerson'
         tags:
           type: array
           items:
@@ -1964,18 +1920,15 @@ components:
             value: 1
           isDisplay: true
           orderNo: 1
-          lyricists:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
+          persons:
+            - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
+              role: lyricist
               orderNo: 1
-          composers:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
+            - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
-              orderNo: 1
-          arrangers:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-              name: ヰ世界情緒
-              orderNo: 1
+              role: composer
+              orderNo: 2
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
@@ -1997,9 +1950,7 @@ components:
         - lyricsLink
         - typeValue
         - isDisplay
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         title:
@@ -2014,18 +1965,10 @@ components:
           $ref: '#/components/schemas/SongTypeValue'
         isDisplay:
           type: boolean
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/RequestLyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestComposer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestArranger'
+            $ref: '#/components/schemas/RequestSongPerson'
         tags:
           type: array
           items:
@@ -2037,19 +1980,6 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
-    SongCreator:
-      type: object
-      required:
-        - creatorId
-        - name
-        - orderNo
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-        name:
-          $ref: '#/components/schemas/creatorName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
     SongGetResponse:
       type: object
       required:
@@ -2057,6 +1987,28 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
+    SongPerson:
+      type: object
+      required:
+        - personId
+        - name
+        - role
+        - orderNo
+      properties:
+        personId:
+          $ref: '#/components/schemas/personId'
+        name:
+          $ref: '#/components/schemas/personName'
+        role:
+          $ref: '#/components/schemas/SongPersonRole'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+    SongPersonRole:
+      type: string
+      enum:
+        - lyricist
+        - composer
+        - arranger
     SongSearchResponse:
       type: object
       required:
@@ -2224,9 +2176,7 @@ components:
         - typeValue
         - isDisplay
         - orderNo
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         title:
@@ -2243,18 +2193,10 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/RequestLyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestComposer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestArranger'
+            $ref: '#/components/schemas/RequestSongPerson'
         tags:
           type: array
           items:

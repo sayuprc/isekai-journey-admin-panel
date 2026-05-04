@@ -23,6 +23,7 @@ class CreatorUsageCheckerTest extends DatabaseTestCase
         $creatorId = $this->generateUuid();
 
         $this->storeCreators($this->createCreator($creatorId, 'テスト', 1));
+        $this->storePersons($this->createPerson($creatorId, 'テスト', 1));
         $this->storeSongs($this->createSong(
             $this->generateUuid(),
             '曲名',
@@ -31,9 +32,7 @@ class CreatorUsageCheckerTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['creatorId' => $creatorId, 'orderNo' => 1]],
-            [],
-            [],
+            [['personId' => $creatorId, 'role' => 'lyricist', 'orderNo' => 1]],
         ));
 
         $result = $this->getInstance()->isUsed(CreatorId::reconstruct($creatorId));

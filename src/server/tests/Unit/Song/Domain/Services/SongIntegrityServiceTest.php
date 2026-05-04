@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Domain\Services;
 
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
+use Person\Domain\Models\PersonId;
+use Person\Domain\Models\PersonRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
@@ -24,7 +24,7 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&UuidGeneratorInterface $generator;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private MockInterface&PersonRepositoryInterface $personRepository;
 
     private MockInterface&SongRepositoryInterface $songRepository;
 
@@ -36,7 +36,7 @@ class SongIntegrityServiceTest extends TestCase
         parent::setUp();
 
         $this->generator = Mockery::mock(UuidGeneratorInterface::class);
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->personRepository = Mockery::mock(PersonRepositoryInterface::class);
         $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
         $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
     }
@@ -51,6 +51,11 @@ class SongIntegrityServiceTest extends TestCase
         $currentMaxOrderNo = 100;
         $expectedOrderNo = 110;
         $description = '説明';
+        $persons = [
+            ['personId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
+            ['personId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
+            ['personId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+        ];
 
         $expectedSong = $this->createSong(
             $uuid,
@@ -60,25 +65,23 @@ class SongIntegrityServiceTest extends TestCase
             true,
             $expectedOrderNo,
             [],
-            [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            $persons,
         );
 
-        $this->creatorRepository->shouldReceive('findByIds')
+        $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
                 fn (
-                    CreatorId $arg1,
-                    CreatorId $arg2,
-                    CreatorId $arg3,
+                    PersonId $arg1,
+                    PersonId $arg2,
+                    PersonId $arg3,
                 ): bool => $arg1->value === $lyricistId
                     && $arg2->value === $composerId
                     && $arg3->value === $arrangerId,
             )
             ->andReturn([
-                $this->createCreator($lyricistId, '', 1),
-                $this->createCreator($composerId, '', 1),
-                $this->createCreator($arrangerId, '', 1),
+                $this->createPerson($lyricistId, '', 1),
+                $this->createPerson($composerId, '', 1),
+                $this->createPerson($arrangerId, '', 1),
             ])
             ->once();
 
@@ -99,9 +102,7 @@ class SongIntegrityServiceTest extends TestCase
             $type,
             $isDisplay,
             [],
-            [['creatorId' => $lyricistId]],
-            [['creatorId' => $composerId]],
-            [['creatorId' => $arrangerId]],
+            $persons,
         );
 
         $this->assertTrue($result->isOk());
@@ -109,30 +110,31 @@ class SongIntegrityServiceTest extends TestCase
     }
 
     #[Test]
-    public function prepareForCreateNotExistsCreator(): void
+    public function prepareForCreateNotExistsPerson(): void
     {
         $title = '描き続けた君へ';
-        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $type = SongType::Original->value;
         $isDisplay = true;
-        $currentMaxOrderNo = 100;
-        $expectedOrderNo = 110;
         $description = '説明';
+        $persons = [
+            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
+            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
+            ['personId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+        ];
 
-        $this->creatorRepository->shouldReceive('findByIds')
+        $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
                 fn (
-                    CreatorId $arg1,
-                    CreatorId $arg2,
-                    CreatorId $arg3,
+                    PersonId $arg1,
+                    PersonId $arg2,
+                    PersonId $arg3,
                 ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                     && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                     && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
             )
             ->andReturn([
-                // D のやつがいない場合
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
-                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
+                $this->createPerson('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
+                $this->createPerson('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
             ])
             ->once();
 
@@ -143,9 +145,7 @@ class SongIntegrityServiceTest extends TestCase
             $type,
             $isDisplay,
             [],
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+            $persons,
         );
 
         $this->assertTrue($result->isErr());
@@ -160,6 +160,11 @@ class SongIntegrityServiceTest extends TestCase
         $type = SongType::Original->value;
         $isDisplay = true;
         $orderNo = 1;
+        $persons = [
+            ['personId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
+            ['personId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
+            ['personId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+        ];
 
         $expectedSong = $this->createSong(
             $songId,
@@ -169,25 +174,23 @@ class SongIntegrityServiceTest extends TestCase
             true,
             $orderNo,
             [],
-            [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'orderNo' => 1]],
-            [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'orderNo' => 1]],
-            [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'orderNo' => 1]],
+            $persons,
         );
 
-        $this->creatorRepository->shouldReceive('findByIds')
+        $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
                 fn (
-                    CreatorId $arg1,
-                    CreatorId $arg2,
-                    CreatorId $arg3,
+                    PersonId $arg1,
+                    PersonId $arg2,
+                    PersonId $arg3,
                 ): bool => $arg1->value === $lyricistId
                     && $arg2->value === $composerId
                     && $arg3->value === $arrangerId,
             )
             ->andReturn([
-                $this->createCreator($lyricistId, '', 1),
-                $this->createCreator($composerId, '', 1),
-                $this->createCreator($arrangerId, '', 1),
+                $this->createPerson($lyricistId, '', 1),
+                $this->createPerson($composerId, '', 1),
+                $this->createPerson($arrangerId, '', 1),
             ])
             ->once();
 
@@ -200,9 +203,7 @@ class SongIntegrityServiceTest extends TestCase
             $isDisplay,
             $orderNo,
             [],
-            [['creatorId' => $lyricistId]],
-            [['creatorId' => $composerId]],
-            [['creatorId' => $arrangerId]],
+            $persons,
         );
 
         $this->assertTrue($result->isOk());
@@ -210,7 +211,7 @@ class SongIntegrityServiceTest extends TestCase
     }
 
     #[Test]
-    public function prepareForUpdateNotExistsCreator(): void
+    public function prepareForUpdateNotExistsPerson(): void
     {
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $title = '描き続けた君へ';
@@ -218,20 +219,25 @@ class SongIntegrityServiceTest extends TestCase
         $type = SongType::Original->value;
         $isDisplay = true;
         $orderNo = 1;
+        $persons = [
+            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 'lyricist', 'orderNo' => 1],
+            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 'composer', 'orderNo' => 2],
+            ['personId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 'arranger', 'orderNo' => 3],
+        ];
 
-        $this->creatorRepository->shouldReceive('findByIds')
+        $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
                 fn (
-                    CreatorId $arg1,
-                    CreatorId $arg2,
-                    CreatorId $arg3,
+                    PersonId $arg1,
+                    PersonId $arg2,
+                    PersonId $arg3,
                 ): bool => $arg1->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'
                     && $arg2->value === 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'
                     && $arg3->value === 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD',
             )
             ->andReturn([
-                $this->createCreator('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
-                $this->createCreator('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
+                $this->createPerson('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '', 1),
+                $this->createPerson('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', '', 1),
             ])
             ->once();
 
@@ -244,9 +250,7 @@ class SongIntegrityServiceTest extends TestCase
             $isDisplay,
             $orderNo,
             [],
-            [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']],
-            [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']],
-            [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']],
+            $persons,
         );
 
         $this->assertTrue($result->isErr());
@@ -257,7 +261,7 @@ class SongIntegrityServiceTest extends TestCase
         return new SongIntegrityService(
             $this->generator,
             $this->songRepository,
-            $this->creatorRepository,
+            $this->personRepository,
             $this->songTagRepository,
         );
     }
