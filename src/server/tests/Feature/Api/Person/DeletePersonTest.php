@@ -6,6 +6,7 @@ namespace Tests\Feature\Api\Person;
 
 use Person\Route\PersonRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -42,6 +43,31 @@ class DeletePersonTest extends DatabaseTestCase
                         'message' => '予期せぬエラー',
                     ],
                 ],
+            ]);
+    }
+
+    #[Test]
+    public function cannotDeleteWhenUsedInSong(): void
+    {
+        $personId = $this->generateUuid();
+
+        $this->storePersons($this->createPerson($personId, '人物', 1));
+        $this->storeSongs($this->createSong(
+            $this->generateUuid(),
+            '曲名',
+            '説明',
+            SongType::Original,
+            true,
+            1,
+            [],
+            [['personId' => $personId, 'role' => 1, 'orderNo' => 1]],
+        ));
+
+        $this->withAuth()
+            ->delete(route(PersonRouteMap::Delete, $personId))
+            ->assertStatus(400)
+            ->assertExactJson([
+                'message' => 'この人物は楽曲に使用されているため削除できません',
             ]);
     }
 }
