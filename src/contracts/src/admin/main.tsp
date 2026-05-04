@@ -3,6 +3,7 @@ import "@typespec/versioning";
 import "./admin-users";
 import "./auth";
 import "./creators";
+import "./persons";
 import "./performers";
 import "./song-tags";
 import "./song-types";
