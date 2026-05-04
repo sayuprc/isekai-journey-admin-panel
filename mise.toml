@@ -38,6 +38,7 @@ run = [
   { task = "build" },
   { tasks = ["api:composer:install", "bun:install"] },
   { task = "up" },
+  "lefthook install",
 ]
 
 [tasks.build]
@@ -318,8 +319,9 @@ depends = ["admin:lint:fix", "admin:style:fix"]
 
 [tasks."admin:lint"]
 description = "ESLint を実行する"
+usage = 'arg "[path]" var=#true help="ESLint 対象パス"'
 dir = "src"
-run = "bun --filter admin lint:check"
+run = "bun --filter admin lint:check ${usage_path}"
 
 [tasks."admin:lint:fix"]
 description = "ESLint を --fix オプション付きで実行する"
@@ -328,8 +330,9 @@ run = "bun --filter admin lint"
 
 [tasks."admin:style"]
 description = "Stylelint を実行する"
+usage = 'arg "[path]" var=#true help="Stylelint 対象パス"'
 dir = "src"
-run = "bun --filter admin style:check"
+run = "bun --filter admin style:check ${usage_path}"
 
 [tasks."admin:style:fix"]
 description = "Stylelint を --fix オプション付きで実行する"

@@ -4,33 +4,32 @@
 pre-commit:
   parallel: true
   commands:
-    php-ecs:
+    api-ecs:
       root: "src/server/"
       glob: "{app,bootstrap,config,database,packages,routes,tests,tools}/**/*.php"
-      run: docker exec isekai-observatory-api vendor/bin/ecs check --no-progress-bar -- {staged_files}
+      run: mise run api:ecs -- {staged_files}
 
-    php-phpstan:
+    api-phpstan:
       root: "src/server/"
       glob: "{app,bootstrap,packages}/**/*.php"
-      run: docker exec isekai-observatory-api vendor/bin/phpstan analyze --no-progress -- {staged_files}
+      run: mise run api:phpstan -- {staged_files}
 
-    eslint:
+    admin-lint:
       root: "src/admin/"
       glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
-      run: bunx eslint {staged_files}
+      run: mise run admin:lint -- {staged_files}
 
-    stylelint:
+    admin-style:
       root: "src/admin/"
       glob: "src/**/*.{css,astro}"
-      run: bunx stylelint {staged_files}
+      run: mise run admin:style -- {staged_files}
 
-    tsp-format:
-      root: "src/contracts/"
-      glob: "src/**/*.tsp"
-      run: bun run format:check
+    contracts-format:
+      root: "src/"
+      glob: "contracts/src/**/*.tsp"
+      run: mise run contract:format:check
 
-    tsp-test:
-      root: "src/contracts/"
-      glob: "scripts/**/*.ts"
-      run: bun test
-
+    contracts-test:
+      root: "src/"
+      glob: "contracts/scripts/**/*.ts"
+      run: mise run contract:test
