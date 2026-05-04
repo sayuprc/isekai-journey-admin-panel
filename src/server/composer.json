@@ -43,6 +43,7 @@
       "Support\\": "packages/Support/",
       "Song\\": "packages/Song/",
       "Creator\\": "packages/Creator/",
+      "Person\\": "packages/Person/",
       "AdminUser\\": "packages/AdminUser/",
       "Performer\\": "packages/Performer/",
       "Auth\\": "packages/Auth/",

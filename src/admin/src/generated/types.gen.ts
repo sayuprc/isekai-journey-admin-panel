@@ -137,6 +137,47 @@ export type Permission = {
  */
 export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_creator' | 'write_creator' | 'read_performer' | 'write_performer' | 'read_song' | 'write_song';
 
+export type Person = {
+    personId: PersonId;
+    name: PersonName;
+    orderNo: OrderNo;
+};
+
+export type PersonCreateRequest = {
+    name: PersonName;
+};
+
+export type PersonCreateResponse = {
+    person: Person;
+};
+
+export type PersonGetResponse = {
+    person: Person;
+};
+
+export type PersonListResponse = {
+    persons: Array<Person>;
+};
+
+export type PersonSearchResponse = {
+    persons: Array<Person>;
+    maxPage: number;
+};
+
+/**
+ * 人物検索のソート条件
+ */
+export type PersonSearchSortBy = 'name' | 'order_no';
+
+export type PersonUpdateRequest = {
+    name: PersonName;
+    orderNo: OrderNo;
+};
+
+export type PersonUpdateResponse = {
+    person: Person;
+};
+
 export type RefreshTokenRequest = {
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
@@ -411,6 +452,16 @@ export type PerformerName = string;
  * 権限名
  */
 export type PermissionName = string;
+
+/**
+ * 人物ID
+ */
+export type PersonId = string;
+
+/**
+ * 人物名
+ */
+export type PersonName = string;
 
 /**
  * リフレッシュトークン
@@ -1161,6 +1212,296 @@ export type PerformerServiceUpdatePerformerResponses = {
 };
 
 export type PerformerServiceUpdatePerformerResponse = PerformerServiceUpdatePerformerResponses[keyof PerformerServiceUpdatePerformerResponses];
+
+export type PersonServiceListPersonsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/persons';
+};
+
+export type PersonServiceListPersonsErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceListPersonsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PersonListResponse;
+};
+
+export type PersonServiceListPersonsResponse = PersonServiceListPersonsResponses[keyof PersonServiceListPersonsResponses];
+
+export type PersonServiceCreatePersonData = {
+    body: PersonCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/persons';
+};
+
+export type PersonServiceCreatePersonErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceCreatePersonError = PersonServiceCreatePersonErrors[keyof PersonServiceCreatePersonErrors];
+
+export type PersonServiceCreatePersonResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PersonCreateResponse;
+};
+
+export type PersonServiceCreatePersonResponse = PersonServiceCreatePersonResponses[keyof PersonServiceCreatePersonResponses];
+
+export type PersonServiceSearchPersonsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        name?: string;
+        sort?: PersonSearchSortBy;
+        order?: SortOrder;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/persons/search';
+};
+
+export type PersonServiceSearchPersonsErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceSearchPersonsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PersonSearchResponse;
+};
+
+export type PersonServiceSearchPersonsResponse = PersonServiceSearchPersonsResponses[keyof PersonServiceSearchPersonsResponses];
+
+export type PersonServiceDeletePersonData = {
+    body?: never;
+    path: {
+        personId: Uuid;
+    };
+    query?: never;
+    url: '/persons/{personId}';
+};
+
+export type PersonServiceDeletePersonErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceDeletePersonError = PersonServiceDeletePersonErrors[keyof PersonServiceDeletePersonErrors];
+
+export type PersonServiceDeletePersonResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type PersonServiceDeletePersonResponse = PersonServiceDeletePersonResponses[keyof PersonServiceDeletePersonResponses];
+
+export type PersonServiceGetPersonData = {
+    body?: never;
+    path: {
+        personId: Uuid;
+    };
+    query?: never;
+    url: '/persons/{personId}';
+};
+
+export type PersonServiceGetPersonErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceGetPersonError = PersonServiceGetPersonErrors[keyof PersonServiceGetPersonErrors];
+
+export type PersonServiceGetPersonResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PersonGetResponse;
+};
+
+export type PersonServiceGetPersonResponse = PersonServiceGetPersonResponses[keyof PersonServiceGetPersonResponses];
+
+export type PersonServiceUpdatePersonData = {
+    body: PersonUpdateRequest;
+    path: {
+        personId: Uuid;
+    };
+    query?: never;
+    url: '/persons/{personId}';
+};
+
+export type PersonServiceUpdatePersonErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceUpdatePersonError = PersonServiceUpdatePersonErrors[keyof PersonServiceUpdatePersonErrors];
+
+export type PersonServiceUpdatePersonResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PersonUpdateResponse;
+};
+
+export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
 
 export type SongTagServiceListSongTagsData = {
     body?: never;
