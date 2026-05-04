@@ -1,5 +1,5 @@
 import "../lib";
-import "../creators";
+import "../persons";
 import "../song-tags";
 
 namespace IsekaiObservatory.Admin;
@@ -26,9 +26,15 @@ scalar lyricsLink extends string;
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   isDisplay: true,
   orderNo: 1,
-  lyricists: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
-  composers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
-  arrangers: #[#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 }],
+  persons: #[
+    #{
+      personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
+      name: "ヰ世界情緒",
+      role: SongPersonRole.Lyricist,
+      orderNo: 1,
+    },
+    #{ personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", role: SongPersonRole.Composer, orderNo: 2 }
+  ],
   tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲" }],
 })
 model Song {
@@ -39,9 +45,7 @@ model Song {
   type: SongType;
   isDisplay: boolean;
   orderNo: orderNo;
-  lyricists: Lyricist[];
-  composers: Composer[];
-  arrangers: Arranger[];
+  persons: SongPerson[];
   tags: SongAttachedTag[];
 }
 
@@ -76,9 +80,16 @@ model SongSummary {
   orderNo: orderNo;
 }
 
-model SongCreator {
-  creatorId: creatorId;
-  name: creatorName;
+enum SongPersonRole {
+  Lyricist: 1,
+  Composer: 2,
+  Arranger: 3,
+}
+
+model SongPerson {
+  personId: personId;
+  name: personName;
+  role: SongPersonRole;
   orderNo: orderNo;
 }
 
@@ -86,12 +97,3 @@ model SongAttachedTag {
   songTagId: songTagId;
   name: songTagName;
 }
-
-@example(#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 })
-model Lyricist extends SongCreator {}
-
-@example(#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 })
-model Composer extends SongCreator {}
-
-@example(#{ creatorId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", orderNo: 1 })
-model Arranger extends SongCreator {}

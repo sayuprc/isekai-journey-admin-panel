@@ -39,6 +39,7 @@ class DeleteCreatorTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(CreatorRepository::class)->save($this->createCreator($creatorId, 'クリエイター', 1));
+        $this->storePersons($this->createPerson($creatorId, 'クリエイター', 1));
         $this->app->make(SongRepository::class)->save($this->createSong(
             $songId,
             '曲名',
@@ -47,9 +48,7 @@ class DeleteCreatorTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['creatorId' => $creatorId, 'orderNo' => 1]],
-            [],
-            [],
+            [['personId' => $creatorId, 'role' => 1, 'orderNo' => 1]],
         ));
 
         $this->withAuth()

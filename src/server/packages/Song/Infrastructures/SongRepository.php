@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Song\Infrastructures;
 
 use App\Models\Song\Song as ModelsSong;
-use App\Models\Song\SongArranger;
-use App\Models\Song\SongComposer;
-use App\Models\Song\SongLyricist;
+use App\Models\Song\SongPerson as ModelsSongPerson;
 use App\Models\Song\SongTagging;
 use Creator\Domain\Models\CreatorId;
 use Override;
+use Person\Domain\Models\PersonId;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
@@ -42,13 +41,19 @@ readonly class SongRepository implements SongRepositoryInterface
     }
 
     #[Override]
+    public function isPersonUsed(PersonId $personId): bool
+    {
+        return ModelsSongPerson::query()
+            ->where('person_id', $this->converter->toBin($personId->value))
+            ->exists();
+    }
+
+    #[Override]
     public function isCreatorUsed(CreatorId $creatorId): bool
     {
-        $id = $this->converter->toBin($creatorId->value);
-
-        return SongLyricist::query()->where('creator_id', $id)->exists()
-            || SongComposer::query()->where('creator_id', $id)->exists()
-            || SongArranger::query()->where('creator_id', $id)->exists();
+        return ModelsSongPerson::query()
+            ->where('person_id', $this->converter->toBin($creatorId->value))
+            ->exists();
     }
 
     #[Override]
@@ -57,9 +62,7 @@ readonly class SongRepository implements SongRepositoryInterface
         $id = $this->converter->toBin($song->songId->value);
         $data = $song->toArray();
 
-        SongLyricist::query()->where('song_id', $id)->delete();
-        SongComposer::query()->where('song_id', $id)->delete();
-        SongArranger::query()->where('song_id', $id)->delete();
+        ModelsSongPerson::query()->where('song_id', $id)->delete();
         SongTagging::query()->where('song_id', $id)->delete();
 
         ModelsSong::query()->upsert(
@@ -86,21 +89,11 @@ readonly class SongRepository implements SongRepositoryInterface
             ],
         );
 
-        $lyricists = array_map(fn (array $row) => $this->toRecord($id, $row), $data['lyricists']);
-        $composers = array_map(fn (array $row) => $this->toRecord($id, $row), $data['composers']);
-        $arrangers = array_map(fn (array $row) => $this->toRecord($id, $row), $data['arrangers']);
+        $persons = array_map(fn (array $row) => $this->toPersonRecord($id, $row), $data['persons']);
         $tags = array_map(fn (array $row) => $this->toTaggingRecord($id, $row), $data['tags']);
 
-        if ($lyricists !== []) {
-            SongLyricist::query()->insert($lyricists);
-        }
-
-        if ($composers !== []) {
-            SongComposer::query()->insert($composers);
-        }
-
-        if ($arrangers !== []) {
-            SongArranger::query()->insert($arrangers);
+        if ($persons !== []) {
+            ModelsSongPerson::query()->insert($persons);
         }
 
         if ($tags !== []) {
@@ -111,15 +104,16 @@ readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * @param array{creator_id: string, order_no: int} $row
+     * @param array{person_id: string, role: int, order_no: int} $row
      *
-     * @return array{song_id: string, creator_id: string, order_no: int}
+     * @return array{song_id: string, person_id: string, role: int, order_no: int}
      */
-    private function toRecord(string $binId, array $row): array
+    private function toPersonRecord(string $binId, array $row): array
     {
         return [
             'song_id' => $binId,
-            'creator_id' => $this->converter->toBin($row['creator_id']),
+            'person_id' => $this->converter->toBin($row['person_id']),
+            'role' => $row['role'],
             'order_no' => $row['order_no'],
         ];
     }
@@ -152,20 +146,17 @@ readonly class SongRepository implements SongRepositoryInterface
 
     private function hydrate(ModelsSong $model): Song
     {
-        $fn = fn (SongArranger|SongComposer|SongLyricist $row): array => [
-            'creatorId' => $this->converter->toUuid($row->creator_id),
+        $fn = fn (ModelsSongPerson $row): array => [
+            'personId' => $this->converter->toUuid($row->person_id),
+            'role' => $row->role,
             'orderNo' => $row->order_no,
         ];
         $toTag = fn (SongTagging $row): array => [
             'songTagId' => $this->converter->toUuid($row->song_tag_id),
         ];
 
-        /** @var list<array{creatorId: string, orderNo: int}> */
-        $lyricists = $model->lyricists->map($fn)->all();
-        /** @var list<array{creatorId: string, orderNo: int}> */
-        $composers = $model->composers->map($fn)->all();
-        /** @var list<array{creatorId: string, orderNo: int}> */
-        $arrangers = $model->arrangers->map($fn)->all();
+        /** @var list<array{personId: string, role: int, orderNo: int}> */
+        $persons = $model->persons->sortBy('order_no')->map($fn)->values()->all();
         /** @var list<array{songTagId: string}> */
         $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));
 
@@ -178,9 +169,7 @@ readonly class SongRepository implements SongRepositoryInterface
             $model->is_display,
             $model->order_no,
             $tags,
-            $lyricists,
-            $composers,
-            $arrangers,
+            $persons,
         );
     }
 

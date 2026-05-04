@@ -15,9 +15,7 @@ model SongCreateRequest {
   lyricsLink: lyricsLink | null;
   typeValue: SongTypeValue;
   isDisplay: boolean;
-  lyricists: RequestLyricist[];
-  composers: RequestComposer[];
-  arrangers: RequestArranger[];
+  persons: RequestSongPerson[];
   tags: RequestSongTag[];
 }
 
@@ -32,9 +30,7 @@ model SongUpdateRequest {
   typeValue: SongTypeValue;
   isDisplay: boolean;
   orderNo: orderNo;
-  lyricists: RequestLyricist[];
-  composers: RequestComposer[];
-  arrangers: RequestArranger[];
+  persons: RequestSongPerson[];
   tags: RequestSongTag[];
 }
 
@@ -42,10 +38,6 @@ model SongUpdateResponse {
   song: Song;
 }
 
-model RequestLyricist is PickProperties<Lyricist, "creatorId">;
-
-model RequestComposer is PickProperties<Composer, "creatorId">;
-
-model RequestArranger is PickProperties<Arranger, "creatorId">;
+model RequestSongPerson is PickProperties<SongPerson, "personId" | "role" | "orderNo">;
 
 model RequestSongTag is PickProperties<SongTag, "songTagId">;

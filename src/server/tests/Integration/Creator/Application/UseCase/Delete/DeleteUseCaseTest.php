@@ -41,6 +41,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->storeCreators($this->createCreator($creatorId, 'クリエイター', 1));
+        $this->storePersons($this->createPerson($creatorId, 'クリエイター', 1));
         $this->storeSongs($this->createSong(
             $songId,
             '曲名',
@@ -49,9 +50,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
             true,
             1,
             [],
-            [['creatorId' => $creatorId, 'orderNo' => 1]],
-            [],
-            [],
+            [['personId' => $creatorId, 'role' => 1, 'orderNo' => 1]],
         ));
 
         $result = $this->getInstance()->handle(new DeleteInputData($creatorId));

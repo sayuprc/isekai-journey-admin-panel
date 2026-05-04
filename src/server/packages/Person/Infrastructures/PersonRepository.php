@@ -78,6 +78,19 @@ readonly class PersonRepository implements PersonRepositoryInterface
     }
 
     #[Override]
+    public function findByIds(PersonId ...$personIds): array
+    {
+        return ModelsPerson::query()
+            ->whereIn(
+                'person_id',
+                array_map(fn (PersonId $personId): string => $this->converter->toBin($personId->value), $personIds),
+            )
+            ->get()
+            ->map($this->hydrate(...))
+            ->all();
+    }
+
+    #[Override]
     public function findByName(PersonName $name): ?Person
     {
         $found = ModelsPerson::query()

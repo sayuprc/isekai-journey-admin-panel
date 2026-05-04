@@ -7,6 +7,7 @@ namespace Tests\Integration\Song\Application\UseCase;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\UseCase\Get\GetInputData;
 use Song\Application\UseCase\Get\GetUseCase;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\DatabaseTestCase;
@@ -21,11 +22,11 @@ class GetUseCaseTest extends DatabaseTestCase
     #[Test]
     public function getSong(): void
     {
-        $lyricist = $this->createCreator($lyricistId = $this->generateUuid(), '作詞者A', 1);
-        $composer = $this->createCreator($composerId = $this->generateUuid(), '作曲者A', 1);
-        $arranger = $this->createCreator($arrangerId = $this->generateUuid(), '編曲者A', 1);
+        $lyricist = $this->createPerson($lyricistId = $this->generateUuid(), '作詞者A', 1);
+        $composer = $this->createPerson($composerId = $this->generateUuid(), '作曲者A', 1);
+        $arranger = $this->createPerson($arrangerId = $this->generateUuid(), '編曲者A', 1);
 
-        $this->storeCreators($lyricist, $composer, $arranger);
+        $this->storePersons($lyricist, $composer, $arranger);
 
         $songId = $this->generateUuid();
 
@@ -38,9 +39,11 @@ class GetUseCaseTest extends DatabaseTestCase
                 true,
                 1,
                 [],
-                [['creatorId' => $lyricistId, 'orderNo' => 1]],
-                [['creatorId' => $composerId, 'orderNo' => 1]],
-                [['creatorId' => $arrangerId, 'orderNo' => 1]],
+                [
+                    ['personId' => $lyricistId, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $composerId, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $arrangerId, 'role' => 3, 'orderNo' => 3],
+                ],
             ),
         );
 
@@ -56,15 +59,14 @@ class GetUseCaseTest extends DatabaseTestCase
         $this->assertSame(SongType::Original->getName(), $response->song->typeName);
         $this->assertSame(SongType::Original->value, $response->song->typeValue);
         $this->assertSame(1, $response->song->orderNo);
-        $this->assertCount(1, $response->song->lyricists);
-        $this->assertSame($lyricistId, $response->song->lyricists[0]->creatorId);
-        $this->assertSame('作詞者A', $response->song->lyricists[0]->name);
-        $this->assertCount(1, $response->song->composers);
-        $this->assertSame($composerId, $response->song->composers[0]->creatorId);
-        $this->assertSame('作曲者A', $response->song->composers[0]->name);
-        $this->assertCount(1, $response->song->arrangers);
-        $this->assertSame($arrangerId, $response->song->arrangers[0]->creatorId);
-        $this->assertSame('編曲者A', $response->song->arrangers[0]->name);
+        $this->assertCount(3, $response->song->persons);
+        $this->assertSame($lyricistId, $response->song->persons[0]->personId);
+        $this->assertSame('作詞者A', $response->song->persons[0]->name);
+        $this->assertSame(SongPersonRole::Lyricist, $response->song->persons[0]->role);
+        $this->assertSame($composerId, $response->song->persons[1]->personId);
+        $this->assertSame(SongPersonRole::Composer, $response->song->persons[1]->role);
+        $this->assertSame($arrangerId, $response->song->persons[2]->personId);
+        $this->assertSame(SongPersonRole::Arranger, $response->song->persons[2]->role);
     }
 
     #[Test]

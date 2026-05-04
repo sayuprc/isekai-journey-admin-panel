@@ -10,9 +10,7 @@ variable "table_schemas" {
     "file://schemas/songs.my.hcl",
     "file://schemas/song-tags.my.hcl",
     "file://schemas/song-taggings.my.hcl",
-    "file://schemas/song-lyricists.my.hcl",
-    "file://schemas/song-composers.my.hcl",
-    "file://schemas/song-arrangers.my.hcl",
+    "file://schemas/song-persons.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
   ]
 }

@@ -12,6 +12,7 @@ use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
 use Override;
 use Performer\Domain\Models\Performer;
+use Person\Domain\Models\Person;
 use Song\Domain\Models\Song;
 use Support\Contracts\MapperInterface;
 
@@ -35,6 +36,7 @@ readonly class Mapper implements MapperInterface
             ->registerConstructor(RefreshToken::reconstruct(...))
             ->registerConstructor(Creator::reconstruct(...))
             ->registerConstructor(Performer::reconstruct(...))
+            ->registerConstructor(Person::reconstruct(...))
             ->registerConstructor(Song::reconstruct(...))
             ->allowSuperfluousKeys()
             // 場合によって builder を DI できるようにして適宜変えるのがよさそう

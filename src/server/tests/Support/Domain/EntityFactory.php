@@ -24,11 +24,10 @@ use Performer\Domain\Models\PerformerName;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
-use Song\Domain\Models\Creators\Arrangers;
-use Song\Domain\Models\Creators\Composers;
-use Song\Domain\Models\Creators\Lyricists;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
+use Song\Domain\Models\Persons\SongPersonRole;
+use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongType;
@@ -76,7 +75,8 @@ trait EntityFactory
         mixed $typeOrIsDisplay = null,
         mixed $isDisplayOrOrderNo = true,
         mixed $orderNoOrTags = 1,
-        mixed $tagsOrLyricists = [],
+        mixed $tagsOrPersons = [],
+        mixed $personsOrLyricists = [],
         mixed $lyricistsOrComposers = [],
         mixed $composersOrArrangers = [],
         mixed $arrangers = [],
@@ -87,18 +87,24 @@ trait EntityFactory
             $isDisplay = is_bool($typeOrIsDisplay) ? $typeOrIsDisplay : true;
             $orderNo = is_int($isDisplayOrOrderNo) ? $isDisplayOrOrderNo : 1;
             $tags = is_array($orderNoOrTags) ? $orderNoOrTags : [];
-            $lyricists = is_array($tagsOrLyricists) ? $tagsOrLyricists : [];
-            $composers = is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [];
-            $arrangerItems = is_array($composersOrArrangers) ? $composersOrArrangers : [];
+            $persons = $this->normalizeSongPersons(
+                is_array($tagsOrPersons) ? $tagsOrPersons : [],
+                is_array($personsOrLyricists) ? $personsOrLyricists : [],
+                is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
+                is_array($composersOrArrangers) ? $composersOrArrangers : [],
+            );
         } else {
             $lyricsLink = is_string($lyricsLinkOrType) ? $lyricsLinkOrType : null;
             $type = $typeOrIsDisplay;
             $isDisplay = is_bool($isDisplayOrOrderNo) ? $isDisplayOrOrderNo : true;
             $orderNo = is_int($orderNoOrTags) ? $orderNoOrTags : 1;
-            $tags = is_array($tagsOrLyricists) ? $tagsOrLyricists : [];
-            $lyricists = is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [];
-            $composers = is_array($composersOrArrangers) ? $composersOrArrangers : [];
-            $arrangerItems = is_array($arrangers) ? $arrangers : [];
+            $tags = is_array($tagsOrPersons) ? $tagsOrPersons : [];
+            $persons = $this->normalizeSongPersons(
+                is_array($personsOrLyricists) ? $personsOrLyricists : [],
+                is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
+                is_array($composersOrArrangers) ? $composersOrArrangers : [],
+                is_array($arrangers) ? $arrangers : [],
+            );
         }
 
         assert($type instanceof SongType);
@@ -112,10 +118,41 @@ trait EntityFactory
             $isDisplay,
             OrderNo::reconstruct($orderNo),
             SongTagReferences::fromArray($tags)->unwrap(),
-            Lyricists::fromArray($lyricists)->unwrap(),
-            Composers::fromArray($composers)->unwrap(),
-            Arrangers::fromArray($arrangerItems)->unwrap(),
+            SongPersons::fromArray($persons)->unwrap(),
         );
+    }
+
+    /**
+     * @param list<array<string, mixed>> $personsOrLyricists
+     * @param list<array<string, mixed>> $composersOrLegacyLyricists
+     * @param list<array<string, mixed>> $arrangersOrLegacyComposers
+     * @param list<array<string, mixed>> $legacyArrangers
+     *
+     * @return list<array{personId: string, role: int, orderNo: int}>
+     */
+    private function normalizeSongPersons(
+        array $personsOrLyricists,
+        array $composersOrLegacyLyricists,
+        array $arrangersOrLegacyComposers,
+        array $legacyArrangers,
+    ): array {
+        if ($personsOrLyricists === [] || array_key_exists('personId', $personsOrLyricists[0] ?? [])) {
+            /** @var list<array{personId: string, role: int, orderNo: int}> */
+            return $personsOrLyricists;
+        }
+
+        $toPerson = fn (array $item, SongPersonRole $role): array => [
+            'personId' => (string)$item['creatorId'],
+            'role' => $role->value,
+            'orderNo' => (int)$item['orderNo'],
+        ];
+
+        return [
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Lyricist), $personsOrLyricists),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Composer), $composersOrLegacyLyricists),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $arrangersOrLegacyComposers),
+            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $legacyArrangers),
+        ];
     }
 
     protected function createSongTag(string $songTagId, string $name, int $orderNo): SongTag

@@ -6,6 +6,7 @@ namespace Tests\Integration\Song\Application\Assemble;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -25,6 +26,10 @@ class SongAssemblerTest extends DatabaseTestCase
         $type = SongType::Original;
         $orderNo = 1;
 
+        $lyricistId = $this->generateUuid();
+        $composerId = $this->generateUuid();
+        $arrangerId = $this->generateUuid();
+
         $song = $this->createSong(
             $uuid,
             $title,
@@ -33,15 +38,17 @@ class SongAssemblerTest extends DatabaseTestCase
             true,
             $orderNo,
             [],
-            [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
-            [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],
-            [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
+            [
+                ['personId' => $lyricistId, 'role' => 1, 'orderNo' => 1],
+                ['personId' => $composerId, 'role' => 2, 'orderNo' => 2],
+                ['personId' => $arrangerId, 'role' => 3, 'orderNo' => 3],
+            ],
         );
 
-        $this->storeCreators(
-            $this->createCreator($lyricistId, '作詞者', 1),
-            $this->createCreator($composerId, '作曲者', 1),
-            $this->createCreator($arrangerId, '編曲者', 1),
+        $this->storePersons(
+            $this->createPerson($lyricistId, '作詞者', 1),
+            $this->createPerson($composerId, '作曲者', 1),
+            $this->createPerson($arrangerId, '編曲者', 1),
         );
 
         $assembled = $this->getInstance()->assemble($song);
@@ -52,18 +59,14 @@ class SongAssemblerTest extends DatabaseTestCase
         $this->assertSame($type->getName(), $assembled->typeName);
         $this->assertSame($type->value, $assembled->typeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
-        $this->assertCount(1, $assembled->lyricists);
-        $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);
-        $this->assertSame('作詞者', $assembled->lyricists[0]->name);
-        $this->assertSame(1, $assembled->lyricists[0]->orderNo);
-        $this->assertCount(1, $assembled->composers);
-        $this->assertSame($composerId, $assembled->composers[0]->creatorId);
-        $this->assertSame('作曲者', $assembled->composers[0]->name);
-        $this->assertSame(1, $assembled->composers[0]->orderNo);
-        $this->assertCount(1, $assembled->arrangers);
-        $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
-        $this->assertSame('編曲者', $assembled->arrangers[0]->name);
-        $this->assertSame(1, $assembled->arrangers[0]->orderNo);
+        $this->assertCount(3, $assembled->persons);
+        $this->assertSame($lyricistId, $assembled->persons[0]->personId);
+        $this->assertSame('作詞者', $assembled->persons[0]->name);
+        $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
+        $this->assertSame($composerId, $assembled->persons[1]->personId);
+        $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);
+        $this->assertSame($arrangerId, $assembled->persons[2]->personId);
+        $this->assertSame(SongPersonRole::Arranger, $assembled->persons[2]->role);
     }
 
     private function getInstance(): SongAssembler

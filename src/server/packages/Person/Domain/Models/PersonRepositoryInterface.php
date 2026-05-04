@@ -22,6 +22,11 @@ interface PersonRepositoryInterface
 
     public function find(PersonId $personId): ?Person;
 
+    /**
+     * @return array<Person>
+     */
+    public function findByIds(PersonId ...$personIds): array;
+
     public function findByName(PersonName $name): ?Person;
 
     public function save(Person $person): Person;

@@ -11,11 +11,12 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Err;
 use ResultType\Ok;
-use Song\Application\Assemble\AssembledCreator;
+use Song\Application\Assemble\AssembledPerson;
 use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Create\CreateUseCase;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
@@ -58,9 +59,11 @@ class CreateUseCaseTest extends TestCase
         $typeValue = SongType::Original->value;
         $isDisplay = true;
         $orderNo = 1;
-        $lyricists = [['creatorId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
-        $composers = [['creatorId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
-        $arrangers = [['creatorId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
+        $persons = [
+            ['personId' => $lyricistId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 1, 'orderNo' => 1],
+            ['personId' => $composerId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 2, 'orderNo' => 2],
+            ['personId' => $arrangerId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 3, 'orderNo' => 3],
+        ];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -68,7 +71,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons)
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -79,54 +82,18 @@ class CreateUseCaseTest extends TestCase
                     $isDisplay,
                     $orderNo,
                     [],
-                    $lyricists,
-                    $composers,
-                    $arrangers,
+                    $persons,
                 )),
             )
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->withArgs(
-                fn (Song $arg): bool => $arg->songId->value === $songId
-                    && $arg->title->value === $title
-                    && $arg->description->value === $description
-                    && $arg->lyricsLink?->value === $lyricsLink
-                    && $arg->type->value === $typeValue
-                    && $arg->isDisplay === $isDisplay
-                    && $arg->orderNo->value === $orderNo
-                    && $arg->lyricists->count() === 1
-                    && $arg->lyricists[0]->creatorId->value === $lyricistId
-                    && $arg->lyricists[0]->orderNo->value === 1
-                    && $arg->composers->count() === 1
-                    && $arg->composers[0]->creatorId->value === $composerId
-                    && $arg->composers[0]->orderNo->value === 1
-                    && $arg->arrangers->count() === 1
-                    && $arg->arrangers[0]->creatorId->value === $arrangerId
-                    && $arg->arrangers[0]->orderNo->value === 1,
-            )
+            ->withArgs(fn (Song $arg): bool => $this->assertSong($arg, $songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, $persons))
             ->andReturn($song)
             ->once();
 
         $this->assembler->shouldReceive('assemble')
-            ->withArgs(
-                fn (Song $arg): bool => $arg->songId->value === $songId
-                    && $arg->title->value === $title
-                    && $arg->description->value === $description
-                    && $arg->lyricsLink?->value === $lyricsLink
-                    && $arg->type->value === $typeValue
-                    && $arg->isDisplay === $isDisplay
-                    && $arg->orderNo->value === $orderNo
-                    && $arg->lyricists->count() === 1
-                    && $arg->lyricists[0]->creatorId->value === $lyricistId
-                    && $arg->lyricists[0]->orderNo->value === 1
-                    && $arg->composers->count() === 1
-                    && $arg->composers[0]->creatorId->value === $composerId
-                    && $arg->composers[0]->orderNo->value === 1
-                    && $arg->arrangers->count() === 1
-                    && $arg->arrangers[0]->creatorId->value === $arrangerId
-                    && $arg->arrangers[0]->orderNo->value === 1,
-            )
+            ->withArgs(fn (Song $arg): bool => $this->assertSong($arg, $songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, $persons))
             ->andReturn(
                 new AssembledSong(
                     $song->songId->value,
@@ -137,9 +104,11 @@ class CreateUseCaseTest extends TestCase
                     $song->type->value,
                     $song->isDisplay,
                     $song->orderNo->value,
-                    [new AssembledCreator($lyricistId, '作詞者', 1)],
-                    [new AssembledCreator($composerId, '作曲者', 1)],
-                    [new AssembledCreator($arrangerId, '編曲者', 1)],
+                    [
+                        new AssembledPerson($lyricistId, '作詞者', SongPersonRole::Lyricist, 1),
+                        new AssembledPerson($composerId, '作曲者', SongPersonRole::Composer, 2),
+                        new AssembledPerson($arrangerId, '編曲者', SongPersonRole::Arranger, 3),
+                    ],
                 ),
             )
             ->once();
@@ -152,9 +121,7 @@ class CreateUseCaseTest extends TestCase
                 $typeValue,
                 $isDisplay,
                 [],
-                $lyricists,
-                $composers,
-                $arrangers,
+                $persons,
             ),
         );
 
@@ -162,16 +129,18 @@ class CreateUseCaseTest extends TestCase
     }
 
     #[Test]
-    public function createFailsIfCreatorIdNotExists(): void
+    public function createFailsIfPersonIdNotExists(): void
     {
         $title = '曲名';
         $description = '説明';
         $lyricsLink = null;
         $typeValue = 1;
         $isDisplay = true;
-        $lyricists = [['creatorId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB']];
-        $composers = [['creatorId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC']];
-        $arrangers = [['creatorId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD']];
+        $persons = [
+            ['personId' => 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'role' => 1, 'orderNo' => 1],
+            ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 2, 'orderNo' => 2],
+            ['personId' => 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'role' => 3, 'orderNo' => 3],
+        ];
 
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
@@ -179,7 +148,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $lyricists, $composers, $arrangers)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons)
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
@@ -191,13 +160,51 @@ class CreateUseCaseTest extends TestCase
                 $typeValue,
                 $isDisplay,
                 [],
-                $lyricists,
-                $composers,
-                $arrangers,
+                $persons,
             ),
         );
 
         $this->assertTrue($result->isErr());
+    }
+
+    /**
+     * @param list<array{personId: string, role: string, orderNo: int}> $persons
+     */
+    private function assertSong(
+        Song $song,
+        string $songId,
+        string $title,
+        string $description,
+        ?string $lyricsLink,
+        int $typeValue,
+        bool $isDisplay,
+        int $orderNo,
+        array $persons,
+    ): bool {
+        if (
+            $song->songId->value !== $songId
+            || $song->title->value !== $title
+            || $song->description->value !== $description
+            || $song->lyricsLink?->value !== $lyricsLink
+            || $song->type->value !== $typeValue
+            || $song->isDisplay !== $isDisplay
+            || $song->orderNo->value !== $orderNo
+            || $song->persons->count() !== count($persons)
+        ) {
+            return false;
+        }
+
+        foreach ($persons as $index => $person) {
+            if (
+                $song->persons[$index]->personId->value !== $person['personId']
+                || $song->persons[$index]->role->value !== $person['role']
+                || $song->persons[$index]->orderNo->value !== $person['orderNo']
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function getInstance(): CreateUseCase
