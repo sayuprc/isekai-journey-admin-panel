@@ -7,7 +7,6 @@ namespace Song\Infrastructures;
 use App\Models\Song\Song as ModelsSong;
 use App\Models\Song\SongPerson as ModelsSongPerson;
 use App\Models\Song\SongTagging;
-use Creator\Domain\Models\CreatorId;
 use Override;
 use Person\Domain\Models\PersonId;
 use Song\Domain\Models\Song;
@@ -45,14 +44,6 @@ readonly class SongRepository implements SongRepositoryInterface
     {
         return ModelsSongPerson::query()
             ->where('person_id', $this->converter->toBin($personId->value))
-            ->exists();
-    }
-
-    #[Override]
-    public function isCreatorUsed(CreatorId $creatorId): bool
-    {
-        return ModelsSongPerson::query()
-            ->where('person_id', $this->converter->toBin($creatorId->value))
             ->exists();
     }
 

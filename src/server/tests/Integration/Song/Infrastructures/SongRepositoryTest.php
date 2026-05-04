@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Infrastructures;
 
-use Creator\Domain\Models\CreatorId;
 use Person\Domain\Models\PersonId;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongId;
@@ -44,7 +43,7 @@ class SongRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function findWithCreators(): void
+    public function findWithPersons(): void
     {
         $person = $this->createPerson($this->generateUuid(), '人物', 1);
         $this->storePersons($person);
@@ -75,7 +74,7 @@ class SongRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function isCreatorUsed(): void
+    public function isPersonUsed(): void
     {
         $person = $this->createPerson($this->generateUuid(), '人物', 1);
         $this->storePersons($person);
@@ -95,14 +94,12 @@ class SongRepositoryTest extends DatabaseTestCase
 
         $repository->save($song);
 
-        $this->assertTrue($repository->isCreatorUsed(CreatorId::reconstruct($person->personId->value)));
         $this->assertTrue($repository->isPersonUsed($person->personId));
     }
 
     #[Test]
-    public function isCreatorNotUsed(): void
+    public function isPersonNotUsed(): void
     {
-        $this->assertFalse($this->getInstance()->isCreatorUsed(CreatorId::reconstruct($this->generateUuid())));
         $this->assertFalse($this->getInstance()->isPersonUsed(PersonId::reconstruct($this->generateUuid())));
     }
 

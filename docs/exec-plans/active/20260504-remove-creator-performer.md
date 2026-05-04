@@ -4,7 +4,7 @@ Creator Performer 削除
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -53,13 +53,16 @@ planned
 ## Decision Log
 
 - 2026-05-04: 削除 PR は cleanup に徹し、ここでは新機能追加を混ぜない。レビューの焦点を「消してよいか」に限定するため。
+- 2026-05-04: admin 生成物は `src/admin/src/generated` を明示的に再生成して更新した。`admin:generate` 実行後の生成先状態に差異があったため。
 
 ## Validation
 
 - `mise run contract:compile:admin`
 - `mise run api:generate`
 - `mise run admin:generate`
-- `mise run api:test -- src/server/tests/Feature/Api/Person src/server/tests/Feature/Api/Song`
-- `mise run api:test -- src/server/tests/Integration/Person src/server/tests/Integration/Song`
-- `mise run api:test -- src/server/tests/Unit/Person src/server/tests/Unit/Song`
 - `(cd src/admin && bunx tsc --noEmit)`
+- `mise run api:test -- tests/Feature/Api/Person`
+- `mise run api:test -- tests/Feature/Api/Song`
+- `mise run api:test -- tests/Integration/Person`
+- `mise run api:test -- tests/Integration/Song`
+- testing 用 DB 群 `isekai_observatory_testing_test_*` が未作成のため、API / Integration テストは環境起因で失敗することを確認
