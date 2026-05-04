@@ -17,51 +17,6 @@ export type AdminUserListResponse = {
     adminUsers: Array<AdminUser>;
 };
 
-export type Arranger = SongCreator;
-
-export type Composer = SongCreator;
-
-export type Creator = {
-    creatorId: CreatorId;
-    name: CreatorName;
-    orderNo: OrderNo;
-};
-
-export type CreatorCreateRequest = {
-    name: CreatorName;
-};
-
-export type CreatorCreateResponse = {
-    creator: Creator;
-};
-
-export type CreatorGetResponse = {
-    creator: Creator;
-};
-
-export type CreatorListResponse = {
-    creators: Array<Creator>;
-};
-
-export type CreatorSearchResponse = {
-    creators: Array<Creator>;
-    maxPage: number;
-};
-
-/**
- * クリエイター検索のソート条件
- */
-export type CreatorSearchSortBy = 'name' | 'order_no';
-
-export type CreatorUpdateRequest = {
-    name: CreatorName;
-    orderNo: OrderNo;
-};
-
-export type CreatorUpdateResponse = {
-    creator: Creator;
-};
-
 export type ErrorResponse = {
     message: string;
 };
@@ -79,53 +34,10 @@ export type LoginResponse = {
     refreshToken: RefreshToken;
 };
 
-export type Lyricist = SongCreator;
-
 /**
  * 1ページあたりの件数
  */
 export type PerPage = 25 | 50 | 100;
-
-export type Performer = {
-    performerId: PerformerId;
-    name: PerformerName;
-    orderNo: OrderNo;
-};
-
-export type PerformerCreateRequest = {
-    name: PerformerName;
-};
-
-export type PerformerCreateResponse = {
-    performer: Performer;
-};
-
-export type PerformerGetResponse = {
-    performer: Performer;
-};
-
-export type PerformerListResponse = {
-    performers: Array<Performer>;
-};
-
-export type PerformerSearchResponse = {
-    performers: Array<Performer>;
-    maxPage: number;
-};
-
-/**
- * 共演者検索のソート条件
- */
-export type PerformerSearchSortBy = 'name' | 'order_no';
-
-export type PerformerUpdateRequest = {
-    name: PerformerName;
-    orderNo: OrderNo;
-};
-
-export type PerformerUpdateResponse = {
-    performer: Performer;
-};
 
 export type Permission = {
     name: PermissionName;
@@ -135,7 +47,48 @@ export type Permission = {
 /**
  * 権限の値
  */
-export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_creator' | 'write_creator' | 'read_performer' | 'write_performer' | 'read_song' | 'write_song';
+export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song';
+
+export type Person = {
+    personId: PersonId;
+    name: PersonName;
+    orderNo: OrderNo;
+};
+
+export type PersonCreateRequest = {
+    name: PersonName;
+};
+
+export type PersonCreateResponse = {
+    person: Person;
+};
+
+export type PersonGetResponse = {
+    person: Person;
+};
+
+export type PersonListResponse = {
+    persons: Array<Person>;
+};
+
+export type PersonSearchResponse = {
+    persons: Array<Person>;
+    maxPage: number;
+};
+
+/**
+ * 人物検索のソート条件
+ */
+export type PersonSearchSortBy = 'name' | 'order_no';
+
+export type PersonUpdateRequest = {
+    name: PersonName;
+    orderNo: OrderNo;
+};
+
+export type PersonUpdateResponse = {
+    person: Person;
+};
 
 export type RefreshTokenRequest = {
     refreshTokenId: RefreshTokenId;
@@ -151,22 +104,10 @@ export type RefreshTokenResponse = {
 /**
  * The template for picking properties.
  */
-export type RequestArranger = {
-    creatorId: CreatorId;
-};
-
-/**
- * The template for picking properties.
- */
-export type RequestComposer = {
-    creatorId: CreatorId;
-};
-
-/**
- * The template for picking properties.
- */
-export type RequestLyricist = {
-    creatorId: CreatorId;
+export type RequestSongPerson = {
+    personId: PersonId;
+    role: SongPersonRole;
+    orderNo: OrderNo;
 };
 
 /**
@@ -194,9 +135,7 @@ export type Song = {
     type: SongType;
     isDisplay: boolean;
     orderNo: OrderNo;
-    lyricists: Array<Lyricist>;
-    composers: Array<Composer>;
-    arrangers: Array<Arranger>;
+    persons: Array<SongPerson>;
     tags: Array<SongAttachedTag>;
 };
 
@@ -211,9 +150,7 @@ export type SongCreateRequest = {
     lyricsLink: LyricsLink | null;
     typeValue: SongTypeValue;
     isDisplay: boolean;
-    lyricists: Array<RequestLyricist>;
-    composers: Array<RequestComposer>;
-    arrangers: Array<RequestArranger>;
+    persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
 };
 
@@ -221,15 +158,18 @@ export type SongCreateResponse = {
     song: Song;
 };
 
-export type SongCreator = {
-    creatorId: CreatorId;
-    name: CreatorName;
-    orderNo: OrderNo;
-};
-
 export type SongGetResponse = {
     song: Song;
 };
+
+export type SongPerson = {
+    personId: PersonId;
+    name: PersonName;
+    role: SongPersonRole;
+    orderNo: OrderNo;
+};
+
+export type SongPersonRole = 1 | 2 | 3;
 
 export type SongSearchResponse = {
     songs: Array<SongSummary>;
@@ -311,9 +251,7 @@ export type SongUpdateRequest = {
     typeValue: SongTypeValue;
     isDisplay: boolean;
     orderNo: OrderNo;
-    lyricists: Array<RequestLyricist>;
-    composers: Array<RequestComposer>;
-    arrangers: Array<RequestArranger>;
+    persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
 };
 
@@ -358,16 +296,6 @@ export type AdminUserName = string;
 export type CreatedAt = string;
 
 /**
- * クリエイターID
- */
-export type CreatorId = string;
-
-/**
- * クリエイター名
- */
-export type CreatorName = string;
-
-/**
  * 楽曲の説明
  */
 export type Description = string;
@@ -398,19 +326,19 @@ export type Page = number;
 export type Password = string;
 
 /**
- * 共演者ID
- */
-export type PerformerId = string;
-
-/**
- * 共演者名
- */
-export type PerformerName = string;
-
-/**
  * 権限名
  */
 export type PermissionName = string;
+
+/**
+ * 人物ID
+ */
+export type PersonId = string;
+
+/**
+ * 人物名
+ */
+export type PersonName = string;
 
 /**
  * リフレッシュトークン
@@ -582,14 +510,14 @@ export type AuthenticateServiceRefreshResponses = {
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
 
-export type CreatorServiceListCreatorsData = {
+export type PersonServiceListPersonsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/creators';
+    url: '/persons';
 };
 
-export type CreatorServiceListCreatorsErrors = {
+export type PersonServiceListPersonsErrors = {
     /**
      * Access is unauthorized.
      */
@@ -612,23 +540,23 @@ export type CreatorServiceListCreatorsErrors = {
     504: unknown;
 };
 
-export type CreatorServiceListCreatorsResponses = {
+export type PersonServiceListPersonsResponses = {
     /**
      * The request has succeeded.
      */
-    200: CreatorListResponse;
+    200: PersonListResponse;
 };
 
-export type CreatorServiceListCreatorsResponse = CreatorServiceListCreatorsResponses[keyof CreatorServiceListCreatorsResponses];
+export type PersonServiceListPersonsResponse = PersonServiceListPersonsResponses[keyof PersonServiceListPersonsResponses];
 
-export type CreatorServiceCreateCreatorData = {
-    body: CreatorCreateRequest;
+export type PersonServiceCreatePersonData = {
+    body: PersonCreateRequest;
     path?: never;
     query?: never;
-    url: '/creators';
+    url: '/persons';
 };
 
-export type CreatorServiceCreateCreatorErrors = {
+export type PersonServiceCreatePersonErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -659,31 +587,31 @@ export type CreatorServiceCreateCreatorErrors = {
     504: unknown;
 };
 
-export type CreatorServiceCreateCreatorError = CreatorServiceCreateCreatorErrors[keyof CreatorServiceCreateCreatorErrors];
+export type PersonServiceCreatePersonError = PersonServiceCreatePersonErrors[keyof PersonServiceCreatePersonErrors];
 
-export type CreatorServiceCreateCreatorResponses = {
+export type PersonServiceCreatePersonResponses = {
     /**
      * The request has succeeded.
      */
-    200: CreatorCreateResponse;
+    200: PersonCreateResponse;
 };
 
-export type CreatorServiceCreateCreatorResponse = CreatorServiceCreateCreatorResponses[keyof CreatorServiceCreateCreatorResponses];
+export type PersonServiceCreatePersonResponse = PersonServiceCreatePersonResponses[keyof PersonServiceCreatePersonResponses];
 
-export type CreatorServiceSearchCreatorsData = {
+export type PersonServiceSearchPersonsData = {
     body?: never;
     path?: never;
     query?: {
         name?: string;
-        sort?: CreatorSearchSortBy;
+        sort?: PersonSearchSortBy;
         order?: SortOrder;
         page?: Page;
         per_page?: PerPage;
     };
-    url: '/creators/search';
+    url: '/persons/search';
 };
 
-export type CreatorServiceSearchCreatorsErrors = {
+export type PersonServiceSearchPersonsErrors = {
     /**
      * Access is unauthorized.
      */
@@ -706,25 +634,25 @@ export type CreatorServiceSearchCreatorsErrors = {
     504: unknown;
 };
 
-export type CreatorServiceSearchCreatorsResponses = {
+export type PersonServiceSearchPersonsResponses = {
     /**
      * The request has succeeded.
      */
-    200: CreatorSearchResponse;
+    200: PersonSearchResponse;
 };
 
-export type CreatorServiceSearchCreatorsResponse = CreatorServiceSearchCreatorsResponses[keyof CreatorServiceSearchCreatorsResponses];
+export type PersonServiceSearchPersonsResponse = PersonServiceSearchPersonsResponses[keyof PersonServiceSearchPersonsResponses];
 
-export type CreatorServiceDeleteCreatorData = {
+export type PersonServiceDeletePersonData = {
     body?: never;
     path: {
-        creatorId: Uuid;
+        personId: Uuid;
     };
     query?: never;
-    url: '/creators/{creatorId}';
+    url: '/persons/{personId}';
 };
 
-export type CreatorServiceDeleteCreatorErrors = {
+export type PersonServiceDeletePersonErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -755,27 +683,27 @@ export type CreatorServiceDeleteCreatorErrors = {
     504: unknown;
 };
 
-export type CreatorServiceDeleteCreatorError = CreatorServiceDeleteCreatorErrors[keyof CreatorServiceDeleteCreatorErrors];
+export type PersonServiceDeletePersonError = PersonServiceDeletePersonErrors[keyof PersonServiceDeletePersonErrors];
 
-export type CreatorServiceDeleteCreatorResponses = {
+export type PersonServiceDeletePersonResponses = {
     /**
      * There is no content to send for this request, but the headers may be useful.
      */
     204: void;
 };
 
-export type CreatorServiceDeleteCreatorResponse = CreatorServiceDeleteCreatorResponses[keyof CreatorServiceDeleteCreatorResponses];
+export type PersonServiceDeletePersonResponse = PersonServiceDeletePersonResponses[keyof PersonServiceDeletePersonResponses];
 
-export type CreatorServiceGetCreatorData = {
+export type PersonServiceGetPersonData = {
     body?: never;
     path: {
-        creatorId: Uuid;
+        personId: Uuid;
     };
     query?: never;
-    url: '/creators/{creatorId}';
+    url: '/persons/{personId}';
 };
 
-export type CreatorServiceGetCreatorErrors = {
+export type PersonServiceGetPersonErrors = {
     /**
      * Access is unauthorized.
      */
@@ -806,27 +734,27 @@ export type CreatorServiceGetCreatorErrors = {
     504: unknown;
 };
 
-export type CreatorServiceGetCreatorError = CreatorServiceGetCreatorErrors[keyof CreatorServiceGetCreatorErrors];
+export type PersonServiceGetPersonError = PersonServiceGetPersonErrors[keyof PersonServiceGetPersonErrors];
 
-export type CreatorServiceGetCreatorResponses = {
+export type PersonServiceGetPersonResponses = {
     /**
      * The request has succeeded.
      */
-    200: CreatorGetResponse;
+    200: PersonGetResponse;
 };
 
-export type CreatorServiceGetCreatorResponse = CreatorServiceGetCreatorResponses[keyof CreatorServiceGetCreatorResponses];
+export type PersonServiceGetPersonResponse = PersonServiceGetPersonResponses[keyof PersonServiceGetPersonResponses];
 
-export type CreatorServiceUpdateCreatorData = {
-    body: CreatorUpdateRequest;
+export type PersonServiceUpdatePersonData = {
+    body: PersonUpdateRequest;
     path: {
-        creatorId: Uuid;
+        personId: Uuid;
     };
     query?: never;
-    url: '/creators/{creatorId}';
+    url: '/persons/{personId}';
 };
 
-export type CreatorServiceUpdateCreatorErrors = {
+export type PersonServiceUpdatePersonErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -861,306 +789,16 @@ export type CreatorServiceUpdateCreatorErrors = {
     504: unknown;
 };
 
-export type CreatorServiceUpdateCreatorError = CreatorServiceUpdateCreatorErrors[keyof CreatorServiceUpdateCreatorErrors];
+export type PersonServiceUpdatePersonError = PersonServiceUpdatePersonErrors[keyof PersonServiceUpdatePersonErrors];
 
-export type CreatorServiceUpdateCreatorResponses = {
+export type PersonServiceUpdatePersonResponses = {
     /**
      * The request has succeeded.
      */
-    200: CreatorUpdateResponse;
+    200: PersonUpdateResponse;
 };
 
-export type CreatorServiceUpdateCreatorResponse = CreatorServiceUpdateCreatorResponses[keyof CreatorServiceUpdateCreatorResponses];
-
-export type PerformerServiceListPerformersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/performers';
-};
-
-export type PerformerServiceListPerformersErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceListPerformersResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: PerformerListResponse;
-};
-
-export type PerformerServiceListPerformersResponse = PerformerServiceListPerformersResponses[keyof PerformerServiceListPerformersResponses];
-
-export type PerformerServiceCreatePerformerData = {
-    body: PerformerCreateRequest;
-    path?: never;
-    query?: never;
-    url: '/performers';
-};
-
-export type PerformerServiceCreatePerformerErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorResponse;
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * Client error
-     */
-    422: ValidationError;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceCreatePerformerError = PerformerServiceCreatePerformerErrors[keyof PerformerServiceCreatePerformerErrors];
-
-export type PerformerServiceCreatePerformerResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: PerformerCreateResponse;
-};
-
-export type PerformerServiceCreatePerformerResponse = PerformerServiceCreatePerformerResponses[keyof PerformerServiceCreatePerformerResponses];
-
-export type PerformerServiceSearchPerformersData = {
-    body?: never;
-    path?: never;
-    query?: {
-        name?: string;
-        sort?: PerformerSearchSortBy;
-        order?: SortOrder;
-        page?: Page;
-        per_page?: PerPage;
-    };
-    url: '/performers/search';
-};
-
-export type PerformerServiceSearchPerformersErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceSearchPerformersResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: PerformerSearchResponse;
-};
-
-export type PerformerServiceSearchPerformersResponse = PerformerServiceSearchPerformersResponses[keyof PerformerServiceSearchPerformersResponses];
-
-export type PerformerServiceDeletePerformerData = {
-    body?: never;
-    path: {
-        performerId: Uuid;
-    };
-    query?: never;
-    url: '/performers/{performerId}';
-};
-
-export type PerformerServiceDeletePerformerErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorResponse;
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * Client error
-     */
-    422: ValidationError;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceDeletePerformerError = PerformerServiceDeletePerformerErrors[keyof PerformerServiceDeletePerformerErrors];
-
-export type PerformerServiceDeletePerformerResponses = {
-    /**
-     * There is no content to send for this request, but the headers may be useful.
-     */
-    204: void;
-};
-
-export type PerformerServiceDeletePerformerResponse = PerformerServiceDeletePerformerResponses[keyof PerformerServiceDeletePerformerResponses];
-
-export type PerformerServiceGetPerformerData = {
-    body?: never;
-    path: {
-        performerId: Uuid;
-    };
-    query?: never;
-    url: '/performers/{performerId}';
-};
-
-export type PerformerServiceGetPerformerErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * The server cannot find the requested resource.
-     */
-    404: ErrorResponse;
-    /**
-     * Client error
-     */
-    422: ValidationError;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceGetPerformerError = PerformerServiceGetPerformerErrors[keyof PerformerServiceGetPerformerErrors];
-
-export type PerformerServiceGetPerformerResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: PerformerGetResponse;
-};
-
-export type PerformerServiceGetPerformerResponse = PerformerServiceGetPerformerResponses[keyof PerformerServiceGetPerformerResponses];
-
-export type PerformerServiceUpdatePerformerData = {
-    body: PerformerUpdateRequest;
-    path: {
-        performerId: Uuid;
-    };
-    query?: never;
-    url: '/performers/{performerId}';
-};
-
-export type PerformerServiceUpdatePerformerErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorResponse;
-    /**
-     * Access is unauthorized.
-     */
-    401: unknown;
-    /**
-     * Access is forbidden.
-     */
-    403: unknown;
-    /**
-     * The server cannot find the requested resource.
-     */
-    404: ErrorResponse;
-    /**
-     * Client error
-     */
-    422: ValidationError;
-    /**
-     * Server error
-     */
-    500: unknown;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type PerformerServiceUpdatePerformerError = PerformerServiceUpdatePerformerErrors[keyof PerformerServiceUpdatePerformerErrors];
-
-export type PerformerServiceUpdatePerformerResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: PerformerUpdateResponse;
-};
-
-export type PerformerServiceUpdatePerformerResponse = PerformerServiceUpdatePerformerResponses[keyof PerformerServiceUpdatePerformerResponses];
+export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
 
 export type SongTagServiceListSongTagsData = {
     body?: never;

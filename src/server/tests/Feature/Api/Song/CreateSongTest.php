@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
-use Creator\Infrastructures\CreatorRepository;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\Tag\SongTagRepository;
@@ -22,10 +22,10 @@ class CreateSongTest extends DatabaseTestCase
     #[Test]
     public function canCreate(): void
     {
-        $creatorRepo = $this->app->make(CreatorRepository::class);
-        $creatorRepo->save($creator1 = $this->createCreator($this->generateUuid(), '作詞者', 1));
-        $creatorRepo->save($creator2 = $this->createCreator($this->generateUuid(), '作曲者', 1));
-        $creatorRepo->save($creator3 = $this->createCreator($this->generateUuid(), '編曲者', 1));
+        $personRepo = $this->app->make(PersonRepository::class);
+        $personRepo->save($person1 = $this->createPerson($this->generateUuid(), '作詞者', 1));
+        $personRepo->save($person2 = $this->createPerson($this->generateUuid(), '作曲者', 1));
+        $personRepo->save($person3 = $this->createPerson($this->generateUuid(), '編曲者', 1));
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($tag1 = $this->createSongTag($this->generateUuid(), 'タグA', 10));
         $tagRepo->save($tag2 = $this->createSongTag($this->generateUuid(), 'タグB', 20));
@@ -37,9 +37,11 @@ class CreateSongTest extends DatabaseTestCase
                 'lyricsLink' => 'https://example.com/lyrics',
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
-                'lyricists' => [['creatorId' => $creator1->creatorId->value]],
-                'composers' => [['creatorId' => $creator2->creatorId->value]],
-                'arrangers' => [['creatorId' => $creator3->creatorId->value]],
+                'persons' => [
+                    ['personId' => $person1->personId->value, 'role' => 1, 'orderNo' => 1],
+                    ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
+                    ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
+                ],
                 'tags' => [
                     ['songTagId' => $tag2->songTagId->value],
                     ['songTagId' => $tag1->songTagId->value],
@@ -60,20 +62,21 @@ class CreateSongTest extends DatabaseTestCase
                             ])
                             ->where('isDisplay', true)
                             ->where('orderNo', 10)
-                            ->where('lyricists', [[
-                                'creatorId' => $creator1->creatorId->value,
-                                'name' => $creator1->name->value,
+                            ->where('persons', [[
+                                'personId' => $person1->personId->value,
+                                'name' => $person1->name->value,
+                                'role' => 1,
                                 'orderNo' => 1,
-                            ]])
-                            ->where('composers', [[
-                                'creatorId' => $creator2->creatorId->value,
-                                'name' => $creator2->name->value,
-                                'orderNo' => 1,
-                            ]])
-                            ->where('arrangers', [[
-                                'creatorId' => $creator3->creatorId->value,
-                                'name' => $creator3->name->value,
-                                'orderNo' => 1,
+                            ], [
+                                'personId' => $person2->personId->value,
+                                'name' => $person2->name->value,
+                                'role' => 2,
+                                'orderNo' => 2,
+                            ], [
+                                'personId' => $person3->personId->value,
+                                'name' => $person3->name->value,
+                                'role' => 3,
+                                'orderNo' => 3,
                             ]])
                             ->where('tags', [[
                                 'songTagId' => $tag1->songTagId->value,
@@ -96,9 +99,7 @@ class CreateSongTest extends DatabaseTestCase
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
-                'lyricists' => [],
-                'composers' => [],
-                'arrangers' => [],
+                'persons' => [],
                 'tags' => [],
             ])->assertStatus(200)
             ->assertJsonPath('song.lyricsLink', null);
@@ -114,9 +115,7 @@ class CreateSongTest extends DatabaseTestCase
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
-                'lyricists' => [],
-                'composers' => [],
-                'arrangers' => [],
+                'persons' => [],
                 'tags' => [['songTagId' => $this->generateUuid()]],
             ])->assertStatus(400);
     }
@@ -134,9 +133,7 @@ class CreateSongTest extends DatabaseTestCase
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
-                'lyricists' => [],
-                'composers' => [],
-                'arrangers' => [],
+                'persons' => [],
                 'tags' => [
                     ['songTagId' => $tag->songTagId->value],
                     ['songTagId' => $tag->songTagId->value],

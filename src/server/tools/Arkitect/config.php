@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 use Tools\Arkitect\ComponentMaps\AdminUserComponent;
 use Tools\Arkitect\ComponentMaps\AuthComponent;
-use Tools\Arkitect\ComponentMaps\CreatorComponent;
 use Tools\Arkitect\ComponentMaps\LibraryComponent;
-use Tools\Arkitect\ComponentMaps\PerformerComponent;
+use Tools\Arkitect\ComponentMaps\PersonComponent;
 use Tools\Arkitect\ComponentMaps\SongComponent;
 use Tools\Arkitect\ComponentMaps\SupportComponent;
 use Tools\Arkitect\Define;
@@ -61,33 +60,15 @@ return [
         LibraryComponent::ResultType,
     ]),
 
-    new Define(CreatorComponent::Domain, [
-        CreatorComponent::Domain,
+    new Define(PersonComponent::Domain, [
+        PersonComponent::Domain,
         SupportComponent::Domain,
         SupportComponent::Contracts,
         SupportComponent::Optional,
         LibraryComponent::ResultType,
     ]),
-    new Define(CreatorComponent::UseCase, [
-        CreatorComponent::Domain,
-        AdminUserComponent::Domain,
-        AuthComponent::Domain,
-        SupportComponent::Contracts,
-        SupportComponent::Domain,
-        SupportComponent::Optional,
-        SupportComponent::UseCase,
-        LibraryComponent::ResultType,
-    ]),
-
-    new Define(PerformerComponent::Domain, [
-        PerformerComponent::Domain,
-        SupportComponent::Domain,
-        SupportComponent::Contracts,
-        SupportComponent::Optional,
-        LibraryComponent::ResultType,
-    ]),
-    new Define(PerformerComponent::UseCase, [
-        PerformerComponent::Domain,
+    new Define(PersonComponent::UseCase, [
+        PersonComponent::Domain,
         AdminUserComponent::Domain,
         AuthComponent::Domain,
         SupportComponent::Contracts,
@@ -99,7 +80,7 @@ return [
 
     new Define(SongComponent::Domain, [
         SongComponent::Domain,
-        CreatorComponent::Domain,
+        PersonComponent::Domain,
         SupportComponent::Domain,
         SupportComponent::Contracts,
         SupportComponent::Collection,
@@ -111,7 +92,7 @@ return [
     ]),
     new Define(SongComponent::Assemble, [
         SongComponent::Domain,
-        CreatorComponent::Domain,
+        PersonComponent::Domain,
     ]),
     new Define(SongComponent::UseCase, [
         SongComponent::Domain,

@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Integration\Person\Application\UseCase\Delete;
+
+use App\Models\Person\Person as ModelsPerson;
+use Person\Application\UseCase\Delete\DeleteInputData;
+use Person\Application\UseCase\Delete\DeleteUseCase;
+use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
+use Tests\Support\DatabaseTestCase;
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
+
+class DeleteUseCaseTest extends DatabaseTestCase
+{
+    use EntityFactory;
+    use EntityStore;
+
+    #[Test]
+    public function canDelete(): void
+    {
+        $uuid = $this->generateUuid();
+
+        $this->storePersons($this->createPerson($uuid, '人物', 1));
+
+        $result = $this->getInstance()->handle(new DeleteInputData($uuid));
+
+        $this->assertTrue($result->isOk());
+        $this->assertCount(0, ModelsPerson::query()->get()->all());
+    }
+
+    #[Test]
+    public function cannotDeleteWhenUsedInSong(): void
+    {
+        $personId = $this->generateUuid();
+
+        $this->storePersons($this->createPerson($personId, '人物', 1));
+        $this->storeSongs($this->createSong(
+            $this->generateUuid(),
+            '曲名',
+            '説明',
+            SongType::Original,
+            true,
+            1,
+            [],
+            [['personId' => $personId, 'role' => 1, 'orderNo' => 1]],
+        ));
+
+        $result = $this->getInstance()->handle(new DeleteInputData($personId));
+
+        $this->assertTrue($result->isErr());
+        $this->assertSame('この人物は楽曲に使用されているため削除できません', $result->unwrapErr()->message);
+        $this->assertCount(1, ModelsPerson::query()->get()->all());
+    }
+
+    private function getInstance(): DeleteUseCase
+    {
+        $this->privilegedContext();
+
+        return $this->app->make(DeleteUseCase::class);
+    }
+}

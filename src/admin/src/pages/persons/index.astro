@@ -1,0 +1,12 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import { SearchList } from '../../components/person/SearchList';
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = false;
+---
+
+<Layout pageTitle="人物一覧">
+  <FlashMessage client:only="solid-js" />
+  <SearchList client:only="solid-js" />
+</Layout>

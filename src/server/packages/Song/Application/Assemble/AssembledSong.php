@@ -7,10 +7,8 @@ namespace Song\Application\Assemble;
 readonly class AssembledSong
 {
     /**
-     * @param array<int, AssembledCreator> $lyricists
-     * @param array<int, AssembledCreator> $composers
-     * @param array<int, AssembledCreator> $arrangers
-     * @param array<int, AssembledTag>     $tags
+     * @param array<int, AssembledPerson> $persons
+     * @param array<int, AssembledTag>    $tags
      */
     public function __construct(
         public string $songId,
@@ -21,9 +19,7 @@ readonly class AssembledSong
         public int $typeValue,
         public bool $isDisplay,
         public int $orderNo,
-        public array $lyricists,
-        public array $composers,
-        public array $arrangers,
+        public array $persons,
         public array $tags = [],
     ) {
     }

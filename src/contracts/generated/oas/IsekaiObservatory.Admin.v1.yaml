@@ -5,8 +5,7 @@ info:
 tags:
   - name: AdminUser
   - name: Authenticate
-  - name: Creator
-  - name: Performer
+  - name: Person
   - name: SongTag
   - name: Song
   - name: SongType
@@ -111,10 +110,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
-  /creators:
+  /persons:
     get:
-      operationId: CreatorService_listCreators
-      description: クリエイター一覧取得API
+      operationId: PersonService_listPersons
+      description: 人物一覧取得API
       parameters: []
       responses:
         '200':
@@ -122,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatorListResponse'
+                $ref: '#/components/schemas/PersonListResponse'
         '401':
           description: Access is unauthorized.
         '403':
@@ -134,12 +133,12 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
+        - Person
       security:
         - BearerAuth: []
     post:
-      operationId: CreatorService_createCreator
-      description: クリエイター作成API
+      operationId: PersonService_createPerson
+      description: 人物作成API
       parameters: []
       responses:
         '200':
@@ -147,7 +146,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatorCreateResponse'
+                $ref: '#/components/schemas/PersonCreateResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -171,19 +170,19 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
+        - Person
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatorCreateRequest'
+              $ref: '#/components/schemas/PersonCreateRequest'
       security:
         - BearerAuth: []
-  /creators/search:
+  /persons/search:
     get:
-      operationId: CreatorService_searchCreators
-      description: クリエイター検索API
+      operationId: PersonService_searchPersons
+      description: 人物検索API
       parameters:
         - name: name
           in: query
@@ -195,7 +194,7 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/CreatorSearchSortBy'
+            $ref: '#/components/schemas/PersonSearchSortBy'
             default: order_no
           explode: false
         - name: order
@@ -225,7 +224,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatorSearchResponse'
+                $ref: '#/components/schemas/PersonSearchResponse'
         '401':
           description: Access is unauthorized.
         '403':
@@ -237,15 +236,15 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
+        - Person
       security:
         - BearerAuth: []
-  /creators/{creatorId}:
+  /persons/{personId}:
     get:
-      operationId: CreatorService_getCreator
-      description: クリエイター取得API
+      operationId: PersonService_getPerson
+      description: 人物取得API
       parameters:
-        - name: creatorId
+        - name: personId
           in: path
           required: true
           schema:
@@ -256,7 +255,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatorGetResponse'
+                $ref: '#/components/schemas/PersonGetResponse'
         '401':
           description: Access is unauthorized.
         '403':
@@ -280,14 +279,14 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
+        - Person
       security:
         - BearerAuth: []
     put:
-      operationId: CreatorService_updateCreator
-      description: クリエイター更新API
+      operationId: PersonService_updatePerson
+      description: 人物更新API
       parameters:
-        - name: creatorId
+        - name: personId
           in: path
           required: true
           schema:
@@ -298,7 +297,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatorUpdateResponse'
+                $ref: '#/components/schemas/PersonUpdateResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -328,20 +327,20 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
+        - Person
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatorUpdateRequest'
+              $ref: '#/components/schemas/PersonUpdateRequest'
       security:
         - BearerAuth: []
     delete:
-      operationId: CreatorService_deleteCreator
-      description: クリエイター削除API
+      operationId: PersonService_deletePerson
+      description: 人物削除API
       parameters:
-        - name: creatorId
+        - name: personId
           in: path
           required: true
           schema:
@@ -372,271 +371,7 @@ paths:
         '504':
           description: Server error
       tags:
-        - Creator
-      security:
-        - BearerAuth: []
-  /performers:
-    get:
-      operationId: PerformerService_listPerformers
-      description: 共演者一覧取得API
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PerformerListResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
-      security:
-        - BearerAuth: []
-    post:
-      operationId: PerformerService_createPerformer
-      description: 共演者作成API
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PerformerCreateResponse'
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PerformerCreateRequest'
-      security:
-        - BearerAuth: []
-  /performers/search:
-    get:
-      operationId: PerformerService_searchPerformers
-      description: 共演者検索API
-      parameters:
-        - name: name
-          in: query
-          required: false
-          schema:
-            type: string
-          explode: false
-        - name: sort
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/PerformerSearchSortBy'
-            default: order_no
-          explode: false
-        - name: order
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/SortOrder'
-            default: asc
-          explode: false
-        - name: page
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/page'
-            default: 1
-          explode: false
-        - name: per_page
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/PerPage'
-            default: 50
-          explode: false
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PerformerSearchResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
-      security:
-        - BearerAuth: []
-  /performers/{performerId}:
-    get:
-      operationId: PerformerService_getPerformer
-      description: 共演者取得API
-      parameters:
-        - name: performerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PerformerGetResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '404':
-          description: The server cannot find the requested resource.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
-      security:
-        - BearerAuth: []
-    put:
-      operationId: PerformerService_updatePerformer
-      description: 共演者更新API
-      parameters:
-        - name: performerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PerformerUpdateResponse'
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '404':
-          description: The server cannot find the requested resource.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PerformerUpdateRequest'
-      security:
-        - BearerAuth: []
-    delete:
-      operationId: PerformerService_deletePerformer
-      description: 共演者削除API
-      parameters:
-        - name: performerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        '204':
-          description: 'There is no content to send for this request, but the headers may be useful. '
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Access is unauthorized.
-        '403':
-          description: Access is forbidden.
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Performer
+        - Person
       security:
         - BearerAuth: []
   /song-tags:
@@ -1226,105 +961,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdminUser'
-    Arranger:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
-    Composer:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
-    Creator:
-      type: object
-      required:
-        - creatorId
-        - name
-        - orderNo
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-        name:
-          $ref: '#/components/schemas/creatorName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
-      examples:
-        - creatorId: 0cc5f492-22fe-4f38-b702-8b2375bc0254
-          name: ヰ世界情緒
-          orderNo: 10
-    CreatorCreateRequest:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          $ref: '#/components/schemas/creatorName'
-    CreatorCreateResponse:
-      type: object
-      required:
-        - creator
-      properties:
-        creator:
-          $ref: '#/components/schemas/Creator'
-    CreatorGetResponse:
-      type: object
-      required:
-        - creator
-      properties:
-        creator:
-          $ref: '#/components/schemas/Creator'
-    CreatorListResponse:
-      type: object
-      required:
-        - creators
-      properties:
-        creators:
-          type: array
-          items:
-            $ref: '#/components/schemas/Creator'
-    CreatorSearchResponse:
-      type: object
-      required:
-        - creators
-        - maxPage
-      properties:
-        creators:
-          type: array
-          items:
-            $ref: '#/components/schemas/Creator'
-        maxPage:
-          type: integer
-          format: int32
-    CreatorSearchSortBy:
-      type: string
-      enum:
-        - name
-        - order_no
-      description: クリエイター検索のソート条件
-    CreatorUpdateRequest:
-      type: object
-      required:
-        - name
-        - orderNo
-      properties:
-        name:
-          $ref: '#/components/schemas/creatorName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
-    CreatorUpdateResponse:
-      type: object
-      required:
-        - creator
-      properties:
-        creator:
-          $ref: '#/components/schemas/Creator'
     ErrorResponse:
       type: object
       required:
@@ -1359,14 +995,6 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
-    Lyricist:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SongCreator'
-      examples:
-        - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-          name: ヰ世界情緒
-          orderNo: 1
     PerPage:
       type: integer
       format: int32
@@ -1375,89 +1003,6 @@ components:
         - 50
         - 100
       description: 1ページあたりの件数
-    Performer:
-      type: object
-      required:
-        - performerId
-        - name
-        - orderNo
-      properties:
-        performerId:
-          $ref: '#/components/schemas/performerId'
-        name:
-          $ref: '#/components/schemas/performerName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
-      examples:
-        - performerId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          name: ヰ世界情緒
-          orderNo: 1
-    PerformerCreateRequest:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          $ref: '#/components/schemas/performerName'
-    PerformerCreateResponse:
-      type: object
-      required:
-        - performer
-      properties:
-        performer:
-          $ref: '#/components/schemas/Performer'
-    PerformerGetResponse:
-      type: object
-      required:
-        - performer
-      properties:
-        performer:
-          $ref: '#/components/schemas/Performer'
-    PerformerListResponse:
-      type: object
-      required:
-        - performers
-      properties:
-        performers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Performer'
-    PerformerSearchResponse:
-      type: object
-      required:
-        - performers
-        - maxPage
-      properties:
-        performers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Performer'
-        maxPage:
-          type: integer
-          format: int32
-    PerformerSearchSortBy:
-      type: string
-      enum:
-        - name
-        - order_no
-      description: 共演者検索のソート条件
-    PerformerUpdateRequest:
-      type: object
-      required:
-        - name
-        - orderNo
-      properties:
-        name:
-          $ref: '#/components/schemas/performerName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
-    PerformerUpdateResponse:
-      type: object
-      required:
-        - performer
-      properties:
-        performer:
-          $ref: '#/components/schemas/Performer'
     Permission:
       type: object
       required:
@@ -1476,13 +1021,94 @@ components:
       enum:
         - read_admin_user
         - write_admin_user
-        - read_creator
-        - write_creator
-        - read_performer
-        - write_performer
+        - read_person
+        - write_person
         - read_song
         - write_song
       description: 権限の値
+    Person:
+      type: object
+      required:
+        - personId
+        - name
+        - orderNo
+      properties:
+        personId:
+          $ref: '#/components/schemas/personId'
+        name:
+          $ref: '#/components/schemas/personName'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+      examples:
+        - personId: 0cc5f492-22fe-4f38-b702-8b2375bc0254
+          name: ヰ世界情緒
+          orderNo: 10
+    PersonCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: '#/components/schemas/personName'
+    PersonCreateResponse:
+      type: object
+      required:
+        - person
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+    PersonGetResponse:
+      type: object
+      required:
+        - person
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+    PersonListResponse:
+      type: object
+      required:
+        - persons
+      properties:
+        persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    PersonSearchResponse:
+      type: object
+      required:
+        - persons
+        - maxPage
+      properties:
+        persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        maxPage:
+          type: integer
+          format: int32
+    PersonSearchSortBy:
+      type: string
+      enum:
+        - name
+        - order_no
+      description: 人物検索のソート条件
+    PersonUpdateRequest:
+      type: object
+      required:
+        - name
+        - orderNo
+      properties:
+        name:
+          $ref: '#/components/schemas/personName'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+    PersonUpdateResponse:
+      type: object
+      required:
+        - person
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
     RefreshTokenRequest:
       type: object
       required:
@@ -1506,29 +1132,19 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
-    RequestArranger:
+    RequestSongPerson:
       type: object
       required:
-        - creatorId
+        - personId
+        - role
+        - orderNo
       properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-      description: The template for picking properties.
-    RequestComposer:
-      type: object
-      required:
-        - creatorId
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-      description: The template for picking properties.
-    RequestLyricist:
-      type: object
-      required:
-        - creatorId
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
+        personId:
+          $ref: '#/components/schemas/personId'
+        role:
+          $ref: '#/components/schemas/SongPersonRole'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
       description: The template for picking properties.
     RequestSongTag:
       type: object
@@ -1569,9 +1185,7 @@ components:
         - type
         - isDisplay
         - orderNo
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         songId:
@@ -1590,18 +1204,10 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/Lyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Composer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Arranger'
+            $ref: '#/components/schemas/SongPerson'
         tags:
           type: array
           items:
@@ -1616,18 +1222,15 @@ components:
             value: 1
           isDisplay: true
           orderNo: 1
-          lyricists:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
+          persons:
+            - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
+              role: 1
               orderNo: 1
-          composers:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
+            - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
               name: ヰ世界情緒
-              orderNo: 1
-          arrangers:
-            - creatorId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-              name: ヰ世界情緒
-              orderNo: 1
+              role: 2
+              orderNo: 2
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
@@ -1649,9 +1252,7 @@ components:
         - lyricsLink
         - typeValue
         - isDisplay
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         title:
@@ -1666,18 +1267,10 @@ components:
           $ref: '#/components/schemas/SongTypeValue'
         isDisplay:
           type: boolean
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/RequestLyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestComposer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestArranger'
+            $ref: '#/components/schemas/RequestSongPerson'
         tags:
           type: array
           items:
@@ -1689,19 +1282,6 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
-    SongCreator:
-      type: object
-      required:
-        - creatorId
-        - name
-        - orderNo
-      properties:
-        creatorId:
-          $ref: '#/components/schemas/creatorId'
-        name:
-          $ref: '#/components/schemas/creatorName'
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
     SongGetResponse:
       type: object
       required:
@@ -1709,6 +1289,29 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
+    SongPerson:
+      type: object
+      required:
+        - personId
+        - name
+        - role
+        - orderNo
+      properties:
+        personId:
+          $ref: '#/components/schemas/personId'
+        name:
+          $ref: '#/components/schemas/personName'
+        role:
+          $ref: '#/components/schemas/SongPersonRole'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+    SongPersonRole:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
     SongSearchResponse:
       type: object
       required:
@@ -1876,9 +1479,7 @@ components:
         - typeValue
         - isDisplay
         - orderNo
-        - lyricists
-        - composers
-        - arrangers
+        - persons
         - tags
       properties:
         title:
@@ -1895,18 +1496,10 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
-        lyricists:
+        persons:
           type: array
           items:
-            $ref: '#/components/schemas/RequestLyricist'
-        composers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestComposer'
-        arrangers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestArranger'
+            $ref: '#/components/schemas/RequestSongPerson'
         tags:
           type: array
           items:
@@ -1962,14 +1555,6 @@ components:
       type: string
       format: date-time
       description: 作成日時
-    creatorId:
-      type: string
-      format: uuid
-      description: クリエイターID
-    creatorName:
-      type: string
-      minLength: 1
-      description: クリエイター名
     description:
       type: string
       description: 楽曲の説明
@@ -1995,18 +1580,18 @@ components:
       type: string
       format: password
       description: 平文パスワード
-    performerId:
-      type: string
-      format: uuid
-      description: 共演者ID
-    performerName:
-      type: string
-      minLength: 1
-      description: 共演者名
     permissionName:
       type: string
       minLength: 1
       description: 権限名
+    personId:
+      type: string
+      format: uuid
+      description: 人物ID
+    personName:
+      type: string
+      minLength: 1
+      description: 人物名
     refreshToken:
       type: string
       format: password

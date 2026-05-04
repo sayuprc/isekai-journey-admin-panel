@@ -20,9 +20,7 @@ use Override;
  * @property int             $order_no    表示順
  * @property CarbonImmutable $created_at  作成日時
  * @property CarbonImmutable $updated_at  更新日時
- * @property-read Collection<int, SongArranger> $arrangers
- * @property-read Collection<int, SongComposer> $composers
- * @property-read Collection<int, SongLyricist> $lyricists
+ * @property-read Collection<int, SongPerson> $persons
  * @property-read Collection<int, SongTagging> $taggings
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newModelQuery()
@@ -44,9 +42,7 @@ class Song extends Model
 
     #[Override]
     protected $with = [
-        'lyricists',
-        'composers',
-        'arrangers',
+        'persons',
         'taggings',
     ];
 
@@ -61,27 +57,12 @@ class Song extends Model
     }
 
     /**
-     * @return HasMany<SongLyricist, $this>
+     * @return HasMany<SongPerson, $this>
      */
-    public function lyricists(): HasMany
+    public function persons(): HasMany
     {
-        return $this->hasMany(SongLyricist::class, 'song_id', 'song_id');
-    }
-
-    /**
-     * @return HasMany<SongComposer, $this>
-     */
-    public function composers(): HasMany
-    {
-        return $this->hasMany(SongComposer::class, 'song_id', 'song_id');
-    }
-
-    /**
-     * @return HasMany<SongArranger, $this>
-     */
-    public function arrangers(): HasMany
-    {
-        return $this->hasMany(SongArranger::class, 'song_id', 'song_id');
+        return $this->hasMany(SongPerson::class, 'song_id', 'song_id')
+            ->orderBy('order_no');
     }
 
     /**

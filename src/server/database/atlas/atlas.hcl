@@ -4,14 +4,11 @@ variable "table_schemas" {
     "file://schemas/schema.my.hcl",
     "file://schemas/admin-users.my.hcl",
     "file://schemas/admin-user-permissions.my.hcl",
-    "file://schemas/creators.my.hcl",
-    "file://schemas/performers.my.hcl",
+    "file://schemas/persons.my.hcl",
     "file://schemas/songs.my.hcl",
     "file://schemas/song-tags.my.hcl",
     "file://schemas/song-taggings.my.hcl",
-    "file://schemas/song-lyricists.my.hcl",
-    "file://schemas/song-composers.my.hcl",
-    "file://schemas/song-arrangers.my.hcl",
+    "file://schemas/song-persons.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
   ]
 }

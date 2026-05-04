@@ -98,7 +98,7 @@ class AdminUserRepositoryTest extends DatabaseTestCase
             $this->generateUuid(),
             'user@example.com',
             Role::General,
-            ['read_creator', 'write_creator'],
+            ['read_person', 'write_person'],
             $createdAt,
         );
 

@@ -55,9 +55,7 @@ readonly class CreateUseCase
                 $inputData->typeValue,
                 $inputData->isDisplay,
                 $inputData->tags,
-                $inputData->lyricists,
-                $inputData->composers,
-                $inputData->arrangers,
+                $inputData->persons,
             );
 
             if ($result->isErr()) {

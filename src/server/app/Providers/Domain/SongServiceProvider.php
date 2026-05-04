@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Creator\Domain\Services\CreatorUsageCheckerInterface;
 use Illuminate\Http\Request;
 use Override;
+use Person\Domain\Services\PersonUsageCheckerInterface;
 use Song\Application\Query\SongQueryServiceInterface;
 use Song\Application\UseCase\Create\CreateInputData;
 use Song\Application\UseCase\Search\SearchInputData;
@@ -16,7 +16,7 @@ use Song\Application\UseCase\Tag\Update\UpdateInputData as UpdateTagInputData;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Song\Infrastructures\CreatorUsageChecker;
+use Song\Infrastructures\PersonUsageChecker;
 use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
 use Song\Infrastructures\Tag\SongTagRepository;
@@ -28,7 +28,7 @@ class SongServiceProvider extends EnvServiceProvider
     {
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
-        $this->app->bind(CreatorUsageCheckerInterface::class, CreatorUsageChecker::class);
+        $this->app->bind(PersonUsageCheckerInterface::class, PersonUsageChecker::class);
 
         $this->app->bind(SongQueryServiceInterface::class, SongQueryService::class);
 

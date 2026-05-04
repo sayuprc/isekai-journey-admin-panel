@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, CreatorServiceCreateCreatorData, CreatorServiceCreateCreatorErrors, CreatorServiceCreateCreatorResponses, CreatorServiceDeleteCreatorData, CreatorServiceDeleteCreatorErrors, CreatorServiceDeleteCreatorResponses, CreatorServiceGetCreatorData, CreatorServiceGetCreatorErrors, CreatorServiceGetCreatorResponses, CreatorServiceListCreatorsData, CreatorServiceListCreatorsErrors, CreatorServiceListCreatorsResponses, CreatorServiceSearchCreatorsData, CreatorServiceSearchCreatorsErrors, CreatorServiceSearchCreatorsResponses, CreatorServiceUpdateCreatorData, CreatorServiceUpdateCreatorErrors, CreatorServiceUpdateCreatorResponses, PerformerServiceCreatePerformerData, PerformerServiceCreatePerformerErrors, PerformerServiceCreatePerformerResponses, PerformerServiceDeletePerformerData, PerformerServiceDeletePerformerErrors, PerformerServiceDeletePerformerResponses, PerformerServiceGetPerformerData, PerformerServiceGetPerformerErrors, PerformerServiceGetPerformerResponses, PerformerServiceListPerformersData, PerformerServiceListPerformersErrors, PerformerServiceListPerformersResponses, PerformerServiceSearchPerformersData, PerformerServiceSearchPerformersErrors, PerformerServiceSearchPerformersResponses, PerformerServiceUpdatePerformerData, PerformerServiceUpdatePerformerErrors, PerformerServiceUpdatePerformerResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
+import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, PersonServiceCreatePersonData, PersonServiceCreatePersonErrors, PersonServiceCreatePersonResponses, PersonServiceDeletePersonData, PersonServiceDeletePersonErrors, PersonServiceDeletePersonResponses, PersonServiceGetPersonData, PersonServiceGetPersonErrors, PersonServiceGetPersonResponses, PersonServiceListPersonsData, PersonServiceListPersonsErrors, PersonServiceListPersonsResponses, PersonServiceSearchPersonsData, PersonServiceSearchPersonsErrors, PersonServiceSearchPersonsResponses, PersonServiceUpdatePersonData, PersonServiceUpdatePersonErrors, PersonServiceUpdatePersonResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -52,20 +52,20 @@ export const authenticateServiceRefresh = <ThrowOnError extends boolean = false>
 });
 
 /**
- * クリエイター一覧取得API
+ * 人物一覧取得API
  */
-export const creatorServiceListCreators = <ThrowOnError extends boolean = false>(options?: Options<CreatorServiceListCreatorsData, ThrowOnError>) => (options?.client ?? client).get<CreatorServiceListCreatorsResponses, CreatorServiceListCreatorsErrors, ThrowOnError>({
+export const personServiceListPersons = <ThrowOnError extends boolean = false>(options?: Options<PersonServiceListPersonsData, ThrowOnError>) => (options?.client ?? client).get<PersonServiceListPersonsResponses, PersonServiceListPersonsErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators',
+    url: '/persons',
     ...options
 });
 
 /**
- * クリエイター作成API
+ * 人物作成API
  */
-export const creatorServiceCreateCreator = <ThrowOnError extends boolean = false>(options: Options<CreatorServiceCreateCreatorData, ThrowOnError>) => (options.client ?? client).post<CreatorServiceCreateCreatorResponses, CreatorServiceCreateCreatorErrors, ThrowOnError>({
+export const personServiceCreatePerson = <ThrowOnError extends boolean = false>(options: Options<PersonServiceCreatePersonData, ThrowOnError>) => (options.client ?? client).post<PersonServiceCreatePersonResponses, PersonServiceCreatePersonErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators',
+    url: '/persons',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -74,100 +74,38 @@ export const creatorServiceCreateCreator = <ThrowOnError extends boolean = false
 });
 
 /**
- * クリエイター検索API
+ * 人物検索API
  */
-export const creatorServiceSearchCreators = <ThrowOnError extends boolean = false>(options?: Options<CreatorServiceSearchCreatorsData, ThrowOnError>) => (options?.client ?? client).get<CreatorServiceSearchCreatorsResponses, CreatorServiceSearchCreatorsErrors, ThrowOnError>({
+export const personServiceSearchPersons = <ThrowOnError extends boolean = false>(options?: Options<PersonServiceSearchPersonsData, ThrowOnError>) => (options?.client ?? client).get<PersonServiceSearchPersonsResponses, PersonServiceSearchPersonsErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators/search',
+    url: '/persons/search',
     ...options
 });
 
 /**
- * クリエイター削除API
+ * 人物削除API
  */
-export const creatorServiceDeleteCreator = <ThrowOnError extends boolean = false>(options: Options<CreatorServiceDeleteCreatorData, ThrowOnError>) => (options.client ?? client).delete<CreatorServiceDeleteCreatorResponses, CreatorServiceDeleteCreatorErrors, ThrowOnError>({
+export const personServiceDeletePerson = <ThrowOnError extends boolean = false>(options: Options<PersonServiceDeletePersonData, ThrowOnError>) => (options.client ?? client).delete<PersonServiceDeletePersonResponses, PersonServiceDeletePersonErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators/{creatorId}',
+    url: '/persons/{personId}',
     ...options
 });
 
 /**
- * クリエイター取得API
+ * 人物取得API
  */
-export const creatorServiceGetCreator = <ThrowOnError extends boolean = false>(options: Options<CreatorServiceGetCreatorData, ThrowOnError>) => (options.client ?? client).get<CreatorServiceGetCreatorResponses, CreatorServiceGetCreatorErrors, ThrowOnError>({
+export const personServiceGetPerson = <ThrowOnError extends boolean = false>(options: Options<PersonServiceGetPersonData, ThrowOnError>) => (options.client ?? client).get<PersonServiceGetPersonResponses, PersonServiceGetPersonErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators/{creatorId}',
+    url: '/persons/{personId}',
     ...options
 });
 
 /**
- * クリエイター更新API
+ * 人物更新API
  */
-export const creatorServiceUpdateCreator = <ThrowOnError extends boolean = false>(options: Options<CreatorServiceUpdateCreatorData, ThrowOnError>) => (options.client ?? client).put<CreatorServiceUpdateCreatorResponses, CreatorServiceUpdateCreatorErrors, ThrowOnError>({
+export const personServiceUpdatePerson = <ThrowOnError extends boolean = false>(options: Options<PersonServiceUpdatePersonData, ThrowOnError>) => (options.client ?? client).put<PersonServiceUpdatePersonResponses, PersonServiceUpdatePersonErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/creators/{creatorId}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * 共演者一覧取得API
- */
-export const performerServiceListPerformers = <ThrowOnError extends boolean = false>(options?: Options<PerformerServiceListPerformersData, ThrowOnError>) => (options?.client ?? client).get<PerformerServiceListPerformersResponses, PerformerServiceListPerformersErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers',
-    ...options
-});
-
-/**
- * 共演者作成API
- */
-export const performerServiceCreatePerformer = <ThrowOnError extends boolean = false>(options: Options<PerformerServiceCreatePerformerData, ThrowOnError>) => (options.client ?? client).post<PerformerServiceCreatePerformerResponses, PerformerServiceCreatePerformerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * 共演者検索API
- */
-export const performerServiceSearchPerformers = <ThrowOnError extends boolean = false>(options?: Options<PerformerServiceSearchPerformersData, ThrowOnError>) => (options?.client ?? client).get<PerformerServiceSearchPerformersResponses, PerformerServiceSearchPerformersErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers/search',
-    ...options
-});
-
-/**
- * 共演者削除API
- */
-export const performerServiceDeletePerformer = <ThrowOnError extends boolean = false>(options: Options<PerformerServiceDeletePerformerData, ThrowOnError>) => (options.client ?? client).delete<PerformerServiceDeletePerformerResponses, PerformerServiceDeletePerformerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers/{performerId}',
-    ...options
-});
-
-/**
- * 共演者取得API
- */
-export const performerServiceGetPerformer = <ThrowOnError extends boolean = false>(options: Options<PerformerServiceGetPerformerData, ThrowOnError>) => (options.client ?? client).get<PerformerServiceGetPerformerResponses, PerformerServiceGetPerformerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers/{performerId}',
-    ...options
-});
-
-/**
- * 共演者更新API
- */
-export const performerServiceUpdatePerformer = <ThrowOnError extends boolean = false>(options: Options<PerformerServiceUpdatePerformerData, ThrowOnError>) => (options.client ?? client).put<PerformerServiceUpdatePerformerResponses, PerformerServiceUpdatePerformerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/performers/{performerId}',
+    url: '/persons/{personId}',
     ...options,
     headers: {
         'Content-Type': 'application/json',

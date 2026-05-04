@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Song\Application\Assemble;
 
-use Creator\Domain\Models\CreatorRepositoryInterface;
-use Song\Domain\Models\Creators\Arranger;
-use Song\Domain\Models\Creators\Composer;
-use Song\Domain\Models\Creators\Lyricist;
+use Person\Domain\Models\PersonRepositoryInterface;
+use Song\Domain\Models\Persons\SongPerson;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Models\Tags\SongTagReference;
@@ -15,25 +13,23 @@ use Song\Domain\Models\Tags\SongTagReference;
 class SongAssembler
 {
     public function __construct(
-        private readonly CreatorRepositoryInterface $creatorRepository,
+        private readonly PersonRepositoryInterface $personRepository,
         private readonly SongTagRepositoryInterface $songTagRepository,
     ) {
     }
 
     public function assemble(Song $song): AssembledSong
     {
-        $allCreatorIds = [];
-        foreach ([$song->lyricists, $song->composers, $song->arrangers] as $collection) {
-            foreach ($collection as $creator) {
-                $allCreatorIds[$creator->creatorId->value] = $creator->creatorId;
-            }
+        $allPersonIds = [];
+        foreach ($song->persons as $person) {
+            $allPersonIds[$person->personId->value] = $person->personId;
         }
 
-        $creatorMap = [];
-        if (! empty($allCreatorIds)) {
-            $creators = $this->creatorRepository->findByIds(...array_values($allCreatorIds));
-            foreach ($creators as $creator) {
-                $creatorMap[$creator->creatorId->value] = $creator;
+        $personMap = [];
+        if (! empty($allPersonIds)) {
+            $persons = $this->personRepository->findByIds(...array_values($allPersonIds));
+            foreach ($persons as $person) {
+                $personMap[$person->personId->value] = $person;
             }
         }
 
@@ -50,15 +46,16 @@ class SongAssembler
             }
         }
 
-        $toAssembled = function (Arranger|Composer|Lyricist $creator) use ($creatorMap): AssembledCreator {
-            $found = $creatorMap[$creator->creatorId->value] ?? null;
+        $toAssembled = function (SongPerson $person) use ($personMap): AssembledPerson {
+            $found = $personMap[$person->personId->value] ?? null;
             // Song Entity が成立している時点で $found が null になることはない
             assert(! is_null($found));
 
-            return new AssembledCreator(
-                $creator->creatorId->value,
+            return new AssembledPerson(
+                $person->personId->value,
                 $found->name->value,
-                $creator->orderNo->value,
+                $person->role,
+                $person->orderNo->value,
             );
         };
         $toAssembledTag = function (SongTagReference $tag) use ($songTagMap): AssembledTag {
@@ -81,9 +78,7 @@ class SongAssembler
             $song->type->value,
             $song->isDisplay,
             $song->orderNo->value,
-            $song->lyricists->toGeneric()->map($toAssembled)->toArray(),
-            $song->composers->toGeneric()->map($toAssembled)->toArray(),
-            $song->arrangers->toGeneric()->map($toAssembled)->toArray(),
+            $song->persons->toGeneric()->map($toAssembled)->toArray(),
             $song->tags->toGeneric()->map($toAssembledTag)->toArray(),
         );
     }

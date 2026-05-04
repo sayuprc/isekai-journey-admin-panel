@@ -54,10 +54,8 @@ scalar permissionName extends string;
 enum PermissionValue {
   ReadAdminUser: "read_admin_user",
   WriteAdminUser: "write_admin_user",
-  ReadCreator: "read_creator",
-  WriteCreator: "write_creator",
-  ReadPerformer: "read_performer",
-  WritePerformer: "write_performer",
+  ReadPerson: "read_person",
+  WritePerson: "write_person",
   ReadSong: "read_song",
   WriteSong: "write_song",
 }

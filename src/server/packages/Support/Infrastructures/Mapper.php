@@ -7,11 +7,10 @@ namespace Support\Infrastructures;
 use AdminUser\Domain\Models\AdminUser;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
-use Creator\Domain\Models\Creator;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
 use Override;
-use Performer\Domain\Models\Performer;
+use Person\Domain\Models\Person;
 use Song\Domain\Models\Song;
 use Support\Contracts\MapperInterface;
 
@@ -33,8 +32,7 @@ readonly class Mapper implements MapperInterface
             ->registerConstructor(AdminUser::reconstruct(...))
             ->registerConstructor(AuthenticatableAdminUser::reconstruct(...))
             ->registerConstructor(RefreshToken::reconstruct(...))
-            ->registerConstructor(Creator::reconstruct(...))
-            ->registerConstructor(Performer::reconstruct(...))
+            ->registerConstructor(Person::reconstruct(...))
             ->registerConstructor(Song::reconstruct(...))
             ->allowSuperfluousKeys()
             // 場合によって builder を DI できるようにして適宜変えるのがよさそう

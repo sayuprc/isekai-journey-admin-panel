@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Assemble;
 
-use Creator\Domain\Models\Creator;
-use Creator\Domain\Models\CreatorId;
-use Creator\Domain\Models\CreatorName;
-use Creator\Domain\Models\CreatorRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
+use Person\Domain\Models\Person;
+use Person\Domain\Models\PersonId;
+use Person\Domain\Models\PersonName;
+use Person\Domain\Models\PersonRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Assemble\SongAssembler;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Domain\ValueObjects\OrderNo;
@@ -23,7 +24,7 @@ class SongAssemblerTest extends TestCase
 {
     use EntityFactory;
 
-    private CreatorRepositoryInterface&MockInterface $creatorRepository;
+    private MockInterface&PersonRepositoryInterface $personRepository;
 
     private MockInterface&SongTagRepositoryInterface $songTagRepository;
 
@@ -32,7 +33,7 @@ class SongAssemblerTest extends TestCase
     {
         parent::setUp();
 
-        $this->creatorRepository = Mockery::mock(CreatorRepositoryInterface::class);
+        $this->personRepository = Mockery::mock(PersonRepositoryInterface::class);
         $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
     }
 
@@ -53,14 +54,16 @@ class SongAssemblerTest extends TestCase
             true,
             $orderNo,
             [],
-            [['creatorId' => $lyricistId = $this->generateUuid(), 'orderNo' => 1]],
-            [['creatorId' => $composerId = $this->generateUuid(), 'orderNo' => 1]],
-            [['creatorId' => $arrangerId = $this->generateUuid(), 'orderNo' => 1]],
+            [
+                ['personId' => $lyricistId = $this->generateUuid(), 'role' => 1, 'orderNo' => 1],
+                ['personId' => $composerId = $this->generateUuid(), 'role' => 2, 'orderNo' => 2],
+                ['personId' => $arrangerId = $this->generateUuid(), 'role' => 3, 'orderNo' => 3],
+            ],
         );
 
-        $this->creatorRepository->shouldReceive('findByIds')
-            ->withArgs(function (CreatorId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
-                $idValues = array_map(fn (CreatorId $id): string => $id->value, $ids);
+        $this->personRepository->shouldReceive('findByIds')
+            ->withArgs(function (PersonId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
+                $idValues = array_map(fn (PersonId $id): string => $id->value, $ids);
                 sort($idValues);
                 $expectedIds = [$lyricistId, $composerId, $arrangerId];
                 sort($expectedIds);
@@ -68,9 +71,9 @@ class SongAssemblerTest extends TestCase
                 return $idValues === $expectedIds;
             })
             ->andReturn([
-                new Creator(CreatorId::reconstruct($lyricistId), CreatorName::reconstruct('作詞者'), OrderNo::reconstruct(1)),
-                new Creator(CreatorId::reconstruct($composerId), CreatorName::reconstruct('作曲者'), OrderNo::reconstruct(1)),
-                new Creator(CreatorId::reconstruct($arrangerId), CreatorName::reconstruct('編曲者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($lyricistId), PersonName::reconstruct('作詞者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($composerId), PersonName::reconstruct('作曲者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($arrangerId), PersonName::reconstruct('編曲者'), OrderNo::reconstruct(1)),
             ])
             ->once();
 
@@ -82,26 +85,22 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($type->getName(), $assembled->typeName);
         $this->assertSame($type->value, $assembled->typeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
-        $this->assertCount(1, $assembled->lyricists);
-        $this->assertSame($lyricistId, $assembled->lyricists[0]->creatorId);
-        $this->assertSame('作詞者', $assembled->lyricists[0]->name);
-        $this->assertSame(1, $assembled->lyricists[0]->orderNo);
-        $this->assertCount(1, $assembled->composers);
-        $this->assertSame($composerId, $assembled->composers[0]->creatorId);
-        $this->assertSame('作曲者', $assembled->composers[0]->name);
-        $this->assertSame(1, $assembled->composers[0]->orderNo);
-        $this->assertCount(1, $assembled->arrangers);
-        $this->assertSame($arrangerId, $assembled->arrangers[0]->creatorId);
-        $this->assertSame('編曲者', $assembled->arrangers[0]->name);
-        $this->assertSame(1, $assembled->arrangers[0]->orderNo);
+        $this->assertCount(3, $assembled->persons);
+        $this->assertSame($lyricistId, $assembled->persons[0]->personId);
+        $this->assertSame('作詞者', $assembled->persons[0]->name);
+        $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
+        $this->assertSame($composerId, $assembled->persons[1]->personId);
+        $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);
+        $this->assertSame($arrangerId, $assembled->persons[2]->personId);
+        $this->assertSame(SongPersonRole::Arranger, $assembled->persons[2]->role);
     }
 
     #[Test]
-    public function canAssembleWithoutCreators(): void
+    public function canAssembleWithoutPersons(): void
     {
         $uuid = $this->generateUuid();
         $title = 'インストゥルメンタル';
-        $description = 'クリエイター無しの楽曲';
+        $description = '人物無しの楽曲';
         $type = SongType::Original;
         $orderNo = 1;
 
@@ -114,11 +113,9 @@ class SongAssemblerTest extends TestCase
             $orderNo,
             [],
             [],
-            [],
-            [],
         );
 
-        $this->creatorRepository->shouldReceive('findByIds')->never();
+        $this->personRepository->shouldReceive('findByIds')->never();
 
         $assembled = $this->getInstance()->assemble($song);
 
@@ -128,13 +125,11 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($type->getName(), $assembled->typeName);
         $this->assertSame($type->value, $assembled->typeValue);
         $this->assertSame($orderNo, $assembled->orderNo);
-        $this->assertCount(0, $assembled->lyricists);
-        $this->assertCount(0, $assembled->composers);
-        $this->assertCount(0, $assembled->arrangers);
+        $this->assertCount(0, $assembled->persons);
     }
 
     private function getInstance(): SongAssembler
     {
-        return new SongAssembler($this->creatorRepository, $this->songTagRepository);
+        return new SongAssembler($this->personRepository, $this->songTagRepository);
     }
 }

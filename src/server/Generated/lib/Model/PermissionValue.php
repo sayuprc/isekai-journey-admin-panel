@@ -47,13 +47,9 @@ enum PermissionValue: string
 
     case WRITE_ADMIN_USER = 'write_admin_user';
 
-    case READ_CREATOR = 'read_creator';
+    case READ_PERSON = 'read_person';
 
-    case WRITE_CREATOR = 'write_creator';
-
-    case READ_PERFORMER = 'read_performer';
-
-    case WRITE_PERFORMER = 'write_performer';
+    case WRITE_PERSON = 'write_person';
 
     case READ_SONG = 'read_song';
 
