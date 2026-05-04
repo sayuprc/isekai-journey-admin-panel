@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, Show } from 'solid-js';
-import type { Creator, SongTag, SongType, SongTypeValue } from '../../generated';
+import type { Person, RequestSongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -7,8 +7,10 @@ import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 
-type CreatorEntry = {
-  creatorId: string;
+type PersonEntry = {
+  personId: string;
+  role: SongPersonRole;
+  orderNo: number;
 };
 
 type SongTagEntry = {
@@ -16,13 +18,13 @@ type SongTagEntry = {
 };
 
 export const CreateForm = () => {
-  const [creators, setCreators] = createSignal<Creator[]>([]);
+  const [persons, setPersons] = createSignal<Person[]>([]);
   const [types, setTypes] = createSignal<SongType[]>([]);
   const [availableTags, setAvailableTags] = createSignal<SongTag[]>([]);
 
-  const [lyricists, setLyricists] = createSignal<CreatorEntry[]>([]);
-  const [composers, setComposers] = createSignal<CreatorEntry[]>([]);
-  const [arrangers, setArrangers] = createSignal<CreatorEntry[]>([]);
+  const [lyricists, setLyricists] = createSignal<PersonEntry[]>([]);
+  const [composers, setComposers] = createSignal<PersonEntry[]>([]);
+  const [arrangers, setArrangers] = createSignal<PersonEntry[]>([]);
   const [tags, setTags] = createSignal<SongTagEntry[]>([]);
   const [tagPickerValue, setTagPickerValue] = createSignal('');
 
@@ -38,21 +40,23 @@ export const CreateForm = () => {
   onMount(async () => {
     const { data } = await client.api.songs['create-form'].get();
     if (data) {
-      setCreators(data.creators);
+      setPersons(data.persons);
       setTypes(data.types);
       setAvailableTags(data.tags);
     }
   });
 
-  const addEntry = (setter: typeof setArrangers) => {
-    setter(prev => [...prev, { creatorId: '' }]);
+  const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
+    setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
   };
 
-  const removeEntry = (setter: typeof setArrangers, index: number) => {
-    setter(prev => prev.filter((_, i) => i !== index));
+  const removeEntry = (setter: typeof setLyricists, index: number) => {
+    setter(prev =>
+      prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })),
+    );
   };
 
-  const updateEntry = (setter: typeof setArrangers, index: number, field: keyof CreatorEntry, value: string) => {
+  const updateEntry = (setter: typeof setLyricists, index: number, field: keyof PersonEntry, value: string | number) => {
     setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
@@ -69,6 +73,8 @@ export const CreateForm = () => {
     setTagPickerValue('');
   };
 
+  const buildPersons = (): RequestSongPerson[] => [...lyricists(), ...composers(), ...arrangers()];
+
   const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
     clearErrors();
@@ -82,9 +88,7 @@ export const CreateForm = () => {
       lyricsLink: normalizeOptionalString(formData.get('lyricsLink')),
       typeValue: Number(formData.get('typeValue')) as SongTypeValue,
       isDisplay: formData.get('isDisplay') === 'true',
-      arrangers: arrangers(),
-      composers: composers(),
-      lyricists: lyricists(),
+      persons: buildPersons(),
       tags: tags(),
     });
 
@@ -97,14 +101,16 @@ export const CreateForm = () => {
     handleError(status, error);
   });
 
-  const creatorOptions = (entries: CreatorEntry[], currentIndex: number) => {
-    const selectedCreatorIds = new Set(
-      entries.filter((entry, index) => index !== currentIndex && entry.creatorId !== '').map(entry => entry.creatorId),
+  const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
+    const selectedPersonIds = new Set(
+      entries
+        .filter(entry => entry.personId !== '' && entry.personId !== currentPersonId)
+        .map(entry => entry.personId),
     );
 
-    return creators()
-      .filter(creator => !selectedCreatorIds.has(creator.creatorId) || creator.creatorId === entries[currentIndex]?.creatorId)
-      .map(creator => ({ value: creator.creatorId, label: creator.name }));
+    return persons()
+      .filter(person => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
+      .map(person => ({ value: person.personId, label: person.name }));
   };
 
   const tagOptions = () => {
@@ -120,24 +126,35 @@ export const CreateForm = () => {
       .map(entry => availableTags().find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
 
-  const CreatorList = (props: { label: string; entries: () => CreatorEntry[]; setter: typeof setArrangers }) => (
+  const PersonSection = (props: { label: string; entries: () => PersonEntry[]; setter: typeof setLyricists; role: SongPersonRole }) => (
     <div class="mt-4">
       <div class="flex items-center gap-2">
         <span class="label">{props.label}</span>
-        <button type="button" class="btn btn-xs btn-outline" onclick={() => addEntry(props.setter)}>
+        <button type="button" class="btn btn-xs btn-outline" onclick={() => addEntry(props.setter, props.role)}>
           + 追加
         </button>
       </div>
       <For each={props.entries()}>
         {(entry, index) => (
-          <div class="mt-2 flex items-center gap-3">
+          <div class="mt-2 grid gap-3 md:grid-cols-[minmax(0,2fr)_96px_40px] md:items-center">
             <SearchableSelect
-              options={creatorOptions(props.entries(), index())}
-              value={entry.creatorId}
-              onChange={value => updateEntry(props.setter, index(), 'creatorId', value)}
-              placeholder="クリエイターを検索..."
+              options={personOptions(props.entries(), entry.personId)}
+              value={entry.personId}
+              onChange={value => updateEntry(props.setter, index(), 'personId', value)}
+              placeholder="人物を検索..."
               required
             />
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-base-content/60">順</label>
+              <input
+                type="number"
+                class="input input-bordered w-16"
+                value={entry.orderNo}
+                onchange={e => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
+                required
+                min="1"
+              />
+            </div>
             <button
               type="button"
               class="btn btn-ghost btn-xs btn-square text-error"
@@ -161,6 +178,9 @@ export const CreateForm = () => {
           </div>
         )}
       </For>
+      <Show when={props.entries().length === 0}>
+        <p class="mt-3 text-sm text-base-content/60">{props.label}はまだ追加されていません。</p>
+      </Show>
     </div>
   );
 
@@ -282,9 +302,9 @@ export const CreateForm = () => {
 
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">関係者</legend>
-          <CreatorList label="作詞者" entries={lyricists} setter={setLyricists} />
-          <CreatorList label="作曲者" entries={composers} setter={setComposers} />
-          <CreatorList label="編曲者" entries={arrangers} setter={setArrangers} />
+          <PersonSection label="作詞" entries={lyricists} setter={setLyricists} role={1} />
+          <PersonSection label="作曲" entries={composers} setter={setComposers} role={2} />
+          <PersonSection label="編曲" entries={arrangers} setter={setArrangers} role={3} />
         </fieldset>
 
         <div class="flex justify-end">

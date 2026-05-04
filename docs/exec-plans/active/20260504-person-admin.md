@@ -4,7 +4,7 @@ Person Admin 導線
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -39,11 +39,11 @@ planned
 
 ## Steps
 
-1. `src/admin/src/server/routes/persons.ts` を追加し、server index へ登録する。
-2. `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}` と `src/admin/src/components/person/*` を追加する。
-3. `src/admin/src/server/routes/songs.ts` と `src/admin/src/components/song/{CreateForm,EditableForm}.tsx` を新しい songs 契約へ合わせて更新する。
-4. `src/admin/src/components/Sidebar.tsx` を更新し、`/persons` 導線を追加する。
-5. 生成物追従と型検査を行う。
+1. ✅ `src/admin/src/server/routes/persons.ts` を追加し、server index へ登録した。
+2. ✅ `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}` と `src/admin/src/components/person/*` を追加した。
+3. ✅ `src/admin/src/server/routes/songs.ts` と `src/admin/src/components/song/{CreateForm,EditableForm}.tsx` を新しい songs 契約へ合わせて更新した。
+4. ✅ `src/admin/src/components/Sidebar.tsx` を更新し、`/persons` 導線を追加した。
+5. ✅ 生成物追従と型検査を行った。
 
 ## Decision Log
 

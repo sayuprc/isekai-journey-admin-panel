@@ -126,6 +126,7 @@ const navSections: NavSection[] = [
   {
     title: '関係者',
     items: [
+      { href: '/persons', label: '人物', icon: UserIcon },
       { href: '/creators', label: 'クリエイター', icon: UserIcon },
       { href: '/performers', label: '共演者', icon: UsersIcon },
     ],
