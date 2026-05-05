@@ -14,8 +14,6 @@ enum MediaFormat: int
 
     case ShortVideo = 4;
 
-    case Teaser = 5;
-
     case LiveClip = 6;
 
     case Other = 99;
@@ -27,8 +25,7 @@ enum MediaFormat: int
             self::AudioVideo => '音源動画',
             self::StreamArchive => '配信アーカイブ',
             self::ShortVideo => 'ショート動画',
-            self::Teaser => 'ティザー',
-            self::LiveClip => 'ライブクリップ',
+            self::LiveClip => 'ライブ切り抜き',
             self::Other => 'その他',
         };
     }
