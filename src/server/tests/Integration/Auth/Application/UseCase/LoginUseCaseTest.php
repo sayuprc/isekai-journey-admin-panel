@@ -52,7 +52,7 @@ class LoginUseCaseTest extends DatabaseTestCase
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Login, AuditTargetType::AdminUser, $adminUserId);
         $this->assertSame($adminUserId, $log['admin_user_id']);
-        $this->assertArrayHasKey('refreshTokenId', $log['snapshot']);
+        $this->assertArrayHasKey('refresh_token_id', $log['snapshot']);
         $this->assertArrayNotHasKey('password', $log['snapshot']);
     }
 

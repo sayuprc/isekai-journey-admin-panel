@@ -70,7 +70,7 @@ readonly class RefreshUseCase
                 AuditTargetType::AdminUser,
                 $refreshToken->adminUserId,
                 [
-                    'refreshTokenId' => $nextRefreshToken->refreshTokenId->value,
+                    'refresh_token_id' => $nextRefreshToken->refreshTokenId->value,
                 ],
                 $refreshToken->adminUserId,
             );
