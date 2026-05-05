@@ -12,14 +12,14 @@ use ResultType\Result;
 use Song\Application\Assemble\SongAssembler;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -73,7 +73,7 @@ readonly class UpdateUseCase
             $this->recorder->record(
                 AuditAction::Update,
                 AuditTargetType::Song,
-                $song->songId->value,
+                $song->songId,
                 $song->toArray(),
             );
 

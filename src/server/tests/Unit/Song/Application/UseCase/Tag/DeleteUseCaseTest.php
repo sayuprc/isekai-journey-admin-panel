@@ -17,7 +17,7 @@ use Song\Application\UseCase\Tag\Delete\DeleteInputData;
 use Song\Application\UseCase\Tag\Delete\DeleteUseCase;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\TransactionInterface;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;

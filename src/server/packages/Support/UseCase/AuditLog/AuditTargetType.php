@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Contracts\AuditLog;
+namespace Support\UseCase\AuditLog;
 
 enum AuditTargetType: string
 {

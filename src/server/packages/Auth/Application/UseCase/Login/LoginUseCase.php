@@ -11,13 +11,13 @@ use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -53,11 +53,11 @@ readonly class LoginUseCase
             $this->recorder->record(
                 AuditAction::Login,
                 AuditTargetType::AdminUser,
-                $refreshToken->adminUserId->value,
+                $refreshToken->adminUserId,
                 [
                     'refreshTokenId' => $refreshToken->refreshTokenId->value,
                 ],
-                $refreshToken->adminUserId->value,
+                $refreshToken->adminUserId,
             );
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));

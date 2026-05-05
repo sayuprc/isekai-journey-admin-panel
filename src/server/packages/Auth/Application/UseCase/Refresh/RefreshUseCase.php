@@ -12,10 +12,10 @@ use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -68,11 +68,11 @@ readonly class RefreshUseCase
             $this->recorder->record(
                 AuditAction::Refresh,
                 AuditTargetType::AdminUser,
-                $refreshToken->adminUserId->value,
+                $refreshToken->adminUserId,
                 [
                     'refreshTokenId' => $nextRefreshToken->refreshTokenId->value,
                 ],
-                $refreshToken->adminUserId->value,
+                $refreshToken->adminUserId,
             );
 
             return new Ok(

@@ -17,7 +17,7 @@ use Song\Domain\Models\Tag\SongTag;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainValidationError;
 use Support\UseCase\Error\NotFoundError;

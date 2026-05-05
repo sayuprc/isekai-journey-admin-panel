@@ -10,10 +10,10 @@ use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -61,12 +61,8 @@ readonly class DeleteUseCase
                 $this->recorder->record(
                     AuditAction::Delete,
                     AuditTargetType::SongTag,
-                    $tag->songTagId->value,
-                    [
-                        'songTagId' => $tag->songTagId->value,
-                        'name' => $tag->name->value,
-                        'orderNo' => $tag->orderNo->value,
-                    ],
+                    $tag->songTagId,
+                    $tag->toArray(),
                 );
 
                 return new Ok(null);

@@ -10,9 +10,9 @@ use Person\Application\UseCase\Create\CreateInputData;
 use Person\Application\UseCase\Create\CreateUseCase;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 
