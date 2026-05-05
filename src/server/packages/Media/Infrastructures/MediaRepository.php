@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Media\Infrastructures;
 
 use App\Models\Media\Media as ModelsMedia;
-use App\Models\Song\SongMediaLink as ModelsSongMediaLink;
 use Illuminate\Database\Eloquent\Builder;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaId;
-use Media\Domain\Models\MediaReferencedSong;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaUrl;
 use Override;
@@ -58,28 +56,6 @@ readonly class MediaRepository implements MediaRepositoryInterface
             ->where('media_id', $this->converter->toBin($mediaId->value))
             ->whereHas('songMediaLinks')
             ->exists();
-    }
-
-    #[Override]
-    public function findReferencedSongs(MediaId $mediaId): array
-    {
-        return array_values(
-            ModelsSongMediaLink::query()
-                ->with('song')
-                ->where('media_id', $this->converter->toBin($mediaId->value))
-                ->get()
-                ->sortBy([
-                    fn (ModelsSongMediaLink $link): int => $link->song->order_no,
-                    fn (ModelsSongMediaLink $link): int => $link->order_no,
-                ])
-                ->map(fn (ModelsSongMediaLink $link): MediaReferencedSong => MediaReferencedSong::reconstruct(
-                    $this->converter->toUuid($link->song_id),
-                    $link->song->title,
-                    $link->song->order_no,
-                    $link->order_no,
-                ))
-                ->all(),
-        );
     }
 
     #[Override]

@@ -12,11 +12,6 @@ interface MediaRepositoryInterface
 
     public function findByUrl(MediaUrl $url): ?Media;
 
-    /**
-     * @return list<MediaReferencedSong>
-     */
-    public function findReferencedSongs(MediaId $mediaId): array;
-
     public function isUsed(MediaId $mediaId): bool;
 
     /**

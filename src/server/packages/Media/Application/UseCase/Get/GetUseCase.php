@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Media\Application\UseCase\Get;
 
 use AdminUser\Domain\Models\Permission;
+use Media\Application\Query\MediaDetailQueryServiceInterface;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
 use ResultType\Err;
@@ -21,6 +22,7 @@ readonly class GetUseCase
     public function __construct(
         private UseCaseAuthorizer $authorizer,
         private MediaRepositoryInterface $repository,
+        private MediaDetailQueryServiceInterface $query,
     ) {
     }
 
@@ -47,7 +49,7 @@ readonly class GetUseCase
 
                 return new Ok(new GetOutputData(
                     $found,
-                    $this->repository->findReferencedSongs($mediaId),
+                    $this->query->findReferencedSongs($mediaId),
                 ));
             });
     }

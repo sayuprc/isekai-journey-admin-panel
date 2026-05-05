@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Http\Request;
+use Media\Application\Query\MediaDetailQueryServiceInterface;
 use Media\Application\UseCase\Create\CreateInputData;
 use Media\Application\UseCase\Search\SearchInputData;
 use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Infrastructures\MediaDetailQueryService;
 use Media\Infrastructures\MediaRepository;
 use Override;
 use Support\Domain\SearchCriteria\PerPage;
@@ -19,6 +21,7 @@ class MediaServiceProvider extends EnvServiceProvider
     public function register(): void
     {
         $this->app->bind(MediaRepositoryInterface::class, MediaRepository::class);
+        $this->app->bind(MediaDetailQueryServiceInterface::class, MediaDetailQueryService::class);
 
         $this->app->bind(SearchInputData::class, function (): SearchInputData {
             $request = $this->app->make(Request::class);
