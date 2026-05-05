@@ -26,13 +26,21 @@ readonly class SongMediaLink
     }
 
     /**
-     * @return array{media_id: string, song_media_type: value-of<SongMediaType>, order_no: int}
+     * @return array{media_id: string, song_media_type: 1|2|3|4|99, order_no: int}
      */
     public function toArray(): array
     {
+        $songMediaType = match ($this->songMediaType) {
+            SongMediaType::Mv => 1,
+            SongMediaType::AudioVideo => 2,
+            SongMediaType::StreamArchive => 3,
+            SongMediaType::ShortVideo => 4,
+            SongMediaType::Other => 99,
+        };
+
         return [
             'media_id' => $this->mediaId->value,
-            'song_media_type' => $this->songMediaType->value,
+            'song_media_type' => $songMediaType,
             'order_no' => $this->orderNo->value,
         ];
     }

@@ -6,8 +6,8 @@ namespace App\Http\Presenters\Api\Media;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use Media\Domain\Models\Media;
 use Media\Application\UseCase\Search\SearchOutputData;
+use Media\Domain\Models\Media;
 use OpenAPI\Client\Model\MediaSearchResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;

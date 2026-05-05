@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Media\Infrastructures;
 
 use App\Models\Media\Media as ModelsMedia;
+use Illuminate\Database\Eloquent\Builder;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaId;
@@ -25,13 +26,13 @@ readonly class MediaRepository implements MediaRepositoryInterface
         $query = $this->buildSearchQuery($criteria);
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
 
-        return $query
+        return array_values($query
             ->orderBy('title')
             ->limit($criteria->perPage->value)
             ->offset($offset)
             ->get()
             ->map($this->hydrate(...))
-            ->all();
+            ->all());
     }
 
     #[Override]
@@ -45,14 +46,14 @@ readonly class MediaRepository implements MediaRepositoryInterface
     #[Override]
     public function findByIds(MediaId ...$mediaIds): array
     {
-        return ModelsMedia::query()
+        return array_values(ModelsMedia::query()
             ->whereIn(
                 'media_id',
                 array_map(fn (MediaId $mediaId): string => $this->converter->toBin($mediaId->value), $mediaIds),
             )
             ->get()
             ->map($this->hydrate(...))
-            ->all();
+            ->all());
     }
 
     #[Override]
@@ -78,6 +79,9 @@ readonly class MediaRepository implements MediaRepositoryInterface
         return $media;
     }
 
+    /**
+     * @return Builder<ModelsMedia>
+     */
     private function buildSearchQuery(MediaSearchCriteria $criteria)
     {
         $query = ModelsMedia::query();

@@ -6,6 +6,7 @@ namespace App\Providers\Domain;
 
 use Illuminate\Http\Request;
 use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Infrastructures\MediaRepository;
 use Override;
 use Person\Domain\Services\PersonUsageCheckerInterface;
 use Song\Application\Query\SongQueryServiceInterface;
@@ -34,15 +35,16 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
         $this->app->bind(PersonUsageCheckerInterface::class, PersonUsageChecker::class);
-        $this->app->bind(MediaRepositoryInterface::class, \Media\Infrastructures\MediaRepository::class);
+        $this->app->bind(MediaRepositoryInterface::class, MediaRepository::class);
 
         $this->app->bind(SongQueryServiceInterface::class, SongQueryService::class);
 
         $this->app->bind(SearchInputData::class, function (): SearchInputData {
             $request = $this->app->make(Request::class);
+            $title = $request->query('title', '');
 
             return new SearchInputData(
-                $request->has('title') ? $request->query('title', '') : Arg::Optional,
+                $request->has('title') && is_string($title) ? $title : Arg::Optional,
                 $request->has('type') ? (int)$request->query('type') : Arg::Optional,
                 $request->has('is_display')
                     ? filter_var($request->query('is_display'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false

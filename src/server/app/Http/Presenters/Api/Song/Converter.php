@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Song;
 
+use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
+use OpenAPI\Client\Model\MediaTypeValue;
 use OpenAPI\Client\Model\Song as OpenApiSong;
 use OpenAPI\Client\Model\SongAttachedTag as OpenApiSongAttachedTag;
 use OpenAPI\Client\Model\SongLinkedMedia as OpenApiSongLinkedMedia;
@@ -12,8 +14,6 @@ use OpenAPI\Client\Model\SongPerson as OpenApiSongPerson;
 use OpenAPI\Client\Model\SongPersonRole as OpenApiSongPersonRole;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
 use OpenAPI\Client\Model\SongTypeValue;
-use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
-use OpenAPI\Client\Model\MediaTypeValue;
 use Song\Application\Assemble\AssembledMedia;
 use Song\Application\Assemble\AssembledPerson;
 use Song\Application\Assemble\AssembledSong;

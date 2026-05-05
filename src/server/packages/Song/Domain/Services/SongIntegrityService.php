@@ -45,8 +45,8 @@ class SongIntegrityService
     }
 
     /**
-     * @param list<songTag> $tags
-     * @param list<person>  $persons
+     * @param list<songTag>   $tags
+     * @param list<person>    $persons
      * @param list<songMedia> $media
      *
      * @return Result<Song, DomainError>
@@ -105,8 +105,8 @@ class SongIntegrityService
     }
 
     /**
-     * @param list<songTag> $tags
-     * @param list<person>  $persons
+     * @param list<songTag>   $tags
+     * @param list<person>    $persons
      * @param list<songMedia> $media
      *
      * @return Result<Song, DomainError>
