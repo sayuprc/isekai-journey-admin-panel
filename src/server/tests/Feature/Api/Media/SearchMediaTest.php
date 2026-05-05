@@ -6,7 +6,6 @@ namespace Tests\Feature\Api\Media;
 
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
-use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -25,7 +24,7 @@ class SearchMediaTest extends DatabaseTestCase
         $repository->save($this->createMedia($this->generateUuid(), '別の動画', 'https://example.com/other', MediaType::Article, true));
 
         $this->withAuth()
-            ->getJson(route(MediaRouteMap::Search, ['title' => '描き続けた君へ']))
+            ->getJson(route('media.search', ['title' => '描き続けた君へ']))
             ->assertStatus(200)
             ->assertJsonCount(1, 'media')
             ->assertJsonPath('media.0.title', '描き続けた君へ MV')
@@ -39,7 +38,7 @@ class SearchMediaTest extends DatabaseTestCase
         $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true));
 
         $this->withAuth()
-            ->getJson(route(MediaRouteMap::Search, ['per_page' => 25]))
+            ->getJson(route('media.search', ['per_page' => 25]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'media')
             ->assertJsonPath('media.0.title', '描き続けた君へ MV')

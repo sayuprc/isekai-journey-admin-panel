@@ -31,7 +31,6 @@ use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
@@ -64,8 +63,8 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                 });
 
                 Route::prefix('media')->group(function () {
-                    Route::post('/', [CreateMediaController::class, 'handle'])->name(MediaRouteMap::Create);
-                    Route::get('/search', [SearchMediaController::class, 'handle'])->name(MediaRouteMap::Search);
+                    Route::post('/', [CreateMediaController::class, 'handle'])->name('media.create');
+                    Route::get('/search', [SearchMediaController::class, 'handle'])->name('media.search');
                 });
 
                 Route::prefix('songs')->group(function () {
