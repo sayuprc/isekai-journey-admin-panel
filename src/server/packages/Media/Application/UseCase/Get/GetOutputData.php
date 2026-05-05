@@ -15,7 +15,6 @@ readonly class GetOutputData
     public function __construct(
         public Media $media,
         public array $songs,
-    )
-    {
+    ) {
     }
 }

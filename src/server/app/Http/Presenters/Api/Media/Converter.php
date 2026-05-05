@@ -8,8 +8,8 @@ use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaReferencedSong;
 use OpenAPI\Client\Model\Media as OpenApiMedia;
 use OpenAPI\Client\Model\MediaFormat as OpenApiMediaFormat;
-use OpenAPI\Client\Model\MediaReferencedSong as OpenApiMediaReferencedSong;
 use OpenAPI\Client\Model\MediaFormatValue;
+use OpenAPI\Client\Model\MediaReferencedSong as OpenApiMediaReferencedSong;
 use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
 use OpenAPI\Client\Model\MediaTypeValue;
 
