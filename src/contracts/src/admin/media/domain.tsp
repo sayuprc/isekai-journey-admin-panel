@@ -39,7 +39,7 @@ enum MediaFormatValue {
   AudioVideo: 2,
   StreamArchive: 3,
   ShortVideo: 4,
-  LiveClip: 6,
+  LiveClip: 5,
   Other: 99,
 }
 

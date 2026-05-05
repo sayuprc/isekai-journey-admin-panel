@@ -29,12 +29,14 @@ readonly class SongMediaLinks extends ImmutableCollection
         $seen = [];
 
         foreach ($items as $item) {
-            $mediaId = MediaId::create($item['mediaId']);
-            $orderNo = OrderNo::create($item['orderNo']);
+            $result = Result::collect(
+                MediaId::create($item['mediaId']),
+                OrderNo::create($item['orderNo']),
+            )->map(fn (array $items): SongMediaLink => new SongMediaLink(...$items));
 
-            if ($mediaId->isErr() || $orderNo->isErr()) {
+            if ($result->isErr()) {
                 $messages = [];
-                foreach ([$mediaId->unwrapErrOr(null), $orderNo->unwrapErrOr(null)] as $error) {
+                foreach ($result->unwrapErr() as $error) {
                     if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
@@ -44,7 +46,7 @@ readonly class SongMediaLinks extends ImmutableCollection
                 return new Err(new DomainValidationError($messages));
             }
 
-            $link = new SongMediaLink($mediaId->unwrap(), $orderNo->unwrap());
+            $link = $result->unwrap();
 
             if (isset($seen[$link->mediaId->value])) {
                 return new Err(new DomainValidationError([

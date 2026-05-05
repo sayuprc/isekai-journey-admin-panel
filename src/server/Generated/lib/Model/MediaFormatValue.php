@@ -50,7 +50,7 @@ enum MediaFormatValue: int
 
     case NUMBER_4 = 4;
 
-    case NUMBER_6 = 6;
+    case NUMBER_5 = 5;
 
     case NUMBER_99 = 99;
 
