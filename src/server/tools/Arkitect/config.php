@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Tools\Arkitect\ComponentMaps\AdminUserComponent;
 use Tools\Arkitect\ComponentMaps\AuthComponent;
 use Tools\Arkitect\ComponentMaps\LibraryComponent;
+use Tools\Arkitect\ComponentMaps\MediaComponent;
 use Tools\Arkitect\ComponentMaps\PersonComponent;
 use Tools\Arkitect\ComponentMaps\SongComponent;
 use Tools\Arkitect\ComponentMaps\SupportComponent;
@@ -78,8 +79,16 @@ return [
         LibraryComponent::ResultType,
     ]),
 
+    new Define(MediaComponent::Domain, [
+        MediaComponent::Domain,
+        SupportComponent::Domain,
+        SupportComponent::Contracts,
+        LibraryComponent::ResultType,
+    ]),
+
     new Define(SongComponent::Domain, [
         SongComponent::Domain,
+        MediaComponent::Domain,
         PersonComponent::Domain,
         SupportComponent::Domain,
         SupportComponent::Contracts,
