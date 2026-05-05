@@ -34,7 +34,7 @@ readonly class UpdateUseCase
      */
     public function handle(UpdateInputData $inputData): Result
     {
-        return $this->authorizer->require(Permission::WriteSong)
+        return $this->authorizer->require(Permission::WriteMedia)
             ->andThen(fn () => $this->updateMedia($inputData));
     }
 

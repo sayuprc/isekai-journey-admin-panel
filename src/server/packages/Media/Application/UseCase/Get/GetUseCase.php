@@ -29,7 +29,7 @@ readonly class GetUseCase
      */
     public function handle(GetInputData $inputData): Result
     {
-        return $this->authorizer->require(Permission::ReadSong)
+        return $this->authorizer->require(Permission::ReadMedia)
             ->andThen(fn () => $this->getMedia($inputData));
     }
 

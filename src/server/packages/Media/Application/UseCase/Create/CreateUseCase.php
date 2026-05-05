@@ -34,7 +34,7 @@ readonly class CreateUseCase
      */
     public function handle(CreateInputData $inputData): Result
     {
-        return $this->authorizer->require(Permission::WriteSong)
+        return $this->authorizer->require(Permission::WriteMedia)
             ->andThen(fn () => $this->createMedia($inputData));
     }
 
