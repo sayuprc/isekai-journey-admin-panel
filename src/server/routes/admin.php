@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
+use App\Http\Controllers\Api\AuditLog\GetAuditLogController;
+use App\Http\Controllers\Api\AuditLog\SearchAuditLogController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RefreshController;
 use App\Http\Controllers\Api\Media\CreateMediaController;
@@ -39,6 +41,7 @@ use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
+use Support\Route\AuditLogRouteMap;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -84,6 +87,11 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('song-types')->group(function () {
                     Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
+                });
+
+                Route::prefix('audit-logs')->group(function () {
+                    Route::get('/search', [SearchAuditLogController::class, 'handle'])->name(AuditLogRouteMap::Search);
+                    Route::get('/{auditLogId}', [GetAuditLogController::class, 'handle'])->name(AuditLogRouteMap::Get);
                 });
 
                 Route::prefix('song-tags')->group(function () {

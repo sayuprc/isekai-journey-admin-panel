@@ -18,6 +18,8 @@ enum Permission: string
 
     case WriteSong = 'write_song';
 
+    case ReadAuditLog = 'read_audit_log';
+
     case ReadMedia = 'read_media';
 
     case WriteMedia = 'write_media';
@@ -31,6 +33,7 @@ enum Permission: string
             self::WritePerson => '人物編集',
             self::ReadSong => '楽曲閲覧',
             self::WriteSong => '楽曲編集',
+            self::ReadAuditLog => '監査ログ閲覧',
             self::ReadMedia => 'メディア閲覧',
             self::WriteMedia => 'メディア編集',
         };
