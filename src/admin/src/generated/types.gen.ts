@@ -17,6 +17,57 @@ export type AdminUserListResponse = {
     adminUsers: Array<AdminUser>;
 };
 
+/**
+ * 監査ログの操作種別
+ */
+export type AuditAction = 'create' | 'update' | 'delete' | 'login' | 'refresh';
+
+/**
+ * 監査ログ詳細
+ */
+export type AuditLog = {
+    auditLogId: AuditLogId;
+    adminUserId: Uuid;
+    adminUserName: string;
+    action: AuditAction;
+    targetType: AuditTargetType;
+    targetId: Uuid;
+    createdAt: string;
+    /**
+     * 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする。
+     */
+    snapshot: {
+        [key: string]: unknown;
+    };
+};
+
+export type AuditLogGetResponse = {
+    auditLog: AuditLog;
+};
+
+export type AuditLogSearchResponse = {
+    auditLogs: Array<AuditLogSummary>;
+    maxPage: number;
+};
+
+/**
+ * 監査ログ一覧の 1 行分
+ */
+export type AuditLogSummary = {
+    auditLogId: AuditLogId;
+    adminUserId: Uuid;
+    adminUserName: string;
+    action: AuditAction;
+    targetType: AuditTargetType;
+    targetId: Uuid;
+    createdAt: string;
+};
+
+/**
+ * 監査ログの対象種別
+ */
+export type AuditTargetType = 'AdminUser' | 'Person' | 'Song' | 'SongTag';
+
 export type ErrorResponse = {
     message: string;
 };
@@ -291,6 +342,11 @@ export type AdminUserId = string;
 export type AdminUserName = string;
 
 /**
+ * 監査ログID
+ */
+export type AuditLogId = string;
+
+/**
  * 作成日時
  */
 export type CreatedAt = string;
@@ -423,6 +479,101 @@ export type AdminUserServiceListAdminUsersResponses = {
 };
 
 export type AdminUserServiceListAdminUsersResponse = AdminUserServiceListAdminUsersResponses[keyof AdminUserServiceListAdminUsersResponses];
+
+export type AuditLogServiceSearchAuditLogsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        from?: string;
+        to?: string;
+        action?: AuditAction;
+        target_type?: AuditTargetType;
+        target_id?: Uuid;
+        admin_user_name?: string;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/audit-logs/search';
+};
+
+export type AuditLogServiceSearchAuditLogsErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuditLogServiceSearchAuditLogsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: AuditLogSearchResponse;
+};
+
+export type AuditLogServiceSearchAuditLogsResponse = AuditLogServiceSearchAuditLogsResponses[keyof AuditLogServiceSearchAuditLogsResponses];
+
+export type AuditLogServiceGetAuditLogData = {
+    body?: never;
+    path: {
+        auditLogId: Uuid;
+    };
+    query?: never;
+    url: '/audit-logs/{auditLogId}';
+};
+
+export type AuditLogServiceGetAuditLogErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuditLogServiceGetAuditLogError = AuditLogServiceGetAuditLogErrors[keyof AuditLogServiceGetAuditLogErrors];
+
+export type AuditLogServiceGetAuditLogResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: AuditLogGetResponse;
+};
+
+export type AuditLogServiceGetAuditLogResponse = AuditLogServiceGetAuditLogResponses[keyof AuditLogServiceGetAuditLogResponses];
 
 export type AuthenticateServiceLoginData = {
     body: LoginRequest;

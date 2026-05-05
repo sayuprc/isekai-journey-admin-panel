@@ -18,6 +18,8 @@ enum Permission: string
 
     case WriteSong = 'write_song';
 
+    case ReadAuditLog = 'read_audit_log';
+
     public function getName(): string
     {
         return match ($this) {
@@ -27,6 +29,7 @@ enum Permission: string
             self::WritePerson => '人物編集',
             self::ReadSong => '楽曲閲覧',
             self::WriteSong => '楽曲編集',
+            self::ReadAuditLog => '監査ログ閲覧',
         };
     }
 }

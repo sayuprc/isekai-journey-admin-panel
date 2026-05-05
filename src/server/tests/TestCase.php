@@ -19,6 +19,8 @@ use Support\UseCase\Authorizer\UseCaseAuthorizer;
 
 abstract class TestCase extends BaseTestCase
 {
+    private ?AuthContext $privilegedAuthContext = null;
+
     protected function generateUuid(): string
     {
         return $this->app->make(UuidGeneratorInterface::class)->generate();
@@ -31,6 +33,10 @@ abstract class TestCase extends BaseTestCase
 
     protected function privilegedContext(): AuthContext
     {
+        if (! is_null($this->privilegedAuthContext)) {
+            return $this->privilegedAuthContext;
+        }
+
         $context = $this->app->make(AuthContext::class);
 
         $user = AdminUser::reconstruct(
@@ -54,6 +60,8 @@ abstract class TestCase extends BaseTestCase
         }
 
         $context->set($user);
+
+        $this->privilegedAuthContext = $context;
 
         return $context;
     }

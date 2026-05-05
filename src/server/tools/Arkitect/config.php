@@ -27,6 +27,7 @@ return [
         AdminUserComponent::Domain,
         SupportComponent::Contracts,
         SupportComponent::Domain,
+        SupportComponent::Optional,
         LibraryComponent::ResultType,
     ]),
 

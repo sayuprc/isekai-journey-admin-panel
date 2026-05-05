@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, PersonServiceCreatePersonData, PersonServiceCreatePersonErrors, PersonServiceCreatePersonResponses, PersonServiceDeletePersonData, PersonServiceDeletePersonErrors, PersonServiceDeletePersonResponses, PersonServiceGetPersonData, PersonServiceGetPersonErrors, PersonServiceGetPersonResponses, PersonServiceListPersonsData, PersonServiceListPersonsErrors, PersonServiceListPersonsResponses, PersonServiceSearchPersonsData, PersonServiceSearchPersonsErrors, PersonServiceSearchPersonsResponses, PersonServiceUpdatePersonData, PersonServiceUpdatePersonErrors, PersonServiceUpdatePersonResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
+import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuditLogServiceGetAuditLogData, AuditLogServiceGetAuditLogErrors, AuditLogServiceGetAuditLogResponses, AuditLogServiceSearchAuditLogsData, AuditLogServiceSearchAuditLogsErrors, AuditLogServiceSearchAuditLogsResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, PersonServiceCreatePersonData, PersonServiceCreatePersonErrors, PersonServiceCreatePersonResponses, PersonServiceDeletePersonData, PersonServiceDeletePersonErrors, PersonServiceDeletePersonResponses, PersonServiceGetPersonData, PersonServiceGetPersonErrors, PersonServiceGetPersonResponses, PersonServiceListPersonsData, PersonServiceListPersonsErrors, PersonServiceListPersonsResponses, PersonServiceSearchPersonsData, PersonServiceSearchPersonsErrors, PersonServiceSearchPersonsResponses, PersonServiceUpdatePersonData, PersonServiceUpdatePersonErrors, PersonServiceUpdatePersonResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -24,6 +24,24 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 export const adminUserServiceListAdminUsers = <ThrowOnError extends boolean = false>(options?: Options<AdminUserServiceListAdminUsersData, ThrowOnError>) => (options?.client ?? client).get<AdminUserServiceListAdminUsersResponses, AdminUserServiceListAdminUsersErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/admin-users',
+    ...options
+});
+
+/**
+ * 監査ログ検索API
+ */
+export const auditLogServiceSearchAuditLogs = <ThrowOnError extends boolean = false>(options?: Options<AuditLogServiceSearchAuditLogsData, ThrowOnError>) => (options?.client ?? client).get<AuditLogServiceSearchAuditLogsResponses, AuditLogServiceSearchAuditLogsErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/audit-logs/search',
+    ...options
+});
+
+/**
+ * 監査ログ取得API
+ */
+export const auditLogServiceGetAuditLog = <ThrowOnError extends boolean = false>(options: Options<AuditLogServiceGetAuditLogData, ThrowOnError>) => (options.client ?? client).get<AuditLogServiceGetAuditLogResponses, AuditLogServiceGetAuditLogErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/audit-logs/{auditLogId}',
     ...options
 });
 
