@@ -40,7 +40,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Person, $personId);
         $this->assertSame('ヰ世界情緒', $log['snapshot']['name']);
-        $this->assertSame(20, $log['snapshot']['orderNo']);
+        $this->assertSame(20, $log['snapshot']['order_no']);
     }
 
     private function getInstance(): UpdateUseCase

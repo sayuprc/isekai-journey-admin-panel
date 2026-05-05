@@ -64,11 +64,7 @@ readonly class CreateUseCase
                 AuditAction::Create,
                 AuditTargetType::Person,
                 $person->personId,
-                [
-                    'personId' => $person->personId->value,
-                    'name' => $person->name->value,
-                    'orderNo' => $person->orderNo->value,
-                ],
+                $person->toArray(),
             );
 
             return new Ok(new CreateOutputData($person));
