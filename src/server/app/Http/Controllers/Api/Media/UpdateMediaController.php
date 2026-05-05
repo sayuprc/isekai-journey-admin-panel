@@ -6,8 +6,8 @@ namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Media\UpdatePresenter;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Media\Application\UseCase\Update\UpdateInputData;
 use Media\Application\UseCase\Update\UpdateUseCase;
 
