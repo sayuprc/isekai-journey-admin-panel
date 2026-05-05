@@ -9,6 +9,7 @@ readonly class AssembledSong
     /**
      * @param array<int, AssembledPerson> $persons
      * @param array<int, AssembledTag>    $tags
+     * @param array<int, AssembledMedia>  $media
      */
     public function __construct(
         public string $songId,
@@ -21,6 +22,7 @@ readonly class AssembledSong
         public int $orderNo,
         public array $persons,
         public array $tags = [],
+        public array $media = [],
     ) {
     }
 }

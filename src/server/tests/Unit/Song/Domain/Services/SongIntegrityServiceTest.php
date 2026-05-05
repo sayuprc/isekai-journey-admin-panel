@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Domain\Services;
 
+use Media\Domain\Models\MediaRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
@@ -30,6 +31,8 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&SongTagRepositoryInterface $songTagRepository;
 
+    private MockInterface&MediaRepositoryInterface $mediaRepository;
+
     #[Override]
     protected function setUp(): void
     {
@@ -39,6 +42,7 @@ class SongIntegrityServiceTest extends TestCase
         $this->personRepository = Mockery::mock(PersonRepositoryInterface::class);
         $this->songRepository = Mockery::mock(SongRepositoryInterface::class);
         $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
+        $this->mediaRepository = Mockery::mock(MediaRepositoryInterface::class);
     }
 
     #[Test]
@@ -103,6 +107,7 @@ class SongIntegrityServiceTest extends TestCase
             $isDisplay,
             [],
             $persons,
+            [],
         );
 
         $this->assertTrue($result->isOk());
@@ -146,6 +151,7 @@ class SongIntegrityServiceTest extends TestCase
             $isDisplay,
             [],
             $persons,
+            [],
         );
 
         $this->assertTrue($result->isErr());
@@ -204,6 +210,7 @@ class SongIntegrityServiceTest extends TestCase
             $orderNo,
             [],
             $persons,
+            [],
         );
 
         $this->assertTrue($result->isOk());
@@ -251,6 +258,7 @@ class SongIntegrityServiceTest extends TestCase
             $orderNo,
             [],
             $persons,
+            [],
         );
 
         $this->assertTrue($result->isErr());
@@ -263,6 +271,7 @@ class SongIntegrityServiceTest extends TestCase
             $this->songRepository,
             $this->personRepository,
             $this->songTagRepository,
+            $this->mediaRepository,
         );
     }
 }
