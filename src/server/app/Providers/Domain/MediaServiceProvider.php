@@ -22,9 +22,10 @@ class MediaServiceProvider extends EnvServiceProvider
 
         $this->app->bind(SearchInputData::class, function (): SearchInputData {
             $request = $this->app->make(Request::class);
+            $title = $request->query('title', '');
 
             return new SearchInputData(
-                $request->has('title') ? $request->query('title', '') : Arg::Optional,
+                $request->has('title') && is_string($title) ? $title : Arg::Optional,
                 (int)$request->query('page', 1),
                 PerPage::from((int)$request->query('per_page', PerPage::TwentyFive->value)),
             );

@@ -83,6 +83,7 @@ return [
         MediaComponent::Domain,
         SupportComponent::Domain,
         SupportComponent::Contracts,
+        SupportComponent::Optional,
         LibraryComponent::ResultType,
     ]),
 
@@ -101,6 +102,7 @@ return [
     ]),
     new Define(SongComponent::Assemble, [
         SongComponent::Domain,
+        MediaComponent::Domain,
         PersonComponent::Domain,
     ]),
     new Define(SongComponent::UseCase, [

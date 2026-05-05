@@ -31,7 +31,7 @@ class SongIntegrityServiceTest extends TestCase
 
     private MockInterface&SongTagRepositoryInterface $songTagRepository;
 
-    private MockInterface&MediaRepositoryInterface $mediaRepository;
+    private MediaRepositoryInterface&MockInterface $mediaRepository;
 
     #[Override]
     protected function setUp(): void

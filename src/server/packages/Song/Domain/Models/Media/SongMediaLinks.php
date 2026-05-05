@@ -78,13 +78,17 @@ readonly class SongMediaLinks extends ImmutableCollection
     }
 
     /**
-     * @return list<array{media_id: string, song_media_type: value-of<SongMediaType>, order_no: int}>
+     * @return list<array{media_id: string, song_media_type: 1|2|3|4|99, order_no: int}>
      */
     public function toArray(): array
     {
-        return $this->toGeneric()
-            ->map(fn (SongMediaLink $item): array => $item->toArray())
-            ->toList();
+        $items = [];
+
+        foreach ($this->toGeneric() as $item) {
+            $items[] = $item->toArray();
+        }
+
+        return $items;
     }
 
     /**
