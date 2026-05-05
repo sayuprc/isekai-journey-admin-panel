@@ -21,18 +21,13 @@ class UpdateMediaController extends Controller
 
     public function handle(Request $request, string $mediaId): JsonResponse
     {
-        $title = $request->input('title');
-        $url = $request->input('url');
-        $typeValue = $request->input('typeValue');
-        $formatValue = $request->input('formatValue');
-
         $inputData = new UpdateInputData(
             $mediaId,
-            is_string($title) ? $title : '',
-            is_string($url) ? $url : '',
-            is_scalar($typeValue) ? (int)$typeValue : 0,
-            is_scalar($formatValue) ? (int)$formatValue : 0,
-            (bool)$request->input('isDisplay', false),
+            $request->string('title')->toString(),
+            $request->string('url')->toString(),
+            $request->integer('typeValue'),
+            $request->integer('formatValue'),
+            $request->boolean('isDisplay'),
         );
 
         return $this->presenter->present($this->useCase->handle($inputData));
