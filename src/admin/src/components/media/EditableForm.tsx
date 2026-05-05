@@ -85,6 +85,33 @@ export const EditableForm = (props: Props) => {
     handleError(status, error);
   });
 
+  const handleDelete = withSubmitting(async (e: Event) => {
+    e.preventDefault();
+
+    if (!window.confirm('削除します。よろしいですか？')) {
+      return;
+    }
+
+    clearErrors();
+
+    const mediaId = props.data?.media.mediaId;
+
+    if (!mediaId) {
+      setFormError('削除対象のMedia IDを取得できませんでした');
+      return;
+    }
+
+    const { error, status } = await client.api.media({ mediaId }).delete();
+
+    if (error) {
+      handleError(status, error);
+      return;
+    }
+
+    setFlash('削除しました');
+    window.location.href = listUrl;
+  });
+
   onMount(() => {
     if (props.status === 404) {
       setFlash('データがありません', 'error');
@@ -174,6 +201,16 @@ export const EditableForm = (props: Props) => {
             </div>
           </fieldset>
         </form>
+
+        <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
+          <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
+          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。楽曲に使用中のMediaは削除できません。</p>
+          <div class="mt-4">
+            <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
+              {isSubmitting() ? '削除中...' : 'このMediaを削除する'}
+            </button>
+          </div>
+        </fieldset>
       </div>
     </Show>
   );

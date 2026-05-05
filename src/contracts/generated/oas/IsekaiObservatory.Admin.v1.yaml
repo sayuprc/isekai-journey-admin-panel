@@ -316,6 +316,44 @@ paths:
               $ref: '#/components/schemas/MediaUpdateRequest'
       security:
         - BearerAuth: []
+    delete:
+      operationId: MediaService_deleteMedia
+      description: メディア削除API
+      parameters:
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Media
+      security:
+        - BearerAuth: []
   /persons:
     get:
       operationId: PersonService_listPersons

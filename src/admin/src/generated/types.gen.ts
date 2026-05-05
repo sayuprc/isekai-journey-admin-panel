@@ -709,6 +709,57 @@ export type MediaServiceSearchMediaResponses = {
 
 export type MediaServiceSearchMediaResponse = MediaServiceSearchMediaResponses[keyof MediaServiceSearchMediaResponses];
 
+export type MediaServiceDeleteMediaData = {
+    body?: never;
+    path: {
+        mediaId: Uuid;
+    };
+    query?: never;
+    url: '/media/{mediaId}';
+};
+
+export type MediaServiceDeleteMediaErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type MediaServiceDeleteMediaError = MediaServiceDeleteMediaErrors[keyof MediaServiceDeleteMediaErrors];
+
+export type MediaServiceDeleteMediaResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type MediaServiceDeleteMediaResponse = MediaServiceDeleteMediaResponses[keyof MediaServiceDeleteMediaResponses];
+
 export type MediaServiceGetMediaData = {
     body?: never;
     path: {

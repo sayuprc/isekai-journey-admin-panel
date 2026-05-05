@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { mediaServiceCreateMedia, mediaServiceGetMedia, mediaServiceSearchMedia, mediaServiceUpdateMedia } from '../../generated';
+import { mediaServiceCreateMedia, mediaServiceDeleteMedia, mediaServiceGetMedia, mediaServiceSearchMedia, mediaServiceUpdateMedia } from '../../generated';
 import type { MediaFormatValue, MediaTypeValue, PerPage } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -104,6 +104,22 @@ export const media = new Elysia({ prefix: '/media' })
         typeValue: MediaTypeValueSchema,
         formatValue: MediaFormatValueSchema,
         isDisplay: t.Boolean(),
+      }),
+    },
+  )
+  .delete(
+    '/:mediaId',
+    async ({ params: { mediaId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await mediaServiceDeleteMedia({
+          client,
+          path: { mediaId },
+        }));
+      });
+    },
+    {
+      params: t.Object({
+        mediaId: t.String(),
       }),
     },
   );
