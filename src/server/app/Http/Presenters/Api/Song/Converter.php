@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Song;
 
+use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
+use OpenAPI\Client\Model\MediaTypeValue as OpenApiMediaTypeValue;
 use OpenAPI\Client\Model\Song as OpenApiSong;
 use OpenAPI\Client\Model\SongAttachedMedia as OpenApiSongAttachedMedia;
 use OpenAPI\Client\Model\SongAttachedTag as OpenApiSongAttachedTag;
@@ -11,8 +13,6 @@ use OpenAPI\Client\Model\SongMediaType as OpenApiSongMediaType;
 use OpenAPI\Client\Model\SongMediaTypeValue as OpenApiSongMediaTypeValue;
 use OpenAPI\Client\Model\SongPerson as OpenApiSongPerson;
 use OpenAPI\Client\Model\SongPersonRole as OpenApiSongPersonRole;
-use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
-use OpenAPI\Client\Model\MediaTypeValue as OpenApiMediaTypeValue;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
 use OpenAPI\Client\Model\SongTypeValue;
 use Song\Application\Assemble\AssembledMedia;
@@ -66,12 +66,12 @@ readonly class Converter
             ->setTitle($media->title)
             ->setUrl($media->url)
             ->setType(
-                (new OpenApiMediaType())
+                new OpenApiMediaType()
                     ->setName($media->typeName)
                     ->setValue(OpenApiMediaTypeValue::from($media->typeValue)),
             )
             ->setSongMediaType(
-                (new OpenApiSongMediaType())
+                new OpenApiSongMediaType()
                     ->setName($media->songMediaTypeName)
                     ->setValue(OpenApiSongMediaTypeValue::from($media->songMediaTypeValue)),
             )

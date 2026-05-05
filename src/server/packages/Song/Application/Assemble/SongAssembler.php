@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Song\Application\Assemble;
 
 use Person\Domain\Models\PersonRepositoryInterface;
-use Song\Domain\Models\SongAttachedMedia;
 use Song\Domain\Models\Persons\SongPerson;
 use Song\Domain\Models\Song;
+use Song\Domain\Models\SongAttachedMedia;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Models\Tags\SongTagReference;
 
