@@ -13,8 +13,6 @@ use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\RegistrationTokenExpiredAt;
 use AdminUser\Domain\Models\RegistrationTokenHashedValue;
 use AdminUser\Domain\Models\Role;
-use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
-use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -29,8 +27,8 @@ class RegistrationTokenIssueService
     public function __construct(
         private readonly ClockInterface $clock,
         private readonly UuidGeneratorInterface $uuidGenerator,
-        private readonly RandomTokenGeneratorInterface $randomTokenGenerator,
-        private readonly TokenHasherInterface $tokenHasher,
+        private readonly RegistrationTokenGeneratorInterface $randomTokenGenerator,
+        private readonly RegistrationTokenHasherInterface $tokenHasher,
     ) {
     }
 

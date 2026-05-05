@@ -15,8 +15,6 @@ use Support\UseCase\Error\UseCaseError;
 
 class InviteCommand extends Command
 {
-    private const int DEFAULT_EXPIRES_IN_MINUTES = 60;
-
     #[Override]
     protected $signature = 'admin:invite
         {name : 管理ユーザー名}
