@@ -18,7 +18,7 @@ class InviteCommand extends Command
     protected $signature = 'admin:invite
         {name : 管理ユーザー名}
         {email : メールアドレス}
-        {role : role.general | role.console | role.privilege}
+        {--p|privilege : 特権ユーザーとして発行する}
         {--expires-in-minutes=60 : トークン有効期限（分）}';
 
     #[Override]
@@ -40,12 +40,9 @@ class InviteCommand extends Command
             return Command::FAILURE;
         }
 
-        $role = $this->resolveRole($this->argument('role'));
-        if (is_null($role)) {
-            $this->error('不正なロールです');
-
-            return Command::FAILURE;
-        }
+        $role = $this->isPrivilege()
+            ? Role::Privilege
+            : Role::General;
 
         $expiresInMinutes = (int)$this->option('expires-in-minutes');
 
@@ -74,14 +71,9 @@ class InviteCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function resolveRole(string $value): ?Role
+    private function isPrivilege(): bool
     {
-        return match ($value) {
-            'role.general', 'general' => Role::General,
-            'role.console', 'console' => Role::Console,
-            'role.privilege', 'privilege' => Role::Privilege,
-            default => null,
-        };
+        return (bool)$this->option('privilege');
     }
 
     private function resolveErrorMessage(UseCaseError $error): string
