@@ -59,9 +59,9 @@ class RefreshUseCaseTest extends DatabaseTestCase
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Refresh, AuditTargetType::AdminUser, $adminUser->adminUserId->value);
         $this->assertSame($adminUser->adminUserId->value, $log['admin_user_id']);
-        $this->assertArrayHasKey('refreshTokenId', $log['snapshot']);
-        $this->assertArrayNotHasKey('refreshToken', $log['snapshot']);
-        $this->assertArrayNotHasKey('plainToken', $log['snapshot']);
+        $this->assertArrayHasKey('refresh_token_id', $log['snapshot']);
+        $this->assertArrayNotHasKey('refresh_token', $log['snapshot']);
+        $this->assertArrayNotHasKey('plain_token', $log['snapshot']);
         $this->assertNotContains($plainToken, $log['snapshot'], 'snapshot に平文トークンが含まれてはならない');
         $this->assertNotContains($hashedToken, $log['snapshot'], 'snapshot にハッシュ済みトークンが含まれてはならない');
     }

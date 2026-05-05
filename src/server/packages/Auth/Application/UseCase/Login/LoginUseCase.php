@@ -55,7 +55,7 @@ readonly class LoginUseCase
                 AuditTargetType::AdminUser,
                 $refreshToken->adminUserId,
                 [
-                    'refreshTokenId' => $refreshToken->refreshTokenId->value,
+                    'refresh_token_id' => $refreshToken->refreshTokenId->value,
                 ],
                 $refreshToken->adminUserId,
             );
