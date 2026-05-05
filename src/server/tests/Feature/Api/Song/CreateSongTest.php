@@ -84,7 +84,8 @@ class CreateSongTest extends DatabaseTestCase
                             ], [
                                 'songTagId' => $tag2->songTagId->value,
                                 'name' => $tag2->name->value,
-                            ]]),
+                            ]])
+                            ->where('media', []),
                     ),
             );
     }
