@@ -24,7 +24,7 @@ readonly class Song
         public OrderNo $orderNo,
         public SongTagReferences $tags,
         public SongPersons $persons,
-        public array $media = [],
+        public array $media,
     ) {
     }
 
@@ -43,7 +43,7 @@ readonly class Song
         int $orderNo,
         array $tags,
         array $persons,
-        array $media = [],
+        array $media,
     ): self {
         return new self(
             SongId::reconstruct($songId),

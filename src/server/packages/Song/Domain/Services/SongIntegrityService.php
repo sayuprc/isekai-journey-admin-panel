@@ -176,7 +176,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $persons]));
+            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $persons, []]));
     }
 
     /**

@@ -95,6 +95,7 @@ trait EntityFactory
             OrderNo::reconstruct($orderNo),
             SongTagReferences::fromArray($tags)->unwrap(),
             SongPersons::fromArray($persons)->unwrap(),
+            [],
         );
     }
 
