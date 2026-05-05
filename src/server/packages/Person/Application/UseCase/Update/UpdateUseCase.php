@@ -16,6 +16,9 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -28,6 +31,7 @@ readonly class UpdateUseCase
         private TransactionInterface $transaction,
         private PersonRepositoryInterface $repository,
         private PersonIntegrityService $service,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -55,6 +59,13 @@ readonly class UpdateUseCase
             $person = $result->unwrap();
 
             $this->repository->save($person);
+
+            $this->recorder->record(
+                AuditAction::Update,
+                AuditTargetType::Person,
+                $person->personId,
+                $person->toArray(),
+            );
 
             return new Ok(new UpdateOutputData($person));
         });

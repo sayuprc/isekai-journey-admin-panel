@@ -11,18 +11,25 @@ use Person\Domain\Services\PersonUsageCheckerInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteUseCase
 {
     public function __construct(
         private UseCaseAuthorizer $authorizer,
+        private TransactionInterface $transaction,
         private PersonRepositoryInterface $repository,
         private PersonUsageCheckerInterface $usageChecker,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -42,14 +49,27 @@ readonly class DeleteUseCase
     {
         return PersonId::create($inputData->personId)
             ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(function (PersonId $personId): Result {
+            ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($personId): Result {
+                $person = $this->repository->find($personId);
+
+                if (is_null($person)) {
+                    return new Err(new NotFoundError('Person', $personId->value));
+                }
+
                 if ($this->usageChecker->isUsed($personId)) {
                     return new Err(new BusinessLogicError('この人物は楽曲に使用されているため削除できません'));
                 }
 
                 $this->repository->delete($personId);
 
+                $this->recorder->record(
+                    AuditAction::Delete,
+                    AuditTargetType::Person,
+                    $person->personId,
+                    $person->toArray(),
+                );
+
                 return new Ok(null);
-            });
+            }));
     }
 }

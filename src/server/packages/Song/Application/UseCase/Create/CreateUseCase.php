@@ -17,6 +17,9 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -30,6 +33,7 @@ readonly class CreateUseCase
         private SongRepositoryInterface $repository,
         private SongIntegrityService $service,
         private SongAssembler $assembler,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -63,6 +67,13 @@ readonly class CreateUseCase
             }
 
             $song = $this->repository->save($result->unwrap());
+
+            $this->recorder->record(
+                AuditAction::Create,
+                AuditTargetType::Song,
+                $song->songId,
+                $song->toArray(),
+            );
 
             return new Ok(new CreateOutputData($this->assembler->assemble($song)));
         });

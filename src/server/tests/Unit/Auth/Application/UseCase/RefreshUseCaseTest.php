@@ -20,6 +20,7 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -37,6 +38,8 @@ class RefreshUseCaseTest extends TestCase
 
     private MockInterface&TokenHasherInterface $tokenHasher;
 
+    private AuditLogRecorderInterface&MockInterface $recorder;
+
     private ?RefreshToken $foundRefreshToken = null;
 
     /**
@@ -53,6 +56,8 @@ class RefreshUseCaseTest extends TestCase
         $this->refreshTokenIssueService = Mockery::mock(RefreshTokenIssueService::class);
         $this->accessTokenIssueService = Mockery::mock(AccessTokenIssueService::class);
         $this->tokenHasher = Mockery::mock(TokenHasherInterface::class);
+        $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
+        $this->recorder->shouldReceive('record')->byDefault();
 
         $this->refreshTokenRepository = new class ($this) implements RefreshTokenRepositoryInterface {
             public function __construct(private readonly RefreshUseCaseTest $test)
@@ -152,6 +157,7 @@ class RefreshUseCaseTest extends TestCase
             $this->refreshTokenIssueService,
             $this->accessTokenIssueService,
             $this->tokenHasher,
+            $this->recorder,
         );
     }
 

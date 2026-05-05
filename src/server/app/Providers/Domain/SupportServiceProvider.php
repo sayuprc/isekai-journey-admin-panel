@@ -10,12 +10,14 @@ use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Infrastructures\AuditLog\AuditLogRecorder;
 use Support\Infrastructures\Clock;
 use Support\Infrastructures\Database\SQLiteConfig;
 use Support\Infrastructures\DbTransaction;
 use Support\Infrastructures\Mapper;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 
 class SupportServiceProvider extends EnvServiceProvider
 {
@@ -27,6 +29,7 @@ class SupportServiceProvider extends EnvServiceProvider
         $this->app->bind(UuidConverterInterface::class, UuidConverter::class);
         $this->app->bind(TransactionInterface::class, DbTransaction::class);
         $this->app->bind(ClockInterface::class, Clock::class);
+        $this->app->bind(AuditLogRecorderInterface::class, AuditLogRecorder::class);
 
         $this->app->bind(
             SQLiteConfig::class,

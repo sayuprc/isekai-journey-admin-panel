@@ -8,12 +8,16 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\UseCase\Tag\Update\UpdateInputData;
 use Song\Application\UseCase\Tag\Update\UpdateUseCase;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
 
 class UpdateUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
     use EntityStore;
 
@@ -32,6 +36,10 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertCount(1, $tags);
         $this->assertSame('派生曲', array_first($tags)->name->value);
         $this->assertSame(2, array_first($tags)->orderNo->value);
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::SongTag, $uuid);
+        $this->assertSame('派生曲', $log['snapshot']['name']);
     }
 
     #[Test]

@@ -19,6 +19,7 @@ use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainValidationError;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -33,6 +34,8 @@ class UpdateUseCaseTest extends TestCase
 
     private MockInterface&SongTagIntegrityService $service;
 
+    private AuditLogRecorderInterface&MockInterface $recorder;
+
     #[Override]
     protected function setUp(): void
     {
@@ -41,6 +44,8 @@ class UpdateUseCaseTest extends TestCase
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->repository = Mockery::mock(SongTagRepositoryInterface::class);
         $this->service = Mockery::mock(SongTagIntegrityService::class);
+        $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
+        $this->recorder->shouldReceive('record')->byDefault();
     }
 
     #[Test]
@@ -132,11 +137,14 @@ class UpdateUseCaseTest extends TestCase
 
     private function getInstance(): UpdateUseCase
     {
+        $context = $this->privilegedContext();
+
         return new UpdateUseCase(
-            $this->authorizer(),
+            $this->authorizer($context),
             $this->transaction,
             $this->repository,
             $this->service,
+            $this->recorder,
         );
     }
 }

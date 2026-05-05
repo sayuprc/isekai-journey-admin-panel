@@ -9,11 +9,15 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\UseCase\Tag\Create\CreateInputData;
 use Song\Application\UseCase\Tag\Create\CreateUseCase;
 use Song\Infrastructures\Tag\SongTagRepository;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 
 class CreateUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
 
     #[Test]
@@ -27,6 +31,11 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertCount(1, $tags);
         $this->assertSame('派生曲', $tags->first()->name);
         $this->assertSame(10, $tags->first()->order_no);
+
+        $tagId = $this->toUuid($tags->first()->song_tag_id);
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::SongTag, $tagId);
+        $this->assertSame('派生曲', $log['snapshot']['name']);
     }
 
     #[Test]
