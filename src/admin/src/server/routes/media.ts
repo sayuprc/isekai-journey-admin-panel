@@ -6,7 +6,7 @@ import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 const MediaTypeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(99)]);
-const MediaFormatValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5), t.Literal(6), t.Literal(99)]);
+const MediaFormatValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(6), t.Literal(99)]);
 
 export const media = new Elysia({ prefix: '/media' })
   .use(authGuard)
