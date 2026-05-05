@@ -12,6 +12,9 @@ use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\InvalidInputError;
@@ -25,6 +28,7 @@ readonly class RefreshUseCase
         private RefreshTokenIssueService $refreshTokenIssueService,
         private AccessTokenIssueService $accessTokenIssueService,
         private TokenHasherInterface $tokenHasher,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -60,6 +64,16 @@ readonly class RefreshUseCase
 
             $this->refreshTokenRepository->save($refreshToken->consume());
             $this->refreshTokenRepository->save($nextRefreshToken);
+
+            $this->recorder->record(
+                $refreshToken->adminUserId->value,
+                AuditAction::Refresh,
+                AuditTargetType::AdminUser,
+                $refreshToken->adminUserId->value,
+                [
+                    'refreshTokenId' => $nextRefreshToken->refreshTokenId->value,
+                ],
+            );
 
             return new Ok(
                 new RefreshOutputData(

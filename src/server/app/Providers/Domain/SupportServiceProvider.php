@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Override;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Infrastructures\AuditLog\AuditLogRecorder;
 use Support\Infrastructures\Clock;
 use Support\Infrastructures\Database\SQLiteConfig;
 use Support\Infrastructures\DbTransaction;
@@ -27,6 +29,7 @@ class SupportServiceProvider extends EnvServiceProvider
         $this->app->bind(UuidConverterInterface::class, UuidConverter::class);
         $this->app->bind(TransactionInterface::class, DbTransaction::class);
         $this->app->bind(ClockInterface::class, Clock::class);
+        $this->app->bind(AuditLogRecorderInterface::class, AuditLogRecorder::class);
 
         $this->app->bind(
             SQLiteConfig::class,

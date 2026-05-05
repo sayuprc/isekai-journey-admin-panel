@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Tests;
 
 use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
 use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use DateTimeImmutable;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
@@ -30,14 +33,27 @@ abstract class TestCase extends BaseTestCase
     {
         $context = $this->app->make(AuthContext::class);
 
-        $context->set(AdminUser::reconstruct(
+        $user = AdminUser::reconstruct(
             $this->generateUuid(),
             'テストユーザー',
             'test@example.com',
             new DateTimeImmutable(),
             Role::Privilege->value,
             [],
-        ));
+        );
+
+        // 監査ログ機構が admin_users への外部キーを要求するため、
+        // DB を使うテスト（DatabaseTransactions を使うテスト）の場合のみ、
+        // 認証済みユーザーを実 DB にも登録する。
+        if (in_array(DatabaseTransactions::class, class_uses_recursive(static::class), true)) {
+            $repository = $this->app->make(AdminUserRepositoryInterface::class);
+
+            if (is_null($repository->find($user->adminUserId))) {
+                $repository->register($user, HashedPassword::reconstruct('hashed-password'));
+            }
+        }
+
+        $context->set($user);
 
         return $context;
     }

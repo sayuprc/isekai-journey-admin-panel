@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Create;
 
 use AdminUser\Domain\Models\Permission;
+use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
@@ -28,6 +32,8 @@ readonly class CreateUseCase
         private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
         private SongTagIntegrityService $service,
+        private AuditLogRecorderInterface $recorder,
+        private AuthContext $authContext,
     ) {
     }
 
@@ -55,6 +61,21 @@ readonly class CreateUseCase
             $tag = $result->unwrap();
 
             $this->repository->save($tag);
+
+            $actor = $this->authContext->get();
+            assert(! is_null($actor));
+
+            $this->recorder->record(
+                $actor->adminUserId->value,
+                AuditAction::Create,
+                AuditTargetType::SongTag,
+                $tag->songTagId->value,
+                [
+                    'songTagId' => $tag->songTagId->value,
+                    'name' => $tag->name->value,
+                    'orderNo' => $tag->orderNo->value,
+                ],
+            );
 
             return new Ok(new CreateOutputData($tag));
         });

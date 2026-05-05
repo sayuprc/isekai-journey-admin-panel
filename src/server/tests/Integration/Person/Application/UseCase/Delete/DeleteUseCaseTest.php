@@ -9,12 +9,16 @@ use Person\Application\UseCase\Delete\DeleteInputData;
 use Person\Application\UseCase\Delete\DeleteUseCase;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
 
 class DeleteUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
     use EntityStore;
 
@@ -29,6 +33,10 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
         $this->assertCount(0, ModelsPerson::query()->get()->all());
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Person, $uuid);
+        $this->assertSame('人物', $log['snapshot']['name']);
     }
 
     #[Test]
@@ -53,6 +61,8 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isErr());
         $this->assertSame('この人物は楽曲に使用されているため削除できません', $result->unwrapErr()->message);
         $this->assertCount(1, ModelsPerson::query()->get()->all());
+
+        $this->assertAuditLogCount(0);
     }
 
     private function getInstance(): DeleteUseCase

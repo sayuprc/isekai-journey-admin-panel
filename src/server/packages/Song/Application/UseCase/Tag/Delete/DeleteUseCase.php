@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Delete;
 
 use AdminUser\Domain\Models\Permission;
+use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\AuditLog\AuditTargetType;
+use Support\Contracts\TransactionInterface;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -19,7 +24,10 @@ readonly class DeleteUseCase
 {
     public function __construct(
         private UseCaseAuthorizer $authorizer,
+        private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
+        private AuditLogRecorderInterface $recorder,
+        private AuthContext $authContext,
     ) {
     }
 
@@ -39,14 +47,35 @@ readonly class DeleteUseCase
     {
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
-            ->andThen(function (SongTagId $songTagId): Result {
+            ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($songTagId): Result {
+                $tag = $this->repository->find($songTagId);
+
+                if (is_null($tag)) {
+                    return new Ok(null);
+                }
+
                 if ($this->repository->isUsed($songTagId)) {
                     return new Err(new BusinessLogicError('この楽曲タグは楽曲に使用されているため削除できません'));
                 }
 
                 $this->repository->delete($songTagId);
 
+                $actor = $this->authContext->get();
+                assert(! is_null($actor));
+
+                $this->recorder->record(
+                    $actor->adminUserId->value,
+                    AuditAction::Delete,
+                    AuditTargetType::SongTag,
+                    $tag->songTagId->value,
+                    [
+                        'songTagId' => $tag->songTagId->value,
+                        'name' => $tag->name->value,
+                        'orderNo' => $tag->orderNo->value,
+                    ],
+                );
+
                 return new Ok(null);
-            });
+            }));
     }
 }
