@@ -67,6 +67,7 @@ class SongTest extends TestCase
                 ['personId' => 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'role' => 2, 'orderNo' => 2],
                 ['personId' => 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'role' => 3, 'orderNo' => 3],
             ],
+            [],
         );
     }
 }

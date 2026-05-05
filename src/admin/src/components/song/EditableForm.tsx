@@ -1,11 +1,12 @@
 import { createEffect, createSignal, For, Show } from 'solid-js';
-import type { Person, RequestSongPerson, Song, SongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
+import type { Media, Person, RequestSongPerson, Song, SongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
+import { buildSongMediaRequest, MediaSection, toMediaEntry, type MediaEntry } from './MediaSection';
 
 type PersonEntry = {
   personId: string;
@@ -18,7 +19,7 @@ type SongTagEntry = {
 };
 
 interface Props {
-  data?: { song: Song; persons: Person[]; types: SongType[]; tags: SongTag[] };
+  data?: { song: Song; persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
   status: number;
 }
 
@@ -37,7 +38,23 @@ export const EditableForm = (props: Props) => {
 
   const persons = props.data?.persons ?? [];
   const types = props.data?.types ?? [];
+  const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>(props.data?.song.type.value ?? '');
   const availableTags = props.data?.tags ?? [];
+  const initialAvailableMedia = (() => {
+    const items = [...(props.data?.media ?? [])];
+    for (const item of props.data?.song.media ?? []) {
+      if (!items.some(media => media.mediaId === item.mediaId)) {
+        items.push({
+          mediaId: item.mediaId,
+          title: item.title,
+          url: item.url,
+          type: item.type,
+          isDisplay: item.isDisplay,
+        });
+      }
+    }
+    return items;
+  })();
 
   const toEntries = (items: SongPerson[] | undefined): PersonEntry[] =>
     (items ?? []).map(item => ({ personId: item.personId, role: item.role, orderNo: item.orderNo }));
@@ -49,6 +66,8 @@ export const EditableForm = (props: Props) => {
   const [tags, setTags] = createSignal<SongTagEntry[]>(
     (props.data?.song.tags ?? []).map(tag => ({ songTagId: tag.songTagId })),
   );
+  const [availableMedia, setAvailableMedia] = createSignal<Media[]>(initialAvailableMedia);
+  const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>((props.data?.song.media ?? []).map(toMediaEntry));
   const [tagPickerValue, setTagPickerValue] = createSignal('');
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -146,11 +165,12 @@ export const EditableForm = (props: Props) => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       lyricsLink: normalizeOptionalString(formData.get('lyricsLink')),
-      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
+      typeValue: typeValue() as SongTypeValue,
       isDisplay: formData.get('isDisplay') === 'true',
       orderNo: Number(formData.get('orderNo')),
       persons: buildPersons(),
       tags: tags(),
+      media: buildSongMediaRequest(mediaEntries()),
     });
 
     if (data) {
@@ -314,18 +334,22 @@ export const EditableForm = (props: Props) => {
 
                 <div>
                   <label class="label">楽曲種別</label>
-                  <select class="select select-bordered w-full" name="typeValue" required>
+                  <select
+                    class="select select-bordered w-full"
+                    name="typeValue"
+                    value={typeValue()}
+                    onChange={e => setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
+                    required
+                    classList={{ 'select-error': !!getFieldError('typeValue') }}
+                  >
                     <option value="" disabled>
                       選択してください
                     </option>
                     <For each={types}>
-                      {type => (
-                        <option value={type.value} selected={type.value === props.data?.song.type.value}>
-                          {type.name}
-                        </option>
-                      )}
+                      {type => <option value={type.value}>{type.name}</option>}
                     </For>
                   </select>
+                  <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
                 </div>
 
                 <div class="md:col-span-2">
@@ -388,6 +412,13 @@ export const EditableForm = (props: Props) => {
             <PersonSection label="作曲" entries={composers} setter={setComposers} role={2} />
             <PersonSection label="編曲" entries={arrangers} setter={setArrangers} role={3} />
           </fieldset>
+
+          <MediaSection
+            entries={mediaEntries}
+            setEntries={setMediaEntries}
+            availableMedia={availableMedia}
+            setAvailableMedia={setAvailableMedia}
+          />
 
           <div class="flex justify-end">
             <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>

@@ -64,7 +64,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => 'bool',
         'order_no' => 'int',
         'persons' => '\OpenAPI\Client\Model\RequestSongPerson[]',
-        'tags' => '\OpenAPI\Client\Model\RequestSongTag[]'
+        'tags' => '\OpenAPI\Client\Model\RequestSongTag[]',
+        'media' => '\OpenAPI\Client\Model\RequestSongMediaLink[]'
     ];
 
     /**
@@ -82,7 +83,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => null,
         'order_no' => 'int32',
         'persons' => null,
-        'tags' => null
+        'tags' => null,
+        'media' => null
     ];
 
     /**
@@ -98,7 +100,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => false,
         'order_no' => false,
         'persons' => false,
-        'tags' => false
+        'tags' => false,
+        'media' => false
     ];
 
     /**
@@ -194,7 +197,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo',
         'persons' => 'persons',
-        'tags' => 'tags'
+        'tags' => 'tags',
+        'media' => 'media'
     ];
 
     /**
@@ -210,7 +214,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo',
         'persons' => 'setPersons',
-        'tags' => 'setTags'
+        'tags' => 'setTags',
+        'media' => 'setMedia'
     ];
 
     /**
@@ -226,7 +231,8 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo',
         'persons' => 'getPersons',
-        'tags' => 'getTags'
+        'tags' => 'getTags',
+        'media' => 'getMedia'
     ];
 
     /**
@@ -294,6 +300,7 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('persons', $data ?? [], null);
         $this->setIfExists('tags', $data ?? [], null);
+        $this->setIfExists('media', $data ?? [], null);
     }
 
     /**
@@ -354,6 +361,9 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
         }
         if ($this->container['tags'] === null) {
             $invalidProperties[] = "'tags' can't be null";
+        }
+        if ($this->container['media'] === null) {
+            $invalidProperties[] = "'media' can't be null";
         }
         return $invalidProperties;
     }
@@ -599,6 +609,33 @@ class SongUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable tags cannot be null');
         }
         $this->container['tags'] = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Gets media
+     *
+     * @return \OpenAPI\Client\Model\RequestSongMediaLink[]
+     */
+    public function getMedia()
+    {
+        return $this->container['media'];
+    }
+
+    /**
+     * Sets media
+     *
+     * @param \OpenAPI\Client\Model\RequestSongMediaLink[] $media media
+     *
+     * @return self
+     */
+    public function setMedia($media)
+    {
+        if (is_null($media)) {
+            throw new \InvalidArgumentException('non-nullable media cannot be null');
+        }
+        $this->container['media'] = $media;
 
         return $this;
     }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Song\Application\Assemble;
 
+use Media\Domain\Models\Media;
+use Media\Domain\Models\MediaRepositoryInterface;
 use Person\Domain\Models\PersonRepositoryInterface;
+use Song\Domain\Models\Media\SongMediaLink;
 use Song\Domain\Models\Persons\SongPerson;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
@@ -15,6 +18,7 @@ class SongAssembler
     public function __construct(
         private readonly PersonRepositoryInterface $personRepository,
         private readonly SongTagRepositoryInterface $songTagRepository,
+        private readonly MediaRepositoryInterface $mediaRepository,
     ) {
     }
 
@@ -46,6 +50,19 @@ class SongAssembler
             }
         }
 
+        $allMediaIds = [];
+        foreach ($song->media as $media) {
+            $allMediaIds[$media->mediaId->value] = $media->mediaId;
+        }
+
+        $mediaMap = [];
+        if (! empty($allMediaIds)) {
+            $mediaItems = $this->mediaRepository->findByIds(...array_values($allMediaIds));
+            foreach ($mediaItems as $media) {
+                $mediaMap[$media->mediaId->value] = $media;
+            }
+        }
+
         $toAssembled = function (SongPerson $person) use ($personMap): AssembledPerson {
             $found = $personMap[$person->personId->value] ?? null;
             // Song Entity が成立している時点で $found が null になることはない
@@ -68,6 +85,21 @@ class SongAssembler
                 $found->name->value,
             );
         };
+        $toAssembledMedia = function (SongMediaLink $link) use ($mediaMap): AssembledMedia {
+            $found = $mediaMap[$link->mediaId->value] ?? null;
+            assert($found instanceof Media);
+
+            return new AssembledMedia(
+                $found->mediaId->value,
+                $found->title->value,
+                $found->url->value,
+                $found->type->getName(),
+                $found->type->value,
+                $found->isDisplay,
+                $link->songMediaType->value,
+                $link->orderNo->value,
+            );
+        };
 
         return new AssembledSong(
             $song->songId->value,
@@ -80,6 +112,7 @@ class SongAssembler
             $song->orderNo->value,
             $song->persons->toGeneric()->map($toAssembled)->toArray(),
             $song->tags->toGeneric()->map($toAssembledTag)->toArray(),
+            $song->media->toGeneric()->map($toAssembledMedia)->toArray(),
         );
     }
 }

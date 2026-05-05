@@ -58,6 +58,7 @@ readonly class UpdateUseCase
                 $inputData->orderNo,
                 $inputData->tags,
                 $inputData->persons,
+                $inputData->media,
             );
 
             if ($result->isErr()) {

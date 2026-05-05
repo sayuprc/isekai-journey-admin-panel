@@ -44,7 +44,7 @@ readonly class SearchUseCase
                 : new Some($inputData->title),
             $inputData->type === Arg::Optional
                 ? new None()
-                : new Some(SongType::from($inputData->type)),
+                : new Some(SongType::from((int)$inputData->type)),
             $inputData->isDisplay === Arg::Optional
                 ? new None()
                 : new Some($inputData->isDisplay),

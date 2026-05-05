@@ -6,6 +6,8 @@ use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RefreshController;
+use App\Http\Controllers\Api\Media\CreateMediaController;
+use App\Http\Controllers\Api\Media\SearchMediaController;
 use App\Http\Controllers\Api\Person\CreatePersonController;
 use App\Http\Controllers\Api\Person\DeletePersonController;
 use App\Http\Controllers\Api\Person\GetPersonController;
@@ -29,6 +31,7 @@ use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
@@ -58,6 +61,11 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::delete('/{personId}', [DeletePersonController::class, 'handle'])->name(PersonRouteMap::Delete);
                     Route::get('/search', [SearchPersonController::class, 'handle'])->name(PersonRouteMap::Search);
                     Route::get('/{personId}', [GetPersonController::class, 'handle'])->name(PersonRouteMap::Get);
+                });
+
+                Route::prefix('media')->group(function () {
+                    Route::post('/', [CreateMediaController::class, 'handle'])->name(MediaRouteMap::Create);
+                    Route::get('/search', [SearchMediaController::class, 'handle'])->name(MediaRouteMap::Search);
                 });
 
                 Route::prefix('songs')->group(function () {
