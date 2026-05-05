@@ -69,6 +69,23 @@ const SwatchIcon = () => (
   </svg>
 );
 
+const PlayIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+    class="size-5"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M5.25 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.713 1.295 2.573 0 3.286L8.03 19.99c-1.25.688-2.779-.216-2.779-1.643V5.653Z"
+    />
+  </svg>
+);
+
 const ShieldIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -102,6 +119,7 @@ const navSections: NavSection[] = [
     title: '楽曲',
     items: [
       { href: '/songs', label: '楽曲', icon: MusicNoteIcon },
+      { href: '/media', label: 'Media', icon: PlayIcon },
       { href: '/song-types', label: '楽曲種別', icon: TagIcon },
       { href: '/song-tags', label: '楽曲タグ', icon: SwatchIcon },
     ],

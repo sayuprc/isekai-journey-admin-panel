@@ -6,7 +6,9 @@ namespace Media\Application\UseCase\Search;
 
 use AdminUser\Domain\Models\Permission;
 use Media\Domain\Criteria\MediaSearchCriteria;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Domain\Models\MediaType;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Optional\Arg;
@@ -41,6 +43,15 @@ readonly class SearchUseCase
             $inputData->title === Arg::Optional
                 ? new None()
                 : new Some($inputData->title),
+            $inputData->type === Arg::Optional
+                ? new None()
+                : new Some(MediaType::from($inputData->type)),
+            $inputData->format === Arg::Optional
+                ? new None()
+                : new Some(MediaFormat::from($inputData->format)),
+            $inputData->isDisplay === Arg::Optional
+                ? new None()
+                : new Some($inputData->isDisplay),
             $inputData->page,
             $inputData->perPage,
         );

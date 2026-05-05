@@ -14,6 +14,9 @@ interface MediaService {
   @route("/search")
   searchMedia(
     @query title?: string,
+    @query type?: MediaTypeValue,
+    @query format?: MediaFormatValue,
+    @query("is_display") isDisplay?: boolean,
     @query page?: page = 1,
     @query("per_page") perPage?: PerPage = PerPage.twentyFive,
   ): Ok<MediaSearchResponse> | Unauthorized | Forbidden | ServerError;
