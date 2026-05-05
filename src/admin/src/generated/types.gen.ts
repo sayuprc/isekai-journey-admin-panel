@@ -64,6 +64,14 @@ export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
 
 export type MediaGetResponse = {
     media: Media;
+    songs: Array<MediaReferencedSong>;
+};
+
+export type MediaReferencedSong = {
+    songId: MediaReferencedSongId;
+    title: MediaReferencedSongTitle;
+    songOrderNo: OrderNo;
+    mediaOrderNo: OrderNo;
 };
 
 export type MediaSearchResponse = {
@@ -398,6 +406,16 @@ export type MediaFormatName = string;
  * メディアID
  */
 export type MediaId = string;
+
+/**
+ * メディアを参照している楽曲ID
+ */
+export type MediaReferencedSongId = string;
+
+/**
+ * メディアを参照している楽曲名
+ */
+export type MediaReferencedSongTitle = string;
 
 /**
  * メディアタイトル

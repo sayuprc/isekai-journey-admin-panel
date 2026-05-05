@@ -7,6 +7,7 @@ model MediaSearchResponse {
 
 model MediaGetResponse {
   media: Media;
+  songs: MediaReferencedSong[];
 }
 
 model MediaCreateRequest {

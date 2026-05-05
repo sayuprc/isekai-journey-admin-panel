@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Media;
 
+use Media\Application\Query\MediaReferencedSong;
 use Media\Domain\Models\Media;
 use OpenAPI\Client\Model\Media as OpenApiMedia;
 use OpenAPI\Client\Model\MediaFormat as OpenApiMediaFormat;
 use OpenAPI\Client\Model\MediaFormatValue;
+use OpenAPI\Client\Model\MediaReferencedSong as OpenApiMediaReferencedSong;
 use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
 use OpenAPI\Client\Model\MediaTypeValue;
 
@@ -22,6 +24,15 @@ class Converter
             ->setType($this->toOpenApiMediaType($media))
             ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay);
+    }
+
+    public function toOpenApiReferencedSong(MediaReferencedSong $song): OpenApiMediaReferencedSong
+    {
+        return new OpenApiMediaReferencedSong()
+            ->setSongId($song->songId)
+            ->setTitle($song->title)
+            ->setSongOrderNo($song->songOrderNo)
+            ->setMediaOrderNo($song->mediaOrderNo);
     }
 
     private function toOpenApiMediaType(Media $media): OpenApiMediaType

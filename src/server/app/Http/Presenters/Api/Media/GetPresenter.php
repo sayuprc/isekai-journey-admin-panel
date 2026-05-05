@@ -26,7 +26,9 @@ class GetPresenter
     {
         [$data, $status] = $result->match(
             fn (GetOutputData $outputData) => [
-                new MediaGetResponse()->setMedia($this->converter->toOpenApiMedia($outputData->media)),
+                new MediaGetResponse()
+                    ->setMedia($this->converter->toOpenApiMedia($outputData->media))
+                    ->setSongs(array_map($this->converter->toOpenApiReferencedSong(...), $outputData->songs)),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),
