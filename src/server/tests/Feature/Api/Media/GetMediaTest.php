@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
+use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -35,7 +36,7 @@ class GetMediaTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->getJson(route('media.get', $uuid))
+            ->getJson(route(MediaRouteMap::Get, $uuid))
             ->assertStatus(200)
             ->assertExactJson([
                 'media' => [
@@ -59,7 +60,7 @@ class GetMediaTest extends DatabaseTestCase
     public function notFound(): void
     {
         $this->withAuth()
-            ->getJson(route('media.get', $this->generateUuid()))
+            ->getJson(route(MediaRouteMap::Get, $this->generateUuid()))
             ->assertStatus(404);
     }
 }

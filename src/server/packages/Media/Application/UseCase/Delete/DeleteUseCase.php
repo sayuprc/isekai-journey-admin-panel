@@ -41,7 +41,7 @@ readonly class DeleteUseCase
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['mediaId' => ['IDが不正です']]))
             ->andThen(function (MediaId $mediaId): Result {
                 if ($this->repository->isUsed($mediaId)) {
-                    return new Err(new BusinessLogicError('このMediaは楽曲に使用されているため削除できません'));
+                    return new Err(new BusinessLogicError('このメディアは楽曲に使用されているため削除できません'));
                 }
 
                 $this->repository->delete($mediaId);

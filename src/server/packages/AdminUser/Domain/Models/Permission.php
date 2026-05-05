@@ -31,8 +31,8 @@ enum Permission: string
             self::WritePerson => '人物編集',
             self::ReadSong => '楽曲閲覧',
             self::WriteSong => '楽曲編集',
-            self::ReadMedia => 'Media閲覧',
-            self::WriteMedia => 'Media編集',
+            self::ReadMedia => 'メディア閲覧',
+            self::WriteMedia => 'メディア編集',
         };
     }
 }

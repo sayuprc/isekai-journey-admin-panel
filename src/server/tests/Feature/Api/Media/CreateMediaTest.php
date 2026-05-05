@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Media;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
+use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -19,7 +20,7 @@ class CreateMediaTest extends DatabaseTestCase
     public function canCreate(): void
     {
         $this->withAuth()
-            ->postJson(route('media.create'), [
+            ->postJson(route(MediaRouteMap::Create), [
                 'title' => '描き続けた君へ MV',
                 'url' => 'https://example.com/media',
                 'typeValue' => MediaType::Video->value,

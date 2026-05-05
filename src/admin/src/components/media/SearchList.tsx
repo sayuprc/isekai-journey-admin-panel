@@ -155,7 +155,7 @@ export const SearchList = () => {
             value={inputTitle()}
             onInput={e => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
-            placeholder="Media タイトルで検索"
+            placeholder="メディアタイトルで検索"
           />
         </fieldset>
         <fieldset class="fieldset">
@@ -247,7 +247,7 @@ export const SearchList = () => {
                 {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.media.length === 0}>
-                <ListState state="empty" colSpan={6} message="条件に一致する Media はありません。" />
+                <ListState state="empty" colSpan={6} message="条件に一致するメディアはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (

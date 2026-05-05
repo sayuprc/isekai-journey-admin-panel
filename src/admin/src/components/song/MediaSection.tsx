@@ -181,12 +181,12 @@ export const MediaSection = (props: Props) => {
 
   return (
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
-      <legend class="px-2 text-sm font-semibold text-base-content/70">Media</legend>
+      <legend class="px-2 text-sm font-semibold text-base-content/70">メディア</legend>
 
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <div class="space-y-4">
           <div>
-            <label class="label">既存 Media を検索</label>
+            <label class="label">既存メディアを検索</label>
             <div class="flex gap-2">
               <input
                 type="text"
@@ -231,7 +231,7 @@ export const MediaSection = (props: Props) => {
 
         <div class="space-y-3 rounded-box border border-base-300 bg-base-100 p-4">
           <div>
-            <label class="label">新規 Media 作成</label>
+            <label class="label">新規メディア作成</label>
             <input
               type="text"
               class="input input-bordered w-full"
@@ -288,10 +288,10 @@ export const MediaSection = (props: Props) => {
       </div>
 
       <div class="mt-6">
-        <label class="label">選択中の Media</label>
+        <label class="label">選択中のメディア</label>
         <Show
           when={props.entries().length > 0}
-          fallback={<p class="text-sm text-base-content/60">Media はまだ追加されていません。</p>}
+          fallback={<p class="text-sm text-base-content/60">メディアはまだ追加されていません。</p>}
         >
           <div class="space-y-3">
             <For each={props.entries()}>

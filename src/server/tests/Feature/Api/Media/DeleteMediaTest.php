@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
+use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
 use Song\Infrastructures\SongRepository;
@@ -29,7 +30,7 @@ class DeleteMediaTest extends DatabaseTestCase
         $repository->save($media);
 
         $this->withAuth()
-            ->delete(route('media.delete', $uuid))
+            ->delete(route(MediaRouteMap::Delete, $uuid))
             ->assertStatus(204);
 
         $this->assertNull($repository->find($media->mediaId));
@@ -63,10 +64,10 @@ class DeleteMediaTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->delete(route('media.delete', $mediaId))
+            ->delete(route(MediaRouteMap::Delete, $mediaId))
             ->assertStatus(400)
             ->assertExactJson([
-                'message' => 'このMediaは楽曲に使用されているため削除できません',
+                'message' => 'このメディアは楽曲に使用されているため削除できません',
             ]);
 
         $this->assertNotNull($repository->find($media->mediaId));
@@ -76,7 +77,7 @@ class DeleteMediaTest extends DatabaseTestCase
     public function canDeleteEvenIfTargetDoesNotExist(): void
     {
         $this->withAuth()
-            ->delete(route('media.delete', 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
+            ->delete(route(MediaRouteMap::Delete, 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->assertStatus(204);
     }
 }
