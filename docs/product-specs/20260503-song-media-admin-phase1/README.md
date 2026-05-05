@@ -73,10 +73,12 @@
 - `Media` は独立エンティティとして持つ
 - `Media` は概念上、楽曲にも出来事にも紐づきうる外部参照リソースとして扱う
 - 第1回で扱う `Media` の運用対象は、楽曲に直接関連する公式メディアのみに限定する
-- `Media` の最小モデルは `タイトル / URL / 種別 / 表示有無 / 表示順`
-- 初期の `Media` 種別は `MV / 公式音源 / 歌唱動画 / 配信アーカイブ / ショート動画 / その他`
-- 既存種別に当てはまらない動画 URL は `その他` を使う
-- `SongMediaLink` は関係エンティティとして持ち、第1回では `song_id / media_id / order_no` に絞る
+- `Media` の最小モデルは `タイトル / URL / MediaType / 表示有無`
+- 初期の `MediaType` は `video / article / social_post / official_page / other` とする
+- Phase 1 では `MediaType` は実質 `video` を中心に扱い、将来の `Event` 連携で他形式を使える前提を残す
+- `SongMediaLink` は関係エンティティとして持ち、第1回では `song_id / media_id / SongMediaType / order_no` を中心に扱う
+- 初期の `SongMediaType` は `mv / audio_video / stream_archive / short_video / other` とする
+- 既存種別に当てはまらない動画 URL は `SongMediaType` の `other` を使う
 - 同一アーカイブを複数楽曲に結び付けることを許容する
 - 楽曲ごとに参照箇所を分けたい場合は、タイムスタンプ込み URL を持つ別 `Media` として扱う
 - 将来の `Event` は、ライブや配信に限らず、ヰ世界情緒が関わった出来事全般を扱う想定とする
