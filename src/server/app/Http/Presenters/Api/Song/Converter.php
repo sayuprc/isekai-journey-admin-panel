@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Song;
 
+use OpenAPI\Client\Model\MediaFormat as OpenApiMediaFormat;
+use OpenAPI\Client\Model\MediaFormatValue;
 use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
 use OpenAPI\Client\Model\MediaTypeValue;
 use OpenAPI\Client\Model\Song as OpenApiSong;
 use OpenAPI\Client\Model\SongAttachedTag as OpenApiSongAttachedTag;
 use OpenAPI\Client\Model\SongLinkedMedia as OpenApiSongLinkedMedia;
-use OpenAPI\Client\Model\SongMediaType as OpenApiSongMediaType;
 use OpenAPI\Client\Model\SongPerson as OpenApiSongPerson;
 use OpenAPI\Client\Model\SongPersonRole as OpenApiSongPersonRole;
 use OpenAPI\Client\Model\SongType as OpenApiSongType;
@@ -65,8 +66,8 @@ readonly class Converter
             ->setTitle($media->title)
             ->setUrl($media->url)
             ->setType($this->toOpenApiMediaType($media))
+            ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay)
-            ->setSongMediaType(OpenApiSongMediaType::from($media->songMediaTypeValue))
             ->setOrderNo($media->orderNo);
     }
 
@@ -75,5 +76,12 @@ readonly class Converter
         return new OpenApiMediaType()
             ->setName($media->typeName)
             ->setValue(MediaTypeValue::from($media->typeValue));
+    }
+
+    private function toOpenApiMediaFormat(AssembledMedia $media): OpenApiMediaFormat
+    {
+        return new OpenApiMediaFormat()
+            ->setName($media->formatName)
+            ->setValue(MediaFormatValue::from($media->formatValue));
     }
 }

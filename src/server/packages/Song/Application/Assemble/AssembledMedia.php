@@ -12,8 +12,9 @@ readonly class AssembledMedia
         public string $url,
         public string $typeName,
         public int $typeValue,
+        public string $formatName,
+        public int $formatValue,
         public bool $isDisplay,
-        public int $songMediaTypeValue,
         public int $orderNo,
     ) {
     }

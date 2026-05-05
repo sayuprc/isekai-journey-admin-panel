@@ -15,7 +15,8 @@ use Override;
  * @property string          $media_id   メディアID
  * @property string          $title      タイトル
  * @property string          $url        URL
- * @property int             $type       メディア形式
+ * @property int             $type       メディア種別
+ * @property int             $format     メディア形式
  * @property bool            $is_display 表示フラグ
  * @property CarbonImmutable $created_at 作成日時
  * @property CarbonImmutable $updated_at 更新日時

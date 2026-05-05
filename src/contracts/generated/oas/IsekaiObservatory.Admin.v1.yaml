@@ -1093,6 +1093,7 @@ components:
         - title
         - url
         - type
+        - format
         - isDisplay
       properties:
         mediaId:
@@ -1103,6 +1104,8 @@ components:
           $ref: '#/components/schemas/mediaUrl'
         type:
           $ref: '#/components/schemas/MediaType'
+        format:
+          $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
     MediaCreateRequest:
@@ -1111,6 +1114,7 @@ components:
         - title
         - url
         - typeValue
+        - formatValue
         - isDisplay
       properties:
         title:
@@ -1119,6 +1123,8 @@ components:
           $ref: '#/components/schemas/mediaUrl'
         typeValue:
           $ref: '#/components/schemas/MediaTypeValue'
+        formatValue:
+          $ref: '#/components/schemas/MediaFormatValue'
         isDisplay:
           type: boolean
     MediaCreateResponse:
@@ -1128,6 +1134,27 @@ components:
       properties:
         media:
           $ref: '#/components/schemas/Media'
+    MediaFormat:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaFormatName'
+        value:
+          $ref: '#/components/schemas/MediaFormatValue'
+    MediaFormatValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 99
     MediaSearchResponse:
       type: object
       required:
@@ -1301,13 +1328,10 @@ components:
       type: object
       required:
         - mediaId
-        - songMediaType
         - orderNo
       properties:
         mediaId:
           $ref: '#/components/schemas/mediaId'
-        songMediaType:
-          $ref: '#/components/schemas/SongMediaType'
         orderNo:
           $ref: '#/components/schemas/orderNo'
     RequestSongPerson:
@@ -1424,8 +1448,10 @@ components:
               type:
                 name: 動画
                 value: 1
+              format:
+                name: MV
+                value: 1
               isDisplay: true
-              songMediaType: 1
               orderNo: 1
     SongAttachedTag:
       type: object
@@ -1494,8 +1520,8 @@ components:
         - title
         - url
         - type
+        - format
         - isDisplay
-        - songMediaType
         - orderNo
       properties:
         mediaId:
@@ -1506,10 +1532,10 @@ components:
           $ref: '#/components/schemas/mediaUrl'
         type:
           $ref: '#/components/schemas/MediaType'
+        format:
+          $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
-        songMediaType:
-          $ref: '#/components/schemas/SongMediaType'
         orderNo:
           $ref: '#/components/schemas/orderNo'
       examples:
@@ -1519,18 +1545,11 @@ components:
           type:
             name: 動画
             value: 1
+          format:
+            name: MV
+            value: 1
           isDisplay: true
-          songMediaType: 1
           orderNo: 1
-    SongMediaType:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 99
     SongPerson:
       type: object
       required:
@@ -1819,6 +1838,10 @@ components:
       type: string
       format: uri
       description: 歌詞リンク
+    mediaFormatName:
+      type: string
+      minLength: 1
+      description: メディア形式名
     mediaId:
       type: string
       format: uuid

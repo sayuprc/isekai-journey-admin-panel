@@ -1,6 +1,6 @@
 <?php
 /**
- * RequestSongMediaLink
+ * MediaFormat
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * RequestSongMediaLink Class Doc Comment
+ * MediaFormat Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializable
+class MediaFormat implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
       *
       * @var string
       */
-    protected static $openAPIModelName = 'RequestSongMediaLink';
+    protected static $openAPIModelName = 'MediaFormat';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var string[]
       */
     protected static $openAPITypes = [
-        'media_id' => 'string',
-        'order_no' => 'int'
+        'name' => 'string',
+        'value' => '\OpenAPI\Client\Model\MediaFormatValue'
     ];
 
     /**
@@ -69,8 +69,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'media_id' => 'uuid',
-        'order_no' => 'int32'
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'media_id' => false,
-        'order_no' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $attributeMap = [
-        'media_id' => 'mediaId',
-        'order_no' => 'orderNo'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -179,8 +179,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $setters = [
-        'media_id' => 'setMediaId',
-        'order_no' => 'setOrderNo'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -189,8 +189,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
      * @var string[]
      */
     protected static $getters = [
-        'media_id' => 'getMediaId',
-        'order_no' => 'getOrderNo'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -250,8 +250,8 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('media_id', $data ?? [], null);
-        $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -281,16 +281,16 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
     {
         $invalidProperties = [];
 
-        if ($this->container['media_id'] === null) {
-            $invalidProperties[] = "'media_id' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ($this->container['order_no'] === null) {
-            $invalidProperties[] = "'order_no' can't be null";
-        }
-        if (($this->container['order_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
+        }
         return $invalidProperties;
     }
 
@@ -307,60 +307,60 @@ class RequestSongMediaLink implements ModelInterface, ArrayAccess, \JsonSerializ
 
 
     /**
-     * Gets media_id
+     * Gets name
      *
      * @return string
      */
-    public function getMediaId()
+    public function getName()
     {
-        return $this->container['media_id'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets media_id
+     * Sets name
      *
-     * @param string $media_id メディアID
+     * @param string $name メディア形式名
      *
      * @return self
      */
-    public function setMediaId($media_id)
+    public function setName($name)
     {
-        if (is_null($media_id)) {
-            throw new \InvalidArgumentException('non-nullable media_id cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['media_id'] = $media_id;
+
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling MediaFormat., must be bigger than or equal to 1.');
+        }
+
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets order_no
+     * Gets value
      *
-     * @return int
+     * @return \OpenAPI\Client\Model\MediaFormatValue
      */
-    public function getOrderNo()
+    public function getValue()
     {
-        return $this->container['order_no'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets order_no
+     * Sets value
      *
-     * @param int $order_no 表示順
+     * @param \OpenAPI\Client\Model\MediaFormatValue $value value
      *
      * @return self
      */
-    public function setOrderNo($order_no)
+    public function setValue($value)
     {
-        if (is_null($order_no)) {
-            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-
-        if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling RequestSongMediaLink., must be bigger than or equal to 1.');
-        }
-
-        $this->container['order_no'] = $order_no;
+        $this->container['value'] = $value;
 
         return $this;
     }

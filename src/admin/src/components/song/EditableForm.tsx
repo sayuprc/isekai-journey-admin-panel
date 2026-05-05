@@ -49,6 +49,7 @@ export const EditableForm = (props: Props) => {
           title: item.title,
           url: item.url,
           type: item.type,
+          format: item.format,
           isDisplay: item.isDisplay,
         });
       }

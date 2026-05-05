@@ -17,6 +17,10 @@ scalar mediaUrl extends string;
 @minLength(1)
 scalar mediaTypeName extends string;
 
+@doc("メディア形式名")
+@minLength(1)
+scalar mediaFormatName extends string;
+
 enum MediaTypeValue {
   Video: 1,
   Article: 2,
@@ -30,10 +34,26 @@ model MediaType {
   value: MediaTypeValue;
 }
 
+enum MediaFormatValue {
+  Mv: 1,
+  AudioVideo: 2,
+  StreamArchive: 3,
+  ShortVideo: 4,
+  Teaser: 5,
+  LiveClip: 6,
+  Other: 99,
+}
+
+model MediaFormat {
+  name: mediaFormatName;
+  value: MediaFormatValue;
+}
+
 model Media {
   mediaId: mediaId;
   title: mediaTitle;
   url: mediaUrl;
   type: MediaType;
+  format: MediaFormat;
   isDisplay: boolean;
 }

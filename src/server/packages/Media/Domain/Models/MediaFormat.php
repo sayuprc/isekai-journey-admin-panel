@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Song\Domain\Models\Media;
+namespace Media\Domain\Models;
 
-enum SongMediaType: int
+enum MediaFormat: int
 {
     case Mv = 1;
 
@@ -13,6 +13,10 @@ enum SongMediaType: int
     case StreamArchive = 3;
 
     case ShortVideo = 4;
+
+    case Teaser = 5;
+
+    case LiveClip = 6;
 
     case Other = 99;
 
@@ -23,6 +27,8 @@ enum SongMediaType: int
             self::AudioVideo => '音源動画',
             self::StreamArchive => '配信アーカイブ',
             self::ShortVideo => 'ショート動画',
+            self::Teaser => 'ティザー',
+            self::LiveClip => 'ライブクリップ',
             self::Other => 'その他',
         };
     }

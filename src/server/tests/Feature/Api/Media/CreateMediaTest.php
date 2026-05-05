@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Media;
 
 use Illuminate\Testing\Fluent\AssertableJson;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
@@ -22,6 +23,7 @@ class CreateMediaTest extends DatabaseTestCase
                 'title' => '描き続けた君へ MV',
                 'url' => 'https://example.com/media',
                 'typeValue' => MediaType::Video->value,
+                'formatValue' => MediaFormat::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) => $json
@@ -31,6 +33,10 @@ class CreateMediaTest extends DatabaseTestCase
                 ->where('media.type', [
                     'name' => MediaType::Video->getName(),
                     'value' => MediaType::Video->value,
+                ])
+                ->where('media.format', [
+                    'name' => MediaFormat::Mv->getName(),
+                    'value' => MediaFormat::Mv->value,
                 ])
                 ->where('media.isDisplay', true));
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * SongMediaType
+ * MediaFormatValue
  *
  * PHP version 8.1
  *
@@ -30,14 +30,14 @@ namespace OpenAPI\Client\Model;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * SongMediaType Class Doc Comment
+ * MediaFormatValue Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-enum SongMediaType: int
+enum MediaFormatValue: int
 {
     /**
      * Possible values of this enum
@@ -49,6 +49,10 @@ enum SongMediaType: int
     case NUMBER_3 = 3;
 
     case NUMBER_4 = 4;
+
+    case NUMBER_5 = 5;
+
+    case NUMBER_6 = 6;
 
     case NUMBER_99 = 99;
 

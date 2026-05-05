@@ -21,6 +21,12 @@ table "media" {
     null     = false
     type     = tinyint
     unsigned = true
+    comment  = "メディア種別"
+  }
+  column "format" {
+    null     = false
+    type     = tinyint
+    unsigned = true
     comment  = "メディア形式"
   }
   column "is_display" {

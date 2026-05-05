@@ -10,6 +10,7 @@ readonly class CreateInputData
         public string $title,
         public string $url,
         public int $typeValue,
+        public int $formatValue,
         public bool $isDisplay,
     ) {
     }

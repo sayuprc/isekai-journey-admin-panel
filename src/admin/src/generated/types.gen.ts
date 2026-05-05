@@ -39,6 +39,7 @@ export type Media = {
     title: MediaTitle;
     url: MediaUrl;
     type: MediaType;
+    format: MediaFormat;
     isDisplay: boolean;
 };
 
@@ -46,12 +47,20 @@ export type MediaCreateRequest = {
     title: MediaTitle;
     url: MediaUrl;
     typeValue: MediaTypeValue;
+    formatValue: MediaFormatValue;
     isDisplay: boolean;
 };
 
 export type MediaCreateResponse = {
     media: Media;
 };
+
+export type MediaFormat = {
+    name: MediaFormatName;
+    value: MediaFormatValue;
+};
+
+export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 6 | 99;
 
 export type MediaSearchResponse = {
     media: Array<Media>;
@@ -134,7 +143,6 @@ export type RefreshTokenResponse = {
 
 export type RequestSongMediaLink = {
     mediaId: MediaId;
-    songMediaType: SongMediaType;
     orderNo: OrderNo;
 };
 
@@ -206,12 +214,10 @@ export type SongLinkedMedia = {
     title: MediaTitle;
     url: MediaUrl;
     type: MediaType;
+    format: MediaFormat;
     isDisplay: boolean;
-    songMediaType: SongMediaType;
     orderNo: OrderNo;
 };
-
-export type SongMediaType = 1 | 2 | 3 | 4 | 99;
 
 export type SongPerson = {
     personId: PersonId;
@@ -366,6 +372,11 @@ export type Email = string;
  * 歌詞リンク
  */
 export type LyricsLink = string;
+
+/**
+ * メディア形式名
+ */
+export type MediaFormatName = string;
 
 /**
  * メディアID

@@ -1,5 +1,5 @@
 import { createSignal, For, Show, type Accessor, type Setter } from 'solid-js';
-import type { Media, MediaTypeValue, RequestSongMediaLink, SongLinkedMedia, SongMediaType } from '../../generated';
+import type { Media, MediaFormatValue, MediaTypeValue, RequestSongMediaLink, SongLinkedMedia } from '../../generated';
 import { client } from '../../utils/client';
 
 export type MediaEntry = {
@@ -7,8 +7,8 @@ export type MediaEntry = {
   title: string;
   url: string;
   typeName: string;
+  formatName: string;
   isDisplay: boolean;
-  songMediaType: SongMediaType;
 };
 
 interface Props {
@@ -18,11 +18,13 @@ interface Props {
   setAvailableMedia: Setter<Media[]>;
 }
 
-const songMediaTypeOptions: Array<{ value: SongMediaType; label: string }> = [
+const mediaFormatOptions: Array<{ value: MediaFormatValue; label: string }> = [
   { value: 1, label: 'MV' },
   { value: 2, label: '音源動画' },
   { value: 3, label: '配信アーカイブ' },
   { value: 4, label: 'ショート動画' },
+  { value: 5, label: 'ティザー' },
+  { value: 6, label: 'ライブクリップ' },
   { value: 99, label: 'その他' },
 ];
 
@@ -55,14 +57,13 @@ export const toMediaEntry = (item: SongLinkedMedia | Media): MediaEntry => ({
   title: item.title,
   url: item.url,
   typeName: item.type.name,
+  formatName: item.format.name,
   isDisplay: item.isDisplay,
-  songMediaType: 'songMediaType' in item ? item.songMediaType : 1,
 });
 
 export const buildSongMediaRequest = (entries: MediaEntry[]): RequestSongMediaLink[] =>
   entries.map((entry, index) => ({
     mediaId: entry.mediaId,
-    songMediaType: entry.songMediaType,
     orderNo: index + 1,
   }));
 
@@ -75,6 +76,7 @@ export const MediaSection = (props: Props) => {
   const [createTitle, setCreateTitle] = createSignal('');
   const [createUrl, setCreateUrl] = createSignal('');
   const [createTypeValue, setCreateTypeValue] = createSignal<MediaTypeValue>(1);
+  const [createFormatValue, setCreateFormatValue] = createSignal<MediaFormatValue>(1);
   const [createIsDisplay, setCreateIsDisplay] = createSignal(true);
   const [creating, setCreating] = createSignal(false);
   const [createError, setCreateError] = createSignal<string | null>(null);
@@ -88,10 +90,6 @@ export const MediaSection = (props: Props) => {
 
     props.setEntries(prev => [...prev, toMediaEntry(media)]);
     props.setAvailableMedia(prev => mergeMedia(prev, [media]));
-  };
-
-  const updateEntry = (index: number, patch: Partial<MediaEntry>) => {
-    props.setEntries(prev => prev.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)));
   };
 
   const removeEntry = (index: number) => {
@@ -160,6 +158,7 @@ export const MediaSection = (props: Props) => {
       title,
       url,
       typeValue: createTypeValue(),
+      formatValue: createFormatValue(),
       isDisplay: createIsDisplay(),
     });
 
@@ -175,6 +174,7 @@ export const MediaSection = (props: Props) => {
     setCreateTitle('');
     setCreateUrl('');
     setCreateTypeValue(1);
+    setCreateFormatValue(1);
     setCreateIsDisplay(true);
   };
 
@@ -214,7 +214,7 @@ export const MediaSection = (props: Props) => {
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
                         <p class="truncate font-medium">{item.title}</p>
-                        <p class="text-xs text-base-content/60">{item.type.name}</p>
+                        <p class="text-xs text-base-content/60">{item.type.name} / {item.format.name}</p>
                         <a href={item.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
                           {item.url}
                         </a>
@@ -261,16 +261,24 @@ export const MediaSection = (props: Props) => {
               <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
             </select>
 
-            <label class="label cursor-pointer justify-start gap-3 rounded-box border border-base-300 px-3">
-              <input
-                type="checkbox"
-                class="checkbox checkbox-sm"
-                checked={createIsDisplay()}
-                onChange={e => setCreateIsDisplay(e.currentTarget.checked)}
-              />
-              <span class="label-text">表示する</span>
-            </label>
+            <select
+              class="select select-bordered w-full"
+              value={createFormatValue()}
+              onChange={e => setCreateFormatValue(Number(e.currentTarget.value) as MediaFormatValue)}
+            >
+              <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
+            </select>
           </div>
+
+          <label class="label cursor-pointer justify-start gap-3 rounded-box border border-base-300 px-3">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-sm"
+              checked={createIsDisplay()}
+              onChange={e => setCreateIsDisplay(e.currentTarget.checked)}
+            />
+            <span class="label-text">表示する</span>
+          </label>
 
           <Show when={createError()}>{message => <p class="text-sm text-error">{message()}</p>}</Show>
 
@@ -293,7 +301,7 @@ export const MediaSection = (props: Props) => {
                   <div class="flex flex-wrap items-start justify-between gap-3">
                     <div class="min-w-0">
                       <p class="font-medium">{entry.title}</p>
-                      <p class="text-xs text-base-content/60">{entry.typeName}</p>
+                      <p class="text-xs text-base-content/60">{entry.typeName} / {entry.formatName}</p>
                       <a href={entry.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
                         {entry.url}
                       </a>
@@ -324,14 +332,8 @@ export const MediaSection = (props: Props) => {
                     </div>
 
                     <div>
-                      <label class="text-xs text-base-content/60">楽曲文脈種別</label>
-                      <select
-                        class="select select-bordered mt-1 w-full"
-                        value={entry.songMediaType}
-                        onChange={e => updateEntry(index(), { songMediaType: Number(e.currentTarget.value) as SongMediaType })}
-                      >
-                        <For each={songMediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
-                      </select>
+                      <label class="text-xs text-base-content/60">形式</label>
+                      <p class="mt-1 text-sm">{entry.formatName}</p>
                     </div>
                   </div>
                 </div>

@@ -61,8 +61,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'string',
         'url' => 'string',
         'type' => '\OpenAPI\Client\Model\MediaType',
+        'format' => '\OpenAPI\Client\Model\MediaFormat',
         'is_display' => 'bool',
-        'song_media_type' => '\OpenAPI\Client\Model\SongMediaType',
         'order_no' => 'int'
     ];
 
@@ -78,8 +78,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => null,
         'url' => 'uri',
         'type' => null,
+        'format' => null,
         'is_display' => null,
-        'song_media_type' => null,
         'order_no' => 'int32'
     ];
 
@@ -93,8 +93,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'url' => false,
         'type' => false,
+        'format' => false,
         'is_display' => false,
-        'song_media_type' => false,
         'order_no' => false
     ];
 
@@ -188,8 +188,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'title',
         'url' => 'url',
         'type' => 'type',
+        'format' => 'format',
         'is_display' => 'isDisplay',
-        'song_media_type' => 'songMediaType',
         'order_no' => 'orderNo'
     ];
 
@@ -203,8 +203,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'setTitle',
         'url' => 'setUrl',
         'type' => 'setType',
+        'format' => 'setFormat',
         'is_display' => 'setIsDisplay',
-        'song_media_type' => 'setSongMediaType',
         'order_no' => 'setOrderNo'
     ];
 
@@ -218,8 +218,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'getTitle',
         'url' => 'getUrl',
         'type' => 'getType',
+        'format' => 'getFormat',
         'is_display' => 'getIsDisplay',
-        'song_media_type' => 'getSongMediaType',
         'order_no' => 'getOrderNo'
     ];
 
@@ -284,8 +284,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
+        $this->setIfExists('format', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('song_media_type', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
 
@@ -332,11 +332,11 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
         }
+        if ($this->container['format'] === null) {
+            $invalidProperties[] = "'format' can't be null";
+        }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
-        }
-        if ($this->container['song_media_type'] === null) {
-            $invalidProperties[] = "'song_media_type' can't be null";
         }
         if ($this->container['order_no'] === null) {
             $invalidProperties[] = "'order_no' can't be null";
@@ -474,6 +474,33 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
+     * Gets format
+     *
+     * @return \OpenAPI\Client\Model\MediaFormat
+     */
+    public function getFormat()
+    {
+        return $this->container['format'];
+    }
+
+    /**
+     * Sets format
+     *
+     * @param \OpenAPI\Client\Model\MediaFormat $format format
+     *
+     * @return self
+     */
+    public function setFormat($format)
+    {
+        if (is_null($format)) {
+            throw new \InvalidArgumentException('non-nullable format cannot be null');
+        }
+        $this->container['format'] = $format;
+
+        return $this;
+    }
+
+    /**
      * Gets is_display
      *
      * @return bool
@@ -496,33 +523,6 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
-
-        return $this;
-    }
-
-    /**
-     * Gets song_media_type
-     *
-     * @return \OpenAPI\Client\Model\SongMediaType
-     */
-    public function getSongMediaType()
-    {
-        return $this->container['song_media_type'];
-    }
-
-    /**
-     * Sets song_media_type
-     *
-     * @param \OpenAPI\Client\Model\SongMediaType $song_media_type song_media_type
-     *
-     * @return self
-     */
-    public function setSongMediaType($song_media_type)
-    {
-        if (is_null($song_media_type)) {
-            throw new \InvalidArgumentException('non-nullable song_media_type cannot be null');
-        }
-        $this->container['song_media_type'] = $song_media_type;
 
         return $this;
     }

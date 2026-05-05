@@ -95,8 +95,9 @@ class SongAssembler
                 $found->url->value,
                 $found->type->getName(),
                 $found->type->value,
+                $found->format->getName(),
+                $found->format->value,
                 $found->isDisplay,
-                $link->songMediaType->value,
                 $link->orderNo->value,
             );
         };

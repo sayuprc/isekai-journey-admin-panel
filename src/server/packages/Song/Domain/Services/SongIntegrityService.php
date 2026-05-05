@@ -31,7 +31,7 @@ use Support\Domain\ValueObjects\OrderNo;
 /**
  * @phpstan-type person array{personId: string, role: int, orderNo: int}
  * @phpstan-type songTag array{songTagId: string}
- * @phpstan-type songMedia array{mediaId: string, songMediaType: int, orderNo: int}
+ * @phpstan-type songMedia array{mediaId: string, orderNo: int}
  */
 class SongIntegrityService
 {
