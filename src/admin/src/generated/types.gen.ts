@@ -34,6 +34,16 @@ export type LoginResponse = {
     refreshToken: RefreshToken;
 };
 
+export type MediaType = {
+    name: MediaTypeName;
+    value: MediaTypeValue;
+};
+
+/**
+ * メディア種別の値
+ */
+export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+
 /**
  * 1ページあたりの件数
  */
@@ -137,6 +147,17 @@ export type Song = {
     orderNo: OrderNo;
     persons: Array<SongPerson>;
     tags: Array<SongAttachedTag>;
+    media: Array<SongAttachedMedia>;
+};
+
+export type SongAttachedMedia = {
+    mediaId: MediaId;
+    title: MediaTitle;
+    url: MediaUrl;
+    type: MediaType;
+    songMediaType: SongMediaType;
+    isDisplay: boolean;
+    orderNo: OrderNo;
 };
 
 export type SongAttachedTag = {
@@ -161,6 +182,16 @@ export type SongCreateResponse = {
 export type SongGetResponse = {
     song: Song;
 };
+
+export type SongMediaType = {
+    name: SongMediaTypeName;
+    value: SongMediaTypeValue;
+};
+
+/**
+ * 楽曲文脈メディア種別の値
+ */
+export type SongMediaTypeValue = 1 | 2 | 3 | 4 | 99;
 
 export type SongPerson = {
     personId: PersonId;
@@ -311,6 +342,26 @@ export type Email = string;
 export type LyricsLink = string;
 
 /**
+ * メディアID
+ */
+export type MediaId = string;
+
+/**
+ * メディアタイトル
+ */
+export type MediaTitle = string;
+
+/**
+ * メディア種別名
+ */
+export type MediaTypeName = string;
+
+/**
+ * メディアURL
+ */
+export type MediaUrl = string;
+
+/**
  * 表示順
  */
 export type OrderNo = number;
@@ -359,6 +410,11 @@ export type RoleName = string;
  * 楽曲ID
  */
 export type SongId = string;
+
+/**
+ * 楽曲文脈メディア種別名
+ */
+export type SongMediaTypeName = string;
 
 /**
  * 楽曲タグID

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\Application\Assemble;
 
 use Person\Domain\Models\PersonRepositoryInterface;
+use Song\Domain\Models\SongAttachedMedia;
 use Song\Domain\Models\Persons\SongPerson;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
@@ -68,6 +69,17 @@ class SongAssembler
                 $found->name->value,
             );
         };
+        $toAssembledMedia = fn (SongAttachedMedia $media): AssembledMedia => new AssembledMedia(
+            $media->media->mediaId->value,
+            $media->media->title->value,
+            $media->media->url->value,
+            $media->media->type->getName(),
+            $media->media->type->value,
+            $media->songMediaType->getName(),
+            $media->songMediaType->value,
+            $media->media->isDisplay,
+            $media->orderNo->value,
+        );
 
         return new AssembledSong(
             $song->songId->value,
@@ -80,6 +92,7 @@ class SongAssembler
             $song->orderNo->value,
             $song->persons->toGeneric()->map($toAssembled)->toArray(),
             $song->tags->toGeneric()->map($toAssembledTag)->toArray(),
+            array_map($toAssembledMedia, $song->media),
         );
     }
 }

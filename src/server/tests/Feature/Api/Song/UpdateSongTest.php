@@ -100,6 +100,7 @@ class UpdateSongTest extends DatabaseTestCase
                             'name' => $newTag->name->value,
                         ],
                     ],
+                    'media' => [],
                 ],
             ]);
     }
@@ -212,6 +213,7 @@ class UpdateSongTest extends DatabaseTestCase
                         ],
                     ],
                     'tags' => [],
+                    'media' => [],
                 ],
             ]);
     }

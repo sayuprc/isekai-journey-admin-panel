@@ -1,6 +1,6 @@
 <?php
 /**
- * Song
+ * SongAttachedMedia
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * Song Class Doc Comment
+ * SongAttachedMedia Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class Song implements ModelInterface, ArrayAccess, \JsonSerializable
+class SongAttachedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'Song';
+    protected static $openAPIModelName = 'SongAttachedMedia';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,16 +57,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_id' => 'string',
+        'media_id' => 'string',
         'title' => 'string',
-        'description' => 'string',
-        'lyrics_link' => 'string',
-        'type' => '\OpenAPI\Client\Model\SongType',
+        'url' => 'string',
+        'type' => '\OpenAPI\Client\Model\MediaType',
+        'song_media_type' => '\OpenAPI\Client\Model\SongMediaType',
         'is_display' => 'bool',
-        'order_no' => 'int',
-        'persons' => '\OpenAPI\Client\Model\SongPerson[]',
-        'tags' => '\OpenAPI\Client\Model\SongAttachedTag[]',
-        'media' => '\OpenAPI\Client\Model\SongAttachedMedia[]'
+        'order_no' => 'int'
     ];
 
     /**
@@ -77,16 +74,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_id' => 'uuid',
+        'media_id' => 'uuid',
         'title' => null,
-        'description' => null,
-        'lyrics_link' => 'uri',
+        'url' => 'uri',
         'type' => null,
+        'song_media_type' => null,
         'is_display' => null,
-        'order_no' => 'int32',
-        'persons' => null,
-        'tags' => null,
-        'media' => null
+        'order_no' => 'int32'
     ];
 
     /**
@@ -95,16 +89,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_id' => false,
+        'media_id' => false,
         'title' => false,
-        'description' => false,
-        'lyrics_link' => true,
+        'url' => false,
         'type' => false,
+        'song_media_type' => false,
         'is_display' => false,
-        'order_no' => false,
-        'persons' => false,
-        'tags' => false,
-        'media' => false
+        'order_no' => false
     ];
 
     /**
@@ -193,16 +184,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_id' => 'songId',
+        'media_id' => 'mediaId',
         'title' => 'title',
-        'description' => 'description',
-        'lyrics_link' => 'lyricsLink',
+        'url' => 'url',
         'type' => 'type',
+        'song_media_type' => 'songMediaType',
         'is_display' => 'isDisplay',
-        'order_no' => 'orderNo',
-        'persons' => 'persons',
-        'tags' => 'tags',
-        'media' => 'media'
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -211,16 +199,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'song_id' => 'setSongId',
+        'media_id' => 'setMediaId',
         'title' => 'setTitle',
-        'description' => 'setDescription',
-        'lyrics_link' => 'setLyricsLink',
+        'url' => 'setUrl',
         'type' => 'setType',
+        'song_media_type' => 'setSongMediaType',
         'is_display' => 'setIsDisplay',
-        'order_no' => 'setOrderNo',
-        'persons' => 'setPersons',
-        'tags' => 'setTags',
-        'media' => 'setMedia'
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -229,16 +214,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'song_id' => 'getSongId',
+        'media_id' => 'getMediaId',
         'title' => 'getTitle',
-        'description' => 'getDescription',
-        'lyrics_link' => 'getLyricsLink',
+        'url' => 'getUrl',
         'type' => 'getType',
+        'song_media_type' => 'getSongMediaType',
         'is_display' => 'getIsDisplay',
-        'order_no' => 'getOrderNo',
-        'persons' => 'getPersons',
-        'tags' => 'getTags',
-        'media' => 'getMedia'
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -298,16 +280,13 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_id', $data ?? [], null);
+        $this->setIfExists('media_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('description', $data ?? [], null);
-        $this->setIfExists('lyrics_link', $data ?? [], null);
+        $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
+        $this->setIfExists('song_media_type', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
-        $this->setIfExists('persons', $data ?? [], null);
-        $this->setIfExists('tags', $data ?? [], null);
-        $this->setIfExists('media', $data ?? [], null);
     }
 
     /**
@@ -337,8 +316,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['song_id'] === null) {
-            $invalidProperties[] = "'song_id' can't be null";
+        if ($this->container['media_id'] === null) {
+            $invalidProperties[] = "'media_id' can't be null";
         }
         if ($this->container['title'] === null) {
             $invalidProperties[] = "'title' can't be null";
@@ -347,14 +326,14 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['description'] === null) {
-            $invalidProperties[] = "'description' can't be null";
-        }
-        if ($this->container['lyrics_link'] === null) {
-            $invalidProperties[] = "'lyrics_link' can't be null";
+        if ($this->container['url'] === null) {
+            $invalidProperties[] = "'url' can't be null";
         }
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
+        }
+        if ($this->container['song_media_type'] === null) {
+            $invalidProperties[] = "'song_media_type' can't be null";
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
@@ -366,15 +345,6 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
-        if ($this->container['persons'] === null) {
-            $invalidProperties[] = "'persons' can't be null";
-        }
-        if ($this->container['tags'] === null) {
-            $invalidProperties[] = "'tags' can't be null";
-        }
-        if ($this->container['media'] === null) {
-            $invalidProperties[] = "'media' can't be null";
-        }
         return $invalidProperties;
     }
 
@@ -391,28 +361,28 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets song_id
+     * Gets media_id
      *
      * @return string
      */
-    public function getSongId()
+    public function getMediaId()
     {
-        return $this->container['song_id'];
+        return $this->container['media_id'];
     }
 
     /**
-     * Sets song_id
+     * Sets media_id
      *
-     * @param string $song_id 楽曲ID
+     * @param string $media_id メディアID
      *
      * @return self
      */
-    public function setSongId($song_id)
+    public function setMediaId($media_id)
     {
-        if (is_null($song_id)) {
-            throw new \InvalidArgumentException('non-nullable song_id cannot be null');
+        if (is_null($media_id)) {
+            throw new \InvalidArgumentException('non-nullable media_id cannot be null');
         }
-        $this->container['song_id'] = $song_id;
+        $this->container['media_id'] = $media_id;
 
         return $this;
     }
@@ -430,7 +400,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets title
      *
-     * @param string $title 楽曲名
+     * @param string $title メディアタイトル
      *
      * @return self
      */
@@ -441,7 +411,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         if ((mb_strlen($title) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $title when calling Song., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid length for $title when calling SongAttachedMedia., must be bigger than or equal to 1.');
         }
 
         $this->container['title'] = $title;
@@ -450,62 +420,28 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets description
+     * Gets url
      *
      * @return string
      */
-    public function getDescription()
+    public function getUrl()
     {
-        return $this->container['description'];
+        return $this->container['url'];
     }
 
     /**
-     * Sets description
+     * Sets url
      *
-     * @param string $description 楽曲の説明
+     * @param string $url メディアURL
      *
      * @return self
      */
-    public function setDescription($description)
+    public function setUrl($url)
     {
-        if (is_null($description)) {
-            throw new \InvalidArgumentException('non-nullable description cannot be null');
+        if (is_null($url)) {
+            throw new \InvalidArgumentException('non-nullable url cannot be null');
         }
-        $this->container['description'] = $description;
-
-        return $this;
-    }
-
-    /**
-     * Gets lyrics_link
-     *
-     * @return string
-     */
-    public function getLyricsLink()
-    {
-        return $this->container['lyrics_link'];
-    }
-
-    /**
-     * Sets lyrics_link
-     *
-     * @param string $lyrics_link 歌詞リンク
-     *
-     * @return self
-     */
-    public function setLyricsLink($lyrics_link)
-    {
-        if (is_null($lyrics_link)) {
-            array_push($this->openAPINullablesSetToNull, 'lyrics_link');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('lyrics_link', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
-        }
-        $this->container['lyrics_link'] = $lyrics_link;
+        $this->container['url'] = $url;
 
         return $this;
     }
@@ -513,7 +449,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets type
      *
-     * @return \OpenAPI\Client\Model\SongType
+     * @return \OpenAPI\Client\Model\MediaType
      */
     public function getType()
     {
@@ -523,7 +459,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets type
      *
-     * @param \OpenAPI\Client\Model\SongType $type type
+     * @param \OpenAPI\Client\Model\MediaType $type type
      *
      * @return self
      */
@@ -533,6 +469,33 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable type cannot be null');
         }
         $this->container['type'] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Gets song_media_type
+     *
+     * @return \OpenAPI\Client\Model\SongMediaType
+     */
+    public function getSongMediaType()
+    {
+        return $this->container['song_media_type'];
+    }
+
+    /**
+     * Sets song_media_type
+     *
+     * @param \OpenAPI\Client\Model\SongMediaType $song_media_type song_media_type
+     *
+     * @return self
+     */
+    public function setSongMediaType($song_media_type)
+    {
+        if (is_null($song_media_type)) {
+            throw new \InvalidArgumentException('non-nullable song_media_type cannot be null');
+        }
+        $this->container['song_media_type'] = $song_media_type;
 
         return $this;
     }
@@ -588,91 +551,10 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling Song., must be bigger than or equal to 1.');
+            throw new \InvalidArgumentException('invalid value for $order_no when calling SongAttachedMedia., must be bigger than or equal to 1.');
         }
 
         $this->container['order_no'] = $order_no;
-
-        return $this;
-    }
-
-    /**
-     * Gets persons
-     *
-     * @return \OpenAPI\Client\Model\SongPerson[]
-     */
-    public function getPersons()
-    {
-        return $this->container['persons'];
-    }
-
-    /**
-     * Sets persons
-     *
-     * @param \OpenAPI\Client\Model\SongPerson[] $persons persons
-     *
-     * @return self
-     */
-    public function setPersons($persons)
-    {
-        if (is_null($persons)) {
-            throw new \InvalidArgumentException('non-nullable persons cannot be null');
-        }
-        $this->container['persons'] = $persons;
-
-        return $this;
-    }
-
-    /**
-     * Gets tags
-     *
-     * @return \OpenAPI\Client\Model\SongAttachedTag[]
-     */
-    public function getTags()
-    {
-        return $this->container['tags'];
-    }
-
-    /**
-     * Sets tags
-     *
-     * @param \OpenAPI\Client\Model\SongAttachedTag[] $tags tags
-     *
-     * @return self
-     */
-    public function setTags($tags)
-    {
-        if (is_null($tags)) {
-            throw new \InvalidArgumentException('non-nullable tags cannot be null');
-        }
-        $this->container['tags'] = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Gets media
-     *
-     * @return \OpenAPI\Client\Model\SongAttachedMedia[]
-     */
-    public function getMedia()
-    {
-        return $this->container['media'];
-    }
-
-    /**
-     * Sets media
-     *
-     * @param \OpenAPI\Client\Model\SongAttachedMedia[] $media media
-     *
-     * @return self
-     */
-    public function setMedia($media)
-    {
-        if (is_null($media)) {
-            throw new \InvalidArgumentException('non-nullable media cannot be null');
-        }
-        $this->container['media'] = $media;
 
         return $this;
     }

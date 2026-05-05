@@ -995,6 +995,29 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    MediaType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaTypeName'
+        value:
+          $ref: '#/components/schemas/MediaTypeValue'
+      examples:
+        - name: 動画
+          value: 1
+    MediaTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: メディア種別の値
     PerPage:
       type: integer
       format: int32
@@ -1187,6 +1210,7 @@ components:
         - orderNo
         - persons
         - tags
+        - media
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -1212,6 +1236,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SongAttachedTag'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongAttachedMedia'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -1234,6 +1262,55 @@ components:
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
+          media:
+            - mediaId: 4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45
+              title: 描き続けた君へ Official MV
+              url: https://example.com/media/1
+              type:
+                name: 動画
+                value: 1
+              songMediaType:
+                name: MV
+                value: 1
+              isDisplay: true
+              orderNo: 1
+    SongAttachedMedia:
+      type: object
+      required:
+        - mediaId
+        - title
+        - url
+        - type
+        - songMediaType
+        - isDisplay
+        - orderNo
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        type:
+          $ref: '#/components/schemas/MediaType'
+        songMediaType:
+          $ref: '#/components/schemas/SongMediaType'
+        isDisplay:
+          type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+      examples:
+        - mediaId: 4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45
+          title: 描き続けた君へ Official MV
+          url: https://example.com/media/1
+          type:
+            name: 動画
+            value: 1
+          songMediaType:
+            name: MV
+            value: 1
+          isDisplay: true
+          orderNo: 1
     SongAttachedTag:
       type: object
       required:
@@ -1289,6 +1366,29 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
+    SongMediaType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/songMediaTypeName'
+        value:
+          $ref: '#/components/schemas/SongMediaTypeValue'
+      examples:
+        - name: MV
+          value: 1
+    SongMediaTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: 楽曲文脈メディア種別の値
     SongPerson:
       type: object
       required:
@@ -1566,6 +1666,22 @@ components:
       type: string
       format: uri
       description: 歌詞リンク
+    mediaId:
+      type: string
+      format: uuid
+      description: メディアID
+    mediaTitle:
+      type: string
+      minLength: 1
+      description: メディアタイトル
+    mediaTypeName:
+      type: string
+      minLength: 1
+      description: メディア種別名
+    mediaUrl:
+      type: string
+      format: uri
+      description: メディアURL
     orderNo:
       type: integer
       format: int32
@@ -1608,6 +1724,10 @@ components:
       type: string
       format: uuid
       description: 楽曲ID
+    songMediaTypeName:
+      type: string
+      minLength: 1
+      description: 楽曲文脈メディア種別名
     songTagId:
       type: string
       format: uuid

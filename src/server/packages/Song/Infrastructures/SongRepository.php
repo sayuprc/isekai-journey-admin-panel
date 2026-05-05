@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\Infrastructures;
 
 use App\Models\Song\Song as ModelsSong;
+use App\Models\Song\SongMediaLink as ModelsSongMediaLink;
 use App\Models\Song\SongPerson as ModelsSongPerson;
 use App\Models\Song\SongTagging;
 use Override;
@@ -29,6 +30,7 @@ readonly class SongRepository implements SongRepositoryInterface
     public function find(SongId $songId): ?Song
     {
         $found = ModelsSong::query()
+            ->with(['songMediaLinks.media'])
             ->where('song_id', $this->converter->toBin($songId->value))
             ->first();
 
@@ -145,11 +147,22 @@ readonly class SongRepository implements SongRepositoryInterface
         $toTag = fn (SongTagging $row): array => [
             'songTagId' => $this->converter->toUuid($row->song_tag_id),
         ];
+        $toMedia = fn (ModelsSongMediaLink $row): array => [
+            'mediaId' => $this->converter->toUuid($row->media_id),
+            'title' => $row->media->title,
+            'url' => $row->media->url,
+            'type' => $row->media->type,
+            'isDisplay' => $row->media->is_display,
+            'songMediaType' => $row->song_media_type,
+            'orderNo' => $row->order_no,
+        ];
 
         /** @var list<array{personId: string, role: int, orderNo: int}> */
         $persons = $model->persons->sortBy('order_no')->map($fn)->values()->all();
         /** @var list<array{songTagId: string}> */
         $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));
+        /** @var list<array{mediaId: string, title: string, url: string, type: int, isDisplay: bool, songMediaType: int, orderNo: int}> */
+        $media = $model->songMediaLinks->sortBy('order_no')->map($toMedia)->values()->all();
 
         return Song::reconstruct(
             $this->converter->toUuid($model->song_id),
@@ -161,6 +174,7 @@ readonly class SongRepository implements SongRepositoryInterface
             $model->order_no,
             $tags,
             $persons,
+            $media,
         );
     }
 

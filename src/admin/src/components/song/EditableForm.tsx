@@ -287,6 +287,40 @@ export const EditableForm = (props: Props) => {
     </div>
   );
 
+  const MediaList = () => (
+    <div class="mt-4">
+      <Show
+        when={(props.data?.song.media ?? []).length > 0}
+        fallback={<p class="mt-3 text-sm text-base-content/60">関連 Media はまだ登録されていません。</p>}
+      >
+        <div class="mt-3 space-y-3">
+          <For each={props.data?.song.media ?? []}>
+            {media => (
+              <div class="rounded-box border border-base-300 bg-base-100 p-4">
+                <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <div class="space-y-2">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-medium">{media.title}</span>
+                      <span class="badge badge-outline">{media.songMediaType.name}</span>
+                      <span class="badge badge-ghost">{media.type.name}</span>
+                      <span class={`badge ${media.isDisplay ? 'badge-success' : 'badge-warning'}`}>
+                        {media.isDisplay ? '表示' : '非表示'}
+                      </span>
+                    </div>
+                    <a href={media.url} target="_blank" rel="noreferrer" class="link link-hover text-sm break-all">
+                      {media.url}
+                    </a>
+                  </div>
+                  <div class="text-sm text-base-content/60">表示順: {media.orderNo}</div>
+                </div>
+              </div>
+            )}
+          </For>
+        </div>
+      </Show>
+    </div>
+  );
+
   return (
     <Show when={props.data} fallback={<p>読み込み中...</p>}>
       <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
@@ -381,6 +415,11 @@ export const EditableForm = (props: Props) => {
               <TagList />
             </fieldset>
           </div>
+
+          <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
+            <legend class="px-2 text-sm font-semibold text-base-content/70">関連 Media</legend>
+            <MediaList />
+          </fieldset>
 
           <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
             <legend class="px-2 text-sm font-semibold text-base-content/70">関係者</legend>
