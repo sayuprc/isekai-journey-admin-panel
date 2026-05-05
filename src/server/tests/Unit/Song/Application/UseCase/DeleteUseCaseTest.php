@@ -9,8 +9,6 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Song\Application\Assemble\AssembledSong;
-use Song\Application\Assemble\SongAssembler;
 use Song\Application\UseCase\Delete\DeleteInputData;
 use Song\Application\UseCase\Delete\DeleteUseCase;
 use Song\Domain\Models\SongId;
@@ -29,8 +27,6 @@ class DeleteUseCaseTest extends TestCase
 
     private MockInterface&SongRepositoryInterface $repository;
 
-    private MockInterface&SongAssembler $assembler;
-
     private AuditLogRecorderInterface&MockInterface $recorder;
 
     #[Override]
@@ -44,7 +40,6 @@ class DeleteUseCaseTest extends TestCase
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->byDefault();
         $this->repository = Mockery::mock(SongRepositoryInterface::class);
-        $this->assembler = Mockery::mock(SongAssembler::class);
         $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
         $this->recorder->shouldReceive('record')->byDefault();
     }
@@ -58,11 +53,6 @@ class DeleteUseCaseTest extends TestCase
         $this->repository->shouldReceive('find')
             ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturn($song)
-            ->once();
-
-        $this->assembler->shouldReceive('assemble')
-            ->with($song)
-            ->andReturn(new AssembledSong($songId, '曲', '説明', null, 'Original', 1, true, 1, [], []))
             ->once();
 
         $this->repository->shouldReceive('delete')
@@ -82,7 +72,6 @@ class DeleteUseCaseTest extends TestCase
             $this->authorizer($context),
             $this->transaction,
             $this->repository,
-            $this->assembler,
             $this->recorder,
         );
     }

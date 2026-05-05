@@ -8,8 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Song\Application\Assemble\AssembledSong;
-use Song\Application\Assemble\SongAssembler;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\AuditLog\AuditAction;
@@ -27,7 +25,6 @@ readonly class DeleteUseCase
         private UseCaseAuthorizer $authorizer,
         private TransactionInterface $transaction,
         private SongRepositoryInterface $repository,
-        private SongAssembler $assembler,
         private AuditLogRecorderInterface $recorder,
     ) {
     }
@@ -55,44 +52,16 @@ readonly class DeleteUseCase
                     return new Err(new NotFoundError('Song', $songId->value));
                 }
 
-                $assembled = $this->assembler->assemble($song);
-
                 $this->repository->delete($songId);
 
                 $this->recorder->record(
                     AuditAction::Delete,
                     AuditTargetType::Song,
-                    $assembled->songId,
-                    $this->snapshot($assembled),
+                    $song->songId->value,
+                    $song->toArray(),
                 );
 
                 return new Ok(null);
             }));
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function snapshot(AssembledSong $assembled): array
-    {
-        return [
-            'songId' => $assembled->songId,
-            'title' => $assembled->title,
-            'description' => $assembled->description,
-            'lyricsLink' => $assembled->lyricsLink,
-            'typeName' => $assembled->typeName,
-            'typeValue' => $assembled->typeValue,
-            'isDisplay' => $assembled->isDisplay,
-            'orderNo' => $assembled->orderNo,
-            'tagIds' => array_map(fn ($t) => $t->songTagId, $assembled->tags),
-            'persons' => array_map(
-                fn ($p) => [
-                    'personId' => $p->personId,
-                    'role' => $p->role->value,
-                    'orderNo' => $p->orderNo,
-                ],
-                $assembled->persons,
-            ),
-        ];
     }
 }

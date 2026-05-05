@@ -40,7 +40,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Song, $uuid);
-        $this->assertSame($uuid, $log['snapshot']['songId']);
+        $this->assertSame($uuid, $log['snapshot']['song_id']);
     }
 
     private function getInstance(): DeleteUseCase
