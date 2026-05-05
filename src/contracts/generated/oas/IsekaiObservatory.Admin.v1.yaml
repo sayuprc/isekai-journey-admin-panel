@@ -5,6 +5,7 @@ info:
 tags:
   - name: AdminUser
   - name: Authenticate
+  - name: Media
   - name: Person
   - name: SongTag
   - name: Song
@@ -110,6 +111,122 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
+  /media:
+    post:
+      operationId: MediaService_createMedia
+      description: メディア作成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaCreateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaCreateRequest'
+      security:
+        - BearerAuth: []
+  /media/search:
+    get:
+      operationId: MediaService_searchMedia
+      description: メディア検索API
+      parameters:
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/MediaTypeValue'
+          explode: false
+        - name: is_display
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+        - name: sort
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/MediaSearchSortBy'
+            default: title
+          explode: false
+        - name: order
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+            default: asc
+          explode: false
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/page'
+            default: 1
+          explode: false
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PerPage'
+            default: 50
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaSearchResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Media
+      security:
+        - BearerAuth: []
   /persons:
     get:
       operationId: PersonService_listPersons
@@ -995,6 +1112,97 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    Media:
+      type: object
+      required:
+        - mediaId
+        - title
+        - url
+        - type
+        - isDisplay
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        type:
+          $ref: '#/components/schemas/MediaType'
+        isDisplay:
+          type: boolean
+      examples:
+        - mediaId: 4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45
+          title: 描き続けた君へ Official MV
+          url: https://example.com/media/1
+          type:
+            name: 動画
+            value: 1
+          isDisplay: true
+    MediaCreateRequest:
+      type: object
+      required:
+        - title
+        - url
+        - typeValue
+        - isDisplay
+      properties:
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        typeValue:
+          $ref: '#/components/schemas/MediaTypeValue'
+        isDisplay:
+          type: boolean
+    MediaCreateResponse:
+      type: object
+      required:
+        - media
+      properties:
+        media:
+          $ref: '#/components/schemas/Media'
+    MediaSearchResponse:
+      type: object
+      required:
+        - media
+        - maxPage
+      properties:
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/Media'
+        maxPage:
+          type: integer
+          format: int32
+    MediaSearchSortBy:
+      type: string
+      enum:
+        - title
+      description: メディア検索のソート条件
+    MediaType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaTypeName'
+        value:
+          $ref: '#/components/schemas/MediaTypeValue'
+      examples:
+        - name: 動画
+          value: 1
+    MediaTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: メディア種別の値
     PerPage:
       type: integer
       format: int32
@@ -1132,6 +1340,19 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    RequestSongMedia:
+      type: object
+      required:
+        - mediaId
+        - songMediaTypeValue
+        - orderNo
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        songMediaTypeValue:
+          $ref: '#/components/schemas/SongMediaTypeValue'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
     RequestSongPerson:
       type: object
       required:
@@ -1187,6 +1408,7 @@ components:
         - orderNo
         - persons
         - tags
+        - media
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -1212,6 +1434,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SongAttachedTag'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongAttachedMedia'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -1234,6 +1460,55 @@ components:
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               name: 派生曲
+          media:
+            - mediaId: 4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45
+              title: 描き続けた君へ Official MV
+              url: https://example.com/media/1
+              type:
+                name: 動画
+                value: 1
+              songMediaType:
+                name: MV
+                value: 1
+              isDisplay: true
+              orderNo: 1
+    SongAttachedMedia:
+      type: object
+      required:
+        - mediaId
+        - title
+        - url
+        - type
+        - songMediaType
+        - isDisplay
+        - orderNo
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        type:
+          $ref: '#/components/schemas/MediaType'
+        songMediaType:
+          $ref: '#/components/schemas/SongMediaType'
+        isDisplay:
+          type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+      examples:
+        - mediaId: 4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45
+          title: 描き続けた君へ Official MV
+          url: https://example.com/media/1
+          type:
+            name: 動画
+            value: 1
+          songMediaType:
+            name: MV
+            value: 1
+          isDisplay: true
+          orderNo: 1
     SongAttachedTag:
       type: object
       required:
@@ -1254,6 +1529,7 @@ components:
         - isDisplay
         - persons
         - tags
+        - media
       properties:
         title:
           $ref: '#/components/schemas/title'
@@ -1275,6 +1551,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RequestSongTag'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestSongMedia'
     SongCreateResponse:
       type: object
       required:
@@ -1289,6 +1569,29 @@ components:
       properties:
         song:
           $ref: '#/components/schemas/Song'
+    SongMediaType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/songMediaTypeName'
+        value:
+          $ref: '#/components/schemas/SongMediaTypeValue'
+      examples:
+        - name: MV
+          value: 1
+    SongMediaTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: 楽曲文脈メディア種別の値
     SongPerson:
       type: object
       required:
@@ -1481,6 +1784,7 @@ components:
         - orderNo
         - persons
         - tags
+        - media
       properties:
         title:
           $ref: '#/components/schemas/title'
@@ -1504,6 +1808,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RequestSongTag'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestSongMedia'
     SongUpdateResponse:
       type: object
       required:
@@ -1566,6 +1874,22 @@ components:
       type: string
       format: uri
       description: 歌詞リンク
+    mediaId:
+      type: string
+      format: uuid
+      description: メディアID
+    mediaTitle:
+      type: string
+      minLength: 1
+      description: メディアタイトル
+    mediaTypeName:
+      type: string
+      minLength: 1
+      description: メディア種別名
+    mediaUrl:
+      type: string
+      format: uri
+      description: メディアURL
     orderNo:
       type: integer
       format: int32
@@ -1608,6 +1932,10 @@ components:
       type: string
       format: uuid
       description: 楽曲ID
+    songMediaTypeName:
+      type: string
+      minLength: 1
+      description: 楽曲文脈メディア種別名
     songTagId:
       type: string
       format: uuid

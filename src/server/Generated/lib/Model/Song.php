@@ -65,7 +65,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => 'bool',
         'order_no' => 'int',
         'persons' => '\OpenAPI\Client\Model\SongPerson[]',
-        'tags' => '\OpenAPI\Client\Model\SongAttachedTag[]'
+        'tags' => '\OpenAPI\Client\Model\SongAttachedTag[]',
+        'media' => '\OpenAPI\Client\Model\SongAttachedMedia[]'
     ];
 
     /**
@@ -84,7 +85,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => null,
         'order_no' => 'int32',
         'persons' => null,
-        'tags' => null
+        'tags' => null,
+        'media' => null
     ];
 
     /**
@@ -101,7 +103,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => false,
         'order_no' => false,
         'persons' => false,
-        'tags' => false
+        'tags' => false,
+        'media' => false
     ];
 
     /**
@@ -198,7 +201,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo',
         'persons' => 'persons',
-        'tags' => 'tags'
+        'tags' => 'tags',
+        'media' => 'media'
     ];
 
     /**
@@ -215,7 +219,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo',
         'persons' => 'setPersons',
-        'tags' => 'setTags'
+        'tags' => 'setTags',
+        'media' => 'setMedia'
     ];
 
     /**
@@ -232,7 +237,8 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo',
         'persons' => 'getPersons',
-        'tags' => 'getTags'
+        'tags' => 'getTags',
+        'media' => 'getMedia'
     ];
 
     /**
@@ -301,6 +307,7 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('persons', $data ?? [], null);
         $this->setIfExists('tags', $data ?? [], null);
+        $this->setIfExists('media', $data ?? [], null);
     }
 
     /**
@@ -364,6 +371,9 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['tags'] === null) {
             $invalidProperties[] = "'tags' can't be null";
+        }
+        if ($this->container['media'] === null) {
+            $invalidProperties[] = "'media' can't be null";
         }
         return $invalidProperties;
     }
@@ -636,6 +646,33 @@ class Song implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable tags cannot be null');
         }
         $this->container['tags'] = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Gets media
+     *
+     * @return \OpenAPI\Client\Model\SongAttachedMedia[]
+     */
+    public function getMedia()
+    {
+        return $this->container['media'];
+    }
+
+    /**
+     * Sets media
+     *
+     * @param \OpenAPI\Client\Model\SongAttachedMedia[] $media media
+     *
+     * @return self
+     */
+    public function setMedia($media)
+    {
+        if (is_null($media)) {
+            throw new \InvalidArgumentException('non-nullable media cannot be null');
+        }
+        $this->container['media'] = $media;
 
         return $this;
     }

@@ -34,6 +34,45 @@ export type LoginResponse = {
     refreshToken: RefreshToken;
 };
 
+export type Media = {
+    mediaId: MediaId;
+    title: MediaTitle;
+    url: MediaUrl;
+    type: MediaType;
+    isDisplay: boolean;
+};
+
+export type MediaCreateRequest = {
+    title: MediaTitle;
+    url: MediaUrl;
+    typeValue: MediaTypeValue;
+    isDisplay: boolean;
+};
+
+export type MediaCreateResponse = {
+    media: Media;
+};
+
+export type MediaSearchResponse = {
+    media: Array<Media>;
+    maxPage: number;
+};
+
+/**
+ * メディア検索のソート条件
+ */
+export type MediaSearchSortBy = 'title';
+
+export type MediaType = {
+    name: MediaTypeName;
+    value: MediaTypeValue;
+};
+
+/**
+ * メディア種別の値
+ */
+export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+
 /**
  * 1ページあたりの件数
  */
@@ -101,6 +140,12 @@ export type RefreshTokenResponse = {
     refreshToken: RefreshToken;
 };
 
+export type RequestSongMedia = {
+    mediaId: MediaId;
+    songMediaTypeValue: SongMediaTypeValue;
+    orderNo: OrderNo;
+};
+
 /**
  * The template for picking properties.
  */
@@ -137,6 +182,17 @@ export type Song = {
     orderNo: OrderNo;
     persons: Array<SongPerson>;
     tags: Array<SongAttachedTag>;
+    media: Array<SongAttachedMedia>;
+};
+
+export type SongAttachedMedia = {
+    mediaId: MediaId;
+    title: MediaTitle;
+    url: MediaUrl;
+    type: MediaType;
+    songMediaType: SongMediaType;
+    isDisplay: boolean;
+    orderNo: OrderNo;
 };
 
 export type SongAttachedTag = {
@@ -152,6 +208,7 @@ export type SongCreateRequest = {
     isDisplay: boolean;
     persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
+    media: Array<RequestSongMedia>;
 };
 
 export type SongCreateResponse = {
@@ -161,6 +218,16 @@ export type SongCreateResponse = {
 export type SongGetResponse = {
     song: Song;
 };
+
+export type SongMediaType = {
+    name: SongMediaTypeName;
+    value: SongMediaTypeValue;
+};
+
+/**
+ * 楽曲文脈メディア種別の値
+ */
+export type SongMediaTypeValue = 1 | 2 | 3 | 4 | 99;
 
 export type SongPerson = {
     personId: PersonId;
@@ -253,6 +320,7 @@ export type SongUpdateRequest = {
     orderNo: OrderNo;
     persons: Array<RequestSongPerson>;
     tags: Array<RequestSongTag>;
+    media: Array<RequestSongMedia>;
 };
 
 export type SongUpdateResponse = {
@@ -311,6 +379,26 @@ export type Email = string;
 export type LyricsLink = string;
 
 /**
+ * メディアID
+ */
+export type MediaId = string;
+
+/**
+ * メディアタイトル
+ */
+export type MediaTitle = string;
+
+/**
+ * メディア種別名
+ */
+export type MediaTypeName = string;
+
+/**
+ * メディアURL
+ */
+export type MediaUrl = string;
+
+/**
  * 表示順
  */
 export type OrderNo = number;
@@ -359,6 +447,11 @@ export type RoleName = string;
  * 楽曲ID
  */
 export type SongId = string;
+
+/**
+ * 楽曲文脈メディア種別名
+ */
+export type SongMediaTypeName = string;
 
 /**
  * 楽曲タグID
@@ -509,6 +602,102 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type MediaServiceCreateMediaData = {
+    body: MediaCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/media';
+};
+
+export type MediaServiceCreateMediaErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type MediaServiceCreateMediaError = MediaServiceCreateMediaErrors[keyof MediaServiceCreateMediaErrors];
+
+export type MediaServiceCreateMediaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MediaCreateResponse;
+};
+
+export type MediaServiceCreateMediaResponse = MediaServiceCreateMediaResponses[keyof MediaServiceCreateMediaResponses];
+
+export type MediaServiceSearchMediaData = {
+    body?: never;
+    path?: never;
+    query?: {
+        title?: string;
+        type?: MediaTypeValue;
+        is_display?: boolean;
+        sort?: MediaSearchSortBy;
+        order?: SortOrder;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/media/search';
+};
+
+export type MediaServiceSearchMediaErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type MediaServiceSearchMediaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MediaSearchResponse;
+};
+
+export type MediaServiceSearchMediaResponse = MediaServiceSearchMediaResponses[keyof MediaServiceSearchMediaResponses];
 
 export type PersonServiceListPersonsData = {
     body?: never;

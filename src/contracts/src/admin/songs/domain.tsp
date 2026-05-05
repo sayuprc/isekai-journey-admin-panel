@@ -1,4 +1,5 @@
 import "../lib";
+import "../media";
 import "../persons";
 import "../song-tags";
 
@@ -36,6 +37,17 @@ scalar lyricsLink extends string;
     #{ personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", role: SongPersonRole.Composer, orderNo: 2 }
   ],
   tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲" }],
+  media: #[
+    #{
+      mediaId: "4d31f7b7-b15e-4bd8-a0b9-0b2a6fdb2b45",
+      title: "描き続けた君へ Official MV",
+      url: "https://example.com/media/1",
+      type: #{ name: "動画", value: MediaTypeValue.Video },
+      songMediaType: #{ name: "MV", value: SongMediaTypeValue.Mv },
+      isDisplay: true,
+      orderNo: 1,
+    }
+  ],
 })
 model Song {
   songId: songId;
@@ -47,6 +59,7 @@ model Song {
   orderNo: orderNo;
   persons: SongPerson[];
   tags: SongAttachedTag[];
+  media: SongAttachedMedia[];
 }
 
 @doc("楽曲種別名")
