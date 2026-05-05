@@ -34,6 +34,7 @@ use App\Http\Middleware\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
@@ -66,11 +67,11 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                 });
 
                 Route::prefix('media')->group(function () {
-                    Route::post('/', [CreateMediaController::class, 'handle'])->name('media.create');
-                    Route::delete('/{mediaId}', [DeleteMediaController::class, 'handle'])->name('media.delete');
-                    Route::put('/{mediaId}', [UpdateMediaController::class, 'handle'])->name('media.update');
-                    Route::get('/search', [SearchMediaController::class, 'handle'])->name('media.search');
-                    Route::get('/{mediaId}', [GetMediaController::class, 'handle'])->name('media.get');
+                    Route::post('/', [CreateMediaController::class, 'handle'])->name(MediaRouteMap::Create);
+                    Route::delete('/{mediaId}', [DeleteMediaController::class, 'handle'])->name(MediaRouteMap::Delete);
+                    Route::put('/{mediaId}', [UpdateMediaController::class, 'handle'])->name(MediaRouteMap::Update);
+                    Route::get('/search', [SearchMediaController::class, 'handle'])->name(MediaRouteMap::Search);
+                    Route::get('/{mediaId}', [GetMediaController::class, 'handle'])->name(MediaRouteMap::Get);
                 });
 
                 Route::prefix('songs')->group(function () {

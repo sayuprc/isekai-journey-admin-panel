@@ -58,7 +58,7 @@ export const EditableForm = (props: Props) => {
     const mediaId = props.data?.media.mediaId;
 
     if (!mediaId) {
-      setFormError('更新対象のMedia IDを取得できませんでした');
+      setFormError('更新対象のメディアIDを取得できませんでした');
       return;
     }
 
@@ -97,7 +97,7 @@ export const EditableForm = (props: Props) => {
     const mediaId = props.data?.media.mediaId;
 
     if (!mediaId) {
-      setFormError('削除対象のMedia IDを取得できませんでした');
+      setFormError('削除対象のメディアIDを取得できませんでした');
       return;
     }
 
@@ -204,10 +204,10 @@ export const EditableForm = (props: Props) => {
 
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
-          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。楽曲に使用中のMediaは削除できません。</p>
+          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。楽曲に使用中のメディアは削除できません。</p>
           <div class="mt-4">
             <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
-              {isSubmitting() ? '削除中...' : 'このMediaを削除する'}
+              {isSubmitting() ? '削除中...' : 'このメディアを削除する'}
             </button>
           </div>
         </fieldset>

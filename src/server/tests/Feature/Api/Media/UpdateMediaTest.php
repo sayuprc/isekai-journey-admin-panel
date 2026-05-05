@@ -8,6 +8,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
+use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
@@ -36,7 +37,7 @@ class UpdateMediaTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->putJson(route('media.update', $uuid), [
+            ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => '描き続けた君へ 配信アーカイブ',
                 'url' => 'https://example.com/archive',
                 'typeValue' => MediaType::SocialPost->value,
@@ -80,7 +81,7 @@ class UpdateMediaTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->putJson(route('media.update', $routeMediaId), [
+            ->putJson(route(MediaRouteMap::Update, $routeMediaId), [
                 'mediaId' => $bodyMediaId,
                 'title' => '描き続けた君へ 配信アーカイブ',
                 'url' => 'https://example.com/archive',
@@ -109,7 +110,7 @@ class UpdateMediaTest extends DatabaseTestCase
         );
 
         $this->withAuth()
-            ->putJson(route('media.update', $uuid), [
+            ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => '',
                 'url' => '',
                 'typeValue' => 0,
