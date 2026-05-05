@@ -254,7 +254,9 @@ export const SearchList = () => {
                   <For each={result().media}>
                     {media => (
                       <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
-                        <td class="min-w-56">{media.title}</td>
+                        <td class="min-w-44 max-w-56">
+                          <p class="truncate">{media.title}</p>
+                        </td>
                         <td>{media.type.name}</td>
                         <td>
                           <span class={`badge badge-sm ${media.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
