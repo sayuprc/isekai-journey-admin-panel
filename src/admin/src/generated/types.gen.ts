@@ -652,6 +652,9 @@ export type MediaServiceSearchMediaData = {
     path?: never;
     query?: {
         title?: string;
+        type?: MediaTypeValue;
+        format?: MediaFormatValue;
+        is_display?: boolean;
         page?: Page;
         per_page?: PerPage;
     };

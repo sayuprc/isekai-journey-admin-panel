@@ -92,6 +92,18 @@ readonly class MediaRepository implements MediaRepositoryInterface
             $query = $query->whereLike('title', '%' . $keyword . '%');
         }
 
+        if ($criteria->type->isPresent()) {
+            $query = $query->where('type', $criteria->type->get()->value);
+        }
+
+        if ($criteria->format->isPresent()) {
+            $query = $query->where('format', $criteria->format->get()->value);
+        }
+
+        if ($criteria->isDisplay->isPresent()) {
+            $query = $query->where('is_display', $criteria->isDisplay->get());
+        }
+
         return $query;
     }
 

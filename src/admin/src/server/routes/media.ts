@@ -18,6 +18,9 @@ export const media = new Elysia({ prefix: '/media' })
           client,
           query: {
             title: query.title || undefined,
+            type: query.type as MediaTypeValue | undefined,
+            format: query.format as MediaFormatValue | undefined,
+            is_display: query.is_display,
             page: query.page ?? 1,
             per_page: (query.per_page ?? 25) as PerPage,
           },
@@ -27,6 +30,9 @@ export const media = new Elysia({ prefix: '/media' })
     {
       query: t.Object({
         title: t.Optional(t.String()),
+        type: t.Optional(t.Union([t.Literal('1'), t.Literal('2'), t.Literal('3'), t.Literal('4'), t.Literal('99')])),
+        format: t.Optional(t.Union([t.Literal('1'), t.Literal('2'), t.Literal('3'), t.Literal('4'), t.Literal('5'), t.Literal('99')])),
+        is_display: t.Optional(t.Boolean()),
         page: t.Optional(t.Number()),
         per_page: t.Optional(t.Number()),
       }),
