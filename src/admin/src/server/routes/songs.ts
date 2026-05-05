@@ -30,7 +30,7 @@ export const songs = new Elysia({ prefix: '/songs' })
         personServiceListPersons({ client }),
         songTypeServiceListSongTypes({ client }),
         songTagServiceListSongTags({ client }),
-        mediaServiceSearchMedia({ client, query: { per_page: 25 } }),
+        mediaServiceSearchMedia({ client, query: { per_page: 50 } }),
       ]);
 
       return {
@@ -88,7 +88,7 @@ export const songs = new Elysia({ prefix: '/songs' })
           personServiceListPersons({ client }),
           songTypeServiceListSongTypes({ client }),
           songTagServiceListSongTags({ client }),
-          mediaServiceSearchMedia({ client, query: { per_page: 25 } }),
+          mediaServiceSearchMedia({ client, query: { per_page: 50 } }),
         ]);
 
         return {
