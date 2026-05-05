@@ -7,6 +7,7 @@ namespace Media\Domain\Services;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -22,6 +23,7 @@ class MediaIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
+        private readonly MediaRepositoryInterface $repository,
     ) {
     }
 
@@ -35,32 +37,66 @@ class MediaIntegrityService
         int $formatValue,
         bool $isDisplay,
     ): Result {
-        return Result::collect6(
-            MediaId::create($this->generator->generate()),
-            MediaTitle::create($title),
-            MediaUrl::create($url),
-            $this->toMediaType($typeValue),
-            $this->toMediaFormat($formatValue),
-            new Ok($isDisplay),
-        )
-            ->mapErr(function (array $errors): DomainValidationError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+        $result = $this->build(
+            $this->generator->generate(),
+            $title,
+            $url,
+            $typeValue,
+            $formatValue,
+            $isDisplay,
+        );
 
-                return new DomainValidationError($messages);
-            })
-            ->map(fn (array $values): Media => new Media(...$values));
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $media = $result->unwrap();
+
+        if (! is_null($this->repository->findByUrl($media->url))) {
+            return new Err(new DomainValidationError(['url' => ['同じURLのメディアが既に存在します']]));
+        }
+
+        return new Ok($media);
     }
 
     /**
      * @return Result<Media, DomainError>
      */
     public function prepareForUpdate(
+        string $mediaId,
+        string $title,
+        string $url,
+        int $typeValue,
+        int $formatValue,
+        bool $isDisplay,
+    ): Result {
+        $result = $this->build(
+            $mediaId,
+            $title,
+            $url,
+            $typeValue,
+            $formatValue,
+            $isDisplay,
+        );
+
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $media = $result->unwrap();
+        $found = $this->repository->findByUrl($media->url);
+
+        if (! is_null($found) && ! $found->equals($media)) {
+            return new Err(new DomainValidationError(['url' => ['同じURLのメディアが既に存在します']]));
+        }
+
+        return new Ok($media);
+    }
+
+    /**
+     * @return Result<Media, DomainError>
+     */
+    private function build(
         string $mediaId,
         string $title,
         string $url,

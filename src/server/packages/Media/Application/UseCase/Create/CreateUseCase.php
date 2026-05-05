@@ -56,13 +56,7 @@ readonly class CreateUseCase
                 return new Err($this->handleError($result->unwrapErr()));
             }
 
-            $media = $result->unwrap();
-
-            if (! is_null($this->repository->findByUrl($media->url))) {
-                return new Err(new InvalidInputError(['url' => ['同じURLのメディアが既に存在します']]));
-            }
-
-            $media = $this->repository->save($media);
+            $media = $this->repository->save($result->unwrap());
 
             return new Ok(new CreateOutputData($media));
         });
