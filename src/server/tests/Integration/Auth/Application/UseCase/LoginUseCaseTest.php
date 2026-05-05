@@ -10,13 +10,17 @@ use Auth\Application\UseCase\Login\LoginUseCase;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
 
 class LoginUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
     use EntityStore;
 
@@ -44,6 +48,12 @@ class LoginUseCaseTest extends DatabaseTestCase
         $this->assertSame($adminUserId, $converter->toUuid(array_first($refreshTokens)->admin_user_id));
         $this->assertSame(ConsumptionStatus::Unused->value, array_first($refreshTokens)->status);
         $this->assertSame($now->addDays(7)->format('Y-m-d H:i:s'), array_first($refreshTokens)->expired_at->format('Y-m-d H:i:s'));
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Login, AuditTargetType::AdminUser, $adminUserId);
+        $this->assertSame($adminUserId, $log['admin_user_id']);
+        $this->assertArrayHasKey('refreshTokenId', $log['snapshot']);
+        $this->assertArrayNotHasKey('password', $log['snapshot']);
     }
 
     private function getInstance(): LoginUseCase

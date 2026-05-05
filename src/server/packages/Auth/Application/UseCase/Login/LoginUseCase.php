@@ -11,6 +11,9 @@ use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
@@ -25,6 +28,7 @@ readonly class LoginUseCase
         private RefreshTokenRepositoryInterface $refreshTokenRepository,
         private RefreshTokenIssueService $refreshTokenIssueService,
         private AccessTokenIssueService $accessTokenIssueService,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -45,6 +49,16 @@ readonly class LoginUseCase
             $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
 
             $this->refreshTokenRepository->save($refreshToken);
+
+            $this->recorder->record(
+                $refreshToken->adminUserId->value,
+                AuditAction::Login,
+                AuditTargetType::AdminUser,
+                $refreshToken->adminUserId->value,
+                [
+                    'refreshTokenId' => $refreshToken->refreshTokenId->value,
+                ],
+            );
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
