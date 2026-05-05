@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Song\Infrastructures;
 
 use App\Models\Song\Song as ModelsSong;
+use App\Models\Song\SongMediaLink as ModelsSongMediaLink;
 use App\Models\Song\SongPerson as ModelsSongPerson;
 use App\Models\Song\SongTagging;
 use Override;
@@ -55,6 +56,7 @@ readonly class SongRepository implements SongRepositoryInterface
 
         ModelsSongPerson::query()->where('song_id', $id)->delete();
         SongTagging::query()->where('song_id', $id)->delete();
+        ModelsSongMediaLink::query()->where('song_id', $id)->delete();
 
         ModelsSong::query()->upsert(
             [
@@ -82,6 +84,7 @@ readonly class SongRepository implements SongRepositoryInterface
 
         $persons = array_map(fn (array $row) => $this->toPersonRecord($id, $row), $data['persons']);
         $tags = array_map(fn (array $row) => $this->toTaggingRecord($id, $row), $data['tags']);
+        $media = array_map(fn (array $row) => $this->toMediaRecord($id, $row), $data['media']);
 
         if ($persons !== []) {
             ModelsSongPerson::query()->insert($persons);
@@ -89,6 +92,10 @@ readonly class SongRepository implements SongRepositoryInterface
 
         if ($tags !== []) {
             SongTagging::query()->insert($tags);
+        }
+
+        if ($media !== []) {
+            ModelsSongMediaLink::query()->insert($media);
         }
 
         return $this->find($song->songId) ?? $song;
@@ -122,6 +129,21 @@ readonly class SongRepository implements SongRepositoryInterface
         ];
     }
 
+    /**
+     * @param array{media_id: string, song_media_type: int, order_no: int} $row
+     *
+     * @return array{song_id: string, media_id: string, song_media_type: int, order_no: int}
+     */
+    private function toMediaRecord(string $binId, array $row): array
+    {
+        return [
+            'song_id' => $binId,
+            'media_id' => $this->converter->toBin($row['media_id']),
+            'song_media_type' => $row['song_media_type'],
+            'order_no' => $row['order_no'],
+        ];
+    }
+
     #[Override]
     public function delete(SongId $songId): void
     {
@@ -145,11 +167,18 @@ readonly class SongRepository implements SongRepositoryInterface
         $toTag = fn (SongTagging $row): array => [
             'songTagId' => $this->converter->toUuid($row->song_tag_id),
         ];
+        $toMedia = fn (ModelsSongMediaLink $row): array => [
+            'mediaId' => $this->converter->toUuid($row->media_id),
+            'songMediaType' => $row->song_media_type,
+            'orderNo' => $row->order_no,
+        ];
 
         /** @var list<array{personId: string, role: int, orderNo: int}> */
         $persons = $model->persons->sortBy('order_no')->map($fn)->values()->all();
         /** @var list<array{songTagId: string}> */
         $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));
+        /** @var list<array{mediaId: string, songMediaType: int, orderNo: int}> */
+        $media = $model->songMediaLinks->sortBy('order_no')->map($toMedia)->values()->all();
 
         return Song::reconstruct(
             $this->converter->toUuid($model->song_id),
@@ -161,6 +190,7 @@ readonly class SongRepository implements SongRepositoryInterface
             $model->order_no,
             $tags,
             $persons,
+            $media,
         );
     }
 

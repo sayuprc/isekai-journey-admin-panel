@@ -56,6 +56,7 @@ readonly class CreateUseCase
                 $inputData->isDisplay,
                 $inputData->tags,
                 $inputData->persons,
+                $inputData->media,
             );
 
             if ($result->isErr()) {

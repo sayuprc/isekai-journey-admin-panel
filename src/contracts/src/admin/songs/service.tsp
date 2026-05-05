@@ -12,6 +12,12 @@ enum SongSearchSortBy {
   orderNo: "order_no",
 }
 
+@doc("楽曲検索API用の楽曲種別")
+enum SongSearchTypeValue {
+  Original: "1",
+  Cover: "2",
+}
+
 @tag("Song")
 @route("/songs")
 @useAuth(BearerAuth)
@@ -20,7 +26,7 @@ interface SongService {
   @route("/search")
   searchSongs(
     @query title?: string,
-    @query type?: SongTypeValue,
+    @query type?: SongSearchTypeValue,
     @query("is_display") isDisplay?: boolean,
     @query sort?: SongSearchSortBy = SongSearchSortBy.orderNo,
     @query order?: SortOrder = SortOrder.asc,

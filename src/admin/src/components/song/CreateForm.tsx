@@ -1,11 +1,12 @@
-import { createSignal, For, onMount, Show } from 'solid-js';
-import type { Person, RequestSongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
+import { createEffect, createSignal, For, Show } from 'solid-js';
+import type { Media, Person, RequestSongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
+import { buildSongMediaRequest, MediaSection, type MediaEntry } from './MediaSection';
 
 type PersonEntry = {
   personId: string;
@@ -17,15 +18,23 @@ type SongTagEntry = {
   songTagId: string;
 };
 
-export const CreateForm = () => {
-  const [persons, setPersons] = createSignal<Person[]>([]);
-  const [types, setTypes] = createSignal<SongType[]>([]);
-  const [availableTags, setAvailableTags] = createSignal<SongTag[]>([]);
+interface Props {
+  data?: { persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
+  status: number;
+}
+
+export const CreateForm = (props: Props) => {
+  const [persons] = createSignal<Person[]>(props.data?.persons ?? []);
+  const [types] = createSignal<SongType[]>(props.data?.types ?? []);
+  const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>('');
+  const [availableTags] = createSignal<SongTag[]>(props.data?.tags ?? []);
+  const [availableMedia, setAvailableMedia] = createSignal<Media[]>(props.data?.media ?? []);
 
   const [lyricists, setLyricists] = createSignal<PersonEntry[]>([]);
   const [composers, setComposers] = createSignal<PersonEntry[]>([]);
   const [arrangers, setArrangers] = createSignal<PersonEntry[]>([]);
   const [tags, setTags] = createSignal<SongTagEntry[]>([]);
+  const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>([]);
   const [tagPickerValue, setTagPickerValue] = createSignal('');
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -37,12 +46,9 @@ export const CreateForm = () => {
     return normalized === '' ? null : normalized;
   };
 
-  onMount(async () => {
-    const { data } = await client.api.songs['create-form'].get();
-    if (data) {
-      setPersons(data.persons);
-      setTypes(data.types);
-      setAvailableTags(data.tags);
+  createEffect(() => {
+    if (props.status !== 200) {
+      handleError(props.status, undefined);
     }
   });
 
@@ -86,10 +92,11 @@ export const CreateForm = () => {
       title: formData.get('title')?.toString() ?? '',
       description: formData.get('description')?.toString() ?? '',
       lyricsLink: normalizeOptionalString(formData.get('lyricsLink')),
-      typeValue: Number(formData.get('typeValue')) as SongTypeValue,
+      typeValue: typeValue() as SongTypeValue,
       isDisplay: formData.get('isDisplay') === 'true',
       persons: buildPersons(),
       tags: tags(),
+      media: buildSongMediaRequest(mediaEntries()),
     });
 
     if (data) {
@@ -245,12 +252,20 @@ export const CreateForm = () => {
 
               <div>
                 <label class="label">楽曲種別</label>
-                <select class="select select-bordered w-full" name="typeValue" required>
-                  <option value="" disabled selected>
+                <select
+                  class="select select-bordered w-full"
+                  name="typeValue"
+                  value={typeValue()}
+                  onChange={e => setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
+                  required
+                  classList={{ 'select-error': !!getFieldError('typeValue') }}
+                >
+                  <option value="" disabled>
                     選択してください
                   </option>
                   <For each={types()}>{type => <option value={type.value}>{type.name}</option>}</For>
                 </select>
+                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
               </div>
 
               <div class="md:col-span-2">
@@ -306,6 +321,13 @@ export const CreateForm = () => {
           <PersonSection label="作曲" entries={composers} setter={setComposers} role={2} />
           <PersonSection label="編曲" entries={arrangers} setter={setArrangers} role={3} />
         </fieldset>
+
+        <MediaSection
+          entries={mediaEntries}
+          setEntries={setMediaEntries}
+          availableMedia={availableMedia}
+          setAvailableMedia={setAvailableMedia}
+        />
 
         <div class="flex justify-end">
           <button class="btn btn-primary" disabled={isSubmitting()}>

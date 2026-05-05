@@ -17,6 +17,7 @@ model SongCreateRequest {
   isDisplay: boolean;
   persons: RequestSongPerson[];
   tags: RequestSongTag[];
+  media: RequestSongMediaLink[];
 }
 
 model SongCreateResponse {
@@ -32,6 +33,7 @@ model SongUpdateRequest {
   orderNo: orderNo;
   persons: RequestSongPerson[];
   tags: RequestSongTag[];
+  media: RequestSongMediaLink[];
 }
 
 model SongUpdateResponse {

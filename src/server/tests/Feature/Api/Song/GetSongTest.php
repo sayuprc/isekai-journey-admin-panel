@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Media\Domain\Models\MediaType;
+use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
@@ -33,6 +35,8 @@ class GetSongTest extends DatabaseTestCase
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($tagA = $this->createSongTag($this->generateUuid(), 'タグA', 20));
         $tagRepo->save($tagB = $this->createSongTag($this->generateUuid(), 'タグB', 10));
+        $mediaRepo = $this->app->make(MediaRepository::class);
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true));
 
         $songId = $this->generateUuid();
 
@@ -53,6 +57,10 @@ class GetSongTest extends DatabaseTestCase
                     ['personId' => $lyricistId, 'role' => 1, 'orderNo' => 1],
                     ['personId' => $composerId, 'role' => 2, 'orderNo' => 2],
                     ['personId' => $arrangerId, 'role' => 3, 'orderNo' => 3],
+                ],
+                [],
+                [
+                    ['mediaId' => $media->mediaId->value, 'songMediaType' => 1, 'orderNo' => 1],
                 ],
             ),
         );
@@ -81,6 +89,20 @@ class GetSongTest extends DatabaseTestCase
                         ['songTagId' => $tagB->songTagId->value, 'name' => 'タグB'],
                         ['songTagId' => $tagA->songTagId->value, 'name' => 'タグA'],
                     ],
+                    'media' => [
+                        [
+                            'mediaId' => $media->mediaId->value,
+                            'title' => $media->title->value,
+                            'url' => $media->url->value,
+                            'type' => [
+                                'name' => $media->type->getName(),
+                                'value' => $media->type->value,
+                            ],
+                            'isDisplay' => true,
+                            'songMediaType' => 1,
+                            'orderNo' => 1,
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -91,13 +113,14 @@ class GetSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], []),
+            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], [], [], []),
         );
 
         $this->withAuth()
             ->get(route(SongRouteMap::Get, $songId))
             ->assertStatus(200)
-            ->assertJsonPath('song.lyricsLink', null);
+            ->assertJsonPath('song.lyricsLink', null)
+            ->assertJsonPath('song.media', []);
     }
 
     #[Test]

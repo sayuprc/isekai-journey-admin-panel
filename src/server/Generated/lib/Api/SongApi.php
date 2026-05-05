@@ -954,7 +954,7 @@ class SongApi
      * Operation songServiceSearchSongs
      *
      * @param  string|null $title title (optional)
-     * @param  \OpenAPI\Client\Model\SongTypeValue|null $type type (optional)
+     * @param  \OpenAPI\Client\Model\SongSearchTypeValue|null $type type (optional)
      * @param  bool|null $is_display is_display (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order order (optional)
@@ -976,7 +976,7 @@ class SongApi
      * Operation songServiceSearchSongsWithHttpInfo
      *
      * @param  string|null $title (optional)
-     * @param  \OpenAPI\Client\Model\SongTypeValue|null $type (optional)
+     * @param  \OpenAPI\Client\Model\SongSearchTypeValue|null $type (optional)
      * @param  bool|null $is_display (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
@@ -1065,7 +1065,7 @@ class SongApi
      * Operation songServiceSearchSongsAsync
      *
      * @param  string|null $title (optional)
-     * @param  \OpenAPI\Client\Model\SongTypeValue|null $type (optional)
+     * @param  \OpenAPI\Client\Model\SongSearchTypeValue|null $type (optional)
      * @param  bool|null $is_display (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
@@ -1090,7 +1090,7 @@ class SongApi
      * Operation songServiceSearchSongsAsyncWithHttpInfo
      *
      * @param  string|null $title (optional)
-     * @param  \OpenAPI\Client\Model\SongTypeValue|null $type (optional)
+     * @param  \OpenAPI\Client\Model\SongSearchTypeValue|null $type (optional)
      * @param  bool|null $is_display (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
@@ -1146,7 +1146,7 @@ class SongApi
      * Create request for operation 'songServiceSearchSongs'
      *
      * @param  string|null $title (optional)
-     * @param  \OpenAPI\Client\Model\SongTypeValue|null $type (optional)
+     * @param  \OpenAPI\Client\Model\SongSearchTypeValue|null $type (optional)
      * @param  bool|null $is_display (optional)
      * @param  \OpenAPIClientModelSongSearchSortBy|null $sort (optional)
      * @param  \OpenAPIClientModelSortOrder|null $order (optional)
@@ -1188,7 +1188,7 @@ class SongApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $type,
             'type', // param base name
-            'SongTypeValue', // openApiType
+            'SongSearchTypeValue', // openApiType
             'form', // style
             false, // explode
             false // required

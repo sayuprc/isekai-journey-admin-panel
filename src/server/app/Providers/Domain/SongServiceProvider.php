@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Http\Request;
+use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Infrastructures\MediaRepository;
 use Override;
 use Person\Domain\Services\PersonUsageCheckerInterface;
 use Song\Application\Query\SongQueryServiceInterface;
@@ -14,12 +16,16 @@ use Song\Application\UseCase\Tag\Create\CreateInputData as CreateTagInputData;
 use Song\Application\UseCase\Tag\Search\SearchInputData as SearchTagInputData;
 use Song\Application\UseCase\Tag\Update\UpdateInputData as UpdateTagInputData;
 use Song\Application\UseCase\Update\UpdateInputData;
+use Song\Domain\Criteria\Sort;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Infrastructures\PersonUsageChecker;
 use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
 use Song\Infrastructures\Tag\SongTagRepository;
+use Support\Domain\SearchCriteria\Order;
+use Support\Domain\SearchCriteria\PerPage;
+use Support\Optional\Arg;
 
 class SongServiceProvider extends EnvServiceProvider
 {
@@ -29,13 +35,25 @@ class SongServiceProvider extends EnvServiceProvider
         $this->app->bind(SongRepositoryInterface::class, SongRepository::class);
         $this->app->bind(SongTagRepositoryInterface::class, SongTagRepository::class);
         $this->app->bind(PersonUsageCheckerInterface::class, PersonUsageChecker::class);
+        $this->app->bind(MediaRepositoryInterface::class, MediaRepository::class);
 
         $this->app->bind(SongQueryServiceInterface::class, SongQueryService::class);
 
         $this->app->bind(SearchInputData::class, function (): SearchInputData {
             $request = $this->app->make(Request::class);
+            $title = $request->query('title', '');
 
-            return $this->getMapper()->map(SearchInputData::class, $request->query());
+            return new SearchInputData(
+                $request->has('title') && is_string($title) ? $title : Arg::Optional,
+                $request->has('type') ? (int)$request->query('type') : Arg::Optional,
+                $request->has('is_display')
+                    ? filter_var($request->query('is_display'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false
+                    : Arg::Optional,
+                Sort::from($request->query('sort', Sort::OrderNo->value)),
+                Order::from($request->query('order', Order::Asc->value)),
+                (int)$request->query('page', 1),
+                PerPage::from((int)$request->query('per_page', PerPage::Fifty->value)),
+            );
         });
 
         $this->app->bind(CreateInputData::class, function (): CreateInputData {

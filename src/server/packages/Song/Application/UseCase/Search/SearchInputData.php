@@ -13,7 +13,7 @@ readonly class SearchInputData
 {
     public function __construct(
         public Arg|string $title = Arg::Optional,
-        public Arg|int $type = Arg::Optional,
+        public Arg|int|string $type = Arg::Optional,
         public Arg|bool $isDisplay = Arg::Optional,
         public Sort $sort = Sort::OrderNo,
         public Order $order = Order::Asc,

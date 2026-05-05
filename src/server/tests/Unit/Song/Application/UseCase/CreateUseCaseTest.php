@@ -71,7 +71,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons, [])
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -148,7 +148,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
-            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons)
+            ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 

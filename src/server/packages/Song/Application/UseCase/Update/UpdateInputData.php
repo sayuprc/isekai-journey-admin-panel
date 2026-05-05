@@ -7,8 +7,9 @@ namespace Song\Application\UseCase\Update;
 readonly class UpdateInputData
 {
     /**
-     * @param list<array{songTagId: string}>                         $tags
-     * @param list<array{personId: string, role: int, orderNo: int}> $persons
+     * @param list<array{songTagId: string}>                                 $tags
+     * @param list<array{personId: string, role: int, orderNo: int}>         $persons
+     * @param list<array{mediaId: string, songMediaType: int, orderNo: int}> $media
      */
     public function __construct(
         public string $songId,
@@ -20,6 +21,7 @@ readonly class UpdateInputData
         public int $orderNo,
         public array $tags,
         public array $persons,
+        public array $media = [],
     ) {
     }
 }

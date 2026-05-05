@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Song;
 
 use Illuminate\Testing\Fluent\AssertableJson;
+use Media\Domain\Models\MediaType;
+use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
@@ -29,6 +31,8 @@ class CreateSongTest extends DatabaseTestCase
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($tag1 = $this->createSongTag($this->generateUuid(), 'タグA', 10));
         $tagRepo->save($tag2 = $this->createSongTag($this->generateUuid(), 'タグB', 20));
+        $mediaRepo = $this->app->make(MediaRepository::class);
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true));
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
@@ -45,6 +49,9 @@ class CreateSongTest extends DatabaseTestCase
                 'tags' => [
                     ['songTagId' => $tag2->songTagId->value],
                     ['songTagId' => $tag1->songTagId->value],
+                ],
+                'media' => [
+                    ['mediaId' => $media->mediaId->value, 'songMediaType' => 1, 'orderNo' => 1],
                 ],
             ])->assertStatus(200)
             ->assertJson(
@@ -84,6 +91,18 @@ class CreateSongTest extends DatabaseTestCase
                             ], [
                                 'songTagId' => $tag2->songTagId->value,
                                 'name' => $tag2->name->value,
+                            ]])
+                            ->where('media', [[
+                                'mediaId' => $media->mediaId->value,
+                                'title' => $media->title->value,
+                                'url' => $media->url->value,
+                                'type' => [
+                                    'name' => $media->type->getName(),
+                                    'value' => $media->type->value,
+                                ],
+                                'isDisplay' => true,
+                                'songMediaType' => 1,
+                                'orderNo' => 1,
                             ]]),
                     ),
             );
@@ -101,8 +120,10 @@ class CreateSongTest extends DatabaseTestCase
                 'isDisplay' => true,
                 'persons' => [],
                 'tags' => [],
+                'media' => [],
             ])->assertStatus(200)
-            ->assertJsonPath('song.lyricsLink', null);
+            ->assertJsonPath('song.lyricsLink', null)
+            ->assertJsonPath('song.media', []);
     }
 
     #[Test]
@@ -117,6 +138,7 @@ class CreateSongTest extends DatabaseTestCase
                 'isDisplay' => true,
                 'persons' => [],
                 'tags' => [['songTagId' => $this->generateUuid()]],
+                'media' => [],
             ])->assertStatus(400);
     }
 
@@ -138,6 +160,7 @@ class CreateSongTest extends DatabaseTestCase
                     ['songTagId' => $tag->songTagId->value],
                     ['songTagId' => $tag->songTagId->value],
                 ],
+                'media' => [],
             ])->assertStatus(422);
     }
 
