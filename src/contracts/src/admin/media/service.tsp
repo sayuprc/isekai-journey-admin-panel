@@ -49,4 +49,8 @@ interface MediaService {
     | NotFound
     | Unprocessable
     | ServerError;
+
+  @doc("メディア削除API")
+  @delete
+  deleteMedia(@path mediaId: uuid): NoContent | BadRequest | Unauthorized | Forbidden | Unprocessable | ServerError;
 }

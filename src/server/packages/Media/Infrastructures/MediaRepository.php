@@ -35,6 +35,15 @@ readonly class MediaRepository implements MediaRepositoryInterface
     }
 
     #[Override]
+    public function isUsed(MediaId $mediaId): bool
+    {
+        return ModelsMedia::query()
+            ->where('media_id', $this->converter->toBin($mediaId->value))
+            ->whereHas('songMediaLinks')
+            ->exists();
+    }
+
+    #[Override]
     public function search(MediaSearchCriteria $criteria): array
     {
         $query = $this->buildSearchQuery($criteria);
@@ -92,6 +101,14 @@ readonly class MediaRepository implements MediaRepositoryInterface
         );
 
         return $media;
+    }
+
+    #[Override]
+    public function delete(MediaId $mediaId): void
+    {
+        ModelsMedia::query()
+            ->where('media_id', $this->converter->toBin($mediaId->value))
+            ->delete();
     }
 
     /**

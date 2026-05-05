@@ -10,6 +10,8 @@ interface MediaRepositoryInterface
 {
     public function find(MediaId $mediaId): ?Media;
 
+    public function isUsed(MediaId $mediaId): bool;
+
     /**
      * @return list<Media>
      */
@@ -23,4 +25,6 @@ interface MediaRepositoryInterface
     public function findByIds(MediaId ...$mediaIds): array;
 
     public function save(Media $media): Media;
+
+    public function delete(MediaId $mediaId): void;
 }
