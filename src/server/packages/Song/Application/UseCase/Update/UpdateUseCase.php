@@ -9,7 +9,6 @@ use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
@@ -71,43 +70,16 @@ readonly class UpdateUseCase
             }
 
             $song = $this->repository->save($result->unwrap());
-            $assembled = $this->assembler->assemble($song);
 
             $this->recorder->record(
                 AuditAction::Update,
                 AuditTargetType::Song,
-                $assembled->songId,
-                $this->snapshot($assembled),
+                $song->songId->value,
+                $song->toArray(),
             );
 
-            return new Ok(new UpdateOutputData($assembled));
+            return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
         });
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function snapshot(AssembledSong $assembled): array
-    {
-        return [
-            'songId' => $assembled->songId,
-            'title' => $assembled->title,
-            'description' => $assembled->description,
-            'lyricsLink' => $assembled->lyricsLink,
-            'typeName' => $assembled->typeName,
-            'typeValue' => $assembled->typeValue,
-            'isDisplay' => $assembled->isDisplay,
-            'orderNo' => $assembled->orderNo,
-            'tagIds' => array_map(fn ($t) => $t->songTagId, $assembled->tags),
-            'persons' => array_map(
-                fn ($p) => [
-                    'personId' => $p->personId,
-                    'role' => $p->role->value,
-                    'orderNo' => $p->orderNo,
-                ],
-                $assembled->persons,
-            ),
-        ];
     }
 
     private function handleError(DomainError $error): UseCaseError
