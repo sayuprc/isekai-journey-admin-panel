@@ -19,7 +19,7 @@ readonly class CreateInputData
         public bool $isDisplay,
         public array $tags,
         public array $persons,
-        public array $media,
+        public array $media = [],
     ) {
     }
 }

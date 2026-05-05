@@ -71,7 +71,7 @@ class UpdateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons)
+            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
             ->andReturn(
                 new Ok($song = $this->createSong(
                     $songId,
@@ -152,7 +152,7 @@ class UpdateUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
-            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons)
+            ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
