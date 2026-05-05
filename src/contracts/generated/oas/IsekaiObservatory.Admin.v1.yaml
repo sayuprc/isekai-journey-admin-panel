@@ -1311,9 +1311,30 @@ components:
       type: object
       required:
         - media
+        - songs
       properties:
         media:
           $ref: '#/components/schemas/Media'
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaReferencedSong'
+    MediaReferencedSong:
+      type: object
+      required:
+        - songId
+        - title
+        - songOrderNo
+        - mediaOrderNo
+      properties:
+        songId:
+          $ref: '#/components/schemas/mediaReferencedSongId'
+        title:
+          $ref: '#/components/schemas/mediaReferencedSongTitle'
+        songOrderNo:
+          $ref: '#/components/schemas/orderNo'
+        mediaOrderNo:
+          $ref: '#/components/schemas/orderNo'
     MediaSearchResponse:
       type: object
       required:
@@ -2033,6 +2054,14 @@ components:
       type: string
       format: uuid
       description: メディアID
+    mediaReferencedSongId:
+      type: string
+      format: uuid
+      description: メディアを参照している楽曲ID
+    mediaReferencedSongTitle:
+      type: string
+      minLength: 1
+      description: メディアを参照している楽曲名
     mediaTitle:
       type: string
       minLength: 1

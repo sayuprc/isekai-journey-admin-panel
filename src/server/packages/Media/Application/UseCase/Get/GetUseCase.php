@@ -45,7 +45,10 @@ readonly class GetUseCase
                     return new Err(new NotFoundError('Media', $mediaId->value));
                 }
 
-                return new Ok(new GetOutputData($found));
+                return new Ok(new GetOutputData(
+                    $found,
+                    $this->repository->findReferencedSongs($mediaId),
+                ));
             });
     }
 }

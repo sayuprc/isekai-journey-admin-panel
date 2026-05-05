@@ -1,5 +1,5 @@
 import { Show, onMount } from 'solid-js';
-import type { Media, MediaFormatValue, MediaTypeValue } from '../../generated';
+import type { Media, MediaFormatValue, MediaReferencedSong, MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -24,7 +24,7 @@ const MEDIA_FORMAT_OPTIONS: Array<{ value: MediaFormatValue; label: string }> = 
 ];
 
 interface Props {
-  data?: { media: Media };
+  data?: { media: Media; songs: MediaReferencedSong[] };
   status: number;
 }
 
@@ -202,9 +202,44 @@ export const EditableForm = (props: Props) => {
           </fieldset>
         </form>
 
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
+          <legend class="px-2 text-sm font-semibold text-base-content/70">参照中の楽曲</legend>
+          <Show
+            when={(props.data?.songs.length ?? 0) > 0}
+            fallback={<p class="text-sm text-base-content/60">参照中の楽曲はありません。</p>}
+          >
+            <div class="overflow-x-auto">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>楽曲</th>
+                    <th>楽曲順</th>
+                    <th>メディア順</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.data?.songs.map(song => (
+                    <tr>
+                      <td>{song.title}</td>
+                      <td>{song.songOrderNo}</td>
+                      <td>{song.mediaOrderNo}</td>
+                      <td class="text-right">
+                        <a href={`/songs/${song.songId}`} class="btn btn-ghost btn-xs">
+                          楽曲を見る
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Show>
+        </fieldset>
+
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
-          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。楽曲に使用中のメディアは削除できません。</p>
+          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。参照中の楽曲があるメディアは削除できません。</p>
           <div class="mt-4">
             <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
               {isSubmitting() ? '削除中...' : 'このメディアを削除する'}

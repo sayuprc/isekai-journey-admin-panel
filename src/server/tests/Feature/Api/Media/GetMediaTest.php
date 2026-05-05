@@ -9,6 +9,8 @@ use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
+use Song\Infrastructures\SongRepository;
 use Tests\Feature\Api\WithAuth;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -22,6 +24,7 @@ class GetMediaTest extends DatabaseTestCase
     public function found(): void
     {
         $uuid = $this->generateUuid();
+        $songId = $this->generateUuid();
 
         $repository = $this->app->make(MediaRepository::class);
         $repository->save(
@@ -32,6 +35,22 @@ class GetMediaTest extends DatabaseTestCase
                 MediaType::Video,
                 true,
                 MediaFormat::Mv,
+            ),
+        );
+        $this->app->make(SongRepository::class)->save(
+            $this->createSong(
+                $songId,
+                '描き続けた君へ',
+                '説明',
+                SongType::Original,
+                true,
+                10,
+                [],
+                [],
+                [],
+                [],
+                [],
+                [['mediaId' => $uuid, 'orderNo' => 2]],
             ),
         );
 
@@ -53,6 +72,12 @@ class GetMediaTest extends DatabaseTestCase
                     ],
                     'isDisplay' => true,
                 ],
+                'songs' => [[
+                    'songId' => $songId,
+                    'title' => '描き続けた君へ',
+                    'songOrderNo' => 10,
+                    'mediaOrderNo' => 2,
+                ]],
             ]);
     }
 
