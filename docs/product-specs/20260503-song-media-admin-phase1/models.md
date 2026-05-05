@@ -640,6 +640,7 @@ erDiagram
 
 - Phase 1 の運用対象は、実質的には `video` が中心になる
 - `article / social_post / official_page` は将来 `Event` と連携する際に使えるよう、共通軸として先に確保しておく
+- `other` は将来の追加値と衝突しにくいよう、末尾の退避値として扱う
 - `MediaType` は「参照先の形式」を表し、`EventType` や楽曲文脈の分類とは役割が異なる
 
 #### SongMediaType
@@ -656,6 +657,7 @@ erDiagram
 
 - `MV` と `音源動画` はどちらも `MediaType` としては `video` だが、楽曲文脈では別の `SongMediaType` として扱う
 - 既存種別に当てはまらない動画 URL は `SongMediaType` の `other` を使う
+- `other` は将来の追加値と衝突しにくいよう、末尾の退避値として扱う
 - 将来 `Event` に固有の分類が必要になった場合は、`EventMediaType` のような別軸を追加する
 
 ## 集約の境界案

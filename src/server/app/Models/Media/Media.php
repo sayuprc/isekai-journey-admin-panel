@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
- * @property string          $media_id     メディアID
- * @property string          $title        タイトル
- * @property string          $url          URL
- * @property int             $type         メディア形式
- * @property bool            $is_display   表示フラグ
- * @property CarbonImmutable $created_at   作成日時
- * @property CarbonImmutable $updated_at   更新日時
+ * @property string          $media_id   メディアID
+ * @property string          $title      タイトル
+ * @property string          $url        URL
+ * @property int             $type       メディア形式
+ * @property bool            $is_display 表示フラグ
+ * @property CarbonImmutable $created_at 作成日時
+ * @property CarbonImmutable $updated_at 更新日時
  * @property-read Collection<int, SongMediaLink> $songMediaLinks
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Media newModelQuery()

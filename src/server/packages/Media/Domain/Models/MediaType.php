@@ -14,7 +14,7 @@ enum MediaType: int
 
     case OfficialPage = 4;
 
-    case Other = 5;
+    case Other = 99;
 
     public function getName(): string
     {
