@@ -23,11 +23,6 @@ table "admin_user_registration_tokens" {
     unsigned = true
     comment  = "ロール"
   }
-  column "permissions" {
-    null    = false
-    type    = json
-    comment = "権限一覧"
-  }
   column "token_hash" {
     null    = false
     type    = varchar(255)

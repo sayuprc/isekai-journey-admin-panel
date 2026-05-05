@@ -13,7 +13,6 @@ readonly class AdminUserRegistrationToken
         public AdminUserName $name,
         public Email $email,
         public Role $role,
-        public Permissions $permissions,
         public RegistrationTokenHashedValue $tokenHash,
         public RegistrationTokenExpiredAt $expiredAt,
         public CreatedAt $createdAt,
@@ -21,15 +20,11 @@ readonly class AdminUserRegistrationToken
     ) {
     }
 
-    /**
-     * @param list<string> $permissions
-     */
     public static function reconstruct(
         string $adminUserRegistrationTokenId,
         string $name,
         string $email,
         int $role,
-        array $permissions,
         string $tokenHash,
         DateTimeImmutable $expiredAt,
         DateTimeImmutable $createdAt,
@@ -40,7 +35,6 @@ readonly class AdminUserRegistrationToken
             AdminUserName::reconstruct($name),
             Email::reconstruct($email),
             Role::from($role),
-            Permissions::reconstruct($permissions),
             RegistrationTokenHashedValue::reconstruct($tokenHash),
             RegistrationTokenExpiredAt::reconstruct($expiredAt),
             CreatedAt::reconstruct($createdAt),
@@ -54,7 +48,6 @@ readonly class AdminUserRegistrationToken
      *   name: string,
      *   email: string,
      *   role: value-of<Role>,
-     *   permissions: list<string>,
      *   token_hash: string,
      *   expired_at: string,
      *   created_at: string,
@@ -68,7 +61,6 @@ readonly class AdminUserRegistrationToken
             'name' => $this->name->value,
             'email' => $this->email->value,
             'role' => $this->role->value,
-            'permissions' => $this->permissions->toArray(),
             'token_hash' => $this->tokenHash->value,
             'expired_at' => $this->expiredAt->value->format('Y-m-d H:i:s'),
             'created_at' => $this->createdAt->value->format('Y-m-d H:i:s'),

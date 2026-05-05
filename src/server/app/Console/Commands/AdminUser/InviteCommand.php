@@ -6,7 +6,6 @@ namespace App\Console\Commands\AdminUser;
 
 use AdminUser\Application\UseCase\IssueRegistrationToken\IssueRegistrationTokenInputData;
 use AdminUser\Application\UseCase\IssueRegistrationToken\IssueRegistrationTokenUseCase;
-use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;
 use Override;
@@ -20,7 +19,6 @@ class InviteCommand extends Command
         {name : 管理ユーザー名}
         {email : メールアドレス}
         {role : role.general | role.console | role.privilege}
-        {permissions?* : 一般ロールに付与する権限}
         {--expires-in-minutes=60 : トークン有効期限（分）}';
 
     #[Override]
@@ -49,17 +47,6 @@ class InviteCommand extends Command
             return Command::FAILURE;
         }
 
-        $permissions = $this->argument('permissions');
-        assert(array_is_list($permissions));
-
-        foreach ($permissions as $permission) {
-            if (is_null(Permission::tryFrom($permission))) {
-                $this->error("不正な権限です: {$permission}");
-
-                return Command::FAILURE;
-            }
-        }
-
         $expiresInMinutes = (int)$this->option('expires-in-minutes');
 
         $result = $useCase->handle(
@@ -67,7 +54,6 @@ class InviteCommand extends Command
                 $name,
                 $email,
                 $role->value,
-                $permissions,
                 $expiresInMinutes,
             ),
         );

@@ -36,7 +36,6 @@ readonly class IssueRegistrationTokenUseCase
                 $inputData->name,
                 $inputData->email,
                 $inputData->role,
-                $inputData->permissions,
                 $inputData->expiresInMinutes,
             );
 

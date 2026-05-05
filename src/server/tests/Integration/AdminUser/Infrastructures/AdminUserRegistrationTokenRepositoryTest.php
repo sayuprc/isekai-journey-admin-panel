@@ -26,7 +26,6 @@ class AdminUserRegistrationTokenRepositoryTest extends DatabaseTestCase
             'テストユーザー',
             'invite@example.com',
             Role::General,
-            ['read_person'],
             'hashed-token',
             new DateTimeImmutable('2026-01-01 01:00:00'),
             null,

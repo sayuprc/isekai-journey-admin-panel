@@ -53,7 +53,6 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             'テストユーザー',
             'invite@example.com',
             Role::General,
-            [],
             'hashed-token',
             new DateTimeImmutable('2026-01-01 01:00:00'),
         );
@@ -64,7 +63,7 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('issue')
-            ->with('テストユーザー', 'invite@example.com', Role::General->value, [], 60)
+            ->with('テストユーザー', 'invite@example.com', Role::General->value, 60)
             ->andReturn(new Ok(['token' => $token, 'plainToken' => $plainToken]))
             ->once();
 
@@ -74,7 +73,7 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->once();
 
         $result = $this->getInstance()->handle(
-            new IssueRegistrationTokenInputData('テストユーザー', 'invite@example.com', Role::General->value, [], 60),
+            new IssueRegistrationTokenInputData('テストユーザー', 'invite@example.com', Role::General->value, 60),
         );
 
         $this->assertTrue($result->isOk());
@@ -90,12 +89,12 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->once();
 
         $this->service->shouldReceive('issue')
-            ->with('テストユーザー', 'invite@example.com', Role::General->value, [], 0)
+            ->with('テストユーザー', 'invite@example.com', Role::General->value, 0)
             ->andReturn(new Err(new DomainValidationError(['expiresInMinutes' => ['invalid']])))
             ->once();
 
         $result = $this->getInstance()->handle(
-            new IssueRegistrationTokenInputData('テストユーザー', 'invite@example.com', Role::General->value, [], 0),
+            new IssueRegistrationTokenInputData('テストユーザー', 'invite@example.com', Role::General->value, 0),
         );
 
         $this->assertTrue($result->isErr());

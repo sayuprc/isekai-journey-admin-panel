@@ -18,9 +18,9 @@ class InviteCommandTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function canIssuePrivilegeTokenWithPermissions(): void
+    public function canIssuePrivilegeToken(): void
     {
-        $this->artisan('admin:invite 特権ユーザー privilege@example.com privilege read_admin_user write_admin_user')
+        $this->artisan('admin:invite 特権ユーザー privilege@example.com privilege')
             ->expectsOutput('管理ユーザー登録トークンを発行しました')
             ->assertSuccessful();
     }
@@ -30,14 +30,6 @@ class InviteCommandTest extends DatabaseTestCase
     {
         $this->artisan('admin:invite テストユーザー invite@example.com invalid-role')
             ->expectsOutput('不正なロールです')
-            ->assertFailed();
-    }
-
-    #[Test]
-    public function failureWhenPermissionIsInvalid(): void
-    {
-        $this->artisan('admin:invite テストユーザー invite@example.com general invalid_permission')
-            ->expectsOutput('不正な権限です: invalid_permission')
             ->assertFailed();
     }
 

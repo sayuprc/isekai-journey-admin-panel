@@ -9,7 +9,6 @@ use AdminUser\Domain\Models\AdminUserRegistrationToken;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenId;
 use AdminUser\Domain\Models\CreatedAt;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\RegistrationTokenExpiredAt;
 use AdminUser\Domain\Models\RegistrationTokenHashedValue;
 use AdminUser\Domain\Models\Role;
@@ -33,15 +32,12 @@ class RegistrationTokenIssueService
     }
 
     /**
-     * @param list<string> $permissions
-     *
      * @return Result<array{token: AdminUserRegistrationToken, plainToken: string}, DomainError>
      */
     public function issue(
         string $name,
         string $email,
         int $role,
-        array $permissions,
         int $expiresInMinutes,
     ): Result {
         if ($expiresInMinutes <= 0) {
@@ -54,12 +50,11 @@ class RegistrationTokenIssueService
         $hashedToken = $this->tokenHasher->hash($plainToken);
         $now = $this->clock->now();
 
-        $result = Result::collect8(
+        $result = Result::collect7(
             AdminUserRegistrationTokenId::create($this->uuidGenerator->generate()),
             AdminUserName::create($name),
             Email::create($email),
             $this->toRole($role),
-            Permissions::fromArray($permissions),
             RegistrationTokenHashedValue::create($hashedToken),
             RegistrationTokenExpiredAt::create($now->modify('+' . $expiresInMinutes . ' minutes')),
             CreatedAt::create($now),

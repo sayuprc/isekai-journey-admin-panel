@@ -29,7 +29,7 @@ planned
 
 ## Acceptance Criteria
 
-- CLI から `email`, `name`, `role`, `permissions`, `expires_at` を持つ登録トークンを発行できる
+- CLI から `email`, `name`, `role`, `expires_at` を持つ登録トークンを発行できる
 - 登録画面は `email + registration token` を `POST` で受け取り、WebAuthn 登録を完了できる
 - 登録成功時に `admin_users` と passkey 関連データが保存され、登録トークンは再利用できない
 - ログイン画面は `email -> passkey` で認証し、既存の access token / refresh token セッションを開始できる
@@ -52,7 +52,7 @@ planned
 - 2026-05-05: 登録トークンは URL クエリに載せず、登録フォームから `POST` 送信する
 - 2026-05-05: ログインフローは `email -> passkey` を採用する
 - 2026-05-05: 既存 password ユーザーとの互換は考慮せず、新方式へ置き換える
-- 2026-05-05: bootstrap は CLI で完結させ、role / permissions を登録トークン発行時に固定する
+- 2026-05-05: bootstrap は CLI で完結させ、role を登録トークン発行時に固定する
 
 ## Validation
 

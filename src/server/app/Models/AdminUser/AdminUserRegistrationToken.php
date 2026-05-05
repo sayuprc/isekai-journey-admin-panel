@@ -13,7 +13,6 @@ use Override;
  * @property string               $name                             管理者名
  * @property string               $email                            メールアドレス
  * @property int                  $role                             ロール
- * @property list<string>         $permissions                      権限一覧
  * @property string               $token_hash                       登録トークンハッシュ
  * @property CarbonImmutable      $expired_at                       有効期限
  * @property CarbonImmutable|null $used_at                          使用日時
@@ -41,7 +40,6 @@ class AdminUserRegistrationToken extends Model
     protected function casts()
     {
         return [
-            'permissions' => 'array',
             'expired_at' => 'immutable_datetime',
             'used_at' => 'immutable_datetime',
             'created_at' => 'immutable_datetime',
