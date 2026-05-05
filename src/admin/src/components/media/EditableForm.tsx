@@ -127,27 +127,33 @@ export const EditableForm = (props: Props) => {
             />
             <Show when={getFieldError('url')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-            <label class="label">種別</label>
-            <select
-              class="select w-full"
-              name="typeValue"
-              value={props.data?.media.type.value}
-              classList={{ 'select-error': !!getFieldError('typeValue') }}
-            >
-              {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
-            </select>
-            <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <label class="label">種別</label>
+                <select
+                  class="select w-full"
+                  name="typeValue"
+                  value={props.data?.media.type.value}
+                  classList={{ 'select-error': !!getFieldError('typeValue') }}
+                >
+                  {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                </select>
+                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+              </div>
 
-            <label class="label">形式</label>
-            <select
-              class="select w-full"
-              name="formatValue"
-              value={props.data?.media.format.value}
-              classList={{ 'select-error': !!getFieldError('formatValue') }}
-            >
-              {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
-            </select>
-            <Show when={getFieldError('formatValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+              <div>
+                <label class="label">形式</label>
+                <select
+                  class="select w-full"
+                  name="formatValue"
+                  value={props.data?.media.format.value}
+                  classList={{ 'select-error': !!getFieldError('formatValue') }}
+                >
+                  {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                </select>
+                <Show when={getFieldError('formatValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+              </div>
+            </div>
 
             <label class="label">表示設定</label>
             <select
