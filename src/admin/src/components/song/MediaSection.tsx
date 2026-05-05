@@ -18,6 +18,8 @@ interface Props {
   setAvailableMedia: Setter<Media[]>;
 }
 
+type DisplayFilter = '' | 'true' | 'false';
+
 const mediaFormatOptions: Array<{ value: MediaFormatValue; label: string }> = [
   { value: 1, label: 'MV' },
   { value: 2, label: '音源動画' },
@@ -68,9 +70,13 @@ export const buildSongMediaRequest = (entries: MediaEntry[]): RequestSongMediaLi
 
 export const MediaSection = (props: Props) => {
   const [searchTitle, setSearchTitle] = createSignal('');
+  const [searchTypeValue, setSearchTypeValue] = createSignal<'' | `${MediaTypeValue}`>('');
+  const [searchFormatValue, setSearchFormatValue] = createSignal<'' | `${MediaFormatValue}`>('');
+  const [searchIsDisplay, setSearchIsDisplay] = createSignal<DisplayFilter>('');
   const [searching, setSearching] = createSignal(false);
   const [searchResults, setSearchResults] = createSignal<Media[]>([]);
   const [searchError, setSearchError] = createSignal<string | null>(null);
+  const [hasSearched, setHasSearched] = createSignal(false);
 
   const [createTitle, setCreateTitle] = createSignal('');
   const [createUrl, setCreateUrl] = createSignal('');
@@ -116,10 +122,14 @@ export const MediaSection = (props: Props) => {
   const handleSearch = async () => {
     setSearchError(null);
     setSearching(true);
+    setHasSearched(true);
 
     const { data, error, status } = await client.api.media.search.get({
       query: {
         title: searchTitle(),
+        type: searchTypeValue() || undefined,
+        format: searchFormatValue() || undefined,
+        is_display: searchIsDisplay() === '' ? undefined : searchIsDisplay() === 'true',
         per_page: 25,
       },
     });
@@ -133,6 +143,16 @@ export const MediaSection = (props: Props) => {
 
     setSearchResults(data.media);
     props.setAvailableMedia(prev => mergeMedia(prev, data.media));
+  };
+
+  const handleResetSearch = () => {
+    setSearchTitle('');
+    setSearchTypeValue('');
+    setSearchFormatValue('');
+    setSearchIsDisplay('');
+    setSearchError(null);
+    setHasSearched(false);
+    setSearchResults([]);
   };
 
   const handleCreate = async () => {
@@ -177,7 +197,7 @@ export const MediaSection = (props: Props) => {
     setCreateIsDisplay(true);
   };
 
-  const unselectedResults = () => searchResults().filter(item => !selectedIds().has(item.mediaId));
+  const candidateResults = () => (hasSearched() ? searchResults() : props.availableMedia());
 
   return (
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
@@ -187,7 +207,7 @@ export const MediaSection = (props: Props) => {
         <div class="space-y-4">
           <div>
             <label class="label">既存メディアを検索</label>
-            <div class="flex gap-2">
+            <div class="grid gap-3 md:grid-cols-2">
               <input
                 type="text"
                 class="input input-bordered w-full"
@@ -195,8 +215,42 @@ export const MediaSection = (props: Props) => {
                 onInput={e => setSearchTitle(e.currentTarget.value)}
                 placeholder="タイトルで検索"
               />
+
+              <select
+                class="select select-bordered w-full"
+                value={searchTypeValue()}
+                onChange={e => setSearchTypeValue(e.currentTarget.value as '' | `${MediaTypeValue}`)}
+              >
+                <option value="">すべての種別</option>
+                <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
+              </select>
+
+              <select
+                class="select select-bordered w-full"
+                value={searchFormatValue()}
+                onChange={e => setSearchFormatValue(e.currentTarget.value as '' | `${MediaFormatValue}`)}
+              >
+                <option value="">すべての形式</option>
+                <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
+              </select>
+
+              <select
+                class="select select-bordered w-full"
+                value={searchIsDisplay()}
+                onChange={e => setSearchIsDisplay(e.currentTarget.value as DisplayFilter)}
+              >
+                <option value="">すべての表示設定</option>
+                <option value="true">表示する</option>
+                <option value="false">表示しない</option>
+              </select>
+            </div>
+
+            <div class="mt-3 flex gap-2">
               <button type="button" class="btn btn-outline" disabled={searching()} onClick={handleSearch}>
                 {searching() ? '検索中...' : '検索'}
+              </button>
+              <button type="button" class="btn btn-ghost" disabled={searching()} onClick={handleResetSearch}>
+                リセット
               </button>
             </div>
             <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
@@ -204,22 +258,32 @@ export const MediaSection = (props: Props) => {
 
           <div class="space-y-2">
             <Show
-              when={unselectedResults().length > 0}
-              fallback={<p class="text-sm text-base-content/60">検索結果はまだありません。</p>}
+              when={candidateResults().length > 0}
+              fallback={<p class="text-sm text-base-content/60">{hasSearched() ? '条件に一致するメディアはありません。' : '候補のメディアはまだありません。'}</p>}
             >
-              <For each={unselectedResults()}>
+              <For each={candidateResults()}>
                 {item => (
                   <div class="rounded-box border border-base-300 bg-base-100 p-3">
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
-                        <p class="truncate font-medium">{item.title}</p>
+                        <div class="flex items-center gap-2">
+                          <p class="truncate font-medium">{item.title}</p>
+                          <Show when={selectedIds().has(item.mediaId)}>
+                            <span class="badge badge-sm badge-primary badge-soft">選択中</span>
+                          </Show>
+                        </div>
                         <p class="text-xs text-base-content/60">{item.type.name} / {item.format.name}</p>
                         <a href={item.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
                           {item.url}
                         </a>
                       </div>
-                      <button type="button" class="btn btn-xs btn-primary" onClick={() => addEntry(item)}>
-                        追加
+                      <button
+                        type="button"
+                        class="btn btn-xs btn-primary"
+                        disabled={selectedIds().has(item.mediaId)}
+                        onClick={() => addEntry(item)}
+                      >
+                        {selectedIds().has(item.mediaId) ? '追加済み' : '追加'}
                       </button>
                     </div>
                   </div>
