@@ -229,7 +229,6 @@ class UpdateUseCaseTest extends TestCase
             $this->service,
             $this->assembler,
             $this->recorder,
-            $context,
         );
     }
 }

@@ -10,10 +10,10 @@ interface AuditLogRecorderInterface
      * @param array<string, mixed> $snapshot
      */
     public function record(
-        string $actorId,
         AuditAction $action,
         AuditTargetType $targetType,
         string $targetId,
         array $snapshot,
+        ?string $actorId = null,
     ): void;
 }

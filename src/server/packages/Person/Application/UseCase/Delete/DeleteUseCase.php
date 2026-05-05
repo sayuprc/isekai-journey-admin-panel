@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Person\Application\UseCase\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonUsageCheckerInterface;
@@ -31,7 +30,6 @@ readonly class DeleteUseCase
         private PersonRepositoryInterface $repository,
         private PersonUsageCheckerInterface $usageChecker,
         private AuditLogRecorderInterface $recorder,
-        private AuthContext $authContext,
     ) {
     }
 
@@ -64,11 +62,7 @@ readonly class DeleteUseCase
 
                 $this->repository->delete($personId);
 
-                $actor = $this->authContext->get();
-                assert(! is_null($actor));
-
                 $this->recorder->record(
-                    $actor->adminUserId->value,
                     AuditAction::Delete,
                     AuditTargetType::Person,
                     $person->personId->value,

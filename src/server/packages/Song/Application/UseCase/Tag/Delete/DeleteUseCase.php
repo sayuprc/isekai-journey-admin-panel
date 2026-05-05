@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -27,7 +26,6 @@ readonly class DeleteUseCase
         private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
         private AuditLogRecorderInterface $recorder,
-        private AuthContext $authContext,
     ) {
     }
 
@@ -60,11 +58,7 @@ readonly class DeleteUseCase
 
                 $this->repository->delete($songTagId);
 
-                $actor = $this->authContext->get();
-                assert(! is_null($actor));
-
                 $this->recorder->record(
-                    $actor->adminUserId->value,
                     AuditAction::Delete,
                     AuditTargetType::SongTag,
                     $tag->songTagId->value,

@@ -84,7 +84,6 @@ class DeleteUseCaseTest extends TestCase
             $this->repository,
             $this->assembler,
             $this->recorder,
-            $context,
         );
     }
 }

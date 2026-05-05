@@ -223,7 +223,6 @@ class CreateUseCaseTest extends TestCase
             $this->service,
             $this->assembler,
             $this->recorder,
-            $context,
         );
     }
 }
