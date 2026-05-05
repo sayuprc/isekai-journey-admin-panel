@@ -10,10 +10,10 @@ use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
@@ -57,7 +57,7 @@ readonly class DeleteUseCase
                 $this->recorder->record(
                     AuditAction::Delete,
                     AuditTargetType::Song,
-                    $song->songId->value,
+                    $song->songId,
                     $song->toArray(),
                 );
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Override;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
@@ -18,6 +17,7 @@ use Support\Infrastructures\DbTransaction;
 use Support\Infrastructures\Mapper;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 
 class SupportServiceProvider extends EnvServiceProvider
 {

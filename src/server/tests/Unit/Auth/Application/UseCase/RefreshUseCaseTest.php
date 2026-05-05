@@ -19,7 +19,7 @@ use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Ok;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\TransactionInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;

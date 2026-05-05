@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Support\Concerns;
 
 use App\Models\AuditLog;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditTargetType;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
 trait AssertsAuditLog

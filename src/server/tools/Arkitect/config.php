@@ -26,6 +26,8 @@ return [
     new Define(SupportComponent::UseCase, [
         SupportComponent::UseCase,
         AdminUserComponent::Domain,
+        SupportComponent::Contracts,
+        SupportComponent::Domain,
         LibraryComponent::ResultType,
     ]),
 

@@ -14,7 +14,7 @@ use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonUsageCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\TransactionInterface;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;

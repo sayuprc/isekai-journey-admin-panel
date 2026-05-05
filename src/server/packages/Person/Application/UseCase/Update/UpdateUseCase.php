@@ -11,14 +11,14 @@ use Person\Domain\Services\PersonIntegrityService;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
-use Support\Contracts\AuditLog\AuditAction;
-use Support\Contracts\AuditLog\AuditLogRecorderInterface;
-use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -63,7 +63,7 @@ readonly class UpdateUseCase
             $this->recorder->record(
                 AuditAction::Update,
                 AuditTargetType::Person,
-                $person->personId->value,
+                $person->personId,
                 [
                     'personId' => $person->personId->value,
                     'name' => $person->name->value,
