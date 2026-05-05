@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Media\Domain\Models;
+namespace Song\Domain\Models\Media;
 
 enum SongMediaType: int
 {

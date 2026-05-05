@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Media\Domain\Models;
+namespace Song\Domain\Models\Media;
 
+use Media\Domain\Models\MediaId;
 use Song\Domain\Models\SongId;
 use Support\Domain\ValueObjects\OrderNo;
 
