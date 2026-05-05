@@ -21,6 +21,20 @@ readonly class MediaRepository implements MediaRepositoryInterface
     }
 
     #[Override]
+    public function find(MediaId $mediaId): ?Media
+    {
+        $found = ModelsMedia::query()
+            ->where('media_id', $this->converter->toBin($mediaId->value))
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
+    }
+
+    #[Override]
     public function search(MediaSearchCriteria $criteria): array
     {
         $query = $this->buildSearchQuery($criteria);

@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RefreshController;
 use App\Http\Controllers\Api\Media\CreateMediaController;
+use App\Http\Controllers\Api\Media\GetMediaController;
 use App\Http\Controllers\Api\Media\SearchMediaController;
+use App\Http\Controllers\Api\Media\UpdateMediaController;
 use App\Http\Controllers\Api\Person\CreatePersonController;
 use App\Http\Controllers\Api\Person\DeletePersonController;
 use App\Http\Controllers\Api\Person\GetPersonController;
@@ -64,7 +66,9 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('media')->group(function () {
                     Route::post('/', [CreateMediaController::class, 'handle'])->name('media.create');
+                    Route::put('/{mediaId}', [UpdateMediaController::class, 'handle'])->name('media.update');
                     Route::get('/search', [SearchMediaController::class, 'handle'])->name('media.search');
+                    Route::get('/{mediaId}', [GetMediaController::class, 'handle'])->name('media.get');
                 });
 
                 Route::prefix('songs')->group(function () {

@@ -270,9 +270,9 @@ export const SearchList = () => {
                           </a>
                         </td>
                         <td>
-                          <button type="button" class="btn btn-ghost btn-xs" disabled>
+                          <a href={`/media/${media.mediaId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
                             編集
-                          </button>
+                          </a>
                         </td>
                       </tr>
                     )}

@@ -5,6 +5,10 @@ model MediaSearchResponse {
   maxPage: int32;
 }
 
+model MediaGetResponse {
+  media: Media;
+}
+
 model MediaCreateRequest {
   title: mediaTitle;
   url: mediaUrl;
@@ -14,5 +18,17 @@ model MediaCreateRequest {
 }
 
 model MediaCreateResponse {
+  media: Media;
+}
+
+model MediaUpdateRequest {
+  title: mediaTitle;
+  url: mediaUrl;
+  typeValue: MediaTypeValue;
+  formatValue: MediaFormatValue;
+  isDisplay: boolean;
+}
+
+model MediaUpdateResponse {
   media: Media;
 }

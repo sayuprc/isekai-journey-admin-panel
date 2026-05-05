@@ -10,6 +10,15 @@ namespace IsekaiObservatory.Admin;
 @route("/media")
 @useAuth(BearerAuth)
 interface MediaService {
+  @doc("メディア取得API")
+  getMedia(@path mediaId: uuid):
+    | Ok<MediaGetResponse>
+    | Unauthorized
+    | Forbidden
+    | NotFound
+    | Unprocessable
+    | ServerError;
+
   @doc("メディア検索API")
   @route("/search")
   searchMedia(
@@ -27,6 +36,17 @@ interface MediaService {
     | BadRequest
     | Unauthorized
     | Forbidden
+    | Unprocessable
+    | ServerError;
+
+  @doc("メディア更新API")
+  @put
+  updateMedia(@path mediaId: uuid, @body request: MediaUpdateRequest):
+    | Ok<MediaUpdateResponse>
+    | BadRequest
+    | Unauthorized
+    | Forbidden
+    | NotFound
     | Unprocessable
     | ServerError;
 }

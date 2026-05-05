@@ -62,6 +62,10 @@ export type MediaFormat = {
 
 export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
 
+export type MediaGetResponse = {
+    media: Media;
+};
+
 export type MediaSearchResponse = {
     media: Array<Media>;
     maxPage: number;
@@ -73,6 +77,18 @@ export type MediaType = {
 };
 
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+
+export type MediaUpdateRequest = {
+    title: MediaTitle;
+    url: MediaUrl;
+    typeValue: MediaTypeValue;
+    formatValue: MediaFormatValue;
+    isDisplay: boolean;
+};
+
+export type MediaUpdateResponse = {
+    media: Media;
+};
 
 /**
  * 1ページあたりの件数
@@ -692,6 +708,112 @@ export type MediaServiceSearchMediaResponses = {
 };
 
 export type MediaServiceSearchMediaResponse = MediaServiceSearchMediaResponses[keyof MediaServiceSearchMediaResponses];
+
+export type MediaServiceGetMediaData = {
+    body?: never;
+    path: {
+        mediaId: Uuid;
+    };
+    query?: never;
+    url: '/media/{mediaId}';
+};
+
+export type MediaServiceGetMediaErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type MediaServiceGetMediaError = MediaServiceGetMediaErrors[keyof MediaServiceGetMediaErrors];
+
+export type MediaServiceGetMediaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MediaGetResponse;
+};
+
+export type MediaServiceGetMediaResponse = MediaServiceGetMediaResponses[keyof MediaServiceGetMediaResponses];
+
+export type MediaServiceUpdateMediaData = {
+    body: MediaUpdateRequest;
+    path: {
+        mediaId: Uuid;
+    };
+    query?: never;
+    url: '/media/{mediaId}';
+};
+
+export type MediaServiceUpdateMediaErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type MediaServiceUpdateMediaError = MediaServiceUpdateMediaErrors[keyof MediaServiceUpdateMediaErrors];
+
+export type MediaServiceUpdateMediaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MediaUpdateResponse;
+};
+
+export type MediaServiceUpdateMediaResponse = MediaServiceUpdateMediaResponses[keyof MediaServiceUpdateMediaResponses];
 
 export type PersonServiceListPersonsData = {
     body?: never;

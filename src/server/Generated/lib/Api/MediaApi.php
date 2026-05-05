@@ -77,7 +77,13 @@ class MediaApi
         'mediaServiceCreateMedia' => [
             'application/json',
         ],
+        'mediaServiceGetMedia' => [
+            'application/json',
+        ],
         'mediaServiceSearchMedia' => [
+            'application/json',
+        ],
+        'mediaServiceUpdateMedia' => [
             'application/json',
         ],
     ];
@@ -420,6 +426,298 @@ class MediaApi
     }
 
     /**
+     * Operation mediaServiceGetMedia
+     *
+     * @param  string $media_id media_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceGetMedia'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\MediaGetResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function mediaServiceGetMedia($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
+    {
+        list($response) = $this->mediaServiceGetMediaWithHttpInfo($media_id, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation mediaServiceGetMediaWithHttpInfo
+     *
+     * @param  string $media_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceGetMedia'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\MediaGetResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function mediaServiceGetMediaWithHttpInfo($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
+    {
+        $request = $this->mediaServiceGetMediaRequest($media_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\MediaGetResponse',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\MediaGetResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\MediaGetResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation mediaServiceGetMediaAsync
+     *
+     * @param  string $media_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceGetMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function mediaServiceGetMediaAsync($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
+    {
+        return $this->mediaServiceGetMediaAsyncWithHttpInfo($media_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation mediaServiceGetMediaAsyncWithHttpInfo
+     *
+     * @param  string $media_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceGetMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function mediaServiceGetMediaAsyncWithHttpInfo($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\MediaGetResponse';
+        $request = $this->mediaServiceGetMediaRequest($media_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'mediaServiceGetMedia'
+     *
+     * @param  string $media_id (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceGetMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function mediaServiceGetMediaRequest($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
+    {
+
+        // verify the required parameter 'media_id' is set
+        if ($media_id === null || (is_array($media_id) && count($media_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $media_id when calling mediaServiceGetMedia'
+            );
+        }
+
+
+        $resourcePath = '/media/{mediaId}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($media_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'mediaId' . '}',
+                ObjectSerializer::toPathValue($media_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation mediaServiceSearchMedia
      *
      * @param  string|null $title title (optional)
@@ -747,6 +1045,331 @@ class MediaApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation mediaServiceUpdateMedia
+     *
+     * @param  string $media_id media_id (required)
+     * @param  \OpenAPI\Client\Model\MediaUpdateRequest $media_update_request media_update_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceUpdateMedia'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\MediaUpdateResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function mediaServiceUpdateMedia($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
+    {
+        list($response) = $this->mediaServiceUpdateMediaWithHttpInfo($media_id, $media_update_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation mediaServiceUpdateMediaWithHttpInfo
+     *
+     * @param  string $media_id (required)
+     * @param  \OpenAPI\Client\Model\MediaUpdateRequest $media_update_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceUpdateMedia'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\MediaUpdateResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function mediaServiceUpdateMediaWithHttpInfo($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
+    {
+        $request = $this->mediaServiceUpdateMediaRequest($media_id, $media_update_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\MediaUpdateResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\MediaUpdateResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\MediaUpdateResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation mediaServiceUpdateMediaAsync
+     *
+     * @param  string $media_id (required)
+     * @param  \OpenAPI\Client\Model\MediaUpdateRequest $media_update_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceUpdateMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function mediaServiceUpdateMediaAsync($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
+    {
+        return $this->mediaServiceUpdateMediaAsyncWithHttpInfo($media_id, $media_update_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation mediaServiceUpdateMediaAsyncWithHttpInfo
+     *
+     * @param  string $media_id (required)
+     * @param  \OpenAPI\Client\Model\MediaUpdateRequest $media_update_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceUpdateMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function mediaServiceUpdateMediaAsyncWithHttpInfo($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\MediaUpdateResponse';
+        $request = $this->mediaServiceUpdateMediaRequest($media_id, $media_update_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'mediaServiceUpdateMedia'
+     *
+     * @param  string $media_id (required)
+     * @param  \OpenAPI\Client\Model\MediaUpdateRequest $media_update_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['mediaServiceUpdateMedia'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function mediaServiceUpdateMediaRequest($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
+    {
+
+        // verify the required parameter 'media_id' is set
+        if ($media_id === null || (is_array($media_id) && count($media_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $media_id when calling mediaServiceUpdateMedia'
+            );
+        }
+
+        // verify the required parameter 'media_update_request' is set
+        if ($media_update_request === null || (is_array($media_update_request) && count($media_update_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $media_update_request when calling mediaServiceUpdateMedia'
+            );
+        }
+
+
+        $resourcePath = '/media/{mediaId}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($media_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'mediaId' . '}',
+                ObjectSerializer::toPathValue($media_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($media_update_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($media_update_request));
+            } else {
+                $httpBody = $media_update_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody
