@@ -21,7 +21,7 @@ class UseCaseAuthorizerTest extends TestCase
     #[Test]
     public function returnsAuthenticationErrorWhenCurrentUserDoesNotExist(): void
     {
-        $result = $this->createAuthorizer(new AuthContext())->require(Permission::ReadSong);
+        $result = $this->createAuthorizer(new AuthContext())->require(Permission::ReadMedia);
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
@@ -33,7 +33,7 @@ class UseCaseAuthorizerTest extends TestCase
         $context = new AuthContext();
         $context->set($this->createGeneralUser([]));
 
-        $result = $this->createAuthorizer($context)->require(Permission::ReadSong);
+        $result = $this->createAuthorizer($context)->require(Permission::ReadMedia);
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
@@ -43,12 +43,12 @@ class UseCaseAuthorizerTest extends TestCase
     public function returnsOkWhenCurrentUserHasPermission(): void
     {
         $context = new AuthContext();
-        $context->set($this->createGeneralUser([Permission::ReadSong->value]));
+        $context->set($this->createGeneralUser([Permission::ReadMedia->value]));
 
-        $result = $this->createAuthorizer($context)->require(Permission::ReadSong);
+        $result = $this->createAuthorizer($context)->require(Permission::ReadMedia);
 
         $this->assertTrue($result->isOk());
-        $this->assertTrue($result->unwrap()->can(Permission::ReadSong));
+        $this->assertTrue($result->unwrap()->can(Permission::ReadMedia));
     }
 
     /**

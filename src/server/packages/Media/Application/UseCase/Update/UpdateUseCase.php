@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Media\Application\UseCase\Create;
+namespace Media\Application\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
 use LogicException;
@@ -19,7 +19,7 @@ use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
-readonly class CreateUseCase
+readonly class UpdateUseCase
 {
     public function __construct(
         private UseCaseAuthorizer $authorizer,
@@ -30,21 +30,22 @@ readonly class CreateUseCase
     }
 
     /**
-     * @return Result<CreateOutputData, UseCaseError>
+     * @return Result<UpdateOutputData, UseCaseError>
      */
-    public function handle(CreateInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): Result
     {
         return $this->authorizer->require(Permission::WriteMedia)
-            ->andThen(fn () => $this->createMedia($inputData));
+            ->andThen(fn () => $this->updateMedia($inputData));
     }
 
     /**
-     * @return Result<CreateOutputData, UseCaseError>
+     * @return Result<UpdateOutputData, UseCaseError>
      */
-    private function createMedia(CreateInputData $inputData): Result
+    private function updateMedia(UpdateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForCreate(
+            $result = $this->service->prepareForUpdate(
+                $inputData->mediaId,
                 $inputData->title,
                 $inputData->url,
                 $inputData->typeValue,
@@ -58,7 +59,7 @@ readonly class CreateUseCase
 
             $media = $this->repository->save($result->unwrap());
 
-            return new Ok(new CreateOutputData($media));
+            return new Ok(new UpdateOutputData($media));
         });
     }
 

@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { mediaServiceCreateMedia, mediaServiceSearchMedia } from '../../generated';
+import { mediaServiceCreateMedia, mediaServiceGetMedia, mediaServiceSearchMedia, mediaServiceUpdateMedia } from '../../generated';
 import type { MediaFormatValue, MediaTypeValue, PerPage } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -38,6 +38,19 @@ export const media = new Elysia({ prefix: '/media' })
       }),
     },
   )
+  .get(
+    '/:mediaId',
+    async ({ params: { mediaId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await mediaServiceGetMedia({ client, path: { mediaId } }));
+      });
+    },
+    {
+      params: t.Object({
+        mediaId: t.String(),
+      }),
+    },
+  )
   .post(
     '/',
     async ({ body: { title, url, typeValue, formatValue, isDisplay }, authSession }) => {
@@ -55,6 +68,36 @@ export const media = new Elysia({ prefix: '/media' })
       });
     },
     {
+      body: t.Object({
+        title: t.String(),
+        url: t.String(),
+        typeValue: MediaTypeValueSchema,
+        formatValue: MediaFormatValueSchema,
+        isDisplay: t.Boolean(),
+      }),
+    },
+  )
+  .put(
+    '/:mediaId',
+    async ({ params: { mediaId }, body: { title, url, typeValue, formatValue, isDisplay }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await mediaServiceUpdateMedia({
+          client,
+          path: { mediaId },
+          body: {
+            title,
+            url,
+            typeValue: typeValue as MediaTypeValue,
+            formatValue: formatValue as MediaFormatValue,
+            isDisplay,
+          },
+        }));
+      });
+    },
+    {
+      params: t.Object({
+        mediaId: t.String(),
+      }),
       body: t.Object({
         title: t.String(),
         url: t.String(),

@@ -30,7 +30,7 @@ readonly class SearchUseCase
      */
     public function handle(SearchInputData $inputData): Result
     {
-        return $this->authorizer->require(Permission::ReadSong)
+        return $this->authorizer->require(Permission::ReadMedia)
             ->andThen(fn () => $this->searchMedia($inputData));
     }
 

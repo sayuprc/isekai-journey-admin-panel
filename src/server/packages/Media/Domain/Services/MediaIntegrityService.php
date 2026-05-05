@@ -58,6 +58,39 @@ class MediaIntegrityService
     }
 
     /**
+     * @return Result<Media, DomainError>
+     */
+    public function prepareForUpdate(
+        string $mediaId,
+        string $title,
+        string $url,
+        int $typeValue,
+        int $formatValue,
+        bool $isDisplay,
+    ): Result {
+        return Result::collect6(
+            MediaId::create($mediaId),
+            MediaTitle::create($title),
+            MediaUrl::create($url),
+            $this->toMediaType($typeValue),
+            $this->toMediaFormat($formatValue),
+            new Ok($isDisplay),
+        )
+            ->mapErr(function (array $errors): DomainValidationError {
+                $messages = [];
+                foreach ($errors as $error) {
+                    if ($error instanceof EntityRuleViolationError) {
+                        $messages[$error->field] ??= [];
+                        $messages[$error->field][] = $error->message;
+                    }
+                }
+
+                return new DomainValidationError($messages);
+            })
+            ->map(fn (array $values): Media => new Media(...$values));
+    }
+
+    /**
      * @return Result<MediaType, DomainError>
      */
     private function toMediaType(int $typeValue): Result

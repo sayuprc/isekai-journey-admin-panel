@@ -8,6 +8,8 @@ use Media\Domain\Criteria\MediaSearchCriteria;
 
 interface MediaRepositoryInterface
 {
+    public function find(MediaId $mediaId): ?Media;
+
     /**
      * @return list<Media>
      */

@@ -219,6 +219,103 @@ paths:
         - Media
       security:
         - BearerAuth: []
+  /media/{mediaId}:
+    get:
+      operationId: MediaService_getMedia
+      description: メディア取得API
+      parameters:
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaGetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Media
+      security:
+        - BearerAuth: []
+    put:
+      operationId: MediaService_updateMedia
+      description: メディア更新API
+      parameters:
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaUpdateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaUpdateRequest'
+      security:
+        - BearerAuth: []
   /persons:
     get:
       operationId: PersonService_listPersons
@@ -1172,6 +1269,13 @@ components:
         - 4
         - 5
         - 99
+    MediaGetResponse:
+      type: object
+      required:
+        - media
+      properties:
+        media:
+          $ref: '#/components/schemas/Media'
     MediaSearchResponse:
       type: object
       required:
@@ -1204,6 +1308,32 @@ components:
         - 3
         - 4
         - 99
+    MediaUpdateRequest:
+      type: object
+      required:
+        - title
+        - url
+        - typeValue
+        - formatValue
+        - isDisplay
+      properties:
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        typeValue:
+          $ref: '#/components/schemas/MediaTypeValue'
+        formatValue:
+          $ref: '#/components/schemas/MediaFormatValue'
+        isDisplay:
+          type: boolean
+    MediaUpdateResponse:
+      type: object
+      required:
+        - media
+      properties:
+        media:
+          $ref: '#/components/schemas/Media'
     PerPage:
       type: integer
       format: int32
@@ -1234,6 +1364,8 @@ components:
         - write_person
         - read_song
         - write_song
+        - read_media
+        - write_media
       description: 権限の値
     Person:
       type: object
