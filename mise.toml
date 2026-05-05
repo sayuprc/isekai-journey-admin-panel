@@ -188,6 +188,10 @@ run = "docker compose exec php bash"
 description = "composer パッケージをインストールする"
 run = "docker compose run --rm php composer install"
 
+[tasks."api:composer:dump"]
+description = "autoloader を更新する"
+run = "docker compose exec -T php composer dump-autoload"
+
 [tasks."api:generate"]
 description = "OAS からサーバーのコードを生成する"
 run = '''
