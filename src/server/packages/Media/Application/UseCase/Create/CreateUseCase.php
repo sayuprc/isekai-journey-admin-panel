@@ -48,6 +48,7 @@ readonly class CreateUseCase
                 $inputData->title,
                 $inputData->url,
                 $inputData->typeValue,
+                $inputData->formatValue,
                 $inputData->isDisplay,
             );
 

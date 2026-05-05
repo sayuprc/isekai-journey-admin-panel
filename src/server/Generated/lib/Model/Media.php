@@ -61,6 +61,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'string',
         'url' => 'string',
         'type' => '\OpenAPI\Client\Model\MediaType',
+        'format' => '\OpenAPI\Client\Model\MediaFormat',
         'is_display' => 'bool'
     ];
 
@@ -76,6 +77,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => null,
         'url' => 'uri',
         'type' => null,
+        'format' => null,
         'is_display' => null
     ];
 
@@ -89,6 +91,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'url' => false,
         'type' => false,
+        'format' => false,
         'is_display' => false
     ];
 
@@ -182,6 +185,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'title',
         'url' => 'url',
         'type' => 'type',
+        'format' => 'format',
         'is_display' => 'isDisplay'
     ];
 
@@ -195,6 +199,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'setTitle',
         'url' => 'setUrl',
         'type' => 'setType',
+        'format' => 'setFormat',
         'is_display' => 'setIsDisplay'
     ];
 
@@ -208,6 +213,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'getTitle',
         'url' => 'getUrl',
         'type' => 'getType',
+        'format' => 'getFormat',
         'is_display' => 'getIsDisplay'
     ];
 
@@ -272,6 +278,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
+        $this->setIfExists('format', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
     }
 
@@ -317,6 +324,9 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
+        }
+        if ($this->container['format'] === null) {
+            $invalidProperties[] = "'format' can't be null";
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
@@ -445,6 +455,33 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable type cannot be null');
         }
         $this->container['type'] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Gets format
+     *
+     * @return \OpenAPI\Client\Model\MediaFormat
+     */
+    public function getFormat()
+    {
+        return $this->container['format'];
+    }
+
+    /**
+     * Sets format
+     *
+     * @param \OpenAPI\Client\Model\MediaFormat $format format
+     *
+     * @return self
+     */
+    public function setFormat($format)
+    {
+        if (is_null($format)) {
+            throw new \InvalidArgumentException('non-nullable format cannot be null');
+        }
+        $this->container['format'] = $format;
 
         return $this;
     }

@@ -11,6 +11,7 @@ readonly class Media
         public MediaTitle $title,
         public MediaUrl $url,
         public MediaType $type,
+        public MediaFormat $format,
         public bool $isDisplay,
     ) {
     }
@@ -20,6 +21,7 @@ readonly class Media
         string $title,
         string $url,
         int $type,
+        int $format,
         bool $isDisplay,
     ): self {
         return new self(
@@ -27,12 +29,13 @@ readonly class Media
             MediaTitle::reconstruct($title),
             MediaUrl::reconstruct($url),
             MediaType::from($type),
+            MediaFormat::from($format),
             $isDisplay,
         );
     }
 
     /**
-     * @return array{media_id: string, title: string, url: string, type: value-of<MediaType>, is_display: bool}
+     * @return array{media_id: string, title: string, url: string, type: value-of<MediaType>, format: value-of<MediaFormat>, is_display: bool}
      */
     public function toArray(): array
     {
@@ -41,6 +44,7 @@ readonly class Media
             'title' => $this->title->value,
             'url' => $this->url->value,
             'type' => $this->type->value,
+            'format' => $this->format->value,
             'is_display' => $this->isDisplay,
         ];
     }

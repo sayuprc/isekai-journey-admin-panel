@@ -130,16 +130,15 @@ readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * @param array{media_id: string, song_media_type: int, order_no: int} $row
+     * @param array{media_id: string, order_no: int} $row
      *
-     * @return array{song_id: string, media_id: string, song_media_type: int, order_no: int}
+     * @return array{song_id: string, media_id: string, order_no: int}
      */
     private function toMediaRecord(string $binId, array $row): array
     {
         return [
             'song_id' => $binId,
             'media_id' => $this->converter->toBin($row['media_id']),
-            'song_media_type' => $row['song_media_type'],
             'order_no' => $row['order_no'],
         ];
     }
@@ -169,7 +168,6 @@ readonly class SongRepository implements SongRepositoryInterface
         ];
         $toMedia = fn (ModelsSongMediaLink $row): array => [
             'mediaId' => $this->converter->toUuid($row->media_id),
-            'songMediaType' => $row->song_media_type,
             'orderNo' => $row->order_no,
         ];
 
@@ -177,7 +175,7 @@ readonly class SongRepository implements SongRepositoryInterface
         $persons = $model->persons->sortBy('order_no')->map($fn)->values()->all();
         /** @var list<array{songTagId: string}> */
         $tags = $this->sortTagsByMasterOrder($model->taggings->map($toTag)->all() |> array_values(...));
-        /** @var list<array{mediaId: string, songMediaType: int, orderNo: int}> */
+        /** @var list<array{mediaId: string, orderNo: int}> */
         $media = $model->songMediaLinks->sortBy('order_no')->map($toMedia)->values()->all();
 
         return Song::reconstruct(

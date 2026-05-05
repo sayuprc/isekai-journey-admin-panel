@@ -12,12 +12,6 @@ table "song_media_links" {
     type    = binary(16)
     comment = "メディアID"
   }
-  column "song_media_type" {
-    null     = false
-    type     = tinyint
-    unsigned = true
-    comment  = "楽曲文脈メディア種別"
-  }
   column "order_no" {
     null     = false
     type     = int

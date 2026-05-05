@@ -16,6 +16,7 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use DateTimeImmutable;
 use Media\Domain\Models\Media;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
@@ -154,13 +155,13 @@ trait EntityFactory
     /**
      * @param list<array<string, mixed>> ...$candidates
      *
-     * @return list<array{mediaId: string, songMediaType: int, orderNo: int}>
+     * @return list<array{mediaId: string, orderNo: int}>
      */
     private function normalizeSongMedia(array ...$candidates): array
     {
         foreach ($candidates as $candidate) {
             if ($candidate !== [] && array_key_exists('mediaId', $candidate[0] ?? [])) {
-                /** @var list<array{mediaId: string, songMediaType: int, orderNo: int}> */
+                /** @var list<array{mediaId: string, orderNo: int}> */
                 return $candidate;
             }
         }
@@ -183,12 +184,14 @@ trait EntityFactory
         string $url,
         MediaType $type,
         bool $isDisplay,
+        MediaFormat $format = MediaFormat::Other,
     ): Media {
         return new Media(
             MediaId::reconstruct($mediaId),
             MediaTitle::reconstruct($title),
             MediaUrl::reconstruct($url),
             $type,
+            $format,
             $isDisplay,
         );
     }

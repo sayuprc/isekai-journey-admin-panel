@@ -71,6 +71,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
                 'title',
                 'url',
                 'type',
+                'format',
                 'is_display',
                 'updated_at',
             ],
@@ -101,6 +102,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
             $row->title,
             $row->url,
             $row->type,
+            $row->format,
             $row->is_display,
         );
     }

@@ -43,8 +43,8 @@ scalar lyricsLink extends string;
       title: "描き続けた君へ MV",
       url: "https://example.com/media",
       type: #{ name: "動画", value: MediaTypeValue.Video },
+      format: #{ name: "MV", value: MediaFormatValue.Mv },
       isDisplay: true,
-      songMediaType: SongMediaType.Mv,
       orderNo: 1,
     }
   ],
@@ -99,14 +99,6 @@ enum SongPersonRole {
   Arranger: 3,
 }
 
-enum SongMediaType {
-  Mv: 1,
-  AudioVideo: 2,
-  StreamArchive: 3,
-  ShortVideo: 4,
-  Other: 99,
-}
-
 model SongPerson {
   personId: personId;
   name: personName;
@@ -124,17 +116,15 @@ model SongAttachedTag {
   title: "描き続けた君へ MV",
   url: "https://example.com/media",
   type: #{ name: "動画", value: MediaTypeValue.Video },
+  format: #{ name: "MV", value: MediaFormatValue.Mv },
   isDisplay: true,
-  songMediaType: SongMediaType.Mv,
   orderNo: 1,
 })
 model SongLinkedMedia is Media {
-  songMediaType: SongMediaType;
   orderNo: orderNo;
 }
 
 model RequestSongMediaLink {
   mediaId: mediaId;
-  songMediaType: SongMediaType;
   orderNo: orderNo;
 }

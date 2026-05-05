@@ -10,10 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
 /**
- * @property string $song_id         楽曲ID
- * @property string $media_id        メディアID
- * @property int    $song_media_type 楽曲文脈メディア種別
- * @property int    $order_no        表示順
+ * @property string $song_id  楽曲ID
+ * @property string $media_id メディアID
+ * @property int    $order_no 表示順
  * @property-read Song $song
  * @property-read Media $media
  *

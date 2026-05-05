@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -36,8 +37,8 @@ class UpdateSongTest extends DatabaseTestCase
         $tagRepo->save($oldTag = $this->createSongTag($this->generateUuid(), '旧タグ', 10));
         $tagRepo->save($newTag = $this->createSongTag($this->generateUuid(), '新タグ', 20));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($oldMedia = $this->createMedia($this->generateUuid(), '旧 Media', 'https://example.com/old-media', MediaType::Video, true));
-        $mediaRepo->save($newMedia = $this->createMedia($this->generateUuid(), '新 Media', 'https://example.com/new-media', MediaType::OfficialPage, true));
+        $mediaRepo->save($oldMedia = $this->createMedia($this->generateUuid(), '旧 Media', 'https://example.com/old-media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($newMedia = $this->createMedia($this->generateUuid(), '新 Media', 'https://example.com/new-media', MediaType::OfficialPage, true, MediaFormat::ShortVideo));
 
         $songId = $this->generateUuid();
 
@@ -58,7 +59,7 @@ class UpdateSongTest extends DatabaseTestCase
                 ],
                 [],
                 [
-                    ['mediaId' => $oldMedia->mediaId->value, 'songMediaType' => 1, 'orderNo' => 1],
+                    ['mediaId' => $oldMedia->mediaId->value, 'orderNo' => 1],
                 ],
             ),
         );
@@ -76,7 +77,7 @@ class UpdateSongTest extends DatabaseTestCase
                     ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
                 'tags' => [['songTagId' => $newTag->songTagId->value]],
-                'media' => [['mediaId' => $newMedia->mediaId->value, 'songMediaType' => 4, 'orderNo' => 1]],
+                'media' => [['mediaId' => $newMedia->mediaId->value, 'orderNo' => 1]],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -119,8 +120,11 @@ class UpdateSongTest extends DatabaseTestCase
                                 'name' => $newMedia->type->getName(),
                                 'value' => $newMedia->type->value,
                             ],
+                            'format' => [
+                                'name' => $newMedia->format->getName(),
+                                'value' => $newMedia->format->value,
+                            ],
                             'isDisplay' => true,
-                            'songMediaType' => 4,
                             'orderNo' => 1,
                         ],
                     ],

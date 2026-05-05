@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Domain\Models;
 
 use Song\Domain\Models\Media\SongMediaLinks;
-use Song\Domain\Models\Media\SongMediaType;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Tags\SongTagReferences;
@@ -28,9 +27,9 @@ readonly class Song
     }
 
     /**
-     * @param list<array{songTagId: string}>                                 $tags
-     * @param list<array{personId: string, role: int, orderNo: int}>         $persons
-     * @param list<array{mediaId: string, songMediaType: int, orderNo: int}> $media
+     * @param list<array{songTagId: string}>                         $tags
+     * @param list<array{personId: string, role: int, orderNo: int}> $persons
+     * @param list<array{mediaId: string, orderNo: int}>             $media
      */
     public static function reconstruct(
         string $songId,
@@ -59,7 +58,7 @@ readonly class Song
     }
 
     /**
-     * @return array{song_id: string, title: string, description: string, lyrics_link: string|null, type: value-of<SongType>, is_display: bool, order_no: int, persons: array<int, array{person_id: string, role: value-of<SongPersonRole>, order_no: int}>, tags: array<int, array{song_tag_id: string}>, media: array<int, array{media_id: string, song_media_type: value-of<SongMediaType>, order_no: int}>}
+     * @return array{song_id: string, title: string, description: string, lyrics_link: string|null, type: value-of<SongType>, is_display: bool, order_no: int, persons: array<int, array{person_id: string, role: value-of<SongPersonRole>, order_no: int}>, tags: array<int, array{song_tag_id: string}>, media: array<int, array{media_id: string, order_no: int}>}
      */
     public function toArray(): array
     {

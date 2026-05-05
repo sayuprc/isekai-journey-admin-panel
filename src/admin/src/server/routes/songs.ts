@@ -16,12 +16,11 @@ import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
-const SongMediaTypeSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(99)]);
 const NullableStringSchema = t.Union([t.String(), t.Null()]);
 
 const SongPersonRefSchema = t.Array(t.Object({ personId: t.String(), role: t.Union([t.Literal(1), t.Literal(2), t.Literal(3)]), orderNo: t.Number() }));
 const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
-const SongMediaRefSchema = t.Array(t.Object({ mediaId: t.String(), songMediaType: SongMediaTypeSchema, orderNo: t.Number() }));
+const SongMediaRefSchema = t.Array(t.Object({ mediaId: t.String(), orderNo: t.Number() }));
 
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)

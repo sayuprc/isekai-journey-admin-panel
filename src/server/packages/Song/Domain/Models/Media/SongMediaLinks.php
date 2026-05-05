@@ -19,7 +19,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class SongMediaLinks extends ImmutableCollection
 {
     /**
-     * @param list<array{mediaId: string, songMediaType: int, orderNo: int}> $items
+     * @param list<array{mediaId: string, orderNo: int}> $items
      *
      * @return Result<self, DomainValidationError>
      */
@@ -29,15 +29,12 @@ readonly class SongMediaLinks extends ImmutableCollection
         $seen = [];
 
         foreach ($items as $item) {
-            $result = Result::collect3(
-                MediaId::create($item['mediaId']),
-                self::toSongMediaType($item['songMediaType']),
-                OrderNo::create($item['orderNo']),
-            )->map(fn (array $values): SongMediaLink => new SongMediaLink(...$values));
+            $mediaId = MediaId::create($item['mediaId']);
+            $orderNo = OrderNo::create($item['orderNo']);
 
-            if ($result->isErr()) {
+            if ($mediaId->isErr() || $orderNo->isErr()) {
                 $messages = [];
-                foreach ($result->unwrapErr() as $error) {
+                foreach ([$mediaId->unwrapErrOr(null), $orderNo->unwrapErrOr(null)] as $error) {
                     if ($error instanceof EntityRuleViolationError) {
                         $messages[$error->field] ??= [];
                         $messages[$error->field][] = $error->message;
@@ -47,7 +44,7 @@ readonly class SongMediaLinks extends ImmutableCollection
                 return new Err(new DomainValidationError($messages));
             }
 
-            $link = $result->unwrap();
+            $link = new SongMediaLink($mediaId->unwrap(), $orderNo->unwrap());
 
             if (isset($seen[$link->mediaId->value])) {
                 return new Err(new DomainValidationError([
@@ -63,14 +60,13 @@ readonly class SongMediaLinks extends ImmutableCollection
     }
 
     /**
-     * @param list<array{mediaId: string, songMediaType: int, orderNo: int}> $items
+     * @param list<array{mediaId: string, orderNo: int}> $items
      */
     public static function reconstruct(array $items): self
     {
         return new self(array_map(
             fn (array $item): SongMediaLink => SongMediaLink::reconstruct(
                 $item['mediaId'],
-                $item['songMediaType'],
                 $item['orderNo'],
             ),
             $items,
@@ -78,7 +74,7 @@ readonly class SongMediaLinks extends ImmutableCollection
     }
 
     /**
-     * @return list<array{media_id: string, song_media_type: 1|2|3|4|99, order_no: int}>
+     * @return list<array{media_id: string, order_no: int}>
      */
     public function toArray(): array
     {
@@ -89,19 +85,5 @@ readonly class SongMediaLinks extends ImmutableCollection
         }
 
         return $items;
-    }
-
-    /**
-     * @return Result<SongMediaType, EntityRuleViolationError>
-     */
-    private static function toSongMediaType(int $type): Result
-    {
-        $found = SongMediaType::tryFrom($type);
-
-        if (is_null($found)) {
-            return new Err(new EntityRuleViolationError('songMediaType', "不正な songMediaType です: {$type}"));
-        }
-
-        return new Ok($found);
     }
 }

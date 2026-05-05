@@ -9,6 +9,7 @@ model MediaCreateRequest {
   title: mediaTitle;
   url: mediaUrl;
   typeValue: MediaTypeValue;
+  formatValue: MediaFormatValue;
   isDisplay: boolean;
 }
 

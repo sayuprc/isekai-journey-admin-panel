@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Media\Domain\Services;
 
 use Media\Domain\Models\Media;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
@@ -31,13 +32,15 @@ class MediaIntegrityService
         string $title,
         string $url,
         int $typeValue,
+        int $formatValue,
         bool $isDisplay,
     ): Result {
-        return Result::collect5(
+        return Result::collect6(
             MediaId::create($this->generator->generate()),
             MediaTitle::create($title),
             MediaUrl::create($url),
             $this->toMediaType($typeValue),
+            $this->toMediaFormat($formatValue),
             new Ok($isDisplay),
         )
             ->mapErr(function (array $errors): DomainValidationError {
@@ -66,5 +69,19 @@ class MediaIntegrityService
         }
 
         return new Ok($type);
+    }
+
+    /**
+     * @return Result<MediaFormat, DomainError>
+     */
+    private function toMediaFormat(int $formatValue): Result
+    {
+        $format = MediaFormat::tryFrom($formatValue);
+
+        if (is_null($format)) {
+            return new Err(new EntityRuleViolationError(MediaFormat::class, "不正なメディア形式です: {$formatValue}"));
+        }
+
+        return new Ok($format);
     }
 }

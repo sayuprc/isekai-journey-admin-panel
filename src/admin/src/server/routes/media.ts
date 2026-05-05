@@ -1,11 +1,12 @@
 import { Elysia, t } from 'elysia';
 import { mediaServiceCreateMedia, mediaServiceSearchMedia } from '../../generated';
-import type { MediaTypeValue, PerPage } from '../../generated';
+import type { MediaFormatValue, MediaTypeValue, PerPage } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
 const MediaTypeValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(99)]);
+const MediaFormatValueSchema = t.Union([t.Literal(1), t.Literal(2), t.Literal(3), t.Literal(4), t.Literal(5), t.Literal(6), t.Literal(99)]);
 
 export const media = new Elysia({ prefix: '/media' })
   .use(authGuard)
@@ -33,7 +34,7 @@ export const media = new Elysia({ prefix: '/media' })
   )
   .post(
     '/',
-    async ({ body: { title, url, typeValue, isDisplay }, authSession }) => {
+    async ({ body: { title, url, typeValue, formatValue, isDisplay }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
         return resolveApiResponse(await mediaServiceCreateMedia({
           client,
@@ -41,6 +42,7 @@ export const media = new Elysia({ prefix: '/media' })
             title,
             url,
             typeValue: typeValue as MediaTypeValue,
+            formatValue: formatValue as MediaFormatValue,
             isDisplay,
           },
         }));
@@ -51,6 +53,7 @@ export const media = new Elysia({ prefix: '/media' })
         title: t.String(),
         url: t.String(),
         typeValue: MediaTypeValueSchema,
+        formatValue: MediaFormatValueSchema,
         isDisplay: t.Boolean(),
       }),
     },

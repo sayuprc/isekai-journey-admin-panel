@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Song;
 
 use Illuminate\Testing\Fluent\AssertableJson;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -32,7 +33,7 @@ class CreateSongTest extends DatabaseTestCase
         $tagRepo->save($tag1 = $this->createSongTag($this->generateUuid(), 'タグA', 10));
         $tagRepo->save($tag2 = $this->createSongTag($this->generateUuid(), 'タグB', 20));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true));
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
@@ -51,7 +52,7 @@ class CreateSongTest extends DatabaseTestCase
                     ['songTagId' => $tag1->songTagId->value],
                 ],
                 'media' => [
-                    ['mediaId' => $media->mediaId->value, 'songMediaType' => 1, 'orderNo' => 1],
+                    ['mediaId' => $media->mediaId->value, 'orderNo' => 1],
                 ],
             ])->assertStatus(200)
             ->assertJson(
@@ -100,8 +101,11 @@ class CreateSongTest extends DatabaseTestCase
                                     'name' => $media->type->getName(),
                                     'value' => $media->type->value,
                                 ],
+                                'format' => [
+                                    'name' => $media->format->getName(),
+                                    'value' => $media->format->value,
+                                ],
                                 'isDisplay' => true,
-                                'songMediaType' => 1,
                                 'orderNo' => 1,
                             ]]),
                     ),

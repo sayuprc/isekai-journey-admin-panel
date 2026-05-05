@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Media;
 
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,8 +21,8 @@ class SearchMediaTest extends DatabaseTestCase
     public function canSearchByTitle(): void
     {
         $repository = $this->app->make(MediaRepository::class);
-        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true));
-        $repository->save($this->createMedia($this->generateUuid(), '別の動画', 'https://example.com/other', MediaType::Article, true));
+        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv));
+        $repository->save($this->createMedia($this->generateUuid(), '別の動画', 'https://example.com/other', MediaType::Article, true, MediaFormat::Other));
 
         $this->withAuth()
             ->getJson(route('media.search', ['title' => '描き続けた君へ']))
@@ -35,7 +36,7 @@ class SearchMediaTest extends DatabaseTestCase
     public function canSearchWithoutTitle(): void
     {
         $repository = $this->app->make(MediaRepository::class);
-        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true));
+        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv));
 
         $this->withAuth()
             ->getJson(route('media.search', ['per_page' => 25]))
