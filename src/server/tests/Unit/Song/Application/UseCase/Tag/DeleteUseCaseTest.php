@@ -153,7 +153,6 @@ class DeleteUseCaseTest extends TestCase
             $this->transaction,
             $this->repository,
             $this->recorder,
-            $context,
         );
     }
 }

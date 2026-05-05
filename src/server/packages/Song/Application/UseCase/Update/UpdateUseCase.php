@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -36,7 +35,6 @@ readonly class UpdateUseCase
         private SongIntegrityService $service,
         private SongAssembler $assembler,
         private AuditLogRecorderInterface $recorder,
-        private AuthContext $authContext,
     ) {
     }
 
@@ -75,11 +73,7 @@ readonly class UpdateUseCase
             $song = $this->repository->save($result->unwrap());
             $assembled = $this->assembler->assemble($song);
 
-            $actor = $this->authContext->get();
-            assert(! is_null($actor));
-
             $this->recorder->record(
-                $actor->adminUserId->value,
                 AuditAction::Update,
                 AuditTargetType::Song,
                 $assembled->songId,

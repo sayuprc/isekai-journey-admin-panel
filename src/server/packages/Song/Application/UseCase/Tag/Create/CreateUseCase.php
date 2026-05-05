@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Tag\Create;
 
 use AdminUser\Domain\Models\Permission;
-use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -33,7 +32,6 @@ readonly class CreateUseCase
         private SongTagRepositoryInterface $repository,
         private SongTagIntegrityService $service,
         private AuditLogRecorderInterface $recorder,
-        private AuthContext $authContext,
     ) {
     }
 
@@ -62,11 +60,7 @@ readonly class CreateUseCase
 
             $this->repository->save($tag);
 
-            $actor = $this->authContext->get();
-            assert(! is_null($actor));
-
             $this->recorder->record(
-                $actor->adminUserId->value,
                 AuditAction::Create,
                 AuditTargetType::SongTag,
                 $tag->songTagId->value,

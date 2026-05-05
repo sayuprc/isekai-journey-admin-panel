@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Support\Infrastructures\AuditLog;
 
 use App\Models\AuditLog as ModelsAuditLog;
+use Auth\Domain\Models\AuthContext;
+use LogicException;
 use Override;
 use Support\Contracts\AuditLog\AuditAction;
 use Support\Contracts\AuditLog\AuditLogRecorderInterface;
@@ -19,6 +21,7 @@ readonly class AuditLogRecorder implements AuditLogRecorderInterface
         private ClockInterface $clock,
         private UuidGeneratorInterface $uuidGenerator,
         private UuidConverterInterface $uuidConverter,
+        private AuthContext $authContext,
     ) {
     }
 
@@ -27,15 +30,21 @@ readonly class AuditLogRecorder implements AuditLogRecorderInterface
      */
     #[Override]
     public function record(
-        string $actorId,
         AuditAction $action,
         AuditTargetType $targetType,
         string $targetId,
         array $snapshot,
+        ?string $actorId = null,
     ): void {
+        $resolvedActorId = $actorId ?? $this->authContext->get()?->adminUserId->value;
+
+        if (is_null($resolvedActorId)) {
+            throw new LogicException('audit log の actor が解決できません');
+        }
+
         ModelsAuditLog::create([
             'audit_log_id' => $this->uuidConverter->toBin($this->uuidGenerator->generate()),
-            'admin_user_id' => $this->uuidConverter->toBin($actorId),
+            'admin_user_id' => $this->uuidConverter->toBin($resolvedActorId),
             'action' => $action->value,
             'target_type' => $targetType->value,
             'target_id' => $this->uuidConverter->toBin($targetId),

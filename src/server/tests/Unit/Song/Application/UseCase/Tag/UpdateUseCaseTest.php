@@ -145,7 +145,6 @@ class UpdateUseCaseTest extends TestCase
             $this->repository,
             $this->service,
             $this->recorder,
-            $context,
         );
     }
 }

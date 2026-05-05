@@ -66,13 +66,13 @@ readonly class RefreshUseCase
             $this->refreshTokenRepository->save($nextRefreshToken);
 
             $this->recorder->record(
-                $refreshToken->adminUserId->value,
                 AuditAction::Refresh,
                 AuditTargetType::AdminUser,
                 $refreshToken->adminUserId->value,
                 [
                     'refreshTokenId' => $nextRefreshToken->refreshTokenId->value,
                 ],
+                $refreshToken->adminUserId->value,
             );
 
             return new Ok(

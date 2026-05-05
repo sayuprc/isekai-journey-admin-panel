@@ -51,13 +51,13 @@ readonly class LoginUseCase
             $this->refreshTokenRepository->save($refreshToken);
 
             $this->recorder->record(
-                $refreshToken->adminUserId->value,
                 AuditAction::Login,
                 AuditTargetType::AdminUser,
                 $refreshToken->adminUserId->value,
                 [
                     'refreshTokenId' => $refreshToken->refreshTokenId->value,
                 ],
+                $refreshToken->adminUserId->value,
             );
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
