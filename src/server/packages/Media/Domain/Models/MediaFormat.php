@@ -14,7 +14,7 @@ enum MediaFormat: int
 
     case ShortVideo = 4;
 
-    case LiveClip = 6;
+    case LiveClip = 5;
 
     case Other = 99;
 

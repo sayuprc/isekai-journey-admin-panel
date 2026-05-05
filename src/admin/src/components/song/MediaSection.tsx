@@ -23,7 +23,7 @@ const mediaFormatOptions: Array<{ value: MediaFormatValue; label: string }> = [
   { value: 2, label: '音源動画' },
   { value: 3, label: '配信アーカイブ' },
   { value: 4, label: 'ショート動画' },
-  { value: 6, label: 'ライブ切り抜き' },
+  { value: 5, label: 'ライブ切り抜き' },
   { value: 99, label: 'その他' },
 ];
 

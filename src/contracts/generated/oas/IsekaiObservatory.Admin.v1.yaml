@@ -1152,7 +1152,7 @@ components:
         - 2
         - 3
         - 4
-        - 6
+        - 5
         - 99
     MediaSearchResponse:
       type: object

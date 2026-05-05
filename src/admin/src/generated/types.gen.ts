@@ -60,7 +60,7 @@ export type MediaFormat = {
     value: MediaFormatValue;
 };
 
-export type MediaFormatValue = 1 | 2 | 3 | 4 | 6 | 99;
+export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
 
 export type MediaSearchResponse = {
     media: Array<Media>;
