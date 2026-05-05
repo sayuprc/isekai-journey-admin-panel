@@ -22,6 +22,7 @@ use Override;
  * @property CarbonImmutable $updated_at  更新日時
  * @property-read Collection<int, SongPerson> $persons
  * @property-read Collection<int, SongTagging> $taggings
+ * @property-read Collection<int, SongMediaLink> $songMediaLinks
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Song newQuery()
@@ -71,5 +72,14 @@ class Song extends Model
     public function taggings(): HasMany
     {
         return $this->hasMany(SongTagging::class, 'song_id', 'song_id');
+    }
+
+    /**
+     * @return HasMany<SongMediaLink, $this>
+     */
+    public function songMediaLinks(): HasMany
+    {
+        return $this->hasMany(SongMediaLink::class, 'song_id', 'song_id')
+            ->orderBy('order_no');
     }
 }
