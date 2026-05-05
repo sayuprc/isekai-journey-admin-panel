@@ -62,7 +62,7 @@ class InviteCommand extends Command
             }
         }
 
-        $expiresInMinutes = (int) $this->option('expires-in-minutes');
+        $expiresInMinutes = (int)$this->option('expires-in-minutes');
 
         $result = $useCase->handle(
             new IssueRegistrationTokenInputData(

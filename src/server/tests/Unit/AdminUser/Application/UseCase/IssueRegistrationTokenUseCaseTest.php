@@ -11,6 +11,7 @@ use AdminUser\Domain\Models\AdminUserRegistrationTokenRepositoryInterface;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationTokenIssueService;
 use Closure;
+use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
@@ -29,7 +30,7 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
 
     private MockInterface&TransactionInterface $transaction;
 
-    private RegistrationTokenIssueService&MockInterface $service;
+    private MockInterface&RegistrationTokenIssueService $service;
 
     private AdminUserRegistrationTokenRepositoryInterface&MockInterface $repository;
 
@@ -54,7 +55,7 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             Role::General,
             [],
             'hashed-token',
-            new \DateTimeImmutable('2026-01-01 01:00:00'),
+            new DateTimeImmutable('2026-01-01 01:00:00'),
         );
 
         $this->transaction->shouldReceive('scope')
@@ -68,7 +69,7 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->once();
 
         $this->repository->shouldReceive('save')
-            ->withArgs(fn (AdminUserRegistrationToken $arg): bool => $arg == $token)
+            ->withArgs(fn (AdminUserRegistrationToken $arg): bool => $arg === $token)
             ->andReturn($token)
             ->once();
 

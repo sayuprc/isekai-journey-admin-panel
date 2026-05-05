@@ -23,8 +23,6 @@ readonly class AdminUserRegistrationToken
 
     /**
      * @param list<string> $permissions
-     *
-     * @return self
      */
     public static function reconstruct(
         string $adminUserRegistrationTokenId,
