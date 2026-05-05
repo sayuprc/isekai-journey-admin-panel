@@ -6,7 +6,10 @@ namespace Tests\Support\Domain;
 
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserRegistrationToken;
 use AdminUser\Domain\Models\Role;
+use AdminUser\Domain\Models\RegistrationTokenExpiredAt;
+use AdminUser\Domain\Models\RegistrationTokenHashedValue;
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 use Auth\Domain\Models\Token\AccessToken\Jwt;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
@@ -215,6 +218,30 @@ trait EntityFactory
             $createdAt ?? new DateTimeImmutable(),
             $role->value,
             $permissions,
+        );
+    }
+
+    protected function createAdminUserRegistrationToken(
+        string $adminUserRegistrationTokenId,
+        string $name,
+        string $email,
+        Role $role,
+        array $permissions,
+        string $tokenHash,
+        DateTimeImmutable $expiredAt,
+        ?DateTimeImmutable $usedAt = null,
+        ?DateTimeImmutable $createdAt = null,
+    ): AdminUserRegistrationToken {
+        return new AdminUserRegistrationToken(
+            \AdminUser\Domain\Models\AdminUserRegistrationTokenId::reconstruct($adminUserRegistrationTokenId),
+            \AdminUser\Domain\Models\AdminUserName::reconstruct($name),
+            \AdminUser\Domain\Models\Email::reconstruct($email),
+            $role,
+            \AdminUser\Domain\Models\Permissions::reconstruct($permissions),
+            RegistrationTokenHashedValue::reconstruct($tokenHash),
+            RegistrationTokenExpiredAt::reconstruct($expiredAt),
+            \AdminUser\Domain\Models\CreatedAt::reconstruct($createdAt ?? new DateTimeImmutable()),
+            $usedAt,
         );
     }
 
