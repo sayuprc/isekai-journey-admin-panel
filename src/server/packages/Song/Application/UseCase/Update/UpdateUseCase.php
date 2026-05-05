@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Song\Application\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
+use Auth\Domain\Models\AuthContext;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Song\Application\Assemble\AssembledSong;
 use Song\Application\Assemble\SongAssembler;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
+use Support\Contracts\AuditLog\AuditAction;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\AuditLog\AuditTargetType;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
@@ -30,6 +35,8 @@ readonly class UpdateUseCase
         private SongRepositoryInterface $repository,
         private SongIntegrityService $service,
         private SongAssembler $assembler,
+        private AuditLogRecorderInterface $recorder,
+        private AuthContext $authContext,
     ) {
     }
 
@@ -66,9 +73,47 @@ readonly class UpdateUseCase
             }
 
             $song = $this->repository->save($result->unwrap());
+            $assembled = $this->assembler->assemble($song);
 
-            return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
+            $actor = $this->authContext->get();
+            assert(! is_null($actor));
+
+            $this->recorder->record(
+                $actor->adminUserId->value,
+                AuditAction::Update,
+                AuditTargetType::Song,
+                $assembled->songId,
+                $this->snapshot($assembled),
+            );
+
+            return new Ok(new UpdateOutputData($assembled));
         });
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function snapshot(AssembledSong $assembled): array
+    {
+        return [
+            'songId' => $assembled->songId,
+            'title' => $assembled->title,
+            'description' => $assembled->description,
+            'lyricsLink' => $assembled->lyricsLink,
+            'typeName' => $assembled->typeName,
+            'typeValue' => $assembled->typeValue,
+            'isDisplay' => $assembled->isDisplay,
+            'orderNo' => $assembled->orderNo,
+            'tagIds' => array_map(fn ($t) => $t->songTagId, $assembled->tags),
+            'persons' => array_map(
+                fn ($p) => [
+                    'personId' => $p->personId,
+                    'role' => $p->role->value,
+                    'orderNo' => $p->orderNo,
+                ],
+                $assembled->persons,
+            ),
+        ];
     }
 
     private function handleError(DomainError $error): UseCaseError

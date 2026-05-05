@@ -7,6 +7,7 @@ namespace Tests\Unit\Song\Application\UseCase\Tag;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
+use Closure;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
@@ -16,27 +17,48 @@ use Song\Application\UseCase\Tag\Delete\DeleteInputData;
 use Song\Application\UseCase\Tag\Delete\DeleteUseCase;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
+use Support\Contracts\TransactionInterface;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
+use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
 class DeleteUseCaseTest extends TestCase
 {
+    use EntityFactory;
+
+    private MockInterface&TransactionInterface $transaction;
+
     private MockInterface&SongTagRepositoryInterface $repository;
+
+    private AuditLogRecorderInterface&MockInterface $recorder;
 
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->transaction = Mockery::mock(TransactionInterface::class);
+        $this->transaction->shouldReceive('scope')
+            ->withArgs(fn (Closure $_) => true)
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->byDefault();
         $this->repository = Mockery::mock(SongTagRepositoryInterface::class);
+        $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
+        $this->recorder->shouldReceive('record')->byDefault();
     }
 
     #[Test]
     public function deleteSongTag(): void
     {
+        $this->repository->shouldReceive('find')
+            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->andReturn($this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'タグ', 1))
+            ->once();
+
         $this->repository->shouldReceive('isUsed')
             ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(false)
@@ -54,6 +76,11 @@ class DeleteUseCaseTest extends TestCase
     #[Test]
     public function cannotDeleteWhenUsed(): void
     {
+        $this->repository->shouldReceive('find')
+            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->andReturn($this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'タグ', 1))
+            ->once();
+
         $this->repository->shouldReceive('isUsed')
             ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(true)
@@ -119,9 +146,14 @@ class DeleteUseCaseTest extends TestCase
 
     private function getInstance(?AuthContext $context = null): DeleteUseCase
     {
+        $context ??= $this->privilegedContext();
+
         return new DeleteUseCase(
-            $context ? $this->authorizer($context) : $this->authorizer(),
+            $this->authorizer($context),
+            $this->transaction,
             $this->repository,
+            $this->recorder,
+            $context,
         );
     }
 }
