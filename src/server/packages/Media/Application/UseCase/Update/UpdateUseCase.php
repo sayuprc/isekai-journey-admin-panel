@@ -57,7 +57,14 @@ readonly class UpdateUseCase
                 return new Err($this->handleError($result->unwrapErr()));
             }
 
-            $media = $this->repository->save($result->unwrap());
+            $media = $result->unwrap();
+            $duplicatedMedia = $this->repository->findByUrl($media->url);
+
+            if (! is_null($duplicatedMedia) && ! $duplicatedMedia->mediaId->equals($media->mediaId)) {
+                return new Err(new InvalidInputError(['url' => ['同じURLのメディアが既に存在します']]));
+            }
+
+            $media = $this->repository->save($media);
 
             return new Ok(new UpdateOutputData($media));
         });

@@ -49,8 +49,8 @@ const mergeMedia = (current: Media[], incoming: Media[]): Media[] => {
 
 const toErrorMessage = (error: unknown, fallback: string) => {
   if (typeof error === 'object' && error !== null && 'value' in error) {
-    const value = (error as { value?: { message?: string; summary?: string } }).value;
-    return value?.message ?? value?.summary ?? fallback;
+    const value = (error as { value?: { message?: string; summary?: string; errors?: Array<{ message?: string }> } }).value;
+    return value?.errors?.[0]?.message ?? value?.message ?? value?.summary ?? fallback;
   }
 
   return fallback;

@@ -10,6 +10,8 @@ interface MediaRepositoryInterface
 {
     public function find(MediaId $mediaId): ?Media;
 
+    public function findByUrl(MediaUrl $url): ?Media;
+
     public function isUsed(MediaId $mediaId): bool;
 
     /**

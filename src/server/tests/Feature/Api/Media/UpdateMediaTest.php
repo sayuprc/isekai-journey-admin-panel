@@ -128,4 +128,52 @@ class UpdateMediaTest extends DatabaseTestCase
                     ),
             );
     }
+
+    #[Test]
+    public function duplicateUrlCannotBeUpdated(): void
+    {
+        $targetMediaId = $this->generateUuid();
+        $existingMediaId = $this->generateUuid();
+
+        $repository = $this->app->make(MediaRepository::class);
+        $repository->save(
+            $this->createMedia(
+                $targetMediaId,
+                '更新対象メディア',
+                'https://example.com/target',
+                MediaType::Video,
+                true,
+                MediaFormat::Mv,
+            ),
+        );
+        $repository->save(
+            $this->createMedia(
+                $existingMediaId,
+                '既存メディア',
+                'https://example.com/existing',
+                MediaType::Video,
+                true,
+                MediaFormat::StreamArchive,
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(MediaRouteMap::Update, $targetMediaId), [
+                'title' => '更新対象メディア',
+                'url' => 'https://example.com/existing',
+                'typeValue' => MediaType::Video->value,
+                'formatValue' => MediaFormat::Mv->value,
+                'isDisplay' => true,
+            ])->assertStatus(422)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has(
+                        'errors',
+                        1,
+                        fn (AssertableJson $json) => $json
+                            ->where('field', 'url')
+                            ->where('message', '同じURLのメディアが既に存在します'),
+                    ),
+            );
+    }
 }
