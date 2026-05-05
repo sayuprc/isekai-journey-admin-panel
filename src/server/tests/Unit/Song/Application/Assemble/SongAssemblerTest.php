@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Song\Application\Assemble;
 
+use Media\Domain\Models\MediaRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
@@ -28,6 +29,8 @@ class SongAssemblerTest extends TestCase
 
     private MockInterface&SongTagRepositoryInterface $songTagRepository;
 
+    private MediaRepositoryInterface&MockInterface $mediaRepository;
+
     #[Override]
     protected function setUp(): void
     {
@@ -35,6 +38,7 @@ class SongAssemblerTest extends TestCase
 
         $this->personRepository = Mockery::mock(PersonRepositoryInterface::class);
         $this->songTagRepository = Mockery::mock(SongTagRepositoryInterface::class);
+        $this->mediaRepository = Mockery::mock(MediaRepositoryInterface::class);
     }
 
     #[Test]
@@ -130,6 +134,6 @@ class SongAssemblerTest extends TestCase
 
     private function getInstance(): SongAssembler
     {
-        return new SongAssembler($this->personRepository, $this->songTagRepository);
+        return new SongAssembler($this->personRepository, $this->songTagRepository, $this->mediaRepository);
     }
 }

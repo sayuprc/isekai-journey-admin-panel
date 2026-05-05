@@ -21,7 +21,7 @@ readonly class UpdateInputData
         public int $orderNo,
         public array $tags,
         public array $persons,
-        public array $media,
+        public array $media = [],
     ) {
     }
 }
