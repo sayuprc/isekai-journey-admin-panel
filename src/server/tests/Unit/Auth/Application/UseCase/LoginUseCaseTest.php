@@ -18,6 +18,7 @@ use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use ResultType\Ok;
+use Support\Contracts\AuditLog\AuditLogRecorderInterface;
 use Support\Contracts\TransactionInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -34,6 +35,8 @@ class LoginUseCaseTest extends TestCase
 
     private AccessTokenIssueService&MockInterface $accessTokenIssueService;
 
+    private AuditLogRecorderInterface&MockInterface $recorder;
+
     #[Override]
     protected function setUp(): void
     {
@@ -43,6 +46,8 @@ class LoginUseCaseTest extends TestCase
         $this->refreshTokenRepository = Mockery::mock(RefreshTokenRepositoryInterface::class);
         $this->refreshTokenIssueService = Mockery::mock(RefreshTokenIssueService::class);
         $this->accessTokenIssueService = Mockery::mock(AccessTokenIssueService::class);
+        $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
+        $this->recorder->shouldReceive('record')->byDefault();
     }
 
     #[Test]
@@ -94,6 +99,7 @@ class LoginUseCaseTest extends TestCase
             $this->refreshTokenRepository,
             $this->refreshTokenIssueService,
             $this->accessTokenIssueService,
+            $this->recorder,
         );
     }
 }

@@ -12,5 +12,7 @@ enum AuditAction: string
 
     case Delete = 'delete';
 
+    case Login = 'login';
+
     case Refresh = 'refresh';
 }
