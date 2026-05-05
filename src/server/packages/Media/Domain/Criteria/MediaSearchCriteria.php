@@ -12,10 +12,10 @@ use Support\Optional\Optional;
 readonly class MediaSearchCriteria
 {
     /**
-     * @param Optional<string>    $title
-     * @param Optional<MediaType> $type
+     * @param Optional<string>      $title
+     * @param Optional<MediaType>   $type
      * @param Optional<MediaFormat> $format
-     * @param Optional<bool>      $isDisplay
+     * @param Optional<bool>        $isDisplay
      */
     public function __construct(
         public Optional $title,
