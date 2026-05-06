@@ -29,6 +29,24 @@ interface Props {
 }
 
 export const EditableForm = (props: Props) => {
+  const normalizeDateInputValue = (value: unknown): string => {
+    if (value instanceof Date) {
+      return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
+    }
+
+    if (typeof value !== 'string') {
+      return '';
+    }
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return value;
+    }
+
+    const parsed = new Date(value);
+
+    return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
+  };
+
   const back = new URLSearchParams(window.location.search).get('back') ?? '';
   const listQuery = (() => {
     if (!back.startsWith('?')) return '';
@@ -160,7 +178,7 @@ export const EditableForm = (props: Props) => {
               type="date"
               class="input w-full"
               name="publishedAt"
-              value={props.data?.media.publishedAt}
+              value={normalizeDateInputValue(props.data?.media.publishedAt)}
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
