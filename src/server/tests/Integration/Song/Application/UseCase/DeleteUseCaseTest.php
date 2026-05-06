@@ -9,12 +9,16 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\UseCase\Delete\DeleteInputData;
 use Song\Application\UseCase\Delete\DeleteUseCase;
 use Song\Domain\Models\SongType;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
 
 class DeleteUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
     use EntityStore;
 
@@ -33,6 +37,10 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $songs = Song::query()->get();
         $this->assertCount(0, $songs);
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Song, $uuid);
+        $this->assertSame($uuid, $log['snapshot']['song_id']);
     }
 
     private function getInstance(): DeleteUseCase

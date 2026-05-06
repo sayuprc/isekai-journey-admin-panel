@@ -15,6 +15,9 @@ use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -26,6 +29,7 @@ readonly class CreateUseCase
         private TransactionInterface $transaction,
         private MediaRepositoryInterface $repository,
         private MediaIntegrityService $service,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -57,6 +61,13 @@ readonly class CreateUseCase
             }
 
             $media = $this->repository->save($result->unwrap());
+
+            $this->recorder->record(
+                AuditAction::Create,
+                AuditTargetType::Media,
+                $media->mediaId,
+                $media->toArray(),
+            );
 
             return new Ok(new CreateOutputData($media));
         });

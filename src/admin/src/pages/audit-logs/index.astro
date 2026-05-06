@@ -1,0 +1,10 @@
+---
+import { SearchList } from '../../components/audit-log/SearchList';
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = false;
+---
+
+<Layout pageTitle="監査ログ一覧">
+  <SearchList client:only="solid-js" />
+</Layout>

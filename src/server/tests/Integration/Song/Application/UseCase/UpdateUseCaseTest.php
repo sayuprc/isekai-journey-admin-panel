@@ -9,12 +9,16 @@ use PHPUnit\Framework\Attributes\Test;
 use Song\Application\UseCase\Update\UpdateInputData;
 use Song\Application\UseCase\Update\UpdateUseCase;
 use Song\Domain\Models\SongType;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
 
 class UpdateUseCaseTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
     use EntityFactory;
     use EntityStore;
 
@@ -79,6 +83,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame(2, $song->persons[0]->role);
         $this->assertSame($person3->personId->value, $this->toUuid($song->persons[1]->person_id));
         $this->assertSame(3, $song->persons[1]->role);
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
+        $this->assertSame('描き続けた君へ', $log['snapshot']['title']);
+        $this->assertCount(2, $log['snapshot']['persons']);
     }
 
     private function getInstance(): UpdateUseCase

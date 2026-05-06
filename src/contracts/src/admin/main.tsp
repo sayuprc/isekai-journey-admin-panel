@@ -1,6 +1,7 @@
 import "@typespec/http";
 import "@typespec/versioning";
 import "./admin-users";
+import "./audit-logs";
 import "./auth";
 import "./media";
 import "./persons";

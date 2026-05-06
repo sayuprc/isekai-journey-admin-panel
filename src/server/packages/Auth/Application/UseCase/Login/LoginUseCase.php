@@ -15,6 +15,9 @@ use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -25,6 +28,7 @@ readonly class LoginUseCase
         private RefreshTokenRepositoryInterface $refreshTokenRepository,
         private RefreshTokenIssueService $refreshTokenIssueService,
         private AccessTokenIssueService $accessTokenIssueService,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -45,6 +49,16 @@ readonly class LoginUseCase
             $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
 
             $this->refreshTokenRepository->save($refreshToken);
+
+            $this->recorder->record(
+                AuditAction::Login,
+                AuditTargetType::AdminUser,
+                $refreshToken->adminUserId,
+                [
+                    'refresh_token_id' => $refreshToken->refreshTokenId->value,
+                ],
+                $refreshToken->adminUserId,
+            );
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });

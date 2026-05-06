@@ -10,6 +10,10 @@ use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Support\Contracts\TransactionInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
@@ -19,7 +23,9 @@ readonly class DeleteUseCase
 {
     public function __construct(
         private UseCaseAuthorizer $authorizer,
+        private TransactionInterface $transaction,
         private SongTagRepositoryInterface $repository,
+        private AuditLogRecorderInterface $recorder,
     ) {
     }
 
@@ -39,14 +45,27 @@ readonly class DeleteUseCase
     {
         return SongTagId::create($inputData->songTagId)
             ->mapErr(fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
-            ->andThen(function (SongTagId $songTagId): Result {
+            ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($songTagId): Result {
+                $tag = $this->repository->find($songTagId);
+
+                if (is_null($tag)) {
+                    return new Ok(null);
+                }
+
                 if ($this->repository->isUsed($songTagId)) {
                     return new Err(new BusinessLogicError('この楽曲タグは楽曲に使用されているため削除できません'));
                 }
 
                 $this->repository->delete($songTagId);
 
+                $this->recorder->record(
+                    AuditAction::Delete,
+                    AuditTargetType::SongTag,
+                    $tag->songTagId,
+                    $tag->toArray(),
+                );
+
                 return new Ok(null);
-            });
+            }));
     }
 }
