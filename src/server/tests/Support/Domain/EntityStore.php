@@ -9,6 +9,8 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\HashedPassword;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Media\Domain\Models\Media;
+use Media\Domain\Models\MediaRepositoryInterface;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Song\Domain\Models\Song;
@@ -28,6 +30,12 @@ trait EntityStore
     {
         $repository = $this->makeRepository(SongRepositoryInterface::class);
         array_map(fn (Song $item) => $repository->save($item), $items);
+    }
+
+    protected function storeMedia(Media ...$items): void
+    {
+        $repository = $this->makeRepository(MediaRepositoryInterface::class);
+        array_map(fn (Media $item) => $repository->save($item), $items);
     }
 
     protected function storeSongTags(SongTag ...$items): void
