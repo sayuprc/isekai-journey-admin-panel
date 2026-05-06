@@ -2,10 +2,6 @@ import "../lib";
 
 namespace IsekaiObservatory.Admin;
 
-@doc("平文パスワード")
-@secret
-scalar password extends string;
-
 @doc("管理ユーザー登録トークン")
 @secret
 scalar registrationToken extends string;

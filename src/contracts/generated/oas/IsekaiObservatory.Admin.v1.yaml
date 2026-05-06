@@ -153,46 +153,6 @@ paths:
         - AuditLog
       security:
         - BearerAuth: []
-  /auth/login:
-    post:
-      operationId: AuthenticateService_login
-      description: 認証API
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResponse'
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Access is unauthorized.
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '500':
-          description: Server error
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Authenticate
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
   /auth/login/finish:
     post:
       operationId: AuthenticateService_loginFinish
@@ -1589,29 +1549,6 @@ components:
       type: string
       enum:
         - v1
-    LoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          $ref: '#/components/schemas/email'
-        password:
-          $ref: '#/components/schemas/password'
-    LoginResponse:
-      type: object
-      required:
-        - accessToken
-        - refreshTokenId
-        - refreshToken
-      properties:
-        accessToken:
-          $ref: '#/components/schemas/accessToken'
-        refreshTokenId:
-          $ref: '#/components/schemas/refreshTokenId'
-        refreshToken:
-          $ref: '#/components/schemas/refreshToken'
     Media:
       type: object
       required:
@@ -2570,10 +2507,6 @@ components:
       format: int32
       minimum: 1
       description: ページ番号
-    password:
-      type: string
-      format: password
-      description: 平文パスワード
     permissionName:
       type: string
       minLength: 1

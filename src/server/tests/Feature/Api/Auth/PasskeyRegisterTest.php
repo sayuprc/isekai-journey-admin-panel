@@ -85,7 +85,10 @@ class PasskeyRegisterTest extends DatabaseTestCase
         ])->assertStatus(200)
             ->assertJsonStructure(['accessToken', 'refreshTokenId', 'refreshToken']);
 
-        $this->assertDatabaseHas('admin_users', ['email' => 'register@example.com']);
+        $this->assertDatabaseHas('admin_users', [
+            'email' => 'register@example.com',
+            'role' => Role::General->value,
+        ]);
         $this->assertDatabaseHas('admin_user_passkeys', ['credential_id' => 'credential-1']);
         $this->assertDatabaseHas('admin_user_registration_tokens', [
             'email' => 'register@example.com',

@@ -26,10 +26,6 @@ interface AuthenticateService {
     | Unprocessable
     | ServerError;
 
-  @doc("認証API")
-  @route("/login")
-  login(@body request: LoginRequest): LoginResponse | BadRequest | Unauthorized | Unprocessable | ServerError;
-
   @doc("パスキーログイン開始API")
   @route("/login/start")
   loginStart(@body request: PasskeyLoginStartRequest):

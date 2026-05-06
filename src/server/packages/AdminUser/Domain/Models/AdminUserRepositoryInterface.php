@@ -15,5 +15,5 @@ interface AdminUserRepositoryInterface
 
     public function findByEmail(Email $email): ?AdminUser;
 
-    public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser;
+    public function register(AdminUser $adminUser): AdminUser;
 }

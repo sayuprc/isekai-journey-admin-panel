@@ -5,11 +5,6 @@ using Http;
 
 namespace IsekaiObservatory.Admin;
 
-model LoginRequest {
-  email: email;
-  password: password;
-}
-
 model PasskeyRegistrationStartRequest {
   email: email;
   registrationToken: registrationToken;
@@ -46,12 +41,6 @@ model PasskeyLoginFinishRequest {
 }
 
 model PasskeyLoginFinishResponse {
-  accessToken: accessToken;
-  refreshTokenId: refreshTokenId;
-  refreshToken: refreshToken;
-}
-
-model LoginResponse {
   accessToken: accessToken;
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;

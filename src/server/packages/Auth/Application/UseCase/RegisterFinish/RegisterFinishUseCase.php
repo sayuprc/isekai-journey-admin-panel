@@ -9,9 +9,7 @@ use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenId;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenRepositoryInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
-use AdminUser\Domain\Services\HasherInterface;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
@@ -43,7 +41,6 @@ readonly class RegisterFinishUseCase
         private TransactionInterface $transaction,
         private ClockInterface $clock,
         private UuidGeneratorInterface $uuidGenerator,
-        private HasherInterface $hasher,
         private AdminUserIntegrityService $adminUserIntegrityService,
         private AdminUserRepositoryInterface $adminUserRepository,
         private AdminUserRegistrationTokenRepositoryInterface $tokenRepository,
@@ -93,7 +90,7 @@ readonly class RegisterFinishUseCase
                 return new Err($this->handleError($adminUserResult->unwrapErr()));
             }
 
-            $this->appRegisterUser($adminUserResult->unwrap());
+            $this->adminUserRepository->register($adminUserResult->unwrap());
 
             $passkey = new AdminUserPasskey(
                 $this->uuidGenerator->generate(),
@@ -130,17 +127,6 @@ readonly class RegisterFinishUseCase
             return new Ok(new RegisterFinishOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
     }
-
-    private function appRegisterUser(AdminUser $adminUser): void
-    {
-        $password = bin2hex(random_bytes(32));
-
-        $this->adminUserRepository->register(
-            $adminUser,
-            HashedPassword::reconstruct($this->hasher->hash($password)),
-        );
-    }
-
     private function handleError(DomainError $error): UseCaseError
     {
         return match (true) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
@@ -38,7 +37,7 @@ trait WithAuth
         $result = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
         $refreshToken = $result['token'];
 
-        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
+        $this->app->make(AdminUserRepository::class)->register($user);
         $this->app->make(RefreshTokenRepository::class)->save($refreshToken);
 
         $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);

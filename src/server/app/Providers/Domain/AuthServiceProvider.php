@@ -6,7 +6,6 @@ namespace App\Providers\Domain;
 
 use Auth\Application\UseCase\Refresh\RefreshInputData;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
-use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
@@ -17,8 +16,6 @@ use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Auth\Infrastructures\AdminUserPasskeyRepository;
-use Auth\Infrastructures\Auth\AuthAdminUserRepository;
-use Auth\Infrastructures\Auth\AuthUserProvider;
 use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use Auth\Infrastructures\PasskeyAuthenticator;
 use Auth\Infrastructures\PasskeyCeremonyStore;
@@ -28,7 +25,6 @@ use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Override;
 use Support\UseCase\Authorizer\AuthorizationContextInterface;
 
@@ -42,7 +38,6 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
         $this->app->bind(TokenHasherInterface::class, TokenHasher::class);
         $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
-        $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
         $this->app->bind(AdminUserPasskeyRepositoryInterface::class, AdminUserPasskeyRepository::class);
         $this->app->bind(PasskeyCeremonyStoreInterface::class, PasskeyCeremonyStore::class);
         $this->app->bind(PasskeyAuthenticatorInterface::class, PasskeyAuthenticator::class);
@@ -66,10 +61,5 @@ class AuthServiceProvider extends EnvServiceProvider
                 config()->string('app.url'),
             ),
         );
-    }
-
-    public function boot(): void
-    {
-        Auth::provider('custom', fn () => $this->app->make(AuthUserProvider::class));
     }
 }

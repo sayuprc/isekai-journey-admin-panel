@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\AdminUser;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use AdminUser\Route\AdminUserRouteMap;
@@ -33,7 +32,6 @@ class ListAdminUserTest extends DatabaseTestCase
                 new DateTimeImmutable('2019-12-09 10:20:30'),
                 'コンソールユーザー',
             ),
-            HashedPassword::reconstruct('hashed-password'),
         );
 
         $response = $this->withAuth()
