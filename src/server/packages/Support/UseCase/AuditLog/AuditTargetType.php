@@ -8,6 +8,8 @@ enum AuditTargetType: string
 {
     case AdminUser = 'AdminUser';
 
+    case Media = 'Media';
+
     case Person = 'Person';
 
     case Song = 'Song';

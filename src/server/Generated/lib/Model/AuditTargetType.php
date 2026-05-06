@@ -45,6 +45,8 @@ enum AuditTargetType: string
      */
     case ADMIN_USER = 'AdminUser';
 
+    case MEDIA = 'Media';
+
     case PERSON = 'Person';
 
     case SONG = 'Song';

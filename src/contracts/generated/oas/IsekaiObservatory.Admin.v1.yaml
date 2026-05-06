@@ -1413,6 +1413,7 @@ components:
       type: string
       enum:
         - AdminUser
+        - Media
         - Person
         - Song
         - SongTag

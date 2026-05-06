@@ -17,6 +17,7 @@ enum AuditAction {
 @doc("監査ログの対象種別")
 enum AuditTargetType {
   adminUser: "AdminUser",
+  media: "Media",
   person: "Person",
   song: "Song",
   songTag: "SongTag",
