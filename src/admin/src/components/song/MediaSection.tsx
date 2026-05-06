@@ -77,7 +77,7 @@ export const MediaSection = (props: Props) => {
   const [searchFormatValue, setSearchFormatValue] = createSignal<'' | `${MediaFormatValue}`>('');
   const [searchIsDisplay, setSearchIsDisplay] = createSignal<DisplayFilter>('');
   const [searchPage, setSearchPage] = createSignal(1);
-  const [searchPerPage, setSearchPerPage] = createSignal<PerPage>(50);
+  const [searchPerPage, setSearchPerPage] = createSignal<PerPage>(25);
   const [searchMaxPage, setSearchMaxPage] = createSignal(1);
   const [searching, setSearching] = createSignal(false);
   const [searchResults, setSearchResults] = createSignal<Media[]>([]);
@@ -203,7 +203,7 @@ export const MediaSection = (props: Props) => {
     setSearchFormatValue('');
     setSearchIsDisplay('');
     setSearchPage(1);
-    setSearchPerPage(50);
+    setSearchPerPage(25);
     setSearchMaxPage(1);
     setSearchError(null);
     setHasSearched(false);
@@ -257,7 +257,7 @@ export const MediaSection = (props: Props) => {
     setCreateIsDisplay(true);
   };
 
-  const candidateResults = () => (hasSearched() ? searchResults() : props.availableMedia());
+  const candidateResults = () => (hasSearched() ? searchResults() : []);
 
   return (
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
@@ -327,10 +327,10 @@ export const MediaSection = (props: Props) => {
           <div class="space-y-2">
             <Show
               when={candidateResults().length > 0}
-              fallback={<p class="text-sm text-base-content/60">{hasSearched() ? '条件に一致するメディアはありません。' : '候補のメディアはまだありません。'}</p>}
+              fallback={<p class="text-sm text-base-content/60">{hasSearched() ? '条件に一致するメディアはありません。' : '検索すると候補が表示されます。'}</p>}
             >
               <div class="mb-2 flex items-center justify-between text-xs text-base-content/60">
-                <p>{hasSearched() ? `${searchPage()} / ${searchMaxPage()} ページ` : `${candidateResults().length} 件の候補を表示中`}</p>
+                <p>{searchPage()} / {searchMaxPage()} ページ</p>
                 <Show when={hasSearched() && searchMaxPage() > 1}>
                   <div class="flex gap-2">
                     <button
