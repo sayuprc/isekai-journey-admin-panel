@@ -116,6 +116,7 @@ class UpdateSongTest extends DatabaseTestCase
                             'mediaId' => $newMedia->mediaId->value,
                             'title' => $newMedia->title->value,
                             'url' => $newMedia->url->value,
+                            'publishedAt' => $newMedia->publishedAt->value->format('Y-m-d'),
                             'type' => [
                                 'name' => $newMedia->type->getName(),
                                 'value' => $newMedia->type->value,

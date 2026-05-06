@@ -95,6 +95,7 @@ class GetSongTest extends DatabaseTestCase
                             'mediaId' => $media->mediaId->value,
                             'title' => $media->title->value,
                             'url' => $media->url->value,
+                            'publishedAt' => $media->publishedAt->value->format('Y-m-d'),
                             'type' => [
                                 'name' => $media->type->getName(),
                                 'value' => $media->type->value,

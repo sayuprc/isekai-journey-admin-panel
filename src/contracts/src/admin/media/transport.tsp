@@ -13,6 +13,7 @@ model MediaGetResponse {
 model MediaCreateRequest {
   title: mediaTitle;
   url: mediaUrl;
+  publishedAt: mediaPublishedAt;
   typeValue: MediaTypeValue;
   formatValue: MediaFormatValue;
   isDisplay: boolean;
@@ -25,6 +26,7 @@ model MediaCreateResponse {
 model MediaUpdateRequest {
   title: mediaTitle;
   url: mediaUrl;
+  publishedAt: mediaPublishedAt;
   typeValue: MediaTypeValue;
   formatValue: MediaFormatValue;
   isDisplay: boolean;

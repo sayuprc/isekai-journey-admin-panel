@@ -26,6 +26,7 @@ class CreateMediaTest extends DatabaseTestCase
             ->postJson(route(MediaRouteMap::Create), [
                 'title' => '描き続けた君へ MV',
                 'url' => 'https://example.com/media',
+                'publishedAt' => '2024-03-01',
                 'typeValue' => MediaType::Video->value,
                 'formatValue' => MediaFormat::Mv->value,
                 'isDisplay' => true,
@@ -34,6 +35,7 @@ class CreateMediaTest extends DatabaseTestCase
                 ->whereType('media.mediaId', 'string')
                 ->where('media.title', '描き続けた君へ MV')
                 ->where('media.url', 'https://example.com/media')
+                ->where('media.publishedAt', '2024-03-01')
                 ->where('media.type', [
                     'name' => MediaType::Video->getName(),
                     'value' => MediaType::Video->value,
@@ -64,6 +66,7 @@ class CreateMediaTest extends DatabaseTestCase
             ->postJson(route(MediaRouteMap::Create), [
                 'title' => '別タイトル',
                 'url' => 'https://example.com/media',
+                'publishedAt' => '2024-03-01',
                 'typeValue' => MediaType::Video->value,
                 'formatValue' => MediaFormat::StreamArchive->value,
                 'isDisplay' => true,

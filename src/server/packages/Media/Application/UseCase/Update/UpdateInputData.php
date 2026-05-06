@@ -10,6 +10,7 @@ readonly class UpdateInputData
         public string $mediaId,
         public string $title,
         public string $url,
+        public string $publishedAt,
         public int $typeValue,
         public int $formatValue,
         public bool $isDisplay,

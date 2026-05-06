@@ -60,6 +60,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'string',
         'title' => 'string',
         'url' => 'string',
+        'published_at' => '\DateTime',
         'type' => '\OpenAPI\Client\Model\MediaType',
         'format' => '\OpenAPI\Client\Model\MediaFormat',
         'is_display' => 'bool'
@@ -76,6 +77,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'uuid',
         'title' => null,
         'url' => 'uri',
+        'published_at' => 'date',
         'type' => null,
         'format' => null,
         'is_display' => null
@@ -90,6 +92,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => false,
         'title' => false,
         'url' => false,
+        'published_at' => false,
         'type' => false,
         'format' => false,
         'is_display' => false
@@ -184,6 +187,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'mediaId',
         'title' => 'title',
         'url' => 'url',
+        'published_at' => 'publishedAt',
         'type' => 'type',
         'format' => 'format',
         'is_display' => 'isDisplay'
@@ -198,6 +202,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'setMediaId',
         'title' => 'setTitle',
         'url' => 'setUrl',
+        'published_at' => 'setPublishedAt',
         'type' => 'setType',
         'format' => 'setFormat',
         'is_display' => 'setIsDisplay'
@@ -212,6 +217,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'getMediaId',
         'title' => 'getTitle',
         'url' => 'getUrl',
+        'published_at' => 'getPublishedAt',
         'type' => 'getType',
         'format' => 'getFormat',
         'is_display' => 'getIsDisplay'
@@ -277,6 +283,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('media_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('url', $data ?? [], null);
+        $this->setIfExists('published_at', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('format', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
@@ -321,6 +328,9 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
 
         if ($this->container['url'] === null) {
             $invalidProperties[] = "'url' can't be null";
+        }
+        if ($this->container['published_at'] === null) {
+            $invalidProperties[] = "'published_at' can't be null";
         }
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
@@ -428,6 +438,33 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable url cannot be null');
         }
         $this->container['url'] = $url;
+
+        return $this;
+    }
+
+    /**
+     * Gets published_at
+     *
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->container['published_at'];
+    }
+
+    /**
+     * Sets published_at
+     *
+     * @param \DateTime $published_at 公開日
+     *
+     * @return self
+     */
+    public function setPublishedAt($published_at)
+    {
+        if (is_null($published_at)) {
+            throw new \InvalidArgumentException('non-nullable published_at cannot be null');
+        }
+        $this->container['published_at'] = $published_at;
 
         return $this;
     }

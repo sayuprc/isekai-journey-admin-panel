@@ -15,9 +15,11 @@ use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use DateTimeImmutable;
+use DateType\ImmutableDate;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -185,11 +187,13 @@ trait EntityFactory
         MediaType $type,
         bool $isDisplay,
         MediaFormat $format = MediaFormat::Other,
+        ?ImmutableDate $publishedAt = null,
     ): Media {
         return new Media(
             MediaId::reconstruct($mediaId),
             MediaTitle::reconstruct($title),
             MediaUrl::reconstruct($url),
+            MediaPublishedAt::reconstruct($publishedAt ?? new ImmutableDate('2024-01-01')),
             $type,
             $format,
             $isDisplay,

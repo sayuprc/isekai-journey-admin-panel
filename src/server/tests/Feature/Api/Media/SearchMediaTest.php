@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Media;
 
+use DateType\ImmutableDate;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
@@ -22,7 +23,7 @@ class SearchMediaTest extends DatabaseTestCase
     public function canSearchByTitle(): void
     {
         $repository = $this->app->make(MediaRepository::class);
-        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv));
+        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv, new ImmutableDate('2024-03-01')));
         $repository->save($this->createMedia($this->generateUuid(), '別の動画', 'https://example.com/other', MediaType::Article, true, MediaFormat::Other));
 
         $this->withAuth()
@@ -30,6 +31,7 @@ class SearchMediaTest extends DatabaseTestCase
             ->assertStatus(200)
             ->assertJsonCount(1, 'media')
             ->assertJsonPath('media.0.title', '描き続けた君へ MV')
+            ->assertJsonPath('media.0.publishedAt', '2024-03-01')
             ->assertJsonPath('maxPage', 1);
     }
 

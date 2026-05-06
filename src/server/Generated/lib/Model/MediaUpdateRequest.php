@@ -59,6 +59,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $openAPITypes = [
         'title' => 'string',
         'url' => 'string',
+        'published_at' => '\DateTime',
         'type_value' => '\OpenAPI\Client\Model\MediaTypeValue',
         'format_value' => '\OpenAPI\Client\Model\MediaFormatValue',
         'is_display' => 'bool'
@@ -74,6 +75,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $openAPIFormats = [
         'title' => null,
         'url' => 'uri',
+        'published_at' => 'date',
         'type_value' => null,
         'format_value' => null,
         'is_display' => null
@@ -87,6 +89,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static array $openAPINullables = [
         'title' => false,
         'url' => false,
+        'published_at' => false,
         'type_value' => false,
         'format_value' => false,
         'is_display' => false
@@ -180,6 +183,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $attributeMap = [
         'title' => 'title',
         'url' => 'url',
+        'published_at' => 'publishedAt',
         'type_value' => 'typeValue',
         'format_value' => 'formatValue',
         'is_display' => 'isDisplay'
@@ -193,6 +197,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $setters = [
         'title' => 'setTitle',
         'url' => 'setUrl',
+        'published_at' => 'setPublishedAt',
         'type_value' => 'setTypeValue',
         'format_value' => 'setFormatValue',
         'is_display' => 'setIsDisplay'
@@ -206,6 +211,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $getters = [
         'title' => 'getTitle',
         'url' => 'getUrl',
+        'published_at' => 'getPublishedAt',
         'type_value' => 'getTypeValue',
         'format_value' => 'getFormatValue',
         'is_display' => 'getIsDisplay'
@@ -270,6 +276,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     {
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('url', $data ?? [], null);
+        $this->setIfExists('published_at', $data ?? [], null);
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('format_value', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
@@ -311,6 +318,9 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
 
         if ($this->container['url'] === null) {
             $invalidProperties[] = "'url' can't be null";
+        }
+        if ($this->container['published_at'] === null) {
+            $invalidProperties[] = "'published_at' can't be null";
         }
         if ($this->container['type_value'] === null) {
             $invalidProperties[] = "'type_value' can't be null";
@@ -391,6 +401,33 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
             throw new \InvalidArgumentException('non-nullable url cannot be null');
         }
         $this->container['url'] = $url;
+
+        return $this;
+    }
+
+    /**
+     * Gets published_at
+     *
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->container['published_at'];
+    }
+
+    /**
+     * Sets published_at
+     *
+     * @param \DateTime $published_at 公開日
+     *
+     * @return self
+     */
+    public function setPublishedAt($published_at)
+    {
+        if (is_null($published_at)) {
+            throw new \InvalidArgumentException('non-nullable published_at cannot be null');
+        }
+        $this->container['published_at'] = $published_at;
 
         return $this;
     }

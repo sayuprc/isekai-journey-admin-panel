@@ -40,6 +40,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => '描き続けた君へ 配信アーカイブ',
                 'url' => 'https://example.com/archive',
+                'publishedAt' => '2024-04-02',
                 'typeValue' => MediaType::SocialPost->value,
                 'formatValue' => MediaFormat::StreamArchive->value,
                 'isDisplay' => false,
@@ -49,6 +50,7 @@ class UpdateMediaTest extends DatabaseTestCase
                     'mediaId' => $uuid,
                     'title' => '描き続けた君へ 配信アーカイブ',
                     'url' => 'https://example.com/archive',
+                    'publishedAt' => '2024-04-02',
                     'type' => [
                         'name' => MediaType::SocialPost->getName(),
                         'value' => MediaType::SocialPost->value,
@@ -85,6 +87,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'mediaId' => $bodyMediaId,
                 'title' => '描き続けた君へ 配信アーカイブ',
                 'url' => 'https://example.com/archive',
+                'publishedAt' => '2024-04-02',
                 'typeValue' => MediaType::Video->value,
                 'formatValue' => MediaFormat::StreamArchive->value,
                 'isDisplay' => true,
@@ -113,6 +116,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => '',
                 'url' => '',
+                'publishedAt' => '2024-04-02',
                 'typeValue' => 0,
                 'formatValue' => 0,
                 'isDisplay' => true,
@@ -161,6 +165,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $targetMediaId), [
                 'title' => '更新対象メディア',
                 'url' => 'https://example.com/existing',
+                'publishedAt' => '2024-04-02',
                 'typeValue' => MediaType::Video->value,
                 'formatValue' => MediaFormat::Mv->value,
                 'isDisplay' => true,

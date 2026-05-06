@@ -51,6 +51,7 @@ readonly class CreateUseCase
             $result = $this->service->prepareForCreate(
                 $inputData->title,
                 $inputData->url,
+                $inputData->publishedAt,
                 $inputData->typeValue,
                 $inputData->formatValue,
                 $inputData->isDisplay,

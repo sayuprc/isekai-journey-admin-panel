@@ -12,14 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
- * @property string          $media_id   メディアID
- * @property string          $title      タイトル
- * @property string          $url        URL
- * @property int             $type       メディア種別
- * @property int             $format     メディア形式
- * @property bool            $is_display 表示フラグ
- * @property CarbonImmutable $created_at 作成日時
- * @property CarbonImmutable $updated_at 更新日時
+ * @property string          $media_id     メディアID
+ * @property string          $title        タイトル
+ * @property string          $url          URL
+ * @property CarbonImmutable $published_at 公開日
+ * @property int             $type         メディア種別
+ * @property int             $format       メディア形式
+ * @property bool            $is_display   表示フラグ
+ * @property CarbonImmutable $created_at   作成日時
+ * @property CarbonImmutable $updated_at   更新日時
  * @property-read Collection<int, SongMediaLink> $songMediaLinks
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Media newModelQuery()
@@ -44,6 +45,7 @@ class Media extends Model
     {
         return [
             'is_display' => 'bool',
+            'published_at' => 'immutable_date',
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
         ];
