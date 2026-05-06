@@ -12,7 +12,6 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\HasherInterface;
-use Auth\Application\UseCase\Login\LoginOutputData;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
@@ -59,7 +58,7 @@ readonly class RegisterFinishUseCase
     }
 
     /**
-     * @return Result<LoginOutputData, UseCaseError>
+     * @return Result<RegisterFinishOutputData, UseCaseError>
      */
     public function handle(RegisterFinishInputData $inputData): Result
     {
@@ -128,7 +127,7 @@ readonly class RegisterFinishUseCase
                 AdminUserId::reconstruct($state->adminUserId),
             );
 
-            return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
+            return new Ok(new RegisterFinishOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
     }
 

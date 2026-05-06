@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth\Application\UseCase\LoginFinish;
 
 use AdminUser\Domain\Models\AdminUserId;
-use Auth\Application\UseCase\Login\LoginOutputData;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
@@ -40,7 +39,7 @@ readonly class LoginFinishUseCase
     }
 
     /**
-     * @return Result<LoginOutputData, UseCaseError>
+     * @return Result<LoginFinishOutputData, UseCaseError>
      */
     public function handle(LoginFinishInputData $inputData): Result
     {
@@ -96,7 +95,7 @@ readonly class LoginFinishUseCase
                 AdminUserId::reconstruct($state->adminUserId),
             );
 
-            return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
+            return new Ok(new LoginFinishOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
     }
 }

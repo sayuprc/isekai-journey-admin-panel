@@ -39,8 +39,9 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
      */
     private Serializer $serializer;
 
-    public function __construct()
-    {
+    public function __construct(
+        private PasskeyCredentialRecordConverter $credentialRecordConverter,
+    ) {
         $serializer = new WebauthnSerializerFactory(AttestationStatementSupportManager::create())->create();
         assert($serializer instanceof Serializer);
         $this->serializer = $serializer;
@@ -178,7 +179,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
 
         $credentialRecord = AuthenticatorAssertionResponseValidator::create($factory->requestCeremony())
             ->check(
-                $passkey->toCredentialRecord(),
+                $this->credentialRecordConverter->toCredentialRecord($passkey),
                 $response,
                 $options,
                 $this->host(),
