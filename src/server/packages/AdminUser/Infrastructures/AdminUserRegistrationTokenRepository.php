@@ -7,7 +7,9 @@ namespace AdminUser\Infrastructures;
 use AdminUser\Domain\Models\AdminUserRegistrationToken;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenId;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenRepositoryInterface;
+use AdminUser\Domain\Models\Email;
 use App\Models\AdminUser\AdminUserRegistrationToken as Model;
+use DateTimeImmutable;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
@@ -31,6 +33,20 @@ readonly class AdminUserRegistrationTokenRepository implements AdminUserRegistra
         return $this->hydrate($found);
     }
 
+    /**
+     * @return list<AdminUserRegistrationToken>
+     */
+    #[Override]
+    public function findByEmail(Email $email): array
+    {
+        return array_values(Model::query()
+            ->where('email', $email->value)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map($this->hydrate(...))
+            ->all());
+    }
+
     #[Override]
     public function save(AdminUserRegistrationToken $token): AdminUserRegistrationToken
     {
@@ -49,6 +65,17 @@ readonly class AdminUserRegistrationTokenRepository implements AdminUserRegistra
         ]);
 
         return $token;
+    }
+
+    #[Override]
+    public function markUsed(AdminUserRegistrationTokenId $adminUserRegistrationTokenId, DateTimeImmutable $usedAt): void
+    {
+        Model::query()
+            ->where('admin_user_registration_token_id', $this->converter->toBin($adminUserRegistrationTokenId->value))
+            ->update([
+                'used_at' => $usedAt->format('Y-m-d H:i:s'),
+                'updated_at' => now(),
+            ]);
     }
 
     private function hydrate(Model $model): AdminUserRegistrationToken

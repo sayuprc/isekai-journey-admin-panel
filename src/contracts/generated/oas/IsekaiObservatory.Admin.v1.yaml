@@ -193,6 +193,86 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
+  /auth/login/finish:
+    post:
+      operationId: AuthenticateService_loginFinish
+      description: パスキーログイン完了API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyLoginFinishResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyLoginFinishRequest'
+  /auth/login/start:
+    post:
+      operationId: AuthenticateService_loginStart
+      description: パスキーログイン開始API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyLoginStartResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyLoginStartRequest'
   /auth/refresh:
     post:
       operationId: AuthenticateService_refresh
@@ -227,6 +307,86 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
+  /auth/register/finish:
+    post:
+      operationId: AuthenticateService_registerFinish
+      description: パスキー登録完了API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyRegistrationFinishResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyRegistrationFinishRequest'
+  /auth/register/start:
+    post:
+      operationId: AuthenticateService_registerStart
+      description: パスキー登録開始API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyRegistrationStartResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyRegistrationStartRequest'
   /media:
     post:
       operationId: MediaService_createMedia
@@ -1615,6 +1775,93 @@ components:
       properties:
         media:
           $ref: '#/components/schemas/Media'
+    PasskeyLoginFinishRequest:
+      type: object
+      required:
+        - authCeremonyId
+        - credential
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        credential:
+          type: object
+          unevaluatedProperties: {}
+    PasskeyLoginFinishResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshTokenId
+        - refreshToken
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
+    PasskeyLoginStartRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+    PasskeyLoginStartResponse:
+      type: object
+      required:
+        - authCeremonyId
+        - publicKey
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        publicKey:
+          type: object
+          unevaluatedProperties: {}
+    PasskeyRegistrationFinishRequest:
+      type: object
+      required:
+        - authCeremonyId
+        - credential
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        credential:
+          type: object
+          unevaluatedProperties: {}
+    PasskeyRegistrationFinishResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshTokenId
+        - refreshToken
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
+    PasskeyRegistrationStartRequest:
+      type: object
+      required:
+        - email
+        - registrationToken
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        registrationToken:
+          $ref: '#/components/schemas/registrationToken'
+    PasskeyRegistrationStartResponse:
+      type: object
+      required:
+        - authCeremonyId
+        - publicKey
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        publicKey:
+          type: object
+          unevaluatedProperties: {}
     PerPage:
       type: integer
       format: int32
@@ -2262,6 +2509,10 @@ components:
       type: string
       format: uuid
       description: 監査ログID
+    authCeremonyId:
+      type: string
+      format: uuid
+      description: 認証セッションID
     createdAt:
       type: string
       format: date-time
@@ -2343,6 +2594,10 @@ components:
       type: string
       format: uuid
       description: リフレッシュトークンID
+    registrationToken:
+      type: string
+      format: password
+      description: 管理ユーザー登録トークン
     roleName:
       type: string
       minLength: 1

@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\AuditLog\GetAuditLogController;
 use App\Http\Controllers\Api\AuditLog\SearchAuditLogController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\LoginFinishController;
+use App\Http\Controllers\Api\Auth\LoginStartController;
+use App\Http\Controllers\Api\Auth\RegisterFinishController;
+use App\Http\Controllers\Api\Auth\RegisterStartController;
 use App\Http\Controllers\Api\Auth\RefreshController;
 use App\Http\Controllers\Api\Media\CreateMediaController;
 use App\Http\Controllers\Api\Media\DeleteMediaController;
@@ -51,7 +55,11 @@ Route::middleware(OpenApiValidator::class)->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('v1')->group(function () {
             Route::prefix('auth')->group(function () {
+                Route::post('/register/start', [RegisterStartController::class, 'handle'])->name(AuthRouteMap::RegisterStart);
+                Route::post('/register/finish', [RegisterFinishController::class, 'handle'])->name(AuthRouteMap::RegisterFinish);
                 Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
+                Route::post('/login/start', [LoginStartController::class, 'handle'])->name(AuthRouteMap::LoginStart);
+                Route::post('/login/finish', [LoginFinishController::class, 'handle'])->name(AuthRouteMap::LoginFinish);
                 Route::post('/refresh', [RefreshController::class, 'handle'])->name(AuthRouteMap::Refresh);
             });
 

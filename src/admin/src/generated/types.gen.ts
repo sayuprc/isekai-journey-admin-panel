@@ -152,6 +152,55 @@ export type MediaUpdateResponse = {
     media: Media;
 };
 
+export type PasskeyLoginFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    credential: {
+        [key: string]: unknown;
+    };
+};
+
+export type PasskeyLoginFinishResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type PasskeyLoginStartRequest = {
+    email: Email;
+};
+
+export type PasskeyLoginStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
+};
+
+export type PasskeyRegistrationFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    credential: {
+        [key: string]: unknown;
+    };
+};
+
+export type PasskeyRegistrationFinishResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type PasskeyRegistrationStartRequest = {
+    email: Email;
+    registrationToken: RegistrationToken;
+};
+
+export type PasskeyRegistrationStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
+};
+
 /**
  * 1ページあたりの件数
  */
@@ -438,6 +487,11 @@ export type AdminUserName = string;
 export type AuditLogId = string;
 
 /**
+ * 認証セッションID
+ */
+export type AuthCeremonyId = string;
+
+/**
  * 作成日時
  */
 export type CreatedAt = string;
@@ -536,6 +590,11 @@ export type RefreshToken = string;
  * リフレッシュトークンID
  */
 export type RefreshTokenId = string;
+
+/**
+ * 管理ユーザー登録トークン
+ */
+export type RegistrationToken = string;
 
 /**
  * 役割名
@@ -751,6 +810,96 @@ export type AuthenticateServiceLoginResponses = {
 
 export type AuthenticateServiceLoginResponse = AuthenticateServiceLoginResponses[keyof AuthenticateServiceLoginResponses];
 
+export type AuthenticateServiceLoginFinishData = {
+    body: PasskeyLoginFinishRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/login/finish';
+};
+
+export type AuthenticateServiceLoginFinishErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceLoginFinishError = AuthenticateServiceLoginFinishErrors[keyof AuthenticateServiceLoginFinishErrors];
+
+export type AuthenticateServiceLoginFinishResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PasskeyLoginFinishResponse;
+};
+
+export type AuthenticateServiceLoginFinishResponse = AuthenticateServiceLoginFinishResponses[keyof AuthenticateServiceLoginFinishResponses];
+
+export type AuthenticateServiceLoginStartData = {
+    body: PasskeyLoginStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/login/start';
+};
+
+export type AuthenticateServiceLoginStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceLoginStartError = AuthenticateServiceLoginStartErrors[keyof AuthenticateServiceLoginStartErrors];
+
+export type AuthenticateServiceLoginStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PasskeyLoginStartResponse;
+};
+
+export type AuthenticateServiceLoginStartResponse = AuthenticateServiceLoginStartResponses[keyof AuthenticateServiceLoginStartResponses];
+
 export type AuthenticateServiceRefreshData = {
     body: RefreshTokenRequest;
     path?: never;
@@ -791,6 +940,96 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type AuthenticateServiceRegisterFinishData = {
+    body: PasskeyRegistrationFinishRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register/finish';
+};
+
+export type AuthenticateServiceRegisterFinishErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterFinishError = AuthenticateServiceRegisterFinishErrors[keyof AuthenticateServiceRegisterFinishErrors];
+
+export type AuthenticateServiceRegisterFinishResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PasskeyRegistrationFinishResponse;
+};
+
+export type AuthenticateServiceRegisterFinishResponse = AuthenticateServiceRegisterFinishResponses[keyof AuthenticateServiceRegisterFinishResponses];
+
+export type AuthenticateServiceRegisterStartData = {
+    body: PasskeyRegistrationStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register/start';
+};
+
+export type AuthenticateServiceRegisterStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterStartError = AuthenticateServiceRegisterStartErrors[keyof AuthenticateServiceRegisterStartErrors];
+
+export type AuthenticateServiceRegisterStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PasskeyRegistrationStartResponse;
+};
+
+export type AuthenticateServiceRegisterStartResponse = AuthenticateServiceRegisterStartResponses[keyof AuthenticateServiceRegisterStartResponses];
 
 export type MediaServiceCreateMediaData = {
     body: MediaCreateRequest;
