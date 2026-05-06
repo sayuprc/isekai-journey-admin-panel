@@ -86,6 +86,7 @@ export const MediaSection = (props: Props) => {
 
   const [createTitle, setCreateTitle] = createSignal('');
   const [createUrl, setCreateUrl] = createSignal('');
+  const [createPublishedAt, setCreatePublishedAt] = createSignal('');
   const [createTypeValue, setCreateTypeValue] = createSignal<MediaTypeValue>(1);
   const [createFormatValue, setCreateFormatValue] = createSignal<MediaFormatValue>(1);
   const [createIsDisplay, setCreateIsDisplay] = createSignal(true);
@@ -213,6 +214,7 @@ export const MediaSection = (props: Props) => {
   const handleCreate = async () => {
     const title = createTitle().trim();
     const url = createUrl().trim();
+    const publishedAt = createPublishedAt();
 
     setCreateError(null);
 
@@ -226,6 +228,11 @@ export const MediaSection = (props: Props) => {
       return;
     }
 
+    if (publishedAt === '') {
+      setCreateError('公開日を入力してください');
+      return;
+    }
+
     if (hasExactUrlDuplicate()) {
       setCreateError('同じURLの既存メディアがあります。既存メディアの追加を検討してください');
       return;
@@ -236,6 +243,7 @@ export const MediaSection = (props: Props) => {
     const { data, error, status } = await client.api.media.post({
       title,
       url,
+      publishedAt,
       typeValue: createTypeValue(),
       formatValue: createFormatValue(),
       isDisplay: createIsDisplay(),
@@ -252,6 +260,7 @@ export const MediaSection = (props: Props) => {
     addEntry(data.media);
     setCreateTitle('');
     setCreateUrl('');
+    setCreatePublishedAt('');
     setCreateTypeValue(1);
     setCreateFormatValue(1);
     setCreateIsDisplay(true);
@@ -413,6 +422,15 @@ export const MediaSection = (props: Props) => {
               value={createUrl()}
               onInput={e => setCreateUrl(e.currentTarget.value)}
               placeholder="https://example.com/media"
+            />
+          </div>
+
+          <div>
+            <input
+              type="date"
+              class="input input-bordered w-full"
+              value={createPublishedAt()}
+              onInput={e => setCreatePublishedAt(e.currentTarget.value)}
             />
           </div>
 
