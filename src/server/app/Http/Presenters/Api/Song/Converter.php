@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Song;
 
+use DateTime;
 use OpenAPI\Client\Model\MediaFormat as OpenApiMediaFormat;
 use OpenAPI\Client\Model\MediaFormatValue;
 use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
@@ -65,7 +66,7 @@ readonly class Converter
             ->setMediaId($media->mediaId)
             ->setTitle($media->title)
             ->setUrl($media->url)
-            ->setPublishedAt(new \DateTime($media->publishedAt))
+            ->setPublishedAt(new DateTime($media->publishedAt))
             ->setType($this->toOpenApiMediaType($media))
             ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay)
