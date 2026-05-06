@@ -65,6 +65,7 @@ readonly class Converter
             ->setMediaId($media->mediaId)
             ->setTitle($media->title)
             ->setUrl($media->url)
+            ->setPublishedAt(new \DateTime($media->publishedAt))
             ->setType($this->toOpenApiMediaType($media))
             ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay)

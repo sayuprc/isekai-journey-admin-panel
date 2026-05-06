@@ -10,6 +10,7 @@ readonly class AssembledMedia
         public string $mediaId,
         public string $title,
         public string $url,
+        public string $publishedAt,
         public string $typeName,
         public int $typeValue,
         public string $formatName,
