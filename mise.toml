@@ -112,11 +112,12 @@ run = "bun install"
 
 [tasks."worktree:init"]
 description = "worktree ごとのローカル実行設定を生成し、開発環境を起動する"
-run = [
-  "./tools/worktree/init.sh",
-  { task = "up" },
-  { tasks = ["api:composer:install", "bun:install"] },
-]
+run = '''
+./tools/worktree/init.sh
+mise run up
+mise run api:composer:install
+mise run bun:install
+'''
 
 [tasks."worktree:status"]
 description = "現在の worktree に割り当てられたポートと URL を表示する"
