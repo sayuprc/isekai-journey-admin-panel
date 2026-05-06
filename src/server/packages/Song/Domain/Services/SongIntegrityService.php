@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Domain\Services;
 
+use Media\Domain\Models\MediaRepositoryInterface;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use ResultType\Err;
@@ -11,6 +12,7 @@ use ResultType\Ok;
 use ResultType\Result;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
+use Song\Domain\Models\Media\SongMediaLinks;
 use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongId;
@@ -29,6 +31,7 @@ use Support\Domain\ValueObjects\OrderNo;
 /**
  * @phpstan-type person array{personId: string, role: int, orderNo: int}
  * @phpstan-type songTag array{songTagId: string}
+ * @phpstan-type songMedia array{mediaId: string, orderNo: int}
  */
 class SongIntegrityService
 {
@@ -37,12 +40,14 @@ class SongIntegrityService
         private readonly SongRepositoryInterface $songRepository,
         private readonly PersonRepositoryInterface $personRepository,
         private readonly SongTagRepositoryInterface $songTagRepository,
+        private readonly MediaRepositoryInterface $mediaRepository,
     ) {
     }
 
     /**
-     * @param list<songTag> $tags
-     * @param list<person>  $persons
+     * @param list<songTag>   $tags
+     * @param list<person>    $persons
+     * @param list<songMedia> $media
      *
      * @return Result<Song, DomainError>
      */
@@ -54,17 +59,23 @@ class SongIntegrityService
         bool $isDisplay,
         array $tags,
         array $persons,
+        array $media,
     ): Result {
-        $result = Result::collect(
-            SongPersons::fromArray($persons),
-            SongTagReferences::fromArray($tags),
-        );
+        $personsResult = SongPersons::fromArray($persons);
+        $tagsResult = SongTagReferences::fromArray($tags);
+        $mediaResult = SongMediaLinks::fromArray($media);
 
-        if ($result->isErr()) {
-            return new Err($this->mergeValidationErrors($result->unwrapErr()));
+        if ($personsResult->isErr() || $tagsResult->isErr() || $mediaResult->isErr()) {
+            return new Err($this->mergeValidationErrors([
+                $personsResult->unwrapErrOr(null),
+                $tagsResult->unwrapErrOr(null),
+                $mediaResult->unwrapErrOr(null),
+            ]));
         }
 
-        [$persons, $tags] = $result->unwrap();
+        $persons = $personsResult->unwrap();
+        $tags = $tagsResult->unwrap();
+        $media = $mediaResult->unwrap();
 
         if (! $this->existsPersons($persons)) {
             return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
@@ -72,6 +83,10 @@ class SongIntegrityService
 
         if (! $this->existsSongTags($tags)) {
             return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
+        }
+
+        if (! $this->existsMedia($media)) {
+            return new Err(new BusinessRuleViolationError('指定されたメディアの一部が存在しません。'));
         }
 
         return $this->build(
@@ -85,12 +100,14 @@ class SongIntegrityService
             $this->songRepository->getMaxOrderNo() + 10,
             $persons,
             $tags,
+            $media,
         );
     }
 
     /**
-     * @param list<songTag> $tags
-     * @param list<person>  $persons
+     * @param list<songTag>   $tags
+     * @param list<person>    $persons
+     * @param list<songMedia> $media
      *
      * @return Result<Song, DomainError>
      */
@@ -104,17 +121,23 @@ class SongIntegrityService
         int $orderNo,
         array $tags,
         array $persons,
+        array $media,
     ): Result {
-        $result = Result::collect(
-            SongPersons::fromArray($persons),
-            SongTagReferences::fromArray($tags),
-        );
+        $personsResult = SongPersons::fromArray($persons);
+        $tagsResult = SongTagReferences::fromArray($tags);
+        $mediaResult = SongMediaLinks::fromArray($media);
 
-        if ($result->isErr()) {
-            return new Err($this->mergeValidationErrors($result->unwrapErr()));
+        if ($personsResult->isErr() || $tagsResult->isErr() || $mediaResult->isErr()) {
+            return new Err($this->mergeValidationErrors([
+                $personsResult->unwrapErrOr(null),
+                $tagsResult->unwrapErrOr(null),
+                $mediaResult->unwrapErrOr(null),
+            ]));
         }
 
-        [$persons, $tags] = $result->unwrap();
+        $persons = $personsResult->unwrap();
+        $tags = $tagsResult->unwrap();
+        $media = $mediaResult->unwrap();
 
         if (! $this->existsPersons($persons)) {
             return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
@@ -122,6 +145,10 @@ class SongIntegrityService
 
         if (! $this->existsSongTags($tags)) {
             return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
+        }
+
+        if (! $this->existsMedia($media)) {
+            return new Err(new BusinessRuleViolationError('指定されたメディアの一部が存在しません。'));
         }
 
         return $this->build(
@@ -134,6 +161,7 @@ class SongIntegrityService
             $orderNo,
             $persons,
             $tags,
+            $media,
         );
     }
 
@@ -150,6 +178,7 @@ class SongIntegrityService
         int $orderNo,
         SongPersons $persons,
         SongTagReferences $tags,
+        SongMediaLinks $media,
     ): Result {
         $normalizedLyricsLink = $this->normalizeOptionalString($lyricsLink);
         $lyricsLinkResult = is_null($normalizedLyricsLink)
@@ -176,7 +205,7 @@ class SongIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $persons]));
+            ->map(fn (array $values): Song => new Song(...[...$values, $tags, $persons, $media]));
     }
 
     /**
@@ -246,6 +275,25 @@ class SongIntegrityService
         $founds = $this->songTagRepository->findByIds(...array_values($songTagIds));
 
         return count($songTagIds) === count($founds);
+    }
+
+    private function existsMedia(SongMediaLinks $media): bool
+    {
+        $mediaIds = [];
+
+        foreach ($media as $item) {
+            if (! isset($mediaIds[$item->mediaId->value])) {
+                $mediaIds[$item->mediaId->value] = $item->mediaId;
+            }
+        }
+
+        if ($mediaIds === []) {
+            return true;
+        }
+
+        $founds = $this->mediaRepository->findByIds(...array_values($mediaIds));
+
+        return count($mediaIds) === count($founds);
     }
 
     private function normalizeOptionalString(?string $value): ?string

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Song;
 
+use Media\Domain\Models\MediaFormat;
+use Media\Domain\Models\MediaType;
+use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
@@ -33,6 +36,9 @@ class UpdateSongTest extends DatabaseTestCase
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($oldTag = $this->createSongTag($this->generateUuid(), '旧タグ', 10));
         $tagRepo->save($newTag = $this->createSongTag($this->generateUuid(), '新タグ', 20));
+        $mediaRepo = $this->app->make(MediaRepository::class);
+        $mediaRepo->save($oldMedia = $this->createMedia($this->generateUuid(), '旧 Media', 'https://example.com/old-media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($newMedia = $this->createMedia($this->generateUuid(), '新 Media', 'https://example.com/new-media', MediaType::OfficialPage, true, MediaFormat::ShortVideo));
 
         $songId = $this->generateUuid();
 
@@ -51,6 +57,10 @@ class UpdateSongTest extends DatabaseTestCase
                     ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
                     ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
+                [],
+                [
+                    ['mediaId' => $oldMedia->mediaId->value, 'orderNo' => 1],
+                ],
             ),
         );
 
@@ -67,6 +77,7 @@ class UpdateSongTest extends DatabaseTestCase
                     ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
                 'tags' => [['songTagId' => $newTag->songTagId->value]],
+                'media' => [['mediaId' => $newMedia->mediaId->value, 'orderNo' => 1]],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -100,6 +111,23 @@ class UpdateSongTest extends DatabaseTestCase
                             'name' => $newTag->name->value,
                         ],
                     ],
+                    'media' => [
+                        [
+                            'mediaId' => $newMedia->mediaId->value,
+                            'title' => $newMedia->title->value,
+                            'url' => $newMedia->url->value,
+                            'type' => [
+                                'name' => $newMedia->type->getName(),
+                                'value' => $newMedia->type->value,
+                            ],
+                            'format' => [
+                                'name' => $newMedia->format->getName(),
+                                'value' => $newMedia->format->value,
+                            ],
+                            'isDisplay' => true,
+                            'orderNo' => 1,
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -120,6 +148,8 @@ class UpdateSongTest extends DatabaseTestCase
                 1,
                 [],
                 [],
+                [],
+                [],
             ),
         );
 
@@ -133,8 +163,10 @@ class UpdateSongTest extends DatabaseTestCase
                 'orderNo' => 1,
                 'persons' => [],
                 'tags' => [],
+                'media' => [],
             ])->assertStatus(200)
-            ->assertJsonPath('song.lyricsLink', null);
+            ->assertJsonPath('song.lyricsLink', null)
+            ->assertJsonPath('song.media', []);
     }
 
     #[Test]
@@ -167,6 +199,8 @@ class UpdateSongTest extends DatabaseTestCase
                     ['personId' => $person2->personId->value, 'role' => 2, 'orderNo' => 2],
                     ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 3],
                 ],
+                [],
+                [],
             ),
         );
 
@@ -184,6 +218,7 @@ class UpdateSongTest extends DatabaseTestCase
                     ['personId' => $person3->personId->value, 'role' => 3, 'orderNo' => 2],
                 ],
                 'tags' => [],
+                'media' => [],
             ])->assertStatus(200)
             ->assertExactJson([
                 'song' => [
@@ -212,6 +247,7 @@ class UpdateSongTest extends DatabaseTestCase
                         ],
                     ],
                     'tags' => [],
+                    'media' => [],
                 ],
             ]);
     }
@@ -222,7 +258,7 @@ class UpdateSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '曲名', '説明', null, SongType::Original, true, 1, [], []),
+            $this->createSong($songId, '曲名', '説明', null, SongType::Original, true, 1, [], [], [], []),
         );
 
         $this->withAuth()
@@ -235,6 +271,7 @@ class UpdateSongTest extends DatabaseTestCase
                 'orderNo' => 1,
                 'persons' => [],
                 'tags' => [['songTagId' => $this->generateUuid()]],
+                'media' => [],
             ])->assertStatus(400);
     }
 
@@ -244,7 +281,7 @@ class UpdateSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '曲名', '説明', null, SongType::Original, true, 1, [], []),
+            $this->createSong($songId, '曲名', '説明', null, SongType::Original, true, 1, [], [], [], []),
         );
 
         $tagRepo = $this->app->make(SongTagRepository::class);
@@ -263,6 +300,7 @@ class UpdateSongTest extends DatabaseTestCase
                     ['songTagId' => $tag->songTagId->value],
                     ['songTagId' => $tag->songTagId->value],
                 ],
+                'media' => [],
             ])->assertStatus(422);
     }
 

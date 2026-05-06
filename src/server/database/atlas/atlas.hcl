@@ -6,9 +6,11 @@ variable "table_schemas" {
     "file://schemas/admin-user-permissions.my.hcl",
     "file://schemas/persons.my.hcl",
     "file://schemas/songs.my.hcl",
+    "file://schemas/media.my.hcl",
     "file://schemas/song-tags.my.hcl",
     "file://schemas/song-taggings.my.hcl",
     "file://schemas/song-persons.my.hcl",
+    "file://schemas/song-media-links.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
   ]
 }

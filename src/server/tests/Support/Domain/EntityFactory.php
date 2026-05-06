@@ -15,11 +15,18 @@ use Auth\Domain\Models\Token\RefreshToken\HashedTokenValue;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use DateTimeImmutable;
+use Media\Domain\Models\Media;
+use Media\Domain\Models\MediaFormat;
+use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaTitle;
+use Media\Domain\Models\MediaType;
+use Media\Domain\Models\MediaUrl;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
+use Song\Domain\Models\Media\SongMediaLinks;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Persons\SongPersons;
 use Song\Domain\Models\Song;
@@ -56,6 +63,7 @@ trait EntityFactory
         mixed $lyricistsOrComposers = [],
         mixed $composersOrArrangers = [],
         mixed $arrangers = [],
+        mixed $media = [],
     ): Song {
         if ($lyricsLinkOrType instanceof SongType) {
             $lyricsLink = null;
@@ -69,6 +77,12 @@ trait EntityFactory
                 is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
                 is_array($composersOrArrangers) ? $composersOrArrangers : [],
             );
+            $media = $this->normalizeSongMedia(
+                is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
+                is_array($composersOrArrangers) ? $composersOrArrangers : [],
+                is_array($arrangers) ? $arrangers : [],
+                is_array($media) ? $media : [],
+            );
         } else {
             $lyricsLink = is_string($lyricsLinkOrType) ? $lyricsLinkOrType : null;
             $type = $typeOrIsDisplay;
@@ -80,6 +94,12 @@ trait EntityFactory
                 is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
                 is_array($composersOrArrangers) ? $composersOrArrangers : [],
                 is_array($arrangers) ? $arrangers : [],
+            );
+            $media = $this->normalizeSongMedia(
+                is_array($lyricistsOrComposers) ? $lyricistsOrComposers : [],
+                is_array($composersOrArrangers) ? $composersOrArrangers : [],
+                is_array($arrangers) ? $arrangers : [],
+                is_array($media) ? $media : [],
             );
         }
 
@@ -95,6 +115,7 @@ trait EntityFactory
             OrderNo::reconstruct($orderNo),
             SongTagReferences::fromArray($tags)->unwrap(),
             SongPersons::fromArray($persons)->unwrap(),
+            SongMediaLinks::fromArray(is_array($media) ? $media : [])->unwrap(),
         );
     }
 
@@ -131,12 +152,47 @@ trait EntityFactory
         ];
     }
 
+    /**
+     * @param list<array<string, mixed>> ...$candidates
+     *
+     * @return list<array{mediaId: string, orderNo: int}>
+     */
+    private function normalizeSongMedia(array ...$candidates): array
+    {
+        foreach ($candidates as $candidate) {
+            if ($candidate !== [] && array_key_exists('mediaId', $candidate[0] ?? [])) {
+                /** @var list<array{mediaId: string, orderNo: int}> */
+                return $candidate;
+            }
+        }
+
+        return [];
+    }
+
     protected function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
     {
         return new SongTag(
             SongTagId::reconstruct($songTagId),
             SongTagName::reconstruct($name),
             OrderNo::reconstruct($orderNo),
+        );
+    }
+
+    protected function createMedia(
+        string $mediaId,
+        string $title,
+        string $url,
+        MediaType $type,
+        bool $isDisplay,
+        MediaFormat $format = MediaFormat::Other,
+    ): Media {
+        return new Media(
+            MediaId::reconstruct($mediaId),
+            MediaTitle::reconstruct($title),
+            MediaUrl::reconstruct($url),
+            $type,
+            $format,
+            $isDisplay,
         );
     }
 

@@ -1,4 +1,5 @@
 import "../lib";
+import "../media";
 import "../persons";
 import "../song-tags";
 
@@ -36,6 +37,17 @@ scalar lyricsLink extends string;
     #{ personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", role: SongPersonRole.Composer, orderNo: 2 }
   ],
   tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲" }],
+  media: #[
+    #{
+      mediaId: "11111111-1111-1111-1111-111111111111",
+      title: "描き続けた君へ MV",
+      url: "https://example.com/media",
+      type: #{ name: "動画", value: MediaTypeValue.Video },
+      format: #{ name: "MV", value: MediaFormatValue.Mv },
+      isDisplay: true,
+      orderNo: 1,
+    }
+  ],
 })
 model Song {
   songId: songId;
@@ -47,6 +59,7 @@ model Song {
   orderNo: orderNo;
   persons: SongPerson[];
   tags: SongAttachedTag[];
+  media: SongLinkedMedia[];
 }
 
 @doc("楽曲種別名")
@@ -96,4 +109,22 @@ model SongPerson {
 model SongAttachedTag {
   songTagId: songTagId;
   name: songTagName;
+}
+
+@example(#{
+  mediaId: "11111111-1111-1111-1111-111111111111",
+  title: "描き続けた君へ MV",
+  url: "https://example.com/media",
+  type: #{ name: "動画", value: MediaTypeValue.Video },
+  format: #{ name: "MV", value: MediaFormatValue.Mv },
+  isDisplay: true,
+  orderNo: 1,
+})
+model SongLinkedMedia is Media {
+  orderNo: orderNo;
+}
+
+model RequestSongMediaLink {
+  mediaId: mediaId;
+  orderNo: orderNo;
 }

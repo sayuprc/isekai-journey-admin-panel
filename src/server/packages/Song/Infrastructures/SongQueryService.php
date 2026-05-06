@@ -59,7 +59,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
         }
 
         if ($criteria->type->isPresent()) {
-            $query = $query->where('type', $criteria->type->get());
+            $query = $query->where('type', $criteria->type->get()->value);
         }
 
         if ($criteria->isDisplay->isPresent()) {

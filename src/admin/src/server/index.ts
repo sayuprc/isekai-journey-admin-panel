@@ -2,6 +2,7 @@ import { Elysia } from 'elysia';
 import { ApiError } from './errors';
 import { adminUsers } from './routes/admin-users';
 import { auth } from './routes/auth';
+import { media } from './routes/media';
 import { persons } from './routes/persons';
 import { songTags } from './routes/song-tags';
 import { songTypes } from './routes/song-types';
@@ -16,6 +17,7 @@ export const app = new Elysia({ prefix: '/api' })
   })
   .use(auth)
   .use(adminUsers)
+  .use(media)
   .use(persons)
   .use(songTypes)
   .use(songTags)

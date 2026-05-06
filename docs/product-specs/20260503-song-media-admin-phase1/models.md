@@ -208,7 +208,7 @@ YouTube 動画、配信アーカイブ、MV、ショート動画、画像、外�
 `SongMediaLink`
 
 - MV、公式音源、歌ってみた動画、ショート動画などを紐づける
-- メディア種別と表示順を持てるようにする
+- 楽曲文脈での種別と表示順を持てるようにする
 
 `SongMediaLink` は第1回ローンチで扱う主要要素とする。
 
@@ -577,16 +577,9 @@ erDiagram
 候補:
 
 - メディア ID
-- 種別
-  - MV
-  - 公式音源
-  - 歌唱動画
-  - 配信アーカイブ
-  - ショート動画
-  - その他
 - タイトル
 - URL
-- 種別
+- MediaType
 - 公開日時
 - 表示有無
 - 表示順
@@ -600,9 +593,9 @@ erDiagram
 - 第1回での運用対象は、楽曲に紐づく公式 `Media` に限定する
 - 画像は不要
 - URL ベースのメディアを先に扱う
-- `Media` の最小モデルは `タイトル / URL / 種別 / 表示有無 / 表示順` とする
-- 初期の `Media` 種別は `MV / 公式音源 / 歌唱動画 / 配信アーカイブ / ショート動画 / その他` とする
-- 既存種別に当てはまらない動画 URL は `その他` を使う
+- `Media` の最小モデルは `タイトル / URL / MediaType / 表示有無` とする
+- 初期の `MediaType` は `video / article / social_post / official_page / other` とする
+- Phase 1 では `MediaType` は実質 `video` を中心に扱う
 - 将来は記事、投稿、特設ページなども `Media` に含められる前提で考える
 
 ### 初期の種別方針
@@ -635,13 +628,9 @@ erDiagram
 
 #### MediaType
 
-`Media` は Phase 1 では動画系を中心に運用するが、概念上は将来の汎用化を前提にする。
+`MediaType` は `Media` そのものの形式を表す共通軸とする。
 
-- `mv`
-- `official_audio`
-- `singing_video`
-- `stream_archive`
-- `short_video`
+- `video`
 - `article`
 - `social_post`
 - `official_page`
@@ -649,9 +638,27 @@ erDiagram
 
 補足:
 
-- Phase 1 の運用対象は、主に `mv / official_audio / singing_video / stream_archive / short_video / other`
-- `article / social_post / official_page` は将来 `Event` と連携する際に使えるよう、概念上は先に確保しておく
-- `MediaType` は「参照先の形式」を表し、`EventType` とは役割が異なる
+- Phase 1 の運用対象は、実質的には `video` が中心になる
+- `article / social_post / official_page` は将来 `Event` と連携する際に使えるよう、共通軸として先に確保しておく
+- `other` は将来の追加値と衝突しにくいよう、末尾の退避値として扱う
+- `MediaType` は「参照先の形式」を表し、`EventType` や楽曲文脈の分類とは役割が異なる
+
+#### SongMediaType
+
+`SongMediaType` は、ある `Media` が楽曲に対してどのような意味で紐づくかを表す楽曲文脈の軸とする。
+
+- `mv`
+- `audio_video`
+- `stream_archive`
+- `short_video`
+- `other`
+
+補足:
+
+- `MV` と `音源動画` はどちらも `MediaType` としては `video` だが、楽曲文脈では別の `SongMediaType` として扱う
+- 既存種別に当てはまらない動画 URL は `SongMediaType` の `other` を使う
+- `other` は将来の追加値と衝突しにくいよう、末尾の退避値として扱う
+- 将来 `Event` に固有の分類が必要になった場合は、`EventMediaType` のような別軸を追加する
 
 ## 集約の境界案
 
@@ -785,12 +792,13 @@ erDiagram
 
 - タイトル
 - URL
-- 種別
+- `MediaType`
 - 表示有無
 
 `SongMediaLink`
 
 - 関連付け対象の `Media`
+- `SongMediaType`
 - 楽曲内の表示順
 
 `Release`
@@ -809,7 +817,7 @@ erDiagram
 
 補足:
 
-- 第1回では `SongMediaLink` 自体に複雑な意味は持たせない
+- 第1回では `SongMediaLink` 自体に過剰な属性は持たせないが、楽曲文脈での分類として `SongMediaType` は持つ
 - 「どの出来事で使われたか」「どこで披露されたか」はこの段階では入力対象にしない
 
 #### あると望ましい
@@ -1307,15 +1315,17 @@ URL を楽曲や出来事に直接ベタ書きせず、`Media` として持つ�
 そのため、現時点では次の 2 層で考えるのが妥当。
 
 - `Media`
-  - URL、タイトル、種別、表示有無のようなメディアそのものの情報を持つ
+  - URL、タイトル、`MediaType`、表示有無のようなメディアそのものの情報を持つ
 - `SongMediaLink`
   - どの楽曲に紐づくか
+  - 楽曲文脈での種別
   - どの順で見せるか
 
 第1回ローンチ時点では、`SongMediaLink` が持つ属性は最小限に絞る。
 
 - `song_id`
 - `media_id`
+- `song_media_type`
 - `order_no`
 
 この切り方なら、第1回ローンチでは楽曲に強く結び付いた `Media` を扱いつつ、第2回で出来事との関連が必要になったときも破綻しにくい。

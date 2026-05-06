@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tools\Arkitect;
 
-use tools\Arkitect\ComponentMaps\ComponentMap;
+use Tools\Arkitect\ComponentMaps\ComponentMap;
 
 class Define
 {

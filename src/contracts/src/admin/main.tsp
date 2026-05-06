@@ -2,6 +2,7 @@ import "@typespec/http";
 import "@typespec/versioning";
 import "./admin-users";
 import "./auth";
+import "./media";
 import "./persons";
 import "./song-tags";
 import "./song-types";

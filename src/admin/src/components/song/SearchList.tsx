@@ -1,5 +1,5 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
-import type { SongTypeValue } from '../../generated';
+import type { SongSearchTypeValue, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
 
@@ -25,7 +25,7 @@ const DEFAULT_PARAMS = {
 
 const getInitialParams = (): {
   title: string;
-  type?: number;
+  type?: SongSearchTypeValue;
   isDisplay?: boolean;
   sort: Sort;
   order: Order;
@@ -37,9 +37,11 @@ const getInitialParams = (): {
   const isDisplayRaw = params.get('is_display');
   const sort = params.get('sort');
   const order = params.get('order');
+  const type = params.get('type');
+
   return {
     title: params.get('title') ?? DEFAULT_PARAMS.title,
-    type: Number(params.get('type') ?? 0) || undefined,
+    type: type === '1' || type === '2' ? type : undefined,
     isDisplay: isDisplayRaw === 'true' ? true : isDisplayRaw === 'false' ? false : undefined,
     sort: sort === 'title' || sort === 'order_no' ? sort : DEFAULT_PARAMS.sort,
     order: order === 'asc' || order === 'desc' ? order : DEFAULT_PARAMS.order,
@@ -69,7 +71,7 @@ export const SearchList = () => {
 
   const updateUrl = (params: {
     title: string;
-    type?: number;
+    type?: SongSearchTypeValue;
     isDisplay?: boolean;
     sort: Sort;
     order: Order;
@@ -209,13 +211,13 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            onChange={e => setInputType(e.currentTarget.value !== '' ? Number(e.currentTarget.value) : undefined)}
+            onChange={e => setInputType(e.currentTarget.value !== '' ? (e.currentTarget.value as SongSearchTypeValue) : undefined)}
           >
             <option value="" selected={inputType() === undefined}>
               すべて
             </option>
             <For each={data()?.types ?? []}>
-              {t => <option value={t.value} selected={inputType() === t.value}>{t.name}</option>}
+              {t => <option value={String(t.value)} selected={inputType() === String(t.value)}>{t.name}</option>}
             </For>
           </select>
         </fieldset>
