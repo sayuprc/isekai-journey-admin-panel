@@ -84,6 +84,7 @@ return [
 
     new Define(MediaComponent::Domain, [
         MediaComponent::Domain,
+        LibraryComponent::DateType,
         SupportComponent::Domain,
         SupportComponent::Contracts,
         SupportComponent::Optional,
