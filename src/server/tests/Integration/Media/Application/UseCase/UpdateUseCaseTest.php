@@ -44,6 +44,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 '描き続けた君へ 配信アーカイブ',
                 'https://example.com/archive',
+                '2024-04-02',
                 MediaType::SocialPost->value,
                 MediaFormat::StreamArchive->value,
                 false,
@@ -56,6 +57,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertNotNull($media);
         $this->assertSame('描き続けた君へ 配信アーカイブ', $media->title);
         $this->assertSame('https://example.com/archive', $media->url);
+        $this->assertSame('2024-04-02', $media->published_at?->format('Y-m-d'));
         $this->assertSame(MediaType::SocialPost->value, $media->type);
         $this->assertSame(MediaFormat::StreamArchive->value, $media->format);
         $this->assertFalse($media->is_display);

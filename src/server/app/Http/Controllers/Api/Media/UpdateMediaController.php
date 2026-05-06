@@ -25,6 +25,7 @@ class UpdateMediaController extends Controller
             $mediaId,
             $request->string('title')->toString(),
             $request->string('url')->toString(),
+            $request->string('publishedAt')->toString(),
             $request->integer('typeValue'),
             $request->integer('formatValue'),
             $request->boolean('isDisplay'),

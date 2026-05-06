@@ -231,6 +231,7 @@ export const SearchList = () => {
           <thead>
             <tr>
               <th>タイトル</th>
+              <th>公開日</th>
               <th>種別</th>
               <th>表示設定</th>
               <th>形式</th>
@@ -241,13 +242,13 @@ export const SearchList = () => {
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={6} />
+                <ListState state="loading" colSpan={7} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={7} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.media.length === 0}>
-                <ListState state="empty" colSpan={6} message="条件に一致するメディアはありません。" />
+                <ListState state="empty" colSpan={7} message="条件に一致するメディアはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
@@ -257,6 +258,7 @@ export const SearchList = () => {
                         <td class="min-w-44 max-w-56">
                           <p class="truncate">{media.title}</p>
                         </td>
+                        <td class="whitespace-nowrap text-sm">{media.publishedAt}</td>
                         <td>{media.type.name}</td>
                         <td>
                           <span class={`badge badge-sm ${media.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>

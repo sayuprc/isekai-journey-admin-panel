@@ -1458,6 +1458,7 @@ components:
         - mediaId
         - title
         - url
+        - publishedAt
         - type
         - format
         - isDisplay
@@ -1468,6 +1469,8 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         url:
           $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
         type:
           $ref: '#/components/schemas/MediaType'
         format:
@@ -1479,6 +1482,7 @@ components:
       required:
         - title
         - url
+        - publishedAt
         - typeValue
         - formatValue
         - isDisplay
@@ -1487,6 +1491,8 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         url:
           $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
         typeValue:
           $ref: '#/components/schemas/MediaTypeValue'
         formatValue:
@@ -1585,6 +1591,7 @@ components:
       required:
         - title
         - url
+        - publishedAt
         - typeValue
         - formatValue
         - isDisplay
@@ -1593,6 +1600,8 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         url:
           $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
         typeValue:
           $ref: '#/components/schemas/MediaTypeValue'
         formatValue:
@@ -1866,6 +1875,7 @@ components:
             - mediaId: 11111111-1111-1111-1111-111111111111
               title: 描き続けた君へ MV
               url: https://example.com/media
+              publishedAt: '2024-03-01'
               type:
                 name: 動画
                 value: 1
@@ -1940,6 +1950,7 @@ components:
         - mediaId
         - title
         - url
+        - publishedAt
         - type
         - format
         - isDisplay
@@ -1951,6 +1962,8 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         url:
           $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
         type:
           $ref: '#/components/schemas/MediaType'
         format:
@@ -1963,6 +1976,7 @@ components:
         - mediaId: 11111111-1111-1111-1111-111111111111
           title: 描き続けた君へ MV
           url: https://example.com/media
+          publishedAt: '2024-03-01'
           type:
             name: 動画
             value: 1
@@ -2271,6 +2285,10 @@ components:
       type: string
       format: uuid
       description: メディアID
+    mediaPublishedAt:
+      type: string
+      format: date
+      description: 公開日
     mediaReferencedSongId:
       type: string
       format: uuid

@@ -65,6 +65,7 @@ export const EditableForm = (props: Props) => {
     const { data, error, status } = await client.api.media({ mediaId }).put({
       title: formData.get('title')?.toString() ?? '',
       url: formData.get('url')?.toString() ?? '',
+      publishedAt: formData.get('publishedAt')?.toString() ?? '',
       typeValue: Number(formData.get('typeValue')) as MediaTypeValue,
       formatValue: Number(formData.get('formatValue')) as MediaFormatValue,
       isDisplay: formData.get('isDisplay') === 'true',
@@ -153,6 +154,17 @@ export const EditableForm = (props: Props) => {
               classList={{ 'input-error': !!getFieldError('url') }}
             />
             <Show when={getFieldError('url')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+
+            <label class="label">公開日</label>
+            <input
+              type="date"
+              class="input w-full"
+              name="publishedAt"
+              value={props.data?.media.publishedAt}
+              required
+              classList={{ 'input-error': !!getFieldError('publishedAt') }}
+            />
+            <Show when={getFieldError('publishedAt')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
             <div class="grid gap-4 md:grid-cols-2">
               <div>

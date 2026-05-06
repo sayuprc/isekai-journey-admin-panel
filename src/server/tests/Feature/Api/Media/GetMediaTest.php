@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Media;
 
+use DateType\ImmutableDate;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
@@ -35,6 +36,7 @@ class GetMediaTest extends DatabaseTestCase
                 MediaType::Video,
                 true,
                 MediaFormat::Mv,
+                new ImmutableDate('2024-03-01'),
             ),
         );
         $this->app->make(SongRepository::class)->save(
@@ -62,6 +64,7 @@ class GetMediaTest extends DatabaseTestCase
                     'mediaId' => $uuid,
                     'title' => '描き続けた君へ MV',
                     'url' => 'https://example.com/media',
+                    'publishedAt' => '2024-03-01',
                     'type' => [
                         'name' => MediaType::Video->getName(),
                         'value' => MediaType::Video->value,

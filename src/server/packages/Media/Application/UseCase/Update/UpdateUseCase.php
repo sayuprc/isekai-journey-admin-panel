@@ -52,6 +52,7 @@ readonly class UpdateUseCase
                 $inputData->mediaId,
                 $inputData->title,
                 $inputData->url,
+                $inputData->publishedAt,
                 $inputData->typeValue,
                 $inputData->formatValue,
                 $inputData->isDisplay,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Media\Infrastructures;
 
 use App\Models\Media\Media as ModelsMedia;
+use DateType\ImmutableDate;
 use Illuminate\Database\Eloquent\Builder;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\Media;
@@ -108,6 +109,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
             [
                 'title',
                 'url',
+                'published_at',
                 'type',
                 'format',
                 'is_display',
@@ -159,6 +161,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
             $this->converter->toUuid($row->media_id),
             $row->title,
             $row->url,
+            ImmutableDate::createFromInterface($row->published_at),
             $row->type,
             $row->format,
             $row->is_display,

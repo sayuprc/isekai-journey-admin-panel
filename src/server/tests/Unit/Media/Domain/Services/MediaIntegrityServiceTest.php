@@ -61,6 +61,7 @@ class MediaIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             '新規メディア',
             $url,
+            '2024-03-01',
             MediaType::Video->value,
             MediaFormat::Mv->value,
             true,
@@ -94,6 +95,7 @@ class MediaIntegrityServiceTest extends TestCase
             $mediaId,
             '更新後タイトル',
             $url,
+            '2024-04-02',
             MediaType::Video->value,
             MediaFormat::StreamArchive->value,
             false,
@@ -101,6 +103,7 @@ class MediaIntegrityServiceTest extends TestCase
 
         $this->assertTrue($result->isOk());
         $this->assertSame($mediaId, $result->unwrap()->mediaId->value);
+        $this->assertSame('2024-04-02', $result->unwrap()->publishedAt?->value->format('Y-m-d'));
     }
 
     private function getInstance(): MediaIntegrityService

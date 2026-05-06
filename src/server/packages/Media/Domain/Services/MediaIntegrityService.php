@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Media\Domain\Services;
 
+use DateMalformedStringException;
+use DateType\ImmutableDate;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
@@ -33,6 +36,7 @@ class MediaIntegrityService
     public function prepareForCreate(
         string $title,
         string $url,
+        string $publishedAt,
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
@@ -41,6 +45,7 @@ class MediaIntegrityService
             $this->generator->generate(),
             $title,
             $url,
+            $publishedAt,
             $typeValue,
             $formatValue,
             $isDisplay,
@@ -66,6 +71,7 @@ class MediaIntegrityService
         string $mediaId,
         string $title,
         string $url,
+        string $publishedAt,
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
@@ -74,6 +80,7 @@ class MediaIntegrityService
             $mediaId,
             $title,
             $url,
+            $publishedAt,
             $typeValue,
             $formatValue,
             $isDisplay,
@@ -100,14 +107,16 @@ class MediaIntegrityService
         string $mediaId,
         string $title,
         string $url,
+        string $publishedAt,
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
     ): Result {
-        return Result::collect6(
+        return Result::collect7(
             MediaId::create($mediaId),
             MediaTitle::create($title),
             MediaUrl::create($url),
+            $this->toPublishedAt($publishedAt),
             $this->toMediaType($typeValue),
             $this->toMediaFormat($formatValue),
             new Ok($isDisplay),
@@ -124,6 +133,24 @@ class MediaIntegrityService
                 return new DomainValidationError($messages);
             })
             ->map(fn (array $values): Media => new Media(...$values));
+    }
+
+    /**
+     * @return Result<MediaPublishedAt, DomainError>
+     */
+    private function toPublishedAt(string $publishedAt): Result
+    {
+        $normalized = trim($publishedAt);
+
+        if ($normalized === '') {
+            return new Err(new EntityRuleViolationError('publishedAt', '公開日は必須です'));
+        }
+
+        try {
+            return MediaPublishedAt::create(new ImmutableDate($normalized));
+        } catch (DateMalformedStringException) {
+            return new Err(new EntityRuleViolationError('publishedAt', '公開日が不正です'));
+        }
     }
 
     /**

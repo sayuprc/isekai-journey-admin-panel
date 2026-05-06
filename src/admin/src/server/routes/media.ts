@@ -53,13 +53,14 @@ export const media = new Elysia({ prefix: '/media' })
   )
   .post(
     '/',
-    async ({ body: { title, url, typeValue, formatValue, isDisplay }, authSession }) => {
+    async ({ body: { title, url, publishedAt, typeValue, formatValue, isDisplay }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
         return resolveApiResponse(await mediaServiceCreateMedia({
           client,
           body: {
             title,
             url,
+            publishedAt,
             typeValue: typeValue as MediaTypeValue,
             formatValue: formatValue as MediaFormatValue,
             isDisplay,
@@ -71,6 +72,7 @@ export const media = new Elysia({ prefix: '/media' })
       body: t.Object({
         title: t.String(),
         url: t.String(),
+        publishedAt: t.String(),
         typeValue: MediaTypeValueSchema,
         formatValue: MediaFormatValueSchema,
         isDisplay: t.Boolean(),
@@ -79,7 +81,7 @@ export const media = new Elysia({ prefix: '/media' })
   )
   .put(
     '/:mediaId',
-    async ({ params: { mediaId }, body: { title, url, typeValue, formatValue, isDisplay }, authSession }) => {
+    async ({ params: { mediaId }, body: { title, url, publishedAt, typeValue, formatValue, isDisplay }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
         return resolveApiResponse(await mediaServiceUpdateMedia({
           client,
@@ -87,6 +89,7 @@ export const media = new Elysia({ prefix: '/media' })
           body: {
             title,
             url,
+            publishedAt,
             typeValue: typeValue as MediaTypeValue,
             formatValue: formatValue as MediaFormatValue,
             isDisplay,
@@ -101,6 +104,7 @@ export const media = new Elysia({ prefix: '/media' })
       body: t.Object({
         title: t.String(),
         url: t.String(),
+        publishedAt: t.String(),
         typeValue: MediaTypeValueSchema,
         formatValue: MediaFormatValueSchema,
         isDisplay: t.Boolean(),

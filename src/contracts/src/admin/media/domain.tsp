@@ -13,6 +13,10 @@ scalar mediaTitle extends string;
 @format("uri")
 scalar mediaUrl extends string;
 
+@doc("公開日")
+@format("date")
+scalar mediaPublishedAt extends string;
+
 @doc("メディア種別名")
 @minLength(1)
 scalar mediaTypeName extends string;
@@ -52,6 +56,7 @@ model Media {
   mediaId: mediaId;
   title: mediaTitle;
   url: mediaUrl;
+  publishedAt: mediaPublishedAt;
   type: MediaType;
   format: MediaFormat;
   isDisplay: boolean;

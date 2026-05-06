@@ -19,6 +19,11 @@ table "media" {
     type    = text
     comment = "URL"
   }
+  column "published_at" {
+    null    = false
+    type    = date
+    comment = "公開日"
+  }
   column "type" {
     null     = false
     type     = tinyint

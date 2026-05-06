@@ -89,6 +89,7 @@ export type Media = {
     mediaId: MediaId;
     title: MediaTitle;
     url: MediaUrl;
+    publishedAt: MediaPublishedAt;
     type: MediaType;
     format: MediaFormat;
     isDisplay: boolean;
@@ -97,6 +98,7 @@ export type Media = {
 export type MediaCreateRequest = {
     title: MediaTitle;
     url: MediaUrl;
+    publishedAt: MediaPublishedAt;
     typeValue: MediaTypeValue;
     formatValue: MediaFormatValue;
     isDisplay: boolean;
@@ -140,6 +142,7 @@ export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
 export type MediaUpdateRequest = {
     title: MediaTitle;
     url: MediaUrl;
+    publishedAt: MediaPublishedAt;
     typeValue: MediaTypeValue;
     formatValue: MediaFormatValue;
     isDisplay: boolean;
@@ -288,6 +291,7 @@ export type SongLinkedMedia = {
     mediaId: MediaId;
     title: MediaTitle;
     url: MediaUrl;
+    publishedAt: MediaPublishedAt;
     type: MediaType;
     format: MediaFormat;
     isDisplay: boolean;
@@ -462,6 +466,11 @@ export type MediaFormatName = string;
  * メディアID
  */
 export type MediaId = string;
+
+/**
+ * 公開日
+ */
+export type MediaPublishedAt = string;
 
 /**
  * メディアを参照している楽曲ID

@@ -18,6 +18,7 @@ use DateTimeImmutable;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -185,11 +186,13 @@ trait EntityFactory
         MediaType $type,
         bool $isDisplay,
         MediaFormat $format = MediaFormat::Other,
+        ?\DateType\ImmutableDate $publishedAt = null,
     ): Media {
         return new Media(
             MediaId::reconstruct($mediaId),
             MediaTitle::reconstruct($title),
             MediaUrl::reconstruct($url),
+            MediaPublishedAt::reconstruct($publishedAt ?? new \DateType\ImmutableDate('2024-01-01')),
             $type,
             $format,
             $isDisplay,
