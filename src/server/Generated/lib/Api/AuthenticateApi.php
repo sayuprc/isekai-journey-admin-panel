@@ -77,7 +77,19 @@ class AuthenticateApi
         'authenticateServiceLogin' => [
             'application/json',
         ],
+        'authenticateServiceLoginFinish' => [
+            'application/json',
+        ],
+        'authenticateServiceLoginStart' => [
+            'application/json',
+        ],
         'authenticateServiceRefresh' => [
+            'application/json',
+        ],
+        'authenticateServiceRegisterFinish' => [
+            'application/json',
+        ],
+        'authenticateServiceRegisterStart' => [
             'application/json',
         ],
     ];
@@ -416,6 +428,580 @@ class AuthenticateApi
     }
 
     /**
+     * Operation authenticateServiceLoginFinish
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginFinishRequest $passkey_login_finish_request passkey_login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\PasskeyLoginFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceLoginFinish($passkey_login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
+    {
+        list($response) = $this->authenticateServiceLoginFinishWithHttpInfo($passkey_login_finish_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceLoginFinishWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginFinishRequest $passkey_login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\PasskeyLoginFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceLoginFinishWithHttpInfo($passkey_login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
+    {
+        $request = $this->authenticateServiceLoginFinishRequest($passkey_login_finish_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\PasskeyLoginFinishResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\PasskeyLoginFinishResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\PasskeyLoginFinishResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceLoginFinishAsync
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginFinishRequest $passkey_login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginFinishAsync($passkey_login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
+    {
+        return $this->authenticateServiceLoginFinishAsyncWithHttpInfo($passkey_login_finish_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceLoginFinishAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginFinishRequest $passkey_login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginFinishAsyncWithHttpInfo($passkey_login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\PasskeyLoginFinishResponse';
+        $request = $this->authenticateServiceLoginFinishRequest($passkey_login_finish_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceLoginFinish'
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginFinishRequest $passkey_login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceLoginFinishRequest($passkey_login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
+    {
+
+        // verify the required parameter 'passkey_login_finish_request' is set
+        if ($passkey_login_finish_request === null || (is_array($passkey_login_finish_request) && count($passkey_login_finish_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $passkey_login_finish_request when calling authenticateServiceLoginFinish'
+            );
+        }
+
+
+        $resourcePath = '/auth/login/finish';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($passkey_login_finish_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($passkey_login_finish_request));
+            } else {
+                $httpBody = $passkey_login_finish_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceLoginStart
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginStartRequest $passkey_login_start_request passkey_login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\PasskeyLoginStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceLoginStart($passkey_login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        list($response) = $this->authenticateServiceLoginStartWithHttpInfo($passkey_login_start_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginStartRequest $passkey_login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\PasskeyLoginStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceLoginStartWithHttpInfo($passkey_login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        $request = $this->authenticateServiceLoginStartRequest($passkey_login_start_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\PasskeyLoginStartResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\PasskeyLoginStartResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\PasskeyLoginStartResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartAsync
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginStartRequest $passkey_login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginStartAsync($passkey_login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        return $this->authenticateServiceLoginStartAsyncWithHttpInfo($passkey_login_start_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginStartRequest $passkey_login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginStartAsyncWithHttpInfo($passkey_login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\PasskeyLoginStartResponse';
+        $request = $this->authenticateServiceLoginStartRequest($passkey_login_start_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceLoginStart'
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyLoginStartRequest $passkey_login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceLoginStartRequest($passkey_login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+
+        // verify the required parameter 'passkey_login_start_request' is set
+        if ($passkey_login_start_request === null || (is_array($passkey_login_start_request) && count($passkey_login_start_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $passkey_login_start_request when calling authenticateServiceLoginStart'
+            );
+        }
+
+
+        $resourcePath = '/auth/login/start';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($passkey_login_start_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($passkey_login_start_request));
+            } else {
+                $httpBody = $passkey_login_start_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation authenticateServiceRefresh
      *
      * @param  \OpenAPI\Client\Model\RefreshTokenRequest $refresh_token_request refresh_token_request (required)
@@ -641,6 +1227,580 @@ class AuthenticateApi
                 $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($refresh_token_request));
             } else {
                 $httpBody = $refresh_token_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterFinish
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationFinishRequest $passkey_registration_finish_request passkey_registration_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\PasskeyRegistrationFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRegisterFinish($passkey_registration_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
+    {
+        list($response) = $this->authenticateServiceRegisterFinishWithHttpInfo($passkey_registration_finish_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRegisterFinishWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationFinishRequest $passkey_registration_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\PasskeyRegistrationFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRegisterFinishWithHttpInfo($passkey_registration_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
+    {
+        $request = $this->authenticateServiceRegisterFinishRequest($passkey_registration_finish_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\PasskeyRegistrationFinishResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\PasskeyRegistrationFinishResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\PasskeyRegistrationFinishResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRegisterFinishAsync
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationFinishRequest $passkey_registration_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterFinishAsync($passkey_registration_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
+    {
+        return $this->authenticateServiceRegisterFinishAsyncWithHttpInfo($passkey_registration_finish_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterFinishAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationFinishRequest $passkey_registration_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterFinishAsyncWithHttpInfo($passkey_registration_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\PasskeyRegistrationFinishResponse';
+        $request = $this->authenticateServiceRegisterFinishRequest($passkey_registration_finish_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRegisterFinish'
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationFinishRequest $passkey_registration_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRegisterFinishRequest($passkey_registration_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
+    {
+
+        // verify the required parameter 'passkey_registration_finish_request' is set
+        if ($passkey_registration_finish_request === null || (is_array($passkey_registration_finish_request) && count($passkey_registration_finish_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $passkey_registration_finish_request when calling authenticateServiceRegisterFinish'
+            );
+        }
+
+
+        $resourcePath = '/auth/register/finish';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($passkey_registration_finish_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($passkey_registration_finish_request));
+            } else {
+                $httpBody = $passkey_registration_finish_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStart
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationStartRequest $passkey_registration_start_request passkey_registration_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\PasskeyRegistrationStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRegisterStart($passkey_registration_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        list($response) = $this->authenticateServiceRegisterStartWithHttpInfo($passkey_registration_start_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationStartRequest $passkey_registration_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\PasskeyRegistrationStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRegisterStartWithHttpInfo($passkey_registration_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        $request = $this->authenticateServiceRegisterStartRequest($passkey_registration_start_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\PasskeyRegistrationStartResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\PasskeyRegistrationStartResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\PasskeyRegistrationStartResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartAsync
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationStartRequest $passkey_registration_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterStartAsync($passkey_registration_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        return $this->authenticateServiceRegisterStartAsyncWithHttpInfo($passkey_registration_start_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationStartRequest $passkey_registration_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterStartAsyncWithHttpInfo($passkey_registration_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\PasskeyRegistrationStartResponse';
+        $request = $this->authenticateServiceRegisterStartRequest($passkey_registration_start_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRegisterStart'
+     *
+     * @param  \OpenAPI\Client\Model\PasskeyRegistrationStartRequest $passkey_registration_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRegisterStartRequest($passkey_registration_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+
+        // verify the required parameter 'passkey_registration_start_request' is set
+        if ($passkey_registration_start_request === null || (is_array($passkey_registration_start_request) && count($passkey_registration_start_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $passkey_registration_start_request when calling authenticateServiceRegisterStart'
+            );
+        }
+
+
+        $resourcePath = '/auth/register/start';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($passkey_registration_start_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($passkey_registration_start_request));
+            } else {
+                $httpBody = $passkey_registration_start_request;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {

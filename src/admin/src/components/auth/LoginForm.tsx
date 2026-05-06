@@ -2,6 +2,7 @@ import { Show } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
+import { authenticatePasskey } from '../../utils/webauthn';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
@@ -16,23 +17,42 @@ export const LoginForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { error, status } = await client.api.auth.login.post({
-      email: formData.get('email')?.toString() ?? '',
-      password: formData.get('password')?.toString() ?? '',
-    });
+    const email = formData.get('email')?.toString() ?? '';
+    const started = await client.api.auth.login.start.post({ email });
 
-    if (!error) {
+    if (started.error || !started.data) {
+      if (started.status === 401) {
+        setFormError('メールアドレスまたはパスキーが正しくありません');
+        return;
+      }
+
+      handleError(started.status, started.error);
+      return;
+    }
+
+    try {
+      const credential = await authenticatePasskey(started.data.publicKey as Record<string, unknown>);
+      const finished = await client.api.auth.login.finish.post({
+        authCeremonyId: started.data.authCeremonyId,
+        credential,
+      });
+
+      if (finished.error) {
+        if (finished.status === 401) {
+          setFormError('メールアドレスまたはパスキーが正しくありません');
+          return;
+        }
+
+        handleError(finished.status, finished.error);
+        return;
+      }
+
       setFlash('ログインしました');
       window.location.href = '/song-types';
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'パスキーログインに失敗しました');
       return;
     }
-
-    if (status === 401) {
-      setFormError('メールアドレスまたはパスワードが正しくありません');
-      return;
-    }
-
-    handleError(status, error);
   });
 
   return (
@@ -49,19 +69,13 @@ export const LoginForm = () => {
         />
         <Show when={getFieldError('email')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-        <label class="label">パスワード</label>
-        <input
-          type="password"
-          class="input"
-          name="password"
-          required
-          classList={{ 'input-error': !!getFieldError('password') }}
-        />
-        <Show when={getFieldError('password')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
-
         <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
-          {isSubmitting() ? 'ログイン中...' : 'ログイン'}
+          {isSubmitting() ? 'ログイン中...' : 'パスキーでログイン'}
         </button>
+
+        <a class="link link-hover mt-3 text-sm" href="/auth/register">
+          登録トークンを持っている場合はこちら
+        </a>
       </fieldset>
     </form>
   );
