@@ -30,6 +30,7 @@ readonly class SongRepository implements SongRepositoryInterface
     public function find(SongId $songId): ?Song
     {
         $found = ModelsSong::query()
+            ->with('songMediaLinks')
             ->where('song_id', $this->converter->toBin($songId->value))
             ->first();
 

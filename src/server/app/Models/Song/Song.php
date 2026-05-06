@@ -45,7 +45,6 @@ class Song extends Model
     protected $with = [
         'persons',
         'taggings',
-        'songMediaLinks',
     ];
 
     #[Override]
