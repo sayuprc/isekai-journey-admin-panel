@@ -4,6 +4,14 @@
 
 第1回ローンチでは、既存の楽曲管理基盤を前提に、`admin` で楽曲、リリース、公式 `Media` を登録・編集・閲覧できる状態を作る。差別化の中心は、文字情報だけでなく、楽曲とリリース、さらに公式メディアの結び付きを運用できることに置く。
 
+## Current Status
+
+- 2026-05-06 時点で、`Media` の Phase 1 実装は進んでいる
+- `Song` 作成 / 編集 / 詳細で `Media` を扱う導線は実装済み
+- 現行実装では、メディアの意味分類は `SongMediaType` ではなく `Media.format` で表現する
+- `SongMediaLink` は `song_id / media_id / order_no` を中心に持ち、楽曲ごとの責務は関連付けと表示順に絞る
+- `Event` はまだ未実装であり、この資料内の `Event` 記述は将来構想として扱う
+
 ## Users / Actors
 
 - 管理画面の管理者
@@ -73,12 +81,11 @@
 - `Media` は独立エンティティとして持つ
 - `Media` は概念上、楽曲にも出来事にも紐づきうる外部参照リソースとして扱う
 - 第1回で扱う `Media` の運用対象は、楽曲に直接関連する公式メディアのみに限定する
-- `Media` の最小モデルは `タイトル / URL / MediaType / 表示有無`
+- `Media` の最小モデルは `タイトル / URL / MediaType / MediaFormat / 表示有無`
 - 初期の `MediaType` は `video / article / social_post / official_page / other` とする
-- Phase 1 では `MediaType` は実質 `video` を中心に扱い、将来の `Event` 連携で他形式を使える前提を残す
-- `SongMediaLink` は関係エンティティとして持ち、第1回では `song_id / media_id / SongMediaType / order_no` を中心に扱う
-- 初期の `SongMediaType` は `mv / audio_video / stream_archive / short_video / other` とする
-- 既存種別に当てはまらない動画 URL は `SongMediaType` の `other` を使う
+- 初期の `MediaFormat` は `mv / audio_video / stream_archive / short_video / live_clip / other` とする
+- Phase 1 では `MediaType` は実質 `video` を中心に扱い、`MediaFormat` で動画の意味分類を表現する
+- `SongMediaLink` は関係エンティティとして持ち、第1回では `song_id / media_id / order_no` を中心に扱う
 - 同一アーカイブを複数楽曲に結び付けることを許容する
 - 楽曲ごとに参照箇所を分けたい場合は、タイムスタンプ込み URL を持つ別 `Media` として扱う
 - 将来の `Event` は、ライブや配信に限らず、ヰ世界情緒が関わった出来事全般を扱う想定とする
