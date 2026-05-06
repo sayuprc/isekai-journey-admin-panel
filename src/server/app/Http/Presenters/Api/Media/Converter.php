@@ -21,7 +21,7 @@ class Converter
             ->setMediaId($media->mediaId->value)
             ->setTitle($media->title->value)
             ->setUrl($media->url->value)
-            ->setPublishedAt($media->publishedAt->value->format('Y-m-d'))
+            ->setPublishedAt($media->publishedAt->value->toMutable())
             ->setType($this->toOpenApiMediaType($media))
             ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay);
