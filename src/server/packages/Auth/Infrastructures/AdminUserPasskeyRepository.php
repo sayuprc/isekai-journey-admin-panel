@@ -7,7 +7,7 @@ namespace Auth\Infrastructures;
 use App\Models\AdminUser\AdminUserPasskey as Model;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
-use DateTimeImmutable;
+use Illuminate\Support\Carbon;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
@@ -85,7 +85,7 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
      *   sign_count: int,
      *   last_used_at: string|null,
      *   created_at: string,
-     *   updated_at: \Illuminate\Support\Carbon
+     *   updated_at: Carbon
      * }
      */
     private function toPersistence(AdminUserPasskey $passkey): array

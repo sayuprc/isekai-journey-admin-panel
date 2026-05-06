@@ -6,6 +6,7 @@ namespace Auth\Domain\Models;
 
 use DateTimeImmutable;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\TrustPath\EmptyTrustPath;
@@ -49,7 +50,7 @@ readonly class AdminUserPasskey
             [],
             'none',
             EmptyTrustPath::create(),
-            \Symfony\Component\Uid\Uuid::v4(),
+            Uuid::v4(),
             Base64UrlSafe::decodeNoPadding($this->publicKey),
             $this->adminUserId,
             $this->signCount,

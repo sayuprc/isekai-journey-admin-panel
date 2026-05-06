@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Auth\Application\UseCase\RegisterFinish;
 
+use AdminUser\Domain\Models\AdminUser;
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserRegistrationTokenId;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenRepositoryInterface;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
+use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\HasherInterface;
 use Auth\Application\UseCase\Login\LoginOutputData;
@@ -32,6 +36,7 @@ use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
+use Throwable;
 
 readonly class RegisterFinishUseCase
 {
@@ -64,7 +69,7 @@ readonly class RegisterFinishUseCase
             return new Err(new AuthenticationError());
         }
 
-        $token = $this->tokenRepository->find(\AdminUser\Domain\Models\AdminUserRegistrationTokenId::reconstruct($state->registrationTokenId));
+        $token = $this->tokenRepository->find(AdminUserRegistrationTokenId::reconstruct($state->registrationTokenId));
 
         if ($token === null || $token->usedAt !== null || $token->expiredAt->value <= $this->clock->now()) {
             return new Err(new AuthenticationError());
@@ -72,7 +77,7 @@ readonly class RegisterFinishUseCase
 
         try {
             $verificationResult = $this->passkeyAuthenticator->finishRegistration($inputData->credential, $state->optionsJson);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return new Err(new AuthenticationError());
         }
 
@@ -118,22 +123,22 @@ readonly class RegisterFinishUseCase
             $this->recorder->record(
                 AuditAction::Login,
                 AuditTargetType::AdminUser,
-                \AdminUser\Domain\Models\AdminUserId::reconstruct($state->adminUserId),
+                AdminUserId::reconstruct($state->adminUserId),
                 ['refresh_token_id' => $refreshToken->refreshTokenId->value],
-                \AdminUser\Domain\Models\AdminUserId::reconstruct($state->adminUserId),
+                AdminUserId::reconstruct($state->adminUserId),
             );
 
             return new Ok(new LoginOutputData($accessToken, $refreshToken->refreshTokenId->value, $plainToken));
         });
     }
 
-    private function appRegisterUser(\AdminUser\Domain\Models\AdminUser $adminUser): void
+    private function appRegisterUser(AdminUser $adminUser): void
     {
         $password = bin2hex(random_bytes(32));
 
         $this->adminUserRepository->register(
             $adminUser,
-            \AdminUser\Domain\Models\HashedPassword::reconstruct($this->hasher->hash($password)),
+            HashedPassword::reconstruct($this->hasher->hash($password)),
         );
     }
 

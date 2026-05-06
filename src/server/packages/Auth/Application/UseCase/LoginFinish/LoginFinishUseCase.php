@@ -22,6 +22,7 @@ use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\UseCaseError;
+use Throwable;
 
 readonly class LoginFinishUseCase
 {
@@ -70,7 +71,7 @@ readonly class LoginFinishUseCase
                 $passkey,
                 $state->adminUserId,
             );
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return new Err(new AuthenticationError());
         }
 

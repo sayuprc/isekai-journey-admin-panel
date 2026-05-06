@@ -7,11 +7,15 @@ namespace Tests\Feature\Api\Auth;
 use AdminUser\Domain\Models\AdminUserRegistrationTokenRepositoryInterface;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationTokenHasherInterface;
+use App\Models\AdminUser\AdminUserRegistrationToken;
+use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Route\AuthRouteMap;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use stdClass;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 
@@ -27,7 +31,7 @@ class PasskeyRegisterTest extends DatabaseTestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $this->app->instance(PasskeyAuthenticatorInterface::class, new class implements PasskeyAuthenticatorInterface {
+        $this->app->instance(PasskeyAuthenticatorInterface::class, new class () implements PasskeyAuthenticatorInterface {
             public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
             {
                 return new PasskeyStartResult('{"challenge":"register"}', ['challenge' => 'register']);
@@ -46,7 +50,7 @@ class PasskeyRegisterTest extends DatabaseTestCase
             public function finishAuthentication(
                 array $credential,
                 string $optionsJson,
-                \Auth\Domain\Models\AdminUserPasskey $passkey,
+                AdminUserPasskey $passkey,
                 string $userHandle,
             ): PasskeyVerificationResult {
                 return new PasskeyVerificationResult($passkey->credentialId, $passkey->publicKey, $passkey->signCount + 1);
@@ -63,7 +67,7 @@ class PasskeyRegisterTest extends DatabaseTestCase
                 'register@example.com',
                 Role::General,
                 $tokenHash,
-                new \DateTimeImmutable('+1 hour'),
+                new DateTimeImmutable('+1 hour'),
             ),
         );
 
@@ -77,7 +81,7 @@ class PasskeyRegisterTest extends DatabaseTestCase
 
         $this->postJson(route(AuthRouteMap::RegisterFinish), [
             'authCeremonyId' => $authCeremonyId,
-            'credential' => new \stdClass(),
+            'credential' => new stdClass(),
         ])->assertStatus(200)
             ->assertJsonStructure(['accessToken', 'refreshTokenId', 'refreshToken']);
 
@@ -87,7 +91,7 @@ class PasskeyRegisterTest extends DatabaseTestCase
             'email' => 'register@example.com',
         ]);
         $this->assertNotNull(
-            \App\Models\AdminUser\AdminUserRegistrationToken::query()
+            AdminUserRegistrationToken::query()
                 ->where('email', 'register@example.com')
                 ->firstOrFail()
                 ->used_at,

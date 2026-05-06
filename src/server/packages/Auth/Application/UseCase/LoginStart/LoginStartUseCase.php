@@ -15,6 +15,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Error\AuthenticationError;
@@ -68,7 +69,7 @@ readonly class LoginStartUseCase
         return new Ok(new LoginStartOutputData($authCeremonyId, $result->publicKey));
     }
 
-    private function handleEmailError(\Support\Domain\Error\DomainError $error): UseCaseError
+    private function handleEmailError(DomainError $error): UseCaseError
     {
         return match (true) {
             $error instanceof DomainValidationError => new InvalidInputError($error->errors),

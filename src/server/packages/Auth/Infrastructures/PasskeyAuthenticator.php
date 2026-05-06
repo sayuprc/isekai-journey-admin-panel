@@ -10,10 +10,12 @@ use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Domain\Services\PasskeyVerificationResult;
 use Cose\Algorithms;
 use InvalidArgumentException;
+use Override;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
@@ -39,12 +41,12 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
 
     public function __construct()
     {
-        $serializer = (new WebauthnSerializerFactory(AttestationStatementSupportManager::create()))->create();
+        $serializer = new WebauthnSerializerFactory(AttestationStatementSupportManager::create())->create();
         assert($serializer instanceof Serializer);
         $this->serializer = $serializer;
     }
 
-    #[\Override]
+    #[Override]
     public function startRegistration(
         string $userHandle,
         string $userName,
@@ -84,7 +86,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
     /**
      * @param array<string, mixed> $credential
      */
-    #[\Override]
+    #[Override]
     public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
     {
         $publicKeyCredential = $this->deserializeCredential($credential);
@@ -108,8 +110,8 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             ->check($response, $options, $this->host());
 
         return new PasskeyVerificationResult(
-            \ParagonIE\ConstantTime\Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
-            \ParagonIE\ConstantTime\Base64UrlSafe::encodeUnpadded($credentialRecord->credentialPublicKey),
+            Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
+            Base64UrlSafe::encodeUnpadded($credentialRecord->credentialPublicKey),
             $credentialRecord->counter,
         );
     }
@@ -117,13 +119,13 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
     /**
      * @param list<AdminUserPasskey> $passkeys
      */
-    #[\Override]
+    #[Override]
     public function startAuthentication(array $passkeys): PasskeyStartResult
     {
         $descriptors = array_map(
             fn (AdminUserPasskey $passkey) => PublicKeyCredentialDescriptor::create(
                 PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                \ParagonIE\ConstantTime\Base64UrlSafe::decodeNoPadding($passkey->credentialId),
+                Base64UrlSafe::decodeNoPadding($passkey->credentialId),
             ),
             $passkeys,
         );
@@ -150,7 +152,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
     /**
      * @param array<string, mixed> $credential
      */
-    #[\Override]
+    #[Override]
     public function finishAuthentication(
         array $credential,
         string $optionsJson,
@@ -184,7 +186,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             );
 
         return new PasskeyVerificationResult(
-            \ParagonIE\ConstantTime\Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
+            Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
             $passkey->publicKey,
             $credentialRecord->counter,
         );
@@ -195,14 +197,12 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
      */
     private function deserializeCredential(array $credential): PublicKeyCredential
     {
-        /** @var PublicKeyCredential $publicKeyCredential */
-        $publicKeyCredential = $this->serializer->denormalize(
+        /** @var PublicKeyCredential */
+        return $this->serializer->denormalize(
             $credential,
             PublicKeyCredential::class,
             JsonEncoder::FORMAT,
         );
-
-        return $publicKeyCredential;
     }
 
     private function host(): string

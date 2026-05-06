@@ -10,6 +10,7 @@ use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Route\AuthRouteMap;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -28,7 +29,7 @@ class PasskeyLoginTest extends DatabaseTestCase
             'auth.jwt.key' => str_repeat('k', 256),
         ]);
 
-        $this->app->instance(PasskeyAuthenticatorInterface::class, new class implements PasskeyAuthenticatorInterface {
+        $this->app->instance(PasskeyAuthenticatorInterface::class, new class () implements PasskeyAuthenticatorInterface {
             public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
             {
                 return new PasskeyStartResult('{"challenge":"register"}', ['challenge' => 'register']);
@@ -47,7 +48,7 @@ class PasskeyLoginTest extends DatabaseTestCase
             public function finishAuthentication(
                 array $credential,
                 string $optionsJson,
-                \Auth\Domain\Models\AdminUserPasskey $passkey,
+                AdminUserPasskey $passkey,
                 string $userHandle,
             ): PasskeyVerificationResult {
                 return new PasskeyVerificationResult($passkey->credentialId, $passkey->publicKey, 10);
@@ -64,7 +65,7 @@ class PasskeyLoginTest extends DatabaseTestCase
                 'credential-1',
                 'public-key-1',
                 0,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 null,
             ),
         );

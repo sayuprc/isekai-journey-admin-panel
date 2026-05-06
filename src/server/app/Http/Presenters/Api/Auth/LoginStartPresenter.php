@@ -24,7 +24,7 @@ class LoginStartPresenter
             fn (LoginStartOutputData $output) => [
                 new PasskeyLoginStartResponse()
                     ->setAuthCeremonyId($output->authCeremonyId)
-                    ->setPublicKey((object) $output->publicKey),
+                    ->setPublicKey((object)$output->publicKey),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),

@@ -18,14 +18,14 @@ readonly class PasskeyCeremonyStore implements PasskeyCeremonyStoreInterface
     #[Override]
     public function put(PasskeyCeremonyState $state): void
     {
-        $ttl = config('auth.passkey.ceremony_ttl_seconds');
+        $ttl = config()->integer('auth.passkey.ceremony_ttl_seconds', 300);
 
         $this->cache
             ->store(config()->string('auth.passkey.ceremony_cache_store'))
             ->put(
                 $this->key($state->authCeremonyId),
                 $state->toArray(),
-                is_int($ttl) ? $ttl : 300,
+                $ttl,
             );
     }
 

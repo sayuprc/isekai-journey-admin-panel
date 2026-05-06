@@ -129,8 +129,8 @@ return [
         'rp_name' => env('AUTH_PASSKEY_RP_NAME', env('APP_NAME', 'IsekaiObservatory')),
         'rp_id' => $adminRpId,
         'origin' => $adminOrigin,
-        'timeout_ms' => (int) env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
-        'ceremony_ttl_seconds' => (int) env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
+        'timeout_ms' => (int)env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
+        'ceremony_ttl_seconds' => (int)env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
         'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'file'),
     ],
 ];
