@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Http\Middleware\OpenApiConfig;
+use App\Http\Middleware\Admin\OpenApiConfig;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Override;

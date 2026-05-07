@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Illuminate\Support\ServiceProvider;
-use Media\Application\Query\MediaDetailQueryServiceInterface;
+use Media\Application\Admin\Query\MediaDetailQueryServiceInterface;
 use Media\Domain\Models\MediaRepositoryInterface;
-use Media\Infrastructures\MediaDetailQueryService;
+use Media\Infrastructures\Admin\MediaDetailQueryService;
 use Media\Infrastructures\MediaRepository;
 use Override;
 

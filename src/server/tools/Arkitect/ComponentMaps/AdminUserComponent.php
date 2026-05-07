@@ -10,5 +10,5 @@ enum AdminUserComponent: string implements ComponentMap
 
     case Domain = 'AdminUser\Domain\*';
 
-    case UseCase = 'AdminUser\Application\UseCase\*';
+    case UseCase = 'AdminUser\Application\*\UseCase\*';
 }

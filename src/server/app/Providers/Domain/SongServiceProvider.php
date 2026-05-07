@@ -9,11 +9,11 @@ use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Infrastructures\MediaRepository;
 use Override;
 use Person\Domain\Services\PersonUsageCheckerInterface;
-use Song\Application\Query\SongQueryServiceInterface;
+use Song\Application\Admin\Query\SongQueryServiceInterface;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
+use Song\Infrastructures\Admin\SongQueryService;
 use Song\Infrastructures\PersonUsageChecker;
-use Song\Infrastructures\SongQueryService;
 use Song\Infrastructures\SongRepository;
 use Song\Infrastructures\Tag\SongTagRepository;
 
