@@ -1,64 +1,42 @@
----
-interface Props {
-  siteTitle: string;
-}
-
-const { siteTitle } = Astro.props;
----
-
-<footer>
-  <div class="footer-inner">
-    <div class="site-title">{siteTitle}</div>
-    <div class="footer-contents">
-      <div class="site-links">
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="/logo-dark.svg" alt="" class="footer-logo footer-logo-dark" />
+          <img src="/logo-light.svg" alt="" class="footer-logo footer-logo-light" />
+          <div class="footer-brand-mark">ヰ世界観測所</div>
+        </div>
+        <div class="footer-tagline">ヰ世界情緒のうたと出来事を記録する、非公式のファン・アーカイブ。</div>
+      </div>
+      <div class="footer-col">
+        <h4>Archive</h4>
         <ul>
-          <li><a href="/site-policy">サイトポリシー</a></li>
-          <li><a href="/privacy-policy">プライバシーポリシー</a></li>
-          <li><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSeO0TtKEd3k1WAmi7zbBHBM4sg9DPmBJP5cqmnEO_OHwJ2aNA/viewform?usp=header">お問い合わせ</a></li>
+          <li><a href="/songs">Songs</a></li>
+          <li><a href="/releases">Releases</a></li>
+          <li><a href="/media">Media</a></li>
+          <li><a href="/events">Events</a></li>
         </ul>
       </div>
-      <div class="sns-links">
+      <div class="footer-col">
+        <h4>Guide</h4>
         <ul>
-          <li><a href="/">Twitter</a></li>
-          <li><a href="/">YouTube</a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/site-policy">サイトポリシー</a></li>
+          <li><a href="/privacy-policy">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Notice</h4>
+        <ul>
+          <li>非公式ファンサイトです</li>
+          <li>一次情報は公式サイトを参照</li>
+          <li>画像・文言は後で差し替え前提</li>
         </ul>
       </div>
     </div>
+    <div class="footer-bottom">
+      <div>© FAN ARCHIVE — NON-OFFICIAL</div>
+    </div>
   </div>
 </footer>
-
-<style>
-  * {
-    color: #f0f8ff;
-  }
-
-  footer {
-    position: sticky;
-    top: 100vh;
-    height: 300px;
-    background-color: #018be4;
-  }
-
-  .footer-inner {
-    width: 1260px;
-    height: inherit;
-    margin: 0 auto;
-  }
-
-  .site-title {
-    padding: 20px 0;
-    font-size: 2rem;
-  }
-
-  .footer-contents {
-    display: flex;
-  }
-
-  .site-links {
-    width: 50%;
-  }
-
-  .sns-links {
-    width: 50%;
-  }
-</style>

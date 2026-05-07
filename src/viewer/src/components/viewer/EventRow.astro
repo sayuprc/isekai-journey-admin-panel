@@ -1,0 +1,33 @@
+---
+import { Q } from '../../data/site-helpers';
+
+interface Props {
+  event: {
+    id: string;
+    date: string;
+    category: string;
+    title: string;
+    description: string;
+    venue: string;
+    status: string;
+  };
+}
+
+const { event } = Astro.props;
+const stats = Q.eventStats(event.id);
+---
+
+<a href={`/events/${event.id}`} class={`event-row ${event.status === '予定' ? 'event-row-highlight' : ''}`}>
+  <div class="event-row-date">{event.date}</div>
+  <span class="pill">{event.category}</span>
+  <div>
+    <div class="event-row-title">{event.title}</div>
+    <div class="event-row-description">{event.description}</div>
+  </div>
+  <div class="label-mono">@ {event.venue}</div>
+  <div class="event-row-stats">
+    <span>{stats.songs} songs</span>
+    <span>{stats.media} media</span>
+  </div>
+  <span class="pill">{event.status}</span>
+</a>

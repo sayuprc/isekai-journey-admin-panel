@@ -1,0 +1,66 @@
+---
+import { Q } from '../../../data/site-helpers';
+import SectionHead from '../SectionHead.astro';
+
+interface Props {
+  event: {
+    id: string;
+    title: string;
+    date: string;
+    venue: string;
+    category: string;
+    status: string;
+    description: string;
+  };
+}
+
+const { event } = Astro.props;
+const performances = Q.performancesAtEvent(event.id);
+const media = Q.mediaOfEvent(event.id);
+---
+
+<div class="detail-page-content">
+  <div class="event-hero">
+    <span class="pill">{event.status}</span>
+    <div class="label-mono">{event.category}</div>
+    <h1 class="detail-title">{event.title}</h1>
+    <div class="detail-title-en">{event.date} · {event.venue}</div>
+    <p class="detail-description">{event.description}</p>
+  </div>
+
+  <SectionHead num="01" title="この日の歌唱" titleEn="Setlist" />
+  <div class="rel-list">
+    {
+      performances.map((performance, index) => {
+        const song = Q.song(performance.songId);
+        return (
+          <a class="rel-chip" href={`/songs/${performance.songId}`}>
+            <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
+            <div class="color-block" style={`--tile-color:${song?.color ?? '#888'};`}></div>
+            <div class="rel-copy">
+              <div class="rel-main">{song?.title ?? '—'}</div>
+              <div class="label-mono">{song?.duration ?? '—'}{performance.note ? ` · ${performance.note}` : ''}</div>
+            </div>
+            <span>→</span>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <SectionHead num="02" title="関連メディア" titleEn="Media" />
+  <div class="rel-list">
+    {
+      media.map(entry => (
+        <a class="rel-chip" href={`/media/${entry.id}`}>
+          <div class="color-block" style={`--tile-color:${entry.color};`}></div>
+          <div class="rel-copy">
+            <div class="rel-main">{entry.title}</div>
+            <div class="label-mono">{entry.date} · {entry.type}</div>
+          </div>
+          <span>→</span>
+        </a>
+      ))
+    }
+  </div>
+</div>

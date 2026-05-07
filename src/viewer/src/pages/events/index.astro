@@ -1,0 +1,111 @@
+---
+import { DetailDrawer } from '../../components/viewer/DetailDrawer';
+import EventRow from '../../components/viewer/EventRow.astro';
+import LayoutSwitcher from '../../components/viewer/LayoutSwitcher.astro';
+import SectionHead from '../../components/viewer/SectionHead.astro';
+import { sortedEvents } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+const events = sortedEvents();
+const upcoming = events.filter(event => event.status === '予定');
+const history = events.filter(event => event.status !== '予定');
+const eventsByYearMonth = Object.groupBy(events, (event) => {
+  const [year, month] = event.date.split('.');
+  return `${year}-${month}`;
+});
+const years = [...new Set(events.map(event => event.date.split('.')[0]))].sort().reverse();
+const categories = ['ライブ', '配信', 'フェス', 'メディア', 'コラボ', 'リリイベ'];
+---
+
+<Layout pageTitle="Events">
+  <section class="shell page-section">
+    <SectionHead num="—" title="出来事" titleEn={`Events / ${events.length} entries`}>
+      <LayoutSwitcher
+        slot="right"
+        name="events"
+        initialValue="timeline"
+        options={[
+          { value: 'timeline', label: 'TIMELINE' },
+          { value: 'calendar', label: 'CALENDAR' },
+          { value: 'category', label: 'CATEGORY' },
+        ]}
+      />
+    </SectionHead>
+
+    <div data-layout-group="events">
+      <div data-layout-panel="timeline">
+        {
+          upcoming.length > 0 && (
+            <div class="events-group">
+              <div class="label-mono events-group-label">UPCOMING — 開催予定</div>
+              {upcoming.map(event => <EventRow event={event} />)}
+            </div>
+          )
+        }
+        <div class="events-group">
+          <div class="label-mono events-group-label">HISTORY — 過去の催し</div>
+          {history.map(event => <EventRow event={event} />)}
+        </div>
+      </div>
+
+      <div data-layout-panel="calendar" hidden>
+        <div class="events-calendar">
+          {
+            years.map(year => (
+              <div>
+                <div class="events-year">{year}</div>
+                {
+                  Array.from({ length: 12 }, (_, index) => index + 1)
+                    .reverse()
+                    .map((month) => {
+                      const key = `${year}-${String(month).padStart(2, '0')}`;
+                      const monthEvents = eventsByYearMonth[key] ?? [];
+                      return (
+                        <div class={`events-month ${monthEvents.length === 0 ? 'events-month-empty' : ''}`}>
+                          <div class="label-mono">{String(month).padStart(2, '0')}月</div>
+                          {monthEvents.length === 0 && <div class="label-mono">—</div>}
+                          {monthEvents.map(event => <a href={`/events/${event.id}`} class="events-month-link">{event.title}</a>)}
+                        </div>
+                      );
+                    })
+                }
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div data-layout-panel="category" hidden>
+        <div class="events-category-grid">
+          {
+            categories.map((category) => {
+              const categoryEvents = events.filter(event => event.category === category);
+              return (
+                <div class="events-category-card">
+                  <div class="events-category-head">
+                    <div class="events-category-title">{category}</div>
+                    <div class="label-mono">{categoryEvents.length}</div>
+                  </div>
+                  <div class="events-category-list">
+                    {
+                      categoryEvents.length === 0
+                        ? <div class="label-mono">—</div>
+                        : categoryEvents.map(event => (
+                            <a href={`/events/${event.id}`} class="events-category-link">
+                              <div class="label-mono">{event.date}</div>
+                              <div class="event-row-title">{event.title}</div>
+                              <div class="event-row-description">@ {event.venue}</div>
+                            </a>
+                          ))
+                    }
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <DetailDrawer client:load />
+</Layout>

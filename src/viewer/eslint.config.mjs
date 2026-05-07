@@ -33,7 +33,7 @@ export default [
   {
     plugins: {
       '@stylistic': stylistic,
-      import: importPlugin,
+      'import': importPlugin,
     },
   },
   eslint.configs.recommended,

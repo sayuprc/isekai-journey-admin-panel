@@ -1,16 +1,17 @@
 ---
-import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/common/Footer.astro';
 import Header from '../components/common/Header.astro';
 import '../styles/reset.css';
+import '../styles/viewer.css';
 
 interface Props {
   pageTitle: string;
+  pageDescription?: string;
 }
 
-const { pageTitle } = Astro.props;
+const { pageTitle, pageDescription = 'ヰ世界情緒の非公式ファンアーカイブモック' } = Astro.props;
 
-const siteTitle = 'ヰ世界情緒(タイトル未定)';
+const siteTitle = 'ヰ世界観測所';
 
 const generateTitle = (title: string) => {
   return title ? `${title} | ${siteTitle}` : siteTitle;
@@ -26,27 +27,82 @@ const title = generateTitle(pageTitle);
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={pageDescription} />
     <title>{title}</title>
-    <ClientRouter />
+    <script is:inline>
+      (() => {
+        const themeKey = 'isekai-observatory-theme';
+        const paletteKey = 'isekai-observatory-palette';
+        const root = document.documentElement;
+        const savedTheme = localStorage.getItem(themeKey) ?? 'dark';
+        const savedPalette = localStorage.getItem(paletteKey) ?? 'moon';
+        root.dataset.theme = savedTheme;
+        root.dataset.palette = savedPalette;
+      })();
+    </script>
   </head>
   <body>
-    <Header siteTitle={siteTitle} />
+    <Header currentPath={Astro.url.pathname} />
     <main>
       <slot />
     </main>
-    <Footer siteTitle={siteTitle} />
+    <Footer />
+    <script is:inline>
+      (() => {
+        const palettes = ['moon', 'gunjou', 'reimei', 'setsuya', 'hisui'];
+        const themeKey = 'isekai-observatory-theme';
+        const paletteKey = 'isekai-observatory-palette';
+
+        const initThemeControls = () => {
+          const root = document.documentElement;
+          const themeButton = document.querySelector('[data-theme-toggle]');
+          const paletteButton = document.querySelector('[data-palette-toggle]');
+
+          if (!(themeButton instanceof HTMLButtonElement) || !(paletteButton instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          if (themeButton.dataset.themeReady === 'true') {
+            return;
+          }
+
+          const syncButtons = () => {
+            themeButton.textContent = root.dataset.theme === 'light' ? '☼' : '☾';
+          };
+
+          const applyTheme = (theme) => {
+            root.dataset.theme = theme;
+            localStorage.setItem(themeKey, theme);
+            syncButtons();
+          };
+
+          const applyPalette = (palette) => {
+            root.dataset.palette = palette;
+            localStorage.setItem(paletteKey, palette);
+          };
+
+          themeButton.addEventListener('click', () => {
+            const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
+            applyTheme(nextTheme);
+          });
+
+          paletteButton.addEventListener('click', () => {
+            const currentPalette = root.dataset.palette ?? 'moon';
+            const currentIndex = palettes.indexOf(currentPalette);
+            const nextIndex = (currentIndex + 1 + palettes.length) % palettes.length;
+            applyPalette(palettes[nextIndex]);
+          });
+
+          syncButtons();
+          themeButton.dataset.themeReady = 'true';
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initThemeControls, { once: true });
+        } else {
+          initThemeControls();
+        }
+      })();
+    </script>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-  }
-
-  main {
-    max-width: 1260px;
-    margin: 0 auto;
-  }
-</style>

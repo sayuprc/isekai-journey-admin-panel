@@ -1,64 +1,35 @@
 ---
+import { isActivePath, navLinks } from '../../data/site-helpers';
+
 interface Props {
-  siteTitle: string;
+  currentPath: string;
 }
 
-const { siteTitle } = Astro.props;
+const { currentPath } = Astro.props;
 ---
 
-<header>
-  <div class="header-inner">
-    <div class="site-title">{siteTitle}</div>
-    <nav>
-      <ul>
-        <li><a href="/song">Song</a></li>
-      </ul>
-    </nav>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="/logo-dark.svg" alt="" class="brand-logo brand-logo-dark" />
+      <img src="/logo-light.svg" alt="" class="brand-logo brand-logo-light" />
+      <div class="brand-text">
+        <span class="brand-mark">ヰ世界観測所</span>
+        <span class="brand-en">Isekai Observatory</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      {
+        navLinks.map(link => (
+          <a href={link.href} class={isActivePath(currentPath, link.href) ? 'active' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+    <div class="nav-utils">
+      <button class="icon-btn" type="button" title="テーマ切替" data-theme-toggle>☼</button>
+      <button class="icon-btn" type="button" title="パレット切替" data-palette-toggle>◈</button>
+    </div>
   </div>
-</header>
-
-<style>
-  header {
-    height: 80px;
-    color: #f0f8ff;
-    background-color: #018be4;
-  }
-
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 1260px;
-    height: inherit;
-    margin: 0 auto;
-  }
-
-  .site-title {
-    margin-left: 10px;
-    font-size: 2rem;
-  }
-
-  nav {
-    margin-right: 10px;
-  }
-
-  ul {
-    display: flex;
-  }
-
-  li {
-    margin-left: 20px;
-  }
-
-  a {
-    font-size: 1.2rem;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  a:visited {
-    color: #f0f8ff;
-  }
-</style>
+</nav>

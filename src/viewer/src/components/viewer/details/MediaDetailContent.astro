@@ -1,0 +1,69 @@
+---
+import { Q, mediaTypeLabel } from '../../../data/site-helpers';
+import MVThumb from '../MVThumb.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props {
+  entry: {
+    id: string;
+    title: string;
+    type: string;
+    date: string;
+    views: string;
+    description: string;
+    color: string;
+  };
+}
+
+const { entry } = Astro.props;
+const songs = Q.songsOfMedia(entry.id);
+const event = Q.eventOfMedia(entry.id);
+---
+
+<div class="detail-page-content media-detail-content">
+  <div class="detail-hero-grid detail-hero-grid-wide">
+    <MVThumb color={entry.color} label={mediaTypeLabel(entry.type).toUpperCase()} />
+    <div>
+      <div class="label-mono">{entry.date} · {mediaTypeLabel(entry.type)} · {entry.views} views</div>
+      <h1 class="detail-title">{entry.title}</h1>
+      <p class="detail-description">{entry.description}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#">YouTubeで観る ↗</a>
+        <a class="btn" href="#">公式サイト ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <SectionHead num="01" title="関連楽曲" titleEn="Songs" />
+  <div class="rel-list">
+    {
+      songs.map(song => (
+        <a class="rel-chip" href={`/songs/${song.id}`}>
+          <div class="color-block" style={`--tile-color:${song.color};`}></div>
+          <div class="rel-copy">
+            <div class="rel-main">{song.title}</div>
+            <div class="label-mono">{song.duration} · {song.category}</div>
+          </div>
+          <span>→</span>
+        </a>
+      ))
+    }
+  </div>
+
+  {
+    event && (
+      <>
+        <SectionHead num="02" title="紐づく出来事" titleEn="Event" />
+        <div class="rel-list">
+          <a class="rel-chip" href={`/events/${event.id}`}>
+            <div class="rel-copy">
+              <div class="rel-main">{event.title}</div>
+              <div class="label-mono">{event.date} · {event.category} · {event.venue}</div>
+            </div>
+            <span>→</span>
+          </a>
+        </div>
+      </>
+    )
+  }
+</div>

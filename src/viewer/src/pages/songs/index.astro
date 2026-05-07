@@ -1,0 +1,112 @@
+---
+import { DetailDrawer } from '../../components/viewer/DetailDrawer';
+import JacketArt from '../../components/viewer/JacketArt.astro';
+import LayoutSwitcher from '../../components/viewer/LayoutSwitcher.astro';
+import SectionHead from '../../components/viewer/SectionHead.astro';
+import { Q, sortedSongs } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+const songs = sortedSongs();
+---
+
+<Layout pageTitle="Songs">
+  <section class="shell page-section">
+    <SectionHead num="—" title="楽曲集" titleEn={`Songs / ${songs.length} songs`}>
+      <LayoutSwitcher
+        slot="right"
+        name="songs"
+        initialValue="grid"
+        options={[
+          { value: 'grid', label: 'GRID' },
+          { value: 'table', label: 'TABLE' },
+          { value: 'card', label: 'CARD' },
+        ]}
+      />
+    </SectionHead>
+
+    <div data-layout-group="songs">
+      <div data-layout-panel="grid">
+        <div class="song-grid">
+          {
+            songs.map(song => (
+              <a href={`/songs/${song.id}`} class="song-grid-card">
+                <JacketArt color={song.color} label={song.titleEn} />
+                <div class="song-grid-body">
+                  <div class="song-grid-meta">
+                    <span class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'}</span>
+                    <span class="pill">{song.category}</span>
+                  </div>
+                  <div class="song-grid-title">{song.title}</div>
+                  <div class="song-grid-title-en">{song.titleEn}</div>
+                  <p class="song-grid-description">{song.description}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div data-layout-panel="table" hidden>
+        <div class="songs-table">
+          <div class="tbl-row tbl-head">
+            <div class="label-mono">DATE</div>
+            <div class="label-mono">#</div>
+            <div class="label-mono">TITLE</div>
+            <div class="label-mono">CAT.</div>
+            <div class="label-mono">LEN</div>
+            <div class="label-mono">REL</div>
+            <div class="label-mono">LIVE</div>
+            <div class="label-mono">MV</div>
+          </div>
+          {
+            songs.map((song, index) => {
+              const stats = Q.songStats(song.id);
+              return (
+                <a href={`/songs/${song.id}`} class="tbl-row tbl-body">
+                  <span class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'}</span>
+                  <span class="detail-index">{String(songs.length - index).padStart(2, '0')}</span>
+                  <div>
+                    <div class="table-title">{song.title}</div>
+                    <div class="song-grid-title-en">{song.titleEn}</div>
+                  </div>
+                  <span class="pill">{song.category}</span>
+                  <span class="label-mono">{song.duration}</span>
+                  <span class="num-cell">{stats.releases}</span>
+                  <span class="num-cell">{stats.performances}</span>
+                  <span class="num-cell">{stats.media}</span>
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
+
+      <div data-layout-panel="card" hidden>
+        <div class="songs-card-grid">
+          {
+            songs.map((song) => {
+              const stats = Q.songStats(song.id);
+              return (
+                <a href={`/songs/${song.id}`} class="song-card">
+                  <JacketArt color={song.color} label={song.id} />
+                  <div class="song-card-body">
+                    <div class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'} · {song.category}</div>
+                    <div class="timeline-title">{song.title}</div>
+                    <div class="song-grid-title-en">{song.titleEn}</div>
+                    <p class="song-grid-description">{song.description}</p>
+                    <div class="song-card-stats">
+                      <div><span class="detail-index">{stats.releases}</span><span class="label-mono">releases</span></div>
+                      <div><span class="detail-index">{stats.performances}</span><span class="label-mono">live</span></div>
+                      <div><span class="detail-index">{stats.media}</span><span class="label-mono">media</span></div>
+                    </div>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <DetailDrawer client:load />
+</Layout>

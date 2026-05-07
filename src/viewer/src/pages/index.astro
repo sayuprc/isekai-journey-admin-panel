@@ -1,6 +1,140 @@
 ---
+import { DetailDrawer } from '../components/viewer/DetailDrawer';
+import JacketArt from '../components/viewer/JacketArt.astro';
+import MVThumb from '../components/viewer/MVThumb.astro';
+import SectionHead from '../components/viewer/SectionHead.astro';
+import {
+  Q,
+  SITE_DATA,
+  latestMedia,
+  latestRelease,
+  mediaTypeLabel,
+  upcomingEvent,
+} from '../data/site-helpers';
 import Layout from '../layouts/Layout.astro';
+
+const release = latestRelease();
+const media = latestMedia(3);
+const nextEvent = upcomingEvent();
 ---
 
-<Layout pageTitle="Top">
+<Layout pageTitle="Home">
+  <section class="hero-symbol">
+    <svg class="hero-stars" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="var(--accent)">
+        <circle cx="120" cy="80" r="1.5"></circle><circle cx="280" cy="180" r="1"></circle><circle cx="450" cy="60" r="1.2"></circle>
+        <circle cx="600" cy="220" r="1.8"></circle><circle cx="780" cy="120" r="1"></circle><circle cx="950" cy="200" r="1.4"></circle>
+        <circle cx="1080" cy="80" r="1.2"></circle><circle cx="200" cy="380" r="1"></circle><circle cx="380" cy="480" r="1.5"></circle>
+        <circle cx="560" cy="420" r="1"></circle><circle cx="720" cy="500" r="1.6"></circle><circle cx="900" cy="420" r="1.2"></circle>
+      </g>
+    </svg>
+    <div class="shell hero-symbol-inner">
+      <div class="eyebrow">Est. 2020 — Fan Observatory</div>
+      <div class="hero-mark">ヰ世界観測所</div>
+      <div class="hero-en">Isekai Observatory</div>
+      <div class="hero-divider"></div>
+      <div class="hero-copy">AN UNOFFICIAL FAN ARCHIVE — ヰ世界情緒</div>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
+        <a class="btn" href="/media">映像を観る</a>
+      </div>
+      <div class="hero-stats-grid">
+        <div><strong>{SITE_DATA.songs.length}</strong><span>songs / 楽曲</span></div>
+        <div><strong>{SITE_DATA.releases.length}</strong><span>releases / リリース</span></div>
+        <div><strong>{SITE_DATA.media.length}</strong><span>media / 映像</span></div>
+        <div><strong>{SITE_DATA.events.length}</strong><span>events / 出来事</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell">
+    <div class="two-col-section">
+      <div>
+        <SectionHead num="01" title="お知らせ" titleEn="News & Updates" />
+        <div class="news-list">
+          {
+            SITE_DATA.news.map(entry => (
+              <div class="news-row">
+                <span class="label-mono">{entry.date}</span>
+                <span class="pill">{entry.category}</span>
+                <span>{entry.title}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <SectionHead num="02" title="最新リリース" titleEn="Latest Release" />
+        {
+          release && (
+            <a href={`/releases/${release.id}`} class="feature-grid-link">
+              <JacketArt color={release.color} label={release.title} />
+              <div>
+                <div class="eyebrow">{release.type} — {release.date}</div>
+                <h3 class="feature-title">{release.title}</h3>
+                <div class="label-mono">{release.format}</div>
+                <p class="feature-summary">収録曲 · {Q.songsOfRelease(release.id).length} 曲</p>
+                <div class="rel-list">
+                  {
+                    Q.songsOfRelease(release.id).slice(0, 5).map((song, index) => (
+                      <a class="rel-chip" href={`/songs/${song.id}`}>
+                        <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
+                        <div class="rel-main">{song.title}</div>
+                        <span class="label-mono">{song.duration}</span>
+                      </a>
+                    ))
+                  }
+                </div>
+              </div>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="shell">
+    <SectionHead num="03" title="最新の映像" titleEn="Latest Media">
+      <a slot="right" class="btn" href="/media">すべての映像 →</a>
+    </SectionHead>
+    <div class="media-card-grid">
+      {
+        media.map(entry => (
+          <a href={`/media/${entry.id}`} class="media-card">
+            <MVThumb color={entry.color} label={mediaTypeLabel(entry.type).toUpperCase()} />
+            <div class="media-card-body">
+              <div class="label-mono">{entry.date} · {entry.views} views</div>
+              <div class="media-card-title">{entry.title}</div>
+              <div class="media-card-tags">
+                {Q.songsOfMedia(entry.id).map(song => <span class="pill">{song.title}</span>)}
+              </div>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    nextEvent && (
+      <section class="shell">
+        <SectionHead num="04" title="次の催し" titleEn="Next Event" />
+        <a href={`/events/${nextEvent.id}`} class="upcoming-event-card">
+          <div class="upcoming-date">
+            <div>{nextEvent.date.split('.')[0]}</div>
+            <strong>{nextEvent.date.split('.').slice(1).join('.')}</strong>
+            <span>{nextEvent.category}</span>
+          </div>
+          <div>
+            <div class="eyebrow">UPCOMING — 開催予定</div>
+            <h3 class="feature-title">{nextEvent.title}</h3>
+            <div class="feature-summary">@ {nextEvent.venue} — {nextEvent.description}</div>
+          </div>
+          <span class="btn btn-primary">詳細を見る</span>
+        </a>
+      </section>
+    )
+  }
+  <DetailDrawer client:load />
 </Layout>

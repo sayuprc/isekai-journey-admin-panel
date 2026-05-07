@@ -1,0 +1,17 @@
+---
+import MediaDetailContent from '../../components/viewer/details/MediaDetailContent.astro';
+import { SITE_DATA } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return SITE_DATA.media.map(entry => ({ params: { mediaId: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<Layout pageTitle={entry.title}>
+  <section class="shell page-section detail-page">
+    <MediaDetailContent entry={entry} />
+  </section>
+</Layout>

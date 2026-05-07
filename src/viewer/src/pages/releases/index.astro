@@ -1,0 +1,33 @@
+---
+import { DetailDrawer } from '../../components/viewer/DetailDrawer';
+import JacketArt from '../../components/viewer/JacketArt.astro';
+import SectionHead from '../../components/viewer/SectionHead.astro';
+import { Q, sortedReleases } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+const releases = sortedReleases();
+---
+
+<Layout pageTitle="Releases">
+  <section class="shell page-section">
+    <SectionHead num="—" title="リリース" titleEn={`Releases / ${releases.length} entries`} />
+    <div class="release-grid">
+      {
+        releases.map(release => (
+          <a href={`/releases/${release.id}`} class="release-card">
+            <JacketArt color={release.color} label={release.title} />
+            <div class="release-card-body">
+              <div class="release-card-meta">
+                <span class="label-mono">{release.date} · {release.type}</span>
+                <span class="detail-index">{Q.songsOfRelease(release.id).length} tracks</span>
+              </div>
+              <div class="song-grid-title">{release.title}</div>
+              <div class="song-grid-title-en">{release.format}</div>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <DetailDrawer client:load />
+</Layout>
