@@ -2,18 +2,155 @@ openapi: 3.1.0
 info:
   title: ヰ世界観測所 API
   version: v1
-tags: []
-paths: {}
+tags:
+  - name: Song
+paths:
+  /songs:
+    get:
+      operationId: SongService_listSongs
+      summary: SSG の build 時一括取得を既定とした楽曲一覧
+      description: Viewer 楽曲一覧取得API
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/cursor'
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/limit'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongListResponse'
+        '500':
+          description: Server error
+      tags:
+        - Song
 components:
   schemas:
     IsekaiObservatory.Viewer.Version:
       type: string
       enum:
         - v1
+    SongListItem:
+      type: object
+      required:
+        - songId
+        - title
+        - type
+        - description
+        - counts
+      properties:
+        songId:
+          $ref: '#/components/schemas/songId'
+        title:
+          $ref: '#/components/schemas/title'
+        type:
+          $ref: '#/components/schemas/ViewerSongType'
+        description:
+          $ref: '#/components/schemas/description'
+        counts:
+          $ref: '#/components/schemas/SongRelationCounts'
+      examples:
+        - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+          title: 描き続けた君へ
+          type:
+            label: オリジナル
+            value: original
+          description: Viewer の一覧表示向けに集約された楽曲説明
+          counts:
+            mediaCount: 3
+    SongListResponse:
+      type: object
+      required:
+        - songs
+      properties:
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongListItem'
+          description: 公開対象の楽曲一覧。
+        nextCursor:
+          anyOf:
+            - $ref: '#/components/schemas/cursor'
+            - type: 'null'
+          description: 続きを取得できる場合のみ返す cursor。一括取得では `null` または未設定を想定。
+      description: Viewer の楽曲一覧レスポンス。一括取得を基本としつつ、将来の seek pagination 追加時も後方互換で拡張できる envelope にしている。
+      examples:
+        - songs:
+            - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+              title: 描き続けた君へ
+              type:
+                label: オリジナル
+                value: original
+              description: Viewer の一覧表示向けに集約された楽曲説明
+              counts:
+                mediaCount: 3
+          nextCursor: null
+    SongRelationCounts:
+      type: object
+      required:
+        - mediaCount
+      properties:
+        mediaCount:
+          type: integer
+          format: int32
+          description: 関連メディア数
     Version:
       type: string
       enum:
         - v1
+    ViewerSongType:
+      type: object
+      required:
+        - label
+        - value
+      properties:
+        label:
+          $ref: '#/components/schemas/songTypeLabel'
+        value:
+          $ref: '#/components/schemas/ViewerSongTypeValue'
+      examples:
+        - label: オリジナル
+          value: original
+    ViewerSongTypeValue:
+      type: string
+      enum:
+        - original
+        - cover
+      description: 公開向け楽曲種別
+    cursor:
+      type: string
+      description: シーク法の続きを示す不透明 cursor。将来の分割取得で安定キーをもとに発行する想定。
+    description:
+      type: string
+      description: 楽曲の説明
+    limit:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 500
+      description: 分割取得が必要になった場合の取得件数。省略時は SSG build 用の全件取得として扱う。
+    songId:
+      type: string
+      format: uuid
+      description: 楽曲ID
+    songTypeLabel:
+      type: string
+      minLength: 1
+      description: 楽曲種別の表示名
+    title:
+      type: string
+      minLength: 1
+      description: 楽曲名
 servers:
   - url: https://local.api.isekaijoucho.fan/{version}
     description: ローカル環境
