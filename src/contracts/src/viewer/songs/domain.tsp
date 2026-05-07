@@ -21,7 +21,7 @@ enum SongTypeValue {
   cover: 2,
 }
 
-@example(#{ name: "オリジナル", value: SongTypeValue.original })
+@example(#{ name: "オリジナル曲", value: SongTypeValue.original })
 model SongType {
   name: songTypeName;
   value: SongTypeValue;
@@ -36,7 +36,7 @@ model SongRelationCounts {
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "描き続けた君へ",
   description: "楽曲説明",
-  type: #{ name: "オリジナル", value: SongTypeValue.original },
+  type: #{ name: "オリジナル曲", value: SongTypeValue.original },
   counts: #{ mediaCount: 3 },
 })
 model SongListItem {
