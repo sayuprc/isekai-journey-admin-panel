@@ -8,8 +8,7 @@ paths:
   /songs:
     get:
       operationId: SongService_listSongs
-      summary: SSG の build 時一括取得を既定とした楽曲一覧
-      description: Viewer 楽曲一覧取得API
+      description: 楽曲一覧取得API
       parameters:
         - name: cursor
           in: query
@@ -45,27 +44,27 @@ components:
       required:
         - songId
         - title
-        - type
         - description
+        - type
         - counts
       properties:
         songId:
           $ref: '#/components/schemas/songId'
         title:
           $ref: '#/components/schemas/title'
-        type:
-          $ref: '#/components/schemas/ViewerSongType'
         description:
           $ref: '#/components/schemas/description'
+        type:
+          $ref: '#/components/schemas/SongType'
         counts:
           $ref: '#/components/schemas/SongRelationCounts'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
+          description: 楽曲説明
           type:
-            label: オリジナル
-            value: original
-          description: Viewer の一覧表示向けに集約された楽曲説明
+            name: オリジナル
+            value: 1
           counts:
             mediaCount: 3
     SongListResponse:
@@ -77,24 +76,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SongListItem'
-          description: 公開対象の楽曲一覧。
         nextCursor:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/cursor'
-            - type: 'null'
-          description: 続きを取得できる場合のみ返す cursor。一括取得では `null` または未設定を想定。
-      description: Viewer の楽曲一覧レスポンス。一括取得を基本としつつ、将来の seek pagination 追加時も後方互換で拡張できる envelope にしている。
+          description: 続きを取得できる場合のみ返す
       examples:
         - songs:
             - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               title: 描き続けた君へ
+              description: 楽曲説明
               type:
-                label: オリジナル
-                value: original
-              description: Viewer の一覧表示向けに集約された楽曲説明
+                name: オリジナル
+                value: 1
               counts:
                 mediaCount: 3
-          nextCursor: null
+          nextCursor: ffc3cb4d-116e-4731-9d90-f01c33253e0c
     SongRelationCounts:
       type: object
       required:
@@ -104,32 +100,33 @@ components:
           type: integer
           format: int32
           description: 関連メディア数
+    SongType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/songTypeName'
+        value:
+          $ref: '#/components/schemas/SongTypeValue'
+      examples:
+        - name: オリジナル
+          value: 1
+    SongTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+      description: 楽曲種別の値
     Version:
       type: string
       enum:
         - v1
-    ViewerSongType:
-      type: object
-      required:
-        - label
-        - value
-      properties:
-        label:
-          $ref: '#/components/schemas/songTypeLabel'
-        value:
-          $ref: '#/components/schemas/ViewerSongTypeValue'
-      examples:
-        - label: オリジナル
-          value: original
-    ViewerSongTypeValue:
-      type: string
-      enum:
-        - original
-        - cover
-      description: 公開向け楽曲種別
     cursor:
       type: string
-      description: シーク法の続きを示す不透明 cursor。将来の分割取得で安定キーをもとに発行する想定。
+      description: 次ページを記すキー
     description:
       type: string
       description: 楽曲の説明
@@ -138,15 +135,15 @@ components:
       format: int32
       minimum: 1
       maximum: 500
-      description: 分割取得が必要になった場合の取得件数。省略時は SSG build 用の全件取得として扱う。
+      description: 1 度に取得できる最大件数
     songId:
       type: string
       format: uuid
       description: 楽曲ID
-    songTypeLabel:
+    songTypeName:
       type: string
       minLength: 1
-      description: 楽曲種別の表示名
+      description: 楽曲種別名
     title:
       type: string
       minLength: 1

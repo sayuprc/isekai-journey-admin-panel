@@ -9,23 +9,17 @@ export type IsekaiObservatoryViewerVersion = 'v1';
 export type SongListItem = {
     songId: SongId;
     title: Title;
-    type: ViewerSongType;
     description: Description;
+    type: SongType;
     counts: SongRelationCounts;
 };
 
-/**
- * Viewer の楽曲一覧レスポンス。一括取得を基本としつつ、将来の seek pagination 追加時も後方互換で拡張できる envelope にしている。
- */
 export type SongListResponse = {
-    /**
-     * 公開対象の楽曲一覧。
-     */
     songs: Array<SongListItem>;
     /**
-     * 続きを取得できる場合のみ返す cursor。一括取得では `null` または未設定を想定。
+     * 続きを取得できる場合のみ返す
      */
-    nextCursor?: Cursor | null;
+    nextCursor?: Cursor;
 };
 
 export type SongRelationCounts = {
@@ -35,20 +29,20 @@ export type SongRelationCounts = {
     mediaCount: number;
 };
 
-export type Version = 'v1';
-
-export type ViewerSongType = {
-    label: SongTypeLabel;
-    value: ViewerSongTypeValue;
+export type SongType = {
+    name: SongTypeName;
+    value: SongTypeValue;
 };
 
 /**
- * 公開向け楽曲種別
+ * 楽曲種別の値
  */
-export type ViewerSongTypeValue = 'original' | 'cover';
+export type SongTypeValue = 1 | 2;
+
+export type Version = 'v1';
 
 /**
- * シーク法の続きを示す不透明 cursor。将来の分割取得で安定キーをもとに発行する想定。
+ * 次ページを記すキー
  */
 export type Cursor = string;
 
@@ -58,7 +52,7 @@ export type Cursor = string;
 export type Description = string;
 
 /**
- * 分割取得が必要になった場合の取得件数。省略時は SSG build 用の全件取得として扱う。
+ * 1 度に取得できる最大件数
  */
 export type Limit = number;
 
@@ -68,9 +62,9 @@ export type Limit = number;
 export type SongId = string;
 
 /**
- * 楽曲種別の表示名
+ * 楽曲種別名
  */
-export type SongTypeLabel = string;
+export type SongTypeName = string;
 
 /**
  * 楽曲名

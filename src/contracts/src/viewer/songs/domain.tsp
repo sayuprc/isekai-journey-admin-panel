@@ -11,20 +11,20 @@ scalar title extends string;
 @doc("楽曲の説明")
 scalar description extends string;
 
-@doc("楽曲種別の表示名")
+@doc("楽曲種別名")
 @minLength(1)
-scalar songTypeLabel extends string;
+scalar songTypeName extends string;
 
-@doc("公開向け楽曲種別")
-enum ViewerSongTypeValue {
-  original: "original",
-  cover: "cover",
+@doc("楽曲種別の値")
+enum SongTypeValue {
+  original: 1,
+  cover: 2,
 }
 
-@example(#{ label: "オリジナル", value: ViewerSongTypeValue.original })
-model ViewerSongType {
-  label: songTypeLabel;
-  value: ViewerSongTypeValue;
+@example(#{ name: "オリジナル", value: SongTypeValue.original })
+model SongType {
+  name: songTypeName;
+  value: SongTypeValue;
 }
 
 model SongRelationCounts {
@@ -35,14 +35,14 @@ model SongRelationCounts {
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "描き続けた君へ",
-  type: #{ label: "オリジナル", value: ViewerSongTypeValue.original },
-  description: "Viewer の一覧表示向けに集約された楽曲説明",
+  description: "楽曲説明",
+  type: #{ name: "オリジナル", value: SongTypeValue.original },
   counts: #{ mediaCount: 3 },
 })
 model SongListItem {
   songId: songId;
   title: title;
-  type: ViewerSongType;
   description: description;
+  type: SongType;
   counts: SongRelationCounts;
 }

@@ -19,8 +19,6 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * SSG の build 時一括取得を既定とした楽曲一覧
- *
- * Viewer 楽曲一覧取得API
+ * 楽曲一覧取得API
  */
 export const songServiceListSongs = <ThrowOnError extends boolean = false>(options?: Options<SongServiceListSongsData, ThrowOnError>) => (options?.client ?? client).get<SongServiceListSongsResponses, SongServiceListSongsErrors, ThrowOnError>({ url: '/songs', ...options });
