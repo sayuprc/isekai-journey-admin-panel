@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Auth\Application\UseCase\Refresh\RefreshInputData;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
@@ -21,12 +20,12 @@ use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
 use Override;
 use Support\UseCase\Authorizer\AuthorizationContextInterface;
 
-class AuthServiceProvider extends EnvServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void
@@ -38,14 +37,6 @@ class AuthServiceProvider extends EnvServiceProvider
         $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
         $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
         $this->app->bind(AuthorizationContextInterface::class, UseCaseAuthorizationContext::class);
-        $this->app->bind(RefreshInputData::class, function (): RefreshInputData {
-            $request = $this->app->make(Request::class);
-
-            return new RefreshInputData(
-                $request->string('refreshTokenId')->toString(),
-                $request->string('refreshToken')->toString(),
-            );
-        });
 
         $this->app->scoped(AuthContext::class);
 

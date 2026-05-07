@@ -8,9 +8,10 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Services\HasherInterface;
 use AdminUser\Infrastructures\AdminUserRepository;
 use AdminUser\Infrastructures\Hasher;
+use Illuminate\Support\ServiceProvider;
 use Override;
 
-class AdminUserServiceProvider extends EnvServiceProvider
+class AdminUserServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void

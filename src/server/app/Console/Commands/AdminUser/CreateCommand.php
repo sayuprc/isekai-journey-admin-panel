@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\AdminUser;
 
-use AdminUser\Application\UseCase\Create\CreateInputData;
-use AdminUser\Application\UseCase\Create\CreateUseCase;
+use AdminUser\Application\Cli\UseCase\Create\CreateInputData;
+use AdminUser\Application\Cli\UseCase\Create\CreateUseCase;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
 use Illuminate\Console\Command;

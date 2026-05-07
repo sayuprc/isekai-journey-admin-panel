@@ -10,9 +10,9 @@ enum SongComponent: string implements ComponentMap
 
     case Domain = 'Song\Domain\*';
 
-    case Query = 'Song\Application\Query\*';
+    case Query = 'Song\Application\*\Query\*';
 
-    case Assemble = 'Song\Application\Assemble\*';
+    case Assemble = 'Song\Application\*\Assemble\*';
 
-    case UseCase = 'Song\Application\UseCase\*';
+    case UseCase = 'Song\Application\*\UseCase\*';
 }

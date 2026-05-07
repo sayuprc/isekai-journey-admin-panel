@@ -10,5 +10,5 @@ enum PersonComponent: string implements ComponentMap
 
     case Domain = 'Person\Domain\*';
 
-    case UseCase = 'Person\Application\UseCase\*';
+    case UseCase = 'Person\Application\*\UseCase\*';
 }
