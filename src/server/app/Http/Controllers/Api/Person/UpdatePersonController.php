@@ -7,19 +7,35 @@ namespace App\Http\Controllers\Api\Person;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Person\UpdatePresenter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Person\Application\UseCase\Update\UpdateInputData;
 use Person\Application\UseCase\Update\UpdateUseCase;
+use Support\Contracts\MapperInterface;
 
 class UpdatePersonController extends Controller
 {
     public function __construct(
+        private readonly MapperInterface $mapper,
         private readonly UpdateUseCase $useCase,
         private readonly UpdatePresenter $presenter,
     ) {
     }
 
-    public function handle(UpdateInputData $inputData): JsonResponse
+    public function handle(string $personId, Request $request): JsonResponse
     {
-        return $this->presenter->present($this->useCase->handle($inputData));
+        return $this->buildInput($personId, $request)
+            |> $this->useCase->handle(...)
+            |> $this->presenter->present(...);
+    }
+
+    private function buildInput(string $personId, Request $request): UpdateInputData
+    {
+        return $this->mapper->map(
+            UpdateInputData::class,
+            [
+                ...$request->all(),
+                'personId' => $personId,
+            ],
+        );
     }
 }

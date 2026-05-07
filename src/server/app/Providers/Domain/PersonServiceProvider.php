@@ -4,43 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;
 use Override;
-use Person\Application\UseCase\Create\CreateInputData;
-use Person\Application\UseCase\Search\SearchInputData;
-use Person\Application\UseCase\Update\UpdateInputData;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Infrastructures\PersonRepository;
 
-class PersonServiceProvider extends EnvServiceProvider
+class PersonServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void
     {
         $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
-
-        $this->app->bind(SearchInputData::class, function (): SearchInputData {
-            $request = $this->app->make(Request::class);
-
-            return $this->getMapper()->map(SearchInputData::class, $request->query());
-        });
-
-        $this->app->bind(CreateInputData::class, function (): CreateInputData {
-            $request = $this->app->make(Request::class);
-
-            return $this->getMapper()->map(CreateInputData::class, $request->all());
-        });
-
-        $this->app->bind(UpdateInputData::class, function (): UpdateInputData {
-            $request = $this->app->make(Request::class);
-
-            return $this->getMapper()->map(
-                UpdateInputData::class,
-                [
-                    ...$request->all(),
-                    'personId' => $request->route('personId'),
-                ],
-            );
-        });
     }
 }

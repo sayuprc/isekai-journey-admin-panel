@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Domain;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;
 use Override;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
@@ -20,11 +20,9 @@ use Support\Infrastructures\Query\AuditLog\EloquentAuditLogQueryService;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
-use Support\UseCase\AuditLog\Get\GetInputData as AuditLogGetInputData;
 use Support\UseCase\AuditLog\Query\AuditLogQueryServiceInterface;
-use Support\UseCase\AuditLog\Search\SearchInputData as AuditLogSearchInputData;
 
-class SupportServiceProvider extends EnvServiceProvider
+class SupportServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void
@@ -36,18 +34,6 @@ class SupportServiceProvider extends EnvServiceProvider
         $this->app->bind(ClockInterface::class, Clock::class);
         $this->app->bind(AuditLogRecorderInterface::class, AuditLogRecorder::class);
         $this->app->bind(AuditLogQueryServiceInterface::class, EloquentAuditLogQueryService::class);
-
-        $this->app->bind(AuditLogSearchInputData::class, function (): AuditLogSearchInputData {
-            $request = $this->app->make(Request::class);
-
-            return $this->getMapper()->map(AuditLogSearchInputData::class, $request->query());
-        });
-
-        $this->app->bind(AuditLogGetInputData::class, function (): AuditLogGetInputData {
-            $request = $this->app->make(Request::class);
-
-            return new AuditLogGetInputData((string)$request->route('auditLogId'));
-        });
 
         $this->app->bind(
             SQLiteConfig::class,
