@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware\Admin;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidSecurity;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -21,7 +20,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
 
-class OpenApiValidator
+abstract class OpenApiValidator
 {
     private readonly PsrHttpFactory $psrHttpFactory;
 
@@ -29,9 +28,8 @@ class OpenApiValidator
         private readonly LoggerInterface $logger,
         private readonly ValidatorBuilder $builder,
         Psr17Factory $psr17Factory,
-        OpenApiConfig $config,
     ) {
-        $this->builder->fromYamlFile($config->path);
+        $this->builder->fromYamlFile($this->getPath());
 
         $this->psrHttpFactory = new PsrHttpFactory(
             $psr17Factory,
@@ -40,6 +38,8 @@ class OpenApiValidator
             $psr17Factory,
         );
     }
+
+    abstract protected function getPath(): string;
 
     /**
      * @param Closure(Request): (Response) $next
@@ -79,11 +79,13 @@ class OpenApiValidator
     private function resolveOperationAddress(Request $request): OperationAddress
     {
         $route = $request->route();
-        $path = $route instanceof Route ? $route->uri() : ltrim($request->getPathInfo(), '/');
-        $path = preg_replace('#^admin/v1#', '', $path) ?? $path;
+        $path = is_null($route) ? ltrim($request->getPathInfo(), '/') : $route->uri();
+        $path = preg_replace($this->getRoutePrefixPattern(), '', $path) ?? $path;
 
         return new OperationAddress('/' . ltrim($path, '/'), strtolower($request->getMethod()));
     }
+
+    abstract protected function getRoutePrefixPattern(): string;
 
     private function handleValidationFailed(ValidationFailed $exception): JsonResponse
     {

@@ -31,8 +31,8 @@ use App\Http\Controllers\Api\Admin\V1\SongTag\ListSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\UpdateSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongType\ListSongTypeController;
+use App\Http\Middleware\Admin\AdminOpenApiValidator;
 use App\Http\Middleware\Admin\Authenticate;
-use App\Http\Middleware\Admin\OpenApiValidator;
 use Auth\Route\AuthRouteMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +47,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware(OpenApiValidator::class)->group(function () {
+Route::middleware(AdminOpenApiValidator::class)->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('v1')->group(function () {
             Route::prefix('auth')->group(function () {
