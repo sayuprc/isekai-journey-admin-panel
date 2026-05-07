@@ -2,18 +2,152 @@ openapi: 3.1.0
 info:
   title: ヰ世界観測所 API
   version: v1
-tags: []
-paths: {}
+tags:
+  - name: Song
+paths:
+  /songs:
+    get:
+      operationId: SongService_listSongs
+      description: 楽曲一覧取得API
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/cursor'
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/limit'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongListResponse'
+        '500':
+          description: Server error
+      tags:
+        - Song
 components:
   schemas:
     IsekaiObservatory.Viewer.Version:
       type: string
       enum:
         - v1
+    SongListItem:
+      type: object
+      required:
+        - songId
+        - title
+        - description
+        - type
+        - counts
+      properties:
+        songId:
+          $ref: '#/components/schemas/songId'
+        title:
+          $ref: '#/components/schemas/title'
+        description:
+          $ref: '#/components/schemas/description'
+        type:
+          $ref: '#/components/schemas/SongType'
+        counts:
+          $ref: '#/components/schemas/SongRelationCounts'
+      examples:
+        - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+          title: 描き続けた君へ
+          description: 楽曲説明
+          type:
+            name: オリジナル
+            value: 1
+          counts:
+            mediaCount: 3
+    SongListResponse:
+      type: object
+      required:
+        - songs
+      properties:
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongListItem'
+        nextCursor:
+          allOf:
+            - $ref: '#/components/schemas/cursor'
+          description: 続きを取得できる場合のみ返す
+      examples:
+        - songs:
+            - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+              title: 描き続けた君へ
+              description: 楽曲説明
+              type:
+                name: オリジナル
+                value: 1
+              counts:
+                mediaCount: 3
+          nextCursor: ffc3cb4d-116e-4731-9d90-f01c33253e0c
+    SongRelationCounts:
+      type: object
+      required:
+        - mediaCount
+      properties:
+        mediaCount:
+          type: integer
+          format: int32
+          description: 関連メディア数
+    SongType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/songTypeName'
+        value:
+          $ref: '#/components/schemas/SongTypeValue'
+      examples:
+        - name: オリジナル
+          value: 1
+    SongTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+      description: 楽曲種別の値
     Version:
       type: string
       enum:
         - v1
+    cursor:
+      type: string
+      description: 次ページを記すキー
+    description:
+      type: string
+      description: 楽曲の説明
+    limit:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 500
+      description: 1 度に取得できる最大件数
+    songId:
+      type: string
+      format: uuid
+      description: 楽曲ID
+    songTypeName:
+      type: string
+      minLength: 1
+      description: 楽曲種別名
+    title:
+      type: string
+      minLength: 1
+      description: 楽曲名
 servers:
   - url: https://local.api.isekaijoucho.fan/{version}
     description: ローカル環境
