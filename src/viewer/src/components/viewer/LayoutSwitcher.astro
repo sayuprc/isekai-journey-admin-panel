@@ -1,0 +1,85 @@
+---
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  name: string;
+  options: Option[];
+  initialValue: string;
+}
+
+const { name, options, initialValue } = Astro.props;
+const storageKey = `viewer-layout-${name}`;
+---
+
+<div class="seg" data-layout-switcher={name} data-layout-storage={storageKey} data-layout-default={initialValue}>
+  {
+    options.map(option => (
+      <button
+        type="button"
+        data-layout-option={option.value}
+        class={option.value === initialValue ? 'active' : undefined}
+      >
+        {option.label}
+      </button>
+    ))
+  }
+</div>
+
+<script is:inline>
+  (() => {
+    const initLayoutSwitchers = () => {
+      const switchers = document.querySelectorAll('[data-layout-switcher]');
+
+      for (const switcher of switchers) {
+        if (!(switcher instanceof HTMLElement)) continue;
+        if (switcher.dataset.layoutReady === 'true') continue;
+
+        const name = switcher.dataset.layoutSwitcher;
+        const storageKey = switcher.dataset.layoutStorage;
+        const defaultValue = switcher.dataset.layoutDefault;
+        if (!name || !storageKey || !defaultValue) continue;
+
+        const buttons = [...switcher.querySelectorAll('[data-layout-option]')];
+        const panels = [...document.querySelectorAll(`[data-layout-group="${name}"] [data-layout-panel]`)];
+        const savedValue = localStorage.getItem(storageKey) ?? defaultValue;
+
+        const apply = (value) => {
+          for (const button of buttons) {
+            if (!(button instanceof HTMLButtonElement)) continue;
+            button.classList.toggle('active', button.dataset.layoutOption === value);
+          }
+
+          for (const panel of panels) {
+            if (!(panel instanceof HTMLElement)) continue;
+            panel.hidden = panel.dataset.layoutPanel !== value;
+          }
+
+          localStorage.setItem(storageKey, value);
+        };
+
+        apply(savedValue);
+
+        switcher.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLElement)) return;
+          const button = target.closest('[data-layout-option]');
+          if (!(button instanceof HTMLButtonElement)) return;
+          const value = button.dataset.layoutOption;
+          if (!value) return;
+          apply(value);
+        });
+
+        switcher.dataset.layoutReady = 'true';
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLayoutSwitchers, { once: true });
+    } else {
+      initLayoutSwitchers();
+    }
+  })();
+</script>

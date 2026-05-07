@@ -1,0 +1,105 @@
+---
+import { DetailDrawer } from '../../components/viewer/DetailDrawer';
+import LayoutSwitcher from '../../components/viewer/LayoutSwitcher.astro';
+import MVThumb from '../../components/viewer/MVThumb.astro';
+import SectionHead from '../../components/viewer/SectionHead.astro';
+import { Q, mediaTypeLabel, sortedMedia } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+const media = sortedMedia();
+const featured = media[0];
+---
+
+<Layout pageTitle="Media">
+  <section class="shell page-section">
+    <SectionHead num="—" title="映像と記録" titleEn={`Media / ${media.length} entries`}>
+      <LayoutSwitcher
+        slot="right"
+        name="media"
+        initialValue="cinema"
+        options={[
+          { value: 'cinema', label: 'CINEMA' },
+          { value: 'mosaic', label: 'MOSAIC' },
+          { value: 'list', label: 'LIST' },
+        ]}
+      />
+    </SectionHead>
+
+    <div data-layout-group="media">
+      <div data-layout-panel="cinema">
+        {
+          featured && (
+            <>
+              <div class="media-featured-grid">
+                <a href={`/media/${featured.id}`}>
+                  <MVThumb color={featured.color} label={`NOW PLAYING — ${mediaTypeLabel(featured.type).toUpperCase()}`} />
+                </a>
+                <div class="media-featured-copy">
+                  <div class="label-mono">FEATURED · {featured.date}</div>
+                  <h3 class="feature-title">{featured.title}</h3>
+                  <div class="feature-subtitle">{mediaTypeLabel(featured.type)} · {featured.views} views</div>
+                  <p class="feature-summary">{featured.description}</p>
+                </div>
+              </div>
+
+              <div class="media-card-grid">
+                {
+                  media.slice(1).map(entry => (
+                    <a href={`/media/${entry.id}`} class="media-card">
+                      <MVThumb color={entry.color} label={mediaTypeLabel(entry.type).toUpperCase()} />
+                      <div class="media-card-body">
+                        <div class="label-mono">{entry.date} · {entry.views}</div>
+                        <div class="media-card-title">{entry.title}</div>
+                      </div>
+                    </a>
+                  ))
+                }
+              </div>
+            </>
+          )
+        }
+      </div>
+
+      <div data-layout-panel="mosaic" hidden>
+        <div class="media-mosaic">
+          {
+            media.map((entry, index) => (
+              <a href={`/media/${entry.id}`} class={`media-mosaic-item media-mosaic-${['lg', 'sm', 'sm', 'md'][index % 4]}`}>
+                <div class="media-mosaic-bg" style={`--tile-color:${entry.color};`}></div>
+                <div class="media-mosaic-copy">
+                  <div class="label-mono media-mosaic-label">{mediaTypeLabel(entry.type).toUpperCase()}</div>
+                  <div class="label-mono">{entry.date} · {entry.views}</div>
+                  <div class="media-card-title">{entry.title}</div>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div data-layout-panel="list" hidden>
+        <div class="media-list">
+          {
+            media.map((entry, index) => (
+              <a href={`/media/${entry.id}`} class="media-list-row">
+                <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
+                <div class="media-list-thumb">
+                  <MVThumb color={entry.color} />
+                </div>
+                <div>
+                  <div class="label-mono">{entry.date} · {mediaTypeLabel(entry.type)} · {entry.views}</div>
+                  <div class="media-card-title">{entry.title}</div>
+                  <div class="media-card-tags">
+                    {Q.songsOfMedia(entry.id).map(song => <span class="pill">楽曲 · {song.title}</span>)}
+                  </div>
+                </div>
+                <span>→</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <DetailDrawer client:load />
+</Layout>

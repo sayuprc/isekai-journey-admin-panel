@@ -1,34 +1,18 @@
 ---
-import { SongList, SongTypeSelect, SongOrderSelect, SearchInput } from '../components/SongList';
 import Layout from '../layouts/Layout.astro';
-import { type Song } from '../schemas/song';
-
-const url = `${import.meta.env.API_URL}/api/songs`;
-
-const response = await fetch(url);
-const songs: Song[] = await response.json();
 ---
 
 <Layout pageTitle="楽曲">
-  <div>
-    <div>
-      ヰ世界情緒が今まで歌ってきた楽曲の一覧です。(V.W.Pやコラボを含む)<br />
-      サムネイルをクリックすることで動画が再生されます。
+  <section class="shell page-section">
+    <div class="event-hero">
+      <div class="eyebrow">Legacy Route</div>
+      <h1 class="detail-title">楽曲一覧</h1>
+      <p class="detail-description">
+        旧 `/song` ルートは `/songs` へ役割を移しました。
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/songs">Songs へ移動</a>
+      </div>
     </div>
-    <div>
-      <SongOrderSelect client:load />
-      <SongTypeSelect client:load />
-      <SearchInput client:load />
-    </div>
-    <div class="song-list">
-      <SongList songs={songs} client:load />
-    </div>
-  </div>
+  </section>
 </Layout>
-
-<style>
-  .song-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-</style>

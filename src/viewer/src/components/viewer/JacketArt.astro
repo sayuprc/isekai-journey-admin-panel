@@ -1,0 +1,20 @@
+---
+interface Props {
+  color: string;
+  label: string;
+  aspectRatio?: string;
+}
+
+const { color, label, aspectRatio = '1 / 1' } = Astro.props;
+---
+
+<div class="jacket-art" style={`--tile-color:${color};--tile-aspect:${aspectRatio};`}>
+  <div class="jacket-art-label">{label}</div>
+  <svg class="jacket-art-mark" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="0.3"></circle>
+    <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="0.2"></circle>
+    <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="0.4"></circle>
+    <line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="0.2"></line>
+    <line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="0.2"></line>
+  </svg>
+</div>

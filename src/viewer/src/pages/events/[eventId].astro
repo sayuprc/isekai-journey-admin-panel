@@ -1,0 +1,17 @@
+---
+import EventDetailContent from '../../components/viewer/details/EventDetailContent.astro';
+import { SITE_DATA } from '../../data/site-helpers';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return SITE_DATA.events.map(event => ({ params: { eventId: event.id }, props: { event } }));
+}
+
+const { event } = Astro.props;
+---
+
+<Layout pageTitle={event.title}>
+  <section class="shell page-section detail-page">
+    <EventDetailContent event={event} />
+  </section>
+</Layout>
