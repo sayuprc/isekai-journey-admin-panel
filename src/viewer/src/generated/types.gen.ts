@@ -17,7 +17,7 @@ export type SongListItem = {
 export type SongListResponse = {
     songs: Array<SongListItem>;
     /**
-     * 続きを取得できる場合のみ返す
+     * 続きがある場合のみ返す
      */
     nextCursor?: Cursor;
 };
@@ -52,7 +52,7 @@ export type Cursor = string;
 export type Description = string;
 
 /**
- * 1 度に取得できる最大件数
+ * 1 度に取得する件数
  */
 export type Limit = number;
 

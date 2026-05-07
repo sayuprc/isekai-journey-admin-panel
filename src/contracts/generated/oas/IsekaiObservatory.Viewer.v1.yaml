@@ -63,7 +63,7 @@ components:
           title: 描き続けた君へ
           description: 楽曲説明
           type:
-            name: オリジナル
+            name: オリジナル曲
             value: 1
           counts:
             mediaCount: 3
@@ -79,18 +79,18 @@ components:
         nextCursor:
           allOf:
             - $ref: '#/components/schemas/cursor'
-          description: 続きを取得できる場合のみ返す
+          description: 続きがある場合のみ返す
       examples:
         - songs:
             - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
               title: 描き続けた君へ
               description: 楽曲説明
               type:
-                name: オリジナル
+                name: オリジナル曲
                 value: 1
               counts:
                 mediaCount: 3
-          nextCursor: ffc3cb4d-116e-4731-9d90-f01c33253e0c
+          nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongRelationCounts:
       type: object
       required:
@@ -111,7 +111,7 @@ components:
         value:
           $ref: '#/components/schemas/SongTypeValue'
       examples:
-        - name: オリジナル
+        - name: オリジナル曲
           value: 1
     SongTypeValue:
       type: integer
@@ -134,8 +134,8 @@ components:
       type: integer
       format: int32
       minimum: 1
-      maximum: 500
-      description: 1 度に取得できる最大件数
+      maximum: 50
+      description: 1 度に取得する件数
     songId:
       type: string
       format: uuid
