@@ -219,6 +219,21 @@ export type RefreshTokenResponse = {
     refreshToken: RefreshToken;
 };
 
+export type Release = {
+    releaseId: ReleaseId;
+    title: ReleaseTitle;
+    typeValue: ReleaseTypeValue;
+    distributionTypeValue: ReleaseDistributionTypeValue;
+    releasedOn: ReleasedOn;
+    description: string;
+    isDisplay: boolean;
+    trackEntries: Array<TrackEntry>;
+};
+
+export type ReleaseDistributionTypeValue = 1 | 2 | 99;
+
+export type ReleaseTypeValue = 1 | 2 | 3 | 99;
+
 export type RequestSongMediaLink = {
     mediaId: MediaId;
     orderNo: OrderNo;
@@ -406,6 +421,11 @@ export type SongUpdateResponse = {
  */
 export type SortOrder = 'asc' | 'desc';
 
+export type TrackEntry = {
+    songId: Uuid;
+    trackNo: OrderNo;
+};
+
 export type ValidationError = {
     errors: Array<ValidationErrorDetail>;
 };
@@ -536,6 +556,21 @@ export type RefreshToken = string;
  * リフレッシュトークンID
  */
 export type RefreshTokenId = string;
+
+/**
+ * リリースID
+ */
+export type ReleaseId = string;
+
+/**
+ * リリースタイトル
+ */
+export type ReleaseTitle = string;
+
+/**
+ * 発売日
+ */
+export type ReleasedOn = string;
 
 /**
  * 役割名
