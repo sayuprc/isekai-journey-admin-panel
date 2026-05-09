@@ -12,6 +12,9 @@ export type SongListItem = {
     description: Description;
     type: SongType;
     counts: SongRelationCounts;
+    lyricists: Array<string>;
+    composers: Array<string>;
+    arrangers: Array<string>;
 };
 
 export type SongListResponse = {
@@ -23,6 +26,10 @@ export type SongListResponse = {
 };
 
 export type SongRelationCounts = {
+    /**
+     * 関連リリース数
+     */
+    releaseCount: number;
     /**
      * 関連メディア数
      */

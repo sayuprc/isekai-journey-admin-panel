@@ -35,7 +35,7 @@ class ListPresenter
     }
 
     /**
-     * @return array{songId: string, title: string, type: array{name: string, value: 1|2}, description: string, counts: array{mediaCount: int}}
+     * @return array{songId: string, title: string, type: array{name: string, value: 1|2}, description: string, lyricists: array<string>, composers: array<string>, arrangers: array<string>, counts: array{releaseCount: int, mediaCount: int}}
      */
     private function toArray(SongListItem $song): array
     {
@@ -47,7 +47,11 @@ class ListPresenter
                 'value' => $song->type->value,
             ],
             'description' => $song->description,
+            'lyricists' => $song->lyricists,
+            'composers' => $song->composers,
+            'arrangers' => $song->arrangers,
             'counts' => [
+                'releaseCount' => $song->releaseCount,
                 'mediaCount' => $song->mediaCount,
             ],
         ];
