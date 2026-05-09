@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\Release;
 
-use OpenAPI\Client\Model\ReleaseReferencedSong as OpenApiReleaseReferencedSong;
 use OpenAPI\Client\Model\Release as OpenApiRelease;
 use OpenAPI\Client\Model\ReleaseDistributionTypeValue;
+use OpenAPI\Client\Model\ReleaseReferencedSong as OpenApiReleaseReferencedSong;
 use OpenAPI\Client\Model\ReleaseTypeValue;
 use OpenAPI\Client\Model\TrackEntry as OpenApiTrackEntry;
 use Release\Application\Admin\Query\ReleaseReferencedSong;
