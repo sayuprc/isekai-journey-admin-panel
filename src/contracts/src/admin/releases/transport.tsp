@@ -13,6 +13,11 @@ model ReleaseCreateResponse {
   release: Release;
 }
 
+model ReleaseGetResponse {
+  release: Release;
+  songs: ReleaseReferencedSong[];
+}
+
 model ReleaseSearchResponse {
   releases: Release[];
   maxPage: int32;

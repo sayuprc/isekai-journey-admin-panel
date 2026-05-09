@@ -19,6 +19,15 @@ interface ReleaseService {
     | Unprocessable
     | ServerError;
 
+  @doc("リリース取得API")
+  getRelease(@path releaseId: uuid):
+    | Ok<ReleaseGetResponse>
+    | Unauthorized
+    | Forbidden
+    | NotFound
+    | Unprocessable
+    | ServerError;
+
   @doc("リリース検索API")
   @route("/search")
   searchReleases(

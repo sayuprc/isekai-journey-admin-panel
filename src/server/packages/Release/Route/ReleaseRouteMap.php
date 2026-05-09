@@ -8,5 +8,7 @@ enum ReleaseRouteMap: string
 {
     case Create = 'release.create';
 
+    case Get = 'release.get';
+
     case Search = 'release.search';
 }

@@ -8,6 +8,8 @@ use Release\Domain\Criteria\ReleaseSearchCriteria;
 
 interface ReleaseRepositoryInterface
 {
+    public function find(ReleaseId $releaseId): ?Release;
+
     /**
      * @return list<Release>
      */
