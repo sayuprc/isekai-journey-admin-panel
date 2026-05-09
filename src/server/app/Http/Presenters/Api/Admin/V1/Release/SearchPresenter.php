@@ -28,10 +28,12 @@ class SearchPresenter
         [$data, $status] = $result->match(
             fn (SearchOutputData $outputData) => [
                 new ReleaseSearchResponse()
-                    ->setReleases(array_map(
-                        fn (Release $release) => $this->converter->toOpenApiRelease($release),
-                        $outputData->releases,
-                    ))
+                    ->setReleases(
+                        array_map(
+                            fn (Release $release) => $this->converter->toOpenApiRelease($release),
+                            $outputData->releases,
+                        ),
+                    )
                     ->setMaxPage($outputData->maxPage),
                 200,
             ],

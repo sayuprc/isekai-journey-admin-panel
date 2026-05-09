@@ -15,12 +15,6 @@ class Converter
 {
     public function toOpenApiRelease(Release $release): OpenApiRelease
     {
-        $trackEntries = [];
-
-        foreach ($release->trackEntries->toGeneric() as $trackEntry) {
-            $trackEntries[] = $this->toOpenApiTrackEntry($trackEntry);
-        }
-
         return new OpenApiRelease()
             ->setReleaseId($release->releaseId->value)
             ->setTitle($release->title->value)
@@ -29,7 +23,7 @@ class Converter
             ->setReleasedOn($release->releasedOn->value->toMutable())
             ->setDescription($release->description->value)
             ->setIsDisplay($release->isDisplay)
-            ->setTrackEntries($trackEntries);
+            ->setTrackEntries($release->trackEntries->toGeneric()->map($this->toOpenApiTrackEntry(...))->toArray());
     }
 
     public function toOpenApiTrackEntry(TrackEntry $trackEntry): OpenApiTrackEntry
