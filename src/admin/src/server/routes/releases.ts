@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { releaseServiceSearchReleases } from '../../generated';
+import { releaseServiceGetRelease, releaseServiceSearchReleases } from '../../generated';
 import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -32,6 +32,19 @@ export const releases = new Elysia({ prefix: '/releases' })
         is_display: t.Optional(t.Boolean()),
         page: t.Optional(t.Number()),
         per_page: t.Optional(t.Number()),
+      }),
+    },
+  )
+  .get(
+    '/:releaseId',
+    async ({ params: { releaseId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await releaseServiceGetRelease({ client, path: { releaseId } }));
+      });
+    },
+    {
+      params: t.Object({
+        releaseId: t.String(),
       }),
     },
   );

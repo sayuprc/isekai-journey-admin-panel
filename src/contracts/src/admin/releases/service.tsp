@@ -10,6 +10,15 @@ namespace IsekaiObservatory.Admin;
 @route("/releases")
 @useAuth(BearerAuth)
 interface ReleaseService {
+  @doc("リリース取得API")
+  getRelease(@path releaseId: uuid):
+    | Ok<ReleaseGetResponse>
+    | Unauthorized
+    | Forbidden
+    | NotFound
+    | Unprocessable
+    | ServerError;
+
   @doc("リリース検索API")
   @route("/search")
   searchReleases(

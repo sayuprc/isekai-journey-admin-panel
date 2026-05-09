@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Override;
 use Release\Domain\Criteria\ReleaseSearchCriteria;
 use Release\Domain\Models\Release;
+use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\SqlHelper;
@@ -19,6 +20,21 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
 {
     public function __construct(private UuidConverterInterface $converter)
     {
+    }
+
+    #[Override]
+    public function find(ReleaseId $releaseId): ?Release
+    {
+        $found = ModelsRelease::query()
+            ->with('trackEntries')
+            ->where('release_id', $this->converter->toBin($releaseId->value))
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
     }
 
     #[Override]

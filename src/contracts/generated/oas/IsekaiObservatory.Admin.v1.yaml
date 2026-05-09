@@ -799,6 +799,49 @@ paths:
         - Release
       security:
         - BearerAuth: []
+  /releases/{releaseId}:
+    get:
+      operationId: ReleaseService_getRelease
+      description: リリース取得API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      security:
+        - BearerAuth: []
   /song-tags:
     get:
       operationId: SongTagService_listSongTags
@@ -1857,6 +1900,13 @@ components:
         - 1
         - 2
         - 99
+    ReleaseGetResponse:
+      type: object
+      required:
+        - release
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
     ReleaseSearchResponse:
       type: object
       required:

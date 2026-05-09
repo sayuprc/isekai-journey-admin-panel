@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Admin\V1\Person\GetPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\ListPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\SearchPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
+use App\Http\Controllers\Api\Admin\V1\Release\GetReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\SearchReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Song\CreateSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\DeleteSongController;
@@ -89,6 +90,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
 
                 Route::prefix('releases')->group(function () {
                     Route::get('/search', [SearchReleaseController::class, 'handle'])->name(ReleaseRouteMap::Search);
+                    Route::get('/{releaseId}', [GetReleaseController::class, 'handle'])->name(ReleaseRouteMap::Get);
                 });
 
                 Route::prefix('song-types')->group(function () {

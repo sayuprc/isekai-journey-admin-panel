@@ -274,18 +274,19 @@ export const SearchList = () => {
               <th>流通形態</th>
               <th>発売日</th>
               <th>表示設定</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={6} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releases.length === 0}>
-                <ListState state="empty" colSpan={5} message="条件に一致するリリースはありません。" />
+                <ListState state="empty" colSpan={6} message="条件に一致するリリースはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
@@ -300,6 +301,11 @@ export const SearchList = () => {
                           <span class={`badge badge-sm ${release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
                             {release.isDisplay ? '表示する' : '表示しない'}
                           </span>
+                        </td>
+                        <td>
+                          <a href={`/releases/${release.releaseId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                            詳細
+                          </a>
                         </td>
                       </tr>
                     )}

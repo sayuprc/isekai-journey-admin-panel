@@ -1,0 +1,30 @@
+---
+import { Detail } from '../../components/release/Detail';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  throw new Error('URL が不正');
+}
+
+const { data, status } = await client.api.releases({ releaseId: id }).get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
+---
+
+<Layout pageTitle="リリース詳細">
+  <div>
+    <Detail data={data ?? undefined} status={status} client:only="solid-js" />
+  </div>
+</Layout>
