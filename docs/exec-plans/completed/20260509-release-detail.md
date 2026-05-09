@@ -4,7 +4,7 @@ Release 詳細
 
 ## Status
 
-in-progress
+completed
 
 ## Background
 
