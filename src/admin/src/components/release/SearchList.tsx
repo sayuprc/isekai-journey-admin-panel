@@ -63,6 +63,11 @@ const normalizeDateDisplayValue = (value: unknown): string => {
   return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
 };
 
+const buildDetailHref = (releaseId: string): string => {
+  const back = typeof window === 'undefined' ? '' : window.location.search;
+  return back ? `/releases/${releaseId}?back=${encodeURIComponent(back)}` : `/releases/${releaseId}`;
+};
+
 export const SearchList = () => {
   const initial = getInitialParams();
 
@@ -298,7 +303,11 @@ export const SearchList = () => {
                   <For each={result().releases}>
                     {release => (
                       <tr>
-                        <td class="min-w-56">{release.title}</td>
+                        <td class="min-w-56">
+                          <a href={buildDetailHref(release.releaseId)} class="link link-hover font-medium">
+                            {release.title}
+                          </a>
+                        </td>
                         <td>{RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label ?? '不明'}</td>
                         <td>{DISTRIBUTION_TYPE_OPTIONS.find(option => option.value === String(release.distributionTypeValue))?.label ?? '不明'}</td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(release.releasedOn)}</td>

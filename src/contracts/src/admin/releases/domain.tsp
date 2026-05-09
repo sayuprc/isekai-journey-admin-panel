@@ -31,6 +31,12 @@ model TrackEntry {
   trackNo: orderNo;
 }
 
+model ReleaseReferencedSong {
+  songId: uuid;
+  title: title;
+  trackNo: orderNo;
+}
+
 model Release {
   releaseId: releaseId;
   title: releaseTitle;

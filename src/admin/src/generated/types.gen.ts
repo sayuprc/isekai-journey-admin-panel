@@ -245,6 +245,17 @@ export type ReleaseCreateResponse = {
 
 export type ReleaseDistributionTypeValue = 1 | 2 | 99;
 
+export type ReleaseGetResponse = {
+    release: Release;
+    songs: Array<ReleaseReferencedSong>;
+};
+
+export type ReleaseReferencedSong = {
+    songId: Uuid;
+    title: Title;
+    trackNo: OrderNo;
+};
+
 export type ReleaseSearchResponse = {
     releases: Array<Release>;
     maxPage: number;
@@ -1481,6 +1492,57 @@ export type ReleaseServiceSearchReleasesResponses = {
 };
 
 export type ReleaseServiceSearchReleasesResponse = ReleaseServiceSearchReleasesResponses[keyof ReleaseServiceSearchReleasesResponses];
+
+export type ReleaseServiceGetReleaseData = {
+    body?: never;
+    path: {
+        releaseId: Uuid;
+    };
+    query?: never;
+    url: '/releases/{releaseId}';
+};
+
+export type ReleaseServiceGetReleaseErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceGetReleaseError = ReleaseServiceGetReleaseErrors[keyof ReleaseServiceGetReleaseErrors];
+
+export type ReleaseServiceGetReleaseResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseGetResponse;
+};
+
+export type ReleaseServiceGetReleaseResponse = ReleaseServiceGetReleaseResponses[keyof ReleaseServiceGetReleaseResponses];
 
 export type SongTagServiceListSongTagsData = {
     body?: never;
