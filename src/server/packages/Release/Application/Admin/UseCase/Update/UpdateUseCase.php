@@ -54,11 +54,11 @@ readonly class UpdateUseCase
         return ReleaseId::create($inputData->releaseId)
             ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (ReleaseId $releaseId) use ($inputData): Result {
-                if (is_null($this->repository->find($releaseId))) {
-                    return new Err(new NotFoundError('Release', $releaseId->value));
-                }
+                return $this->transaction->scope(function () use ($inputData, $releaseId): Result {
+                    if (is_null($this->repository->find($releaseId))) {
+                        return new Err(new NotFoundError('Release', $releaseId->value));
+                    }
 
-                return $this->transaction->scope(function () use ($inputData): Result {
                     $result = $this->service->prepareForUpdate(
                         $inputData->releaseId,
                         $inputData->title,
