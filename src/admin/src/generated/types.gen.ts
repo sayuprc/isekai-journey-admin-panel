@@ -165,7 +165,7 @@ export type Permission = {
 /**
  * 権限の値
  */
-export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release';
+export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release' | 'write_release';
 
 export type Person = {
     personId: PersonId;
@@ -228,6 +228,19 @@ export type Release = {
     description: string;
     isDisplay: boolean;
     trackEntries: Array<TrackEntry>;
+};
+
+export type ReleaseCreateRequest = {
+    title: ReleaseTitle;
+    typeValue: ReleaseTypeValue;
+    distributionTypeValue: ReleaseDistributionTypeValue;
+    releasedOn: ReleasedOn;
+    description: string;
+    isDisplay: boolean;
+};
+
+export type ReleaseCreateResponse = {
+    release: Release;
 };
 
 export type ReleaseDistributionTypeValue = 1 | 2 | 99;
@@ -1373,6 +1386,55 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type ReleaseServiceCreateReleaseData = {
+    body: ReleaseCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/releases';
+};
+
+export type ReleaseServiceCreateReleaseErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceCreateReleaseError = ReleaseServiceCreateReleaseErrors[keyof ReleaseServiceCreateReleaseErrors];
+
+export type ReleaseServiceCreateReleaseResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseCreateResponse;
+};
+
+export type ReleaseServiceCreateReleaseResponse = ReleaseServiceCreateReleaseResponses[keyof ReleaseServiceCreateReleaseResponses];
 
 export type ReleaseServiceSearchReleasesData = {
     body?: never;

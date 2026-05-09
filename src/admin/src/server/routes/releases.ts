@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { releaseServiceSearchReleases } from '../../generated';
+import { releaseServiceCreateRelease, releaseServiceSearchReleases } from '../../generated';
 import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -7,6 +7,24 @@ import { authGuard } from '../middleware';
 
 export const releases = new Elysia({ prefix: '/releases' })
   .use(authGuard)
+  .post(
+    '/',
+    async ({ body, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await releaseServiceCreateRelease({ client, body }));
+      });
+    },
+    {
+      body: t.Object({
+        title: t.String(),
+        typeValue: t.Numeric(),
+        distributionTypeValue: t.Numeric(),
+        releasedOn: t.String(),
+        description: t.String(),
+        isDisplay: t.Boolean(),
+      }),
+    },
+  )
   .get(
     '/search',
     async ({ query, authSession }) => {

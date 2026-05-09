@@ -735,6 +735,50 @@ paths:
         - Person
       security:
         - BearerAuth: []
+  /releases:
+    post:
+      operationId: ReleaseService_createRelease
+      description: リリース作成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseCreateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseCreateRequest'
+      security:
+        - BearerAuth: []
   /releases/search:
     get:
       operationId: ReleaseService_searchReleases
@@ -1713,6 +1757,7 @@ components:
         - read_media
         - write_media
         - read_release
+        - write_release
       description: 権限の値
     Person:
       type: object
@@ -1850,6 +1895,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TrackEntry'
+    ReleaseCreateRequest:
+      type: object
+      required:
+        - title
+        - typeValue
+        - distributionTypeValue
+        - releasedOn
+        - description
+        - isDisplay
+      properties:
+        title:
+          $ref: '#/components/schemas/releaseTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseTypeValue'
+        distributionTypeValue:
+          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+    ReleaseCreateResponse:
+      type: object
+      required:
+        - release
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
     ReleaseDistributionTypeValue:
       type: integer
       format: int32

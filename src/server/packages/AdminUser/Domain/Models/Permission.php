@@ -26,6 +26,8 @@ enum Permission: string
 
     case ReadRelease = 'read_release';
 
+    case WriteRelease = 'write_release';
+
     public function getName(): string
     {
         return match ($this) {
@@ -39,6 +41,7 @@ enum Permission: string
             self::ReadMedia => 'メディア閲覧',
             self::WriteMedia => 'メディア編集',
             self::ReadRelease => 'リリース閲覧',
+            self::WriteRelease => 'リリース編集',
         };
     }
 }
