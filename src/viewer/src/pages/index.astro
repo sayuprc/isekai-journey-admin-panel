@@ -1,101 +1,100 @@
 ---
-import { DetailDrawer } from '../components/viewer/DetailDrawer';
 import JacketArt from '../components/viewer/JacketArt.astro';
 import MVThumb from '../components/viewer/MVThumb.astro';
+import PostCard from '../components/viewer/PostCard.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
 import {
   Q,
   SITE_DATA,
   latestMedia,
+  latestPosts,
   latestRelease,
   mediaTypeLabel,
-  upcomingEvent,
 } from '../data/site-helpers';
 import Layout from '../layouts/Layout.astro';
 
 const release = latestRelease();
 const media = latestMedia(3);
-const nextEvent = upcomingEvent();
+const posts = latestPosts(3);
 ---
 
 <Layout pageTitle="Home">
-  <section class="hero-symbol">
-    <svg class="hero-stars" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <g fill="var(--accent)">
-        <circle cx="120" cy="80" r="1.5"></circle><circle cx="280" cy="180" r="1"></circle><circle cx="450" cy="60" r="1.2"></circle>
-        <circle cx="600" cy="220" r="1.8"></circle><circle cx="780" cy="120" r="1"></circle><circle cx="950" cy="200" r="1.4"></circle>
-        <circle cx="1080" cy="80" r="1.2"></circle><circle cx="200" cy="380" r="1"></circle><circle cx="380" cy="480" r="1.5"></circle>
-        <circle cx="560" cy="420" r="1"></circle><circle cx="720" cy="500" r="1.6"></circle><circle cx="900" cy="420" r="1.2"></circle>
-      </g>
-    </svg>
-    <div class="shell hero-symbol-inner">
-      <div class="eyebrow">Est. 2020 — Fan Observatory</div>
-      <div class="hero-mark">ヰ世界観測所</div>
-      <div class="hero-en">Isekai Observatory</div>
-      <div class="hero-divider"></div>
-      <div class="hero-copy">AN UNOFFICIAL FAN ARCHIVE — ヰ世界情緒</div>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
-        <a class="btn" href="/media">映像を観る</a>
-      </div>
-      <div class="hero-stats-grid">
-        <div><strong>{SITE_DATA.songs.length}</strong><span>songs / 楽曲</span></div>
-        <div><strong>{SITE_DATA.releases.length}</strong><span>releases / リリース</span></div>
-        <div><strong>{SITE_DATA.media.length}</strong><span>media / 映像</span></div>
-        <div><strong>{SITE_DATA.events.length}</strong><span>events / 出来事</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="shell">
-    <div class="two-col-section">
-      <div>
-        <SectionHead num="01" title="お知らせ" titleEn="News & Updates" />
-        <div class="news-list">
-          {
-            SITE_DATA.news.map(entry => (
-              <div class="news-row">
-                <span class="label-mono">{entry.date}</span>
-                <span class="pill">{entry.category}</span>
-                <span>{entry.title}</span>
-              </div>
-            ))
-          }
+  <section class="hero-data">
+    <div class="shell hero-data-grid">
+      <div class="hero-data-copy">
+        <div class="hero-mark hero-mark-data"><span>ヰ世界</span><span>観測所</span></div>
+        <div class="hero-en hero-en-whisper">Isekai Observatory</div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
+          <a class="btn" href="/media">映像を観る</a>
         </div>
       </div>
-
-      <div>
-        <SectionHead num="02" title="最新リリース" titleEn="Latest Release" />
-        {
-          release && (
-            <a href={`/releases/${release.id}`} class="feature-grid-link">
-              <JacketArt color={release.color} label={release.title} />
-              <div>
-                <div class="eyebrow">{release.type} — {release.date}</div>
-                <h3 class="feature-title">{release.title}</h3>
-                <div class="label-mono">{release.format}</div>
-                <p class="feature-summary">収録曲 · {Q.songsOfRelease(release.id).length} 曲</p>
-                <div class="rel-list">
-                  {
-                    Q.songsOfRelease(release.id).slice(0, 5).map((song, index) => (
-                      <a class="rel-chip" href={`/songs/${song.id}`}>
-                        <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
-                        <div class="rel-main">{song.title}</div>
-                        <span class="label-mono">{song.duration}</span>
-                      </a>
-                    ))
-                  }
-                </div>
-              </div>
-            </a>
-          )
-        }
+      <div class="hero-data-stats">
+        <div class="hero-data-stat hero-data-stat-row">
+          <strong>{SITE_DATA.songs.length}</strong>
+          <div class="hero-data-stat-copy">
+            <span>楽曲</span>
+            <em>songs</em>
+          </div>
+        </div>
+        <div class="hero-data-stat hero-data-stat-row">
+          <strong>{SITE_DATA.releases.length}</strong>
+          <div class="hero-data-stat-copy">
+            <span>リリース</span>
+            <em>releases</em>
+          </div>
+        </div>
+        <div class="hero-data-stat hero-data-stat-row">
+          <strong>{SITE_DATA.media.length}</strong>
+          <div class="hero-data-stat-copy">
+            <span>メディア</span>
+            <em>media</em>
+          </div>
+        </div>
+        <div class="hero-data-stat hero-data-stat-row">
+          <strong>{new Date().getFullYear() - 2020}</strong>
+          <div class="hero-data-stat-copy">
+            <span>観測年</span>
+            <em>since 2020</em>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="shell">
-    <SectionHead num="03" title="最新の映像" titleEn="Latest Media">
+    <SectionHead num="01" title="最新リリース" titleEn="Latest Release" />
+    {
+      release && (
+        <div class="feature-grid-link">
+          <a href={`/releases/${release.id}`} class="feature-art-link">
+            <JacketArt color={release.color} label={release.title} />
+          </a>
+          <div>
+            <div class="eyebrow">{release.type} — {release.date}</div>
+            <h3 class="feature-title">
+              <a href={`/releases/${release.id}`}>{release.title}</a>
+            </h3>
+            <div class="label-mono">{release.format}</div>
+            <p class="feature-summary">収録曲 · {Q.songsOfRelease(release.id).length} 曲</p>
+            <div class="rel-list">
+              {
+                Q.songsOfRelease(release.id).slice(0, 5).map((song, index) => (
+                  <a class="rel-chip" href={`/songs/${song.id}`}>
+                    <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
+                    <div class="rel-main">{song.title}</div>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+  </section>
+
+  <section class="shell">
+    <SectionHead num="02" title="最新の映像" titleEn="Latest Media">
       <a slot="right" class="btn" href="/media">すべての映像 →</a>
     </SectionHead>
     <div class="media-card-grid">
@@ -117,24 +116,15 @@ const nextEvent = upcomingEvent();
   </section>
 
   {
-    nextEvent && (
+    posts.length > 0 && (
       <section class="shell">
-        <SectionHead num="04" title="次の催し" titleEn="Next Event" />
-        <a href={`/events/${nextEvent.id}`} class="upcoming-event-card">
-          <div class="upcoming-date">
-            <div>{nextEvent.date.split('.')[0]}</div>
-            <strong>{nextEvent.date.split('.').slice(1).join('.')}</strong>
-            <span>{nextEvent.category}</span>
-          </div>
-          <div>
-            <div class="eyebrow">UPCOMING — 開催予定</div>
-            <h3 class="feature-title">{nextEvent.title}</h3>
-            <div class="feature-summary">@ {nextEvent.venue} — {nextEvent.description}</div>
-          </div>
-          <span class="btn btn-primary">詳細を見る</span>
-        </a>
+        <SectionHead num="03" title="最近の投稿" titleEn="Recent Posts">
+          <a slot="right" class="btn" href="/media">すべての投稿 →</a>
+        </SectionHead>
+        <div class="recent-posts-grid">
+          {posts.map(entry => <PostCard entry={entry} compact />)}
+        </div>
       </section>
     )
   }
-  <DetailDrawer client:load />
 </Layout>

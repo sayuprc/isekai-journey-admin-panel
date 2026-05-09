@@ -14,7 +14,7 @@ type TargetType = AuditTargetType;
 // 型注釈で完全性を担保し、生成型に値が増減したらコンパイルエラーで気付ける形にする。
 const ACTION_OPTIONS = ['create', 'update', 'delete', 'login', 'refresh'] as const satisfies readonly Action[];
 
-const TARGET_TYPE_OPTIONS = ['AdminUser', 'Media', 'Person', 'Song', 'SongTag'] as const satisfies readonly TargetType[];
+const TARGET_TYPE_OPTIONS = ['AdminUser', 'Media', 'Person', 'Release', 'Song', 'SongTag'] as const satisfies readonly TargetType[];
 
 const ACTION_LABEL: Record<Action, string> = {
   create: '作成',
@@ -28,6 +28,7 @@ const TARGET_TYPE_LABEL: Record<TargetType, string> = {
   AdminUser: '管理ユーザー',
   Media: 'メディア',
   Person: '人物',
+  Release: 'リリース',
   Song: '楽曲',
   SongTag: '楽曲タグ',
 };
