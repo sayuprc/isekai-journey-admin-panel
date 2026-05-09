@@ -23,8 +23,20 @@ class CreateReleaseController extends Controller
 
     public function handle(Request $request): JsonResponse
     {
-        return $this->mapper->map(CreateInputData::class, $request->all())
+        return $this->buildInput($request)
             |> $this->useCase->handle(...)
             |> $this->presenter->present(...);
+    }
+
+    private function buildInput(Request $request): CreateInputData
+    {
+        return $this->mapper->map(
+            CreateInputData::class,
+            [
+                ...$request->all(),
+                'description' => $request->string('description')->toString(),
+                'trackEntries' => $request->array('trackEntries'),
+            ],
+        );
     }
 }

@@ -20,8 +20,12 @@ export const releases = new Elysia({ prefix: '/releases' })
         typeValue: t.Numeric(),
         distributionTypeValue: t.Numeric(),
         releasedOn: t.String(),
-        description: t.String(),
+        description: t.Optional(t.String()),
         isDisplay: t.Boolean(),
+        trackEntries: t.Array(t.Object({
+          songId: t.String(),
+          trackNo: t.Number(),
+        })),
       }),
     },
   )

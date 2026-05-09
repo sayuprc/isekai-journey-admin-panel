@@ -33,6 +33,8 @@ class ReleaseIntegrityService
     }
 
     /**
+     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     *
      * @return Result<Release, DomainError>
      */
     public function prepareForCreate(
@@ -42,8 +44,9 @@ class ReleaseIntegrityService
         string $releasedOn,
         string $description,
         bool $isDisplay,
+        array $trackEntries,
     ): Result {
-        return $this->build(
+        $result = $this->build(
             $this->generator->generate(),
             $title,
             $typeValue,
@@ -51,8 +54,20 @@ class ReleaseIntegrityService
             $releasedOn,
             $description,
             $isDisplay,
-            [],
+            $trackEntries,
         );
+
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $release = $result->unwrap();
+
+        if (! $this->existsSongs($release->trackEntries)) {
+            return new Err(new BusinessRuleViolationError('指定された楽曲の一部が存在しません。'));
+        }
+
+        return new Ok($release);
     }
 
     /**

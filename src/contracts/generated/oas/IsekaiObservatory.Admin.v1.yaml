@@ -1653,6 +1653,7 @@ components:
         - AdminUser
         - Media
         - Person
+        - Release
         - Song
         - SongTag
       description: 監査ログの対象種別
@@ -2031,8 +2032,8 @@ components:
         - typeValue
         - distributionTypeValue
         - releasedOn
-        - description
         - isDisplay
+        - trackEntries
       properties:
         title:
           $ref: '#/components/schemas/releaseTitle'
@@ -2046,6 +2047,10 @@ components:
           type: string
         isDisplay:
           type: boolean
+        trackEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackEntry'
     ReleaseCreateResponse:
       type: object
       required:

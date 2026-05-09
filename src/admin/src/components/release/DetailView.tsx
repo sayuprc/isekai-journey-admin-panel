@@ -335,26 +335,16 @@ export const DetailView = (props: Props) => {
 
               <div class="md:col-span-2">
                 <label class="label">表示設定</label>
-                <div class="flex flex-wrap gap-4 rounded-box border border-base-300 bg-base-100 p-4">
-                  <label class="label cursor-pointer justify-start gap-3">
-                    <input
-                      type="radio"
-                      class="radio radio-sm"
-                      checked={isDisplay()}
-                      onChange={() => setIsDisplay(true)}
-                    />
-                    <span class="label-text">表示する</span>
-                  </label>
-                  <label class="label cursor-pointer justify-start gap-3">
-                    <input
-                      type="radio"
-                      class="radio radio-sm"
-                      checked={!isDisplay()}
-                      onChange={() => setIsDisplay(false)}
-                    />
-                    <span class="label-text">表示しない</span>
-                  </label>
-                </div>
+                <select
+                  class="select select-bordered w-full"
+                  value={String(isDisplay())}
+                  onChange={e => setIsDisplay(e.currentTarget.value === 'true')}
+                  classList={{ 'select-error': !!getFieldError('isDisplay') }}
+                >
+                  <option value="true">表示する</option>
+                  <option value="false">表示しない</option>
+                </select>
+                <Show when={getFieldError('isDisplay')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
               </div>
             </div>
 
@@ -366,122 +356,130 @@ export const DetailView = (props: Props) => {
           </fieldset>
         </form>
 
-        <fieldset class="rounded-box border border-base-300 bg-base-100 p-6">
+        <fieldset class="rounded-box border border-base-300 bg-base-200 p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">収録楽曲</legend>
           <Show when={getFieldError('trackEntries')}>{message => <p class="mb-4 text-sm text-error">{message()}</p>}</Show>
-          <Show
-            when={trackEntries().length > 0}
-            fallback={<p class="text-sm text-base-content/60">収録楽曲はまだ登録されていません。</p>}
-          >
-            <div class="overflow-x-auto">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>曲順</th>
-                    <th>楽曲名</th>
-                    <th class="text-right">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <For each={trackEntries()}>
-                    {(entry, index) => (
+          <div class="space-y-6">
+            <div>
+              <label class="label">現在の収録楽曲</label>
+              <Show
+                when={trackEntries().length > 0}
+                fallback={<p class="text-sm text-base-content/60">収録楽曲はまだ登録されていません。</p>}
+              >
+                <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
+                  <table class="table table-sm">
+                    <thead>
                       <tr>
-                        <td>{index() + 1}</td>
-                        <td>{entry.title}</td>
-                        <td>
-                          <div class="flex justify-end gap-2">
-                            <button
-                              type="button"
-                              class="btn btn-ghost btn-xs"
-                              disabled={index() === 0}
-                              onClick={() => moveTrackEntry(index(), -1)}
-                            >
-                              ↑
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-ghost btn-xs"
-                              disabled={index() === trackEntries().length - 1}
-                              onClick={() => moveTrackEntry(index(), 1)}
-                            >
-                              ↓
-                            </button>
-                            <a href={`/songs/${entry.songId}`} class="btn btn-ghost btn-xs">
-                              楽曲を見る
-                            </a>
-                            <button type="button" class="btn btn-outline btn-error btn-xs" onClick={() => removeTrackEntry(entry.songId)}>
-                              削除
-                            </button>
-                          </div>
-                        </td>
+                        <th>曲順</th>
+                        <th>楽曲名</th>
+                        <th class="text-right">操作</th>
                       </tr>
-                    )}
-                  </For>
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      <For each={trackEntries()}>
+                        {(entry, index) => (
+                          <tr>
+                            <td>{index() + 1}</td>
+                            <td>{entry.title}</td>
+                            <td>
+                              <div class="flex justify-end gap-2">
+                                <button
+                                  type="button"
+                                  class="btn btn-ghost btn-xs"
+                                  disabled={index() === 0}
+                                  onClick={() => moveTrackEntry(index(), -1)}
+                                >
+                                  ↑
+                                </button>
+                                <button
+                                  type="button"
+                                  class="btn btn-ghost btn-xs"
+                                  disabled={index() === trackEntries().length - 1}
+                                  onClick={() => moveTrackEntry(index(), 1)}
+                                >
+                                  ↓
+                                </button>
+                                <a href={`/songs/${entry.songId}`} class="btn btn-ghost btn-xs">
+                                  楽曲を見る
+                                </a>
+                                <button type="button" class="btn btn-outline btn-error btn-xs" onClick={() => removeTrackEntry(entry.songId)}>
+                                  削除
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </For>
+                    </tbody>
+                  </table>
+                </div>
+              </Show>
             </div>
-          </Show>
-        </fieldset>
 
-        <fieldset class="rounded-box border border-base-300 bg-base-100 p-6">
-          <legend class="px-2 text-sm font-semibold text-base-content/70">楽曲を追加</legend>
-          <form onSubmit={handleSongSearch} class="flex flex-col gap-4 md:flex-row md:items-end">
-            <div class="flex-1">
-              <label class="label">楽曲名</label>
-              <input
-                type="text"
-                class="input input-bordered w-full"
-                value={searchTitle()}
-                onInput={e => setSearchTitle(e.currentTarget.value)}
-                placeholder="楽曲名で検索"
-              />
+            <div>
+              <label class="label">楽曲を追加</label>
+              <form onSubmit={handleSongSearch} class="flex flex-col gap-4 md:flex-row md:items-end">
+                <div class="flex-1">
+                  <label class="label">楽曲名</label>
+                  <input
+                    type="text"
+                    class="input input-bordered w-full"
+                    value={searchTitle()}
+                    onInput={e => setSearchTitle(e.currentTarget.value)}
+                    placeholder="楽曲名で検索"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary" disabled={isSearching()}>
+                  {isSearching() ? '検索中...' : '検索'}
+                </button>
+              </form>
+
+              <Show when={searchError()}>
+                {message => <p class="mt-3 text-sm text-error">{message()}</p>}
+              </Show>
+
+              <Show when={hasSearched()}>
+                <div class="mt-4 overflow-x-auto rounded-box border border-base-300 bg-base-100">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>楽曲名</th>
+                        <th>種別</th>
+                        <th>表示設定</th>
+                        <th class="text-right">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <Show
+                        when={searchResults().length > 0}
+                        fallback={<tr><td colSpan={4} class="text-center text-sm text-base-content/60">条件に一致する楽曲はありません。</td></tr>}
+                      >
+                        <For each={searchResults()}>
+                          {song => (
+                            <tr>
+                              <td>{song.title}</td>
+                              <td>{song.type.name}</td>
+                              <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
+                              <td class="text-right">
+                                <button
+                                  type="button"
+                                  class="btn btn-primary btn-xs"
+                                  disabled={selectedSongIds().has(song.songId)}
+                                  onClick={() => addTrackEntry(song)}
+                                >
+                                  {selectedSongIds().has(song.songId) ? '追加済み' : '追加'}
+                                </button>
+                              </td>
+                            </tr>
+                          )}
+                        </For>
+                      </Show>
+                    </tbody>
+                  </table>
+                </div>
+              </Show>
             </div>
-            <button type="submit" class="btn btn-primary" disabled={isSearching()}>
-              {isSearching() ? '検索中...' : '検索'}
-            </button>
-          </form>
-
-          <Show when={searchError()}>
-            {message => <p class="mt-3 text-sm text-error">{message()}</p>}
-          </Show>
-
-          <Show when={hasSearched()}>
-            <div class="mt-4 overflow-x-auto">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>楽曲名</th>
-                    <th>種別</th>
-                    <th>表示設定</th>
-                    <th class="text-right">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <Show when={searchResults().length > 0} fallback={<tr><td colSpan={4} class="text-center text-sm text-base-content/60">条件に一致する楽曲はありません。</td></tr>}>
-                    <For each={searchResults()}>
-                      {song => (
-                        <tr>
-                          <td>{song.title}</td>
-                          <td>{song.type.name}</td>
-                          <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
-                          <td class="text-right">
-                            <button
-                              type="button"
-                              class="btn btn-primary btn-xs"
-                              disabled={selectedSongIds().has(song.songId)}
-                              onClick={() => addTrackEntry(song)}
-                            >
-                              {selectedSongIds().has(song.songId) ? '追加済み' : '追加'}
-                            </button>
-                          </td>
-                        </tr>
-                      )}
-                    </For>
-                  </Show>
-                </tbody>
-              </table>
-            </div>
-          </Show>
+          </div>
         </fieldset>
 
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">

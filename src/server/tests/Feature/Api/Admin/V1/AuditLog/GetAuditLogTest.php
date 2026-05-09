@@ -51,7 +51,7 @@ class GetAuditLogTest extends DatabaseTestCase
             ->get(route(AuditLogRouteMap::Get, $auditLogId))
             ->assertStatus(200)
             ->json();
-
+        /** @var array{auditLog: array{auditLogId: string, adminUserId: string, adminUserName: string, action: string, targetType: string, targetId: string, createdAt: string, snapshot: array{title: string, tags: array<int, string>, meta: array{version: int, isDisplay: bool}}}} $response */
         $this->assertArrayHasKey('auditLog', $response);
         $this->assertSame($auditLogId, $response['auditLog']['auditLogId']);
         $this->assertSame($actorId, $response['auditLog']['adminUserId']);
@@ -64,6 +64,34 @@ class GetAuditLogTest extends DatabaseTestCase
         $this->assertSame(['オリジナル', '感動'], $response['auditLog']['snapshot']['tags']);
         $this->assertSame(3, $response['auditLog']['snapshot']['meta']['version']);
         $this->assertTrue($response['auditLog']['snapshot']['meta']['isDisplay']);
+    }
+
+    #[Test]
+    public function foundForRelease(): void
+    {
+        $actorId = $this->generateUuid();
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+
+        $auditLogId = $this->generateUuid();
+        $targetId = $this->generateUuid();
+
+        $this->insertAuditLog(
+            $auditLogId,
+            $actorId,
+            AuditAction::Update,
+            AuditTargetType::Release,
+            $targetId,
+            ['title' => '観測された春'],
+            new DateTimeImmutable('2026-04-02 10:00:00'),
+        );
+
+        $response = $this->withAuth()
+            ->get(route(AuditLogRouteMap::Get, $auditLogId))
+            ->assertStatus(200)
+            ->json();
+        /** @var array{auditLog: array{targetType: string, snapshot: array{title: string}}} $response */
+        $this->assertSame('Release', $response['auditLog']['targetType']);
+        $this->assertSame('観測された春', $response['auditLog']['snapshot']['title']);
     }
 
     #[Test]

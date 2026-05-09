@@ -191,12 +191,6 @@ export const SearchList = () => {
 
   return (
     <>
-      <div class="mb-4 flex justify-end">
-        <a href="/releases/create" class="btn btn-primary btn-sm">
-          新規作成
-        </a>
-      </div>
-
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
           <label class="fieldset-label" for="title">
@@ -276,6 +270,12 @@ export const SearchList = () => {
         </button>
       </form>
 
+      <div class="mb-4 flex justify-end">
+        <a href="/releases/create" class="btn btn-primary btn-sm">
+          新規作成
+        </a>
+      </div>
+
       <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
         <table class="table table-zebra">
           <thead>
@@ -285,29 +285,26 @@ export const SearchList = () => {
               <th>流通形態</th>
               <th>発売日</th>
               <th>表示設定</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={6} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releases.length === 0}>
-                <ListState state="empty" colSpan={5} message="条件に一致するリリースはありません。" />
+                <ListState state="empty" colSpan={6} message="条件に一致するリリースはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().releases}>
                     {release => (
                       <tr>
-                        <td class="min-w-56">
-                          <a href={buildDetailHref(release.releaseId)} class="link link-hover font-medium">
-                            {release.title}
-                          </a>
-                        </td>
+                        <td class="min-w-56 font-medium">{release.title}</td>
                         <td>{RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label ?? '不明'}</td>
                         <td>{DISTRIBUTION_TYPE_OPTIONS.find(option => option.value === String(release.distributionTypeValue))?.label ?? '不明'}</td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(release.releasedOn)}</td>
@@ -315,6 +312,11 @@ export const SearchList = () => {
                           <span class={`badge badge-sm ${release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
                             {release.isDisplay ? '表示する' : '表示しない'}
                           </span>
+                        </td>
+                        <td>
+                          <a href={buildDetailHref(release.releaseId)} class="btn btn-ghost btn-xs">
+                            編集
+                          </a>
                         </td>
                       </tr>
                     )}
