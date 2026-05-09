@@ -1,7 +1,6 @@
 ---
 import { Q } from '../../../data/site-helpers';
 import JacketArt from '../JacketArt.astro';
-import SectionHead from '../SectionHead.astro';
 
 interface Props {
   release: {
@@ -21,34 +20,36 @@ const songs = Q.songsOfRelease(release.id);
 ---
 
 <div class="detail-page-content release-detail-content">
-  <div class="detail-hero-grid">
-    <JacketArt color={release.color} label={release.title} />
-    <div>
-      <div class="label-mono">{release.date} · {release.type} · {release.format}</div>
-      <h1 class="detail-title">{release.title}</h1>
-      <div class="detail-title-en">{release.label}</div>
-      <p class="detail-description">{release.description ?? 'モックデータのリリース詳細です。'}</p>
-      <div class="detail-meta-grid">
-        <div><span class="label-mono">TYPE</span><strong>{release.type}</strong></div>
-        <div><span class="label-mono">FORMAT</span><strong>{release.format}</strong></div>
-        <div><span class="label-mono">DATE</span><strong>{release.date}</strong></div>
-        <div><span class="label-mono">TRACKS</span><strong>{songs.length}</strong></div>
-      </div>
-    </div>
+  <JacketArt color={release.color} label={release.title} />
+  <div class="label-mono" style="margin-top: 28px;">{release.date} · {release.type} · {release.format}</div>
+  <h1 class="detail-title">{release.title}</h1>
+  {release.description && <p class="detail-description" style="margin-top: 16px;">{release.description}</p>}
+
+  <hr class="hairline" style="margin: 32px 0;" />
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;font-size:13px;">
+    <div><div class="label-mono">RELEASE DATE</div><div style="margin-top:4px;">{release.date}</div></div>
+    <div><div class="label-mono">TYPE</div><div style="margin-top:4px;">{release.type}</div></div>
+    <div><div class="label-mono">FORMAT</div><div style="margin-top:4px;">{release.format}</div></div>
+    <div><div class="label-mono">LABEL</div><div style="margin-top:4px;">{release.label ?? '—'}</div></div>
   </div>
 
-  <SectionHead num="01" title="収録曲" titleEn="Track List" />
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+    <div>
+      <span class="label-mono">TRACKLIST</span>
+      <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">収録曲</span>
+    </div>
+    <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{songs.length}</span>
+  </div>
   <div class="rel-list">
     {
       songs.map((song, index) => (
         <a class="rel-chip" href={`/songs/${song.id}`}>
-          <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
-          <div class="color-block" style={`--tile-color:${song.color};`}></div>
+          <span class="detail-index" style="min-width:28px;">{String(index + 1).padStart(2, '0')}</span>
+          <div class="color-block" style={`--tile-color:${song.color};width:32px;height:32px;flex-shrink:0;`}></div>
           <div class="rel-copy">
             <div class="rel-main">{song.title}</div>
-            <div class="label-mono">{song.duration} · {song.category}</div>
           </div>
-          <span>→</span>
+          <span style="color:var(--fg-faint);font-size:14px;">→</span>
         </a>
       ))
     }
