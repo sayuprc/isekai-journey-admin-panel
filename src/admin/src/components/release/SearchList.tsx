@@ -186,6 +186,12 @@ export const SearchList = () => {
 
   return (
     <>
+      <div class="mb-4 flex justify-end">
+        <a href="/releases/create" class="btn btn-primary btn-sm">
+          新規作成
+        </a>
+      </div>
+
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
           <label class="fieldset-label" for="title">

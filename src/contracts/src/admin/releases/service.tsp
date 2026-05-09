@@ -10,6 +10,15 @@ namespace IsekaiObservatory.Admin;
 @route("/releases")
 @useAuth(BearerAuth)
 interface ReleaseService {
+  @doc("リリース作成API")
+  createRelease(@body request: ReleaseCreateRequest):
+    | Ok<ReleaseCreateResponse>
+    | BadRequest
+    | Unauthorized
+    | Forbidden
+    | Unprocessable
+    | ServerError;
+
   @doc("リリース検索API")
   @route("/search")
   searchReleases(
