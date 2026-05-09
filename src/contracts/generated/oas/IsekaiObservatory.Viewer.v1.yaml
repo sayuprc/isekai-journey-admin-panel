@@ -47,6 +47,9 @@ components:
         - description
         - type
         - counts
+        - lyricists
+        - composers
+        - arrangers
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -58,6 +61,18 @@ components:
           $ref: '#/components/schemas/SongType'
         counts:
           $ref: '#/components/schemas/SongRelationCounts'
+        lyricists:
+          type: array
+          items:
+            type: string
+        composers:
+          type: array
+          items:
+            type: string
+        arrangers:
+          type: array
+          items:
+            type: string
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: 描き続けた君へ
@@ -66,7 +81,14 @@ components:
             name: オリジナル曲
             value: 1
           counts:
+            releaseCount: 1
             mediaCount: 3
+          lyricists:
+            - 作詞者
+          composers:
+            - 作曲者
+          arrangers:
+            - 編曲者
     SongListResponse:
       type: object
       required:
@@ -89,13 +111,25 @@ components:
                 name: オリジナル曲
                 value: 1
               counts:
+                releaseCount: 1
                 mediaCount: 3
+              lyricists:
+                - 作詞者
+              composers:
+                - 作曲者
+              arrangers:
+                - 編曲者
           nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongRelationCounts:
       type: object
       required:
+        - releaseCount
         - mediaCount
       properties:
+        releaseCount:
+          type: integer
+          format: int32
+          description: 関連リリース数
         mediaCount:
           type: integer
           format: int32

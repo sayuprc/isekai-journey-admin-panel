@@ -7,6 +7,9 @@ namespace Tests\Feature\Api\Viewer\V1\Song;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
+use Release\Domain\Models\ReleaseDistributionType;
+use Release\Domain\Models\ReleaseType;
+use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Song\Route\ViewerSongRouteMap;
 use Tests\Support\DatabaseTestCase;
@@ -26,6 +29,17 @@ class ListSongTest extends DatabaseTestCase
         $hiddenSongId = $this->generateUuid();
         $visibleMediaId = $this->generateUuid();
         $hiddenMediaId = $this->generateUuid();
+        $visibleReleaseId = $this->generateUuid();
+        $hiddenReleaseId = $this->generateUuid();
+        $lyricistId = $this->generateUuid();
+        $composerId = $this->generateUuid();
+        $arrangerId = $this->generateUuid();
+
+        $this->storePersons(
+            $this->createPerson($lyricistId, '作詞太郎', 1),
+            $this->createPerson($composerId, '作曲花子', 2),
+            $this->createPerson($arrangerId, '編曲次郎', 3),
+        );
 
         $this->storeMedia(
             $this->createMedia($visibleMediaId, '公開 MV', 'https://example.com/public', MediaType::Video, true, MediaFormat::Mv),
@@ -41,7 +55,11 @@ class ListSongTest extends DatabaseTestCase
                 true,
                 1,
                 [],
-                [],
+                [
+                    ['personId' => $lyricistId, 'role' => SongPersonRole::Lyricist->value, 'orderNo' => 1],
+                    ['personId' => $composerId, 'role' => SongPersonRole::Composer->value, 'orderNo' => 2],
+                    ['personId' => $arrangerId, 'role' => SongPersonRole::Arranger->value, 'orderNo' => 3],
+                ],
                 [],
                 [],
                 [],
@@ -57,7 +75,6 @@ class ListSongTest extends DatabaseTestCase
                 SongType::Cover,
                 true,
                 2,
-                [],
                 [],
                 [],
                 [],
@@ -78,7 +95,31 @@ class ListSongTest extends DatabaseTestCase
                 [],
                 [],
                 [],
-                [],
+            ),
+        );
+
+        $this->storeReleases(
+            $this->createRelease(
+                $visibleReleaseId,
+                '公開リリース',
+                ReleaseType::Single,
+                ReleaseDistributionType::Digital,
+                true,
+                description: '公開リリース',
+                trackEntries: [
+                    ['songId' => $visibleSongId, 'trackNo' => 1],
+                ],
+            ),
+            $this->createRelease(
+                $hiddenReleaseId,
+                '非公開リリース',
+                ReleaseType::Album,
+                ReleaseDistributionType::Physical,
+                false,
+                description: '非公開リリース',
+                trackEntries: [
+                    ['songId' => $visibleSongId, 'trackNo' => 1],
+                ],
             ),
         );
 
@@ -94,7 +135,11 @@ class ListSongTest extends DatabaseTestCase
                             'value' => 1,
                         ],
                         'description' => 'Viewer の一覧表示向けに集約された楽曲説明',
+                        'lyricists' => ['作詞太郎'],
+                        'composers' => ['作曲花子'],
+                        'arrangers' => ['編曲次郎'],
                         'counts' => [
+                            'releaseCount' => 1,
                             'mediaCount' => 1,
                         ],
                     ],
@@ -121,7 +166,11 @@ class ListSongTest extends DatabaseTestCase
                             'value' => 2,
                         ],
                         'description' => '2 曲目',
+                        'lyricists' => [],
+                        'composers' => [],
+                        'arrangers' => [],
                         'counts' => [
+                            'releaseCount' => 0,
                             'mediaCount' => 1,
                         ],
                     ],

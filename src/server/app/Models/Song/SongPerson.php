@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models\Song;
 
+use App\Models\Person\Person;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
 /**
@@ -12,6 +14,7 @@ use Override;
  * @property string $person_id 人物ID
  * @property string $role      役割
  * @property int    $order_no  表示順
+ * @property-read Person $person
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SongPerson newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SongPerson newQuery()
@@ -32,4 +35,12 @@ class SongPerson extends Model
 
     #[Override]
     public $timestamps = false;
+
+    /**
+     * @return BelongsTo<Person, $this>
+     */
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(Person::class, 'person_id', 'person_id');
+    }
 }
