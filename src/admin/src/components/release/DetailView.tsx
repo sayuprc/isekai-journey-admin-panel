@@ -95,7 +95,8 @@ export const DetailView = (props: Props) => {
   const [hasSearched, setHasSearched] = createSignal(false);
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
-  const { isSubmitting, withSubmitting } = createSubmitting();
+  const { isSubmitting: isUpdating, withSubmitting: withUpdating } = createSubmitting();
+  const { isSubmitting: isDeleting, withSubmitting: withDeleting } = createSubmitting();
 
   const selectedSongIds = createMemo(() => new Set(trackEntries().map(entry => entry.songId)));
 
@@ -174,7 +175,7 @@ export const DetailView = (props: Props) => {
     setSearchResults(data.songs);
   };
 
-  const handleSubmit = withSubmitting(async (e: Event) => {
+  const handleSubmit = withUpdating(async (e: Event) => {
     e.preventDefault();
     clearErrors();
 
@@ -211,6 +212,33 @@ export const DetailView = (props: Props) => {
     }
 
     handleError(status, error);
+  });
+
+  const handleDelete = withDeleting(async (e: Event) => {
+    e.preventDefault();
+
+    if (!window.confirm('削除します。よろしいですか？')) {
+      return;
+    }
+
+    clearErrors();
+
+    const releaseId = props.data?.release.releaseId;
+
+    if (!releaseId) {
+      setFormError('削除対象のリリースIDを取得できませんでした');
+      return;
+    }
+
+    const { error, status } = await client.api.releases({ releaseId }).delete();
+
+    if (error) {
+      handleError(status, error);
+      return;
+    }
+
+    setFlash('削除しました');
+    window.location.href = listUrl;
   });
 
   onMount(() => {
@@ -331,8 +359,8 @@ export const DetailView = (props: Props) => {
             </div>
 
             <div class="mt-6 flex justify-end">
-              <button class="btn btn-primary" disabled={isSubmitting()}>
-                {isSubmitting() ? '更新中...' : '更新'}
+              <button class="btn btn-primary" disabled={isUpdating() || isDeleting()}>
+                {isUpdating() ? '更新中...' : '更新'}
               </button>
             </div>
           </fieldset>
@@ -454,6 +482,16 @@ export const DetailView = (props: Props) => {
               </table>
             </div>
           </Show>
+        </fieldset>
+
+        <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
+          <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
+          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
+          <div class="mt-4">
+            <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isDeleting() || isUpdating()}>
+              {isDeleting() ? '削除中...' : 'このリリースを削除する'}
+            </button>
+          </div>
         </fieldset>
       </div>
     </Show>

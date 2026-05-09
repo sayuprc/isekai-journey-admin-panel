@@ -1507,6 +1507,57 @@ export type ReleaseServiceSearchReleasesResponses = {
 
 export type ReleaseServiceSearchReleasesResponse = ReleaseServiceSearchReleasesResponses[keyof ReleaseServiceSearchReleasesResponses];
 
+export type ReleaseServiceDeleteReleaseData = {
+    body?: never;
+    path: {
+        releaseId: Uuid;
+    };
+    query?: never;
+    url: '/releases/{releaseId}';
+};
+
+export type ReleaseServiceDeleteReleaseErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceDeleteReleaseError = ReleaseServiceDeleteReleaseErrors[keyof ReleaseServiceDeleteReleaseErrors];
+
+export type ReleaseServiceDeleteReleaseResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type ReleaseServiceDeleteReleaseResponse = ReleaseServiceDeleteReleaseResponses[keyof ReleaseServiceDeleteReleaseResponses];
+
 export type ReleaseServiceGetReleaseData = {
     body?: never;
     path: {

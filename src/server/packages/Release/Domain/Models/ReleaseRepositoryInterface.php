@@ -18,4 +18,6 @@ interface ReleaseRepositoryInterface
     public function maxPage(ReleaseSearchCriteria $criteria): int;
 
     public function save(Release $release): Release;
+
+    public function delete(ReleaseId $releaseId): void;
 }

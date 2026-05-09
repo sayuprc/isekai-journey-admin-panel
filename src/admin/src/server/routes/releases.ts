@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { releaseServiceCreateRelease, releaseServiceGetRelease, releaseServiceSearchReleases, releaseServiceUpdateRelease } from '../../generated';
+import { releaseServiceCreateRelease, releaseServiceDeleteRelease, releaseServiceGetRelease, releaseServiceSearchReleases, releaseServiceUpdateRelease } from '../../generated';
 import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -92,6 +92,22 @@ export const releases = new Elysia({ prefix: '/releases' })
           songId: t.String(),
           trackNo: t.Number(),
         })),
+      }),
+    },
+  )
+  .delete(
+    '/:releaseId',
+    async ({ params: { releaseId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await releaseServiceDeleteRelease({
+          client,
+          path: { releaseId },
+        }));
+      });
+    },
+    {
+      params: t.Object({
+        releaseId: t.String(),
       }),
     },
   );

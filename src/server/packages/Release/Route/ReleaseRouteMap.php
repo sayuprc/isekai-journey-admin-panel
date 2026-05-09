@@ -13,4 +13,6 @@ enum ReleaseRouteMap: string
     case Search = 'release.search';
 
     case Update = 'release.update';
+
+    case Delete = 'release.delete';
 }
