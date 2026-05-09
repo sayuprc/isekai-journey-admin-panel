@@ -7,6 +7,7 @@ model ReleaseCreateRequest {
   releasedOn: releasedOn;
   description: string;
   isDisplay: boolean;
+  trackEntries: TrackEntry[];
 }
 
 model ReleaseCreateResponse {

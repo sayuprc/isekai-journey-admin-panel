@@ -62,7 +62,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => '\OpenAPI\Client\Model\ReleaseDistributionTypeValue',
         'released_on' => '\DateTime',
         'description' => 'string',
-        'is_display' => 'bool'
+        'is_display' => 'bool',
+        'track_entries' => '\OpenAPI\Client\Model\TrackEntry[]'
     ];
 
     /**
@@ -78,7 +79,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => null,
         'released_on' => 'date',
         'description' => null,
-        'is_display' => null
+        'is_display' => null,
+        'track_entries' => null
     ];
 
     /**
@@ -92,7 +94,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => false,
         'released_on' => false,
         'description' => false,
-        'is_display' => false
+        'is_display' => false,
+        'track_entries' => false
     ];
 
     /**
@@ -186,7 +189,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => 'distributionTypeValue',
         'released_on' => 'releasedOn',
         'description' => 'description',
-        'is_display' => 'isDisplay'
+        'is_display' => 'isDisplay',
+        'track_entries' => 'trackEntries'
     ];
 
     /**
@@ -200,7 +204,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => 'setDistributionTypeValue',
         'released_on' => 'setReleasedOn',
         'description' => 'setDescription',
-        'is_display' => 'setIsDisplay'
+        'is_display' => 'setIsDisplay',
+        'track_entries' => 'setTrackEntries'
     ];
 
     /**
@@ -214,7 +219,8 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'distribution_type_value' => 'getDistributionTypeValue',
         'released_on' => 'getReleasedOn',
         'description' => 'getDescription',
-        'is_display' => 'getIsDisplay'
+        'is_display' => 'getIsDisplay',
+        'track_entries' => 'getTrackEntries'
     ];
 
     /**
@@ -280,6 +286,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('track_entries', $data ?? [], null);
     }
 
     /**
@@ -330,6 +337,9 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
+        }
+        if ($this->container['track_entries'] === null) {
+            $invalidProperties[] = "'track_entries' can't be null";
         }
         return $invalidProperties;
     }
@@ -509,6 +519,33 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets track_entries
+     *
+     * @return \OpenAPI\Client\Model\TrackEntry[]
+     */
+    public function getTrackEntries()
+    {
+        return $this->container['track_entries'];
+    }
+
+    /**
+     * Sets track_entries
+     *
+     * @param \OpenAPI\Client\Model\TrackEntry[] $track_entries track_entries
+     *
+     * @return self
+     */
+    public function setTrackEntries($track_entries)
+    {
+        if (is_null($track_entries)) {
+            throw new \InvalidArgumentException('non-nullable track_entries cannot be null');
+        }
+        $this->container['track_entries'] = $track_entries;
 
         return $this;
     }

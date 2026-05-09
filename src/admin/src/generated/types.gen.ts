@@ -66,7 +66,7 @@ export type AuditLogSummary = {
 /**
  * 監査ログの対象種別
  */
-export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Song' | 'SongTag';
+export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Release' | 'Song' | 'SongTag';
 
 export type ErrorResponse = {
     message: string;
@@ -237,6 +237,7 @@ export type ReleaseCreateRequest = {
     releasedOn: ReleasedOn;
     description: string;
     isDisplay: boolean;
+    trackEntries: Array<TrackEntry>;
 };
 
 export type ReleaseCreateResponse = {

@@ -45,7 +45,7 @@ class SearchAuditLogTest extends DatabaseTestCase
             ->get(route(AuditLogRouteMap::Search))
             ->assertStatus(200)
             ->json();
-
+        /** @var array{maxPage: int, auditLogs: list<array{auditLogId: string, adminUserId: string, adminUserName: string, action: string, targetType: string, targetId: string}>} $response */
         $this->assertSame(1, $response['maxPage']);
         $this->assertCount(1, $response['auditLogs']);
         $this->assertSame($auditLogId, $response['auditLogs'][0]['auditLogId']);
@@ -54,6 +54,43 @@ class SearchAuditLogTest extends DatabaseTestCase
         $this->assertSame('update', $response['auditLogs'][0]['action']);
         $this->assertSame('Song', $response['auditLogs'][0]['targetType']);
         $this->assertSame($targetId, $response['auditLogs'][0]['targetId']);
+    }
+
+    #[Test]
+    public function canFilterReleaseTargetType(): void
+    {
+        $actorId = $this->generateUuid();
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+
+        $releaseAuditLogId = $this->generateUuid();
+
+        $this->insertAuditLog(
+            $releaseAuditLogId,
+            $actorId,
+            AuditAction::Update,
+            AuditTargetType::Release,
+            $this->generateUuid(),
+            ['title' => '観測された春'],
+            new DateTimeImmutable('2026-04-02 10:00:00'),
+        );
+        $this->insertAuditLog(
+            $this->generateUuid(),
+            $actorId,
+            AuditAction::Update,
+            AuditTargetType::Song,
+            $this->generateUuid(),
+            ['title' => '描き続けた君へ'],
+            new DateTimeImmutable('2026-04-03 10:00:00'),
+        );
+
+        $response = $this->withAuth()
+            ->get(route(AuditLogRouteMap::Search, ['target_type' => 'Release']))
+            ->assertStatus(200)
+            ->json();
+        /** @var array{auditLogs: list<array{auditLogId: string, targetType: string}>} $response */
+        $this->assertCount(1, $response['auditLogs']);
+        $this->assertSame($releaseAuditLogId, $response['auditLogs'][0]['auditLogId']);
+        $this->assertSame('Release', $response['auditLogs'][0]['targetType']);
     }
 
     #[Test]
@@ -89,7 +126,7 @@ class SearchAuditLogTest extends DatabaseTestCase
             ->get(route(AuditLogRouteMap::Search, ['admin_user_name' => '監査']))
             ->assertStatus(200)
             ->json();
-
+        /** @var array{auditLogs: list<array{adminUserName: string}>} $response */
         $this->assertCount(1, $response['auditLogs']);
         $this->assertSame('監査太郎', $response['auditLogs'][0]['adminUserName']);
     }

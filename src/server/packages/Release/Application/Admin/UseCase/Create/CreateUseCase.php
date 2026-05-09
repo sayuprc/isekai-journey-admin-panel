@@ -55,6 +55,7 @@ readonly class CreateUseCase
                 $inputData->releasedOn,
                 $inputData->description,
                 $inputData->isDisplay,
+                $inputData->trackEntries,
             );
 
             if ($result->isErr()) {
