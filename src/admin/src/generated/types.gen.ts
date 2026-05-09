@@ -235,7 +235,7 @@ export type ReleaseCreateRequest = {
     typeValue: ReleaseTypeValue;
     distributionTypeValue: ReleaseDistributionTypeValue;
     releasedOn: ReleasedOn;
-    description?: string;
+    description: string;
     isDisplay: boolean;
     trackEntries: Array<TrackEntry>;
 };
