@@ -934,6 +934,44 @@ paths:
               $ref: '#/components/schemas/ReleaseUpdateRequest'
       security:
         - BearerAuth: []
+    delete:
+      operationId: ReleaseService_deleteRelease
+      description: リリース削除API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      security:
+        - BearerAuth: []
   /song-tags:
     get:
       operationId: SongTagService_listSongTags

@@ -108,6 +108,12 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         return $release;
     }
 
+    #[Override]
+    public function delete(ReleaseId $releaseId): void
+    {
+        ModelsRelease::query()->where('release_id', $this->converter->toBin($releaseId->value))->delete();
+    }
+
     /**
      * @return Builder<ModelsRelease>
      */

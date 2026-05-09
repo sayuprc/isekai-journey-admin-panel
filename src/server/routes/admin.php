@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Admin\V1\Person\ListPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\SearchPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
 use App\Http\Controllers\Api\Admin\V1\Release\CreateReleaseController;
+use App\Http\Controllers\Api\Admin\V1\Release\DeleteReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\GetReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\SearchReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\UpdateReleaseController;
@@ -93,6 +94,7 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                 Route::prefix('releases')->group(function () {
                     Route::post('/', [CreateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Create);
                     Route::put('/{releaseId}', [UpdateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Update);
+                    Route::delete('/{releaseId}', [DeleteReleaseController::class, 'handle'])->name(ReleaseRouteMap::Delete);
                     Route::get('/search', [SearchReleaseController::class, 'handle'])->name(ReleaseRouteMap::Search);
                     Route::get('/{releaseId}', [GetReleaseController::class, 'handle'])->name(ReleaseRouteMap::Get);
                 });

@@ -38,6 +38,10 @@ interface ReleaseService {
     | Unprocessable
     | ServerError;
 
+  @doc("リリース削除API")
+  @delete
+  deleteRelease(@path releaseId: uuid): NoContent | Unauthorized | Forbidden | NotFound | Unprocessable | ServerError;
+
   @doc("リリース検索API")
   @route("/search")
   searchReleases(
