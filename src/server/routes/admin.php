@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Admin\V1\Person\GetPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\ListPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\SearchPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
+use App\Http\Controllers\Api\Admin\V1\Release\SearchReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Song\CreateSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\DeleteSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\GetSongController;
@@ -38,6 +39,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
+use Release\Route\ReleaseRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
@@ -83,6 +85,10 @@ Route::middleware(OpenApiValidator::class)->group(function () {
                     Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
                     Route::get('/search', [SearchSongController::class, 'handle'])->name(SongRouteMap::Search);
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
+                });
+
+                Route::prefix('releases')->group(function () {
+                    Route::get('/search', [SearchReleaseController::class, 'handle'])->name(ReleaseRouteMap::Search);
                 });
 
                 Route::prefix('song-types')->group(function () {
