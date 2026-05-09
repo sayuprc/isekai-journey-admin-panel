@@ -5,7 +5,7 @@ model ReleaseCreateRequest {
   typeValue: ReleaseTypeValue;
   distributionTypeValue: ReleaseDistributionTypeValue;
   releasedOn: releasedOn;
-  description?: string;
+  description: string;
   isDisplay: boolean;
   trackEntries: TrackEntry[];
 }

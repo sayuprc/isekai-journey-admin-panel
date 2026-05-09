@@ -126,7 +126,7 @@ export const CreateForm = () => {
       typeValue: typeValue(),
       distributionTypeValue: distributionTypeValue(),
       releasedOn: formData.get('releasedOn')?.toString() ?? '',
-      description: formData.get('description')?.toString() || undefined,
+      description: formData.get('description')?.toString() ?? '',
       isDisplay: isDisplay(),
       trackEntries: trackEntries().map((entry, index) => ({
         songId: entry.songId,

@@ -332,6 +332,9 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
         }
+        if ($this->container['description'] === null) {
+            $invalidProperties[] = "'description' can't be null";
+        }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
@@ -469,7 +472,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     /**
      * Gets description
      *
-     * @return string|null
+     * @return string
      */
     public function getDescription()
     {
@@ -479,7 +482,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     /**
      * Sets description
      *
-     * @param string|null $description description
+     * @param string $description description
      *
      * @return self
      */

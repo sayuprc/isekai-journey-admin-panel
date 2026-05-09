@@ -14,8 +14,8 @@ readonly class CreateInputData
         public int $typeValue,
         public int $distributionTypeValue,
         public string $releasedOn,
-        public bool $isDisplay,
         public string $description,
+        public bool $isDisplay,
         public array $trackEntries,
     ) {
     }

@@ -34,6 +34,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'typeValue' => 2,
                 'distributionTypeValue' => 1,
                 'releasedOn' => '2026-05-09',
+                'description' => '',
                 'isDisplay' => true,
                 'trackEntries' => [
                     ['songId' => $songId, 'trackNo' => 1],

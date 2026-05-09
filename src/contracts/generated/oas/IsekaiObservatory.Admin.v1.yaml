@@ -2032,6 +2032,7 @@ components:
         - typeValue
         - distributionTypeValue
         - releasedOn
+        - description
         - isDisplay
         - trackEntries
       properties:
