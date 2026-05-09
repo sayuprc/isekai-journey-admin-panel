@@ -8,6 +8,7 @@ tags:
   - name: AuditLog
   - name: Media
   - name: Person
+  - name: Release
   - name: SongTag
   - name: Song
   - name: SongType
@@ -734,6 +735,243 @@ paths:
         - Person
       security:
         - BearerAuth: []
+  /releases:
+    post:
+      operationId: ReleaseService_createRelease
+      description: リリース作成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseCreateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseCreateRequest'
+      security:
+        - BearerAuth: []
+  /releases/search:
+    get:
+      operationId: ReleaseService_searchReleases
+      description: リリース検索API
+      parameters:
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ReleaseTypeValue'
+          explode: false
+        - name: distribution_type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+          explode: false
+        - name: is_display
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/page'
+            default: 1
+          explode: false
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PerPage'
+            default: 25
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseSearchResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      security:
+        - BearerAuth: []
+  /releases/{releaseId}:
+    get:
+      operationId: ReleaseService_getRelease
+      description: リリース取得API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      security:
+        - BearerAuth: []
+    put:
+      operationId: ReleaseService_updateRelease
+      description: リリース更新API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseUpdateResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseUpdateRequest'
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: ReleaseService_deleteRelease
+      description: リリース削除API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      security:
+        - BearerAuth: []
   /song-tags:
     get:
       operationId: SongTagService_listSongTags
@@ -1415,6 +1653,7 @@ components:
         - AdminUser
         - Media
         - Person
+        - Release
         - Song
         - SongTag
       description: 監査ログの対象種別
@@ -1647,6 +1886,8 @@ components:
         - write_song
         - read_media
         - write_media
+        - read_release
+        - write_release
       description: 権限の値
     Person:
       type: object
@@ -1754,6 +1995,157 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    Release:
+      type: object
+      required:
+        - releaseId
+        - title
+        - typeValue
+        - distributionTypeValue
+        - releasedOn
+        - description
+        - isDisplay
+        - trackEntries
+      properties:
+        releaseId:
+          $ref: '#/components/schemas/releaseId'
+        title:
+          $ref: '#/components/schemas/releaseTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseTypeValue'
+        distributionTypeValue:
+          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+        trackEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackEntry'
+    ReleaseCreateRequest:
+      type: object
+      required:
+        - title
+        - typeValue
+        - distributionTypeValue
+        - releasedOn
+        - description
+        - isDisplay
+        - trackEntries
+      properties:
+        title:
+          $ref: '#/components/schemas/releaseTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseTypeValue'
+        distributionTypeValue:
+          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+        trackEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackEntry'
+    ReleaseCreateResponse:
+      type: object
+      required:
+        - release
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
+    ReleaseDistributionTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 99
+    ReleaseGetResponse:
+      type: object
+      required:
+        - release
+        - songs
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseReferencedSong'
+    ReleaseReferencedSong:
+      type: object
+      required:
+        - songId
+        - title
+        - trackNo
+      properties:
+        songId:
+          $ref: '#/components/schemas/uuid'
+        title:
+          $ref: '#/components/schemas/title'
+        trackNo:
+          $ref: '#/components/schemas/orderNo'
+    ReleaseSearchResponse:
+      type: object
+      required:
+        - releases
+        - maxPage
+      properties:
+        releases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Release'
+        maxPage:
+          type: integer
+          format: int32
+    ReleaseTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 99
+    ReleaseUpdateRequest:
+      type: object
+      required:
+        - title
+        - typeValue
+        - distributionTypeValue
+        - releasedOn
+        - description
+        - isDisplay
+        - trackEntries
+      properties:
+        title:
+          $ref: '#/components/schemas/releaseTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseTypeValue'
+        distributionTypeValue:
+          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+        trackEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackEntry'
+    ReleaseUpdateResponse:
+      type: object
+      required:
+        - release
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
     RequestSongMediaLink:
       type: object
       required:
@@ -2224,6 +2616,16 @@ components:
         - asc
         - desc
       description: ソート順
+    TrackEntry:
+      type: object
+      required:
+        - songId
+        - trackNo
+      properties:
+        songId:
+          $ref: '#/components/schemas/uuid'
+        trackNo:
+          $ref: '#/components/schemas/orderNo'
     ValidationError:
       type: object
       required:
@@ -2343,6 +2745,18 @@ components:
       type: string
       format: uuid
       description: リフレッシュトークンID
+    releaseId:
+      type: string
+      format: uuid
+      description: リリースID
+    releaseTitle:
+      type: string
+      minLength: 1
+      description: リリースタイトル
+    releasedOn:
+      type: string
+      format: date
+      description: 発売日
     roleName:
       type: string
       minLength: 1

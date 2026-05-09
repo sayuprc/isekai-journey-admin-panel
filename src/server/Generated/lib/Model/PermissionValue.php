@@ -59,6 +59,10 @@ enum PermissionValue: string
 
     case WRITE_MEDIA = 'write_media';
 
+    case READ_RELEASE = 'read_release';
+
+    case WRITE_RELEASE = 'write_release';
+
 }
 
 

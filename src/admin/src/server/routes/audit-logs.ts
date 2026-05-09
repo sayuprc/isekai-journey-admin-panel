@@ -20,6 +20,7 @@ const AuditTargetTypeSchema = t.Union([
   t.Literal('AdminUser'),
   t.Literal('Media'),
   t.Literal('Person'),
+  t.Literal('Release'),
   t.Literal('Song'),
   t.Literal('SongTag'),
 ]);

@@ -66,7 +66,7 @@ export type AuditLogSummary = {
 /**
  * 監査ログの対象種別
  */
-export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Song' | 'SongTag';
+export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Release' | 'Song' | 'SongTag';
 
 export type ErrorResponse = {
     message: string;
@@ -165,7 +165,7 @@ export type Permission = {
 /**
  * 権限の値
  */
-export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media';
+export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release' | 'write_release';
 
 export type Person = {
     personId: PersonId;
@@ -217,6 +217,65 @@ export type RefreshTokenResponse = {
     accessToken: AccessToken;
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
+};
+
+export type Release = {
+    releaseId: ReleaseId;
+    title: ReleaseTitle;
+    typeValue: ReleaseTypeValue;
+    distributionTypeValue: ReleaseDistributionTypeValue;
+    releasedOn: ReleasedOn;
+    description: string;
+    isDisplay: boolean;
+    trackEntries: Array<TrackEntry>;
+};
+
+export type ReleaseCreateRequest = {
+    title: ReleaseTitle;
+    typeValue: ReleaseTypeValue;
+    distributionTypeValue: ReleaseDistributionTypeValue;
+    releasedOn: ReleasedOn;
+    description: string;
+    isDisplay: boolean;
+    trackEntries: Array<TrackEntry>;
+};
+
+export type ReleaseCreateResponse = {
+    release: Release;
+};
+
+export type ReleaseDistributionTypeValue = 1 | 2 | 99;
+
+export type ReleaseGetResponse = {
+    release: Release;
+    songs: Array<ReleaseReferencedSong>;
+};
+
+export type ReleaseReferencedSong = {
+    songId: Uuid;
+    title: Title;
+    trackNo: OrderNo;
+};
+
+export type ReleaseSearchResponse = {
+    releases: Array<Release>;
+    maxPage: number;
+};
+
+export type ReleaseTypeValue = 1 | 2 | 3 | 99;
+
+export type ReleaseUpdateRequest = {
+    title: ReleaseTitle;
+    typeValue: ReleaseTypeValue;
+    distributionTypeValue: ReleaseDistributionTypeValue;
+    releasedOn: ReleasedOn;
+    description: string;
+    isDisplay: boolean;
+    trackEntries: Array<TrackEntry>;
+};
+
+export type ReleaseUpdateResponse = {
+    release: Release;
 };
 
 export type RequestSongMediaLink = {
@@ -406,6 +465,11 @@ export type SongUpdateResponse = {
  */
 export type SortOrder = 'asc' | 'desc';
 
+export type TrackEntry = {
+    songId: Uuid;
+    trackNo: OrderNo;
+};
+
 export type ValidationError = {
     errors: Array<ValidationErrorDetail>;
 };
@@ -536,6 +600,21 @@ export type RefreshToken = string;
  * リフレッシュトークンID
  */
 export type RefreshTokenId = string;
+
+/**
+ * リリースID
+ */
+export type ReleaseId = string;
+
+/**
+ * リリースタイトル
+ */
+export type ReleaseTitle = string;
+
+/**
+ * 発売日
+ */
+export type ReleasedOn = string;
 
 /**
  * 役割名
@@ -1333,6 +1412,254 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type ReleaseServiceCreateReleaseData = {
+    body: ReleaseCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/releases';
+};
+
+export type ReleaseServiceCreateReleaseErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceCreateReleaseError = ReleaseServiceCreateReleaseErrors[keyof ReleaseServiceCreateReleaseErrors];
+
+export type ReleaseServiceCreateReleaseResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseCreateResponse;
+};
+
+export type ReleaseServiceCreateReleaseResponse = ReleaseServiceCreateReleaseResponses[keyof ReleaseServiceCreateReleaseResponses];
+
+export type ReleaseServiceSearchReleasesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        title?: string;
+        type?: ReleaseTypeValue;
+        distribution_type?: ReleaseDistributionTypeValue;
+        is_display?: boolean;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/releases/search';
+};
+
+export type ReleaseServiceSearchReleasesErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceSearchReleasesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseSearchResponse;
+};
+
+export type ReleaseServiceSearchReleasesResponse = ReleaseServiceSearchReleasesResponses[keyof ReleaseServiceSearchReleasesResponses];
+
+export type ReleaseServiceDeleteReleaseData = {
+    body?: never;
+    path: {
+        releaseId: Uuid;
+    };
+    query?: never;
+    url: '/releases/{releaseId}';
+};
+
+export type ReleaseServiceDeleteReleaseErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceDeleteReleaseError = ReleaseServiceDeleteReleaseErrors[keyof ReleaseServiceDeleteReleaseErrors];
+
+export type ReleaseServiceDeleteReleaseResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type ReleaseServiceDeleteReleaseResponse = ReleaseServiceDeleteReleaseResponses[keyof ReleaseServiceDeleteReleaseResponses];
+
+export type ReleaseServiceGetReleaseData = {
+    body?: never;
+    path: {
+        releaseId: Uuid;
+    };
+    query?: never;
+    url: '/releases/{releaseId}';
+};
+
+export type ReleaseServiceGetReleaseErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceGetReleaseError = ReleaseServiceGetReleaseErrors[keyof ReleaseServiceGetReleaseErrors];
+
+export type ReleaseServiceGetReleaseResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseGetResponse;
+};
+
+export type ReleaseServiceGetReleaseResponse = ReleaseServiceGetReleaseResponses[keyof ReleaseServiceGetReleaseResponses];
+
+export type ReleaseServiceUpdateReleaseData = {
+    body: ReleaseUpdateRequest;
+    path: {
+        releaseId: Uuid;
+    };
+    query?: never;
+    url: '/releases/{releaseId}';
+};
+
+export type ReleaseServiceUpdateReleaseErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceUpdateReleaseError = ReleaseServiceUpdateReleaseErrors[keyof ReleaseServiceUpdateReleaseErrors];
+
+export type ReleaseServiceUpdateReleaseResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseUpdateResponse;
+};
+
+export type ReleaseServiceUpdateReleaseResponse = ReleaseServiceUpdateReleaseResponses[keyof ReleaseServiceUpdateReleaseResponses];
 
 export type SongTagServiceListSongTagsData = {
     body?: never;

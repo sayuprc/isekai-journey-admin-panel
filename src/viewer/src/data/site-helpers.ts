@@ -1,17 +1,25 @@
-import { Q, SITE_DATA } from './site-data.js';
+import { LIGHT_PALETTES, Q, SITE_DATA, THEMES } from './site-data.js';
 
-export { Q, SITE_DATA };
+export { LIGHT_PALETTES, Q, SITE_DATA, THEMES };
 
 export const navLinks = [
   { href: '/', label: 'Home', jp: '玄関' },
   { href: '/songs', label: 'Songs', jp: '楽曲' },
   { href: '/releases', label: 'Releases', jp: 'リリース' },
-  { href: '/media', label: 'Media', jp: '映像' },
-  { href: '/events', label: 'Events', jp: '催し' },
+  { href: '/media', label: 'Media', jp: 'メディア' },
   { href: '/profile', label: 'Profile', jp: '人物' },
 ] as const;
 
-export const palettes = ['moon', 'gunjou', 'reimei', 'setsuya', 'hisui'] as const;
+export const VIDEO_TYPES = ['mv', 'live-clip', 'interview', 'short'] as const;
+export const POST_TYPES = ['tweet', 'instagram', 'youtube-community', 'blog'] as const;
+
+export function isVideo(type: string) {
+  return VIDEO_TYPES.includes(type as (typeof VIDEO_TYPES)[number]);
+}
+
+export function isPost(type: string) {
+  return POST_TYPES.includes(type as (typeof POST_TYPES)[number]);
+}
 
 export function mediaTypeLabel(type: string) {
   return (
@@ -20,6 +28,10 @@ export function mediaTypeLabel(type: string) {
       'live-clip': 'Live Clip',
       'interview': 'Interview',
       'short': 'Short',
+      tweet: 'X / Twitter',
+      instagram: 'Instagram',
+      'youtube-community': 'YT Community',
+      blog: 'Blog',
     }[type] ?? type
   );
 }
@@ -45,17 +57,17 @@ export function latestRelease() {
 }
 
 export function latestMedia(limit = 3) {
-  return [...SITE_DATA.media].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
+  return [...SITE_DATA.media].filter(entry => isVideo(entry.type)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
 }
 
-export function upcomingEvent() {
-  return SITE_DATA.events.find(event => event.status === '予定') ?? null;
+export function latestPosts(limit = 3) {
+  return [...SITE_DATA.media].filter(entry => isPost(entry.type)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
 }
 
 export function sortedSongs() {
   return [...SITE_DATA.songs].sort((a, b) => {
-    const da = Q.firstReleaseDateOfSong(a.id) ?? '0';
-    const db = Q.firstReleaseDateOfSong(b.id) ?? '0';
+    const da = Q.firstAppearanceDateOfSong(a.id) ?? '0';
+    const db = Q.firstAppearanceDateOfSong(b.id) ?? '0';
     return db.localeCompare(da);
   });
 }
@@ -65,9 +77,9 @@ export function sortedReleases() {
 }
 
 export function sortedMedia() {
-  return [...SITE_DATA.media].sort((a, b) => b.date.localeCompare(a.date));
+  return [...SITE_DATA.media].filter(entry => isVideo(entry.type)).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function sortedEvents() {
-  return [...SITE_DATA.events].sort((a, b) => b.date.localeCompare(a.date));
+export function sortedPosts() {
+  return [...SITE_DATA.media].filter(entry => isPost(entry.type)).sort((a, b) => b.date.localeCompare(a.date));
 }

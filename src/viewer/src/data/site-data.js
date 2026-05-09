@@ -2,6 +2,17 @@
 // 各エンティティをID付き正規化データとして保持し、IDで関係を結ぶ
 // すべて架空のダミーデータ（後で差し替え可能）
 
+export const THEMES = [
+  { value: 'anemone-1', jp: 'アネモネ Ⅰ', en: 'Anemone I', tone: 'dark', costume: null, swatch: ['#0F0F11', '#E63946', '#3A6D8C', '#9CA3AF'] },
+  { value: 'anemone-2', jp: 'アネモネ Ⅱ', en: 'Anemone II', tone: 'light', costume: null, swatch: ['#F0F5F9', '#38BDF8', '#E05A65', '#8B7BB1'] },
+  { value: 'nemophila-1', jp: 'ネモフィラ Ⅰ', en: 'Nemophila I', tone: 'light', costume: null, swatch: ['#F0F8FF', '#3A8DDE', '#8BC6EC', '#E2F0F9'] },
+  { value: 'nemophila-2', jp: 'ネモフィラ Ⅱ', en: 'Nemophila II', tone: 'dark', costume: null, swatch: ['#0B1121', '#2B70B5', '#63A4D9', '#1E508A'] },
+  { value: 'sunflower-1', jp: 'サンフラワー Ⅰ', en: 'Sunflower I', tone: 'light', costume: null, swatch: ['#FFFDF5', '#FFB300', '#E68A00', '#6B4E31'] },
+  { value: 'sunflower-2', jp: 'サンフラワー Ⅱ', en: 'Sunflower II', tone: 'dark', costume: null, swatch: ['#232428', '#F5C033', '#8B5A2B', '#E09E19'] },
+];
+
+export const LIGHT_PALETTES = new Set(THEMES.filter(theme => theme.tone === 'light').map(theme => theme.value));
+
 export const SITE_DATA = {
   artist: {
     name: 'ヰ世界情緒',
@@ -12,21 +23,21 @@ export const SITE_DATA = {
 
   // ─── 楽曲 (Songs) ─── 基本情報のみ
   songs: [
-    { id: 's01', title: '夜光の標', titleEn: 'Yakou no Shirube', category: 'オリジナル', duration: '4:12', composer: '—', lyricist: '—', arranger: '—', color: '#3a4a72', description: '深い夜の海を泳ぐような、静謐なバラード。' },
-    { id: 's02', title: '白昼夢の輪郭', titleEn: 'Hakuchuumu no Rinkaku', category: 'オリジナル', duration: '3:48', composer: '—', lyricist: '—', arranger: '—', color: '#6b7a99', description: '夢と現の境目で揺れる旋律。' },
-    { id: 's03', title: '硝子の庭', titleEn: 'Garasu no Niwa', category: 'オリジナル', duration: '5:01', composer: '—', lyricist: '—', arranger: '—', color: '#88a4c4', description: '壊れやすさと美しさを編み込んだ一曲。' },
-    { id: 's04', title: '群青の余白', titleEn: 'Gunjou no Yohaku', category: 'オリジナル', duration: '4:35', composer: '—', lyricist: '—', arranger: '—', color: '#4a5a8a', description: '余白に響く青のうた。' },
-    { id: 's05', title: '雪明かり', titleEn: 'Yukiakari', category: 'オリジナル', duration: '3:55', composer: '—', lyricist: '—', arranger: '—', color: '#9bb5d0', description: '雪が照らす、静かな夜の独白。' },
-    { id: 's06', title: '燈籠草', titleEn: 'Tourousou', category: 'オリジナル', duration: '4:08', composer: '—', lyricist: '—', arranger: '—', color: '#5a6f9c', description: '灯る花の記憶。' },
-    { id: 's07', title: '海月のうた', titleEn: 'Kurage no Uta', category: 'オリジナル', duration: '3:42', composer: '—', lyricist: '—', arranger: '—', color: '#3e5577', description: 'ゆらゆらと漂う、深海の歌声。' },
-    { id: 's08', title: '残響アーカイブ', titleEn: 'Zankyou Archive', category: 'オリジナル', duration: '4:50', composer: '—', lyricist: '—', arranger: '—', color: '#2c3e5e', description: 'アルバムタイトル曲。記憶の残響を辿る。' },
-    { id: 's09', title: '灰色のワルツ', titleEn: 'Haiiro no Waltz', category: 'オリジナル', duration: '3:30', composer: '—', lyricist: '—', arranger: '—', color: '#7889a8', description: '三拍子で踊る、灰色の詩情。' },
-    { id: 's10', title: '星詠みの少女', titleEn: 'Hoshiyomi no Shoujo', category: 'オリジナル', duration: '4:22', composer: '—', lyricist: '—', arranger: '—', color: '#5d72a0', description: '星を読み解く少女の物語。' },
-    { id: 's11', title: '雨と栞', titleEn: 'Ame to Shiori', category: 'オリジナル', duration: '3:58', composer: '—', lyricist: '—', arranger: '—', color: '#8497b8', description: '雨の日に挟む、ささやかな栞。' },
-    { id: 's12', title: '鳥籠の天使', titleEn: 'Torikago no Tenshi', category: 'カバー', duration: '4:01', composer: '—', lyricist: '—', arranger: '—', color: '#465f88', description: '歌ってみたカバー楽曲。' },
-    { id: 's13', title: '薄明の街', titleEn: 'Hakumei no Machi', category: 'オリジナル', duration: '4:15', composer: '—', lyricist: '—', arranger: '—', color: '#324863', description: '夜明け前の街を歩く。' },
-    { id: 's14', title: '翡翠ノ涙', titleEn: 'Hisui no Namida', category: 'カバー', duration: '3:50', composer: '—', lyricist: '—', arranger: '—', color: '#3d6a73', description: '歌ってみたカバー楽曲。' },
-    { id: 's15', title: '初めての朝', titleEn: 'Hajimete no Asa', category: 'オリジナル', duration: '4:30', composer: '—', lyricist: '—', arranger: '—', color: '#6e85ac', description: 'デビュー楽曲。' },
+    { id: 's01', title: '夜光の標', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#3a4a72', description: '深い夜の海を泳ぐような、静謐なバラード。' },
+    { id: 's02', title: '白昼夢の輪郭', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#6b7a99', description: '夢と現の境目で揺れる旋律。' },
+    { id: 's03', title: '硝子の庭', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#88a4c4', description: '壊れやすさと美しさを編み込んだ一曲。' },
+    { id: 's04', title: '群青の余白', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#4a5a8a', description: '余白に響く青のうた。' },
+    { id: 's05', title: '雪明かり', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#9bb5d0', description: '雪が照らす、静かな夜の独白。' },
+    { id: 's06', title: '燈籠草', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#5a6f9c', description: '灯る花の記憶。' },
+    { id: 's07', title: '海月のうた', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#3e5577', description: 'ゆらゆらと漂う、深海の歌声。' },
+    { id: 's08', title: '残響アーカイブ', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#2c3e5e', description: 'アルバムタイトル曲。記憶の残響を辿る。' },
+    { id: 's09', title: '灰色のワルツ', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#7889a8', description: '三拍子で踊る、灰色の詩情。' },
+    { id: 's10', title: '星詠みの少女', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#5d72a0', description: '星を読み解く少女の物語。' },
+    { id: 's11', title: '雨と栞', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#8497b8', description: '雨の日に挟む、ささやかな栞。' },
+    { id: 's12', title: '鳥籠の天使', category: 'カバー', composer: '—', lyricist: '—', arranger: '—', color: '#465f88', description: '歌ってみたカバー楽曲。' },
+    { id: 's13', title: '薄明の街', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#324863', description: '夜明け前の街を歩く。' },
+    { id: 's14', title: '翡翠ノ涙', category: 'カバー', composer: '—', lyricist: '—', arranger: '—', color: '#3d6a73', description: '歌ってみたカバー楽曲。' },
+    { id: 's15', title: '初めての朝', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#6e85ac', description: 'デビュー楽曲。' },
   ],
 
   // ─── リリース (Releases) ─── アルバム・シングル・配信など
@@ -100,8 +111,8 @@ export const SITE_DATA = {
     { id: 'p30', songId: 's03', eventId: 'e01', date: '2025.03.21', note: '予定' },
   ],
 
-  // ─── 楽曲メディア (Media) ─── MV・インタビュー・切り抜きなど
-  // songIds: 関連楽曲（複数可） / eventId: 紐づく出来事（任意） / type: 'mv' | 'live-clip' | 'interview' | 'short'
+  // ─── 楽曲メディア (Media) ─── MV・インタビュー・切り抜き・SNS投稿など
+  // songIds: 関連楽曲（複数可） / eventId: 紐づく出来事（任意）
   media: [
     { id: 'm01', type: 'mv', title: '夜光の標 [Music Video]', date: '2024.11.20', views: '1.2M', songIds: ['s01'], eventId: null, color: '#3a4a72', description: '深海の中、光を辿る情緒。' },
     { id: 'm02', type: 'mv', title: '白昼夢の輪郭 [Music Video]', date: '2024.07.03', views: '892K', songIds: ['s02'], eventId: null, color: '#6b7a99', description: '白い部屋、揺れるカーテン、夢の輪郭。' },
@@ -120,6 +131,14 @@ export const SITE_DATA = {
     { id: 'm15', type: 'interview', title: 'Album『残響アーカイブ』インタビュー', date: '2022.11.18', views: '85K', songIds: ['s08', 's03', 's04'], eventId: 'e13', color: '#2c3e5e', description: 'アルバム制作秘話。' },
     { id: 'm16', type: 'short', title: '夜光の標 — 30秒トレーラー', date: '2024.11.15', views: '210K', songIds: ['s01'], eventId: null, color: '#3a4a72', description: 'リリース告知用の短尺。' },
     { id: 'm17', type: 'live-clip', title: '幻奏夜会 vol.3 ダイジェスト', date: '2024.10.25', views: '450K', songIds: ['s01', 's03', 's08'], eventId: 'e03', color: '#3a4a72', description: '公演ダイジェスト映像。' },
+    { id: 'p01', type: 'tweet', platform: 'x', date: '2025.01.28', songIds: ['s01'], eventId: null, color: '#3a4a72', text: '新曲『夜光の標』、本日0:00より各種ストリーミングサービスにて配信スタートしました。深い夜の海にひとつだけ灯る光のような曲です。聴いてくれた人の夜が、すこしだけやわらかくなりますように。', likes: '32.4K', reposts: '8.1K' },
+    { id: 'p02', type: 'instagram', platform: 'ig', date: '2024.12.31', songIds: ['s08', 's15'], eventId: null, color: '#2c3e5e', text: '今年もありがとうございました。年越し配信、これから。', likes: '18.2K', hasImage: true },
+    { id: 'p03', type: 'tweet', platform: 'x', date: '2024.11.15', songIds: ['s01'], eventId: null, color: '#3a4a72', text: '11/20リリース『夜光の標』MV、ティザー公開しました。撮影は冬の日本海で。雪と波と、あとちょっとの祈り。', likes: '21.8K', reposts: '5.2K' },
+    { id: 'p04', type: 'youtube-community', platform: 'yt', date: '2024.10.20', songIds: [], eventId: null, color: '#5a6f9c', text: '幻奏夜会 vol.3、来てくれた皆さん、配信で見てくれた皆さん、本当にありがとうございました。次は春に会いましょう。', likes: '12.5K' },
+    { id: 'p05', type: 'tweet', platform: 'x', date: '2024.07.03', songIds: ['s02'], eventId: null, color: '#6b7a99', text: '『白昼夢の輪郭』MV、本日18:00プレミア公開です。白い部屋で見た夢の話。', likes: '15.3K', reposts: '3.8K' },
+    { id: 'p06', type: 'blog', platform: 'blog', date: '2024.04.02', songIds: ['s08'], eventId: null, color: '#2c3e5e', title: 'アルバムから一年', text: '『残響アーカイブ』をリリースしてから一年が経ちました。あのとき書いた曲たちが、今もどこかで誰かの夜を照らしているのなら、それ以上のことはありません。最近のことを少しだけ。', readTime: '3 min' },
+    { id: 'p07', type: 'instagram', platform: 'ig', date: '2024.02.14', songIds: ['s03', 's09'], eventId: 'e07', color: '#88a4c4', text: 'Billboard Live、おわり。アコースティックの夜でした。', likes: '9.7K', hasImage: true },
+    { id: 'p08', type: 'tweet', platform: 'x', date: '2023.12.20', songIds: ['s08'], eventId: 'e08', color: '#2c3e5e', text: 'vol.2 終演しました。最後の『残響アーカイブ』、客席のペンライトが本当に綺麗で。', likes: '24.1K', reposts: '6.5K' },
   ],
 
   // ─── ニュース ───
@@ -154,6 +173,16 @@ export const Q = {
     const rs = Q.releasesOfSong(songId);
     if (!rs.length) return null;
     return rs.map(r => r.date).sort()[0];
+  },
+  firstPerformanceDateOfSong: (songId) => {
+    const ps = Q.performancesOfSong(songId);
+    if (!ps.length) return null;
+    return ps.map(p => p.date).sort()[0];
+  },
+  firstAppearanceDateOfSong: (songId) => {
+    const dates = [Q.firstReleaseDateOfSong(songId), Q.firstPerformanceDateOfSong(songId)].filter(Boolean);
+    if (!dates.length) return null;
+    return dates.sort()[0];
   },
 
   // 出来事を起点に

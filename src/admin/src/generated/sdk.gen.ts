@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuditLogServiceGetAuditLogData, AuditLogServiceGetAuditLogErrors, AuditLogServiceGetAuditLogResponses, AuditLogServiceSearchAuditLogsData, AuditLogServiceSearchAuditLogsErrors, AuditLogServiceSearchAuditLogsResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, MediaServiceCreateMediaData, MediaServiceCreateMediaErrors, MediaServiceCreateMediaResponses, MediaServiceDeleteMediaData, MediaServiceDeleteMediaErrors, MediaServiceDeleteMediaResponses, MediaServiceGetMediaData, MediaServiceGetMediaErrors, MediaServiceGetMediaResponses, MediaServiceSearchMediaData, MediaServiceSearchMediaErrors, MediaServiceSearchMediaResponses, MediaServiceUpdateMediaData, MediaServiceUpdateMediaErrors, MediaServiceUpdateMediaResponses, PersonServiceCreatePersonData, PersonServiceCreatePersonErrors, PersonServiceCreatePersonResponses, PersonServiceDeletePersonData, PersonServiceDeletePersonErrors, PersonServiceDeletePersonResponses, PersonServiceGetPersonData, PersonServiceGetPersonErrors, PersonServiceGetPersonResponses, PersonServiceListPersonsData, PersonServiceListPersonsErrors, PersonServiceListPersonsResponses, PersonServiceSearchPersonsData, PersonServiceSearchPersonsErrors, PersonServiceSearchPersonsResponses, PersonServiceUpdatePersonData, PersonServiceUpdatePersonErrors, PersonServiceUpdatePersonResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
+import type { AdminUserServiceListAdminUsersData, AdminUserServiceListAdminUsersErrors, AdminUserServiceListAdminUsersResponses, AuditLogServiceGetAuditLogData, AuditLogServiceGetAuditLogErrors, AuditLogServiceGetAuditLogResponses, AuditLogServiceSearchAuditLogsData, AuditLogServiceSearchAuditLogsErrors, AuditLogServiceSearchAuditLogsResponses, AuthenticateServiceLoginData, AuthenticateServiceLoginErrors, AuthenticateServiceLoginResponses, AuthenticateServiceRefreshData, AuthenticateServiceRefreshErrors, AuthenticateServiceRefreshResponses, MediaServiceCreateMediaData, MediaServiceCreateMediaErrors, MediaServiceCreateMediaResponses, MediaServiceDeleteMediaData, MediaServiceDeleteMediaErrors, MediaServiceDeleteMediaResponses, MediaServiceGetMediaData, MediaServiceGetMediaErrors, MediaServiceGetMediaResponses, MediaServiceSearchMediaData, MediaServiceSearchMediaErrors, MediaServiceSearchMediaResponses, MediaServiceUpdateMediaData, MediaServiceUpdateMediaErrors, MediaServiceUpdateMediaResponses, PersonServiceCreatePersonData, PersonServiceCreatePersonErrors, PersonServiceCreatePersonResponses, PersonServiceDeletePersonData, PersonServiceDeletePersonErrors, PersonServiceDeletePersonResponses, PersonServiceGetPersonData, PersonServiceGetPersonErrors, PersonServiceGetPersonResponses, PersonServiceListPersonsData, PersonServiceListPersonsErrors, PersonServiceListPersonsResponses, PersonServiceSearchPersonsData, PersonServiceSearchPersonsErrors, PersonServiceSearchPersonsResponses, PersonServiceUpdatePersonData, PersonServiceUpdatePersonErrors, PersonServiceUpdatePersonResponses, ReleaseServiceCreateReleaseData, ReleaseServiceCreateReleaseErrors, ReleaseServiceCreateReleaseResponses, ReleaseServiceDeleteReleaseData, ReleaseServiceDeleteReleaseErrors, ReleaseServiceDeleteReleaseResponses, ReleaseServiceGetReleaseData, ReleaseServiceGetReleaseErrors, ReleaseServiceGetReleaseResponses, ReleaseServiceSearchReleasesData, ReleaseServiceSearchReleasesErrors, ReleaseServiceSearchReleasesResponses, ReleaseServiceUpdateReleaseData, ReleaseServiceUpdateReleaseErrors, ReleaseServiceUpdateReleaseResponses, SongServiceCreateSongData, SongServiceCreateSongErrors, SongServiceCreateSongResponses, SongServiceDeleteSongData, SongServiceDeleteSongErrors, SongServiceDeleteSongResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceSearchSongsData, SongServiceSearchSongsErrors, SongServiceSearchSongsResponses, SongServiceUpdateSongData, SongServiceUpdateSongErrors, SongServiceUpdateSongResponses, SongTagServiceCreateSongTagData, SongTagServiceCreateSongTagErrors, SongTagServiceCreateSongTagResponses, SongTagServiceDeleteSongTagData, SongTagServiceDeleteSongTagErrors, SongTagServiceDeleteSongTagResponses, SongTagServiceGetSongTagData, SongTagServiceGetSongTagErrors, SongTagServiceGetSongTagResponses, SongTagServiceListSongTagsData, SongTagServiceListSongTagsErrors, SongTagServiceListSongTagsResponses, SongTagServiceSearchSongTagsData, SongTagServiceSearchSongTagsErrors, SongTagServiceSearchSongTagsResponses, SongTagServiceUpdateSongTagData, SongTagServiceUpdateSongTagErrors, SongTagServiceUpdateSongTagResponses, SongTypeServiceListSongTypesData, SongTypeServiceListSongTypesErrors, SongTypeServiceListSongTypesResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -177,6 +177,59 @@ export const personServiceGetPerson = <ThrowOnError extends boolean = false>(opt
 export const personServiceUpdatePerson = <ThrowOnError extends boolean = false>(options: Options<PersonServiceUpdatePersonData, ThrowOnError>) => (options.client ?? client).put<PersonServiceUpdatePersonResponses, PersonServiceUpdatePersonErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/persons/{personId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * リリース作成API
+ */
+export const releaseServiceCreateRelease = <ThrowOnError extends boolean = false>(options: Options<ReleaseServiceCreateReleaseData, ThrowOnError>) => (options.client ?? client).post<ReleaseServiceCreateReleaseResponses, ReleaseServiceCreateReleaseErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/releases',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * リリース検索API
+ */
+export const releaseServiceSearchReleases = <ThrowOnError extends boolean = false>(options?: Options<ReleaseServiceSearchReleasesData, ThrowOnError>) => (options?.client ?? client).get<ReleaseServiceSearchReleasesResponses, ReleaseServiceSearchReleasesErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/releases/search',
+    ...options
+});
+
+/**
+ * リリース削除API
+ */
+export const releaseServiceDeleteRelease = <ThrowOnError extends boolean = false>(options: Options<ReleaseServiceDeleteReleaseData, ThrowOnError>) => (options.client ?? client).delete<ReleaseServiceDeleteReleaseResponses, ReleaseServiceDeleteReleaseErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/releases/{releaseId}',
+    ...options
+});
+
+/**
+ * リリース取得API
+ */
+export const releaseServiceGetRelease = <ThrowOnError extends boolean = false>(options: Options<ReleaseServiceGetReleaseData, ThrowOnError>) => (options.client ?? client).get<ReleaseServiceGetReleaseResponses, ReleaseServiceGetReleaseErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/releases/{releaseId}',
+    ...options
+});
+
+/**
+ * リリース更新API
+ */
+export const releaseServiceUpdateRelease = <ThrowOnError extends boolean = false>(options: Options<ReleaseServiceUpdateReleaseData, ThrowOnError>) => (options.client ?? client).put<ReleaseServiceUpdateReleaseResponses, ReleaseServiceUpdateReleaseErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/releases/{releaseId}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
