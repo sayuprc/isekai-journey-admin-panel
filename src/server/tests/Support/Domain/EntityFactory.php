@@ -26,6 +26,14 @@ use Media\Domain\Models\MediaUrl;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
+use Release\Domain\Models\Description as ReleaseDescription;
+use Release\Domain\Models\Release;
+use Release\Domain\Models\ReleaseDistributionType;
+use Release\Domain\Models\ReleaseId;
+use Release\Domain\Models\ReleasedOn;
+use Release\Domain\Models\ReleaseTitle;
+use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\TrackEntries;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
 use Song\Domain\Models\Media\SongMediaLinks;
@@ -197,6 +205,31 @@ trait EntityFactory
             $type,
             $format,
             $isDisplay,
+        );
+    }
+
+    /**
+     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     */
+    protected function createRelease(
+        string $releaseId,
+        string $title,
+        ReleaseType $type,
+        ReleaseDistributionType $distributionType,
+        bool $isDisplay,
+        ?ImmutableDate $releasedOn = null,
+        string $description = 'テスト用リリース',
+        array $trackEntries = [],
+    ): Release {
+        return new Release(
+            ReleaseId::reconstruct($releaseId),
+            ReleaseTitle::reconstruct($title),
+            $type,
+            $distributionType,
+            ReleasedOn::reconstruct($releasedOn ?? new ImmutableDate('2024-01-01')),
+            ReleaseDescription::reconstruct($description),
+            $isDisplay,
+            TrackEntries::reconstruct($trackEntries),
         );
     }
 

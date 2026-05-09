@@ -13,6 +13,8 @@ use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonRepositoryInterface;
+use Release\Domain\Models\Release;
+use Release\Domain\Models\ReleaseRepositoryInterface;
 use Song\Domain\Models\Song;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\Tag\SongTag;
@@ -42,6 +44,12 @@ trait EntityStore
     {
         $repository = $this->makeRepository(SongTagRepositoryInterface::class);
         array_map(fn (SongTag $item) => $repository->save($item), $items);
+    }
+
+    protected function storeReleases(Release ...$items): void
+    {
+        $repository = $this->makeRepository(ReleaseRepositoryInterface::class);
+        array_map(fn (Release $item) => $repository->save($item), $items);
     }
 
     protected function storeAdminUsers(AdminUser ...$items): void

@@ -165,7 +165,7 @@ export type Permission = {
 /**
  * 権限の値
  */
-export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media';
+export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release';
 
 export type Person = {
     personId: PersonId;
@@ -231,6 +231,11 @@ export type Release = {
 };
 
 export type ReleaseDistributionTypeValue = 1 | 2 | 99;
+
+export type ReleaseSearchResponse = {
+    releases: Array<Release>;
+    maxPage: number;
+};
 
 export type ReleaseTypeValue = 1 | 2 | 3 | 99;
 
@@ -1368,6 +1373,52 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type ReleaseServiceSearchReleasesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        title?: string;
+        type?: ReleaseTypeValue;
+        distribution_type?: ReleaseDistributionTypeValue;
+        is_display?: boolean;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/releases/search';
+};
+
+export type ReleaseServiceSearchReleasesErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceSearchReleasesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseSearchResponse;
+};
+
+export type ReleaseServiceSearchReleasesResponse = ReleaseServiceSearchReleasesResponses[keyof ReleaseServiceSearchReleasesResponses];
 
 export type SongTagServiceListSongTagsData = {
     body?: never;
