@@ -886,6 +886,54 @@ paths:
         - Release
       security:
         - BearerAuth: []
+    put:
+      operationId: ReleaseService_updateRelease
+      description: リリース更新API
+      parameters:
+        - name: releaseId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseUpdateResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseUpdateRequest'
+      security:
+        - BearerAuth: []
   /song-tags:
     get:
       operationId: SongTagService_listSongTags
@@ -2020,6 +2068,40 @@ components:
         - 2
         - 3
         - 99
+    ReleaseUpdateRequest:
+      type: object
+      required:
+        - title
+        - typeValue
+        - distributionTypeValue
+        - releasedOn
+        - description
+        - isDisplay
+        - trackEntries
+      properties:
+        title:
+          $ref: '#/components/schemas/releaseTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseTypeValue'
+        distributionTypeValue:
+          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+        trackEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackEntry'
+    ReleaseUpdateResponse:
+      type: object
+      required:
+        - release
+      properties:
+        release:
+          $ref: '#/components/schemas/Release'
     RequestSongMediaLink:
       type: object
       required:

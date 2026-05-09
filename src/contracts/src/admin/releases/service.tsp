@@ -28,6 +28,16 @@ interface ReleaseService {
     | Unprocessable
     | ServerError;
 
+  @doc("リリース更新API")
+  @put
+  updateRelease(@path releaseId: uuid, @body request: ReleaseUpdateRequest):
+    | Ok<ReleaseUpdateResponse>
+    | Unauthorized
+    | Forbidden
+    | NotFound
+    | Unprocessable
+    | ServerError;
+
   @doc("リリース検索API")
   @route("/search")
   searchReleases(
