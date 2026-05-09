@@ -24,6 +24,10 @@ enum Permission: string
 
     case WriteMedia = 'write_media';
 
+    case ReadRelease = 'read_release';
+
+    case WriteRelease = 'write_release';
+
     public function getName(): string
     {
         return match ($this) {
@@ -36,6 +40,8 @@ enum Permission: string
             self::ReadAuditLog => '監査ログ閲覧',
             self::ReadMedia => 'メディア閲覧',
             self::WriteMedia => 'メディア編集',
+            self::ReadRelease => 'リリース閲覧',
+            self::WriteRelease => 'リリース編集',
         };
     }
 }

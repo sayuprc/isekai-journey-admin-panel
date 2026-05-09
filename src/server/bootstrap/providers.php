@@ -8,6 +8,7 @@ return [
     App\Providers\Domain\AuthServiceProvider::class,
     App\Providers\Domain\MediaServiceProvider::class,
     App\Providers\Domain\PersonServiceProvider::class,
+    App\Providers\Domain\ReleaseServiceProvider::class,
     App\Providers\Domain\SongServiceProvider::class,
     App\Providers\Domain\SupportServiceProvider::class,
     App\Providers\Domain\AdminUserServiceProvider::class,

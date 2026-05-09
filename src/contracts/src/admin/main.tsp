@@ -5,6 +5,7 @@ import "./audit-logs";
 import "./auth";
 import "./media";
 import "./persons";
+import "./releases";
 import "./song-tags";
 import "./song-types";
 import "./songs";
