@@ -1,17 +1,16 @@
 ---
-import { DetailDrawer } from '../../components/viewer/DetailDrawer';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import LayoutSwitcher from '../../components/viewer/LayoutSwitcher.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { Q, sortedSongs } from '../../data/site-helpers';
+import { Q, SITE_DATA } from '../../data/site-helpers';
 import Layout from '../../layouts/Layout.astro';
 
-const songs = sortedSongs();
+const songs = SITE_DATA.songs;
 ---
 
-<Layout pageTitle="Songs">
+<Layout pageTitle="楽曲">
   <section class="shell page-section">
-    <SectionHead num="—" title="楽曲集" titleEn={`Songs / ${songs.length} songs`}>
+    <SectionHead num="—" title="楽曲" titleEn={`Songs / ${songs.length} songs`}>
       <LayoutSwitcher
         slot="right"
         name="songs"
@@ -24,24 +23,43 @@ const songs = sortedSongs();
       />
     </SectionHead>
 
-    <div data-layout-group="songs">
+    <div class="viewer-filters" data-songs-controls>
+      <button class="btn is-active" type="button" data-song-filter="all">すべて ({songs.length})</button>
+      <button class="btn" type="button" data-song-filter="original">オリジナル</button>
+      <button class="btn" type="button" data-song-filter="cover">カバー</button>
+      <div class="viewer-filters-spacer"></div>
+      <input class="viewer-search" type="text" placeholder="タイトル・読み・クレジットを検索..." data-song-query />
+    </div>
+
+    <div data-layout-group="songs" data-songs-layout-root>
       <div data-layout-panel="grid">
         <div class="song-grid">
           {
-            songs.map(song => (
-              <a href={`/songs/${song.id}`} class="song-grid-card">
-                <JacketArt color={song.color} label={song.titleEn} />
-                <div class="song-grid-body">
-                  <div class="song-grid-meta">
-                    <span class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'}</span>
-                    <span class="pill">{song.category}</span>
+            songs.map(song => {
+              const stats = Q.songStats(song.id);
+              return (
+                <a
+                  href={`/songs/${song.id}`}
+                  class="song-grid-card"
+                  data-song-entry
+                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
+                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                >
+                  <JacketArt color={song.color} label={song.title} />
+                  <div class="song-grid-body">
+                    <div class="song-grid-meta">
+                      <span class="pill">{song.category}</span>
+                      <div class="song-meta-inline">
+                        <span>{stats.releases} rel</span>
+                        <span>{stats.performances} live</span>
+                        <span>{stats.media} mv</span>
+                      </div>
+                    </div>
+                    <div class="song-grid-title">{song.title}</div>
                   </div>
-                  <div class="song-grid-title">{song.title}</div>
-                  <div class="song-grid-title-en">{song.titleEn}</div>
-                  <p class="song-grid-description">{song.description}</p>
-                </div>
-              </a>
-            ))
+                </a>
+              );
+            })
           }
         </div>
       </div>
@@ -49,11 +67,9 @@ const songs = sortedSongs();
       <div data-layout-panel="table" hidden>
         <div class="songs-table">
           <div class="tbl-row tbl-head">
-            <div class="label-mono">DATE</div>
             <div class="label-mono">#</div>
             <div class="label-mono">TITLE</div>
             <div class="label-mono">CAT.</div>
-            <div class="label-mono">LEN</div>
             <div class="label-mono">REL</div>
             <div class="label-mono">LIVE</div>
             <div class="label-mono">MV</div>
@@ -62,15 +78,18 @@ const songs = sortedSongs();
             songs.map((song, index) => {
               const stats = Q.songStats(song.id);
               return (
-                <a href={`/songs/${song.id}`} class="tbl-row tbl-body">
-                  <span class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'}</span>
-                  <span class="detail-index">{String(songs.length - index).padStart(2, '0')}</span>
+                <a
+                  href={`/songs/${song.id}`}
+                  class="tbl-row tbl-body"
+                  data-song-entry
+                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
+                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                >
+                  <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
                   <div>
                     <div class="table-title">{song.title}</div>
-                    <div class="song-grid-title-en">{song.titleEn}</div>
                   </div>
                   <span class="pill">{song.category}</span>
-                  <span class="label-mono">{song.duration}</span>
                   <span class="num-cell">{stats.releases}</span>
                   <span class="num-cell">{stats.performances}</span>
                   <span class="num-cell">{stats.media}</span>
@@ -84,19 +103,24 @@ const songs = sortedSongs();
       <div data-layout-panel="card" hidden>
         <div class="songs-card-grid">
           {
-            songs.map((song) => {
+            songs.map(song => {
               const stats = Q.songStats(song.id);
               return (
-                <a href={`/songs/${song.id}`} class="song-card">
+                <a
+                  href={`/songs/${song.id}`}
+                  class="song-card"
+                  data-song-entry
+                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
+                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                >
                   <JacketArt color={song.color} label={song.id} />
                   <div class="song-card-body">
-                    <div class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'} · {song.category}</div>
+                    <div class="label-mono">{song.category}</div>
                     <div class="timeline-title">{song.title}</div>
-                    <div class="song-grid-title-en">{song.titleEn}</div>
                     <p class="song-grid-description">{song.description}</p>
                     <div class="song-card-stats">
                       <div><span class="detail-index">{stats.releases}</span><span class="label-mono">releases</span></div>
-                      <div><span class="detail-index">{stats.performances}</span><span class="label-mono">live</span></div>
+                      <div><span class="detail-index">{stats.performances}</span><span class="label-mono">歌唱</span></div>
                       <div><span class="detail-index">{stats.media}</span><span class="label-mono">media</span></div>
                     </div>
                   </div>
@@ -108,5 +132,54 @@ const songs = sortedSongs();
       </div>
     </div>
   </section>
-  <DetailDrawer client:load />
 </Layout>
+
+<script is:inline>
+  (() => {
+    const initSongsFilters = () => {
+      const root = document.querySelector('[data-songs-controls]');
+      const layoutRoot = document.querySelector('[data-songs-layout-root]');
+      if (!(root instanceof HTMLElement) || root.dataset.ready === 'true') return;
+      if (!(layoutRoot instanceof HTMLElement)) return;
+      const buttons = [...root.querySelectorAll('[data-song-filter]')];
+      const query = root.querySelector('[data-song-query]');
+      if (!(query instanceof HTMLInputElement)) return;
+
+      let filter = 'all';
+
+      const getEntries = () => [...layoutRoot.querySelectorAll('[data-song-entry]')];
+
+      const apply = () => {
+        const q = query.value.trim().toLowerCase();
+        for (const entry of getEntries()) {
+          if (!(entry instanceof HTMLElement)) continue;
+          const category = entry.dataset.songCategory || 'all';
+          const text = entry.dataset.songSearch || '';
+          const visible = (filter === 'all' || filter === category) && (q === '' || text.includes(q));
+          entry.style.display = visible ? '' : 'none';
+        }
+      };
+
+      for (const button of buttons) {
+        if (!(button instanceof HTMLButtonElement)) continue;
+        button.addEventListener('click', () => {
+          filter = button.dataset.songFilter || 'all';
+          for (const other of buttons) {
+            if (other instanceof HTMLElement) other.classList.toggle('is-active', other === button);
+          }
+          apply();
+        });
+      }
+
+      query.addEventListener('input', apply);
+      apply();
+      root.dataset.ready = 'true';
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSongsFilters, { once: true });
+    } else {
+      initSongsFilters();
+    }
+  })();
+</script>

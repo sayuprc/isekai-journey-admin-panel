@@ -1,6 +1,7 @@
 ---
 import Footer from '../components/common/Footer.astro';
 import Header from '../components/common/Header.astro';
+import { DetailDrawer } from '../components/viewer/DetailDrawer';
 import '../styles/reset.css';
 import '../styles/viewer.css';
 
@@ -31,12 +32,9 @@ const title = generateTitle(pageTitle);
     <title>{title}</title>
     <script is:inline>
       (() => {
-        const themeKey = 'isekai-observatory-theme';
         const paletteKey = 'isekai-observatory-palette';
         const root = document.documentElement;
-        const savedTheme = localStorage.getItem(themeKey) ?? 'dark';
-        const savedPalette = localStorage.getItem(paletteKey) ?? 'moon';
-        root.dataset.theme = savedTheme;
+        const savedPalette = localStorage.getItem(paletteKey) ?? 'nemophila-2';
         root.dataset.palette = savedPalette;
       })();
     </script>
@@ -47,60 +45,114 @@ const title = generateTitle(pageTitle);
       <slot />
     </main>
     <Footer />
+    <DetailDrawer client:load />
     <script is:inline>
       (() => {
-        const palettes = ['moon', 'gunjou', 'reimei', 'setsuya', 'hisui'];
-        const themeKey = 'isekai-observatory-theme';
         const paletteKey = 'isekai-observatory-palette';
+        const defaultPalette = 'nemophila-2';
 
         const initThemeControls = () => {
           const root = document.documentElement;
-          const themeButton = document.querySelector('[data-theme-toggle]');
-          const paletteButton = document.querySelector('[data-palette-toggle]');
+          const picker = document.querySelector('[data-theme-picker]');
 
-          if (!(themeButton instanceof HTMLButtonElement) || !(paletteButton instanceof HTMLButtonElement)) {
+          if (!(picker instanceof HTMLElement) || picker.dataset.themeReady === 'true') {
             return;
           }
 
-          if (themeButton.dataset.themeReady === 'true') {
+          const trigger = picker.querySelector('[data-theme-trigger]');
+          const overlay = picker.querySelector('[data-theme-overlay]');
+          const pop = picker.querySelector('[data-theme-pop]');
+          const jp = picker.querySelector('[data-theme-current-jp]');
+          const en = picker.querySelector('[data-theme-current-en]');
+          const options = [...picker.querySelectorAll('[data-palette-option]')];
+
+          if (!(trigger instanceof HTMLButtonElement) || !(overlay instanceof HTMLElement) || !(pop instanceof HTMLElement) || !(jp instanceof HTMLElement) || !(en instanceof HTMLElement) || options.length === 0) {
             return;
           }
 
-          const syncButtons = () => {
-            themeButton.textContent = root.dataset.theme === 'light' ? '☼' : '☾';
-          };
-
-          const applyTheme = (theme) => {
-            root.dataset.theme = theme;
-            localStorage.setItem(themeKey, theme);
-            syncButtons();
+          const setOpen = (open) => {
+            trigger.setAttribute('aria-expanded', String(open));
+            overlay.hidden = !open;
+            pop.hidden = !open;
           };
 
           const applyPalette = (palette) => {
             root.dataset.palette = palette;
             localStorage.setItem(paletteKey, palette);
+            const active = options.find(option => option instanceof HTMLElement && option.dataset.paletteOption === palette) ?? options[0];
+            if (!(active instanceof HTMLElement)) return;
+
+            jp.textContent = active.dataset.costume || active.dataset.jp || defaultPalette;
+            en.textContent = active.dataset.costume ? `${active.dataset.jp} · ${active.dataset.en}` : active.dataset.en || '';
+
+            for (const option of options) {
+              if (!(option instanceof HTMLElement)) continue;
+              option.classList.toggle('active', option.dataset.paletteOption === palette);
+            }
           };
 
-          themeButton.addEventListener('click', () => {
-            const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
-            applyTheme(nextTheme);
+          trigger.addEventListener('click', () => {
+            setOpen(pop.hidden);
           });
 
-          paletteButton.addEventListener('click', () => {
-            const currentPalette = root.dataset.palette ?? 'moon';
-            const currentIndex = palettes.indexOf(currentPalette);
-            const nextIndex = (currentIndex + 1 + palettes.length) % palettes.length;
-            applyPalette(palettes[nextIndex]);
+          overlay.addEventListener('click', () => setOpen(false));
+
+          for (const option of options) {
+            if (!(option instanceof HTMLButtonElement)) continue;
+            option.addEventListener('click', () => {
+              applyPalette(option.dataset.paletteOption || defaultPalette);
+              setOpen(false);
+            });
+          }
+
+          applyPalette(root.dataset.palette || defaultPalette);
+          picker.dataset.themeReady = 'true';
+        };
+
+        const initMobileNav = () => {
+          const trigger = document.querySelector('[data-nav-trigger]');
+          const links = document.querySelector('[data-nav-links]');
+          if (!(trigger instanceof HTMLButtonElement) || !(links instanceof HTMLElement) || trigger.dataset.navReady === 'true') {
+            return;
+          }
+
+          const close = () => {
+            trigger.setAttribute('aria-expanded', 'false');
+            document.documentElement.removeAttribute('data-nav-open');
+          };
+
+          trigger.addEventListener('click', () => {
+            const open = trigger.getAttribute('aria-expanded') === 'true';
+            if (open) {
+              close();
+            } else {
+              trigger.setAttribute('aria-expanded', 'true');
+              document.documentElement.setAttribute('data-nav-open', 'true');
+            }
           });
 
-          syncButtons();
-          themeButton.dataset.themeReady = 'true';
+          links.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof Element && target.closest('a[href]')) {
+              close();
+            }
+          });
+
+          window.addEventListener('resize', () => {
+            if (window.innerWidth > 720) close();
+          });
+
+          trigger.dataset.navReady = 'true';
         };
 
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initThemeControls, { once: true });
+          document.addEventListener('DOMContentLoaded', () => {
+            initThemeControls();
+            initMobileNav();
+          }, { once: true });
         } else {
           initThemeControls();
+          initMobileNav();
         }
       })();
     </script>

@@ -1,67 +1,110 @@
 ---
-import { Q, mediaTypeLabel } from '../../../data/site-helpers';
+import { Q, isPost, mediaTypeLabel } from '../../../data/site-helpers';
 import MVThumb from '../MVThumb.astro';
-import SectionHead from '../SectionHead.astro';
 
 interface Props {
   entry: {
     id: string;
-    title: string;
+    title?: string;
     type: string;
+    platform?: string;
     date: string;
-    views: string;
-    description: string;
+    views?: string;
+    description?: string;
     color: string;
+    text?: string;
+    likes?: string;
+    reposts?: string;
+    readTime?: string;
+    hasImage?: boolean;
   };
 }
 
 const { entry } = Astro.props;
 const songs = Q.songsOfMedia(entry.id);
-const event = Q.eventOfMedia(entry.id);
+const postEntry = isPost(entry.type);
+
+const platformMeta = {
+  x: { mark: '𝕏', className: 'platform-badge-x' },
+  ig: { mark: '◉', className: 'platform-badge-ig' },
+  yt: { mark: '▶', className: 'platform-badge-yt' },
+  blog: { mark: '¶', className: 'platform-badge-blog' },
+} as const;
+
+const platform = platformMeta[entry.platform as keyof typeof platformMeta] ?? platformMeta.blog;
 ---
 
 <div class="detail-page-content media-detail-content">
-  <div class="detail-hero-grid detail-hero-grid-wide">
-    <MVThumb color={entry.color} label={mediaTypeLabel(entry.type).toUpperCase()} />
-    <div>
-      <div class="label-mono">{entry.date} · {mediaTypeLabel(entry.type)} · {entry.views} views</div>
-      <h1 class="detail-title">{entry.title}</h1>
-      <p class="detail-description">{entry.description}</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#">YouTubeで観る ↗</a>
-        <a class="btn" href="#">公式サイト ↗</a>
+  {
+    postEntry ? (
+      <div class="post-detail-card">
+        <div class="post-card-head">
+          <span class={`platform-badge ${platform.className}`}>{platform.mark}</span>
+          <div class="label-mono">{mediaTypeLabel(entry.type)} · {entry.date}</div>
+        </div>
+        {entry.title && <div style="font-family:'Shippori Mincho',serif;font-size:22px;letter-spacing:0.04em;line-height:1.4;">{entry.title}</div>}
+        <div style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:var(--fg);white-space:pre-wrap;">{entry.text}</div>
+        {entry.hasImage && <div class="post-detail-image" style={`--tile-color:${entry.color};`}></div>}
+        <div style="display:flex;gap:20px;font-size:12px;color:var(--fg-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
+          {entry.likes && <span>♥ {entry.likes}</span>}
+          {entry.reposts && <span>↻ {entry.reposts}</span>}
+          {entry.readTime && <span>⏱ {entry.readTime}</span>}
+        </div>
       </div>
-    </div>
-  </div>
+    ) : (
+      <MVThumb color={entry.color} label={`${mediaTypeLabel(entry.type)} · ${entry.id.toUpperCase()}`} />
+    )
+  }
 
-  <SectionHead num="01" title="関連楽曲" titleEn="Songs" />
-  <div class="rel-list">
+  {
+    !postEntry && (
+      <>
+        <div class="label-mono" style="margin-top: 28px;">
+          {entry.date} · {mediaTypeLabel(entry.type)}{entry.views ? ` · ${entry.views} views` : ''}
+        </div>
+        <h1 class="detail-title">{entry.title}</h1>
+        {entry.description && <p class="detail-description" style="margin-top: 16px;">{entry.description}</p>}
+      </>
+    )
+  }
+
+  <hr class="hairline" style="margin: 32px 0;" />
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
     {
-      songs.map(song => (
-        <a class="rel-chip" href={`/songs/${song.id}`}>
-          <div class="color-block" style={`--tile-color:${song.color};`}></div>
-          <div class="rel-copy">
-            <div class="rel-main">{song.title}</div>
-            <div class="label-mono">{song.duration} · {song.category}</div>
-          </div>
-          <span>→</span>
-        </a>
-      ))
+      postEntry ? (
+        <button class="btn" type="button">{mediaTypeLabel(entry.type)}で開く ↗</button>
+      ) : (
+        <>
+          <button class="btn" type="button">YouTubeで観る ↗</button>
+          <button class="btn" type="button">公式サイト ↗</button>
+        </>
+      )
     }
   </div>
 
   {
-    event && (
+    songs.length > 0 && (
       <>
-        <SectionHead num="02" title="紐づく出来事" titleEn="Event" />
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+          <div>
+            <span class="label-mono">SONGS</span>
+            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">{songs.length === 1 ? '関連楽曲' : '関連楽曲（複数）'}</span>
+          </div>
+          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{songs.length}</span>
+        </div>
         <div class="rel-list">
-          <a class="rel-chip" href={`/events/${event.id}`}>
-            <div class="rel-copy">
-              <div class="rel-main">{event.title}</div>
-              <div class="label-mono">{event.date} · {event.category} · {event.venue}</div>
-            </div>
-            <span>→</span>
-          </a>
+          {
+            songs.map(song => (
+              <a class="rel-chip" href={`/songs/${song.id}`}>
+                <div class="color-block" style={`--tile-color:${song.color};width:38px;height:38px;flex-shrink:0;`}></div>
+                <div class="rel-copy">
+                  <div class="rel-main">{song.title}</div>
+                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{song.category}</div>
+                </div>
+                <span style="color:var(--fg-faint);font-size:14px;">→</span>
+              </a>
+            ))
+          }
         </div>
       </>
     )

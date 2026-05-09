@@ -1,5 +1,4 @@
 ---
-import { DetailDrawer } from '../../components/viewer/DetailDrawer';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import { Q, sortedReleases } from '../../data/site-helpers';
@@ -11,10 +10,25 @@ const releases = sortedReleases();
 <Layout pageTitle="Releases">
   <section class="shell page-section">
     <SectionHead num="—" title="リリース" titleEn={`Releases / ${releases.length} entries`} />
-    <div class="release-grid">
+
+    <div class="viewer-filters" data-releases-controls>
+      <button class="btn is-active" type="button" data-release-filter="all">すべて ({releases.length})</button>
+      <button class="btn" type="button" data-release-filter="album">アルバム</button>
+      <button class="btn" type="button" data-release-filter="single">シングル</button>
+      <div class="viewer-filters-spacer"></div>
+      <input class="viewer-search" type="text" placeholder="タイトル・形式・収録曲を検索..." data-release-query />
+    </div>
+
+    <div class="release-grid" data-releases-layout-root>
       {
         releases.map(release => (
-          <a href={`/releases/${release.id}`} class="release-card">
+          <a
+            href={`/releases/${release.id}`}
+            class="release-card"
+            data-release-entry
+            data-release-type={release.type.toLowerCase()}
+            data-release-search={`${release.title} ${release.format} ${release.type} ${Q.songsOfRelease(release.id).map(song => song.title).join(' ')}`.toLowerCase()}
+          >
             <JacketArt color={release.color} label={release.title} />
             <div class="release-card-body">
               <div class="release-card-meta">
@@ -29,5 +43,54 @@ const releases = sortedReleases();
       }
     </div>
   </section>
-  <DetailDrawer client:load />
 </Layout>
+
+<script is:inline>
+  (() => {
+    const initReleaseFilters = () => {
+      const root = document.querySelector('[data-releases-controls]');
+      const layoutRoot = document.querySelector('[data-releases-layout-root]');
+      if (!(root instanceof HTMLElement) || root.dataset.ready === 'true') return;
+      if (!(layoutRoot instanceof HTMLElement)) return;
+      const buttons = [...root.querySelectorAll('[data-release-filter]')];
+      const query = root.querySelector('[data-release-query]');
+      if (!(query instanceof HTMLInputElement)) return;
+
+      let filter = 'all';
+
+      const getEntries = () => [...layoutRoot.querySelectorAll('[data-release-entry]')];
+
+      const apply = () => {
+        const q = query.value.trim().toLowerCase();
+        for (const entry of getEntries()) {
+          if (!(entry instanceof HTMLElement)) continue;
+          const type = entry.dataset.releaseType || 'all';
+          const text = entry.dataset.releaseSearch || '';
+          const visible = (filter === 'all' || filter === type) && (q === '' || text.includes(q));
+          entry.style.display = visible ? '' : 'none';
+        }
+      };
+
+      for (const button of buttons) {
+        if (!(button instanceof HTMLButtonElement)) continue;
+        button.addEventListener('click', () => {
+          filter = button.dataset.releaseFilter || 'all';
+          for (const other of buttons) {
+            if (other instanceof HTMLElement) other.classList.toggle('is-active', other === button);
+          }
+          apply();
+        });
+      }
+
+      query.addEventListener('input', apply);
+      apply();
+      root.dataset.ready = 'true';
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initReleaseFilters, { once: true });
+    } else {
+      initReleaseFilters();
+    }
+  })();
+</script>

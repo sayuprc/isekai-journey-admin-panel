@@ -1,15 +1,12 @@
 ---
-import { Q } from '../../../data/site-helpers';
+import { Q, mediaTypeLabel } from '../../../data/site-helpers';
 import JacketArt from '../JacketArt.astro';
-import SectionHead from '../SectionHead.astro';
 
 interface Props {
   song: {
     id: string;
     title: string;
-    titleEn: string;
     category: string;
-    duration: string;
     composer: string;
     lyricist: string;
     arranger: string;
@@ -20,74 +17,89 @@ interface Props {
 
 const { song } = Astro.props;
 const releases = Q.releasesOfSong(song.id);
-const performances = Q.performancesOfSong(song.id).sort((a, b) => b.date.localeCompare(a.date));
 const media = Q.mediaOfSong(song.id);
 ---
 
 <div class="detail-page-content song-detail-content">
-  <div class="detail-hero-grid">
-    <JacketArt color={song.color} label={song.titleEn} />
-    <div>
-      <div class="label-mono">{Q.firstReleaseDateOfSong(song.id) ?? '—'} · {song.category} · {song.duration}</div>
-      <h1 class="detail-title">{song.title}</h1>
-      <div class="detail-title-en">{song.titleEn}</div>
-      <p class="detail-description">{song.description}</p>
-      <div class="detail-meta-grid">
-        <div><span class="label-mono">COMPOSER</span><strong>{song.composer}</strong></div>
-        <div><span class="label-mono">LYRICIST</span><strong>{song.lyricist}</strong></div>
-        <div><span class="label-mono">ARRANGER</span><strong>{song.arranger}</strong></div>
-        <div><span class="label-mono">CATEGORY</span><strong>{song.category}</strong></div>
-      </div>
+  <JacketArt color={song.color} label={song.title} />
+  <div class="label-mono" style="margin-top: 28px;">{song.category}</div>
+  <h1 class="detail-title">{song.title}</h1>
+  <p class="detail-description" style="margin-top: 24px;">{song.description}</p>
+
+  <hr class="hairline" style="margin: 32px 0;" />
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;font-size:13px;">
+    <div><div class="label-mono">CATEGORY</div><div style="margin-top:4px;">{song.category}</div></div>
+    <div><div class="label-mono">COMPOSER / 作曲</div><div style="margin-top:4px;">{song.composer}</div></div>
+    <div><div class="label-mono">LYRICIST / 作詞</div><div style="margin-top:4px;">{song.lyricist}</div></div>
+    <div><div class="label-mono">ARRANGER / 編曲</div><div style="margin-top:4px;">{song.arranger}</div></div>
+  </div>
+
+  <div class="stat-bar">
+    <div class="stat-cell">
+      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{releases.length}</div>
+      <div class="label-mono" style="margin-top: 6px;">RELEASES</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">リリース</div>
+    </div>
+    <div class="stat-cell">
+      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{media.length}</div>
+      <div class="label-mono" style="margin-top: 6px;">MEDIA</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">映像</div>
     </div>
   </div>
 
-  <SectionHead num="01" title="収録リリース" titleEn="Releases" />
-  <div class="rel-list">
-    {
-      releases.map(release => (
-        <a class="rel-chip" href={`/releases/${release.id}`}>
-          <div class="color-block" style={`--tile-color:${release.color};`}></div>
-          <div class="rel-copy">
-            <div class="rel-main">{release.title}</div>
-            <div class="label-mono">{release.date} · {release.type}</div>
+  {
+    releases.length > 0 && (
+      <>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+          <div>
+            <span class="label-mono">RELEASES</span>
+            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">収録リリース</span>
           </div>
-          <span>→</span>
-        </a>
-      ))
-    }
-  </div>
+          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{releases.length}</span>
+        </div>
+        <div class="rel-list">
+          {
+            releases.map(release => (
+              <a class="rel-chip" href={`/releases/${release.id}`}>
+                <div class="color-block" style={`--tile-color:${release.color};width:38px;height:38px;flex-shrink:0;`}></div>
+                <div class="rel-copy">
+                  <div class="rel-main">{release.title}</div>
+                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{release.date} · {release.type}</div>
+                </div>
+                <span style="color:var(--fg-faint);font-size:14px;">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </>
+    )
+  }
 
-  <SectionHead num="02" title="関連メディア" titleEn="Media" />
-  <div class="rel-list">
-    {
-      media.map(entry => (
-        <a class="rel-chip" href={`/media/${entry.id}`}>
-          <div class="color-block" style={`--tile-color:${entry.color};`}></div>
-          <div class="rel-copy">
-            <div class="rel-main">{entry.title}</div>
-            <div class="label-mono">{entry.date} · {entry.type}</div>
+  {
+    media.length > 0 && (
+      <>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+          <div>
+            <span class="label-mono">MEDIA</span>
+            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">関連メディア</span>
           </div>
-          <span>→</span>
-        </a>
-      ))
-    }
-  </div>
-
-  <SectionHead num="03" title="歌唱履歴" titleEn="Performances" />
-  <div class="rel-list">
-    {
-      performances.map((performance) => {
-        const event = Q.event(performance.eventId);
-        return (
-          <a class="rel-chip" href={`/events/${performance.eventId}`}>
-            <div class="rel-copy">
-              <div class="rel-main">{event?.title ?? '—'}</div>
-              <div class="label-mono">{performance.date} · {event?.category ?? ''}{performance.note ? ` · ${performance.note}` : ''}</div>
-            </div>
-            <span>→</span>
-          </a>
-        );
-      })
-    }
-  </div>
+          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{media.length}</span>
+        </div>
+        <div class="rel-list">
+          {
+            media.map(entry => (
+              <a class="rel-chip" href={`/media/${entry.id}`}>
+                <div class="color-block" style={`--tile-color:${entry.color};width:38px;height:38px;flex-shrink:0;`}></div>
+                <div class="rel-copy">
+                  <div class="rel-main">{entry.title}</div>
+                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{entry.date} · {mediaTypeLabel(entry.type)}</div>
+                </div>
+                <span style="color:var(--fg-faint);font-size:14px;">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </>
+    )
+  }
 </div>

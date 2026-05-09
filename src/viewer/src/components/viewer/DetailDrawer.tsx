@@ -1,35 +1,20 @@
-import { Show, createSignal, onMount } from 'solid-js';
+import { Show, createMemo, createSignal, onMount } from 'solid-js';
 import { kindLabel } from '../../data/site-helpers';
+
+type DrawerKind = 'song' | 'release' | 'media';
 
 interface DrawerTarget {
   fragmentPath: string;
   id: string;
-  kind: 'song' | 'release' | 'media' | 'event';
+  kind: DrawerKind;
   pathname: string;
 }
 
 const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
   const patterns = [
-    {
-      fragment: '/fragments/songs/',
-      kind: 'song' as const,
-      prefix: '/songs/',
-    },
-    {
-      fragment: '/fragments/releases/',
-      kind: 'release' as const,
-      prefix: '/releases/',
-    },
-    {
-      fragment: '/fragments/media/',
-      kind: 'media' as const,
-      prefix: '/media/',
-    },
-    {
-      fragment: '/fragments/events/',
-      kind: 'event' as const,
-      prefix: '/events/',
-    },
+    { fragment: '/fragments/songs/', kind: 'song' as const, prefix: '/songs/' },
+    { fragment: '/fragments/releases/', kind: 'release' as const, prefix: '/releases/' },
+    { fragment: '/fragments/media/', kind: 'media' as const, prefix: '/media/' },
   ];
 
   for (const pattern of patterns) {
@@ -48,14 +33,18 @@ const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
 };
 
 export const DetailDrawer = () => {
+  const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
-  const [current, setCurrent] = createSignal<DrawerTarget | null>(null);
   const [isLoading, setIsLoading] = createSignal(false);
   const [shareLabel, setShareLabel] = createSignal('共有');
   let bodyRef: HTMLDivElement | undefined;
 
+  const current = createMemo(() => {
+    const items = stack();
+    return items[items.length - 1] ?? null;
+  });
+
   const loadTarget = async (target: DrawerTarget) => {
-    setCurrent(target);
     setIsLoading(true);
 
     try {
@@ -64,9 +53,11 @@ export const DetailDrawer = () => {
         window.location.href = target.pathname;
         return;
       }
+
       const html = await response.text();
       setContent(html);
       bodyRef?.scrollTo({ top: 0, behavior: 'auto' });
+      setShareLabel('共有');
     } catch {
       window.location.href = target.pathname;
     } finally {
@@ -78,15 +69,33 @@ export const DetailDrawer = () => {
     const target = resolveDrawerTarget(pathname);
     if (!target) return false;
 
+    setStack(prev => {
+      const last = prev[prev.length - 1];
+      if (last?.pathname === target.pathname) return prev;
+      return [...prev, target];
+    });
     await loadTarget(target);
     return true;
   };
 
   const closeDrawer = () => {
-    setCurrent(null);
+    setStack([]);
     setContent('');
     setIsLoading(false);
     setShareLabel('共有');
+  };
+
+  const goBack = async () => {
+    const prev = stack();
+    if (prev.length <= 1) {
+      closeDrawer();
+      return;
+    }
+
+    const nextStack = prev.slice(0, -1);
+    const target = nextStack[nextStack.length - 1];
+    setStack(nextStack);
+    await loadTarget(target);
   };
 
   const handleShare = async () => {
@@ -157,10 +166,22 @@ export const DetailDrawer = () => {
         <div class="detail-overlay" onClick={closeDrawer}>
           <aside class="detail-panel" onClick={event => event.stopPropagation()}>
             <div class="detail-head">
-              <div class="label-mono">
-                {kindLabel(target().kind)} · {target().id.toUpperCase()}
+              <div style={{ display: 'flex', 'align-items': 'center', gap: '12px' }}>
+                <Show when={stack().length > 1}>
+                  <button class="icon-btn" type="button" onClick={() => void goBack()} title="戻る">
+                    ←
+                  </button>
+                </Show>
+                <div class="label-mono">
+                  {kindLabel(target().kind)} · {target().id.toUpperCase()}
+                </div>
               </div>
               <div class="drawer-head-actions">
+                <Show when={stack().length > 1}>
+                  <div class="label-mono" style={{ color: 'var(--fg-faint)' }}>
+                    {stack().length} 階層
+                  </div>
+                </Show>
                 <button class="icon-btn drawer-share-btn" type="button" onClick={handleShare} title="共有リンク">
                   {shareLabel()}
                 </button>
