@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { releaseServiceCreateRelease, releaseServiceGetRelease, releaseServiceSearchReleases } from '../../generated';
+import { releaseServiceCreateRelease, releaseServiceGetRelease, releaseServiceSearchReleases, releaseServiceUpdateRelease } from '../../generated';
 import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -63,6 +63,35 @@ export const releases = new Elysia({ prefix: '/releases' })
     {
       params: t.Object({
         releaseId: t.String(),
+      }),
+    },
+  )
+  .put(
+    '/:releaseId',
+    async ({ params: { releaseId }, body, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await releaseServiceUpdateRelease({
+          client,
+          path: { releaseId },
+          body,
+        }));
+      });
+    },
+    {
+      params: t.Object({
+        releaseId: t.String(),
+      }),
+      body: t.Object({
+        title: t.String(),
+        typeValue: t.Numeric(),
+        distributionTypeValue: t.Numeric(),
+        releasedOn: t.String(),
+        description: t.String(),
+        isDisplay: t.Boolean(),
+        trackEntries: t.Array(t.Object({
+          songId: t.String(),
+          trackNo: t.Number(),
+        })),
       }),
     },
   );

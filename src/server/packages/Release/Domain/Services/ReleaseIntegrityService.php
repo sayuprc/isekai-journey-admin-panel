@@ -17,7 +17,9 @@ use Release\Domain\Models\TrackEntries;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
+use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
@@ -26,6 +28,7 @@ class ReleaseIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
+        private readonly SongRepositoryInterface $songRepository,
     ) {
     }
 
@@ -48,10 +51,52 @@ class ReleaseIntegrityService
             $releasedOn,
             $description,
             $isDisplay,
+            [],
         );
     }
 
     /**
+     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     *
+     * @return Result<Release, DomainError>
+     */
+    public function prepareForUpdate(
+        string $releaseId,
+        string $title,
+        int $typeValue,
+        int $distributionTypeValue,
+        string $releasedOn,
+        string $description,
+        bool $isDisplay,
+        array $trackEntries,
+    ): Result {
+        $result = $this->build(
+            $releaseId,
+            $title,
+            $typeValue,
+            $distributionTypeValue,
+            $releasedOn,
+            $description,
+            $isDisplay,
+            $trackEntries,
+        );
+
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $release = $result->unwrap();
+
+        if (! $this->existsSongs($release->trackEntries)) {
+            return new Err(new BusinessRuleViolationError('指定された楽曲の一部が存在しません。'));
+        }
+
+        return new Ok($release);
+    }
+
+    /**
+     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     *
      * @return Result<Release, DomainError>
      */
     private function build(
@@ -62,7 +107,14 @@ class ReleaseIntegrityService
         string $releasedOn,
         string $description,
         bool $isDisplay,
+        array $trackEntries,
     ): Result {
+        $trackEntriesResult = TrackEntries::fromArray($trackEntries);
+
+        if ($trackEntriesResult->isErr()) {
+            return new Err($trackEntriesResult->unwrapErr());
+        }
+
         return Result::collect6(
             ReleaseId::create($releaseId),
             ReleaseTitle::create($title),
@@ -82,7 +134,18 @@ class ReleaseIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Release => new Release(...[...$values, $isDisplay, new TrackEntries([])]));
+            ->map(fn (array $values): Release => new Release(...[...$values, $isDisplay, $trackEntriesResult->unwrap()]));
+    }
+
+    private function existsSongs(TrackEntries $trackEntries): bool
+    {
+        foreach ($trackEntries as $trackEntry) {
+            if (is_null($this->songRepository->find($trackEntry->songId))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
