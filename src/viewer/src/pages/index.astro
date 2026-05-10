@@ -22,7 +22,7 @@ const posts = latestPosts(3);
         <div class="hero-en hero-en-whisper">Isekai Observatory</div>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
-          <a class="btn" href="/media">映像を観る</a>
+          {/* <a class="btn" href="/media">映像を観る</a> */}
         </div>
       </div>
       <div class="hero-data-stats">
@@ -33,6 +33,7 @@ const posts = latestPosts(3);
             <em>songs</em>
           </div>
         </div>
+        {/*
         <div class="hero-data-stat hero-data-stat-row">
           <strong>{SITE_DATA.releases.length}</strong>
           <div class="hero-data-stat-copy">
@@ -47,6 +48,7 @@ const posts = latestPosts(3);
             <em>media</em>
           </div>
         </div>
+        */}
         <div class="hero-data-stat hero-data-stat-row">
           <strong>{new Date().getFullYear() - 2020}</strong>
           <div class="hero-data-stat-copy">
@@ -58,6 +60,7 @@ const posts = latestPosts(3);
     </div>
   </section>
 
+  {/*
   <section class="shell">
     <SectionHead num="01" title="最新リリース" titleEn="Latest Release" />
     {
@@ -123,4 +126,5 @@ const posts = latestPosts(3);
       </section>
     )
   }
+  */}
 </Layout>

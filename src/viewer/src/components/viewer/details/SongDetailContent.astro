@@ -36,11 +36,13 @@ const media = Q.mediaOfSong(song.id);
   </div>
 
   <div class="stat-bar">
-    <div class="stat-cell">
-      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{releases.length}</div>
-      <div class="label-mono" style="margin-top: 6px;">RELEASES</div>
-      <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">リリース</div>
-    </div>
+    {/*
+      <div class="stat-cell">
+        <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{releases.length}</div>
+        <div class="label-mono" style="margin-top: 6px;">RELEASES</div>
+        <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">リリース</div>
+      </div>
+    */}
     <div class="stat-cell">
       <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{media.length}</div>
       <div class="label-mono" style="margin-top: 6px;">MEDIA</div>
@@ -48,7 +50,7 @@ const media = Q.mediaOfSong(song.id);
     </div>
   </div>
 
-  {
+  {/* {
     releases.length > 0 && (
       <>
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
@@ -74,7 +76,7 @@ const media = Q.mediaOfSong(song.id);
         </div>
       </>
     )
-  }
+  } */}
 
   {
     media.length > 0 && (
