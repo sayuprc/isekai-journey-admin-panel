@@ -1,14 +1,16 @@
 ---
 import SongDetailContent from '../../../components/viewer/details/SongDetailContent.astro';
-import { SITE_DATA } from '../../../data/mock/site-data';
+import { songRepository } from '../../../features/songs/api';
 
 export const partial = true;
 
-export function getStaticPaths() {
-  return SITE_DATA.songs.map(song => ({ params: { songId: song.id }, props: { song } }));
+export async function getStaticPaths() {
+  return (await songRepository.list()).map(song => ({ params: { songId: song.songId } }));
 }
 
-const { song } = Astro.props;
+const { songId } = Astro.params;
+
+// TODO ここで songId を使って詳細を検索してデータを獲得する
 ---
 
-<SongDetailContent song={song} />
+<!-- <SongDetailContent song={song} /> -->
