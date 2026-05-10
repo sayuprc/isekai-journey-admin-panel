@@ -42,8 +42,8 @@ readonly class SongQueryService implements SongQueryServiceInterface
             ->withCount([
                 'songMediaLinks as media_count' => fn (Builder $query) => $query
                     ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true)),
-                'releases as release_count' => fn (Builder $query) => $query
-                    ->where('is_display', true),
+                // 'releases as release_count' => fn (Builder $query) => $query
+                //     ->where('is_display', true),
             ])
             ->orderBy('order_no')
             ->orderBy('song_id');
@@ -66,7 +66,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             ->map(function (Song $song): SongListItem {
                 // 直接 $song から取得しようとすると静的解析でエラーになるため回避策として getAttribute を呼び出している
                 // 将来的に Eloquent をやめてこの回避策をしなくてもいいようにする
-                $releaseCount = $song->getAttribute('release_count');
+                // $releaseCount = $song->getAttribute('release_count');
                 $mediaCount = $song->getAttribute('media_count');
 
                 return new SongListItem(
@@ -77,7 +77,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     $this->personNamesByRole($song, SongPersonRole::Lyricist),
                     $this->personNamesByRole($song, SongPersonRole::Composer),
                     $this->personNamesByRole($song, SongPersonRole::Arranger),
-                    is_numeric($releaseCount) ? (int)$releaseCount : 0,
+                    // is_numeric($releaseCount) ? (int)$releaseCount : 0,
                     is_numeric($mediaCount) ? (int)$mediaCount : 0,
                     $song->order_no,
                 );

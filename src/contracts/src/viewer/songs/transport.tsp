@@ -18,7 +18,10 @@ scalar limit extends int32;
       title: "描き続けた君へ",
       description: "楽曲説明",
       type: #{ name: "オリジナル曲", value: SongTypeValue.original },
-      counts: #{ releaseCount: 1, mediaCount: 3 },
+      counts: #{
+        // releaseCount: 1,
+        mediaCount: 3,
+      },
       lyricists: #["作詞者"],
       composers: #["作曲者"],
       arrangers: #["編曲者"],

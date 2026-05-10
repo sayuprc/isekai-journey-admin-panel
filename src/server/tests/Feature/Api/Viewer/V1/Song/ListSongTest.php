@@ -139,7 +139,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => ['作曲花子'],
                         'arrangers' => ['編曲次郎'],
                         'counts' => [
-                            'releaseCount' => 1,
+                            // 'releaseCount' => 1,
                             'mediaCount' => 1,
                         ],
                     ],
@@ -170,7 +170,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => [],
                         'arrangers' => [],
                         'counts' => [
-                            'releaseCount' => 0,
+                            // 'releaseCount' => 0,
                             'mediaCount' => 1,
                         ],
                     ],
