@@ -27,6 +27,6 @@ async function listAll(): Promise<Song[]> {
   return songs;
 }
 
-export const songsRepo = {
+export const songRepository = {
   list: listAll,
 };

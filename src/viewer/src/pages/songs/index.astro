@@ -3,10 +3,12 @@ import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import LayoutSwitcher from '../../components/viewer/LayoutSwitcher';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { Q, SITE_DATA } from '../../data/mock/site-data';
+import { songRepository } from '../../features/songs/api'
 import Layout from '../../layouts/Layout.astro';
 
-const songs = SITE_DATA.songs;
+const songs = await songRepository.list();
+
+// TODO JacketArt をどうするか決める必要がある
 ---
 
 <Layout pageTitle="楽曲">
@@ -29,13 +31,13 @@ const songs = SITE_DATA.songs;
       client:load
       filters={[
         { value: 'all', label: `すべて (${songs.length})` },
-        { value: 'original', label: 'オリジナル' },
-        { value: 'cover', label: 'カバー' },
+        { value: '1', label: 'オリジナル' },
+        { value: '2', label: 'カバー' },
       ]}
       entrySelector="[data-song-entry]"
       categoryAttrs={['songCategory']}
       searchAttr="songSearch"
-      searchPlaceholder="タイトル・読み・クレジットを検索..."
+      searchPlaceholder="タイトル・作者を検索..."
     />
 
     <div data-layout-group="songs">
@@ -43,23 +45,22 @@ const songs = SITE_DATA.songs;
         <div class="song-grid">
           {
             songs.map(song => {
-              const stats = Q.songStats(song.id);
               return (
                 <a
-                  href={`/songs/${song.id}`}
+                  href={`/songs/${song.songId}`}
                   class="song-grid-card"
                   data-song-entry
-                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
-                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                  data-song-category={song.type.value}
+                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
                 >
                   <JacketArt color={song.color} label={song.title} />
                   <div class="song-grid-body">
                     <div class="song-grid-meta">
-                      <span class="pill">{song.category}</span>
+                      <span class="pill">{song.type.name}</span>
                       <div class="song-meta-inline">
                         {/* <span>{stats.releases} rel</span> */}
-                        <span>{stats.performances} live</span>
-                        <span>{stats.media} mv</span>
+                        {/* <span>{stats.performances} live</span> */}
+                        <span>{song.counts.mediaCount} mv</span>
                       </div>
                     </div>
                     <div class="song-grid-title">{song.title}</div>
@@ -83,23 +84,22 @@ const songs = SITE_DATA.songs;
           </div>
           {
             songs.map((song, index) => {
-              const stats = Q.songStats(song.id);
               return (
                 <a
-                  href={`/songs/${song.id}`}
+                  href={`/songs/${song.songId}`}
                   class="tbl-row tbl-body"
                   data-song-entry
-                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
-                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                  data-song-category={song.type.value}
+                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
                 >
                   <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
                   <div>
                     <div class="table-title">{song.title}</div>
                   </div>
-                  <span class="pill">{song.category}</span>
+                  <span class="pill">{song.type.name}</span>
                   {/* <span class="num-cell">{stats.releases}</span> */}
                   {/* <span class="num-cell">{stats.performances}</span> */}
-                  <span class="num-cell">{stats.media}</span>
+                  <span class="num-cell">{song.counts.mediaCount}</span>
                 </a>
               );
             })
@@ -111,24 +111,23 @@ const songs = SITE_DATA.songs;
         <div class="songs-card-grid">
           {
             songs.map(song => {
-              const stats = Q.songStats(song.id);
               return (
                 <a
-                  href={`/songs/${song.id}`}
+                  href={`/songs/${song.songId}`}
                   class="song-card"
                   data-song-entry
-                  data-song-category={song.category === 'オリジナル' ? 'original' : 'cover'}
-                  data-song-search={`${song.title} ${song.lyricist} ${song.composer} ${song.description}`.toLowerCase()}
+                  data-song-category={song.type.value}
+                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
                 >
-                  <JacketArt color={song.color} label={song.id} />
+                  <JacketArt color={song.color} label={song.songId} />
                   <div class="song-card-body">
-                    <div class="label-mono">{song.category}</div>
+                    <div class="label-mono">{song.type.name}</div>
                     <div class="timeline-title">{song.title}</div>
                     <p class="song-grid-description">{song.description}</p>
                     <div class="song-card-stats">
                       {/* <div><span class="detail-index">{stats.releases}</span><span class="label-mono">releases</span></div> */}
                       {/* <div><span class="detail-index">{stats.performances}</span><span class="label-mono">歌唱</span></div> */}
-                      <div><span class="detail-index">{stats.media}</span><span class="label-mono">media</span></div>
+                      <div><span class="detail-index">{song.counts.mediaCount}</span><span class="label-mono">media</span></div>
                     </div>
                   </div>
                 </a>
