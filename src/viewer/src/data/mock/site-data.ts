@@ -2,7 +2,119 @@
 // 各エンティティをID付き正規化データとして保持し、IDで関係を結ぶ
 // すべて架空のダミーデータ（後で差し替え可能）
 
-export const THEMES = [
+export type ThemeTone = 'dark' | 'light';
+
+export type Theme = {
+  value: string;
+  jp: string;
+  en: string;
+  tone: ThemeTone;
+  costume: string | null;
+  swatch: [string, string, string, string];
+};
+
+export type SongCategory = 'オリジナル' | 'カバー';
+
+export type Song = {
+  id: string;
+  title: string;
+  category: SongCategory;
+  composer: string;
+  lyricist: string;
+  arranger: string;
+  color: string;
+  description: string;
+};
+
+export type ReleaseType = 'Single' | 'Album';
+
+export type Release = {
+  id: string;
+  title: string;
+  date: string;
+  type: ReleaseType;
+  format: string;
+  label: string;
+  songIds: string[];
+  color: string;
+  description?: string;
+};
+
+export type EventCategory = 'ライブ' | '配信' | 'フェス' | 'メディア' | 'コラボ' | 'リリイベ';
+export type EventStatus = '予定' | '終了';
+
+export type AppearanceEvent = {
+  id: string;
+  date: string;
+  title: string;
+  venue: string;
+  category: EventCategory;
+  status: EventStatus;
+  description: string;
+};
+
+export type Performance = {
+  id: string;
+  songId: string;
+  eventId: string;
+  date: string;
+  note?: string;
+};
+
+export type VideoMediaType = 'mv' | 'live-clip' | 'interview' | 'short';
+export type PostMediaType = 'tweet' | 'instagram' | 'youtube-community' | 'blog';
+export type MediaType = VideoMediaType | PostMediaType;
+
+export type MediaPlatform = 'x' | 'ig' | 'yt' | 'blog';
+
+// 映像と投稿が同じ配列に同居しているため flat な型で定義する。
+// 種別は `type` で判別し、種別に応じて使用するフィールドが異なる。
+export type MediaEntry = {
+  id: string;
+  type: MediaType;
+  date: string;
+  songIds: string[];
+  eventId: string | null;
+  color: string;
+  // 映像系で使用
+  title?: string;
+  views?: string;
+  description?: string;
+  // 投稿系で使用
+  platform?: MediaPlatform;
+  text?: string;
+  likes?: string;
+  reposts?: string;
+  hasImage?: boolean;
+  readTime?: string;
+};
+
+export type NewsCategory = 'LIVE' | 'RELEASE' | 'GOODS' | 'MEDIA';
+
+export type NewsItem = {
+  date: string;
+  title: string;
+  category: NewsCategory;
+};
+
+export type Artist = {
+  name: string;
+  nameEn: string;
+  tagline: string;
+  debut: string;
+};
+
+export type SiteData = {
+  artist: Artist;
+  songs: Song[];
+  releases: Release[];
+  events: AppearanceEvent[];
+  performances: Performance[];
+  media: MediaEntry[];
+  news: NewsItem[];
+};
+
+export const THEMES: Theme[] = [
   { value: 'anemone-1', jp: 'アネモネ Ⅰ', en: 'Anemone I', tone: 'dark', costume: null, swatch: ['#0F0F11', '#E63946', '#3A6D8C', '#9CA3AF'] },
   { value: 'anemone-2', jp: 'アネモネ Ⅱ', en: 'Anemone II', tone: 'light', costume: null, swatch: ['#F0F5F9', '#38BDF8', '#E05A65', '#8B7BB1'] },
   { value: 'nemophila-1', jp: 'ネモフィラ Ⅰ', en: 'Nemophila I', tone: 'light', costume: null, swatch: ['#F0F8FF', '#3A8DDE', '#8BC6EC', '#E2F0F9'] },
@@ -11,9 +123,9 @@ export const THEMES = [
   { value: 'sunflower-2', jp: 'サンフラワー Ⅱ', en: 'Sunflower II', tone: 'dark', costume: null, swatch: ['#232428', '#F5C033', '#8B5A2B', '#E09E19'] },
 ];
 
-export const LIGHT_PALETTES = new Set(THEMES.filter(theme => theme.tone === 'light').map(theme => theme.value));
+export const LIGHT_PALETTES: Set<string> = new Set(THEMES.filter(theme => theme.tone === 'light').map(theme => theme.value));
 
-export const SITE_DATA = {
+export const SITE_DATA: SiteData = {
   artist: {
     name: 'ヰ世界情緒',
     nameEn: 'Isekai Joucho',
@@ -21,7 +133,6 @@ export const SITE_DATA = {
     debut: '2020.09.05',
   },
 
-  // ─── 楽曲 (Songs) ─── 基本情報のみ
   songs: [
     { id: 's01', title: '夜光の標', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#3a4a72', description: '深い夜の海を泳ぐような、静謐なバラード。' },
     { id: 's02', title: '白昼夢の輪郭', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#6b7a99', description: '夢と現の境目で揺れる旋律。' },
@@ -40,8 +151,6 @@ export const SITE_DATA = {
     { id: 's15', title: '初めての朝', category: 'オリジナル', composer: '—', lyricist: '—', arranger: '—', color: '#6e85ac', description: 'デビュー楽曲。' },
   ],
 
-  // ─── リリース (Releases) ─── アルバム・シングル・配信など
-  // songIds: 収録楽曲のIDリスト
   releases: [
     { id: 'r01', title: '夜光の標', date: '2024.11.20', type: 'Single', format: 'Digital', label: '—', songIds: ['s01'], color: '#3a4a72' },
     { id: 'r02', title: '白昼夢の輪郭', date: '2024.07.03', type: 'Single', format: 'Digital', label: '—', songIds: ['s02'], color: '#6b7a99' },
@@ -57,7 +166,6 @@ export const SITE_DATA = {
     { id: 'r12', title: '初めての朝', date: '2020.09.05', type: 'Single', format: 'Digital', label: '—', songIds: ['s15'], description: 'デビューシングル。', color: '#6e85ac' },
   ],
 
-  // ─── 出来事 (Events) ─── ライブ、配信、フェス、メディア出演など
   events: [
     { id: 'e01', date: '2025.03.21', title: 'Spring Voyage 2025', venue: 'TOKYO GARDEN THEATER', category: 'ライブ', status: '予定', description: '春の単独公演。' },
     { id: 'e02', date: '2024.12.31', title: 'Year-End Special Live', venue: 'オンライン配信', category: '配信', status: '終了', description: '年越し配信ライブ。' },
@@ -76,8 +184,6 @@ export const SITE_DATA = {
     { id: 'e15', date: '2022.05.04', title: 'GW Special Stream', venue: 'オンライン配信', category: '配信', status: '終了', description: 'GW特別配信。' },
   ],
 
-  // ─── 歌唱 (Performances) ─── 楽曲が実際に歌われた事実
-  // songId: 歌った楽曲 / eventId: その出来事 / type: 'live' | 'studio' | 'cover'
   performances: [
     { id: 'p01', songId: 's01', eventId: 'e02', date: '2024.12.31', note: '新曲披露' },
     { id: 'p02', songId: 's01', eventId: 'e03', date: '2024.10.15' },
@@ -111,8 +217,6 @@ export const SITE_DATA = {
     { id: 'p30', songId: 's03', eventId: 'e01', date: '2025.03.21', note: '予定' },
   ],
 
-  // ─── 楽曲メディア (Media) ─── MV・インタビュー・切り抜き・SNS投稿など
-  // songIds: 関連楽曲（複数可） / eventId: 紐づく出来事（任意）
   media: [
     { id: 'm01', type: 'mv', title: '夜光の標 [Music Video]', date: '2024.11.20', views: '1.2M', songIds: ['s01'], eventId: null, color: '#3a4a72', description: '深海の中、光を辿る情緒。' },
     { id: 'm02', type: 'mv', title: '白昼夢の輪郭 [Music Video]', date: '2024.07.03', views: '892K', songIds: ['s02'], eventId: null, color: '#6b7a99', description: '白い部屋、揺れるカーテン、夢の輪郭。' },
@@ -141,7 +245,6 @@ export const SITE_DATA = {
     { id: 'p08', type: 'tweet', platform: 'x', date: '2023.12.20', songIds: ['s08'], eventId: 'e08', color: '#2c3e5e', text: 'vol.2 終演しました。最後の『残響アーカイブ』、客席のペンライトが本当に綺麗で。', likes: '24.1K', reposts: '6.5K' },
   ],
 
-  // ─── ニュース ───
   news: [
     { date: '2025.02.10', title: 'Spring Voyage 2025 チケット先行受付開始', category: 'LIVE' },
     { date: '2025.01.28', title: '新曲『夜光の標』ストリーミング配信開始', category: 'RELEASE' },
@@ -152,73 +255,78 @@ export const SITE_DATA = {
 };
 
 // ─── リレーショナルアクセサ ───
-// 様々な角度からデータを横断的に取得するヘルパー群
-export const Q = {
-  // by id
-  song: id => SITE_DATA.songs.find(s => s.id === id),
-  event: id => SITE_DATA.events.find(e => e.id === id),
-  release: id => SITE_DATA.releases.find(r => r.id === id),
-  media: id => SITE_DATA.media.find(m => m.id === id),
-  performance: id => SITE_DATA.performances.find(p => p.id === id),
+export type SongStats = {
+  releases: number;
+  performances: number;
+  media: number;
+  events: number;
+};
 
-  // 楽曲を起点に
-  releasesOfSong: songId => SITE_DATA.releases.filter(r => r.songIds.includes(songId)),
-  performancesOfSong: songId => SITE_DATA.performances.filter(p => p.songId === songId),
-  mediaOfSong: songId => SITE_DATA.media.filter(m => m.songIds.includes(songId)),
-  eventsOfSong: (songId) => {
+export type EventStats = {
+  songs: number;
+  media: number;
+};
+
+export const Q = {
+  song: (id: string): Song | undefined => SITE_DATA.songs.find(s => s.id === id),
+  event: (id: string): AppearanceEvent | undefined => SITE_DATA.events.find(e => e.id === id),
+  release: (id: string): Release | undefined => SITE_DATA.releases.find(r => r.id === id),
+  media: (id: string): MediaEntry | undefined => SITE_DATA.media.find(m => m.id === id),
+  performance: (id: string): Performance | undefined => SITE_DATA.performances.find(p => p.id === id),
+
+  releasesOfSong: (songId: string): Release[] => SITE_DATA.releases.filter(r => r.songIds.includes(songId)),
+  performancesOfSong: (songId: string): Performance[] => SITE_DATA.performances.filter(p => p.songId === songId),
+  mediaOfSong: (songId: string): MediaEntry[] => SITE_DATA.media.filter(m => m.songIds.includes(songId)),
+  eventsOfSong: (songId: string): AppearanceEvent[] => {
     const ids = [...new Set(SITE_DATA.performances.filter(p => p.songId === songId).map(p => p.eventId))];
-    return ids.map(id => Q.event(id)).filter(Boolean);
+    return ids.map(id => Q.event(id)).filter((e): e is AppearanceEvent => e !== undefined);
   },
-  firstReleaseDateOfSong: (songId) => {
+  firstReleaseDateOfSong: (songId: string): string | null => {
     const rs = Q.releasesOfSong(songId);
     if (!rs.length) return null;
-    return rs.map(r => r.date).sort()[0];
+    return rs.map(r => r.date).sort()[0] ?? null;
   },
-  firstPerformanceDateOfSong: (songId) => {
+  firstPerformanceDateOfSong: (songId: string): string | null => {
     const ps = Q.performancesOfSong(songId);
     if (!ps.length) return null;
-    return ps.map(p => p.date).sort()[0];
+    return ps.map(p => p.date).sort()[0] ?? null;
   },
-  firstAppearanceDateOfSong: (songId) => {
-    const dates = [Q.firstReleaseDateOfSong(songId), Q.firstPerformanceDateOfSong(songId)].filter(Boolean);
+  firstAppearanceDateOfSong: (songId: string): string | null => {
+    const dates = [Q.firstReleaseDateOfSong(songId), Q.firstPerformanceDateOfSong(songId)].filter((d): d is string => d !== null);
     if (!dates.length) return null;
-    return dates.sort()[0];
+    return dates.sort()[0] ?? null;
   },
 
-  // 出来事を起点に
-  performancesAtEvent: eventId => SITE_DATA.performances.filter(p => p.eventId === eventId),
-  songsAtEvent: (eventId) => {
+  performancesAtEvent: (eventId: string): Performance[] => SITE_DATA.performances.filter(p => p.eventId === eventId),
+  songsAtEvent: (eventId: string): Song[] => {
     const ids = [...new Set(SITE_DATA.performances.filter(p => p.eventId === eventId).map(p => p.songId))];
-    return ids.map(id => Q.song(id)).filter(Boolean);
+    return ids.map(id => Q.song(id)).filter((s): s is Song => s !== undefined);
   },
-  mediaOfEvent: eventId => SITE_DATA.media.filter(m => m.eventId === eventId),
+  mediaOfEvent: (eventId: string): MediaEntry[] => SITE_DATA.media.filter(m => m.eventId === eventId),
 
-  // メディアを起点に
-  songsOfMedia: (mediaId) => {
+  songsOfMedia: (mediaId: string): Song[] => {
     const m = Q.media(mediaId);
     if (!m) return [];
-    return m.songIds.map(id => Q.song(id)).filter(Boolean);
+    return m.songIds.map(id => Q.song(id)).filter((s): s is Song => s !== undefined);
   },
-  eventOfMedia: (mediaId) => {
+  eventOfMedia: (mediaId: string): AppearanceEvent | null => {
     const m = Q.media(mediaId);
-    return m && m.eventId ? Q.event(m.eventId) : null;
+    return m && m.eventId ? Q.event(m.eventId) ?? null : null;
   },
 
-  // リリースを起点に
-  songsOfRelease: (releaseId) => {
+  songsOfRelease: (releaseId: string): Song[] => {
     const r = Q.release(releaseId);
     if (!r) return [];
-    return r.songIds.map(id => Q.song(id)).filter(Boolean);
+    return r.songIds.map(id => Q.song(id)).filter((s): s is Song => s !== undefined);
   },
 
-  // ─── サマリ（カウント表示用）───
-  songStats: songId => ({
+  songStats: (songId: string): SongStats => ({
     releases: Q.releasesOfSong(songId).length,
     performances: Q.performancesOfSong(songId).length,
     media: Q.mediaOfSong(songId).length,
     events: Q.eventsOfSong(songId).length,
   }),
-  eventStats: eventId => ({
+  eventStats: (eventId: string): EventStats => ({
     songs: Q.songsAtEvent(eventId).length,
     media: Q.mediaOfEvent(eventId).length,
   }),

@@ -1,7 +1,9 @@
 ---
+import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { Q, sortedReleases } from '../../data/site-helpers';
+import { Q } from '../../data/mock/site-data';
+import { sortedReleases } from '../../features/releases/sort';
 import Layout from '../../layouts/Layout.astro';
 
 const releases = sortedReleases();
@@ -11,15 +13,20 @@ const releases = sortedReleases();
   <section class="shell page-section">
     <SectionHead num="—" title="リリース" titleEn={`Releases / ${releases.length} entries`} />
 
-    <div class="viewer-filters" data-releases-controls>
-      <button class="btn is-active" type="button" data-release-filter="all">すべて ({releases.length})</button>
-      <button class="btn" type="button" data-release-filter="album">アルバム</button>
-      <button class="btn" type="button" data-release-filter="single">シングル</button>
-      <div class="viewer-filters-spacer"></div>
-      <input class="viewer-search" type="text" placeholder="タイトル・形式・収録曲を検索..." data-release-query />
-    </div>
+    <FilterBar
+      client:load
+      filters={[
+        { value: 'all', label: `すべて (${releases.length})` },
+        { value: 'album', label: 'アルバム' },
+        { value: 'single', label: 'シングル' },
+      ]}
+      entrySelector="[data-release-entry]"
+      categoryAttrs={['releaseType']}
+      searchAttr="releaseSearch"
+      searchPlaceholder="タイトル・形式・収録曲を検索..."
+    />
 
-    <div class="release-grid" data-releases-layout-root>
+    <div class="release-grid">
       {
         releases.map(release => (
           <a
@@ -44,53 +51,3 @@ const releases = sortedReleases();
     </div>
   </section>
 </Layout>
-
-<script is:inline>
-  (() => {
-    const initReleaseFilters = () => {
-      const root = document.querySelector('[data-releases-controls]');
-      const layoutRoot = document.querySelector('[data-releases-layout-root]');
-      if (!(root instanceof HTMLElement) || root.dataset.ready === 'true') return;
-      if (!(layoutRoot instanceof HTMLElement)) return;
-      const buttons = [...root.querySelectorAll('[data-release-filter]')];
-      const query = root.querySelector('[data-release-query]');
-      if (!(query instanceof HTMLInputElement)) return;
-
-      let filter = 'all';
-
-      const getEntries = () => [...layoutRoot.querySelectorAll('[data-release-entry]')];
-
-      const apply = () => {
-        const q = query.value.trim().toLowerCase();
-        for (const entry of getEntries()) {
-          if (!(entry instanceof HTMLElement)) continue;
-          const type = entry.dataset.releaseType || 'all';
-          const text = entry.dataset.releaseSearch || '';
-          const visible = (filter === 'all' || filter === type) && (q === '' || text.includes(q));
-          entry.style.display = visible ? '' : 'none';
-        }
-      };
-
-      for (const button of buttons) {
-        if (!(button instanceof HTMLButtonElement)) continue;
-        button.addEventListener('click', () => {
-          filter = button.dataset.releaseFilter || 'all';
-          for (const other of buttons) {
-            if (other instanceof HTMLElement) other.classList.toggle('is-active', other === button);
-          }
-          apply();
-        });
-      }
-
-      query.addEventListener('input', apply);
-      apply();
-      root.dataset.ready = 'true';
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initReleaseFilters, { once: true });
-    } else {
-      initReleaseFilters();
-    }
-  })();
-</script>

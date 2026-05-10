@@ -1,5 +1,5 @@
 import { Show, createMemo, createSignal, onMount } from 'solid-js';
-import { kindLabel } from '../../data/site-helpers';
+import { kindLabel } from '../../shared/labels';
 
 type DrawerKind = 'song' | 'release' | 'media';
 

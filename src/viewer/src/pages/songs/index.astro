@@ -1,8 +1,9 @@
 ---
+import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
-import LayoutSwitcher from '../../components/viewer/LayoutSwitcher.astro';
+import LayoutSwitcher from '../../components/viewer/LayoutSwitcher';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { Q, SITE_DATA } from '../../data/site-helpers';
+import { Q, SITE_DATA } from '../../data/mock/site-data';
 import Layout from '../../layouts/Layout.astro';
 
 const songs = SITE_DATA.songs;
@@ -12,6 +13,7 @@ const songs = SITE_DATA.songs;
   <section class="shell page-section">
     <SectionHead num="—" title="楽曲" titleEn={`Songs / ${songs.length} songs`}>
       <LayoutSwitcher
+        client:load
         slot="right"
         name="songs"
         initialValue="grid"
@@ -23,15 +25,20 @@ const songs = SITE_DATA.songs;
       />
     </SectionHead>
 
-    <div class="viewer-filters" data-songs-controls>
-      <button class="btn is-active" type="button" data-song-filter="all">すべて ({songs.length})</button>
-      <button class="btn" type="button" data-song-filter="original">オリジナル</button>
-      <button class="btn" type="button" data-song-filter="cover">カバー</button>
-      <div class="viewer-filters-spacer"></div>
-      <input class="viewer-search" type="text" placeholder="タイトル・読み・クレジットを検索..." data-song-query />
-    </div>
+    <FilterBar
+      client:load
+      filters={[
+        { value: 'all', label: `すべて (${songs.length})` },
+        { value: 'original', label: 'オリジナル' },
+        { value: 'cover', label: 'カバー' },
+      ]}
+      entrySelector="[data-song-entry]"
+      categoryAttrs={['songCategory']}
+      searchAttr="songSearch"
+      searchPlaceholder="タイトル・読み・クレジットを検索..."
+    />
 
-    <div data-layout-group="songs" data-songs-layout-root>
+    <div data-layout-group="songs">
       <div data-layout-panel="grid">
         <div class="song-grid">
           {
@@ -133,53 +140,3 @@ const songs = SITE_DATA.songs;
     </div>
   </section>
 </Layout>
-
-<script is:inline>
-  (() => {
-    const initSongsFilters = () => {
-      const root = document.querySelector('[data-songs-controls]');
-      const layoutRoot = document.querySelector('[data-songs-layout-root]');
-      if (!(root instanceof HTMLElement) || root.dataset.ready === 'true') return;
-      if (!(layoutRoot instanceof HTMLElement)) return;
-      const buttons = [...root.querySelectorAll('[data-song-filter]')];
-      const query = root.querySelector('[data-song-query]');
-      if (!(query instanceof HTMLInputElement)) return;
-
-      let filter = 'all';
-
-      const getEntries = () => [...layoutRoot.querySelectorAll('[data-song-entry]')];
-
-      const apply = () => {
-        const q = query.value.trim().toLowerCase();
-        for (const entry of getEntries()) {
-          if (!(entry instanceof HTMLElement)) continue;
-          const category = entry.dataset.songCategory || 'all';
-          const text = entry.dataset.songSearch || '';
-          const visible = (filter === 'all' || filter === category) && (q === '' || text.includes(q));
-          entry.style.display = visible ? '' : 'none';
-        }
-      };
-
-      for (const button of buttons) {
-        if (!(button instanceof HTMLButtonElement)) continue;
-        button.addEventListener('click', () => {
-          filter = button.dataset.songFilter || 'all';
-          for (const other of buttons) {
-            if (other instanceof HTMLElement) other.classList.toggle('is-active', other === button);
-          }
-          apply();
-        });
-      }
-
-      query.addEventListener('input', apply);
-      apply();
-      root.dataset.ready = 'true';
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSongsFilters, { once: true });
-    } else {
-      initSongsFilters();
-    }
-  })();
-</script>
