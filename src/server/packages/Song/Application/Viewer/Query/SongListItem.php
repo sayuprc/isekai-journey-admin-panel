@@ -21,7 +21,7 @@ readonly class SongListItem
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        public int $releaseCount,
+        // public int $releaseCount,
         public int $mediaCount,
         public int $orderNo,
     ) {
