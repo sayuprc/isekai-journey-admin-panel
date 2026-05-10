@@ -27,10 +27,6 @@ export type SongListResponse = {
 
 export type SongRelationCounts = {
     /**
-     * 関連リリース数
-     */
-    releaseCount: number;
-    /**
      * 関連メディア数
      */
     mediaCount: number;

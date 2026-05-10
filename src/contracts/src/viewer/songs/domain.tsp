@@ -28,8 +28,8 @@ model SongType {
 }
 
 model SongRelationCounts {
-  @doc("関連リリース数")
-  releaseCount: int32;
+  // @doc("関連リリース数")
+  // releaseCount: int32;
 
   @doc("関連メディア数")
   mediaCount: int32;
@@ -40,7 +40,10 @@ model SongRelationCounts {
   title: "描き続けた君へ",
   description: "楽曲説明",
   type: #{ name: "オリジナル曲", value: SongTypeValue.original },
-  counts: #{ releaseCount: 1, mediaCount: 3 },
+  counts: #{
+    // releaseCount: 1,
+    mediaCount: 3,
+  },
   lyricists: #["作詞者"],
   composers: #["作曲者"],
   arrangers: #["編曲者"],

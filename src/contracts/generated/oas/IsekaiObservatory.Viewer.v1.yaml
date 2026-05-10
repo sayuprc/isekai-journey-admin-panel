@@ -81,7 +81,6 @@ components:
             name: オリジナル曲
             value: 1
           counts:
-            releaseCount: 1
             mediaCount: 3
           lyricists:
             - 作詞者
@@ -111,7 +110,6 @@ components:
                 name: オリジナル曲
                 value: 1
               counts:
-                releaseCount: 1
                 mediaCount: 3
               lyricists:
                 - 作詞者
@@ -123,13 +121,8 @@ components:
     SongRelationCounts:
       type: object
       required:
-        - releaseCount
         - mediaCount
       properties:
-        releaseCount:
-          type: integer
-          format: int32
-          description: 関連リリース数
         mediaCount:
           type: integer
           format: int32
