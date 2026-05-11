@@ -1,17 +1,20 @@
 ---
 import MediaDetailContent from '../../components/viewer/details/MediaDetailContent.astro';
 import { SITE_DATA } from '../../data/mock/site-data';
+import type { MediaEntry } from '../../data/mock/site-data';
+import { mediaRepository } from '../../features/media/api';
 import Layout from '../../layouts/Layout.astro';
 
-export function getStaticPaths() {
-  return SITE_DATA.media.map(entry => ({ params: { mediaId: entry.id }, props: { entry } }));
+export async function getStaticPaths() {
+  return (await mediaRepository.all()).map(media => {params:{mediaId:media.mediaId}});
 }
 
-const { entry } = Astro.props;
+const { mediaId } = Astro.params;
+// TODO mediaId で詳細を取得する
 ---
 
-<Layout pageTitle={entry.title ?? entry.date}>
+<!-- <Layout pageTitle={entry.title ?? entry.date}>
   <section class="shell page-section detail-page">
     <MediaDetailContent entry={entry} />
   </section>
-</Layout>
+</Layout> -->
