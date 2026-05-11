@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
+import type { MediaServiceListMediaData, MediaServiceListMediaErrors, MediaServiceListMediaResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -17,6 +17,11 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+/**
+ * メディア一覧取得API
+ */
+export const mediaServiceListMedia = <ThrowOnError extends boolean = false>(options?: Options<MediaServiceListMediaData, ThrowOnError>) => (options?.client ?? client).get<MediaServiceListMediaResponses, MediaServiceListMediaErrors, ThrowOnError>({ url: '/media', ...options });
 
 /**
  * 楽曲一覧取得API

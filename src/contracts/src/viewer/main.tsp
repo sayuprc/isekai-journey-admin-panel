@@ -1,5 +1,6 @@
 import "@typespec/http";
 import "@typespec/versioning";
+import "./media";
 import "./songs";
 
 using Http;

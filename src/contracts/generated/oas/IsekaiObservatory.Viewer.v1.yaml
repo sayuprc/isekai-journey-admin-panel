@@ -3,8 +3,37 @@ info:
   title: ヰ世界観測所 API
   version: v1
 tags:
+  - name: Media
   - name: Song
 paths:
+  /media:
+    get:
+      operationId: MediaService_listMedia
+      description: メディア一覧取得API
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/cursor'
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/limit'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaListResponse'
+        '500':
+          description: Server error
+      tags:
+        - Media
   /songs:
     get:
       operationId: SongService_listSongs
@@ -73,6 +102,89 @@ components:
       type: string
       enum:
         - v1
+    MediaFormat:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaFormatName'
+        value:
+          $ref: '#/components/schemas/MediaFormatValue'
+      examples:
+        - name: MV
+          value: 1
+    MediaFormatValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 99
+      description: メディア形式の値
+    MediaListItem:
+      type: object
+      required:
+        - mediaId
+        - title
+        - url
+        - publishedAt
+        - type
+        - format
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
+        type:
+          $ref: '#/components/schemas/MediaType'
+        format:
+          $ref: '#/components/schemas/MediaFormat'
+      examples:
+        - mediaId: 11111111-1111-1111-1111-111111111111
+          title: 描き続けた君へ MV
+          url: https://example.com/media/1
+          publishedAt: '2024-03-01'
+          type:
+            name: 動画
+            value: 1
+          format:
+            name: MV
+            value: 1
+    MediaListResponse:
+      type: object
+      required:
+        - media
+      properties:
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaListItem'
+        nextCursor:
+          allOf:
+            - $ref: '#/components/schemas/cursor'
+          description: 続きがある場合のみ返す
+      examples:
+        - media:
+            - mediaId: 11111111-1111-1111-1111-111111111111
+              title: 描き続けた君へ MV
+              url: https://example.com/media/1
+              publishedAt: '2024-03-01'
+              type:
+                name: 動画
+                value: 1
+              format:
+                name: MV
+                value: 1
+          nextCursor: eyJwdWJsaXNoZWRBdCI6IjIwMjQtMDMtMDEiLCJtZWRpYUlkIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIn0=
     MediaType:
       type: object
       required:
@@ -334,6 +446,10 @@ components:
       minimum: 1
       maximum: 50
       description: 1 度に取得する件数
+    mediaFormatName:
+      type: string
+      minLength: 1
+      description: メディア形式名
     mediaId:
       type: string
       format: uuid
@@ -350,6 +466,10 @@ components:
       type: string
       minLength: 1
       description: 関連メディア種別名
+    mediaUrl:
+      type: string
+      format: uri
+      description: メディアURL
     songId:
       type: string
       format: uuid
