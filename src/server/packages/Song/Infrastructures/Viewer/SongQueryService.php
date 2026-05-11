@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Song\Infrastructures\Viewer;
 
 use App\Models\Song\Song;
+use App\Models\Song\SongMediaLink;
 use App\Models\Song\SongPerson;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Media\Domain\Models\MediaType;
 use Override;
+use Song\Application\Viewer\Query\SongDetail;
+use Song\Application\Viewer\Query\SongDetailMediaSummary;
 use Song\Application\Viewer\Query\SongListCursor;
 use Song\Application\Viewer\Query\SongListItem;
 use Song\Application\Viewer\Query\SongListPage;
@@ -92,6 +96,57 @@ readonly class SongQueryService implements SongQueryServiceInterface
             : SongListCursor::encode($lastSong->orderNo, $lastSong->songId);
 
         return new SongListPage($currentSongs->all(), $nextCursor);
+    }
+
+    #[Override]
+    public function get(string $songId): ?SongDetail
+    {
+        $song = Song::query()
+            ->select(['song_id', 'title', 'description', 'type', 'order_no'])
+            ->where('song_id', $this->converter->toBin($songId))
+            ->where('is_display', true)
+            // 将来的に Eloquent やめるので黙らせる
+            // @phpstan-ignore-next-line
+            ->with([
+                'persons' => fn (HasMany $query) => $query
+                    ->select(['song_id', 'person_id', 'role', 'order_no'])
+                    ->orderBy('order_no'),
+                'persons.person' => fn (BelongsTo $query) => $query
+                    ->select(['person_id', 'name']),
+                'songMediaLinks' => fn (HasMany $query) => $query
+                    ->select(['song_id', 'media_id', 'order_no'])
+                    ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true))
+                    ->orderBy('order_no'),
+                'songMediaLinks.media' => fn (BelongsTo $query) => $query
+                    ->select(['media_id', 'title', 'type', 'published_at']),
+            ])
+            ->first();
+
+        if (is_null($song)) {
+            return null;
+        }
+
+        $media = $song->songMediaLinks
+            ->toBase()
+            ->map(fn (SongMediaLink $link): SongDetailMediaSummary => new SongDetailMediaSummary(
+                $this->converter->toUuid($link->media->media_id),
+                $link->media->title,
+                MediaType::from($link->media->type),
+                $link->media->published_at->toDateTimeImmutable(),
+            ))
+            ->values()
+            ->all();
+
+        return new SongDetail(
+            $this->converter->toUuid($song->song_id),
+            $song->title,
+            $song->description,
+            SongType::from($song->type),
+            $this->personNamesByRole($song, SongPersonRole::Lyricist),
+            $this->personNamesByRole($song, SongPersonRole::Composer),
+            $this->personNamesByRole($song, SongPersonRole::Arranger),
+            $media,
+        );
     }
 
     /**

@@ -103,6 +103,7 @@ return [
     ]),
     new Define(SongComponent::Query, [
         SongComponent::Domain,
+        MediaComponent::Domain,
     ]),
     new Define(SongComponent::Assemble, [
         SongComponent::Domain,

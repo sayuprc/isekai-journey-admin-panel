@@ -5,12 +5,16 @@ import { songRepository } from '../../../features/songs/api';
 export const partial = true;
 
 export async function getStaticPaths() {
-  return (await songRepository.list()).map(song => ({ params: { songId: song.songId } }));
+  return (await songRepository.all()).map(song => ({ params: { songId: song.songId } }));
 }
 
 const { songId } = Astro.params;
 
-// TODO ここで songId を使って詳細を検索してデータを獲得する
+if (!songId) {
+  throw new Error('songId is required');
+}
+
+const song = await songRepository.get(songId);
 ---
 
-<!-- <SongDetailContent song={song} /> -->
+<SongDetailContent song={song} />

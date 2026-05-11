@@ -7,4 +7,6 @@ namespace Song\Application\Viewer\Query;
 interface SongQueryServiceInterface
 {
     public function list(?string $cursor, int $limit): SongListPage;
+
+    public function get(string $songId): ?SongDetail;
 }

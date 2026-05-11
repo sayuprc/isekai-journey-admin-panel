@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
+import type { SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -22,3 +22,8 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * 楽曲一覧取得API
  */
 export const songServiceListSongs = <ThrowOnError extends boolean = false>(options?: Options<SongServiceListSongsData, ThrowOnError>) => (options?.client ?? client).get<SongServiceListSongsResponses, SongServiceListSongsErrors, ThrowOnError>({ url: '/songs', ...options });
+
+/**
+ * 楽曲詳細取得API
+ */
+export const songServiceGetSong = <ThrowOnError extends boolean = false>(options: Options<SongServiceGetSongData, ThrowOnError>) => (options.client ?? client).get<SongServiceGetSongResponses, SongServiceGetSongErrors, ThrowOnError>({ url: '/songs/{songId}', ...options });
