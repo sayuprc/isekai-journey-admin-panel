@@ -6,7 +6,7 @@ import SectionHead from '../../components/viewer/SectionHead.astro';
 import { songRepository } from '../../features/songs/api'
 import Layout from '../../layouts/Layout.astro';
 
-const songs = await songRepository.list();
+const songs = await songRepository.all();
 
 // TODO JacketArt をどうするか決める必要がある
 ---

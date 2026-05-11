@@ -4,7 +4,44 @@ export type ClientOptions = {
     baseUrl: 'https://local.api.isekaijoucho.fan/{version}' | (string & {});
 };
 
+export type ErrorResponse = {
+    message: string;
+};
+
 export type IsekaiObservatoryViewerVersion = 'v1';
+
+export type MediaType = {
+    name: MediaTypeName;
+    value: MediaTypeValue;
+};
+
+/**
+ * 関連メディア種別の値
+ */
+export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+
+export type SongDetail = {
+    songId: SongId;
+    title: Title;
+    description: Description;
+    type: SongType;
+    counts: SongRelationCounts;
+    lyricists: Array<string>;
+    composers: Array<string>;
+    arrangers: Array<string>;
+    media: Array<SongDetailMediaSummary>;
+};
+
+export type SongDetailMediaSummary = {
+    mediaId: MediaId;
+    title: MediaTitle;
+    type: MediaType;
+    publishedAt: MediaPublishedAt;
+};
+
+export type SongDetailResponse = {
+    song: SongDetail;
+};
 
 export type SongListItem = {
     songId: SongId;
@@ -60,6 +97,26 @@ export type Description = string;
 export type Limit = number;
 
 /**
+ * 関連メディアID
+ */
+export type MediaId = string;
+
+/**
+ * 関連メディア公開日
+ */
+export type MediaPublishedAt = string;
+
+/**
+ * 関連メディアタイトル
+ */
+export type MediaTitle = string;
+
+/**
+ * 関連メディア種別名
+ */
+export type MediaTypeName = string;
+
+/**
  * 楽曲ID
  */
 export type SongId = string;
@@ -99,3 +156,34 @@ export type SongServiceListSongsResponses = {
 };
 
 export type SongServiceListSongsResponse = SongServiceListSongsResponses[keyof SongServiceListSongsResponses];
+
+export type SongServiceGetSongData = {
+    body?: never;
+    path: {
+        songId: SongId;
+    };
+    query?: never;
+    url: '/songs/{songId}';
+};
+
+export type SongServiceGetSongErrors = {
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: unknown;
+};
+
+export type SongServiceGetSongError = SongServiceGetSongErrors[keyof SongServiceGetSongErrors];
+
+export type SongServiceGetSongResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: SongDetailResponse;
+};
+
+export type SongServiceGetSongResponse = SongServiceGetSongResponses[keyof SongServiceGetSongResponses];

@@ -4,16 +4,20 @@ import { songRepository } from '../../features/songs/api';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  return (await songRepository.list()).map(song => ({ params: { songId: song.songId } }));
+  return (await songRepository.all()).map(song => ({ params: { songId: song.songId } }));
 }
 
 const { songId } = Astro.params;
 
-// TODO ここで songId を使って詳細を検索してデータを獲得する
+if (!songId) {
+  throw new Error('songId is required');
+}
+
+const song = await songRepository.get(songId);
 ---
 
-<!-- <Layout pageTitle={song.title}>
+<Layout pageTitle={song.title}>
   <section class="shell page-section detail-page">
     <SongDetailContent song={song} />
   </section>
-</Layout> -->
+</Layout>
