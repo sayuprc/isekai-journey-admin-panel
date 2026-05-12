@@ -10,6 +10,27 @@ export type ErrorResponse = {
 
 export type IsekaiObservatoryViewerVersion = 'v1';
 
+export type MediaDetail = {
+    mediaId: MediaId;
+    title: MediaTitle;
+    url: MediaUrl;
+    publishedAt: MediaPublishedAt;
+    type: MediaType;
+    format: MediaFormat;
+    counts: MediaRelationCounts;
+    songs: Array<MediaDetailSongSummary>;
+};
+
+export type MediaDetailResponse = {
+    media: MediaDetail;
+};
+
+export type MediaDetailSongSummary = {
+    songId: SongId;
+    title: Title;
+    type: SongType;
+};
+
 export type MediaFormat = {
     name: MediaFormatName;
     value: MediaFormatValue;
@@ -35,6 +56,13 @@ export type MediaListResponse = {
      * 続きがある場合のみ返す
      */
     nextCursor?: Cursor;
+};
+
+export type MediaRelationCounts = {
+    /**
+     * 関連楽曲数
+     */
+    songCount: number;
 };
 
 export type MediaType = {
@@ -193,6 +221,37 @@ export type MediaServiceListMediaResponses = {
 };
 
 export type MediaServiceListMediaResponse = MediaServiceListMediaResponses[keyof MediaServiceListMediaResponses];
+
+export type MediaServiceGetMediaData = {
+    body?: never;
+    path: {
+        mediaId: MediaId;
+    };
+    query?: never;
+    url: '/media/{mediaId}';
+};
+
+export type MediaServiceGetMediaErrors = {
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: unknown;
+};
+
+export type MediaServiceGetMediaError = MediaServiceGetMediaErrors[keyof MediaServiceGetMediaErrors];
+
+export type MediaServiceGetMediaResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MediaDetailResponse;
+};
+
+export type MediaServiceGetMediaResponse = MediaServiceGetMediaResponses[keyof MediaServiceGetMediaResponses];
 
 export type SongServiceListSongsData = {
     body?: never;

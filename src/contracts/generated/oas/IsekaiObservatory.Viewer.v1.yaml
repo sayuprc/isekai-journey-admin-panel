@@ -34,6 +34,33 @@ paths:
           description: Server error
       tags:
         - Media
+  /media/{mediaId}:
+    get:
+      operationId: MediaService_getMedia
+      description: メディア詳細取得API
+      parameters:
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/mediaId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaDetailResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+      tags:
+        - Media
   /songs:
     get:
       operationId: SongService_listSongs
@@ -102,6 +129,101 @@ components:
       type: string
       enum:
         - v1
+    MediaDetail:
+      type: object
+      required:
+        - mediaId
+        - title
+        - url
+        - publishedAt
+        - type
+        - format
+        - counts
+        - songs
+      properties:
+        mediaId:
+          $ref: '#/components/schemas/mediaId'
+        title:
+          $ref: '#/components/schemas/mediaTitle'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
+        publishedAt:
+          $ref: '#/components/schemas/mediaPublishedAt'
+        type:
+          $ref: '#/components/schemas/MediaType'
+        format:
+          $ref: '#/components/schemas/MediaFormat'
+        counts:
+          $ref: '#/components/schemas/MediaRelationCounts'
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaDetailSongSummary'
+      examples:
+        - mediaId: 11111111-1111-1111-1111-111111111111
+          title: 描き続けた君へ MV
+          url: https://example.com/media/1
+          publishedAt: '2024-03-01'
+          type:
+            name: 動画
+            value: 1
+          format:
+            name: MV
+            value: 1
+          counts:
+            songCount: 1
+          songs:
+            - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+              title: 描き続けた君へ
+              type:
+                name: オリジナル曲
+                value: 1
+    MediaDetailResponse:
+      type: object
+      required:
+        - media
+      properties:
+        media:
+          $ref: '#/components/schemas/MediaDetail'
+      examples:
+        - media:
+            mediaId: 11111111-1111-1111-1111-111111111111
+            title: 描き続けた君へ MV
+            url: https://example.com/media/1
+            publishedAt: '2024-03-01'
+            type:
+              name: 動画
+              value: 1
+            format:
+              name: MV
+              value: 1
+            counts:
+              songCount: 1
+            songs:
+              - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+                title: 描き続けた君へ
+                type:
+                  name: オリジナル曲
+                  value: 1
+    MediaDetailSongSummary:
+      type: object
+      required:
+        - songId
+        - title
+        - type
+      properties:
+        songId:
+          $ref: '#/components/schemas/songId'
+        title:
+          $ref: '#/components/schemas/title'
+        type:
+          $ref: '#/components/schemas/SongType'
+      examples:
+        - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+          title: 描き続けた君へ
+          type:
+            name: オリジナル曲
+            value: 1
     MediaFormat:
       type: object
       required:
@@ -185,6 +307,15 @@ components:
                 name: MV
                 value: 1
           nextCursor: eyJwdWJsaXNoZWRBdCI6IjIwMjQtMDMtMDEiLCJtZWRpYUlkIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIn0=
+    MediaRelationCounts:
+      type: object
+      required:
+        - songCount
+      properties:
+        songCount:
+          type: integer
+          format: int32
+          description: 関連楽曲数
     MediaType:
       type: object
       required:
