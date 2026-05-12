@@ -1,53 +1,53 @@
 ---
-import { Q, mediaTypeLabel } from '../../../data/site-helpers';
+import type { SongDetail } from '../../../features/songs/types';
 import JacketArt from '../JacketArt.astro';
 
 interface Props {
-  song: {
-    id: string;
-    title: string;
-    category: string;
-    composer: string;
-    lyricist: string;
-    arranger: string;
-    description: string;
-    color: string;
-  };
+  song: SongDetail;
 }
 
 const { song } = Astro.props;
-const releases = Q.releasesOfSong(song.id);
-const media = Q.mediaOfSong(song.id);
+// TODO 楽曲ジャケットの色は将来的に決定する。現状は API に色情報が無いため固定値を使う。
+const jacketColor = 'var(--accent)';
+const media = song.media;
+const mediaCount = song.counts.mediaCount;
+const lyricists = song.lyricists.join(' / ');
+const composers = song.composers.join(' / ');
+const arrangers = song.arrangers.join(' / ');
+
+const formatPublishedAt = (value: string): string =>
+  new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
 ---
 
 <div class="detail-page-content song-detail-content">
-  <JacketArt color={song.color} label={song.title} />
-  <div class="label-mono" style="margin-top: 28px;">{song.category}</div>
+  <JacketArt color={jacketColor} label={song.title} />
+  <div class="label-mono" style="margin-top: 28px;">{song.type.name}</div>
   <h1 class="detail-title">{song.title}</h1>
   <p class="detail-description" style="margin-top: 24px;">{song.description}</p>
 
   <hr class="hairline" style="margin: 32px 0;" />
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;font-size:13px;">
-    <div><div class="label-mono">CATEGORY</div><div style="margin-top:4px;">{song.category}</div></div>
-    <div><div class="label-mono">COMPOSER / 作曲</div><div style="margin-top:4px;">{song.composer}</div></div>
-    <div><div class="label-mono">LYRICIST / 作詞</div><div style="margin-top:4px;">{song.lyricist}</div></div>
-    <div><div class="label-mono">ARRANGER / 編曲</div><div style="margin-top:4px;">{song.arranger}</div></div>
+    <div><div class="label-mono">COMPOSER / 作曲</div><div style="margin-top:4px;">{composers}</div></div>
+    <div><div class="label-mono">LYRICIST / 作詞</div><div style="margin-top:4px;">{lyricists}</div></div>
+    <div><div class="label-mono">ARRANGER / 編曲</div><div style="margin-top:4px;">{arrangers}</div></div>
   </div>
 
   <div class="stat-bar">
+    {/*
+      <div class="stat-cell">
+        <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{releases.length}</div>
+        <div class="label-mono" style="margin-top: 6px;">RELEASES</div>
+        <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">リリース</div>
+      </div>
+    */}
     <div class="stat-cell">
-      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{releases.length}</div>
-      <div class="label-mono" style="margin-top: 6px;">RELEASES</div>
-      <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">リリース</div>
-    </div>
-    <div class="stat-cell">
-      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{media.length}</div>
+      <div style="font-family:'EB Garamond','Cormorant Garamond',serif;font-weight:500;font-size:32px;color:var(--accent-strong);line-height:1;">{mediaCount}</div>
       <div class="label-mono" style="margin-top: 6px;">MEDIA</div>
       <div style="font-family:'Shippori Mincho',serif;font-size:11px;color:var(--fg-muted);margin-top:2px;">映像</div>
     </div>
   </div>
 
-  {
+  {/* {
     releases.length > 0 && (
       <>
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
@@ -73,7 +73,7 @@ const media = Q.mediaOfSong(song.id);
         </div>
       </>
     )
-  }
+  } */}
 
   {
     media.length > 0 && (
@@ -86,18 +86,16 @@ const media = Q.mediaOfSong(song.id);
           <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{media.length}</span>
         </div>
         <div class="rel-list">
-          {
-            media.map(entry => (
-              <a class="rel-chip" href={`/media/${entry.id}`}>
-                <div class="color-block" style={`--tile-color:${entry.color};width:38px;height:38px;flex-shrink:0;`}></div>
-                <div class="rel-copy">
-                  <div class="rel-main">{entry.title}</div>
-                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{entry.date} · {mediaTypeLabel(entry.type)}</div>
-                </div>
-                <span style="color:var(--fg-faint);font-size:14px;">→</span>
-              </a>
-            ))
-          }
+          {media.map(entry => (
+            <a class="rel-chip" href={`/media/${entry.mediaId}`}>
+              <div class="color-block" style="--tile-color:var(--accent);width:38px;height:38px;flex-shrink:0;" />
+              <div class="rel-copy">
+                <div class="rel-main">{entry.title}</div>
+                <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{formatPublishedAt(entry.publishedAt)} · {entry.type.name}</div>
+              </div>
+              <span style="color:var(--fg-faint);font-size:14px;">→</span>
+            </a>
+          ))}
         </div>
       </>
     )

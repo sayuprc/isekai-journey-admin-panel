@@ -1,13 +1,19 @@
 ---
 import SongDetailContent from '../../components/viewer/details/SongDetailContent.astro';
-import { SITE_DATA } from '../../data/site-helpers';
+import { songRepository } from '../../features/songs/api';
 import Layout from '../../layouts/Layout.astro';
 
-export function getStaticPaths() {
-  return SITE_DATA.songs.map(song => ({ params: { songId: song.id }, props: { song } }));
+export async function getStaticPaths() {
+  return (await songRepository.all()).map(song => ({ params: { songId: song.songId } }));
 }
 
-const { song } = Astro.props;
+const { songId } = Astro.params;
+
+if (!songId) {
+  throw new Error('songId is required');
+}
+
+const song = await songRepository.get(songId);
 ---
 
 <Layout pageTitle={song.title}>
