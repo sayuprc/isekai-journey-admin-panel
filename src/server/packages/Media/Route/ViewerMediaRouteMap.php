@@ -7,4 +7,6 @@ namespace Media\Route;
 enum ViewerMediaRouteMap: string
 {
     case List = 'viewer.media.list';
+
+    case Get = 'viewer.media.get';
 }

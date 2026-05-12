@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Viewer\V1\Media\GetMediaController;
 use App\Http\Controllers\Api\Viewer\V1\Media\ListMediaController;
 use App\Http\Controllers\Api\Viewer\V1\Song\GetSongController;
 use App\Http\Controllers\Api\Viewer\V1\Song\ListSongController;
@@ -18,6 +19,7 @@ Route::middleware(ViewerOpenApiValidator::class)->group(function () {
         });
         Route::prefix('media')->group(function () {
             Route::get('/', [ListMediaController::class, 'handle'])->name(ViewerMediaRouteMap::List);
+            Route::get('/{mediaId}', [GetMediaController::class, 'handle'])->name(ViewerMediaRouteMap::Get);
         });
     });
 });
