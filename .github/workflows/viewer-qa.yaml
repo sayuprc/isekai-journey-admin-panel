@@ -9,6 +9,9 @@ on:
 env:
   MISE_ENV: ci
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: ESLint
