@@ -41,8 +41,8 @@ const mediaTypeOptions: Array<{ value: MediaTypeValue; label: string }> = [
 const perPageOptions: PerPage[] = [25, 50, 100];
 
 const mergeMedia = (current: Media[], incoming: Media[]): Media[] => {
-  const map = new Map(current.map((item) => [item.mediaId, item]));
-  incoming.forEach((item) => map.set(item.mediaId, item));
+  const map = new Map(current.map(item => [item.mediaId, item]));
+  incoming.forEach(item => map.set(item.mediaId, item));
 
   return Array.from(map.values()).sort((a, b) => a.title.localeCompare(b.title, 'ja'));
 };
@@ -94,7 +94,7 @@ export const MediaSection = (props: Props) => {
   const [creating, setCreating] = createSignal(false);
   const [createError, setCreateError] = createSignal<string | null>(null);
 
-  const selectedIds = () => new Set(props.entries().map((entry) => entry.mediaId));
+  const selectedIds = () => new Set(props.entries().map(entry => entry.mediaId));
   const allKnownMedia = () => mergeMedia(props.availableMedia(), searchResults());
 
   const normalize = (value: string) => value.trim().toLocaleLowerCase('ja');
@@ -110,7 +110,7 @@ export const MediaSection = (props: Props) => {
     }
 
     return allKnownMedia()
-      .map((item) => {
+      .map(item => {
         const itemTitle = normalize(item.title);
         const itemUrl = normalize(item.url);
         const reasons: string[] = [];
@@ -137,23 +137,23 @@ export const MediaSection = (props: Props) => {
       .slice(0, 5);
   };
 
-  const hasExactUrlDuplicate = () => duplicateCandidates().some((entry) => entry.reasons.includes('同じURL'));
+  const hasExactUrlDuplicate = () => duplicateCandidates().some(entry => entry.reasons.includes('同じURL'));
 
   const addEntry = (media: Media) => {
     if (selectedIds().has(media.mediaId)) {
       return;
     }
 
-    props.setEntries((prev) => [...prev, toMediaEntry(media)]);
-    props.setAvailableMedia((prev) => mergeMedia(prev, [media]));
+    props.setEntries(prev => [...prev, toMediaEntry(media)]);
+    props.setAvailableMedia(prev => mergeMedia(prev, [media]));
   };
 
   const removeEntry = (index: number) => {
-    props.setEntries((prev) => prev.filter((_, i) => i !== index));
+    props.setEntries(prev => prev.filter((_, i) => i !== index));
   };
 
   const moveEntry = (index: number, direction: -1 | 1) => {
-    props.setEntries((prev) => {
+    props.setEntries(prev => {
       const nextIndex = index + direction;
       if (nextIndex < 0 || nextIndex >= prev.length) {
         return prev;
@@ -196,7 +196,7 @@ export const MediaSection = (props: Props) => {
 
     setSearchResults(data.media);
     setSearchMaxPage(data.maxPage);
-    props.setAvailableMedia((prev) => mergeMedia(prev, data.media));
+    props.setAvailableMedia(prev => mergeMedia(prev, data.media));
   };
 
   const handleResetSearch = () => {
@@ -257,7 +257,7 @@ export const MediaSection = (props: Props) => {
       return;
     }
 
-    props.setAvailableMedia((prev) => mergeMedia(prev, [data.media]));
+    props.setAvailableMedia(prev => mergeMedia(prev, [data.media]));
     addEntry(data.media);
     setCreateTitle('');
     setCreateUrl('');
@@ -282,32 +282,32 @@ export const MediaSection = (props: Props) => {
                 type="text"
                 class="input input-bordered w-full"
                 value={searchTitle()}
-                onInput={(e) => setSearchTitle(e.currentTarget.value)}
+                onInput={e => setSearchTitle(e.currentTarget.value)}
                 placeholder="タイトルで検索"
               />
 
               <select
                 class="select select-bordered w-full"
                 value={searchTypeValue()}
-                onChange={(e) => setSearchTypeValue(e.currentTarget.value as '' | `${MediaTypeValue}`)}
+                onChange={e => setSearchTypeValue(e.currentTarget.value as '' | `${MediaTypeValue}`)}
               >
                 <option value="">すべての種別</option>
-                <For each={mediaTypeOptions}>{(option) => <option value={option.value}>{option.label}</option>}</For>
+                <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
               </select>
 
               <select
                 class="select select-bordered w-full"
                 value={searchFormatValue()}
-                onChange={(e) => setSearchFormatValue(e.currentTarget.value as '' | `${MediaFormatValue}`)}
+                onChange={e => setSearchFormatValue(e.currentTarget.value as '' | `${MediaFormatValue}`)}
               >
                 <option value="">すべての形式</option>
-                <For each={mediaFormatOptions}>{(option) => <option value={option.value}>{option.label}</option>}</For>
+                <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
               </select>
 
               <select
                 class="select select-bordered w-full"
                 value={searchIsDisplay()}
-                onChange={(e) => setSearchIsDisplay(e.currentTarget.value as DisplayFilter)}
+                onChange={e => setSearchIsDisplay(e.currentTarget.value as DisplayFilter)}
               >
                 <option value="">すべての表示設定</option>
                 <option value="true">表示する</option>
@@ -317,9 +317,9 @@ export const MediaSection = (props: Props) => {
               <select
                 class="select select-bordered w-full"
                 value={searchPerPage()}
-                onChange={(e) => setSearchPerPage(Number(e.currentTarget.value) as PerPage)}
+                onChange={e => setSearchPerPage(Number(e.currentTarget.value) as PerPage)}
               >
-                <For each={perPageOptions}>{(option) => <option value={option}>{option}件表示</option>}</For>
+                <For each={perPageOptions}>{option => <option value={option}>{option}件表示</option>}</For>
               </select>
             </div>
 
@@ -331,7 +331,7 @@ export const MediaSection = (props: Props) => {
                 リセット
               </button>
             </div>
-            <Show when={searchError()}>{(message) => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
+            <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
           </div>
 
           <div class="space-y-2">
@@ -369,7 +369,7 @@ export const MediaSection = (props: Props) => {
                 </Show>
               </div>
               <For each={candidateResults()}>
-                {(item) => (
+                {item => (
                   <div class="rounded-box border border-base-300 bg-base-100 p-3">
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
@@ -419,7 +419,7 @@ export const MediaSection = (props: Props) => {
               type="text"
               class="input input-bordered w-full"
               value={createTitle()}
-              onInput={(e) => setCreateTitle(e.currentTarget.value)}
+              onInput={e => setCreateTitle(e.currentTarget.value)}
               placeholder="タイトル"
             />
           </div>
@@ -429,7 +429,7 @@ export const MediaSection = (props: Props) => {
               type="url"
               class="input input-bordered w-full"
               value={createUrl()}
-              onInput={(e) => setCreateUrl(e.currentTarget.value)}
+              onInput={e => setCreateUrl(e.currentTarget.value)}
               placeholder="https://example.com/media"
             />
           </div>
@@ -439,7 +439,7 @@ export const MediaSection = (props: Props) => {
               type="date"
               class="input input-bordered w-full"
               value={createPublishedAt()}
-              onInput={(e) => setCreatePublishedAt(e.currentTarget.value)}
+              onInput={e => setCreatePublishedAt(e.currentTarget.value)}
             />
           </div>
 
@@ -448,14 +448,14 @@ export const MediaSection = (props: Props) => {
               <p class="text-sm font-medium text-warning-content">重複候補があります</p>
               <div class="mt-2 space-y-2">
                 <For each={duplicateCandidates()}>
-                  {(candidate) => (
+                  {candidate => (
                     <div class="rounded-box bg-base-100 p-3">
                       <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
                           <div class="flex items-center gap-2">
                             <p class="truncate text-sm font-medium">{candidate.item.title}</p>
                             <For each={candidate.reasons}>
-                              {(reason) => <span class="badge badge-warning badge-sm badge-outline">{reason}</span>}
+                              {reason => <span class="badge badge-warning badge-sm badge-outline">{reason}</span>}
                             </For>
                           </div>
                           <p class="text-xs text-base-content/60">
@@ -500,17 +500,17 @@ export const MediaSection = (props: Props) => {
             <select
               class="select select-bordered w-full"
               value={createTypeValue()}
-              onChange={(e) => setCreateTypeValue(Number(e.currentTarget.value) as MediaTypeValue)}
+              onChange={e => setCreateTypeValue(Number(e.currentTarget.value) as MediaTypeValue)}
             >
-              <For each={mediaTypeOptions}>{(option) => <option value={option.value}>{option.label}</option>}</For>
+              <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
             </select>
 
             <select
               class="select select-bordered w-full"
               value={createFormatValue()}
-              onChange={(e) => setCreateFormatValue(Number(e.currentTarget.value) as MediaFormatValue)}
+              onChange={e => setCreateFormatValue(Number(e.currentTarget.value) as MediaFormatValue)}
             >
-              <For each={mediaFormatOptions}>{(option) => <option value={option.value}>{option.label}</option>}</For>
+              <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
             </select>
           </div>
 
@@ -519,12 +519,12 @@ export const MediaSection = (props: Props) => {
               type="checkbox"
               class="checkbox checkbox-sm"
               checked={createIsDisplay()}
-              onChange={(e) => setCreateIsDisplay(e.currentTarget.checked)}
+              onChange={e => setCreateIsDisplay(e.currentTarget.checked)}
             />
             <span class="label-text">表示する</span>
           </label>
 
-          <Show when={createError()}>{(message) => <p class="text-sm text-error">{message()}</p>}</Show>
+          <Show when={createError()}>{message => <p class="text-sm text-error">{message()}</p>}</Show>
 
           <button
             type="button"

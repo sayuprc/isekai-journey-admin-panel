@@ -27,7 +27,7 @@ export const auditLogs = new Elysia({ prefix: '/audit-logs' })
   .get(
     '/search',
     async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await auditLogServiceSearchAuditLogs({
             client,
@@ -61,7 +61,7 @@ export const auditLogs = new Elysia({ prefix: '/audit-logs' })
   .get(
     '/:auditLogId',
     async ({ params: { auditLogId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await auditLogServiceGetAuditLog({ client, path: { auditLogId } }));
       });
     },

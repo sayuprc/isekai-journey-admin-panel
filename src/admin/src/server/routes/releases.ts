@@ -16,7 +16,7 @@ export const releases = new Elysia({ prefix: '/releases' })
   .post(
     '/',
     async ({ body, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await releaseServiceCreateRelease({ client, body }));
       });
     },
@@ -40,7 +40,7 @@ export const releases = new Elysia({ prefix: '/releases' })
   .get(
     '/search',
     async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await releaseServiceSearchReleases({
             client,
@@ -70,7 +70,7 @@ export const releases = new Elysia({ prefix: '/releases' })
   .get(
     '/:releaseId',
     async ({ params: { releaseId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await releaseServiceGetRelease({ client, path: { releaseId } }));
       });
     },
@@ -83,7 +83,7 @@ export const releases = new Elysia({ prefix: '/releases' })
   .put(
     '/:releaseId',
     async ({ params: { releaseId }, body, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await releaseServiceUpdateRelease({
             client,
@@ -116,7 +116,7 @@ export const releases = new Elysia({ prefix: '/releases' })
   .delete(
     '/:releaseId',
     async ({ params: { releaseId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await releaseServiceDeleteRelease({
             client,

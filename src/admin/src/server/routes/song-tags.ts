@@ -15,14 +15,14 @@ import { authGuard } from '../middleware';
 export const songTags = new Elysia({ prefix: '/song-tags' })
   .use(authGuard)
   .get('/', async ({ authSession }) => {
-    return withAuthRetry(authSession, async (client) => {
+    return withAuthRetry(authSession, async client => {
       return resolveApiResponse(await songTagServiceListSongTags({ client }));
     });
   })
   .get(
     '/:songTagId',
     async ({ params: { songTagId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await songTagServiceGetSongTag({ client, path: { songTagId } }));
       });
     },
@@ -35,7 +35,7 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
   .get(
     '/search',
     async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await songTagServiceSearchSongTags({
             client,
@@ -63,7 +63,7 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
   .post(
     '/',
     async ({ body: { name }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await songTagServiceCreateSongTag({ client, body: { name } }));
       });
     },
@@ -76,7 +76,7 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
   .put(
     '/:songTagId',
     async ({ params: { songTagId }, body: { name, orderNo }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await songTagServiceUpdateSongTag({ client, path: { songTagId }, body: { name, orderNo } }),
         );
@@ -95,7 +95,7 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
   .delete(
     '/:songTagId',
     async ({ params: { songTagId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await songTagServiceDeleteSongTag({ client, path: { songTagId } }));
       });
     },

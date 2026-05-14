@@ -52,7 +52,7 @@ export const DetailView = (props: Props) => {
 
   const [resource, { refetch }] = createResource<FetchState, string>(
     () => props.auditLogId,
-    async (id) => {
+    async id => {
       const { data, status } = await client.api['audit-logs']({ auditLogId: id }).get();
 
       if (status === 401) {
@@ -103,7 +103,7 @@ export const DetailView = (props: Props) => {
         </div>
       </Match>
       <Match when={resource()?.status === 'ok' && resource()!.data}>
-        {(data) => (
+        {data => (
           <div class="flex flex-col gap-4">
             <Show when={typeof window !== 'undefined'}>
               <div>

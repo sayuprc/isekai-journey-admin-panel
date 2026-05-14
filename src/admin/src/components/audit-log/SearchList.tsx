@@ -147,7 +147,7 @@ export const SearchList = () => {
       page: page(),
       perPage: perPage(),
     }),
-    async (params) => {
+    async params => {
       setFetchError(null);
 
       const { data, status } = await client.api['audit-logs'].search.get({
@@ -254,7 +254,7 @@ export const SearchList = () => {
             id="from"
             name="from"
             value={inputFrom()}
-            onInput={(e) => setInputFrom(e.currentTarget.value)}
+            onInput={e => setInputFrom(e.currentTarget.value)}
             class="input input-bordered input-sm"
           />
         </fieldset>
@@ -267,7 +267,7 @@ export const SearchList = () => {
             id="to"
             name="to"
             value={inputTo()}
-            onInput={(e) => setInputTo(e.currentTarget.value)}
+            onInput={e => setInputTo(e.currentTarget.value)}
             class="input input-bordered input-sm"
           />
         </fieldset>
@@ -279,15 +279,13 @@ export const SearchList = () => {
             id="action"
             name="action"
             class="select select-bordered select-sm"
-            onChange={(e) =>
-              setInputAction(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as Action))
-            }
+            onChange={e => setInputAction(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as Action))}
           >
             <option value="" selected={inputAction() === undefined}>
               すべて
             </option>
             <For each={ACTION_OPTIONS}>
-              {(a) => (
+              {a => (
                 <option value={a} selected={inputAction() === a}>
                   {ACTION_LABEL[a]}
                 </option>
@@ -303,7 +301,7 @@ export const SearchList = () => {
             id="target_type"
             name="target_type"
             class="select select-bordered select-sm"
-            onChange={(e) =>
+            onChange={e =>
               setInputTargetType(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as TargetType))
             }
           >
@@ -311,7 +309,7 @@ export const SearchList = () => {
               すべて
             </option>
             <For each={TARGET_TYPE_OPTIONS}>
-              {(t) => (
+              {t => (
                 <option value={t} selected={inputTargetType() === t}>
                   {TARGET_TYPE_LABEL[t]}
                 </option>
@@ -328,7 +326,7 @@ export const SearchList = () => {
             id="target_id"
             name="target_id"
             value={inputTargetId()}
-            onInput={(e) => setInputTargetId(e.currentTarget.value)}
+            onInput={e => setInputTargetId(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="UUID"
           />
@@ -342,7 +340,7 @@ export const SearchList = () => {
             id="admin_user_name"
             name="admin_user_name"
             value={inputAdminUserName()}
-            onInput={(e) => setInputAdminUserName(e.currentTarget.value)}
+            onInput={e => setInputAdminUserName(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="部分一致"
           />
@@ -355,10 +353,10 @@ export const SearchList = () => {
             id="per_page"
             name="per_page"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
             <For each={PER_PAGE_OPTIONS}>
-              {(n) => (
+              {n => (
                 <option value={n} selected={inputPerPage() === n}>
                   {n}件
                 </option>
@@ -391,15 +389,15 @@ export const SearchList = () => {
                 <ListState state="loading" colSpan={6} />
               </Match>
               <Match when={fetchError()}>
-                {(message) => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.auditLogs.length === 0}>
                 <ListState state="empty" colSpan={6} />
               </Match>
               <Match when={data()}>
-                {(result) => (
+                {result => (
                   <For each={result().auditLogs}>
-                    {(log) => (
+                    {log => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{formatter.format(new Date(log.createdAt))}</td>
                         <td>{log.adminUserName}</td>
@@ -427,7 +425,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {(p) => (
+              {p => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

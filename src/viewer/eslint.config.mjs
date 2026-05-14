@@ -20,7 +20,11 @@ const defaultRules = {
       allow: 'single-line',
     },
   ],
+  '@stylistic/arrow-parens': ['error', 'as-needed'],
   '@stylistic/brace-style': ['error', '1tbs'],
+  '@stylistic/indent-binary-ops': 'off',
+  '@stylistic/jsx-curly-newline': 'off',
+  '@stylistic/jsx-wrap-multilines': 'off',
   '@typescript-eslint/consistent-type-imports': [
     'error',
     {

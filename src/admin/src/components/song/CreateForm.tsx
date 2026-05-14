@@ -61,11 +61,11 @@ export const CreateForm = (props: Props) => {
   });
 
   const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
-    setter((prev) => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
+    setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
   };
 
   const removeEntry = (setter: typeof setLyricists, index: number) => {
-    setter((prev) => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
+    setter(prev => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
   };
 
   const updateEntry = (
@@ -74,11 +74,11 @@ export const CreateForm = (props: Props) => {
     field: keyof PersonEntry,
     value: string | number,
   ) => {
-    setter((prev) => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+    setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
   const removeTagEntry = (index: number) => {
-    setTags((prev) => prev.filter((_, i) => i !== index));
+    setTags(prev => prev.filter((_, i) => i !== index));
   };
 
   const addTagEntry = (songTagId: string) => {
@@ -86,7 +86,7 @@ export const CreateForm = (props: Props) => {
       return;
     }
 
-    setTags((prev) => (prev.some((entry) => entry.songTagId === songTagId) ? prev : [...prev, { songTagId }]));
+    setTags(prev => (prev.some(entry => entry.songTagId === songTagId) ? prev : [...prev, { songTagId }]));
     setTagPickerValue('');
   };
 
@@ -121,27 +121,25 @@ export const CreateForm = (props: Props) => {
 
   const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
     const selectedPersonIds = new Set(
-      entries
-        .filter((entry) => entry.personId !== '' && entry.personId !== currentPersonId)
-        .map((entry) => entry.personId),
+      entries.filter(entry => entry.personId !== '' && entry.personId !== currentPersonId).map(entry => entry.personId),
     );
 
     return persons()
-      .filter((person) => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
-      .map((person) => ({ value: person.personId, label: person.name }));
+      .filter(person => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
+      .map(person => ({ value: person.personId, label: person.name }));
   };
 
   const tagOptions = () => {
-    const selectedTagIds = new Set(tags().map((entry) => entry.songTagId));
+    const selectedTagIds = new Set(tags().map(entry => entry.songTagId));
 
     return availableTags()
-      .filter((tag) => !selectedTagIds.has(tag.songTagId))
-      .map((tag) => ({ value: tag.songTagId, label: tag.name }));
+      .filter(tag => !selectedTagIds.has(tag.songTagId))
+      .map(tag => ({ value: tag.songTagId, label: tag.name }));
   };
 
   const selectedTags = () =>
     tags()
-      .map((entry) => availableTags().find((tag) => tag.songTagId === entry.songTagId))
+      .map(entry => availableTags().find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
 
   const PersonSection = (props: {
@@ -163,7 +161,7 @@ export const CreateForm = (props: Props) => {
             <SearchableSelect
               options={personOptions(props.entries(), entry.personId)}
               value={entry.personId}
-              onChange={(value) => updateEntry(props.setter, index(), 'personId', value)}
+              onChange={value => updateEntry(props.setter, index(), 'personId', value)}
               placeholder="人物を検索..."
               required
             />
@@ -173,7 +171,7 @@ export const CreateForm = (props: Props) => {
                 type="number"
                 class="input input-bordered w-16"
                 value={entry.orderNo}
-                onchange={(e) => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
+                onchange={e => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
                 required
                 min="1"
               />
@@ -214,7 +212,7 @@ export const CreateForm = (props: Props) => {
         <SearchableSelect
           options={tagOptions()}
           value={tagPickerValue()}
-          onChange={(value) => addTagEntry(value)}
+          onChange={value => addTagEntry(value)}
           placeholder="楽曲タグを検索して追加..."
         />
         <p class="text-xs text-base-content/60">選択したタグは下に追加されます。</p>
@@ -264,7 +262,7 @@ export const CreateForm = (props: Props) => {
                   classList={{ 'input-error': !!getFieldError('title') }}
                 />
                 <Show when={getFieldError('title')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 
@@ -274,7 +272,7 @@ export const CreateForm = (props: Props) => {
                   class="select select-bordered w-full"
                   name="typeValue"
                   value={typeValue()}
-                  onChange={(e) =>
+                  onChange={e =>
                     setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))
                   }
                   required
@@ -283,10 +281,10 @@ export const CreateForm = (props: Props) => {
                   <option value="" disabled>
                     選択してください
                   </option>
-                  <For each={types()}>{(type) => <option value={type.value}>{type.name}</option>}</For>
+                  <For each={types()}>{type => <option value={type.value}>{type.name}</option>}</For>
                 </select>
                 <Show when={getFieldError('typeValue')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 
@@ -299,7 +297,7 @@ export const CreateForm = (props: Props) => {
                   classList={{ 'input-error': !!getFieldError('description') }}
                 />
                 <Show when={getFieldError('description')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 
@@ -313,7 +311,7 @@ export const CreateForm = (props: Props) => {
                   classList={{ 'input-error': !!getFieldError('lyricsLink') }}
                 />
                 <Show when={getFieldError('lyricsLink')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 

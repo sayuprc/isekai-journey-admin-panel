@@ -4,7 +4,7 @@ import { mediaRepository } from '../../features/media/api';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  return (await mediaRepository.all()).map((media) => ({ params: { mediaId: media.mediaId } }));
+  return (await mediaRepository.all()).map(media => ({ params: { mediaId: media.mediaId } }));
 }
 
 const { mediaId } = Astro.params;

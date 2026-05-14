@@ -5,7 +5,7 @@ import { mediaRepository } from '../../../features/media/api';
 export const partial = true;
 
 export async function getStaticPaths() {
-  return (await mediaRepository.all()).map((media) => ({ params: { mediaId: media.mediaId } }));
+  return (await mediaRepository.all()).map(media => ({ params: { mediaId: media.mediaId } }));
 }
 
 const { mediaId } = Astro.params;

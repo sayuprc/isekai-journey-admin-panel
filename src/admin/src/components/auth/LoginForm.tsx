@@ -47,7 +47,7 @@ export const LoginForm = () => {
           required
           classList={{ 'input-error': !!getFieldError('email') }}
         />
-        <Show when={getFieldError('email')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+        <Show when={getFieldError('email')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <label class="label">パスワード</label>
         <input
@@ -57,7 +57,7 @@ export const LoginForm = () => {
           required
           classList={{ 'input-error': !!getFieldError('password') }}
         />
-        <Show when={getFieldError('password')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+        <Show when={getFieldError('password')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? 'ログイン中...' : 'ログイン'}

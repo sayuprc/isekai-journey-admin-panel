@@ -115,7 +115,7 @@ export const SearchList = () => {
       page: page(),
       perPage: perPage(),
     }),
-    async (params) => {
+    async params => {
       setFetchError(null);
 
       const { data, status } = await client.api.releases.search.get({
@@ -203,7 +203,7 @@ export const SearchList = () => {
             id="title"
             name="title"
             value={inputTitle()}
-            onInput={(e) => setInputTitle(e.currentTarget.value)}
+            onInput={e => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="リリース名で検索"
           />
@@ -216,10 +216,10 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputType(e.currentTarget.value as '' | `${ReleaseTypeValue}`)}
+            onChange={e => setInputType(e.currentTarget.value as '' | `${ReleaseTypeValue}`)}
           >
             <For each={RELEASE_TYPE_OPTIONS}>
-              {(option) => (
+              {option => (
                 <option value={option.value} selected={inputType() === option.value}>
                   {option.label}
                 </option>
@@ -235,10 +235,10 @@ export const SearchList = () => {
             id="distributionType"
             name="distributionType"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputDistributionType(e.currentTarget.value as '' | `${ReleaseDistributionTypeValue}`)}
+            onChange={e => setInputDistributionType(e.currentTarget.value as '' | `${ReleaseDistributionTypeValue}`)}
           >
             <For each={DISTRIBUTION_TYPE_OPTIONS}>
-              {(option) => (
+              {option => (
                 <option value={option.value} selected={inputDistributionType() === option.value}>
                   {option.label}
                 </option>
@@ -254,7 +254,7 @@ export const SearchList = () => {
             id="isDisplay"
             name="isDisplay"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputIsDisplay(e.currentTarget.value as DisplayFilter)}
+            onChange={e => setInputIsDisplay(e.currentTarget.value as DisplayFilter)}
           >
             <option value="" selected={inputIsDisplay() === ''}>
               すべて
@@ -275,10 +275,10 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
             <For each={PER_PAGE_OPTIONS}>
-              {(n) => (
+              {n => (
                 <option value={n} selected={inputPerPage() === n}>
                   {n}件
                 </option>
@@ -318,24 +318,24 @@ export const SearchList = () => {
                 <ListState state="loading" colSpan={6} />
               </Match>
               <Match when={fetchError()}>
-                {(message) => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releases.length === 0}>
                 <ListState state="empty" colSpan={6} message="条件に一致するリリースはありません。" />
               </Match>
               <Match when={data()}>
-                {(result) => (
+                {result => (
                   <For each={result().releases}>
-                    {(release) => (
+                    {release => (
                       <tr>
                         <td class="min-w-56 font-medium">{release.title}</td>
                         <td>
-                          {RELEASE_TYPE_OPTIONS.find((option) => option.value === String(release.typeValue))?.label ??
-                            '不明'}
+                          {RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label
+                            ?? '不明'}
                         </td>
                         <td>
                           {DISTRIBUTION_TYPE_OPTIONS.find(
-                            (option) => option.value === String(release.distributionTypeValue),
+                            option => option.value === String(release.distributionTypeValue),
                           )?.label ?? '不明'}
                         </td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(release.releasedOn)}</td>
@@ -365,7 +365,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, index) => index + 1)}>
-              {(p) => (
+              {p => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

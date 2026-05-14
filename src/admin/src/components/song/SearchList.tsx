@@ -101,7 +101,7 @@ export const SearchList = () => {
       page: page(),
       perPage: perPage(),
     }),
-    async (params) => {
+    async params => {
       setFetchError(null);
 
       const { data, status } = await client.api.songs.search.get({
@@ -198,7 +198,7 @@ export const SearchList = () => {
             id="title"
             name="title"
             value={inputTitle()}
-            onInput={(e) => setInputTitle(e.currentTarget.value)}
+            onInput={e => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="楽曲名で検索"
           />
@@ -211,7 +211,7 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            onChange={(e) =>
+            onChange={e =>
               setInputType(e.currentTarget.value !== '' ? (e.currentTarget.value as SongSearchTypeValue) : undefined)
             }
           >
@@ -219,7 +219,7 @@ export const SearchList = () => {
               すべて
             </option>
             <For each={data()?.types ?? []}>
-              {(t) => (
+              {t => (
                 <option value={String(t.value)} selected={inputType() === String(t.value)}>
                   {t.name}
                 </option>
@@ -235,7 +235,7 @@ export const SearchList = () => {
             id="isDisplay"
             name="isDisplay"
             class="select select-bordered select-sm"
-            onChange={(e) =>
+            onChange={e =>
               setInputIsDisplay(e.currentTarget.value === '' ? undefined : e.currentTarget.value === 'true')
             }
           >
@@ -258,7 +258,7 @@ export const SearchList = () => {
             id="sort"
             name="sort"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputSort(e.currentTarget.value as Sort)}
+            onChange={e => setInputSort(e.currentTarget.value as Sort)}
           >
             <option value="order_no" selected={inputSort() === 'order_no'}>
               表示順
@@ -276,7 +276,7 @@ export const SearchList = () => {
             id="order"
             name="order"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputOrder(e.currentTarget.value as Order)}
+            onChange={e => setInputOrder(e.currentTarget.value as Order)}
           >
             <option value="asc" selected={inputOrder() === 'asc'}>
               昇順
@@ -294,10 +294,10 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
             <For each={PER_PAGE_OPTIONS}>
-              {(n) => (
+              {n => (
                 <option value={n} selected={inputPerPage() === n}>
                   {n}件
                 </option>
@@ -334,15 +334,15 @@ export const SearchList = () => {
                 <ListState state="loading" colSpan={5} />
               </Match>
               <Match when={fetchError()}>
-                {(message) => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.songs.length === 0}>
                 <ListState state="empty" colSpan={5} />
               </Match>
               <Match when={data()}>
-                {(result) => (
+                {result => (
                   <For each={result().songs}>
-                    {(song) => (
+                    {song => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
                         <td>{song.title}</td>
                         <td>
@@ -377,7 +377,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {(p) => (
+              {p => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

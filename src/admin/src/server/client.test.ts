@@ -16,7 +16,7 @@ const createAuthSession = (
 ): AuthSession => {
   return {
     credential,
-    storeCredential: async (nextCredential) => nextCredential,
+    storeCredential: async nextCredential => nextCredential,
     clearCredential: async () => {},
     acquireRefreshLock: async () => true,
     waitForCredentialUpdate: async () => credential,
@@ -33,11 +33,11 @@ describe('createWithAuthRetry', () => {
     const updatedTokens: string[] = [];
 
     const withAuthRetry = createWithAuthRetry({
-      createClient: (credential) => {
+      createClient: credential => {
         createdTokens.push(credential.accessToken);
         return credential.accessToken;
       },
-      refreshAccessToken: async (credential) => {
+      refreshAccessToken: async credential => {
         refreshedCredentials.push(credential);
         return {
           accessToken: 'renewed-access-token',
@@ -49,14 +49,14 @@ describe('createWithAuthRetry', () => {
 
     const result = await withAuthRetry(
       createAuthSession({
-        storeCredential: async (nextCredential) => {
+        storeCredential: async nextCredential => {
           updatedTokens.push(nextCredential.accessToken);
           expect(nextCredential.refreshTokenId).toBe('renewed-refresh-token-id');
           expect(nextCredential.refreshToken).toBe('renewed-refresh-token');
           return nextCredential;
         },
       }),
-      async (client) => {
+      async client => {
         executorTokens.push(client);
 
         if (client === baseCredential.accessToken) {
@@ -81,8 +81,8 @@ describe('createWithAuthRetry', () => {
     const refreshedCredentials: Credential[] = [];
 
     const withAuthRetry = createWithAuthRetry({
-      createClient: (credential) => credential.accessToken,
-      refreshAccessToken: async (credential) => {
+      createClient: credential => credential.accessToken,
+      refreshAccessToken: async credential => {
         refreshedCredentials.push(credential);
         return latestCredential;
       },
@@ -91,7 +91,7 @@ describe('createWithAuthRetry', () => {
     const result = await withAuthRetry(
       createAuthSession({
         acquireRefreshLock: async () => false,
-        waitForCredentialUpdate: async (previousAccessToken) => {
+        waitForCredentialUpdate: async previousAccessToken => {
           expect(previousAccessToken).toBe(baseCredential.accessToken);
           return latestCredential;
         },
@@ -99,7 +99,7 @@ describe('createWithAuthRetry', () => {
           cleared.push('cleared');
         },
       }),
-      async (client) => {
+      async client => {
         executorTokens.push(client);
 
         if (client === baseCredential.accessToken) {
@@ -119,7 +119,7 @@ describe('createWithAuthRetry', () => {
   it('refresh が 401 ならそのまま未認証へフォールバックする', async () => {
     const cleared: string[] = [];
     const withAuthRetry = createWithAuthRetry({
-      createClient: (credential) => credential.accessToken,
+      createClient: credential => credential.accessToken,
       refreshAccessToken: async () => {
         throw new ApiError(401, {});
       },

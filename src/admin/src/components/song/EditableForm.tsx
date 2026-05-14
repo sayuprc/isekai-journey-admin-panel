@@ -53,7 +53,7 @@ export const EditableForm = (props: Props) => {
   const initialAvailableMedia = (() => {
     const items = [...(props.data?.media ?? [])];
     for (const item of props.data?.song.media ?? []) {
-      if (!items.some((media) => media.mediaId === item.mediaId)) {
+      if (!items.some(media => media.mediaId === item.mediaId)) {
         items.push({
           mediaId: item.mediaId,
           title: item.title,
@@ -68,14 +68,14 @@ export const EditableForm = (props: Props) => {
   })();
 
   const toEntries = (items: SongPerson[] | undefined): PersonEntry[] =>
-    (items ?? []).map((item) => ({ personId: item.personId, role: item.role, orderNo: item.orderNo }));
+    (items ?? []).map(item => ({ personId: item.personId, role: item.role, orderNo: item.orderNo }));
 
   const initialEntries = toEntries(props.data?.song.persons);
-  const [lyricists, setLyricists] = createSignal<PersonEntry[]>(initialEntries.filter((entry) => entry.role === 1));
-  const [composers, setComposers] = createSignal<PersonEntry[]>(initialEntries.filter((entry) => entry.role === 2));
-  const [arrangers, setArrangers] = createSignal<PersonEntry[]>(initialEntries.filter((entry) => entry.role === 3));
+  const [lyricists, setLyricists] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 1));
+  const [composers, setComposers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 2));
+  const [arrangers, setArrangers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 3));
   const [tags, setTags] = createSignal<SongTagEntry[]>(
-    (props.data?.song.tags ?? []).map((tag) => ({ songTagId: tag.songTagId })),
+    (props.data?.song.tags ?? []).map(tag => ({ songTagId: tag.songTagId })),
   );
   const [availableMedia, setAvailableMedia] = createSignal<Media[]>(initialAvailableMedia);
   const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>((props.data?.song.media ?? []).map(toMediaEntry));
@@ -101,11 +101,11 @@ export const EditableForm = (props: Props) => {
   });
 
   const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
-    setter((prev) => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
+    setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
   };
 
   const removeEntry = (setter: typeof setLyricists, index: number) => {
-    setter((prev) => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
+    setter(prev => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
   };
 
   const updateEntry = (
@@ -114,11 +114,11 @@ export const EditableForm = (props: Props) => {
     field: keyof PersonEntry,
     value: string | number,
   ) => {
-    setter((prev) => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+    setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
   const removeTagEntry = (index: number) => {
-    setTags((prev) => prev.filter((_, i) => i !== index));
+    setTags(prev => prev.filter((_, i) => i !== index));
   };
 
   const addTagEntry = (songTagId: string) => {
@@ -126,7 +126,7 @@ export const EditableForm = (props: Props) => {
       return;
     }
 
-    setTags((prev) => (prev.some((entry) => entry.songTagId === songTagId) ? prev : [...prev, { songTagId }]));
+    setTags(prev => (prev.some(entry => entry.songTagId === songTagId) ? prev : [...prev, { songTagId }]));
     setTagPickerValue('');
   };
 
@@ -204,27 +204,25 @@ export const EditableForm = (props: Props) => {
 
   const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
     const selectedPersonIds = new Set(
-      entries
-        .filter((entry) => entry.personId !== '' && entry.personId !== currentPersonId)
-        .map((entry) => entry.personId),
+      entries.filter(entry => entry.personId !== '' && entry.personId !== currentPersonId).map(entry => entry.personId),
     );
 
     return persons
-      .filter((person) => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
-      .map((person) => ({ value: person.personId, label: person.name }));
+      .filter(person => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
+      .map(person => ({ value: person.personId, label: person.name }));
   };
 
   const tagOptions = () => {
-    const selectedTagIds = new Set(tags().map((entry) => entry.songTagId));
+    const selectedTagIds = new Set(tags().map(entry => entry.songTagId));
 
     return availableTags
-      .filter((tag) => !selectedTagIds.has(tag.songTagId))
-      .map((tag) => ({ value: tag.songTagId, label: tag.name }));
+      .filter(tag => !selectedTagIds.has(tag.songTagId))
+      .map(tag => ({ value: tag.songTagId, label: tag.name }));
   };
 
   const selectedTags = () =>
     tags()
-      .map((entry) => availableTags.find((tag) => tag.songTagId === entry.songTagId))
+      .map(entry => availableTags.find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
 
   const PersonSection = (props: {
@@ -246,7 +244,7 @@ export const EditableForm = (props: Props) => {
             <SearchableSelect
               options={personOptions(props.entries(), entry.personId)}
               value={entry.personId}
-              onChange={(value) => updateEntry(props.setter, index(), 'personId', value)}
+              onChange={value => updateEntry(props.setter, index(), 'personId', value)}
               placeholder="人物を検索..."
               required
             />
@@ -256,7 +254,7 @@ export const EditableForm = (props: Props) => {
                 type="number"
                 class="input input-bordered w-16"
                 value={entry.orderNo}
-                onchange={(e) => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
+                onchange={e => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
                 required
                 min="1"
               />
@@ -297,7 +295,7 @@ export const EditableForm = (props: Props) => {
         <SearchableSelect
           options={tagOptions()}
           value={tagPickerValue()}
-          onChange={(value) => addTagEntry(value)}
+          onChange={value => addTagEntry(value)}
           placeholder="楽曲タグを検索して追加..."
         />
         <p class="text-xs text-base-content/60">選択したタグは下に追加されます。</p>
@@ -349,7 +347,7 @@ export const EditableForm = (props: Props) => {
                     classList={{ 'input-error': !!getFieldError('title') }}
                   />
                   <Show when={getFieldError('title')}>
-                    {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                   </Show>
                 </div>
 
@@ -359,7 +357,7 @@ export const EditableForm = (props: Props) => {
                     class="select select-bordered w-full"
                     name="typeValue"
                     value={typeValue()}
-                    onChange={(e) =>
+                    onChange={e =>
                       setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))
                     }
                     required
@@ -368,10 +366,10 @@ export const EditableForm = (props: Props) => {
                     <option value="" disabled>
                       選択してください
                     </option>
-                    <For each={types}>{(type) => <option value={type.value}>{type.name}</option>}</For>
+                    <For each={types}>{type => <option value={type.value}>{type.name}</option>}</For>
                   </select>
                   <Show when={getFieldError('typeValue')}>
-                    {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                   </Show>
                 </div>
 
@@ -385,7 +383,7 @@ export const EditableForm = (props: Props) => {
                     classList={{ 'input-error': !!getFieldError('description') }}
                   />
                   <Show when={getFieldError('description')}>
-                    {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                   </Show>
                 </div>
 
@@ -400,7 +398,7 @@ export const EditableForm = (props: Props) => {
                     classList={{ 'input-error': !!getFieldError('lyricsLink') }}
                   />
                   <Show when={getFieldError('lyricsLink')}>
-                    {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                   </Show>
                 </div>
 

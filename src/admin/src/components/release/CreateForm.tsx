@@ -38,22 +38,22 @@ export const CreateForm = () => {
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
-  const selectedSongIds = createMemo(() => new Set(trackEntries().map((entry) => entry.songId)));
+  const selectedSongIds = createMemo(() => new Set(trackEntries().map(entry => entry.songId)));
 
   const addTrackEntry = (song: SongSummary) => {
     if (selectedSongIds().has(song.songId)) {
       return;
     }
 
-    setTrackEntries((prev) => [...prev, { songId: song.songId, title: song.title }]);
+    setTrackEntries(prev => [...prev, { songId: song.songId, title: song.title }]);
   };
 
   const removeTrackEntry = (songId: string) => {
-    setTrackEntries((prev) => prev.filter((entry) => entry.songId !== songId));
+    setTrackEntries(prev => prev.filter(entry => entry.songId !== songId));
   };
 
   const moveTrackEntry = (index: number, direction: -1 | 1) => {
-    setTrackEntries((prev) => {
+    setTrackEntries(prev => {
       const nextIndex = index + direction;
       if (nextIndex < 0 || nextIndex >= prev.length) {
         return prev;
@@ -162,9 +162,7 @@ export const CreateForm = () => {
                 required
                 classList={{ 'input-error': !!getFieldError('title') }}
               />
-              <Show when={getFieldError('title')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
-              </Show>
+              <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
             </div>
 
             <div>
@@ -177,7 +175,7 @@ export const CreateForm = () => {
                 classList={{ 'input-error': !!getFieldError('releasedOn') }}
               />
               <Show when={getFieldError('releasedOn')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
 
@@ -187,14 +185,12 @@ export const CreateForm = () => {
                 class="select select-bordered w-full"
                 name="typeValue"
                 value={String(typeValue())}
-                onChange={(e) => setTypeValue(Number(e.currentTarget.value) as ReleaseTypeValue)}
+                onChange={e => setTypeValue(Number(e.currentTarget.value) as ReleaseTypeValue)}
               >
-                <For each={RELEASE_TYPE_OPTIONS}>
-                  {(option) => <option value={option.value}>{option.label}</option>}
-                </For>
+                <For each={RELEASE_TYPE_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
               </select>
               <Show when={getFieldError('typeValue')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
 
@@ -204,16 +200,14 @@ export const CreateForm = () => {
                 class="select select-bordered w-full"
                 name="distributionTypeValue"
                 value={String(distributionTypeValue())}
-                onChange={(e) =>
-                  setDistributionTypeValue(Number(e.currentTarget.value) as ReleaseDistributionTypeValue)
-                }
+                onChange={e => setDistributionTypeValue(Number(e.currentTarget.value) as ReleaseDistributionTypeValue)}
               >
                 <For each={DISTRIBUTION_TYPE_OPTIONS}>
-                  {(option) => <option value={option.value}>{option.label}</option>}
+                  {option => <option value={option.value}>{option.label}</option>}
                 </For>
               </select>
               <Show when={getFieldError('distributionTypeValue')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
 
@@ -225,7 +219,7 @@ export const CreateForm = () => {
                 classList={{ 'textarea-error': !!getFieldError('description') }}
               />
               <Show when={getFieldError('description')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
 
@@ -234,14 +228,14 @@ export const CreateForm = () => {
               <select
                 class="select select-bordered w-full"
                 value={String(isDisplay())}
-                onChange={(e) => setIsDisplay(e.currentTarget.value === 'true')}
+                onChange={e => setIsDisplay(e.currentTarget.value === 'true')}
                 classList={{ 'select-error': !!getFieldError('isDisplay') }}
               >
                 <option value="true">表示する</option>
                 <option value="false">表示しない</option>
               </select>
               <Show when={getFieldError('isDisplay')}>
-                {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
           </div>
@@ -250,7 +244,7 @@ export const CreateForm = () => {
         <fieldset class="rounded-box border border-base-300 bg-base-200 p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">収録楽曲</legend>
           <Show when={getFieldError('trackEntries')}>
-            {(message) => <p class="mb-4 text-sm text-error">{message()}</p>}
+            {message => <p class="mb-4 text-sm text-error">{message()}</p>}
           </Show>
           <div class="space-y-6">
             <div>
@@ -322,7 +316,7 @@ export const CreateForm = () => {
                     type="text"
                     class="input input-bordered w-full"
                     value={searchTitle()}
-                    onInput={(e) => setSearchTitle(e.currentTarget.value)}
+                    onInput={e => setSearchTitle(e.currentTarget.value)}
                     placeholder="楽曲名で検索"
                   />
                 </div>
@@ -331,7 +325,7 @@ export const CreateForm = () => {
                 </button>
               </div>
 
-              <Show when={searchError()}>{(message) => <p class="mt-3 text-sm text-error">{message()}</p>}</Show>
+              <Show when={searchError()}>{message => <p class="mt-3 text-sm text-error">{message()}</p>}</Show>
 
               <Show when={hasSearched()}>
                 <div class="mt-4 overflow-x-auto rounded-box border border-base-300 bg-base-100">
@@ -356,7 +350,7 @@ export const CreateForm = () => {
                         }
                       >
                         <For each={searchResults()}>
-                          {(song) => (
+                          {song => (
                             <tr>
                               <td>{song.title}</td>
                               <td>{song.type.name}</td>

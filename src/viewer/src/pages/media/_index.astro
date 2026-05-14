@@ -11,8 +11,8 @@ import Layout from '../../layouts/Layout.astro';
 const videoTypes: readonly string[] = VIDEO_TYPES;
 const postTypes: readonly string[] = POST_TYPES;
 const entries = [...SITE_DATA.media].sort((a, b) => b.date.localeCompare(a.date));
-const videos = entries.filter((entry) => videoTypes.includes(entry.type));
-const posts = entries.filter((entry) => postTypes.includes(entry.type));
+const videos = entries.filter(entry => videoTypes.includes(entry.type));
+const posts = entries.filter(entry => postTypes.includes(entry.type));
 const featured = videos[0];
 ---
 

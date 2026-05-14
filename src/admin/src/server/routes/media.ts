@@ -26,7 +26,7 @@ export const media = new Elysia({ prefix: '/media' })
   .get(
     '/search',
     async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await mediaServiceSearchMedia({
             client,
@@ -58,7 +58,7 @@ export const media = new Elysia({ prefix: '/media' })
   .get(
     '/:mediaId',
     async ({ params: { mediaId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await mediaServiceGetMedia({ client, path: { mediaId } }));
       });
     },
@@ -71,7 +71,7 @@ export const media = new Elysia({ prefix: '/media' })
   .post(
     '/',
     async ({ body: { title, url, publishedAt, typeValue, formatValue, isDisplay }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await mediaServiceCreateMedia({
             client,
@@ -105,7 +105,7 @@ export const media = new Elysia({ prefix: '/media' })
       body: { title, url, publishedAt, typeValue, formatValue, isDisplay },
       authSession,
     }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await mediaServiceUpdateMedia({
             client,
@@ -139,7 +139,7 @@ export const media = new Elysia({ prefix: '/media' })
   .delete(
     '/:mediaId',
     async ({ params: { mediaId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await mediaServiceDeleteMedia({
             client,

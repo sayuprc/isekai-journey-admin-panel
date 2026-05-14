@@ -27,16 +27,16 @@ const isValidationError = (body: unknown): body is ValidationErrorBody =>
   typeof body === 'object' && body !== null && 'errors' in body && Array.isArray((body as ValidationErrorBody).errors);
 
 const isErrorResponse = (body: unknown): body is ErrorResponseBody =>
-  typeof body === 'object' &&
-  body !== null &&
-  'message' in body &&
-  typeof (body as ErrorResponseBody).message === 'string';
+  typeof body === 'object'
+  && body !== null
+  && 'message' in body
+  && typeof (body as ErrorResponseBody).message === 'string';
 
 export const createFormErrors = () => {
   const [formError, setFormError] = createSignal<string | null>(null);
   const [fieldErrors, setFieldErrors] = createSignal<ValidationErrorDetail[]>([]);
 
-  const getFieldError = (field: string): string | undefined => fieldErrors().find((e) => e.field === field)?.message;
+  const getFieldError = (field: string): string | undefined => fieldErrors().find(e => e.field === field)?.message;
 
   const clearErrors = () => {
     setFormError(null);

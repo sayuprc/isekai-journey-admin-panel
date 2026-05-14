@@ -161,7 +161,7 @@ export const EditableForm = (props: Props) => {
               value={props.data?.media.title}
               classList={{ 'input-error': !!getFieldError('title') }}
             />
-            <Show when={getFieldError('title')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
             <label class="label">URL</label>
             <input
@@ -171,7 +171,7 @@ export const EditableForm = (props: Props) => {
               value={props.data?.media.url}
               classList={{ 'input-error': !!getFieldError('url') }}
             />
-            <Show when={getFieldError('url')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('url')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
             <label class="label">公開日</label>
             <input
@@ -183,7 +183,7 @@ export const EditableForm = (props: Props) => {
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
             <Show when={getFieldError('publishedAt')}>
-              {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
             </Show>
 
             <div class="grid gap-4 md:grid-cols-2">
@@ -195,12 +195,12 @@ export const EditableForm = (props: Props) => {
                   value={props.data?.media.type.value}
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
-                  {MEDIA_TYPE_OPTIONS.map((option) => (
+                  {MEDIA_TYPE_OPTIONS.map(option => (
                     <option value={option.value}>{option.label}</option>
                   ))}
                 </select>
                 <Show when={getFieldError('typeValue')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 
@@ -212,12 +212,12 @@ export const EditableForm = (props: Props) => {
                   value={props.data?.media.format.value}
                   classList={{ 'select-error': !!getFieldError('formatValue') }}
                 >
-                  {MEDIA_FORMAT_OPTIONS.map((option) => (
+                  {MEDIA_FORMAT_OPTIONS.map(option => (
                     <option value={option.value}>{option.label}</option>
                   ))}
                 </select>
                 <Show when={getFieldError('formatValue')}>
-                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
             </div>
@@ -233,7 +233,7 @@ export const EditableForm = (props: Props) => {
               <option value="false">表示しない</option>
             </select>
             <Show when={getFieldError('isDisplay')}>
-              {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
             </Show>
 
             <div class="mt-6 flex justify-end">
@@ -261,7 +261,7 @@ export const EditableForm = (props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {props.data?.songs.map((song) => (
+                  {props.data?.songs.map(song => (
                     <tr>
                       <td>{song.title}</td>
                       <td>{song.songOrderNo}</td>

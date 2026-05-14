@@ -21,7 +21,8 @@
   },
   "javascript": {
     "formatter": {
-      "arrowParentheses": "always",
+      "arrowParentheses": "asNeeded",
+      "operatorLinebreak": "before",
       "quoteProperties": "preserve",
       "quoteStyle": "single",
       "semicolons": "always"

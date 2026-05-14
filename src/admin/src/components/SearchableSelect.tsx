@@ -21,14 +21,14 @@ export const SearchableSelect = (props: Props) => {
   const inputId = createUniqueId();
   let containerRef: HTMLDivElement | undefined;
 
-  const selectedLabel = () => props.options.find((option) => option.value === props.value)?.label ?? '';
+  const selectedLabel = () => props.options.find(option => option.value === props.value)?.label ?? '';
 
   const filtered = () => {
     const loweredQuery = query().toLowerCase();
     if (loweredQuery === '') {
       return props.options;
     }
-    return props.options.filter((o) => o.label.toLowerCase().includes(loweredQuery));
+    return props.options.filter(o => o.label.toLowerCase().includes(loweredQuery));
   };
 
   const activeDescendant = () => {
@@ -38,7 +38,7 @@ export const SearchableSelect = (props: Props) => {
 
   const selectOption = (value: string) => {
     props.onChange(value);
-    const label = props.options.find((option) => option.value === value)?.label ?? '';
+    const label = props.options.find(option => option.value === value)?.label ?? '';
     setQuery(label);
     setOpen(false);
     setActiveIndex(-1);
@@ -66,13 +66,13 @@ export const SearchableSelect = (props: Props) => {
       case 'ArrowDown': {
         e.preventDefault();
         setOpen(true);
-        setActiveIndex((prev) => (prev < items.length - 1 ? prev + 1 : 0));
+        setActiveIndex(prev => (prev < items.length - 1 ? prev + 1 : 0));
         break;
       }
       case 'ArrowUp': {
         e.preventDefault();
         setOpen(true);
-        setActiveIndex((prev) => (prev > 0 ? prev - 1 : items.length - 1));
+        setActiveIndex(prev => (prev > 0 ? prev - 1 : items.length - 1));
         break;
       }
       case 'Enter': {
@@ -127,7 +127,7 @@ export const SearchableSelect = (props: Props) => {
         aria-controls={listboxId}
         aria-expanded={open()}
         aria-activedescendant={activeDescendant()}
-        onInput={(e) => {
+        onInput={e => {
           setQuery(e.currentTarget.value);
           setOpen(true);
           setActiveIndex(-1);
@@ -164,7 +164,7 @@ export const SearchableSelect = (props: Props) => {
                     class={index() === activeIndex() ? 'active' : ''}
                     role="option"
                     aria-selected={index() === activeIndex()}
-                    onMouseDown={(e) => {
+                    onMouseDown={e => {
                       e.preventDefault();
                       selectOption(option.value);
                     }}

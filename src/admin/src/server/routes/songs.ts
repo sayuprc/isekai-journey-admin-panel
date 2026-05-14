@@ -27,7 +27,7 @@ const SongMediaRefSchema = t.Array(t.Object({ mediaId: t.String(), orderNo: t.Nu
 export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
   .get('/create-form', async ({ authSession }) => {
-    return withAuthRetry(authSession, async (client) => {
+    return withAuthRetry(authSession, async client => {
       const [persons, types, tags, media] = await Promise.all([
         personServiceListPersons({ client }),
         songTypeServiceListSongTypes({ client }),
@@ -46,7 +46,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .get(
     '/search',
     async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         const [searchResult, types] = await Promise.all([
           songServiceSearchSongs({
             client,
@@ -84,7 +84,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .get(
     '/:songId/edit-form',
     async ({ params: { songId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         const [song, persons, types, tags, media] = await Promise.all([
           songServiceGetSong({ client, path: { songId } }),
           personServiceListPersons({ client }),
@@ -111,7 +111,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .get(
     '/:songId',
     async ({ params: { songId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(await songServiceGetSong({ client, path: { songId } }));
       });
     },
@@ -124,7 +124,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .post(
     '/',
     async ({ body: { title, description, lyricsLink, typeValue, isDisplay, persons, tags, media }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await songServiceCreateSong({
             client,
@@ -162,7 +162,7 @@ export const songs = new Elysia({ prefix: '/songs' })
       body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, persons, tags, media },
       authSession,
     }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         return resolveApiResponse(
           await songServiceUpdateSong({
             client,
@@ -202,7 +202,7 @@ export const songs = new Elysia({ prefix: '/songs' })
   .delete(
     '/:songId',
     async ({ params: { songId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
+      return withAuthRetry(authSession, async client => {
         resolveApiResponse(await songServiceDeleteSong({ client, path: { songId } }));
       });
     },
