@@ -29,27 +29,29 @@ const formatPublishedAt = (value: string): string =>
 
 <div class="detail-page-content media-detail-content">
   {
-    postEntry ? (
-      <div class="post-detail-card">
-        <div class="post-card-head">
-          {/* <span class={`platform-badge ${platform.className}`}>{platform.mark}</span> */}
-          <div class="label-mono">{media.type.name} · {formatPublishedAt(media.publishedAt)}</div>
-        </div>
-        <div style="font-family:'Shippori Mincho',serif;font-size:22px;letter-spacing:0.04em;line-height:1.4;">{media.title}</div>
-        {/* API に投稿本文 (text) が無いため未提供セクションとして雛形を残す */}
-        {/* <div style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:var(--fg);white-space:pre-wrap;">{entry.text}</div> */}
-        {/* API に hasImage / color が無いため未提供セクションとして雛形を残す */}
-        {/* {entry.hasImage && <div class="post-detail-image" style={`--tile-color:${entry.color};`}></div>} */}
-        {/* API に likes / reposts / readTime が無いため未提供セクションとして雛形を残す */}
-        {/* <div style="display:flex;gap:20px;font-size:12px;color:var(--fg-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
-          {entry.likes && <span>♥ {entry.likes}</span>}
-          {entry.reposts && <span>↻ {entry.reposts}</span>}
-          {entry.readTime && <span>⏱ {entry.readTime}</span>}
-        </div> */}
-      </div>
-    ) : (
-      <MVThumb color={tileColor} label={`${media.type.name} · ${media.mediaId}`} />
-    )
+    postEntry
+      ? (
+          <div class="post-detail-card">
+            <div class="post-card-head">
+              {/* <span class={`platform-badge ${platform.className}`}>{platform.mark}</span> */}
+              <div class="label-mono">{media.type.name} · {formatPublishedAt(media.publishedAt)}</div>
+            </div>
+            <div style="font-family:'Shippori Mincho',serif;font-size:22px;letter-spacing:0.04em;line-height:1.4;">{media.title}</div>
+            {/* API に投稿本文 (text) が無いため未提供セクションとして雛形を残す */}
+            {/* <div style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:var(--fg);white-space:pre-wrap;">{entry.text}</div> */}
+            {/* API に hasImage / color が無いため未提供セクションとして雛形を残す */}
+            {/* {entry.hasImage && <div class="post-detail-image" style={`--tile-color:${entry.color};`}></div>} */}
+            {/* API に likes / reposts / readTime が無いため未提供セクションとして雛形を残す */}
+            {/* <div style="display:flex;gap:20px;font-size:12px;color:var(--fg-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
+              {entry.likes && <span>♥ {entry.likes}</span>}
+              {entry.reposts && <span>↻ {entry.reposts}</span>}
+              {entry.readTime && <span>⏱ {entry.readTime}</span>}
+            </div> */}
+          </div>
+        )
+      : (
+          <MVThumb color={tileColor} label={`${media.type.name} · ${media.mediaId}`} />
+        )
   }
 
   {

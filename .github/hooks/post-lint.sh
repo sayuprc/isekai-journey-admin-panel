@@ -73,8 +73,15 @@ case "$file" in
     fi
     ;;
 
-  */src/admin/*.ts|*/src/admin/*.tsx|*/src/admin/*.js|*/src/admin/*.jsx|*/src/admin/*.mjs)
-    cd "$repo_root/src/admin"
+  */src/admin/*.ts|*/src/admin/*.tsx|*/src/admin/*.js|*/src/admin/*.jsx|*/src/admin/*.mjs|*/src/viewer/*.ts|*/src/viewer/*.tsx|*/src/viewer/*.js|*/src/viewer/*.jsx|*/src/viewer/*.mjs)
+    case "$file" in
+      */src/admin/*)
+        cd "$repo_root/src/admin"
+        ;;
+      *)
+        cd "$repo_root/src/viewer"
+        ;;
+    esac
 
     # Oxlint 自動修正
     bunx oxlint --fix "$file" >/dev/null 2>&1 || true
@@ -92,8 +99,15 @@ case "$file" in
     fi
     ;;
 
-  */src/admin/*.astro)
-    cd "$repo_root/src/admin"
+  */src/admin/*.astro|*/src/viewer/*.astro)
+    case "$file" in
+      */src/admin/*)
+        cd "$repo_root/src/admin"
+        ;;
+      *)
+        cd "$repo_root/src/viewer"
+        ;;
+    esac
 
     # ESLint
     bunx eslint --fix "$file" >/dev/null 2>&1 || true
@@ -121,8 +135,15 @@ case "$file" in
     fi
     ;;
 
-  */src/admin/*.css)
-    cd "$repo_root/src/admin"
+  */src/admin/*.css|*/src/viewer/*.css)
+    case "$file" in
+      */src/admin/*)
+        cd "$repo_root/src/admin"
+        ;;
+      *)
+        cd "$repo_root/src/viewer"
+        ;;
+    esac
 
     # Stylelint 自動修正
     bunx stylelint --fix "$file" >/dev/null 2>&1 || true

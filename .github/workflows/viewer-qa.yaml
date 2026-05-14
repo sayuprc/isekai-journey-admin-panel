@@ -6,63 +6,36 @@ on:
     branches:
       - dev
 
+env:
+  MISE_ENV: ci
+
 jobs:
-  none:
-    name: None
+  lint:
+    name: ESLint
 
     runs-on: ubuntu-latest
 
-    # TODO 将来的に整備する
     steps:
-      - run: echo 1
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref }}
 
-  # check:
-  #   name: Check (Node ${{ matrix.node-versions }})
+      - name: Setup mise
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
 
-  #   runs-on: ubuntu-latest
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/bun.lock') }}
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       node-versions: ["22"]
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run bun:install
 
-  #   steps:
-  #     - name: Checkout the code
-  #       uses: actions/checkout@v4
-  #       with:
-  #         ref: ${{ github.ref }}
-
-  #     - name: npm cache
-  #       id: npm-cache
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ./src/node_modules
-  #         key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-package-
-
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: ${{ matrix.node-versions }}
-
-  #     - name: Install packages
-  #       if: steps.npm-cache.outputs.cache-hit != 'true'
-  #       run: |
-  #         cd src
-  #         npm i
-
-  #     - name: Run ESLint
-  #       run: |
-  #         cd src
-  #         npm run lint
-
-  #     - name: Run Stylelint
-  #       run: |
-  #         cd src
-  #         npm run style
-
-      # - name: Run Build
-      #   run: |
-      #     cd src
-      #     npm run build
+      - name: Run ESLint
+        run: mise run viewer:lint

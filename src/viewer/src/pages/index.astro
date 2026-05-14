@@ -1,17 +1,6 @@
 ---
-import JacketArt from '../components/viewer/JacketArt.astro';
-import MVThumb from '../components/viewer/MVThumb.astro';
-import PostCard from '../components/viewer/PostCard.astro';
-import SectionHead from '../components/viewer/SectionHead.astro';
-import { Q, SITE_DATA } from '../data/mock/site-data';
-import { mediaTypeLabel } from '../features/media/labels';
-import { latestMedia, latestPosts } from '../features/media/sort';
-import { latestRelease } from '../features/releases/sort';
+import { SITE_DATA } from '../data/mock/site-data';
 import Layout from '../layouts/Layout.astro';
-
-const release = latestRelease();
-const media = latestMedia(3);
-const posts = latestPosts(3);
 ---
 
 <Layout pageTitle="Home">

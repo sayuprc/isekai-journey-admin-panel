@@ -69,7 +69,7 @@ export const DetailDrawer = () => {
     const target = resolveDrawerTarget(pathname);
     if (!target) return false;
 
-    setStack(prev => {
+    setStack((prev) => {
       const last = prev[prev.length - 1];
       if (last?.pathname === target.pathname) return prev;
       return [...prev, target];
@@ -166,7 +166,7 @@ export const DetailDrawer = () => {
         <div class="detail-overlay" onClick={closeDrawer}>
           <aside class="detail-panel" onClick={event => event.stopPropagation()}>
             <div class="detail-head">
-              <div style={{ display: 'flex', 'align-items': 'center', gap: '12px' }}>
+              <div style={{ 'display': 'flex', 'align-items': 'center', 'gap': '12px' }}>
                 <Show when={stack().length > 1}>
                   <button class="icon-btn" type="button" onClick={() => void goBack()} title="戻る">
                     ←

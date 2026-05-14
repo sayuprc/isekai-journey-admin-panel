@@ -24,6 +24,11 @@ pre-commit:
       glob: "src/**/*.{css,astro}"
       run: mise run admin:style -- {staged_files}
 
+    viewer-lint:
+      root: "src/viewer/"
+      glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
+      run: mise run viewer:lint -- {staged_files}
+
     contracts-format:
       root: "src/"
       glob: "contracts/src/**/*.tsp"
