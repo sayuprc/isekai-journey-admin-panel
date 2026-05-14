@@ -69,7 +69,7 @@ export const DetailDrawer = () => {
     const target = resolveDrawerTarget(pathname);
     if (!target) return false;
 
-    setStack(prev => {
+    setStack((prev) => {
       const last = prev[prev.length - 1];
       if (last?.pathname === target.pathname) return prev;
       return [...prev, target];
@@ -162,9 +162,9 @@ export const DetailDrawer = () => {
 
   return (
     <Show when={current()}>
-      {target => (
+      {(target) => (
         <div class="detail-overlay" onClick={closeDrawer}>
-          <aside class="detail-panel" onClick={event => event.stopPropagation()}>
+          <aside class="detail-panel" onClick={(event) => event.stopPropagation()}>
             <div class="detail-head">
               <div style={{ display: 'flex', 'align-items': 'center', gap: '12px' }}>
                 <Show when={stack().length > 1}>
@@ -185,7 +185,12 @@ export const DetailDrawer = () => {
                 <button class="icon-btn drawer-share-btn" type="button" onClick={handleShare} title="共有リンク">
                   {shareLabel()}
                 </button>
-                <a class="icon-btn drawer-open-link" href={target().pathname} title="この詳細ページを開く" data-drawer-bypass="true">
+                <a
+                  class="icon-btn drawer-open-link"
+                  href={target().pathname}
+                  title="この詳細ページを開く"
+                  data-drawer-bypass="true"
+                >
                   ↗
                 </a>
                 <button class="icon-btn" type="button" onClick={closeDrawer} title="閉じる">

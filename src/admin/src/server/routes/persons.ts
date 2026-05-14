@@ -71,7 +71,9 @@ export const persons = new Elysia({ prefix: '/persons' })
     '/:personId',
     async ({ params: { personId }, body: { name, orderNo }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await personServiceUpdatePerson({ client, path: { personId }, body: { name, orderNo } }));
+        return resolveApiResponse(
+          await personServiceUpdatePerson({ client, path: { personId }, body: { name, orderNo } }),
+        );
       });
     },
     {

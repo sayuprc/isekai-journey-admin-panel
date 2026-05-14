@@ -3,7 +3,7 @@ import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import LayoutSwitcher from '../../components/viewer/LayoutSwitcher';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { songRepository } from '../../features/songs/api'
+import { songRepository } from '../../features/songs/api';
 import Layout from '../../layouts/Layout.astro';
 
 const songs = await songRepository.all();

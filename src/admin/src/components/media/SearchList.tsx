@@ -83,7 +83,14 @@ export const SearchList = () => {
   const [inputIsDisplay, setInputIsDisplay] = createSignal<DisplayFilter>(initial.isDisplay);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
 
-  const updateUrl = (params: { title: string; type: string; format: string; isDisplay: DisplayFilter; page: number; perPage: number }) => {
+  const updateUrl = (params: {
+    title: string;
+    type: string;
+    format: string;
+    isDisplay: DisplayFilter;
+    page: number;
+    perPage: number;
+  }) => {
     const searchParams = new URLSearchParams();
     if (params.title) searchParams.set('title', params.title);
     if (params.type) searchParams.set('type', params.type);
@@ -97,7 +104,14 @@ export const SearchList = () => {
   const [fetchError, setFetchError] = createSignal<string | null>(null);
 
   const [data, { refetch }] = createResource(
-    () => ({ title: title(), type: type(), format: format(), isDisplay: isDisplay(), page: page(), perPage: perPage() }),
+    () => ({
+      title: title(),
+      type: type(),
+      format: format(),
+      isDisplay: isDisplay(),
+      page: page(),
+      perPage: perPage(),
+    }),
     async (params) => {
       setFetchError(null);
 
@@ -136,12 +150,26 @@ export const SearchList = () => {
     setIsDisplay(inputIsDisplay());
     setPerPage(inputPerPage());
     setPage(newPage);
-    updateUrl({ title: inputTitle(), type: inputType(), format: inputFormat(), isDisplay: inputIsDisplay(), page: newPage, perPage: inputPerPage() });
+    updateUrl({
+      title: inputTitle(),
+      type: inputType(),
+      format: inputFormat(),
+      isDisplay: inputIsDisplay(),
+      page: newPage,
+      perPage: inputPerPage(),
+    });
   };
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
-    updateUrl({ title: title(), type: type(), format: format(), isDisplay: isDisplay(), page: nextPage, perPage: perPage() });
+    updateUrl({
+      title: title(),
+      type: type(),
+      format: format(),
+      isDisplay: isDisplay(),
+      page: nextPage,
+      perPage: perPage(),
+    });
   };
 
   const handleReset = () => {
@@ -171,7 +199,7 @@ export const SearchList = () => {
             id="title"
             name="title"
             value={inputTitle()}
-            onInput={e => setInputTitle(e.currentTarget.value)}
+            onInput={(e) => setInputTitle(e.currentTarget.value)}
             class="input input-bordered input-sm"
             placeholder="メディアタイトルで検索"
           />
@@ -184,9 +212,15 @@ export const SearchList = () => {
             id="type"
             name="type"
             class="select select-bordered select-sm"
-            onChange={e => setInputType(e.currentTarget.value as '' | `${MediaTypeValue}`)}
+            onChange={(e) => setInputType(e.currentTarget.value as '' | `${MediaTypeValue}`)}
           >
-            <For each={MEDIA_TYPE_OPTIONS}>{option => <option value={option.value} selected={inputType() === option.value}>{option.label}</option>}</For>
+            <For each={MEDIA_TYPE_OPTIONS}>
+              {(option) => (
+                <option value={option.value} selected={inputType() === option.value}>
+                  {option.label}
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -197,9 +231,15 @@ export const SearchList = () => {
             id="format"
             name="format"
             class="select select-bordered select-sm"
-            onChange={e => setInputFormat(e.currentTarget.value as '' | `${MediaFormatValue}`)}
+            onChange={(e) => setInputFormat(e.currentTarget.value as '' | `${MediaFormatValue}`)}
           >
-            <For each={MEDIA_FORMAT_OPTIONS}>{option => <option value={option.value} selected={inputFormat() === option.value}>{option.label}</option>}</For>
+            <For each={MEDIA_FORMAT_OPTIONS}>
+              {(option) => (
+                <option value={option.value} selected={inputFormat() === option.value}>
+                  {option.label}
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -210,11 +250,17 @@ export const SearchList = () => {
             id="isDisplay"
             name="isDisplay"
             class="select select-bordered select-sm"
-            onChange={e => setInputIsDisplay(e.currentTarget.value as DisplayFilter)}
+            onChange={(e) => setInputIsDisplay(e.currentTarget.value as DisplayFilter)}
           >
-            <option value="" selected={inputIsDisplay() === ''}>すべて</option>
-            <option value="true" selected={inputIsDisplay() === 'true'}>表示する</option>
-            <option value="false" selected={inputIsDisplay() === 'false'}>表示しない</option>
+            <option value="" selected={inputIsDisplay() === ''}>
+              すべて
+            </option>
+            <option value="true" selected={inputIsDisplay() === 'true'}>
+              表示する
+            </option>
+            <option value="false" selected={inputIsDisplay() === 'false'}>
+              表示しない
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -225,9 +271,15 @@ export const SearchList = () => {
             id="perPage"
             name="perPage"
             class="select select-bordered select-sm"
-            onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
+            onChange={(e) => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>
+              {(n) => (
+                <option value={n} selected={inputPerPage() === n}>
+                  {n}件
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm mb-1">
@@ -263,15 +315,15 @@ export const SearchList = () => {
                 <ListState state="loading" colSpan={7} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={7} message={message()} onRetry={() => refetch()} />}
+                {(message) => <ListState state="error" colSpan={7} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.media.length === 0}>
                 <ListState state="empty" colSpan={7} message="条件に一致するメディアはありません。" />
               </Match>
               <Match when={data()}>
-                {result => (
+                {(result) => (
                   <For each={result().media}>
-                    {media => (
+                    {(media) => (
                       <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
                         <td class="min-w-44 max-w-56">
                           <p class="truncate">{media.title}</p>
@@ -279,18 +331,28 @@ export const SearchList = () => {
                         <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(media.publishedAt)}</td>
                         <td>{media.type.name}</td>
                         <td>
-                          <span class={`badge badge-sm ${media.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
+                          <span
+                            class={`badge badge-sm ${media.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}
+                          >
                             {media.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>
                         <td>{media.format.name}</td>
                         <td class="max-w-xl">
-                          <a href={media.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-sm">
+                          <a
+                            href={media.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            class="link link-hover break-all text-sm"
+                          >
                             {media.url}
                           </a>
                         </td>
                         <td>
-                          <a href={`/media/${media.mediaId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                          <a
+                            href={`/media/${media.mediaId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="btn btn-ghost btn-xs"
+                          >
                             編集
                           </a>
                         </td>
@@ -308,7 +370,7 @@ export const SearchList = () => {
         <div class="mt-4 flex justify-center">
           <div class="join">
             <For each={Array.from({ length: data()!.maxPage }, (_, index) => index + 1)}>
-              {p => (
+              {(p) => (
                 <button
                   class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
                   onClick={() => handlePageChange(p)}

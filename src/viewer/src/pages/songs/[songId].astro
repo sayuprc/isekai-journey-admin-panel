@@ -4,7 +4,7 @@ import { songRepository } from '../../features/songs/api';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  return (await songRepository.all()).map(song => ({ params: { songId: song.songId } }));
+  return (await songRepository.all()).map((song) => ({ params: { songId: song.songId } }));
 }
 
 const { songId } = Astro.params;

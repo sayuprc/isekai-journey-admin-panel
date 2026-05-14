@@ -1,5 +1,11 @@
 import { Elysia, t } from 'elysia';
-import { releaseServiceCreateRelease, releaseServiceDeleteRelease, releaseServiceGetRelease, releaseServiceSearchReleases, releaseServiceUpdateRelease } from '../../generated';
+import {
+  releaseServiceCreateRelease,
+  releaseServiceDeleteRelease,
+  releaseServiceGetRelease,
+  releaseServiceSearchReleases,
+  releaseServiceUpdateRelease,
+} from '../../generated';
 import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -22,10 +28,12 @@ export const releases = new Elysia({ prefix: '/releases' })
         releasedOn: t.String(),
         description: t.String(),
         isDisplay: t.Boolean(),
-        trackEntries: t.Array(t.Object({
-          songId: t.String(),
-          trackNo: t.Number(),
-        })),
+        trackEntries: t.Array(
+          t.Object({
+            songId: t.String(),
+            trackNo: t.Number(),
+          }),
+        ),
       }),
     },
   )
@@ -33,17 +41,19 @@ export const releases = new Elysia({ prefix: '/releases' })
     '/search',
     async ({ query, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await releaseServiceSearchReleases({
-          client,
-          query: {
-            title: query.title || undefined,
-            type: query.type as ReleaseTypeValue | undefined,
-            distribution_type: query.distribution_type as ReleaseDistributionTypeValue | undefined,
-            is_display: query.is_display,
-            page: query.page ?? 1,
-            per_page: (query.per_page ?? 25) as PerPage,
-          },
-        }));
+        return resolveApiResponse(
+          await releaseServiceSearchReleases({
+            client,
+            query: {
+              title: query.title || undefined,
+              type: query.type as ReleaseTypeValue | undefined,
+              distribution_type: query.distribution_type as ReleaseDistributionTypeValue | undefined,
+              is_display: query.is_display,
+              page: query.page ?? 1,
+              per_page: (query.per_page ?? 25) as PerPage,
+            },
+          }),
+        );
       });
     },
     {
@@ -74,11 +84,13 @@ export const releases = new Elysia({ prefix: '/releases' })
     '/:releaseId',
     async ({ params: { releaseId }, body, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await releaseServiceUpdateRelease({
-          client,
-          path: { releaseId },
-          body,
-        }));
+        return resolveApiResponse(
+          await releaseServiceUpdateRelease({
+            client,
+            path: { releaseId },
+            body,
+          }),
+        );
       });
     },
     {
@@ -92,10 +104,12 @@ export const releases = new Elysia({ prefix: '/releases' })
         releasedOn: t.String(),
         description: t.String(),
         isDisplay: t.Boolean(),
-        trackEntries: t.Array(t.Object({
-          songId: t.String(),
-          trackNo: t.Number(),
-        })),
+        trackEntries: t.Array(
+          t.Object({
+            songId: t.String(),
+            trackNo: t.Number(),
+          }),
+        ),
       }),
     },
   )
@@ -103,10 +117,12 @@ export const releases = new Elysia({ prefix: '/releases' })
     '/:releaseId',
     async ({ params: { releaseId }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await releaseServiceDeleteRelease({
-          client,
-          path: { releaseId },
-        }));
+        return resolveApiResponse(
+          await releaseServiceDeleteRelease({
+            client,
+            path: { releaseId },
+          }),
+        );
       });
     },
     {

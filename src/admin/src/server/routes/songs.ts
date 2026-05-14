@@ -18,7 +18,9 @@ import { authGuard } from '../middleware';
 const SongTypeValueSchema = t.Union([t.Literal(1), t.Literal(2)]);
 const NullableStringSchema = t.Union([t.String(), t.Null()]);
 
-const SongPersonRefSchema = t.Array(t.Object({ personId: t.String(), role: t.Union([t.Literal(1), t.Literal(2), t.Literal(3)]), orderNo: t.Number() }));
+const SongPersonRefSchema = t.Array(
+  t.Object({ personId: t.String(), role: t.Union([t.Literal(1), t.Literal(2), t.Literal(3)]), orderNo: t.Number() }),
+);
 const SongTagRefSchema = t.Array(t.Object({ songTagId: t.String() }));
 const SongMediaRefSchema = t.Array(t.Object({ mediaId: t.String(), orderNo: t.Number() }));
 
@@ -155,7 +157,11 @@ export const songs = new Elysia({ prefix: '/songs' })
   )
   .put(
     '/:songId',
-    async ({ params: { songId }, body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, persons, tags, media }, authSession }) => {
+    async ({
+      params: { songId },
+      body: { title, description, lyricsLink, typeValue, isDisplay, orderNo, persons, tags, media },
+      authSession,
+    }) => {
       return withAuthRetry(authSession, async (client) => {
         return resolveApiResponse(
           await songServiceUpdateSong({

@@ -1,175 +1,180 @@
 /* ヰ世界情緒ファンサイト - 共通スタイル */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap");
 
 :root {
-  --bg: #0F0F11;
-  --bg-elev: #1A1A1E;
+  --bg: #0f0f11;
+  --bg-elev: #1a1a1e;
   --bg-elev-2: #232328;
-  --fg: #F4F4F6;
-  --fg-muted: #9CA3AF;
-  --fg-faint: #5A606C;
-  --line: #2C2C32;
-  --line-soft: #1F1F24;
-  --accent: #E63946;
-  --accent-strong: #F25661;
+  --fg: #f4f4f6;
+  --fg-muted: #9ca3af;
+  --fg-faint: #5a606c;
+  --line: #2c2c32;
+  --line-soft: #1f1f24;
+  --accent: #e63946;
+  --accent-strong: #f25661;
   --accent-faint: #5a1f23;
-  --accent-2: #3A6D8C;
-  --accent-2-strong: #5688AB;
+  --accent-2: #3a6d8c;
+  --accent-2-strong: #5688ab;
   --accent-2-faint: #1d3849;
-  --special: #9CA3AF;
-  --special-strong: #C8CDD6;
-  --special-faint: #3A3F48;
+  --special: #9ca3af;
+  --special-strong: #c8cdd6;
+  --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 [data-palette="anemone-1"] {
-  --bg: #0F0F11;
-  --bg-elev: #1A1A1E;
+  --bg: #0f0f11;
+  --bg-elev: #1a1a1e;
   --bg-elev-2: #232328;
-  --fg: #F4F4F6;
-  --fg-muted: #9CA3AF;
-  --fg-faint: #5A606C;
-  --line: #2C2C32;
-  --line-soft: #1F1F24;
-  --accent: #E63946;
-  --accent-strong: #F25661;
+  --fg: #f4f4f6;
+  --fg-muted: #9ca3af;
+  --fg-faint: #5a606c;
+  --line: #2c2c32;
+  --line-soft: #1f1f24;
+  --accent: #e63946;
+  --accent-strong: #f25661;
   --accent-faint: #5a1f23;
-  --accent-2: #3A6D8C;
-  --accent-2-strong: #5688AB;
+  --accent-2: #3a6d8c;
+  --accent-2-strong: #5688ab;
   --accent-2-faint: #1d3849;
-  --special: #9CA3AF;
-  --special-strong: #C8CDD6;
-  --special-faint: #3A3F48;
+  --special: #9ca3af;
+  --special-strong: #c8cdd6;
+  --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 [data-palette="anemone-2"] {
-  --bg: #F0F5F9;
-  --bg-elev: #FFFFFF;
-  --bg-elev-2: #E4ECF3;
-  --fg: #2A323C;
-  --fg-muted: #788A9E;
-  --fg-faint: #B0BCCC;
-  --line: #D2DCE6;
-  --line-soft: #E2EAF2;
-  --accent: #38BDF8;
-  --accent-strong: #0EA5E0;
-  --accent-faint: #B5E4FA;
-  --accent-2: #E05A65;
-  --accent-2-strong: #C44552;
-  --accent-2-faint: #F4B7BD;
-  --special: #8B7BB1;
-  --special-strong: #6F5F95;
-  --special-faint: #D5CDE3;
-  --paper: #F0F5F9;
-  --shadow: 0 20px 60px rgba(30,50,80,0.07);
+  --bg: #f0f5f9;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #e4ecf3;
+  --fg: #2a323c;
+  --fg-muted: #788a9e;
+  --fg-faint: #b0bccc;
+  --line: #d2dce6;
+  --line-soft: #e2eaf2;
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e0;
+  --accent-faint: #b5e4fa;
+  --accent-2: #e05a65;
+  --accent-2-strong: #c44552;
+  --accent-2-faint: #f4b7bd;
+  --special: #8b7bb1;
+  --special-strong: #6f5f95;
+  --special-faint: #d5cde3;
+  --paper: #f0f5f9;
+  --shadow: 0 20px 60px rgba(30, 50, 80, 0.07);
 }
 
 [data-palette="nemophila-1"] {
-  --bg: #FFFFFF;
-  --bg-elev: #F0F8FF;
-  --bg-elev-2: #E2EEF8;
-  --fg: #1B2A49;
-  --fg-muted: #6B8EB8;
-  --fg-faint: #A8BCD3;
-  --line: #C8DAEC;
-  --line-soft: #DEE9F4;
-  --accent: #3A8DDE;
-  --accent-strong: #2270BD;
-  --accent-faint: #B6D5F0;
-  --accent-2: #8BC6EC;
-  --accent-2-strong: #5BA8DB;
-  --accent-2-faint: #D6E9F7;
-  --special: #E2F0F9;
-  --special-strong: #B7D4E8;
-  --special-faint: #F2F8FC;
-  --paper: #F0F8FF;
-  --shadow: 0 20px 60px rgba(20,40,80,0.06);
+  --bg: #ffffff;
+  --bg-elev: #f0f8ff;
+  --bg-elev-2: #e2eef8;
+  --fg: #1b2a49;
+  --fg-muted: #6b8eb8;
+  --fg-faint: #a8bcd3;
+  --line: #c8daec;
+  --line-soft: #dee9f4;
+  --accent: #3a8dde;
+  --accent-strong: #2270bd;
+  --accent-faint: #b6d5f0;
+  --accent-2: #8bc6ec;
+  --accent-2-strong: #5ba8db;
+  --accent-2-faint: #d6e9f7;
+  --special: #e2f0f9;
+  --special-strong: #b7d4e8;
+  --special-faint: #f2f8fc;
+  --paper: #f0f8ff;
+  --shadow: 0 20px 60px rgba(20, 40, 80, 0.06);
 }
 
 [data-palette="nemophila-2"] {
-  --bg: #0B1121;
+  --bg: #0b1121;
   --bg-elev: #162035;
-  --bg-elev-2: #1F2C45;
-  --fg: #D4E0ED;
-  --fg-muted: #7A91A8;
-  --fg-faint: #4A5C72;
+  --bg-elev-2: #1f2c45;
+  --fg: #d4e0ed;
+  --fg-muted: #7a91a8;
+  --fg-faint: #4a5c72;
   --line: #243353;
   --line-soft: #182340;
-  --accent: #2B70B5;
-  --accent-strong: #4A8FD0;
+  --accent: #2b70b5;
+  --accent-strong: #4a8fd0;
   --accent-faint: #143352;
-  --accent-2: #63A4D9;
-  --accent-2-strong: #84BDE8;
-  --accent-2-faint: #1F4570;
-  --special: #1E508A;
-  --special-strong: #3974AE;
+  --accent-2: #63a4d9;
+  --accent-2-strong: #84bde8;
+  --accent-2-faint: #1f4570;
+  --special: #1e508a;
+  --special-strong: #3974ae;
   --special-faint: #102945;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 [data-palette="sunflower-1"] {
-  --bg: #FFFDF5;
-  --bg-elev: #FFF7D6;
-  --bg-elev-2: #FFEFB3;
-  --fg: #4A3F2C;
-  --fg-muted: #8C7B65;
-  --fg-faint: #B8A88E;
-  --line: #E6D9B8;
-  --line-soft: #F0E6CA;
-  --accent: #FFB300;
-  --accent-strong: #E69D00;
-  --accent-faint: #FFE08A;
-  --accent-2: #E68A00;
-  --accent-2-strong: #C77400;
-  --accent-2-faint: #FFCD7A;
-  --special: #6B4E31;
-  --special-strong: #4A3520;
-  --special-faint: #C9B294;
-  --paper: #FFFDF5;
-  --shadow: 0 20px 60px rgba(80,60,20,0.08);
+  --bg: #fffdf5;
+  --bg-elev: #fff7d6;
+  --bg-elev-2: #ffefb3;
+  --fg: #4a3f2c;
+  --fg-muted: #8c7b65;
+  --fg-faint: #b8a88e;
+  --line: #e6d9b8;
+  --line-soft: #f0e6ca;
+  --accent: #ffb300;
+  --accent-strong: #e69d00;
+  --accent-faint: #ffe08a;
+  --accent-2: #e68a00;
+  --accent-2-strong: #c77400;
+  --accent-2-faint: #ffcd7a;
+  --special: #6b4e31;
+  --special-strong: #4a3520;
+  --special-faint: #c9b294;
+  --paper: #fffdf5;
+  --shadow: 0 20px 60px rgba(80, 60, 20, 0.08);
 }
 
 [data-palette="sunflower-2"] {
   --bg: #232428;
-  --bg-elev: #2E3036;
-  --bg-elev-2: #383A41;
-  --fg: #F2F3F5;
-  --fg-muted: #A3A6AA;
-  --fg-faint: #6E7176;
-  --line: #44464D;
-  --line-soft: #33353B;
-  --accent: #F5C033;
-  --accent-strong: #FFD050;
-  --accent-faint: #6B5316;
-  --accent-2: #8B5A2B;
-  --accent-2-strong: #B57939;
-  --accent-2-faint: #3D2911;
-  --special: #E09E19;
-  --special-strong: #F5B73A;
-  --special-faint: #4F390C;
+  --bg-elev: #2e3036;
+  --bg-elev-2: #383a41;
+  --fg: #f2f3f5;
+  --fg-muted: #a3a6aa;
+  --fg-faint: #6e7176;
+  --line: #44464d;
+  --line-soft: #33353b;
+  --accent: #f5c033;
+  --accent-strong: #ffd050;
+  --accent-faint: #6b5316;
+  --accent-2: #8b5a2b;
+  --accent-2-strong: #b57939;
+  --accent-2-faint: #3d2911;
+  --special: #e09e19;
+  --special-strong: #f5b73a;
+  --special-faint: #4f390c;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Shippori Mincho', serif;
+  font-family: "EB Garamond", "Noto Serif JP", "Shippori Mincho", serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.5s ease, color 0.3s ease;
+  transition:
+    background-color 0.5s ease,
+    color 0.3s ease;
 }
 
 body {
@@ -180,27 +185,46 @@ body {
   background-attachment: fixed;
 }
 
-a { color: inherit; text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-::selection { background: color-mix(in oklab, var(--accent) 40%, transparent); color: var(--fg); }
+::selection {
+  background: color-mix(in oklab, var(--accent) 40%, transparent);
+  color: var(--fg);
+}
 
-.font-serif { font-family: 'EB Garamond', 'Noto Serif JP', serif; }
-.font-mincho { font-family: 'Shippori Mincho', 'Noto Serif JP', serif; }
-.font-mono { font-family: 'JetBrains Mono', monospace; }
-.font-cormorant { font-family: 'EB Garamond', 'Cormorant Garamond', serif; }
-.font-en { font-family: 'EB Garamond', 'Cormorant Garamond', serif; letter-spacing: 0.02em; }
+.font-serif {
+  font-family: "EB Garamond", "Noto Serif JP", serif;
+}
+.font-mincho {
+  font-family: "Shippori Mincho", "Noto Serif JP", serif;
+}
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+.font-cormorant {
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
+}
+.font-en {
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  letter-spacing: 0.02em;
+}
 
 .num {
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-style: normal;
   font-weight: 500;
-  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-feature-settings:
+    "lnum" 1,
+    "tnum" 1;
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: 0.02em;
 }
 
 .eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -209,7 +233,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .label-mono {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   letter-spacing: 0.06em;
   color: var(--fg-muted);
@@ -256,7 +280,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 19px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -266,7 +290,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .brand-en {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-style: italic;
   font-weight: 500;
   font-size: 12px;
@@ -312,13 +336,15 @@ a { color: inherit; text-decoration: none; }
 }
 
 .footer-brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.12em;
   color: var(--fg);
 }
 
-.hero-index-title:hover { color: var(--accent-strong) !important; }
+.hero-index-title:hover {
+  color: var(--accent-strong) !important;
+}
 
 .nav-links {
   display: flex;
@@ -327,7 +353,7 @@ a { color: inherit; text-decoration: none; }
 
 .nav-links a {
   padding: 8px 18px;
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   font-size: 14px;
   letter-spacing: 0.08em;
   color: var(--fg-muted);
@@ -335,11 +361,15 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.2s ease;
 }
 
-.nav-links a:hover { color: var(--fg); }
-.nav-links a.active { color: var(--fg); }
+.nav-links a:hover {
+  color: var(--fg);
+}
+.nav-links a.active {
+  color: var(--fg);
+}
 
 .nav-links a.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -19px;
   left: 50%;
@@ -375,7 +405,9 @@ a { color: inherit; text-decoration: none; }
   width: 16px;
   height: 1px;
   background: currentColor;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .icon-btn {
@@ -390,7 +422,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--fg-muted);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
 }
 
@@ -399,7 +431,9 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--accent);
 }
 
-.theme-picker { position: relative; }
+.theme-picker {
+  position: relative;
+}
 
 .theme-trigger {
   display: inline-flex;
@@ -411,7 +445,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 999px;
   color: var(--fg-muted);
   cursor: pointer;
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   transition: all 0.2s ease;
   height: 36px;
 }
@@ -424,7 +458,7 @@ a { color: inherit; text-decoration: none; }
 .theme-trigger .hanger-icon {
   color: var(--fg-muted);
   flex-shrink: 0;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
 }
 
 .theme-trigger:hover .hanger-icon {
@@ -440,14 +474,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-trigger .label .jp {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--fg);
 }
 
 .theme-trigger .label .en {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-style: italic;
   font-size: 10px;
   color: var(--fg-muted);
@@ -456,7 +490,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-trigger .caret {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   color: var(--fg-faint);
   margin-left: 2px;
@@ -492,14 +526,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-pop-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 14px;
   letter-spacing: 0.12em;
   color: var(--fg);
 }
 
 .theme-pop-title-en {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-style: italic;
   font-size: 11px;
   color: var(--fg-muted);
@@ -541,7 +575,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-opt .meta .name {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 13px;
   letter-spacing: 0.06em;
   color: var(--fg);
@@ -551,7 +585,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-opt .meta .sub {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-style: italic;
   font-size: 11px;
   color: var(--fg-muted);
@@ -562,7 +596,7 @@ a { color: inherit; text-decoration: none; }
 
 .theme-opt .check {
   margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--accent);
   opacity: 0;
@@ -588,13 +622,13 @@ a { color: inherit; text-decoration: none; }
   gap: 24px;
 }
 .section-num {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 20px;
   color: var(--accent);
 }
 .section-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 28px;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -602,7 +636,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--fg);
 }
 .section-title-en {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 16px;
   color: var(--fg-muted);
@@ -622,7 +656,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 10px;
   padding: 12px 22px;
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   font-size: 13px;
   letter-spacing: 0.1em;
   background: transparent;
@@ -651,7 +685,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.12em;
   border: 1px solid var(--line);
@@ -784,7 +818,7 @@ image-slot:hover {
   background: color-mix(in oklab, var(--accent) 8%, transparent);
 }
 .num-cell {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 16px;
   color: var(--accent);
@@ -856,7 +890,7 @@ image-slot:hover {
   outline: none;
   background: var(--bg-elev);
   color: var(--fg);
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   font-size: 13px;
 }
 
@@ -871,20 +905,20 @@ image-slot:hover {
   margin-bottom: 16px;
 }
 .footer-brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 28px;
   letter-spacing: 0.1em;
   margin-bottom: 12px;
 }
 .footer-tagline {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   color: var(--fg-muted);
   font-size: 14px;
   line-height: 1.6;
 }
 .footer-col h4 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.18em;
   color: var(--fg-muted);
@@ -904,7 +938,9 @@ image-slot:hover {
   cursor: pointer;
   transition: color 0.2s ease;
 }
-.footer-col li:hover { color: var(--fg); }
+.footer-col li:hover {
+  color: var(--fg);
+}
 
 .footer-bottom {
   display: flex;
@@ -912,7 +948,7 @@ image-slot:hover {
   align-items: center;
   padding-top: 24px;
   border-top: 1px solid var(--line-soft);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-faint);
   letter-spacing: 0.1em;
@@ -941,8 +977,14 @@ image-slot:hover {
   animation: slideIn 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 @keyframes slideIn {
-  from { transform: translateX(40px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 .detail-head {
   display: flex;
@@ -983,7 +1025,7 @@ image-slot:hover {
   align-items: center;
   justify-content: center;
   min-height: 240px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.12em;
   color: var(--fg-muted);
@@ -995,21 +1037,21 @@ image-slot:hover {
   padding: 6px 10px;
   border: 1px solid var(--line);
   background: color-mix(in oklab, var(--bg-elev) 92%, transparent);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.12em;
   color: var(--fg-muted);
   pointer-events: none;
 }
 .detail-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 32px;
   letter-spacing: 0.04em;
   margin: 10px 0 4px;
   line-height: 1.25;
 }
 .detail-title-en {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 18px;
   color: var(--fg-muted);
@@ -1051,17 +1093,29 @@ image-slot:hover {
 }
 
 /* ユーティリティ */
-.spacer-lg { height: 96px; }
-.spacer-md { height: 48px; }
-.spacer-sm { height: 24px; }
+.spacer-lg {
+  height: 96px;
+}
+.spacer-md {
+  height: 48px;
+}
+.spacer-sm {
+  height: 24px;
+}
 
 /* ページ間遷移 */
 .page {
   animation: pageIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* プレースホルダー画像（パターン付き） */
@@ -1081,7 +1135,7 @@ image-slot:hover {
   align-items: center;
   justify-content: center;
   color: var(--fg-faint);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1166,7 +1220,7 @@ image-slot:hover {
 }
 
 .hero-data-stat strong {
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 52px;
   font-style: italic;
@@ -1181,14 +1235,14 @@ image-slot:hover {
 }
 
 .hero-data-stat span {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 17px;
   color: var(--fg);
   letter-spacing: 0.08em;
 }
 
 .hero-data-stat em {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 12px;
   color: var(--fg-faint);
@@ -1215,14 +1269,14 @@ image-slot:hover {
 }
 
 .hero-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: clamp(56px, 9vw, 128px);
   letter-spacing: 0.18em;
   line-height: 1;
 }
 
 .hero-en {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 22px;
   color: var(--accent);
@@ -1271,7 +1325,7 @@ image-slot:hover {
 
 .hero-stats-grid strong,
 .detail-index {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   color: var(--accent);
 }
@@ -1315,7 +1369,7 @@ image-slot:hover {
 }
 
 .feature-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 40px;
   margin: 12px 0 6px;
   letter-spacing: 0.06em;
@@ -1365,7 +1419,7 @@ image-slot:hover {
 .media-card-title,
 .song-grid-title,
 .event-row-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   letter-spacing: 0.04em;
 }
 
@@ -1383,7 +1437,7 @@ image-slot:hover {
 
 .timeline-title,
 .table-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.04em;
 }
@@ -1393,7 +1447,7 @@ image-slot:hover {
 }
 
 .song-grid-title-en {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 12px;
   color: var(--fg-muted);
@@ -1453,7 +1507,7 @@ image-slot:hover {
   width: 28px;
   height: 28px;
   border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 15px;
   line-height: 1;
   flex-shrink: 0;
@@ -1476,7 +1530,7 @@ image-slot:hover {
 }
 
 .post-card-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 18px;
   letter-spacing: 0.04em;
   line-height: 1.4;
@@ -1487,7 +1541,7 @@ image-slot:hover {
   display: -webkit-box;
   overflow: hidden;
   color: var(--fg);
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   font-size: 14px;
   line-height: 1.85;
   -webkit-box-orient: vertical;
@@ -1502,8 +1556,12 @@ image-slot:hover {
 .post-detail-image {
   aspect-ratio: 4 / 3;
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 70%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent)),
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 8px);
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 70%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    ),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 8px);
 }
 
 .post-card-stats,
@@ -1511,7 +1569,7 @@ image-slot:hover {
   display: flex;
   gap: 16px;
   margin-top: auto;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--fg-muted);
@@ -1543,7 +1601,7 @@ image-slot:hover {
 }
 
 .upcoming-date div {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 14px;
   color: var(--accent);
@@ -1551,7 +1609,7 @@ image-slot:hover {
 
 .upcoming-date strong {
   display: block;
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 56px;
   line-height: 1;
 }
@@ -1559,7 +1617,7 @@ image-slot:hover {
 .upcoming-date span {
   display: block;
   margin-top: 8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   color: var(--fg-muted);
 }
@@ -1585,7 +1643,7 @@ image-slot:hover {
 .song-meta-inline {
   display: inline-flex;
   gap: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   color: var(--fg-muted);
   letter-spacing: 0.08em;
@@ -1608,7 +1666,7 @@ image-slot:hover {
 }
 
 .event-row-date {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.04em;
 }
@@ -1618,7 +1676,7 @@ image-slot:hover {
   flex-direction: column;
   gap: 4px;
   text-align: right;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-muted);
 }
@@ -1668,7 +1726,7 @@ image-slot:hover {
 
 .feature-subtitle {
   margin-bottom: 24px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 18px;
   color: var(--accent);
@@ -1701,7 +1759,11 @@ image-slot:hover {
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 80%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent));
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 80%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    );
 }
 
 .media-mosaic-copy {
@@ -1734,7 +1796,7 @@ image-slot:hover {
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--line);
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 48px;
   color: var(--accent);
@@ -1776,7 +1838,7 @@ image-slot:hover {
 }
 
 .events-category-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 20px;
   letter-spacing: 0.08em;
 }
@@ -1806,7 +1868,7 @@ image-slot:hover {
   margin-top: 16px;
   padding: 16px;
   border: 1px solid var(--line);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-muted);
   letter-spacing: 0.1em;
@@ -1825,7 +1887,7 @@ image-slot:hover {
 .chronology-grid-mock > :nth-child(odd) {
   padding-right: 32px;
   border-right: 1px solid var(--line);
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 36px;
   color: var(--accent);
@@ -1843,7 +1905,7 @@ image-slot:hover {
 }
 
 .chronology-grid > :nth-child(odd) {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 36px;
   color: var(--accent);
@@ -1934,7 +1996,7 @@ image-slot:hover {
 }
 
 .rel-main {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1965,7 +2027,7 @@ image-slot:hover {
 
 .jacket-art::before,
 .mv-thumb::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
 }
@@ -1979,7 +2041,7 @@ image-slot:hover {
   left: 10px;
   right: 10px;
   bottom: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.5);
@@ -2001,7 +2063,11 @@ image-slot:hover {
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 80%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent));
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 80%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    );
 }
 
 .mv-thumb::before {
@@ -2013,7 +2079,7 @@ image-slot:hover {
   top: 10px;
   left: 12px;
   z-index: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.15em;
@@ -2044,7 +2110,11 @@ image-slot:hover {
 
 .event-hero {
   padding: 36px;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)), color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2)));
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)),
+    color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2))
+  );
   border: 1px solid var(--line);
 }
 

@@ -25,9 +25,9 @@ export default function FilterBar(props: Props) {
 
     for (const entry of entries) {
       if (!(entry instanceof HTMLElement)) continue;
-      const categoryMatch = f === 'all' || props.categoryAttrs.some(attr => entry.dataset[attr] === f);
+      const categoryMatch = f === 'all' || props.categoryAttrs.some((attr) => entry.dataset[attr] === f);
       const searchKey = props.searchAttr;
-      const text = searchKey ? entry.dataset[searchKey] ?? '' : '';
+      const text = searchKey ? (entry.dataset[searchKey] ?? '') : '';
       const searchMatch = !searchKey || q === '' || text.includes(q);
       entry.style.display = categoryMatch && searchMatch ? '' : 'none';
     }
@@ -36,7 +36,7 @@ export default function FilterBar(props: Props) {
   return (
     <div class="viewer-filters">
       <For each={props.filters}>
-        {option => (
+        {(option) => (
           <button
             class={`btn${filter() === option.value ? ' is-active' : ''}`}
             type="button"
@@ -53,7 +53,7 @@ export default function FilterBar(props: Props) {
           type="text"
           placeholder={props.searchPlaceholder}
           value={query()}
-          onInput={event => setQuery(event.currentTarget.value)}
+          onInput={(event) => setQuery(event.currentTarget.value)}
         />
       </Show>
     </div>

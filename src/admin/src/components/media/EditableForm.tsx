@@ -161,7 +161,7 @@ export const EditableForm = (props: Props) => {
               value={props.data?.media.title}
               classList={{ 'input-error': !!getFieldError('title') }}
             />
-            <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('title')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
             <label class="label">URL</label>
             <input
@@ -171,7 +171,7 @@ export const EditableForm = (props: Props) => {
               value={props.data?.media.url}
               classList={{ 'input-error': !!getFieldError('url') }}
             />
-            <Show when={getFieldError('url')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('url')}>{(message) => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
             <label class="label">公開日</label>
             <input
@@ -182,7 +182,9 @@ export const EditableForm = (props: Props) => {
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
-            <Show when={getFieldError('publishedAt')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('publishedAt')}>
+              {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="grid gap-4 md:grid-cols-2">
               <div>
@@ -193,9 +195,13 @@ export const EditableForm = (props: Props) => {
                   value={props.data?.media.type.value}
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
-                  {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_TYPE_OPTIONS.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('typeValue')}>
+                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -206,9 +212,13 @@ export const EditableForm = (props: Props) => {
                   value={props.data?.media.format.value}
                   classList={{ 'select-error': !!getFieldError('formatValue') }}
                 >
-                  {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_FORMAT_OPTIONS.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('formatValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('formatValue')}>
+                  {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
             </div>
 
@@ -222,7 +232,9 @@ export const EditableForm = (props: Props) => {
               <option value="true">表示する</option>
               <option value="false">表示しない</option>
             </select>
-            <Show when={getFieldError('isDisplay')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('isDisplay')}>
+              {(message) => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="mt-6 flex justify-end">
               <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>
@@ -249,7 +261,7 @@ export const EditableForm = (props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {props.data?.songs.map(song => (
+                  {props.data?.songs.map((song) => (
                     <tr>
                       <td>{song.title}</td>
                       <td>{song.songOrderNo}</td>
@@ -269,7 +281,9 @@ export const EditableForm = (props: Props) => {
 
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
-          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。参照中の楽曲があるメディアは削除できません。</p>
+          <p class="mt-1 text-sm text-base-content/60">
+            この操作は取り消せません。参照中の楽曲があるメディアは削除できません。
+          </p>
           <div class="mt-4">
             <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
               {isSubmitting() ? '削除中...' : 'このメディアを削除する'}

@@ -48,7 +48,8 @@ export const authGuard = new Elysia({ name: 'authGuard' })
           await clearSessionCredential(sessionId);
         },
         acquireRefreshLock: () => acquireSessionRefreshLock(sessionId),
-        waitForCredentialUpdate: (previousAccessToken: string) => waitForSessionCredentialUpdate(sessionId, previousAccessToken),
+        waitForCredentialUpdate: (previousAccessToken: string) =>
+          waitForSessionCredentialUpdate(sessionId, previousAccessToken),
         releaseRefreshLock: () => releaseSessionRefreshLock(sessionId),
       },
     };

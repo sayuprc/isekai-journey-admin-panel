@@ -1,8 +1,5 @@
 import { Elysia, t } from 'elysia';
-import {
-  auditLogServiceGetAuditLog,
-  auditLogServiceSearchAuditLogs,
-} from '../../generated';
+import { auditLogServiceGetAuditLog, auditLogServiceSearchAuditLogs } from '../../generated';
 import type { AuditAction, AuditTargetType, PerPage } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';

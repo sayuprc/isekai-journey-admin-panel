@@ -25,10 +25,14 @@ export const client = createClient(
 
 type AuthRetryDeps<TClient> = {
   createClient: (credential: Credential) => TClient;
-  refreshAccessToken: (credential: Credential) => Promise<Pick<Credential, 'accessToken' | 'refreshTokenId' | 'refreshToken'>>;
+  refreshAccessToken: (
+    credential: Credential,
+  ) => Promise<Pick<Credential, 'accessToken' | 'refreshTokenId' | 'refreshToken'>>;
 };
 
-const refreshAccessToken = async (credential: Credential): Promise<Pick<Credential, 'accessToken' | 'refreshTokenId' | 'refreshToken'>> => {
+const refreshAccessToken = async (
+  credential: Credential,
+): Promise<Pick<Credential, 'accessToken' | 'refreshTokenId' | 'refreshToken'>> => {
   const result = await authenticateServiceRefresh({
     client,
     body: {
