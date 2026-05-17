@@ -14,6 +14,8 @@ variable "table_schemas" {
     "file://schemas/releases.my.hcl",
     "file://schemas/release-track-entries.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
+    "file://schemas/admin-user-registration-tokens.my.hcl",
+    "file://schemas/admin-user-registration-token-permissions.my.hcl",
     "file://schemas/audit-logs.my.hcl",
   ]
 }
