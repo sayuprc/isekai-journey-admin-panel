@@ -26,3 +26,14 @@ model RefreshTokenResponse {
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
 }
+
+model RegisterAdminUserRequest {
+  token: invitationToken;
+  name: adminUserName;
+  email: email;
+  password: password;
+}
+
+model RegisterAdminUserResponse {
+  adminUser: AdminUser;
+}

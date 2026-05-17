@@ -4,8 +4,8 @@ info:
   version: v1
 tags:
   - name: AdminUser
-  - name: Authenticate
   - name: AuditLog
+  - name: Authenticate
   - name: Media
   - name: Person
   - name: Release
@@ -228,6 +228,40 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
+  /auth/register:
+    post:
+      operationId: AuthenticateService_register
+      description: 管理ユーザー登録API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterAdminUserResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAdminUserRequest'
   /media:
     post:
       operationId: MediaService_createMedia
@@ -1995,6 +2029,29 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    RegisterAdminUserRequest:
+      type: object
+      required:
+        - token
+        - name
+        - email
+        - password
+      properties:
+        token:
+          $ref: '#/components/schemas/invitationToken'
+        name:
+          $ref: '#/components/schemas/adminUserName'
+        email:
+          $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
+    RegisterAdminUserResponse:
+      type: object
+      required:
+        - adminUser
+      properties:
+        adminUser:
+          $ref: '#/components/schemas/AdminUser'
     Release:
       type: object
       required:
@@ -2675,6 +2732,10 @@ components:
       type: string
       format: email
       description: メールアドレス
+    invitationToken:
+      type: string
+      format: password
+      description: 招待トークン
     lyricsLink:
       type: string
       format: uri

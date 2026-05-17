@@ -219,6 +219,17 @@ export type RefreshTokenResponse = {
     refreshToken: RefreshToken;
 };
 
+export type RegisterAdminUserRequest = {
+    token: InvitationToken;
+    name: AdminUserName;
+    email: Email;
+    password: Password;
+};
+
+export type RegisterAdminUserResponse = {
+    adminUser: AdminUser;
+};
+
 export type Release = {
     releaseId: ReleaseId;
     title: ReleaseTitle;
@@ -515,6 +526,11 @@ export type Description = string;
  * メールアドレス
  */
 export type Email = string;
+
+/**
+ * 招待トークン
+ */
+export type InvitationToken = string;
 
 /**
  * 歌詞リンク
@@ -870,6 +886,47 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type AuthenticateServiceRegisterData = {
+    body: RegisterAdminUserRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register';
+};
+
+export type AuthenticateServiceRegisterErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterError = AuthenticateServiceRegisterErrors[keyof AuthenticateServiceRegisterErrors];
+
+export type AuthenticateServiceRegisterResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RegisterAdminUserResponse;
+};
+
+export type AuthenticateServiceRegisterResponse = AuthenticateServiceRegisterResponses[keyof AuthenticateServiceRegisterResponses];
 
 export type MediaServiceCreateMediaData = {
     body: MediaCreateRequest;

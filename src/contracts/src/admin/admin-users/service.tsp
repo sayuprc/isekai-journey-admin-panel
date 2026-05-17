@@ -1,6 +1,5 @@
 import "@typespec/http";
 import "../lib";
-import "../auth";
 
 using Http;
 

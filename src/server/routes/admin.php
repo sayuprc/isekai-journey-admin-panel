@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\V1\AuditLog\GetAuditLogController;
 use App\Http\Controllers\Api\Admin\V1\AuditLog\SearchAuditLogController;
 use App\Http\Controllers\Api\Admin\V1\Auth\LoginController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RefreshController;
+use App\Http\Controllers\Api\Admin\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\Admin\V1\Media\CreateMediaController;
 use App\Http\Controllers\Api\Admin\V1\Media\DeleteMediaController;
 use App\Http\Controllers\Api\Admin\V1\Media\GetMediaController;
@@ -59,6 +60,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
             Route::prefix('auth')->group(function () {
                 Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
                 Route::post('/refresh', [RefreshController::class, 'handle'])->name(AuthRouteMap::Refresh);
+                Route::post('/register', [RegisterController::class, 'handle'])->name(AuthRouteMap::Register);
             });
 
             Route::middleware(Authenticate::class)->group(function () {
