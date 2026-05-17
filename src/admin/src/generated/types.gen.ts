@@ -219,6 +219,19 @@ export type RefreshTokenResponse = {
     refreshToken: RefreshToken;
 };
 
+export type RegisterRequest = {
+    token: RegistrationToken;
+    email: Email;
+    name: AdminUserName;
+    password: Password;
+};
+
+export type RegisterResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
 export type Release = {
     releaseId: ReleaseId;
     title: ReleaseTitle;
@@ -602,6 +615,11 @@ export type RefreshToken = string;
 export type RefreshTokenId = string;
 
 /**
+ * 管理ユーザー登録トークン(平文)
+ */
+export type RegistrationToken = string;
+
+/**
  * リリースID
  */
 export type ReleaseId = string;
@@ -870,6 +888,51 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type AuthenticateServiceRegisterData = {
+    body: RegisterRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register';
+};
+
+export type AuthenticateServiceRegisterErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterError = AuthenticateServiceRegisterErrors[keyof AuthenticateServiceRegisterErrors];
+
+export type AuthenticateServiceRegisterResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RegisterResponse;
+};
+
+export type AuthenticateServiceRegisterResponse = AuthenticateServiceRegisterResponses[keyof AuthenticateServiceRegisterResponses];
 
 export type MediaServiceCreateMediaData = {
     body: MediaCreateRequest;

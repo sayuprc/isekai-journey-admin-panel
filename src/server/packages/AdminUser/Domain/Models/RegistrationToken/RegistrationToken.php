@@ -65,4 +65,22 @@ readonly class RegistrationToken
     {
         return $this->registrationTokenId->equals($other->registrationTokenId);
     }
+
+    public function isAvailable(DateTimeImmutable $now): bool
+    {
+        return $this->status->isAvailable() && ! $this->expiredAt->isExpired($now);
+    }
+
+    public function consume(): self
+    {
+        return new self(
+            $this->registrationTokenId,
+            $this->token,
+            $this->email,
+            $this->role,
+            $this->permissions,
+            $this->expiredAt,
+            ConsumptionStatus::Consumed,
+        );
+    }
 }

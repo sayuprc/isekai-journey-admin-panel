@@ -1,0 +1,10 @@
+---
+import { RegisterForm } from '../../components/auth/RegisterForm';
+import SimpleLayout from '../../layouts/SimpleLayout.astro';
+---
+
+<SimpleLayout pageTitle="登録">
+  <div class="flex min-h-[70vh] items-center justify-center">
+    <RegisterForm client:load />
+  </div>
+</SimpleLayout>

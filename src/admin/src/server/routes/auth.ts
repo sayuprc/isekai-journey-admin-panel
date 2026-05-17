@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Elysia, t } from 'elysia';
-import { authenticateServiceLogin } from '../../generated';
+import { authenticateServiceLogin, authenticateServiceRegister } from '../../generated';
 import { client } from '../client';
 import { SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
@@ -10,38 +10,71 @@ const generateRandomBytes = (): string => {
   return randomBytes(32).toString('base64url');
 };
 
-export const auth = new Elysia({ prefix: '/auth' }).post(
-  '/login',
-  async ({ body: { email, password }, cookie: { session, csrf } }) => {
-    const data = resolveApiResponse(await authenticateServiceLogin({ client: client, body: { email, password } }));
+const setAuthCookies = async (
+  session: { set: (value: Record<string, unknown>) => Promise<unknown> | unknown } | undefined,
+  csrf: { set: (value: Record<string, unknown>) => Promise<unknown> | unknown } | undefined,
+  sessionId: string,
+  csrfToken: string,
+): Promise<void> => {
+  await session?.set({
+    value: sessionId,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: SESSION_TTL_SECONDS,
+  });
 
-    const sessionId = generateRandomBytes();
-    const csrfToken = generateRandomBytes();
+  await csrf?.set({
+    value: csrfToken,
+    httpOnly: false,
+    secure: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: SESSION_TTL_SECONDS,
+  });
+};
 
-    await storeSessionCredential(sessionId, { ...data, csrfToken });
+export const auth = new Elysia({ prefix: '/auth' })
+  .post(
+    '/login',
+    async ({ body: { email, password }, cookie: { session, csrf } }) => {
+      const data = resolveApiResponse(await authenticateServiceLogin({ client: client, body: { email, password } }));
 
-    await session?.set({
-      value: sessionId,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: SESSION_TTL_SECONDS,
-    });
+      const sessionId = generateRandomBytes();
+      const csrfToken = generateRandomBytes();
 
-    await csrf?.set({
-      value: csrfToken,
-      httpOnly: false,
-      secure: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: SESSION_TTL_SECONDS,
-    });
-  },
-  {
-    body: t.Object({
-      email: t.String(),
-      password: t.String(),
-    }),
-  },
-);
+      await storeSessionCredential(sessionId, { ...data, csrfToken });
+
+      await setAuthCookies(session, csrf, sessionId, csrfToken);
+    },
+    {
+      body: t.Object({
+        email: t.String(),
+        password: t.String(),
+      }),
+    },
+  )
+  .post(
+    '/register',
+    async ({ body: { token, email, name, password }, cookie: { session, csrf } }) => {
+      const data = resolveApiResponse(
+        await authenticateServiceRegister({ client: client, body: { token, email, name, password } }),
+      );
+
+      const sessionId = generateRandomBytes();
+      const csrfToken = generateRandomBytes();
+
+      await storeSessionCredential(sessionId, { ...data, csrfToken });
+
+      await setAuthCookies(session, csrf, sessionId, csrfToken);
+    },
+    {
+      body: t.Object({
+        token: t.String(),
+        email: t.String(),
+        name: t.String(),
+        password: t.String(),
+      }),
+    },
+  );
