@@ -16,3 +16,7 @@ scalar refreshToken extends string;
 
 @doc("リフレッシュトークンID")
 scalar refreshTokenId extends uuid;
+
+@doc("管理ユーザー登録トークン(平文)")
+@secret
+scalar registrationToken extends string;

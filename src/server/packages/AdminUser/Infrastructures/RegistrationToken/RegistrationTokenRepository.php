@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures\RegistrationToken;
 
+use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationToken;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
@@ -24,20 +25,26 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
 
         $id = $this->converter->toBin($data['admin_user_registration_token_id']);
 
-        ModelsRegistrationToken::query()->insert(
+        ModelsRegistrationToken::query()->upsert(
             [
-                'admin_user_registration_token_id' => $id,
-                'token' => $data['token'],
-                'email' => $data['email'],
-                'role' => $data['role'],
-                'expired_at' => $data['expired_at'],
-                'status' => $data['status'],
-                'created_at' => now(),
-                'updated_at' => now(),
+                [
+                    'admin_user_registration_token_id' => $id,
+                    'token' => $data['token'],
+                    'email' => $data['email'],
+                    'role' => $data['role'],
+                    'expired_at' => $data['expired_at'],
+                    'status' => $data['status'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
             ],
+            ['admin_user_registration_token_id'],
+            ['token', 'email', 'role', 'expired_at', 'status', 'updated_at'],
         );
 
-        if ($data['permissions'] !== []) {
+        if ($data['permissions'] !== [] && ! RegistrationTokenPermission::query()
+            ->where('admin_user_registration_token_id', $id)
+            ->exists()) {
             RegistrationTokenPermission::query()->insert(
                 array_map(fn (string $permission): array => [
                     'admin_user_registration_token_id' => $id,
@@ -47,5 +54,34 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
         }
 
         return $token;
+    }
+
+    #[Override]
+    public function findByEmailForUpdate(Email $email): ?RegistrationToken
+    {
+        $model = ModelsRegistrationToken::query()
+            ->where('email', $email->value)
+            ->orderByDesc('created_at')
+            ->lockForUpdate()
+            ->first();
+
+        if (is_null($model)) {
+            return null;
+        }
+
+        /** @var list<string> */
+        $permissions = $model->permissions
+            ->map(fn (RegistrationTokenPermission $row): string => $row->permission)
+            ->all();
+
+        return RegistrationToken::reconstruct(
+            $this->converter->toUuid($model->admin_user_registration_token_id),
+            $model->token,
+            $model->email,
+            $model->role,
+            $permissions,
+            $model->expired_at->toDateTimeImmutable(),
+            $model->status,
+        );
     }
 }

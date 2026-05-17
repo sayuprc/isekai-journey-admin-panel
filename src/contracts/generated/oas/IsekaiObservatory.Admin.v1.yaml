@@ -228,6 +228,46 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
+  /auth/register:
+    post:
+      operationId: AuthenticateService_register
+      description: 管理ユーザー登録API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
   /media:
     post:
       operationId: MediaService_createMedia
@@ -1995,6 +2035,35 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    RegisterRequest:
+      type: object
+      required:
+        - token
+        - email
+        - name
+        - password
+      properties:
+        token:
+          $ref: '#/components/schemas/registrationToken'
+        email:
+          $ref: '#/components/schemas/email'
+        name:
+          $ref: '#/components/schemas/adminUserName'
+        password:
+          $ref: '#/components/schemas/password'
+    RegisterResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshTokenId
+        - refreshToken
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
     Release:
       type: object
       required:
@@ -2745,6 +2814,10 @@ components:
       type: string
       format: uuid
       description: リフレッシュトークンID
+    registrationToken:
+      type: string
+      format: password
+      description: 管理ユーザー登録トークン(平文)
     releaseId:
       type: string
       format: uuid
