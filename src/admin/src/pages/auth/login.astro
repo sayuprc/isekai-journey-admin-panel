@@ -1,10 +1,14 @@
 ---
 import { LoginForm } from '../../components/auth/LoginForm';
+import { FlashMessage } from '../../components/Flash';
 import SimpleLayout from '../../layouts/SimpleLayout.astro';
 ---
 
 <SimpleLayout pageTitle="ログイン">
   <div class="flex min-h-[70vh] items-center justify-center">
-    <LoginForm client:load />
+    <div class="w-full max-w-sm px-4">
+      <FlashMessage client:only="solid-js" />
+      <LoginForm client:load />
+    </div>
   </div>
 </SimpleLayout>

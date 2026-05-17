@@ -219,6 +219,13 @@ export type RefreshTokenResponse = {
     refreshToken: RefreshToken;
 };
 
+export type RegisterRequest = {
+    name: AdminUserName;
+    email: Email;
+    password: Password;
+    registrationToken: RegistrationToken;
+};
+
 export type Release = {
     releaseId: ReleaseId;
     title: ReleaseTitle;
@@ -602,6 +609,11 @@ export type RefreshToken = string;
 export type RefreshTokenId = string;
 
 /**
+ * 登録トークン
+ */
+export type RegistrationToken = string;
+
+/**
  * リリースID
  */
 export type ReleaseId = string;
@@ -870,6 +882,47 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type AuthenticateServiceRegisterData = {
+    body: RegisterRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register';
+};
+
+export type AuthenticateServiceRegisterErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterError = AuthenticateServiceRegisterErrors[keyof AuthenticateServiceRegisterErrors];
+
+export type AuthenticateServiceRegisterResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type AuthenticateServiceRegisterResponse = AuthenticateServiceRegisterResponses[keyof AuthenticateServiceRegisterResponses];
 
 export type MediaServiceCreateMediaData = {
     body: MediaCreateRequest;

@@ -12,6 +12,10 @@ interface AuthenticateService {
   @route("/login")
   login(@body request: LoginRequest): LoginResponse | BadRequest | Unauthorized | Unprocessable | ServerError;
 
+  @doc("管理画面ユーザー登録API")
+  @route("/register")
+  register(@body request: RegisterRequest): NoContent | BadRequest | Unprocessable | ServerError;
+
   @doc("アクセストークン再発行API")
   @route("/refresh")
   refresh(@body request: RefreshTokenRequest): RefreshTokenResponse | Unauthorized | Unprocessable | ServerError;

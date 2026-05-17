@@ -8,5 +8,7 @@ enum AuthRouteMap: string
 {
     case Login = 'login';
 
+    case Register = 'register';
+
     case Refresh = 'refresh';
 }

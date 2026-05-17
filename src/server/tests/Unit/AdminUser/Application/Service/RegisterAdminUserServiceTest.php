@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\AdminUser\Application\Cli\UseCase;
+namespace Tests\Unit\AdminUser\Application\Service;
 
-use AdminUser\Application\Cli\UseCase\Create\CreateInputData;
-use AdminUser\Application\Cli\UseCase\Create\CreateUseCase;
 use AdminUser\Application\Service\RegisterAdminUserService;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
@@ -13,24 +11,20 @@ use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\HasherInterface;
-use Closure;
 use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\Error\DomainValidationError;
 use ResultType\Err;
 use ResultType\Ok;
-use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\DomainValidationError;
 use Support\UseCase\Error\InvalidInputError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
-class CreateUseCaseTest extends TestCase
+class RegisterAdminUserServiceTest extends TestCase
 {
     use EntityFactory;
-
-    private MockInterface&TransactionInterface $transaction;
 
     private HasherInterface&MockInterface $hasher;
 
@@ -43,23 +37,16 @@ class CreateUseCaseTest extends TestCase
     {
         parent::setUp();
 
-        $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->hasher = Mockery::mock(HasherInterface::class);
         $this->repository = Mockery::mock(AdminUserRepositoryInterface::class);
         $this->integrityService = Mockery::mock(AdminUserIntegrityService::class);
     }
 
     #[Test]
-    public function canCreate(): void
+    public function canRegister(): void
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $email = 'example@example.com';
-        $password = 'plain';
-
-        $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
-            ->once();
 
         $this->integrityService->shouldReceive('prepareForCreate')
             ->with('テストユーザー', $email, Role::General->value, [])
@@ -67,7 +54,7 @@ class CreateUseCaseTest extends TestCase
             ->once();
 
         $this->hasher->shouldReceive('hash')
-            ->with($password)
+            ->with('plain')
             ->andReturn('hashed')
             ->once();
 
@@ -80,42 +67,47 @@ class CreateUseCaseTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
+        $result = $this->makeService()->handle('テストユーザー', $email, 'plain', Role::General->value, []);
 
         $this->assertTrue($result->isOk());
     }
 
     #[Test]
-    public function createFailsIfEmailAlreadyExists(): void
+    public function registerFailsIfPrepareForCreateFails(): void
     {
-        $email = 'example@example.com';
-        $password = 'plain';
-
-        $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
-            ->once();
-
         $this->integrityService->shouldReceive('prepareForCreate')
-            ->with('テストユーザー', $email, Role::General->value, [])
+            ->with('テストユーザー', 'example@example.com', Role::General->value, [])
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
+        $result = $this->makeService()->handle('テストユーザー', 'example@example.com', 'plain', Role::General->value, []);
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
     }
 
-    private function getInstance(): CreateUseCase
+    #[Test]
+    public function registerFailsIfRequiredFieldsAreBlank(): void
     {
-        return new CreateUseCase(
-            $this->transaction,
-            new RegisterAdminUserService(
-                $this->hasher,
-                $this->repository,
-                $this->integrityService,
-            ),
+        $result = $this->makeService()->handle('', '', '', Role::General->value, []);
+
+        $this->assertTrue($result->isErr());
+        $this->assertEquals(
+            new InvalidInputError([
+                'name' => ['管理ユーザー名を入力してください'],
+                'email' => ['メールアドレスを入力してください'],
+                'password' => ['パスワードを入力してください'],
+            ]),
+            $result->unwrapErr(),
+        );
+    }
+
+    private function makeService(): RegisterAdminUserService
+    {
+        return new RegisterAdminUserService(
+            $this->hasher,
+            $this->repository,
+            $this->integrityService,
         );
     }
 }

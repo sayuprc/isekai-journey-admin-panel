@@ -6,8 +6,10 @@ namespace App\Providers\Domain;
 
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
+use Auth\Domain\Models\AdminRegistrationToken\AdminRegistrationTokenRepositoryInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Infrastructures\AdminRegistrationToken\AdminRegistrationTokenRepository;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
@@ -34,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(AccessTokenFactoryInterface::class, AccessTokenFactory::class);
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
         $this->app->bind(TokenHasherInterface::class, TokenHasher::class);
+        $this->app->bind(AdminRegistrationTokenRepositoryInterface::class, AdminRegistrationTokenRepository::class);
         $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
         $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
         $this->app->bind(AuthorizationContextInterface::class, UseCaseAuthorizationContext::class);

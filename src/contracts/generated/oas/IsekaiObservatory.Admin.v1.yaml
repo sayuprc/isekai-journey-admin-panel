@@ -228,6 +228,40 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
+  /auth/register:
+    post:
+      operationId: AuthenticateService_register
+      description: 管理画面ユーザー登録API
+      parameters: []
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
   /media:
     post:
       operationId: MediaService_createMedia
@@ -1995,6 +2029,22 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - registrationToken
+      properties:
+        name:
+          $ref: '#/components/schemas/adminUserName'
+        email:
+          $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
+        registrationToken:
+          $ref: '#/components/schemas/registrationToken'
     Release:
       type: object
       required:
@@ -2745,6 +2795,10 @@ components:
       type: string
       format: uuid
       description: リフレッシュトークンID
+    registrationToken:
+      type: string
+      format: password
+      description: 登録トークン
     releaseId:
       type: string
       format: uuid

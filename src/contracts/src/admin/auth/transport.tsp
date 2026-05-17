@@ -1,4 +1,5 @@
 import "@typespec/http";
+import "../admin-users";
 import "../lib";
 
 using Http;
@@ -14,6 +15,13 @@ model LoginResponse {
   accessToken: accessToken;
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
+}
+
+model RegisterRequest {
+  name: adminUserName;
+  email: email;
+  password: password;
+  registrationToken: registrationToken;
 }
 
 model RefreshTokenRequest {

@@ -13,6 +13,7 @@ variable "table_schemas" {
     "file://schemas/song-media-links.my.hcl",
     "file://schemas/releases.my.hcl",
     "file://schemas/release-track-entries.my.hcl",
+    "file://schemas/admin-registration-tokens.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
     "file://schemas/audit-logs.my.hcl",
   ]
