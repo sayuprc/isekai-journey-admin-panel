@@ -12,6 +12,7 @@ use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -68,6 +69,30 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame(MediaType::SocialPost->value, $log['snapshot']['type']);
         $this->assertSame(MediaFormat::StreamArchive->value, $log['snapshot']['format']);
         $this->assertFalse($log['snapshot']['is_display']);
+    }
+
+    #[Test]
+    public function notFound(): void
+    {
+        $mediaId = $this->generateUuid();
+
+        $result = $this->getInstance()->handle(
+            new UpdateInputData(
+                $mediaId,
+                '描き続けた君へ 配信アーカイブ',
+                'https://example.com/archive',
+                '2024-04-02',
+                MediaType::SocialPost->value,
+                MediaFormat::StreamArchive->value,
+                false,
+            ),
+        );
+
+        $this->assertTrue($result->isErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(NotFoundError::class, $error);
+        $this->assertSame('Media', $error->resourceName);
+        $this->assertSame($mediaId, $error->identifier);
     }
 
     private function getInstance(): UpdateUseCase

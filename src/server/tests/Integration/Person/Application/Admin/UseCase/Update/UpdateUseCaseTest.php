@@ -10,6 +10,7 @@ use Person\Domain\Models\PersonRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -41,6 +42,20 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Person, $personId);
         $this->assertSame('ヰ世界情緒', $log['snapshot']['name']);
         $this->assertSame(20, $log['snapshot']['order_no']);
+    }
+
+    #[Test]
+    public function notFound(): void
+    {
+        $personId = $this->generateUuid();
+
+        $result = $this->getInstance()->handle(new UpdateInputData($personId, 'ヰ世界情緒', 20));
+
+        $this->assertTrue($result->isErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(NotFoundError::class, $error);
+        $this->assertSame('Person', $error->resourceName);
+        $this->assertSame($personId, $error->identifier);
     }
 
     private function getInstance(): UpdateUseCase

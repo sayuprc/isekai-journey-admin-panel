@@ -11,6 +11,7 @@ use Song\Application\Admin\UseCase\Update\UpdateUseCase;
 use Song\Domain\Models\SongType;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -88,6 +89,32 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
         $this->assertSame('描き続けた君へ', $log['snapshot']['title']);
         $this->assertCount(2, $log['snapshot']['persons']);
+    }
+
+    #[Test]
+    public function notFound(): void
+    {
+        $songId = $this->generateUuid();
+
+        $result = $this->getInstance()->handle(
+            new UpdateInputData(
+                $songId,
+                '描き続けた君へ',
+                'オリジナル楽曲',
+                'https://example.com/lyrics',
+                SongType::Cover->value,
+                false,
+                2,
+                [],
+                [],
+            ),
+        );
+
+        $this->assertTrue($result->isErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(NotFoundError::class, $error);
+        $this->assertSame('Song', $error->resourceName);
+        $this->assertSame($songId, $error->identifier);
     }
 
     private function getInstance(): UpdateUseCase
