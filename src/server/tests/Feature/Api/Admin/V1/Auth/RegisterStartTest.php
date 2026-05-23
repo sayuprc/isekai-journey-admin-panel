@@ -1,0 +1,146 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Api\Admin\V1\Auth;
+
+use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\Permissions;
+use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
+use AdminUser\Domain\Models\RegistrationToken\ExpiredAt;
+use AdminUser\Domain\Models\RegistrationToken\HashedTokenValue;
+use AdminUser\Domain\Models\RegistrationToken\RegistrationToken;
+use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenId;
+use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
+use AdminUser\Domain\Models\Role;
+use AdminUser\Domain\Services\RegistrationToken\TokenHasherInterface;
+use AdminUser\Infrastructures\AdminUserRepository;
+use App\Models\AdminUser\AdminUser as ModelsAdminUser;
+use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
+use Auth\Domain\Models\AdminUserPasskey;
+use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyStartResult;
+use Auth\Domain\Services\PasskeyVerificationResult;
+use Auth\Route\AuthRouteMap;
+use DateTimeImmutable;
+use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
+use Tests\Support\DatabaseTestCase;
+use Tests\Support\Domain\EntityFactory;
+
+class RegisterStartTest extends DatabaseTestCase
+{
+    use EntityFactory;
+
+    #[Test]
+    public function canStartRegistration(): void
+    {
+        $this->bindPasskeyAuthenticator();
+        $this->saveToken('plain-token', 'invitee@example.com');
+
+        $this->postJson(route(AuthRouteMap::RegisterStart), [
+            'token' => 'plain-token',
+            'email' => 'invitee@example.com',
+            'name' => '新規ユーザー',
+        ])->assertStatus(200)
+            ->assertJson(
+                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                    ->where('publicKey.challenge', 'challenge')
+                    ->etc(),
+            );
+
+        $this->assertSame(0, ModelsAdminUser::query()->count());
+        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+    }
+
+    #[Test]
+    public function failsWithUnknownToken(): void
+    {
+        $this->bindPasskeyAuthenticator();
+        $this->saveToken('plain-token', 'invitee@example.com');
+
+        $this->postJson(route(AuthRouteMap::RegisterStart), [
+            'token' => 'wrong-token',
+            'email' => 'invitee@example.com',
+            'name' => '新規ユーザー',
+        ])->assertStatus(400);
+
+        $this->assertSame(0, ModelsAdminUser::query()->count());
+        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+    }
+
+    #[Test]
+    public function failsWithEmailCollision(): void
+    {
+        $this->bindPasskeyAuthenticator();
+        $this->app->make(AdminUserRepository::class)->register(
+            $this->createAdminUser($this->generateUuid(), 'invitee@example.com'),
+        );
+        $this->saveToken('plain-token', 'invitee@example.com');
+
+        $this->postJson(route(AuthRouteMap::RegisterStart), [
+            'token' => 'plain-token',
+            'email' => 'invitee@example.com',
+            'name' => '新規ユーザー',
+        ])->assertStatus(400);
+
+        $this->assertSame(1, ModelsAdminUser::query()->count());
+        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+    }
+
+    #[Test]
+    public function failsWithValidationViolation(): void
+    {
+        $this->bindPasskeyAuthenticator();
+        $this->saveToken('plain-token', 'invitee@example.com');
+
+        $this->postJson(route(AuthRouteMap::RegisterStart), [
+            'email' => 'invitee@example.com',
+            'name' => '新規ユーザー',
+        ])->assertStatus(422);
+
+        $this->assertSame(0, ModelsAdminUser::query()->count());
+        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+    }
+
+    private function bindPasskeyAuthenticator(): void
+    {
+        $this->app->bind(PasskeyAuthenticatorInterface::class, fn (): PasskeyAuthenticatorInterface => new class () implements PasskeyAuthenticatorInterface {
+            public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
+            {
+                return new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']);
+            }
+
+            public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
+            {
+                throw new RuntimeException('unused');
+            }
+
+            public function startAuthentication(array $passkeys): PasskeyStartResult
+            {
+                throw new RuntimeException('unused');
+            }
+
+            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyVerificationResult
+            {
+                throw new RuntimeException('unused');
+            }
+        });
+    }
+
+    private function saveToken(string $plainToken, string $email): void
+    {
+        $hashedToken = $this->app->make(TokenHasherInterface::class)->hash($plainToken);
+
+        $this->app->make(RegistrationTokenRepositoryInterface::class)->save(new RegistrationToken(
+            RegistrationTokenId::reconstruct($this->generateUuid()),
+            HashedTokenValue::reconstruct($hashedToken),
+            Email::reconstruct($email),
+            Role::General,
+            Permissions::reconstruct([]),
+            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            ConsumptionStatus::Unused,
+        ));
+    }
+}

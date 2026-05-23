@@ -10,5 +10,7 @@ enum AuthRouteMap: string
 
     case Refresh = 'refresh';
 
-    case Register = 'register';
+    case RegisterStart = 'register.start';
+
+    case RegisterFinish = 'register.finish';
 }

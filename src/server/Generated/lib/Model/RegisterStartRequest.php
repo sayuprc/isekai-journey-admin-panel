@@ -1,6 +1,6 @@
 <?php
 /**
- * RegisterResponse
+ * RegisterStartRequest
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * RegisterResponse Class Doc Comment
+ * RegisterStartRequest Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class RegisterStartRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'RegisterResponse';
+    protected static $openAPIModelName = 'RegisterStartRequest';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,9 +57,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'access_token' => 'string',
-        'refresh_token_id' => 'string',
-        'refresh_token' => 'string'
+        'token' => 'string',
+        'email' => 'string',
+        'name' => 'string'
     ];
 
     /**
@@ -70,9 +70,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'access_token' => 'password',
-        'refresh_token_id' => 'uuid',
-        'refresh_token' => 'password'
+        'token' => 'password',
+        'email' => 'email',
+        'name' => null
     ];
 
     /**
@@ -81,9 +81,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'access_token' => false,
-        'refresh_token_id' => false,
-        'refresh_token' => false
+        'token' => false,
+        'email' => false,
+        'name' => false
     ];
 
     /**
@@ -172,9 +172,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'access_token' => 'accessToken',
-        'refresh_token_id' => 'refreshTokenId',
-        'refresh_token' => 'refreshToken'
+        'token' => 'token',
+        'email' => 'email',
+        'name' => 'name'
     ];
 
     /**
@@ -183,9 +183,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'access_token' => 'setAccessToken',
-        'refresh_token_id' => 'setRefreshTokenId',
-        'refresh_token' => 'setRefreshToken'
+        'token' => 'setToken',
+        'email' => 'setEmail',
+        'name' => 'setName'
     ];
 
     /**
@@ -194,9 +194,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'access_token' => 'getAccessToken',
-        'refresh_token_id' => 'getRefreshTokenId',
-        'refresh_token' => 'getRefreshToken'
+        'token' => 'getToken',
+        'email' => 'getEmail',
+        'name' => 'getName'
     ];
 
     /**
@@ -256,9 +256,9 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('access_token', $data ?? [], null);
-        $this->setIfExists('refresh_token_id', $data ?? [], null);
-        $this->setIfExists('refresh_token', $data ?? [], null);
+        $this->setIfExists('token', $data ?? [], null);
+        $this->setIfExists('email', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
     }
 
     /**
@@ -288,14 +288,14 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['access_token'] === null) {
-            $invalidProperties[] = "'access_token' can't be null";
+        if ($this->container['token'] === null) {
+            $invalidProperties[] = "'token' can't be null";
         }
-        if ($this->container['refresh_token_id'] === null) {
-            $invalidProperties[] = "'refresh_token_id' can't be null";
+        if ($this->container['email'] === null) {
+            $invalidProperties[] = "'email' can't be null";
         }
-        if ($this->container['refresh_token'] === null) {
-            $invalidProperties[] = "'refresh_token' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
         return $invalidProperties;
     }
@@ -313,82 +313,82 @@ class RegisterResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets access_token
+     * Gets token
      *
      * @return string
      */
-    public function getAccessToken()
+    public function getToken()
     {
-        return $this->container['access_token'];
+        return $this->container['token'];
     }
 
     /**
-     * Sets access_token
+     * Sets token
      *
-     * @param string $access_token アクセストークン(JWT)
+     * @param string $token 管理ユーザー登録トークン(平文)
      *
      * @return self
      */
-    public function setAccessToken($access_token)
+    public function setToken($token)
     {
-        if (is_null($access_token)) {
-            throw new \InvalidArgumentException('non-nullable access_token cannot be null');
+        if (is_null($token)) {
+            throw new \InvalidArgumentException('non-nullable token cannot be null');
         }
-        $this->container['access_token'] = $access_token;
+        $this->container['token'] = $token;
 
         return $this;
     }
 
     /**
-     * Gets refresh_token_id
+     * Gets email
      *
      * @return string
      */
-    public function getRefreshTokenId()
+    public function getEmail()
     {
-        return $this->container['refresh_token_id'];
+        return $this->container['email'];
     }
 
     /**
-     * Sets refresh_token_id
+     * Sets email
      *
-     * @param string $refresh_token_id リフレッシュトークンID
+     * @param string $email メールアドレス
      *
      * @return self
      */
-    public function setRefreshTokenId($refresh_token_id)
+    public function setEmail($email)
     {
-        if (is_null($refresh_token_id)) {
-            throw new \InvalidArgumentException('non-nullable refresh_token_id cannot be null');
+        if (is_null($email)) {
+            throw new \InvalidArgumentException('non-nullable email cannot be null');
         }
-        $this->container['refresh_token_id'] = $refresh_token_id;
+        $this->container['email'] = $email;
 
         return $this;
     }
 
     /**
-     * Gets refresh_token
+     * Gets name
      *
      * @return string
      */
-    public function getRefreshToken()
+    public function getName()
     {
-        return $this->container['refresh_token'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets refresh_token
+     * Sets name
      *
-     * @param string $refresh_token リフレッシュトークン
+     * @param string $name 管理ユーザー名
      *
      * @return self
      */
-    public function setRefreshToken($refresh_token)
+    public function setName($name)
     {
-        if (is_null($refresh_token)) {
-            throw new \InvalidArgumentException('non-nullable refresh_token cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['refresh_token'] = $refresh_token;
+        $this->container['name'] = $name;
 
         return $this;
     }

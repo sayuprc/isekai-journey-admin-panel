@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Cli\UseCase\Create;
 
-use SensitiveParameter;
-
 readonly class CreateInputData
 {
     /**
@@ -14,8 +12,6 @@ readonly class CreateInputData
     public function __construct(
         public string $name,
         public string $email,
-        #[SensitiveParameter]
-        public string $plainPassword,
         public int $role,
         public array $permissions,
     ) {

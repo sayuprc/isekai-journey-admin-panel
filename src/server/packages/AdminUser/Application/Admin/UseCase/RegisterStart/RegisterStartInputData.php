@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace AdminUser\Application\Admin\UseCase\Register;
+namespace AdminUser\Application\Admin\UseCase\RegisterStart;
 
 use SensitiveParameter;
 
-readonly class RegisterInputData
+readonly class RegisterStartInputData
 {
     public function __construct(
         #[SensitiveParameter]
         public string $plainToken,
         public string $email,
         public string $name,
-        #[SensitiveParameter]
-        public string $plainPassword,
     ) {
     }
 }

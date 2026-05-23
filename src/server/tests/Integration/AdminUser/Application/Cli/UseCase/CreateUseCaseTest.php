@@ -16,7 +16,7 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function canCreate(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', 'example@example.com', 'plain', Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', 'example@example.com', Role::General->value, []));
 
         $this->assertTrue($result->isOk());
 

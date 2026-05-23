@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+$adminOrigin = env('AUTH_PASSKEY_ORIGIN', env('ASSET_URL', 'https://local.admin.isekaijoucho.fan'));
+$adminRpId = env('AUTH_PASSKEY_RP_ID', parse_url($adminOrigin, PHP_URL_HOST) ?: 'local.admin.isekaijoucho.fan');
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -120,5 +123,14 @@ return [
     'jwt' => [
         'alg' => env('AUTH_JWT_ALG', 'HS256'),
         'key' => env('AUTH_JWT_KEY'),
+    ],
+
+    'passkey' => [
+        'rp_name' => env('AUTH_PASSKEY_RP_NAME', env('APP_NAME', 'IsekaiObservatory')),
+        'rp_id' => $adminRpId,
+        'origin' => $adminOrigin,
+        'timeout_ms' => (int)env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
+        'ceremony_ttl_seconds' => (int)env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
+        'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'file'),
     ],
 ];

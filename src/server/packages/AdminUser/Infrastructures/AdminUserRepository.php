@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\HashedPassword;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\AdminUserPermission;
 use Override;
@@ -59,7 +58,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
     }
 
     #[Override]
-    public function register(AdminUser $adminUser, HashedPassword $hashedPassword): AdminUser
+    public function register(AdminUser $adminUser): AdminUser
     {
         $data = $adminUser->toArray();
 
@@ -70,7 +69,6 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
                 'admin_user_id' => $id,
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => $hashedPassword->value,
                 'role' => $data['role'],
                 'created_at' => $data['created_at'],
                 'updated_at' => now(),

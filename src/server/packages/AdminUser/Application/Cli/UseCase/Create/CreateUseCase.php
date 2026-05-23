@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace AdminUser\Application\Cli\UseCase\Create;
 
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
-use AdminUser\Domain\Services\HasherInterface;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -25,7 +23,6 @@ readonly class CreateUseCase
 {
     public function __construct(
         private TransactionInterface $transaction,
-        private HasherInterface $hasher,
         private AdminUserRepositoryInterface $repository,
         private AdminUserIntegrityService $service,
     ) {
@@ -48,13 +45,7 @@ readonly class CreateUseCase
                 return new Err($this->handleError($adminUserResult->unwrapErr()));
             }
 
-            $passwordResult = HashedPassword::create($this->hasher->hash($inputData->plainPassword));
-
-            if ($passwordResult->isErr()) {
-                return new Err($this->handleError($passwordResult->unwrapErr()));
-            }
-
-            $adminUser = $this->repository->register($adminUserResult->unwrap(), $passwordResult->unwrap());
+            $adminUser = $this->repository->register($adminUserResult->unwrap());
 
             return new Ok(new CreateOutputData($adminUser));
         });

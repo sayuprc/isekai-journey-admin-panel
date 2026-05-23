@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Console\Commands\AdminUser;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,7 +17,7 @@ class CreateCommandTest extends DatabaseTestCase
     #[Test]
     public function canCreateUser(): void
     {
-        $this->artisan('admin:create テストユーザー example@example.com plain')
+        $this->artisan('admin:create テストユーザー example@example.com')
             ->expectsOutput('管理ユーザーを作成しました')
             ->assertSuccessful();
     }
@@ -26,7 +25,7 @@ class CreateCommandTest extends DatabaseTestCase
     #[Test]
     public function canCreatePrivilegeUserWithPermissions(): void
     {
-        $this->artisan('admin:create 特権ユーザー privilege@example.com plain --privilege read_admin_user write_admin_user')
+        $this->artisan('admin:create 特権ユーザー privilege@example.com --privilege read_admin_user write_admin_user')
             ->expectsOutput('管理ユーザーを作成しました')
             ->assertSuccessful();
     }
@@ -34,7 +33,7 @@ class CreateCommandTest extends DatabaseTestCase
     #[Test]
     public function failureCreateUserWithInvalidPermission(): void
     {
-        $this->artisan('admin:create テストユーザー invalid@example.com plain invalid_permission')
+        $this->artisan('admin:create テストユーザー invalid@example.com invalid_permission')
             ->expectsOutput('不正な権限です: invalid_permission')
             ->assertFailed();
     }
@@ -46,10 +45,9 @@ class CreateCommandTest extends DatabaseTestCase
 
         $this->app->make(AdminUserRepository::class)->register(
             $this->createAdminUser($uuid, 'example@example.com', Role::General, []),
-            HashedPassword::reconstruct('hashed-password'),
         );
 
-        $this->artisan('admin:create テストユーザー example@example.com plain')
+        $this->artisan('admin:create テストユーザー example@example.com')
             ->expectsOutput('すでに使われているメールアドレスです "example@example.com"')
             ->assertFailed();
     }

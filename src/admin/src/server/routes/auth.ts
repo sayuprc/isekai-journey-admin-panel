@@ -1,6 +1,10 @@
 import { randomBytes } from 'node:crypto';
 import { Elysia, t } from 'elysia';
-import { authenticateServiceLogin, authenticateServiceRegister } from '../../generated';
+import {
+  authenticateServiceLogin,
+  authenticateServiceRegisterFinish,
+  authenticateServiceRegisterStart,
+} from '../../generated';
 import { client } from '../client';
 import { SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
@@ -56,10 +60,25 @@ export const auth = new Elysia({ prefix: '/auth' })
     },
   )
   .post(
-    '/register',
-    async ({ body: { token, email, name, password }, cookie: { session, csrf } }) => {
+    '/register/start',
+    async ({ body: { token, email, name } }) => {
+      return resolveApiResponse(
+        await authenticateServiceRegisterStart({ client: client, body: { token, email, name } }),
+      );
+    },
+    {
+      body: t.Object({
+        token: t.String(),
+        email: t.String(),
+        name: t.String(),
+      }),
+    },
+  )
+  .post(
+    '/register/finish',
+    async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
       const data = resolveApiResponse(
-        await authenticateServiceRegister({ client: client, body: { token, email, name, password } }),
+        await authenticateServiceRegisterFinish({ client: client, body: { authCeremonyId, credential } }),
       );
 
       const sessionId = generateRandomBytes();
@@ -71,10 +90,8 @@ export const auth = new Elysia({ prefix: '/auth' })
     },
     {
       body: t.Object({
-        token: t.String(),
-        email: t.String(),
-        name: t.String(),
-        password: t.String(),
+        authCeremonyId: t.String(),
+        credential: t.Record(t.String(), t.Any()),
       }),
     },
   );

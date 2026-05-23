@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AdminUser\Application\Admin\UseCase\Register;
+namespace AdminUser\Application\Admin\UseCase\RegisterFinish;
 
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 
-readonly class RegisterOutputData
+readonly class RegisterFinishOutputData
 {
     public function __construct(
         public AccessToken $accessToken,

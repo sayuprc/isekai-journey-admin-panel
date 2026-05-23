@@ -8,10 +8,8 @@ use AdminUser\Application\Cli\UseCase\Create\CreateInputData;
 use AdminUser\Application\Cli\UseCase\Create\CreateUseCase;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
-use AdminUser\Domain\Services\HasherInterface;
 use Closure;
 use Mockery;
 use Mockery\MockInterface;
@@ -31,8 +29,6 @@ class CreateUseCaseTest extends TestCase
 
     private MockInterface&TransactionInterface $transaction;
 
-    private HasherInterface&MockInterface $hasher;
-
     private AdminUserRepositoryInterface&MockInterface $repository;
 
     private AdminUserIntegrityService&MockInterface $service;
@@ -43,7 +39,6 @@ class CreateUseCaseTest extends TestCase
         parent::setUp();
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
-        $this->hasher = Mockery::mock(HasherInterface::class);
         $this->repository = Mockery::mock(AdminUserRepositoryInterface::class);
         $this->service = Mockery::mock(AdminUserIntegrityService::class);
     }
@@ -53,8 +48,6 @@ class CreateUseCaseTest extends TestCase
     {
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $email = 'example@example.com';
-        $password = 'plain';
-
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
             ->andReturnUsing(fn (Closure $arg) => $arg())
@@ -65,21 +58,15 @@ class CreateUseCaseTest extends TestCase
             ->andReturn(new Ok($user = $this->createAdminUser($uuid, $email, Role::General, [])))
             ->once();
 
-        $this->hasher->shouldReceive('hash')
-            ->with($password)
-            ->andReturn('hashed')
-            ->once();
-
         $this->repository->shouldReceive('register')
             ->withArgs(
-                fn (AdminUser $userArg, HashedPassword $passwordArg): bool => $userArg->adminUserId->value === $uuid
-                    && $userArg->email->value === $email
-                    && $passwordArg->value === 'hashed',
+                fn (AdminUser $userArg): bool => $userArg->adminUserId->value === $uuid
+                    && $userArg->email->value === $email,
             )
             ->andReturn($user)
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, Role::General->value, []));
 
         $this->assertTrue($result->isOk());
     }
@@ -88,8 +75,6 @@ class CreateUseCaseTest extends TestCase
     public function createFailsIfEmailAlreadyExists(): void
     {
         $email = 'example@example.com';
-        $password = 'plain';
-
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
             ->andReturnUsing(fn (Closure $arg) => $arg())
@@ -100,7 +85,7 @@ class CreateUseCaseTest extends TestCase
             ->andReturn(new Err(new DomainValidationError([])))
             ->once();
 
-        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, $password, Role::General->value, []));
+        $result = $this->getInstance()->handle(new CreateInputData('テストユーザー', $email, Role::General->value, []));
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
@@ -110,7 +95,6 @@ class CreateUseCaseTest extends TestCase
     {
         return new CreateUseCase(
             $this->transaction,
-            $this->hasher,
             $this->repository,
             $this->service,
         );
