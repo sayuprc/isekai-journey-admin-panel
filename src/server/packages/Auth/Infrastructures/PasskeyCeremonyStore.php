@@ -44,9 +44,9 @@ readonly class PasskeyCeremonyStore implements PasskeyCeremonyStoreInterface
         /** @var array{
          *   auth_ceremony_id: string,
          *   type: string,
-         *   token: string,
+         *   token: string|null,
          *   email: string,
-         *   name: string,
+         *   name: string|null,
          *   admin_user_id: string,
          *   options_json: string
          * } $payload

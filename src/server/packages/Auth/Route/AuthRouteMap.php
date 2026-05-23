@@ -6,7 +6,9 @@ namespace Auth\Route;
 
 enum AuthRouteMap: string
 {
-    case Login = 'login';
+    case LoginStart = 'login.start';
+
+    case LoginFinish = 'login.finish';
 
     case Refresh = 'refresh';
 

@@ -1,7 +1,8 @@
 import { randomBytes } from 'node:crypto';
 import { Elysia, t } from 'elysia';
 import {
-  authenticateServiceLogin,
+  authenticateServiceLoginFinish,
+  authenticateServiceLoginStart,
   authenticateServiceRegisterFinish,
   authenticateServiceRegisterStart,
 } from '../../generated';
@@ -41,9 +42,22 @@ const setAuthCookies = async (
 
 export const auth = new Elysia({ prefix: '/auth' })
   .post(
-    '/login',
-    async ({ body: { email, password }, cookie: { session, csrf } }) => {
-      const data = resolveApiResponse(await authenticateServiceLogin({ client: client, body: { email, password } }));
+    '/login/start',
+    async ({ body: { email } }) => {
+      return resolveApiResponse(await authenticateServiceLoginStart({ client: client, body: { email } }));
+    },
+    {
+      body: t.Object({
+        email: t.String(),
+      }),
+    },
+  )
+  .post(
+    '/login/finish',
+    async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
+      const data = resolveApiResponse(
+        await authenticateServiceLoginFinish({ client: client, body: { authCeremonyId, credential } }),
+      );
 
       const sessionId = generateRandomBytes();
       const csrfToken = generateRandomBytes();
@@ -54,8 +68,8 @@ export const auth = new Elysia({ prefix: '/auth' })
     },
     {
       body: t.Object({
-        email: t.String(),
-        password: t.String(),
+        authCeremonyId: t.String(),
+        credential: t.Record(t.String(), t.Any()),
       }),
     },
   )

@@ -51,7 +51,9 @@ class RegisterStartTest extends DatabaseTestCase
             );
 
         $this->assertSame(0, ModelsAdminUser::query()->count());
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+        $token = ModelsRegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
     }
 
     #[Test]
@@ -67,7 +69,9 @@ class RegisterStartTest extends DatabaseTestCase
         ])->assertStatus(400);
 
         $this->assertSame(0, ModelsAdminUser::query()->count());
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+        $token = ModelsRegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
     }
 
     #[Test]
@@ -86,7 +90,9 @@ class RegisterStartTest extends DatabaseTestCase
         ])->assertStatus(400);
 
         $this->assertSame(1, ModelsAdminUser::query()->count());
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+        $token = ModelsRegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
     }
 
     #[Test]
@@ -101,7 +107,9 @@ class RegisterStartTest extends DatabaseTestCase
         ])->assertStatus(422);
 
         $this->assertSame(0, ModelsAdminUser::query()->count());
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+        $token = ModelsRegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
     }
 
     private function bindPasskeyAuthenticator(): void

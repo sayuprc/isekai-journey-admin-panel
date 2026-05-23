@@ -64,6 +64,10 @@ readonly class RegisterFinishUseCase
             return new Err(new BusinessLogicError('register_ceremony_not_found'));
         }
 
+        if ($state->token === null || $state->name === null) {
+            return new Err(new BusinessLogicError('register_ceremony_not_found'));
+        }
+
         try {
             $verification = $this->passkeyAuthenticator->finishRegistration(
                 $inputData->credential,
@@ -81,6 +85,10 @@ readonly class RegisterFinishUseCase
      */
     private function persist(PasskeyCeremonyState $state, PasskeyVerificationResult $verification): Result
     {
+        if ($state->token === null || $state->name === null) {
+            return new Err(new BusinessLogicError('register_ceremony_not_found'));
+        }
+
         $emailResult = Email::create($state->email);
 
         if ($emailResult->isErr()) {

@@ -154,10 +154,10 @@ paths:
         - AuditLog
       security:
         - BearerAuth: []
-  /auth/login:
+  /auth/login/finish:
     post:
-      operationId: AuthenticateService_login
-      description: 認証API
+      operationId: AuthenticateService_loginFinish
+      description: 認証完了API
       parameters: []
       responses:
         '200':
@@ -165,7 +165,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/LoginFinishResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -193,7 +193,47 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: '#/components/schemas/LoginFinishRequest'
+  /auth/login/start:
+    post:
+      operationId: AuthenticateService_loginStart
+      description: 認証開始API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginStartResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginStartRequest'
   /auth/refresh:
     post:
       operationId: AuthenticateService_refresh
@@ -1748,17 +1788,18 @@ components:
       type: string
       enum:
         - v1
-    LoginRequest:
+    LoginFinishRequest:
       type: object
       required:
-        - email
-        - password
+        - authCeremonyId
+        - credential
       properties:
-        email:
-          $ref: '#/components/schemas/email'
-        password:
-          $ref: '#/components/schemas/password'
-    LoginResponse:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        credential:
+          type: object
+          unevaluatedProperties: {}
+    LoginFinishResponse:
       type: object
       required:
         - accessToken
@@ -1771,6 +1812,24 @@ components:
           $ref: '#/components/schemas/refreshTokenId'
         refreshToken:
           $ref: '#/components/schemas/refreshToken'
+    LoginStartRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+    LoginStartResponse:
+      type: object
+      required:
+        - authCeremonyId
+        - publicKey
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        publicKey:
+          type: object
+          unevaluatedProperties: {}
     Media:
       type: object
       required:
@@ -2853,10 +2912,6 @@ components:
       format: int32
       minimum: 1
       description: ページ番号
-    password:
-      type: string
-      format: password
-      description: 平文パスワード
     permissionName:
       type: string
       minLength: 1

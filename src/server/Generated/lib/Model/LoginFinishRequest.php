@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginResponse
+ * LoginFinishRequest
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginResponse Class Doc Comment
+ * LoginFinishRequest Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class LoginFinishRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginResponse';
+    protected static $openAPIModelName = 'LoginFinishRequest';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,9 +57,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'access_token' => 'string',
-        'refresh_token_id' => 'string',
-        'refresh_token' => 'string'
+        'auth_ceremony_id' => 'string',
+        'credential' => 'object'
     ];
 
     /**
@@ -70,9 +69,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'access_token' => 'password',
-        'refresh_token_id' => 'uuid',
-        'refresh_token' => 'password'
+        'auth_ceremony_id' => 'uuid',
+        'credential' => null
     ];
 
     /**
@@ -81,9 +79,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'access_token' => false,
-        'refresh_token_id' => false,
-        'refresh_token' => false
+        'auth_ceremony_id' => false,
+        'credential' => false
     ];
 
     /**
@@ -172,9 +169,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'access_token' => 'accessToken',
-        'refresh_token_id' => 'refreshTokenId',
-        'refresh_token' => 'refreshToken'
+        'auth_ceremony_id' => 'authCeremonyId',
+        'credential' => 'credential'
     ];
 
     /**
@@ -183,9 +179,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'access_token' => 'setAccessToken',
-        'refresh_token_id' => 'setRefreshTokenId',
-        'refresh_token' => 'setRefreshToken'
+        'auth_ceremony_id' => 'setAuthCeremonyId',
+        'credential' => 'setCredential'
     ];
 
     /**
@@ -194,9 +189,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'access_token' => 'getAccessToken',
-        'refresh_token_id' => 'getRefreshTokenId',
-        'refresh_token' => 'getRefreshToken'
+        'auth_ceremony_id' => 'getAuthCeremonyId',
+        'credential' => 'getCredential'
     ];
 
     /**
@@ -256,9 +250,8 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('access_token', $data ?? [], null);
-        $this->setIfExists('refresh_token_id', $data ?? [], null);
-        $this->setIfExists('refresh_token', $data ?? [], null);
+        $this->setIfExists('auth_ceremony_id', $data ?? [], null);
+        $this->setIfExists('credential', $data ?? [], null);
     }
 
     /**
@@ -288,14 +281,11 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['access_token'] === null) {
-            $invalidProperties[] = "'access_token' can't be null";
+        if ($this->container['auth_ceremony_id'] === null) {
+            $invalidProperties[] = "'auth_ceremony_id' can't be null";
         }
-        if ($this->container['refresh_token_id'] === null) {
-            $invalidProperties[] = "'refresh_token_id' can't be null";
-        }
-        if ($this->container['refresh_token'] === null) {
-            $invalidProperties[] = "'refresh_token' can't be null";
+        if ($this->container['credential'] === null) {
+            $invalidProperties[] = "'credential' can't be null";
         }
         return $invalidProperties;
     }
@@ -313,82 +303,55 @@ class LoginResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets access_token
+     * Gets auth_ceremony_id
      *
      * @return string
      */
-    public function getAccessToken()
+    public function getAuthCeremonyId()
     {
-        return $this->container['access_token'];
+        return $this->container['auth_ceremony_id'];
     }
 
     /**
-     * Sets access_token
+     * Sets auth_ceremony_id
      *
-     * @param string $access_token アクセストークン(JWT)
+     * @param string $auth_ceremony_id 認証セッションID
      *
      * @return self
      */
-    public function setAccessToken($access_token)
+    public function setAuthCeremonyId($auth_ceremony_id)
     {
-        if (is_null($access_token)) {
-            throw new \InvalidArgumentException('non-nullable access_token cannot be null');
+        if (is_null($auth_ceremony_id)) {
+            throw new \InvalidArgumentException('non-nullable auth_ceremony_id cannot be null');
         }
-        $this->container['access_token'] = $access_token;
+        $this->container['auth_ceremony_id'] = $auth_ceremony_id;
 
         return $this;
     }
 
     /**
-     * Gets refresh_token_id
+     * Gets credential
      *
-     * @return string
+     * @return object
      */
-    public function getRefreshTokenId()
+    public function getCredential()
     {
-        return $this->container['refresh_token_id'];
+        return $this->container['credential'];
     }
 
     /**
-     * Sets refresh_token_id
+     * Sets credential
      *
-     * @param string $refresh_token_id リフレッシュトークンID
+     * @param object $credential credential
      *
      * @return self
      */
-    public function setRefreshTokenId($refresh_token_id)
+    public function setCredential($credential)
     {
-        if (is_null($refresh_token_id)) {
-            throw new \InvalidArgumentException('non-nullable refresh_token_id cannot be null');
+        if (is_null($credential)) {
+            throw new \InvalidArgumentException('non-nullable credential cannot be null');
         }
-        $this->container['refresh_token_id'] = $refresh_token_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets refresh_token
-     *
-     * @return string
-     */
-    public function getRefreshToken()
-    {
-        return $this->container['refresh_token'];
-    }
-
-    /**
-     * Sets refresh_token
-     *
-     * @param string $refresh_token リフレッシュトークン
-     *
-     * @return self
-     */
-    public function setRefreshToken($refresh_token)
-    {
-        if (is_null($refresh_token)) {
-            throw new \InvalidArgumentException('non-nullable refresh_token cannot be null');
-        }
-        $this->container['refresh_token'] = $refresh_token;
+        $this->container['credential'] = $credential;
 
         return $this;
     }
