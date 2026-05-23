@@ -59,6 +59,33 @@ class AdminUserIntegrityService
      *
      * @return Result<AdminUser, DomainError>
      */
+    public function prepareForCreateWithId(
+        string $adminUserId,
+        string $name,
+        string $email,
+        int $role,
+        array $permissions,
+    ): Result {
+        $result = $this->build($adminUserId, $name, $email, $this->clock->now(), $role, $permissions);
+
+        if ($result->isErr()) {
+            return new Err($result->unwrapErr());
+        }
+
+        $user = $result->unwrap();
+
+        if (! is_null($this->repository->findByEmail($user->email))) {
+            return new Err(new BusinessRuleViolationError(sprintf('すでに使われているメールアドレスです "%s"', $email)));
+        }
+
+        return new Ok($user);
+    }
+
+    /**
+     * @param list<string> $permissions
+     *
+     * @return Result<AdminUser, DomainError>
+     */
     private function build(
         string $adminUserId,
         string $name,

@@ -6,7 +6,6 @@ namespace Tests\Integration\Auth\Infrastructures\Auth;
 
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Infrastructures\Auth\AuthAdminUserRepository;
@@ -25,13 +24,12 @@ class AuthAdminUserRepositoryTest extends DatabaseTestCase
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
 
-        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
+        $this->app->make(AdminUserRepository::class)->register($user);
 
         $found = $this->getInstance()->find($user->adminUserId);
 
         $this->assertNotNull($found);
         $this->assertSame($user->adminUserId->value, $found->adminUserId->value);
-        $this->assertSame('hashed-password', $found->hashedPassword->value);
     }
 
     #[Test]
@@ -48,13 +46,12 @@ class AuthAdminUserRepositoryTest extends DatabaseTestCase
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
 
-        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
+        $this->app->make(AdminUserRepository::class)->register($user);
 
         $found = $this->getInstance()->findByEmail($user->email);
 
         $this->assertNotNull($found);
         $this->assertSame($user->adminUserId->value, $found->adminUserId->value);
-        $this->assertSame('hashed-password', $found->hashedPassword->value);
     }
 
     #[Test]

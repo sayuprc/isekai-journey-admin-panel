@@ -52,7 +52,6 @@ readonly class AuthAdminUserRepository implements AuthAdminUserRepositoryInterfa
     {
         return AuthenticatableAdminUser::reconstruct(
             $this->converter->toUuid($model->admin_user_id),
-            $model->password,
         );
     }
 }

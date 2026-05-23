@@ -22,7 +22,8 @@ mock.module('@upstash/redis', () => {
 });
 
 const loginCalls: unknown[] = [];
-const registerCalls: unknown[] = [];
+const registerStartCalls: unknown[] = [];
+const registerFinishCalls: unknown[] = [];
 
 mock.module('../../generated', () => {
   return {
@@ -41,13 +42,32 @@ mock.module('../../generated', () => {
         response: new Response(null, { status: 200 }),
       };
     },
-    authenticateServiceRegister: async ({ body }: { body: unknown }) => {
-      registerCalls.push(body);
+    authenticateServiceRegisterStart: async ({ body }: { body: unknown }) => {
+      registerStartCalls.push(body);
 
       const payload = body as { token: string };
       if (payload.token === 'invalid-token') {
         return {
           error: { message: 'トークンが不正です' },
+          response: new Response(null, { status: 400 }),
+        };
+      }
+
+      return {
+        data: {
+          authCeremonyId: 'auth-ceremony-id',
+          publicKey: { challenge: 'challenge' },
+        },
+        response: new Response(null, { status: 200 }),
+      };
+    },
+    authenticateServiceRegisterFinish: async ({ body }: { body: unknown }) => {
+      registerFinishCalls.push(body);
+
+      const payload = body as { credential: { fail?: boolean } };
+      if (payload.credential.fail) {
+        return {
+          error: { message: 'credential が不正です' },
           response: new Response(null, { status: 400 }),
         };
       }
@@ -66,36 +86,68 @@ mock.module('../../generated', () => {
 
 const { auth } = await import('./auth');
 
-describe('POST /auth/register', () => {
+describe('POST /auth/register/start', () => {
   beforeEach(() => {
     for (const key of Object.keys(credentials)) {
       delete credentials[key];
     }
     loginCalls.length = 0;
-    registerCalls.length = 0;
+    registerStartCalls.length = 0;
+    registerFinishCalls.length = 0;
   });
 
-  it('成功時にセッション/CSRF Cookie を発行し、Redis にクレデンシャルを保存する', async () => {
+  it('password を含めず登録開始 API を呼ぶ', async () => {
     const response = await auth.handle(
-      new Request('http://localhost/auth/register', {
+      new Request('http://localhost/auth/register/start', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           token: 'plain-token',
           email: 'invitee@example.com',
           name: '新規ユーザー',
-          password: 'password',
         }),
       }),
     );
 
     expect(response.status).toBe(200);
-    expect(registerCalls).toHaveLength(1);
-    expect(registerCalls[0]).toEqual({
+    expect(registerStartCalls).toHaveLength(1);
+    expect(registerStartCalls[0]).toEqual({
       token: 'plain-token',
       email: 'invitee@example.com',
       name: '新規ユーザー',
-      password: 'password',
+    });
+    expect(response.headers.getSetCookie()).toHaveLength(0);
+    expect(Object.keys(credentials)).toHaveLength(0);
+  });
+});
+
+describe('POST /auth/register/finish', () => {
+  beforeEach(() => {
+    for (const key of Object.keys(credentials)) {
+      delete credentials[key];
+    }
+    loginCalls.length = 0;
+    registerStartCalls.length = 0;
+    registerFinishCalls.length = 0;
+  });
+
+  it('password を含めず登録完了 API を呼び、成功時にセッション/CSRF Cookie を発行する', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/register/finish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          authCeremonyId: 'auth-ceremony-id',
+          credential: { id: 'credential-id' },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(registerFinishCalls).toHaveLength(1);
+    expect(registerFinishCalls[0]).toEqual({
+      authCeremonyId: 'auth-ceremony-id',
+      credential: { id: 'credential-id' },
     });
 
     const cookies = response.headers.getSetCookie();
@@ -115,14 +167,12 @@ describe('POST /auth/register', () => {
 
   it('API エラー時はエラーレスポンスをそのまま返す', async () => {
     const response = await auth.handle(
-      new Request('http://localhost/auth/register', {
+      new Request('http://localhost/auth/register/finish', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          token: 'invalid-token',
-          email: 'invitee@example.com',
-          name: '新規ユーザー',
-          password: 'password',
+          authCeremonyId: 'auth-ceremony-id',
+          credential: { fail: true },
         }),
       }),
     );

@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Auth\Infrastructures;
+
+use Auth\Domain\Models\PasskeyCeremonyState;
+use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
+use Override;
+
+readonly class PasskeyCeremonyStore implements PasskeyCeremonyStoreInterface
+{
+    public function __construct(private CacheFactory $cache)
+    {
+    }
+
+    #[Override]
+    public function put(PasskeyCeremonyState $state): void
+    {
+        $ttl = config()->integer('auth.passkey.ceremony_ttl_seconds', 300);
+
+        $this->cache
+            ->store(config()->string('auth.passkey.ceremony_cache_store'))
+            ->put(
+                $this->key($state->authCeremonyId),
+                $state->toArray(),
+                $ttl,
+            );
+    }
+
+    #[Override]
+    public function pull(string $authCeremonyId): ?PasskeyCeremonyState
+    {
+        /** @var array<string, mixed>|null $payload */
+        $payload = $this->cache
+            ->store(config()->string('auth.passkey.ceremony_cache_store'))
+            ->pull($this->key($authCeremonyId));
+
+        if ($payload === null) {
+            return null;
+        }
+
+        /** @var array{
+         *   auth_ceremony_id: string,
+         *   type: string,
+         *   token: string,
+         *   email: string,
+         *   name: string,
+         *   admin_user_id: string,
+         *   options_json: string
+         * } $payload
+         */
+        return PasskeyCeremonyState::fromArray($payload);
+    }
+
+    private function key(string $authCeremonyId): string
+    {
+        return 'auth:passkey:ceremony:' . $authCeremonyId;
+    }
+}

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Auth;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
@@ -115,7 +114,7 @@ class RefreshTest extends DatabaseTestCase
     private function storeRefreshToken(string $plainToken, DateTimeImmutable $expiredAt): RefreshToken
     {
         $user = $this->createAdminUser($this->generateUuid(), 'example@example.com');
-        $this->app->make(AdminUserRepository::class)->register($user, HashedPassword::reconstruct('hashed-password'));
+        $this->app->make(AdminUserRepository::class)->register($user);
 
         $hashedToken = $this->app->make(TokenHasherInterface::class)->hash($plainToken);
         $refreshToken = $this->createRefreshToken(

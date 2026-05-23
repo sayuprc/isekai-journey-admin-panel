@@ -14,7 +14,6 @@ use Override;
  * @property string          $admin_user_id 管理ユーザーID
  * @property string          $name          管理者名
  * @property string          $email         メールアドレス
- * @property string          $password      パスワード
  * @property int             $role          ロール
  * @property CarbonImmutable $created_at    作成日時
  * @property CarbonImmutable $updated_at    更新日時

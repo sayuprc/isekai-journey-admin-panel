@@ -26,7 +26,7 @@ readonly class AuthUser extends AuthenticatableAdminUser implements Authenticata
 
     public function getAuthPassword()
     {
-        return $this->hashedPassword->value;
+        return '';
     }
 
     public function getRememberToken()

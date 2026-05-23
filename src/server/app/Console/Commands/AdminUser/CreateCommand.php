@@ -17,7 +17,7 @@ use Support\UseCase\Error\UseCaseError;
 class CreateCommand extends Command
 {
     #[Override]
-    protected $signature = 'admin:create {name} {email} {password} {--p|privilege} {permissions?*}';
+    protected $signature = 'admin:create {name} {email} {--p|privilege} {permissions?*}';
 
     #[Override]
     protected $description = '管理ユーザーを作成する';
@@ -40,14 +40,6 @@ class CreateCommand extends Command
             return Command::FAILURE;
         }
 
-        $password = $this->argument('password');
-
-        if (mb_trim($password) === '') {
-            $this->error('パスワードを入力してください');
-
-            return Command::FAILURE;
-        }
-
         $role = $this->isPrivilege()
             ? Role::Privilege
             : Role::General;
@@ -64,7 +56,7 @@ class CreateCommand extends Command
             }
         }
 
-        $result = $useCase->handle(new CreateInputData($name, $email, $password, $role->value, $permissions));
+        $result = $useCase->handle(new CreateInputData($name, $email, $role->value, $permissions));
 
         if ($result->isErr()) {
             $this->error($this->resolveErrorMessage($result->unwrapErr()));

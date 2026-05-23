@@ -80,7 +80,10 @@ class AuthenticateApi
         'authenticateServiceRefresh' => [
             'application/json',
         ],
-        'authenticateServiceRegister' => [
+        'authenticateServiceRegisterFinish' => [
+            'application/json',
+        ],
+        'authenticateServiceRegisterStart' => [
             'application/json',
         ],
     ];
@@ -692,34 +695,34 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceRegister
+     * Operation authenticateServiceRegisterFinish
      *
-     * @param  \OpenAPI\Client\Model\RegisterRequest $register_request register_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegister'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\RegisterFinishRequest $register_finish_request register_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\RegisterResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     * @return \OpenAPI\Client\Model\RegisterFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
      */
-    public function authenticateServiceRegister($register_request, string $contentType = self::contentTypes['authenticateServiceRegister'][0])
+    public function authenticateServiceRegisterFinish($register_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
     {
-        list($response) = $this->authenticateServiceRegisterWithHttpInfo($register_request, $contentType);
+        list($response) = $this->authenticateServiceRegisterFinishWithHttpInfo($register_finish_request, $contentType);
         return $response;
     }
 
     /**
-     * Operation authenticateServiceRegisterWithHttpInfo
+     * Operation authenticateServiceRegisterFinishWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\RegisterRequest $register_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegister'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\RegisterFinishRequest $register_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\RegisterResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\RegisterFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function authenticateServiceRegisterWithHttpInfo($register_request, string $contentType = self::contentTypes['authenticateServiceRegister'][0])
+    public function authenticateServiceRegisterFinishWithHttpInfo($register_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
     {
-        $request = $this->authenticateServiceRegisterRequest($register_request, $contentType);
+        $request = $this->authenticateServiceRegisterFinishRequest($register_finish_request, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -747,7 +750,7 @@ class AuthenticateApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\RegisterResponse',
+                        '\OpenAPI\Client\Model\RegisterFinishResponse',
                         $request,
                         $response,
                     );
@@ -781,7 +784,7 @@ class AuthenticateApi
             }
 
             return $this->handleResponseWithDataType(
-                '\OpenAPI\Client\Model\RegisterResponse',
+                '\OpenAPI\Client\Model\RegisterFinishResponse',
                 $request,
                 $response,
             );
@@ -790,7 +793,7 @@ class AuthenticateApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\RegisterResponse',
+                        '\OpenAPI\Client\Model\RegisterFinishResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -819,17 +822,17 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceRegisterAsync
+     * Operation authenticateServiceRegisterFinishAsync
      *
-     * @param  \OpenAPI\Client\Model\RegisterRequest $register_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegister'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\RegisterFinishRequest $register_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authenticateServiceRegisterAsync($register_request, string $contentType = self::contentTypes['authenticateServiceRegister'][0])
+    public function authenticateServiceRegisterFinishAsync($register_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
     {
-        return $this->authenticateServiceRegisterAsyncWithHttpInfo($register_request, $contentType)
+        return $this->authenticateServiceRegisterFinishAsyncWithHttpInfo($register_finish_request, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -838,18 +841,18 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceRegisterAsyncWithHttpInfo
+     * Operation authenticateServiceRegisterFinishAsyncWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\RegisterRequest $register_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegister'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\RegisterFinishRequest $register_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authenticateServiceRegisterAsyncWithHttpInfo($register_request, string $contentType = self::contentTypes['authenticateServiceRegister'][0])
+    public function authenticateServiceRegisterFinishAsyncWithHttpInfo($register_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\RegisterResponse';
-        $request = $this->authenticateServiceRegisterRequest($register_request, $contentType);
+        $returnType = '\OpenAPI\Client\Model\RegisterFinishResponse';
+        $request = $this->authenticateServiceRegisterFinishRequest($register_finish_request, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -888,26 +891,26 @@ class AuthenticateApi
     }
 
     /**
-     * Create request for operation 'authenticateServiceRegister'
+     * Create request for operation 'authenticateServiceRegisterFinish'
      *
-     * @param  \OpenAPI\Client\Model\RegisterRequest $register_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegister'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\RegisterFinishRequest $register_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function authenticateServiceRegisterRequest($register_request, string $contentType = self::contentTypes['authenticateServiceRegister'][0])
+    public function authenticateServiceRegisterFinishRequest($register_finish_request, string $contentType = self::contentTypes['authenticateServiceRegisterFinish'][0])
     {
 
-        // verify the required parameter 'register_request' is set
-        if ($register_request === null || (is_array($register_request) && count($register_request) === 0)) {
+        // verify the required parameter 'register_finish_request' is set
+        if ($register_finish_request === null || (is_array($register_finish_request) && count($register_finish_request) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $register_request when calling authenticateServiceRegister'
+                'Missing the required parameter $register_finish_request when calling authenticateServiceRegisterFinish'
             );
         }
 
 
-        $resourcePath = '/auth/register';
+        $resourcePath = '/auth/register/finish';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -925,12 +928,299 @@ class AuthenticateApi
         );
 
         // for model (json/xml)
-        if (isset($register_request)) {
+        if (isset($register_finish_request)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($register_request));
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($register_finish_request));
             } else {
-                $httpBody = $register_request;
+                $httpBody = $register_finish_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStart
+     *
+     * @param  \OpenAPI\Client\Model\RegisterStartRequest $register_start_request register_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\RegisterStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRegisterStart($register_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        list($response) = $this->authenticateServiceRegisterStartWithHttpInfo($register_start_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RegisterStartRequest $register_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\RegisterStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRegisterStartWithHttpInfo($register_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        $request = $this->authenticateServiceRegisterStartRequest($register_start_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\RegisterStartResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\RegisterStartResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\RegisterStartResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartAsync
+     *
+     * @param  \OpenAPI\Client\Model\RegisterStartRequest $register_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterStartAsync($register_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        return $this->authenticateServiceRegisterStartAsyncWithHttpInfo($register_start_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRegisterStartAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RegisterStartRequest $register_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRegisterStartAsyncWithHttpInfo($register_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\RegisterStartResponse';
+        $request = $this->authenticateServiceRegisterStartRequest($register_start_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRegisterStart'
+     *
+     * @param  \OpenAPI\Client\Model\RegisterStartRequest $register_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRegisterStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRegisterStartRequest($register_start_request, string $contentType = self::contentTypes['authenticateServiceRegisterStart'][0])
+    {
+
+        // verify the required parameter 'register_start_request' is set
+        if ($register_start_request === null || (is_array($register_start_request) && count($register_start_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $register_start_request when calling authenticateServiceRegisterStart'
+            );
+        }
+
+
+        $resourcePath = '/auth/register/start';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($register_start_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($register_start_request));
+            } else {
+                $httpBody = $register_start_request;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {

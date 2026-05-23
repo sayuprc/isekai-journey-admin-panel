@@ -2,6 +2,7 @@ import { Show } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
+import { registerPasskey } from '../../utils/webauthn';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
@@ -16,25 +17,44 @@ export const RegisterForm = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const { error, status } = await client.api.auth.register.post({
+    const start = await client.api.auth.register.start.post({
       token: formData.get('token')?.toString() ?? '',
       email: formData.get('email')?.toString() ?? '',
       name: formData.get('name')?.toString() ?? '',
-      password: formData.get('password')?.toString() ?? '',
     });
 
-    if (!error) {
+    if (start.error) {
+      if (start.status === 400) {
+        setFormError('登録に失敗しました。トークンを確認してください。');
+        return;
+      }
+
+      handleError(start.status, start.error);
+      return;
+    }
+
+    try {
+      const credential = await registerPasskey(start.data.publicKey as Record<string, unknown>);
+      const finish = await client.api.auth.register.finish.post({
+        authCeremonyId: start.data.authCeremonyId,
+        credential,
+      });
+
+      if (finish.error) {
+        if (finish.status === 400) {
+          setFormError('登録に失敗しました。入力内容を確認してください。');
+          return;
+        }
+
+        handleError(finish.status, finish.error);
+        return;
+      }
+
       setFlash('登録しました');
       window.location.href = '/song-types';
-      return;
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'パスキー登録に失敗しました');
     }
-
-    if (status === 400) {
-      setFormError('登録に失敗しました。トークンを確認してください。');
-      return;
-    }
-
-    handleError(status, error);
   });
 
   return (
@@ -70,16 +90,6 @@ export const RegisterForm = () => {
           classList={{ 'input-error': !!getFieldError('name') }}
         />
         <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
-
-        <label class="label">パスワード</label>
-        <input
-          type="password"
-          class="input"
-          name="password"
-          required
-          classList={{ 'input-error': !!getFieldError('password') }}
-        />
-        <Show when={getFieldError('password')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? '登録中...' : '登録'}

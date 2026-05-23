@@ -6,7 +6,6 @@ namespace Auth\Infrastructures\Auth;
 
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Services\HasherInterface;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -16,7 +15,6 @@ readonly class AuthUserProvider implements UserProvider
 {
     public function __construct(
         private AuthAdminUserRepositoryInterface $repository,
-        private HasherInterface $hasher,
     ) {
     }
 
@@ -54,11 +52,11 @@ readonly class AuthUserProvider implements UserProvider
     }
 
     /**
-     * @param array{password: string} $credentials
+     * @param array{password?: string} $credentials
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        return $this->hasher->check($credentials['password'], $user->getAuthPassword());
+        return false;
     }
 
     /**
@@ -74,6 +72,6 @@ readonly class AuthUserProvider implements UserProvider
             return null;
         }
 
-        return new AuthUser($user->adminUserId, $user->hashedPassword);
+        return new AuthUser($user->adminUserId);
     }
 }

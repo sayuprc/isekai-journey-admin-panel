@@ -6,8 +6,6 @@ namespace Tests\Unit\Auth\Infrastructures\Auth;
 
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Email;
-use AdminUser\Domain\Models\HashedPassword;
-use AdminUser\Domain\Services\HasherInterface;
 use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthenticatableAdminUser;
 use Auth\Infrastructures\Auth\AuthUser;
@@ -22,15 +20,12 @@ class AuthUserProviderTest extends TestCase
 {
     private AuthAdminUserRepositoryInterface&MockInterface $repository;
 
-    private HasherInterface&MockInterface $hasher;
-
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->repository = Mockery::mock(AuthAdminUserRepositoryInterface::class);
-        $this->hasher = Mockery::mock(HasherInterface::class);
     }
 
     #[Test]
@@ -40,7 +35,7 @@ class AuthUserProviderTest extends TestCase
 
         $this->repository->shouldReceive('find')
             ->withArgs(fn (AdminUserId $arg): bool => $arg->value === $adminUserId)
-            ->andReturn($this->createAuthenticatableUser($adminUserId, 'hashed-password'))
+            ->andReturn($this->createAuthenticatableUser($adminUserId))
             ->once();
 
         $result = $this->getInstance()->retrieveById($adminUserId);
@@ -66,7 +61,7 @@ class AuthUserProviderTest extends TestCase
 
         $this->repository->shouldReceive('findByEmail')
             ->withArgs(fn (Email $arg): bool => $arg->value === $email)
-            ->andReturn($this->createAuthenticatableUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'hashed-password'))
+            ->andReturn($this->createAuthenticatableUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'))
             ->once();
 
         $result = $this->getInstance()->retrieveByCredentials([
@@ -75,32 +70,25 @@ class AuthUserProviderTest extends TestCase
         ]);
 
         $this->assertInstanceOf(AuthUser::class, $result);
-        $this->assertSame('hashed-password', $result->getAuthPassword());
+        $this->assertSame('', $result->getAuthPassword());
     }
 
     #[Test]
     public function validateCredentials(): void
     {
-        $this->hasher->shouldReceive('check')
-            ->with('plain-password', 'hashed-password')
-            ->andReturnTrue()
-            ->once();
-
         $user = new AuthUser(
             AdminUserId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-            HashedPassword::reconstruct('hashed-password'),
         );
 
         $result = $this->getInstance()->validateCredentials($user, ['password' => 'plain-password']);
 
-        $this->assertTrue($result);
+        $this->assertFalse($result);
     }
 
-    private function createAuthenticatableUser(string $adminUserId, string $hashedPassword): AuthenticatableAdminUser
+    private function createAuthenticatableUser(string $adminUserId): AuthenticatableAdminUser
     {
         return new AuthenticatableAdminUser(
             AdminUserId::reconstruct($adminUserId),
-            HashedPassword::reconstruct($hashedPassword),
         );
     }
 
@@ -108,7 +96,6 @@ class AuthUserProviderTest extends TestCase
     {
         return new AuthUserProvider(
             $this->repository,
-            $this->hasher,
         );
     }
 }

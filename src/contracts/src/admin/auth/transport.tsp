@@ -27,14 +27,23 @@ model RefreshTokenResponse {
   refreshToken: refreshToken;
 }
 
-model RegisterRequest {
+model RegisterStartRequest {
   token: registrationToken;
   email: email;
   name: adminUserName;
-  password: password;
 }
 
-model RegisterResponse {
+model RegisterStartResponse {
+  authCeremonyId: authCeremonyId;
+  publicKey: webAuthnPublicKeyOptions;
+}
+
+model RegisterFinishRequest {
+  authCeremonyId: authCeremonyId;
+  credential: webAuthnCredential;
+}
+
+model RegisterFinishResponse {
   accessToken: accessToken;
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;

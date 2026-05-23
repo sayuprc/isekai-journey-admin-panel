@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Console\Commands\AdminUser;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use App\Models\AdminUser\RegistrationToken;
@@ -67,7 +66,6 @@ class InviteCommandTest extends DatabaseTestCase
     {
         $this->app->make(AdminUserRepository::class)->register(
             $this->createAdminUser($this->generateUuid(), 'taken@example.com', Role::General, []),
-            HashedPassword::reconstruct('hashed-password'),
         );
 
         $this->artisan('admin:invite taken@example.com')
