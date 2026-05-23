@@ -21,7 +21,8 @@ mock.module('@upstash/redis', () => {
   return { Redis };
 });
 
-const loginCalls: unknown[] = [];
+const loginStartCalls: unknown[] = [];
+const loginFinishCalls: unknown[] = [];
 const registerStartCalls: unknown[] = [];
 const registerFinishCalls: unknown[] = [];
 
@@ -31,8 +32,27 @@ mock.module('../../generated', () => {
       data: null,
       response: new Response(null, { status: 200 }),
     }),
-    authenticateServiceLogin: async ({ body }: { body: unknown }) => {
-      loginCalls.push(body);
+    authenticateServiceLoginStart: async ({ body }: { body: unknown }) => {
+      loginStartCalls.push(body);
+      return {
+        data: {
+          authCeremonyId: 'login-auth-ceremony-id',
+          publicKey: { challenge: 'login-challenge' },
+        },
+        response: new Response(null, { status: 200 }),
+      };
+    },
+    authenticateServiceLoginFinish: async ({ body }: { body: unknown }) => {
+      loginFinishCalls.push(body);
+
+      const payload = body as { credential: { fail?: boolean } };
+      if (payload.credential.fail) {
+        return {
+          error: { message: 'credential が不正です' },
+          response: new Response(null, { status: 401 }),
+        };
+      }
+
       return {
         data: {
           accessToken: 'access-token',
@@ -86,12 +106,111 @@ mock.module('../../generated', () => {
 
 const { auth } = await import('./auth');
 
+describe('POST /auth/login/start', () => {
+  beforeEach(() => {
+    for (const key of Object.keys(credentials)) {
+      delete credentials[key];
+    }
+    loginStartCalls.length = 0;
+    loginFinishCalls.length = 0;
+    registerStartCalls.length = 0;
+    registerFinishCalls.length = 0;
+  });
+
+  it('email だけでログイン開始 API を呼ぶ', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/login/start', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: 'user@example.com',
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      authCeremonyId: 'login-auth-ceremony-id',
+      publicKey: { challenge: 'login-challenge' },
+    });
+    expect(loginStartCalls).toHaveLength(1);
+    expect(loginStartCalls[0]).toEqual({
+      email: 'user@example.com',
+    });
+    expect(response.headers.getSetCookie()).toHaveLength(0);
+    expect(Object.keys(credentials)).toHaveLength(0);
+  });
+});
+
+describe('POST /auth/login/finish', () => {
+  beforeEach(() => {
+    for (const key of Object.keys(credentials)) {
+      delete credentials[key];
+    }
+    loginStartCalls.length = 0;
+    loginFinishCalls.length = 0;
+    registerStartCalls.length = 0;
+    registerFinishCalls.length = 0;
+  });
+
+  it('ログイン完了 API を呼び、成功時にセッション/CSRF Cookie を発行する', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/login/finish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          authCeremonyId: 'login-auth-ceremony-id',
+          credential: { id: 'credential-id' },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(loginFinishCalls).toHaveLength(1);
+    expect(loginFinishCalls[0]).toEqual({
+      authCeremonyId: 'login-auth-ceremony-id',
+      credential: { id: 'credential-id' },
+    });
+
+    const cookies = response.headers.getSetCookie();
+    expect(cookies.some(cookie => cookie.startsWith('session='))).toBe(true);
+    expect(cookies.some(cookie => cookie.startsWith('csrf='))).toBe(true);
+
+    const sessionEntries = Object.entries(credentials).filter(([key]) => key.startsWith('session:'));
+    expect(sessionEntries).toHaveLength(1);
+    const [, stored] = sessionEntries[0]!;
+    expect(stored).toMatchObject({
+      accessToken: 'access-token',
+      refreshTokenId: 'refresh-token-id',
+      refreshToken: 'refresh-token',
+    });
+    expect((stored as { csrfToken: string }).csrfToken).toBeTruthy();
+  });
+
+  it('API エラー時はエラーレスポンスをそのまま返す', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/login/finish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          authCeremonyId: 'login-auth-ceremony-id',
+          credential: { fail: true },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(401);
+    expect(Object.keys(credentials)).toHaveLength(0);
+  });
+});
+
 describe('POST /auth/register/start', () => {
   beforeEach(() => {
     for (const key of Object.keys(credentials)) {
       delete credentials[key];
     }
-    loginCalls.length = 0;
+    loginStartCalls.length = 0;
+    loginFinishCalls.length = 0;
     registerStartCalls.length = 0;
     registerFinishCalls.length = 0;
   });
@@ -126,7 +245,8 @@ describe('POST /auth/register/finish', () => {
     for (const key of Object.keys(credentials)) {
       delete credentials[key];
     }
-    loginCalls.length = 0;
+    loginStartCalls.length = 0;
+    loginFinishCalls.length = 0;
     registerStartCalls.length = 0;
     registerFinishCalls.length = 0;
   });

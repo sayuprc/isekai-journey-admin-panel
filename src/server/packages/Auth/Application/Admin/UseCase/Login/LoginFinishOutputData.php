@@ -6,7 +6,7 @@ namespace Auth\Application\Admin\UseCase\Login;
 
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 
-readonly class LoginOutputData
+readonly class LoginFinishOutputData
 {
     public function __construct(
         public AccessToken $accessToken,

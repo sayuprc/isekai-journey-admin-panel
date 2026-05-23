@@ -95,7 +95,9 @@ class RegisterFinishTest extends DatabaseTestCase
         $this->assertSame(0, ModelsAdminUser::query()->count());
         $this->assertSame(0, ModelsAdminUserPasskey::query()->count());
         $this->assertSame(0, AuthRefreshToken::query()->count());
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRegistrationToken::query()->first()->status);
+        $token = ModelsRegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
     }
 
     private function startRegistration(): string
@@ -106,7 +108,10 @@ class RegisterFinishTest extends DatabaseTestCase
             'name' => '新規ユーザー',
         ])->assertStatus(200);
 
-        return (string)$response->json('authCeremonyId');
+        $authCeremonyId = $response->json('authCeremonyId');
+        $this->assertIsString($authCeremonyId);
+
+        return $authCeremonyId;
     }
 
     private function bindPasskeyAuthenticator(bool $failFinish): void

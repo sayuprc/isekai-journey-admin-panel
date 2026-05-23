@@ -1,6 +1,6 @@
 <?php
 /**
- * LoginRequest
+ * LoginStartResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Client\ObjectSerializer;
 
 /**
- * LoginRequest Class Doc Comment
+ * LoginStartResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
+class LoginStartResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'LoginRequest';
+    protected static $openAPIModelName = 'LoginStartResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'email' => 'string',
-        'password' => 'string'
+        'auth_ceremony_id' => 'string',
+        'public_key' => 'object'
     ];
 
     /**
@@ -69,8 +69,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'email' => 'email',
-        'password' => 'password'
+        'auth_ceremony_id' => 'uuid',
+        'public_key' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'email' => false,
-        'password' => false
+        'auth_ceremony_id' => false,
+        'public_key' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'email' => 'email',
-        'password' => 'password'
+        'auth_ceremony_id' => 'authCeremonyId',
+        'public_key' => 'publicKey'
     ];
 
     /**
@@ -179,8 +179,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'email' => 'setEmail',
-        'password' => 'setPassword'
+        'auth_ceremony_id' => 'setAuthCeremonyId',
+        'public_key' => 'setPublicKey'
     ];
 
     /**
@@ -189,8 +189,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'email' => 'getEmail',
-        'password' => 'getPassword'
+        'auth_ceremony_id' => 'getAuthCeremonyId',
+        'public_key' => 'getPublicKey'
     ];
 
     /**
@@ -250,8 +250,8 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('email', $data ?? [], null);
-        $this->setIfExists('password', $data ?? [], null);
+        $this->setIfExists('auth_ceremony_id', $data ?? [], null);
+        $this->setIfExists('public_key', $data ?? [], null);
     }
 
     /**
@@ -281,11 +281,11 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['email'] === null) {
-            $invalidProperties[] = "'email' can't be null";
+        if ($this->container['auth_ceremony_id'] === null) {
+            $invalidProperties[] = "'auth_ceremony_id' can't be null";
         }
-        if ($this->container['password'] === null) {
-            $invalidProperties[] = "'password' can't be null";
+        if ($this->container['public_key'] === null) {
+            $invalidProperties[] = "'public_key' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +303,55 @@ class LoginRequest implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets email
+     * Gets auth_ceremony_id
      *
      * @return string
      */
-    public function getEmail()
+    public function getAuthCeremonyId()
     {
-        return $this->container['email'];
+        return $this->container['auth_ceremony_id'];
     }
 
     /**
-     * Sets email
+     * Sets auth_ceremony_id
      *
-     * @param string $email メールアドレス
+     * @param string $auth_ceremony_id 認証セッションID
      *
      * @return self
      */
-    public function setEmail($email)
+    public function setAuthCeremonyId($auth_ceremony_id)
     {
-        if (is_null($email)) {
-            throw new \InvalidArgumentException('non-nullable email cannot be null');
+        if (is_null($auth_ceremony_id)) {
+            throw new \InvalidArgumentException('non-nullable auth_ceremony_id cannot be null');
         }
-        $this->container['email'] = $email;
+        $this->container['auth_ceremony_id'] = $auth_ceremony_id;
 
         return $this;
     }
 
     /**
-     * Gets password
+     * Gets public_key
      *
-     * @return string
+     * @return object
      */
-    public function getPassword()
+    public function getPublicKey()
     {
-        return $this->container['password'];
+        return $this->container['public_key'];
     }
 
     /**
-     * Sets password
+     * Sets public_key
      *
-     * @param string $password 平文パスワード
+     * @param object $public_key public_key
      *
      * @return self
      */
-    public function setPassword($password)
+    public function setPublicKey($public_key)
     {
-        if (is_null($password)) {
-            throw new \InvalidArgumentException('non-nullable password cannot be null');
+        if (is_null($public_key)) {
+            throw new \InvalidArgumentException('non-nullable public_key cannot be null');
         }
-        $this->container['password'] = $password;
+        $this->container['public_key'] = $public_key;
 
         return $this;
     }

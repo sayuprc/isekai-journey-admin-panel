@@ -9,9 +9,9 @@ readonly class PasskeyCeremonyState
     public function __construct(
         public string $authCeremonyId,
         public string $type,
-        public string $token,
+        public ?string $token,
         public string $email,
-        public string $name,
+        public ?string $name,
         public string $adminUserId,
         public string $optionsJson,
     ) {
@@ -21,9 +21,9 @@ readonly class PasskeyCeremonyState
      * @return array{
      *   auth_ceremony_id: string,
      *   type: string,
-     *   token: string,
+     *   token: string|null,
      *   email: string,
-     *   name: string,
+     *   name: string|null,
      *   admin_user_id: string,
      *   options_json: string
      * }
@@ -45,9 +45,9 @@ readonly class PasskeyCeremonyState
      * @param array{
      *   auth_ceremony_id: string,
      *   type: string,
-     *   token: string,
+     *   token: string|null,
      *   email: string,
-     *   name: string,
+     *   name: string|null,
      *   admin_user_id: string,
      *   options_json: string
      * } $data

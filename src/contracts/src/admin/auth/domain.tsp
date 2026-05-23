@@ -2,10 +2,6 @@ import "../lib";
 
 namespace IsekaiObservatory.Admin;
 
-@doc("平文パスワード")
-@secret
-scalar password extends string;
-
 @doc("アクセストークン(JWT)")
 @secret
 scalar accessToken extends string;

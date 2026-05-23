@@ -74,7 +74,10 @@ class AuthenticateApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'authenticateServiceLogin' => [
+        'authenticateServiceLoginFinish' => [
+            'application/json',
+        ],
+        'authenticateServiceLoginStart' => [
             'application/json',
         ],
         'authenticateServiceRefresh' => [
@@ -135,34 +138,34 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceLogin
+     * Operation authenticateServiceLoginFinish
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request login_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLogin'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\LoginFinishRequest $login_finish_request login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\LoginResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     * @return \OpenAPI\Client\Model\LoginFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
      */
-    public function authenticateServiceLogin($login_request, string $contentType = self::contentTypes['authenticateServiceLogin'][0])
+    public function authenticateServiceLoginFinish($login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
     {
-        list($response) = $this->authenticateServiceLoginWithHttpInfo($login_request, $contentType);
+        list($response) = $this->authenticateServiceLoginFinishWithHttpInfo($login_finish_request, $contentType);
         return $response;
     }
 
     /**
-     * Operation authenticateServiceLoginWithHttpInfo
+     * Operation authenticateServiceLoginFinishWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLogin'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\LoginFinishRequest $login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\LoginResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\LoginFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
      */
-    public function authenticateServiceLoginWithHttpInfo($login_request, string $contentType = self::contentTypes['authenticateServiceLogin'][0])
+    public function authenticateServiceLoginFinishWithHttpInfo($login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
     {
-        $request = $this->authenticateServiceLoginRequest($login_request, $contentType);
+        $request = $this->authenticateServiceLoginFinishRequest($login_finish_request, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -190,7 +193,7 @@ class AuthenticateApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\LoginResponse',
+                        '\OpenAPI\Client\Model\LoginFinishResponse',
                         $request,
                         $response,
                     );
@@ -224,7 +227,7 @@ class AuthenticateApi
             }
 
             return $this->handleResponseWithDataType(
-                '\OpenAPI\Client\Model\LoginResponse',
+                '\OpenAPI\Client\Model\LoginFinishResponse',
                 $request,
                 $response,
             );
@@ -233,7 +236,7 @@ class AuthenticateApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\LoginResponse',
+                        '\OpenAPI\Client\Model\LoginFinishResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -262,17 +265,17 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceLoginAsync
+     * Operation authenticateServiceLoginFinishAsync
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLogin'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\LoginFinishRequest $login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authenticateServiceLoginAsync($login_request, string $contentType = self::contentTypes['authenticateServiceLogin'][0])
+    public function authenticateServiceLoginFinishAsync($login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
     {
-        return $this->authenticateServiceLoginAsyncWithHttpInfo($login_request, $contentType)
+        return $this->authenticateServiceLoginFinishAsyncWithHttpInfo($login_finish_request, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -281,18 +284,18 @@ class AuthenticateApi
     }
 
     /**
-     * Operation authenticateServiceLoginAsyncWithHttpInfo
+     * Operation authenticateServiceLoginFinishAsyncWithHttpInfo
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLogin'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\LoginFinishRequest $login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function authenticateServiceLoginAsyncWithHttpInfo($login_request, string $contentType = self::contentTypes['authenticateServiceLogin'][0])
+    public function authenticateServiceLoginFinishAsyncWithHttpInfo($login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
     {
-        $returnType = '\OpenAPI\Client\Model\LoginResponse';
-        $request = $this->authenticateServiceLoginRequest($login_request, $contentType);
+        $returnType = '\OpenAPI\Client\Model\LoginFinishResponse';
+        $request = $this->authenticateServiceLoginFinishRequest($login_finish_request, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -331,26 +334,26 @@ class AuthenticateApi
     }
 
     /**
-     * Create request for operation 'authenticateServiceLogin'
+     * Create request for operation 'authenticateServiceLoginFinish'
      *
-     * @param  \OpenAPI\Client\Model\LoginRequest $login_request (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLogin'] to see the possible values for this operation
+     * @param  \OpenAPI\Client\Model\LoginFinishRequest $login_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginFinish'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function authenticateServiceLoginRequest($login_request, string $contentType = self::contentTypes['authenticateServiceLogin'][0])
+    public function authenticateServiceLoginFinishRequest($login_finish_request, string $contentType = self::contentTypes['authenticateServiceLoginFinish'][0])
     {
 
-        // verify the required parameter 'login_request' is set
-        if ($login_request === null || (is_array($login_request) && count($login_request) === 0)) {
+        // verify the required parameter 'login_finish_request' is set
+        if ($login_finish_request === null || (is_array($login_finish_request) && count($login_finish_request) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $login_request when calling authenticateServiceLogin'
+                'Missing the required parameter $login_finish_request when calling authenticateServiceLoginFinish'
             );
         }
 
 
-        $resourcePath = '/auth/login';
+        $resourcePath = '/auth/login/finish';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -368,12 +371,299 @@ class AuthenticateApi
         );
 
         // for model (json/xml)
-        if (isset($login_request)) {
+        if (isset($login_finish_request)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_request));
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_finish_request));
             } else {
-                $httpBody = $login_request;
+                $httpBody = $login_finish_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceLoginStart
+     *
+     * @param  \OpenAPI\Client\Model\LoginStartRequest $login_start_request login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\LoginStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceLoginStart($login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        list($response) = $this->authenticateServiceLoginStartWithHttpInfo($login_start_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\LoginStartRequest $login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\LoginStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceLoginStartWithHttpInfo($login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        $request = $this->authenticateServiceLoginStartRequest($login_start_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\LoginStartResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\LoginStartResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\LoginStartResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartAsync
+     *
+     * @param  \OpenAPI\Client\Model\LoginStartRequest $login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginStartAsync($login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        return $this->authenticateServiceLoginStartAsyncWithHttpInfo($login_start_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceLoginStartAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\LoginStartRequest $login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceLoginStartAsyncWithHttpInfo($login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\LoginStartResponse';
+        $request = $this->authenticateServiceLoginStartRequest($login_start_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceLoginStart'
+     *
+     * @param  \OpenAPI\Client\Model\LoginStartRequest $login_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceLoginStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceLoginStartRequest($login_start_request, string $contentType = self::contentTypes['authenticateServiceLoginStart'][0])
+    {
+
+        // verify the required parameter 'login_start_request' is set
+        if ($login_start_request === null || (is_array($login_start_request) && count($login_start_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $login_start_request when calling authenticateServiceLoginStart'
+            );
+        }
+
+
+        $resourcePath = '/auth/login/start';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($login_start_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_start_request));
+            } else {
+                $httpBody = $login_start_request;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {
