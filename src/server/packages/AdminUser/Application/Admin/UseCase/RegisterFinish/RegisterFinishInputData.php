@@ -11,6 +11,7 @@ readonly class RegisterFinishInputData
      */
     public function __construct(
         public string $authCeremonyId,
+        public string $plainToken,
         public array $credential,
     ) {
     }

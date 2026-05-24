@@ -258,6 +258,7 @@ describe('POST /auth/register/finish', () => {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           authCeremonyId: 'auth-ceremony-id',
+          token: 'plain-token',
           credential: { id: 'credential-id' },
         }),
       }),
@@ -267,6 +268,7 @@ describe('POST /auth/register/finish', () => {
     expect(registerFinishCalls).toHaveLength(1);
     expect(registerFinishCalls[0]).toEqual({
       authCeremonyId: 'auth-ceremony-id',
+      token: 'plain-token',
       credential: { id: 'credential-id' },
     });
 
@@ -292,6 +294,7 @@ describe('POST /auth/register/finish', () => {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           authCeremonyId: 'auth-ceremony-id',
+          token: 'plain-token',
           credential: { fail: true },
         }),
       }),

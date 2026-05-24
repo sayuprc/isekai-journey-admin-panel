@@ -54,6 +54,7 @@ class RegisterFinishTest extends DatabaseTestCase
 
         $this->postJson(route(AuthRouteMap::RegisterFinish), [
             'authCeremonyId' => $authCeremonyId,
+            'token' => 'plain-token',
             'credential' => ['id' => 'credential-id'],
         ])->assertStatus(200)
             ->assertJson(
@@ -89,6 +90,7 @@ class RegisterFinishTest extends DatabaseTestCase
 
         $this->postJson(route(AuthRouteMap::RegisterFinish), [
             'authCeremonyId' => $authCeremonyId,
+            'token' => 'plain-token',
             'credential' => ['id' => 'credential-id'],
         ])->assertStatus(400);
 

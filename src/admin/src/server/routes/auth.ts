@@ -90,9 +90,9 @@ export const auth = new Elysia({ prefix: '/auth' })
   )
   .post(
     '/register/finish',
-    async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
+    async ({ body: { authCeremonyId, token, credential }, cookie: { session, csrf } }) => {
       const data = resolveApiResponse(
-        await authenticateServiceRegisterFinish({ client: client, body: { authCeremonyId, credential } }),
+        await authenticateServiceRegisterFinish({ client: client, body: { authCeremonyId, token, credential } }),
       );
 
       const sessionId = generateRandomBytes();
@@ -105,6 +105,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     {
       body: t.Object({
         authCeremonyId: t.String(),
+        token: t.String(),
         credential: t.Record(t.String(), t.Any()),
       }),
     },

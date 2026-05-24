@@ -9,6 +9,7 @@ use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use LogicException;
 use ResultType\Err;
@@ -73,8 +74,7 @@ readonly class RegisterStartUseCase
 
         $this->ceremonyStore->put(new PasskeyCeremonyState(
             $authCeremonyId,
-            'register',
-            $inputData->plainToken,
+            PasskeyCeremonyType::Register,
             $adminUser->email->value,
             $adminUser->name->value,
             $adminUser->adminUserId->value,

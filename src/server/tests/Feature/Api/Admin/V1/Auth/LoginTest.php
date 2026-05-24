@@ -10,6 +10,7 @@ use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Domain\Services\PasskeyVerificationResult;
@@ -149,8 +150,7 @@ class LoginTest extends DatabaseTestCase
 
         $this->app->make(PasskeyCeremonyStoreInterface::class)->put(new PasskeyCeremonyState(
             $authCeremonyId,
-            'register',
-            'plain-token',
+            PasskeyCeremonyType::Register,
             'example@example.com',
             'テストユーザー',
             $adminUserId,

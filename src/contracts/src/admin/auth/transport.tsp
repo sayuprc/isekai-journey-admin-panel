@@ -49,6 +49,7 @@ model RegisterStartResponse {
 
 model RegisterFinishRequest {
   authCeremonyId: authCeremonyId;
+  token: registrationToken;
   credential: webAuthnCredential;
 }
 
