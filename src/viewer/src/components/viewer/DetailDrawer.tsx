@@ -172,9 +172,7 @@ export const DetailDrawer = () => {
                     ←
                   </button>
                 </Show>
-                <div class="label-mono">
-                  {kindLabel(target().kind)} · {target().id.toUpperCase()}
-                </div>
+                <div class="label-mono">{kindLabel(target().kind)}</div>
               </div>
               <div class="drawer-head-actions">
                 <Show when={stack().length > 1}>
