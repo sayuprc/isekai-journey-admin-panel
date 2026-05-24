@@ -17,7 +17,6 @@ use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
 use AdminUser\Domain\Services\RegistrationToken\TokenHasherInterface;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use DateTimeImmutable;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Tests\Support\DatabaseTestCase;
@@ -37,28 +36,6 @@ class RegistrationTokenConsumeServiceTest extends DatabaseTestCase
         $this->assertTrue($result->unwrap()->equals($older));
         $this->assertFalse($result->unwrap()->equals($newer));
         $this->assertTrue($hasher->verify('plain-old-token', $result->unwrap()->token->value));
-    }
-
-    #[Test]
-    public function canVerifyLegacyBcryptToken(): void
-    {
-        $plainToken = 'plain-token';
-        $token = new RegistrationToken(
-            RegistrationTokenId::reconstruct($this->generateUuid()),
-            HashedTokenValue::reconstruct(Hash::make($plainToken)),
-            Email::reconstruct('invitee@example.com'),
-            Role::General,
-            Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
-            ConsumptionStatus::Unused,
-        );
-
-        $this->app->make(RegistrationTokenRepositoryInterface::class)->save($token);
-
-        $result = $this->getInstance()->verify($plainToken, Email::reconstruct('invitee@example.com'));
-
-        $this->assertTrue($result->isOk());
-        $this->assertTrue($result->unwrap()->equals($token));
     }
 
     private function saveToken(string $plainToken, string $email, DateTimeImmutable $createdAt): RegistrationToken

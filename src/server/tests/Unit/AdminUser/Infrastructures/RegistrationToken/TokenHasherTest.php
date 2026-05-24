@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\AdminUser\Infrastructures\RegistrationToken;
 
 use AdminUser\Infrastructures\RegistrationToken\TokenHasher;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -27,16 +26,6 @@ class TokenHasherTest extends TestCase
     {
         $plainToken = str_repeat('a', 128);
         $hashed = hash('sha256', $plainToken);
-
-        $this->assertTrue($this->getInstance()->verify($plainToken, $hashed));
-        $this->assertFalse($this->getInstance()->verify(str_repeat('b', 128), $hashed));
-    }
-
-    #[Test]
-    public function verifiesLegacyBcryptHash(): void
-    {
-        $plainToken = str_repeat('a', 128);
-        $hashed = Hash::make($plainToken);
 
         $this->assertTrue($this->getInstance()->verify($plainToken, $hashed));
         $this->assertFalse($this->getInstance()->verify(str_repeat('b', 128), $hashed));

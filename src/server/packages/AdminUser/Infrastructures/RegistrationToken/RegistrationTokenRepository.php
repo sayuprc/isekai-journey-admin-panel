@@ -89,18 +89,6 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
             ->all());
     }
 
-    #[Override]
-    public function revokeUnusedByEmail(Email $email): int
-    {
-        return ModelsRegistrationToken::query()
-            ->where('email', $email->value)
-            ->where('status', ConsumptionStatus::Unused->value)
-            ->update([
-                'status' => ConsumptionStatus::Consumed->value,
-                'updated_at' => now(),
-            ]);
-    }
-
     private function hydrate(ModelsRegistrationToken $model): RegistrationToken
     {
         /** @var list<string> */

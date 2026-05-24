@@ -89,41 +89,4 @@ class InviteCommandTest extends DatabaseTestCase
         $this->assertNotSame('', $row->token);
         $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $row->token);
     }
-
-    #[Test]
-    public function canRevokeUnusedTokens(): void
-    {
-        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
-        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
-
-        $this->artisan('admin:invite:revoke invitee@example.com')
-            ->expectsOutput('無効化した登録トークン数: 2')
-            ->assertSuccessful();
-
-        $this->assertSame(
-            [1, 1],
-            RegistrationToken::query()
-                ->where('email', 'invitee@example.com')
-                ->orderBy('created_at')
-                ->pluck('status')
-                ->all(),
-        );
-    }
-
-    #[Test]
-    public function revokeDoesNotChangeConsumedTokens(): void
-    {
-        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
-
-        $token = RegistrationToken::query()->first();
-        $this->assertNotNull($token);
-        $token->status = 1;
-        $token->save();
-
-        $this->artisan('admin:invite:revoke invitee@example.com')
-            ->expectsOutput('無効化した登録トークン数: 0')
-            ->assertSuccessful();
-
-        $this->assertSame(1, RegistrationToken::query()->first()?->status);
-    }
 }

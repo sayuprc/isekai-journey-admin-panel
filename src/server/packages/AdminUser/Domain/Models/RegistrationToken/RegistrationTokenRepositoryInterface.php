@@ -16,6 +16,4 @@ interface RegistrationTokenRepositoryInterface
      * @return list<RegistrationToken>
      */
     public function findUnusedByEmailForUpdate(Email $email): array;
-
-    public function revokeUnusedByEmail(Email $email): int;
 }
