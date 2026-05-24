@@ -13,6 +13,7 @@ use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyVerificationResult;
@@ -60,11 +61,11 @@ readonly class RegisterFinishUseCase
     {
         $state = $this->ceremonyStore->pull($inputData->authCeremonyId);
 
-        if (! $state instanceof PasskeyCeremonyState || $state->type !== 'register') {
+        if (is_null($state) || $state->type !== PasskeyCeremonyType::Register) {
             return new Err(new BusinessLogicError('register_ceremony_not_found'));
         }
 
-        if ($state->token === null || $state->name === null) {
+        if (is_null($state->name)) {
             return new Err(new BusinessLogicError('register_ceremony_not_found'));
         }
 
@@ -77,15 +78,18 @@ readonly class RegisterFinishUseCase
             return new Err(new BusinessLogicError('passkey_verification_failed'));
         }
 
-        return $this->transaction->scope(fn (): Result => $this->persist($state, $verification));
+        return $this->transaction->scope(fn (): Result => $this->persist($state, $inputData->plainToken, $verification));
     }
 
     /**
      * @return Result<RegisterFinishOutputData, UseCaseError>
      */
-    private function persist(PasskeyCeremonyState $state, PasskeyVerificationResult $verification): Result
-    {
-        if ($state->token === null || $state->name === null) {
+    private function persist(
+        PasskeyCeremonyState $state,
+        string $plainToken,
+        PasskeyVerificationResult $verification,
+    ): Result {
+        if (is_null($state->name)) {
             return new Err(new BusinessLogicError('register_ceremony_not_found'));
         }
 
@@ -95,7 +99,7 @@ readonly class RegisterFinishUseCase
             return new Err($this->handleError($emailResult->unwrapErr()));
         }
 
-        $tokenResult = $this->consumeService->verify($state->token, $emailResult->unwrap());
+        $tokenResult = $this->consumeService->verify($plainToken, $emailResult->unwrap());
 
         if ($tokenResult->isErr()) {
             return new Err($this->handleError($tokenResult->unwrapErr()));

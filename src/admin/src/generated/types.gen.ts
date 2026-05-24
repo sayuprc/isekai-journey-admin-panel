@@ -234,6 +234,7 @@ export type RefreshTokenResponse = {
 
 export type RegisterFinishRequest = {
     authCeremonyId: AuthCeremonyId;
+    token: RegistrationToken;
     credential: {
         [key: string]: unknown;
     };

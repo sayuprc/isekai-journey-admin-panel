@@ -8,6 +8,7 @@ use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyVerificationResult;
@@ -52,19 +53,19 @@ readonly class LoginFinishUseCase
     {
         $state = $this->ceremonyStore->pull($inputData->authCeremonyId);
 
-        if (! $state instanceof PasskeyCeremonyState || $state->type !== 'login') {
+        if (is_null($state) || $state->type !== PasskeyCeremonyType::Login) {
             return new Err(new AuthenticationError());
         }
 
         $credentialId = $this->credentialId($inputData->credential);
 
-        if ($credentialId === null) {
+        if (is_null($credentialId)) {
             return new Err(new AuthenticationError());
         }
 
         $passkey = $this->passkeyRepository->findByCredentialId($credentialId);
 
-        if ($passkey === null || $passkey->adminUserId !== $state->adminUserId) {
+        if (is_null($passkey) || $passkey->adminUserId !== $state->adminUserId) {
             return new Err(new AuthenticationError());
         }
 

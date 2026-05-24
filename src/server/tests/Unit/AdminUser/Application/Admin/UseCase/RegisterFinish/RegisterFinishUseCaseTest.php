@@ -23,6 +23,7 @@ use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus as RefreshConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
@@ -103,14 +104,14 @@ class RegisterFinishUseCaseTest extends TestCase
         $passkeyId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
         $refreshTokenId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD';
         $now = new DateTimeImmutable('2026-01-01 00:00:00');
-        $state = new PasskeyCeremonyState('ceremony-id', 'register', 'plain-token', 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
+        $state = new PasskeyCeremonyState('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', PasskeyCeremonyType::Register, 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
         $verification = new PasskeyVerificationResult('credential-id', 'public-key', 123);
         $token = $this->buildToken('invitee@example.com');
         $adminUser = $this->createAdminUser($adminUserId, 'invitee@example.com', name: '名前');
         $refreshToken = $this->createRefreshToken($refreshTokenId, $adminUserId, 'hashed-refresh', new DateTimeImmutable('+7 days'), RefreshConsumptionStatus::Unused);
         $accessToken = $this->createAccessToken('jwt-value');
 
-        $this->ceremonyStore->shouldReceive('pull')->with('ceremony-id')->andReturn($state)->once();
+        $this->ceremonyStore->shouldReceive('pull')->with('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE')->andReturn($state)->once();
         $this->passkeyAuthenticator->shouldReceive('finishRegistration')
             ->with(['id' => 'credential-id'], '{"challenge":"challenge"}')
             ->andReturn($verification)
@@ -148,7 +149,7 @@ class RegisterFinishUseCaseTest extends TestCase
         $this->accessTokenIssueService->shouldReceive('issue')->with($refreshTokenId)->andReturn($accessToken)->once();
         $this->refreshTokenRepository->shouldReceive('save')->with($refreshToken)->andReturn($refreshToken)->once();
 
-        $result = $this->getInstance()->handle(new RegisterFinishInputData('ceremony-id', ['id' => 'credential-id']));
+        $result = $this->getInstance()->handle(new RegisterFinishInputData('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', 'plain-token', ['id' => 'credential-id']));
 
         $this->assertTrue($result->isOk());
         $this->assertSame('jwt-value', $result->unwrap()->accessToken->jwt->value);
@@ -157,16 +158,16 @@ class RegisterFinishUseCaseTest extends TestCase
     #[Test]
     public function doesNotPersistWhenPasskeyVerificationFails(): void
     {
-        $state = new PasskeyCeremonyState('ceremony-id', 'register', 'plain-token', 'invitee@example.com', '名前', 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '{}');
+        $state = new PasskeyCeremonyState('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', PasskeyCeremonyType::Register, 'invitee@example.com', '名前', 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', '{}');
 
-        $this->ceremonyStore->shouldReceive('pull')->with('ceremony-id')->andReturn($state)->once();
+        $this->ceremonyStore->shouldReceive('pull')->with('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE')->andReturn($state)->once();
         $this->passkeyAuthenticator->shouldReceive('finishRegistration')->andThrow(new RuntimeException('failed'))->once();
         $this->transaction->shouldReceive('scope')->never();
         $this->adminUserRepository->shouldReceive('register')->never();
         $this->passkeyRepository->shouldReceive('save')->never();
         $this->registrationTokenRepository->shouldReceive('save')->never();
 
-        $result = $this->getInstance()->handle(new RegisterFinishInputData('ceremony-id', ['id' => 'credential-id']));
+        $result = $this->getInstance()->handle(new RegisterFinishInputData('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', 'plain-token', ['id' => 'credential-id']));
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(BusinessLogicError::class, $result->unwrapErr());
@@ -176,12 +177,12 @@ class RegisterFinishUseCaseTest extends TestCase
     public function doesNotPersistWhenRefreshTokenIssueFails(): void
     {
         $adminUserId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
-        $state = new PasskeyCeremonyState('ceremony-id', 'register', 'plain-token', 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
+        $state = new PasskeyCeremonyState('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', PasskeyCeremonyType::Register, 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
         $verification = new PasskeyVerificationResult('credential-id', 'public-key', 123);
         $token = $this->buildToken('invitee@example.com');
         $adminUser = $this->createAdminUser($adminUserId, 'invitee@example.com', name: '名前');
 
-        $this->ceremonyStore->shouldReceive('pull')->with('ceremony-id')->andReturn($state)->once();
+        $this->ceremonyStore->shouldReceive('pull')->with('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE')->andReturn($state)->once();
         $this->passkeyAuthenticator->shouldReceive('finishRegistration')
             ->with(['id' => 'credential-id'], '{"challenge":"challenge"}')
             ->andReturn($verification)
@@ -208,7 +209,7 @@ class RegisterFinishUseCaseTest extends TestCase
         $this->registrationTokenRepository->shouldReceive('save')->never();
         $this->refreshTokenRepository->shouldReceive('save')->never();
 
-        $result = $this->getInstance()->handle(new RegisterFinishInputData('ceremony-id', ['id' => 'credential-id']));
+        $result = $this->getInstance()->handle(new RegisterFinishInputData('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', 'plain-token', ['id' => 'credential-id']));
 
         $this->assertTrue($result->isErr());
     }

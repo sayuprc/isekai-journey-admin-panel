@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Models;
 
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\Email;
+
 readonly class PasskeyCeremonyState
 {
     public function __construct(
         public string $authCeremonyId,
-        public string $type,
-        public ?string $token,
+        public PasskeyCeremonyType $type,
         public string $email,
         public ?string $name,
         public string $adminUserId,
         public string $optionsJson,
     ) {
+        AuthCeremonyId::reconstruct($this->authCeremonyId);
+        Email::reconstruct($this->email);
+        AdminUserId::reconstruct($this->adminUserId);
     }
 
     /**
      * @return array{
      *   auth_ceremony_id: string,
      *   type: string,
-     *   token: string|null,
      *   email: string,
      *   name: string|null,
      *   admin_user_id: string,
@@ -32,11 +36,10 @@ readonly class PasskeyCeremonyState
     {
         return [
             'auth_ceremony_id' => $this->authCeremonyId,
-            'type' => $this->type,
-            'token' => $this->token,
+            'type' => $this->type->value,
             'email' => $this->email,
-            'admin_user_id' => $this->adminUserId,
             'name' => $this->name,
+            'admin_user_id' => $this->adminUserId,
             'options_json' => $this->optionsJson,
         ];
     }
@@ -45,7 +48,6 @@ readonly class PasskeyCeremonyState
      * @param array{
      *   auth_ceremony_id: string,
      *   type: string,
-     *   token: string|null,
      *   email: string,
      *   name: string|null,
      *   admin_user_id: string,
@@ -56,8 +58,7 @@ readonly class PasskeyCeremonyState
     {
         return new self(
             $data['auth_ceremony_id'],
-            $data['type'],
-            $data['token'],
+            PasskeyCeremonyType::from($data['type']),
             $data['email'],
             $data['name'],
             $data['admin_user_id'],

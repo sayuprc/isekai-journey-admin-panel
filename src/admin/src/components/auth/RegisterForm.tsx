@@ -16,9 +16,10 @@ export const RegisterForm = () => {
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+    const token = formData.get('token')?.toString() ?? '';
 
     const start = await client.api.auth.register.start.post({
-      token: formData.get('token')?.toString() ?? '',
+      token,
       email: formData.get('email')?.toString() ?? '',
       name: formData.get('name')?.toString() ?? '',
     });
@@ -37,6 +38,7 @@ export const RegisterForm = () => {
       const credential = await registerPasskey(start.data.publicKey as Record<string, unknown>);
       const finish = await client.api.auth.register.finish.post({
         authCeremonyId: start.data.authCeremonyId,
+        token,
         credential,
       });
 

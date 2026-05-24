@@ -18,6 +18,7 @@ use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyStartResult;
 use DateTimeImmutable;
@@ -89,8 +90,7 @@ class RegisterStartUseCaseTest extends TestCase
 
         $this->ceremonyStore->shouldReceive('put')
             ->withArgs(fn (PasskeyCeremonyState $state): bool => $state->authCeremonyId === $authCeremonyId
-                && $state->type === 'register'
-                && $state->token === 'plain-token'
+                && $state->type === PasskeyCeremonyType::Register
                 && $state->email === 'invitee@example.com'
                 && $state->name === '名前'
                 && $state->adminUserId === $adminUserId

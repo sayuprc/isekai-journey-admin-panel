@@ -2138,10 +2138,13 @@ components:
       type: object
       required:
         - authCeremonyId
+        - token
         - credential
       properties:
         authCeremonyId:
           $ref: '#/components/schemas/authCeremonyId'
+        token:
+          $ref: '#/components/schemas/registrationToken'
         credential:
           type: object
           unevaluatedProperties: {}

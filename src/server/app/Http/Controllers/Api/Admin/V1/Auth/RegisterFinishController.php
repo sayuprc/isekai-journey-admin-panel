@@ -26,6 +26,7 @@ class RegisterFinishController extends Controller
 
         $inputData = new RegisterFinishInputData(
             $request->string('authCeremonyId')->toString(),
+            $request->string('token')->toString(),
             $credential,
         );
 

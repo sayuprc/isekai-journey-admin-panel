@@ -58,6 +58,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
       */
     protected static $openAPITypes = [
         'auth_ceremony_id' => 'string',
+        'token' => 'string',
         'credential' => 'object'
     ];
 
@@ -70,6 +71,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
       */
     protected static $openAPIFormats = [
         'auth_ceremony_id' => 'uuid',
+        'token' => 'password',
         'credential' => null
     ];
 
@@ -80,6 +82,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
       */
     protected static array $openAPINullables = [
         'auth_ceremony_id' => false,
+        'token' => false,
         'credential' => false
     ];
 
@@ -170,6 +173,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      */
     protected static $attributeMap = [
         'auth_ceremony_id' => 'authCeremonyId',
+        'token' => 'token',
         'credential' => 'credential'
     ];
 
@@ -180,6 +184,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      */
     protected static $setters = [
         'auth_ceremony_id' => 'setAuthCeremonyId',
+        'token' => 'setToken',
         'credential' => 'setCredential'
     ];
 
@@ -190,6 +195,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      */
     protected static $getters = [
         'auth_ceremony_id' => 'getAuthCeremonyId',
+        'token' => 'getToken',
         'credential' => 'getCredential'
     ];
 
@@ -251,6 +257,7 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
     public function __construct(?array $data = null)
     {
         $this->setIfExists('auth_ceremony_id', $data ?? [], null);
+        $this->setIfExists('token', $data ?? [], null);
         $this->setIfExists('credential', $data ?? [], null);
     }
 
@@ -283,6 +290,9 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
 
         if ($this->container['auth_ceremony_id'] === null) {
             $invalidProperties[] = "'auth_ceremony_id' can't be null";
+        }
+        if ($this->container['token'] === null) {
+            $invalidProperties[] = "'token' can't be null";
         }
         if ($this->container['credential'] === null) {
             $invalidProperties[] = "'credential' can't be null";
@@ -325,6 +335,33 @@ class RegisterFinishRequest implements ModelInterface, ArrayAccess, \JsonSeriali
             throw new \InvalidArgumentException('non-nullable auth_ceremony_id cannot be null');
         }
         $this->container['auth_ceremony_id'] = $auth_ceremony_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets token
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->container['token'];
+    }
+
+    /**
+     * Sets token
+     *
+     * @param string $token 管理ユーザー登録トークン(平文)
+     *
+     * @return self
+     */
+    public function setToken($token)
+    {
+        if (is_null($token)) {
+            throw new \InvalidArgumentException('non-nullable token cannot be null');
+        }
+        $this->container['token'] = $token;
 
         return $this;
     }

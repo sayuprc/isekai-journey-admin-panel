@@ -9,6 +9,7 @@ use AdminUser\Domain\Models\Email;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use LogicException;
 use ResultType\Err;
@@ -46,7 +47,7 @@ readonly class LoginStartUseCase
 
         $adminUser = $this->adminUserRepository->findByEmail($emailResult->unwrap());
 
-        if ($adminUser === null) {
+        if (is_null($adminUser)) {
             return new Err(new AuthenticationError());
         }
 
@@ -61,8 +62,7 @@ readonly class LoginStartUseCase
 
         $this->ceremonyStore->put(new PasskeyCeremonyState(
             $authCeremonyId,
-            'login',
-            null,
+            PasskeyCeremonyType::Login,
             $adminUser->email->value,
             null,
             $adminUser->adminUserId->value,
