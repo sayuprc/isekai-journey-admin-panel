@@ -1,36 +1,49 @@
 ---
+import EntryStatus from '../../components/viewer/EntryStatus';
 import FilterBar from '../../components/viewer/FilterBar';
-import JacketArt from '../../components/viewer/JacketArt.astro';
 import LayoutSwitcher from '../../components/viewer/LayoutSwitcher';
 import SectionHead from '../../components/viewer/SectionHead.astro';
-import { songRepository } from '../../features/songs/api'
+import SongTile from '../../components/viewer/SongTile.astro';
+import { songRepository } from '../../features/songs/api';
 import Layout from '../../layouts/Layout.astro';
 
 const songs = await songRepository.all();
 
-// TODO JacketArt をどうするか決める必要がある
+// 今後のローンチでジャケットアートの見せ方を定義する
+const showSongVisualLayouts = false;
+
+const formatSongCredits = (lyricists: string[], composers: string[], arrangers: string[]): string =>
+  [
+    lyricists.length > 0 ? `作詞 ${lyricists.join(' / ')}` : null,
+    composers.length > 0 ? `作曲 ${composers.join(' / ')}` : null,
+    arrangers.length > 0 ? `編曲 ${arrangers.join(' / ')}` : null,
+  ].filter((value): value is string => Boolean(value)).join(' ・ ');
 ---
 
 <Layout pageTitle="楽曲">
   <section class="shell page-section">
-    <SectionHead num="—" title="楽曲" titleEn={`Songs / ${songs.length} songs`}>
-      <LayoutSwitcher
-        client:load
-        slot="right"
-        name="songs"
-        initialValue="grid"
-        options={[
-          { value: 'grid', label: 'GRID' },
-          { value: 'table', label: 'TABLE' },
-          { value: 'card', label: 'CARD' },
-        ]}
-      />
+    <SectionHead title="楽曲">
+      {
+        showSongVisualLayouts && (
+          <LayoutSwitcher
+            client:load
+            slot="right"
+            name="songs"
+            initialValue="grid"
+            options={[
+              { value: 'grid', label: 'GRID' },
+              { value: 'table', label: 'TABLE' },
+              { value: 'card', label: 'CARD' },
+            ]}
+          />
+        )
+      }
     </SectionHead>
 
     <FilterBar
       client:load
       filters={[
-        { value: 'all', label: `すべて (${songs.length})` },
+        { value: 'all', label: `すべて` },
         { value: '1', label: 'オリジナル' },
         { value: '2', label: 'カバー' },
       ]}
@@ -41,101 +54,123 @@ const songs = await songRepository.all();
     />
 
     <div data-layout-group="songs">
-      <div data-layout-panel="grid">
-        <div class="song-grid">
-          {
-            songs.map(song => {
-              return (
-                <a
-                  href={`/songs/${song.songId}`}
-                  class="song-grid-card"
-                  data-song-entry
-                  data-song-category={song.type.value}
-                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
-                >
-                  <JacketArt color={song.color} label={song.title} />
-                  <div class="song-grid-body">
-                    <div class="song-grid-meta">
-                      <span class="pill">{song.type.name}</span>
-                      <div class="song-meta-inline">
-                        {/* <span>{stats.releases} rel</span> */}
-                        {/* <span>{stats.performances} live</span> */}
-                        <span>{song.counts.mediaCount} mv</span>
+      {
+        showSongVisualLayouts && (
+          <div data-layout-panel="grid">
+            <div class="song-grid">
+              {
+                songs.map((song, index) => {
+                  return (
+                    <a
+                      href={`/songs/${song.songId}`}
+                      class="song-grid-card"
+                      data-song-entry
+                      data-song-category={song.type.value}
+                      data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
+                    >
+                      <SongTile
+                        songId={song.songId}
+                        title={song.title}
+                        typeName={song.type.name}
+                        mediaCount={song.counts.mediaCount}
+                        index={index}
+                      />
+                      <div class="song-grid-body">
+                        <div class="song-grid-meta">
+                          <span class="pill">{song.type.name}</span>
+                          <div class="song-meta-inline">
+                            <span>{song.counts.mediaCount} mv</span>
+                          </div>
+                        </div>
+                        <div class="song-grid-title">{song.title}</div>
                       </div>
-                    </div>
-                    <div class="song-grid-title">{song.title}</div>
-                  </div>
-                </a>
-              );
-            })
-          }
-        </div>
-      </div>
+                    </a>
+                  );
+                })
+              }
+            </div>
+          </div>
+        )
+      }
 
-      <div data-layout-panel="table" hidden>
+      <div data-layout-panel="table">
+        <EntryStatus client:load entrySelector="[data-song-entry]" label="楽曲" emptySelector="[data-song-empty]" />
         <div class="songs-table">
           <div class="tbl-row tbl-head">
-            <div class="label-mono">#</div>
-            <div class="label-mono">TITLE</div>
-            <div class="label-mono">CAT.</div>
-            {/* <div class="label-mono">REL</div> */}
-            {/* <div class="label-mono">LIVE</div> */}
-            <div class="label-mono">MV</div>
+            <div class="songs-table-heading" aria-hidden="true"></div>
+            <div class="songs-table-heading">楽曲</div>
+            <div class="songs-table-heading">種別</div>
+            <div class="songs-table-heading songs-table-heading-right">関連メディア</div>
           </div>
-          {
-            songs.map((song, index) => {
-              return (
-                <a
-                  href={`/songs/${song.songId}`}
-                  class="tbl-row tbl-body"
-                  data-song-entry
-                  data-song-category={song.type.value}
-                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
-                >
-                  <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
-                  <div>
-                    <div class="table-title">{song.title}</div>
-                  </div>
-                  <span class="pill">{song.type.name}</span>
-                  {/* <span class="num-cell">{stats.releases}</span> */}
-                  {/* <span class="num-cell">{stats.performances}</span> */}
-                  <span class="num-cell">{song.counts.mediaCount}</span>
-                </a>
-              );
-            })
-          }
+          <div class="songs-table-body">
+            <div class="entry-empty" data-song-empty hidden>
+              <div class="entry-empty-title">該当する楽曲がありません</div>
+              <div class="entry-empty-description">検索語句や種別フィルタを変えて確認してください。</div>
+            </div>
+            {
+              songs.map((song, index) => {
+                const credits = formatSongCredits(song.lyricists, song.composers, song.arrangers);
+
+                return (
+                  <a
+                    href={`/songs/${song.songId}`}
+                    class="tbl-row tbl-body"
+                    data-song-entry
+                    data-song-category={song.type.value}
+                    data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
+                  >
+                    <span class="song-row-index">{index + 1}</span>
+                    <div class="song-row-title-cell">
+                      <div class="table-title">{song.title}</div>
+                      {credits && <div class="song-row-credit">{credits}</div>}
+                    </div>
+                    <span class="song-row-type">{song.type.name}</span>
+                    <span class="song-row-media"><strong>{song.counts.mediaCount}</strong><span>件</span></span>
+                  </a>
+                );
+              })
+            }
+          </div>
         </div>
       </div>
 
-      <div data-layout-panel="card" hidden>
-        <div class="songs-card-grid">
-          {
-            songs.map(song => {
-              return (
-                <a
-                  href={`/songs/${song.songId}`}
-                  class="song-card"
-                  data-song-entry
-                  data-song-category={song.type.value}
-                  data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
-                >
-                  <JacketArt color={song.color} label={song.songId} />
-                  <div class="song-card-body">
-                    <div class="label-mono">{song.type.name}</div>
-                    <div class="timeline-title">{song.title}</div>
-                    <p class="song-grid-description">{song.description}</p>
-                    <div class="song-card-stats">
-                      {/* <div><span class="detail-index">{stats.releases}</span><span class="label-mono">releases</span></div> */}
-                      {/* <div><span class="detail-index">{stats.performances}</span><span class="label-mono">歌唱</span></div> */}
-                      <div><span class="detail-index">{song.counts.mediaCount}</span><span class="label-mono">media</span></div>
-                    </div>
-                  </div>
-                </a>
-              );
-            })
-          }
-        </div>
-      </div>
+      {
+        showSongVisualLayouts && (
+          <div data-layout-panel="card" hidden>
+            <div class="songs-card-grid">
+              {
+                songs.map((song, index) => {
+                  return (
+                    <a
+                      href={`/songs/${song.songId}`}
+                      class="song-card"
+                      data-song-entry
+                      data-song-category={song.type.value}
+                      data-song-search={`${song.title} ${song.lyricists.join(' ')} ${song.composers.join(' ')} ${song.arrangers.join(' ')}`.toLowerCase()}
+                    >
+                      <SongTile
+                        songId={song.songId}
+                        title={song.title}
+                        typeName={song.type.name}
+                        mediaCount={song.counts.mediaCount}
+                        index={index}
+                      />
+                      <div class="song-card-body">
+                        <div class="label-mono">{song.type.name}</div>
+                        <div class="timeline-title">{song.title}</div>
+                        <p class="song-grid-description">{song.description}</p>
+                        <div class="song-card-stats">
+                          <div><span class="detail-index">{song.counts.mediaCount}</span><span class="label-mono">media</span></div>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })
+              }
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </Layout>

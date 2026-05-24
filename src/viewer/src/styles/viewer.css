@@ -162,8 +162,8 @@ html, body {
   margin: 0;
   padding: 0;
   background: var(--bg);
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
   color: var(--fg);
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Shippori Mincho', serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.75;
@@ -184,7 +184,7 @@ a { color: inherit; text-decoration: none; }
 
 ::selection { background: color-mix(in oklab, var(--accent) 40%, transparent); color: var(--fg); }
 
-.font-serif { font-family: 'EB Garamond', 'Noto Serif JP', serif; }
+.font-serif { font-family: 'Noto Serif JP', 'Shippori Mincho', serif; }
 .font-mincho { font-family: 'Shippori Mincho', 'Noto Serif JP', serif; }
 .font-mono { font-family: 'JetBrains Mono', monospace; }
 .font-cormorant { font-family: 'EB Garamond', 'Cormorant Garamond', serif; }
@@ -573,43 +573,34 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* セクションヘッダー */
+
 .section-head {
   display: flex;
+  gap: 32px;
   align-items: baseline;
   justify-content: space-between;
-  gap: 32px;
-  padding: 64px 0 28px;
-  border-bottom: 1px solid var(--line);
+  padding: 40px 0 28px;
   margin-bottom: 36px;
+  border-bottom: 1px solid var(--line);
 }
+
 .section-head-left {
   display: flex;
   align-items: baseline;
-  gap: 24px;
 }
-.section-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 20px;
-  color: var(--accent);
-}
+
 .section-title {
-  font-family: 'Shippori Mincho', serif;
-  font-size: 28px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
   margin: 0;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.15;
   color: var(--fg);
-}
-.section-title-en {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 16px;
-  color: var(--fg-muted);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 /* カード共通 */
+
 .card {
   background: var(--bg-elev);
   border: 1px solid var(--line);
@@ -760,29 +751,96 @@ image-slot:hover {
   grid-template-columns: 200px 1fr;
   transition: border-color 0.18s;
 }
+
 .song-card:hover {
   border-color: var(--accent);
 }
 
 .tbl-row {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) 110px 60px 60px 60px;
-  gap: 16px;
-  padding: 14px 18px;
+  grid-template-columns: 64px minmax(0, 1fr) 128px 116px;
+  gap: 18px;
   align-items: center;
+  padding: 16px 20px;
 }
+
 .tbl-head {
   background: var(--bg-elev);
   border-bottom: 1px solid var(--line);
 }
+
 .tbl-body {
-  border-bottom: 1px solid var(--line-soft);
   cursor: pointer;
+  border-bottom: 1px solid var(--line-soft);
   transition: background 0.12s;
 }
+
 .tbl-body:hover {
   background: color-mix(in oklab, var(--accent) 8%, transparent);
 }
+
+.songs-table-heading {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+.songs-table-heading-right {
+  text-align: right;
+}
+
+.song-row-index {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.song-row-title-cell {
+  min-width: 0;
+}
+
+.song-row-credit {
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.song-row-type {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.song-row-media {
+  display: inline-flex;
+  gap: 3px;
+  align-items: baseline;
+  justify-content: flex-end;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--fg-muted);
+  text-align: right;
+}
+
+.song-row-media strong {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
 .num-cell {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
@@ -1002,7 +1060,7 @@ image-slot:hover {
   pointer-events: none;
 }
 .detail-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
   font-size: 32px;
   letter-spacing: 0.04em;
   margin: 10px 0 4px;
@@ -1115,7 +1173,7 @@ image-slot:hover {
 
 .hero-data {
   padding: 88px 0 84px;
-  border-bottom: 1px solid var(--line);
+  /* border-bottom: 1px solid var(--line); */
 }
 
 .hero-data-grid {
@@ -1315,7 +1373,7 @@ image-slot:hover {
 }
 
 .feature-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
   font-size: 40px;
   margin: 12px 0 6px;
   letter-spacing: 0.06em;
@@ -1365,7 +1423,7 @@ image-slot:hover {
 .media-card-title,
 .song-grid-title,
 .event-row-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
   letter-spacing: 0.04em;
 }
 
@@ -1377,13 +1435,21 @@ image-slot:hover {
   font-size: 17px;
 }
 
+.song-grid-card {
+  transition: transform 0.18s ease;
+}
+
+.song-grid-card:hover {
+  transform: translateY(-2px);
+}
+
 .event-row-title {
   font-size: 18px;
 }
 
 .timeline-title,
 .table-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
   font-size: 22px;
   letter-spacing: 0.04em;
 }
@@ -1624,7 +1690,62 @@ image-slot:hover {
 }
 
 .songs-table {
+  display: flex;
+  flex-direction: column;
+  max-height: min(72vh, 760px);
+  overflow: hidden;
   border: 1px solid var(--line);
+}
+
+.songs-table .tbl-row {
+  grid-template-columns: 64px minmax(0, 1fr) 128px 116px;
+}
+
+.songs-table .tbl-head {
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.songs-table-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.entry-status {
+  margin-bottom: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.entry-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px;
+  text-align: center;
+  background: color-mix(in oklab, var(--bg-elev) 72%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+
+.entry-empty[hidden] {
+  display: none;
+}
+
+.entry-empty-title {
+  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.entry-empty-description {
+  margin-top: 6px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-muted);
 }
 
 .songs-card-grid {
@@ -1878,6 +1999,42 @@ image-slot:hover {
   font-weight: 500;
 }
 
+.song-credit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.song-credit-item {
+  min-width: 0;
+  padding: 14px 16px;
+  background: color-mix(in oklab, var(--bg-elev) 70%, transparent);
+  border: 1px solid var(--line-soft);
+}
+
+.song-credit-label,
+.song-credit-value {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.song-credit-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+.song-credit-value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
 .detail-panel .song-detail-content .detail-hero-grid {
   grid-template-columns: 1fr;
   gap: 24px;
@@ -1899,6 +2056,10 @@ image-slot:hover {
 .detail-panel .song-detail-content .detail-meta-grid {
   grid-template-columns: 1fr;
   gap: 14px;
+}
+
+.detail-panel .song-credit-grid {
+  grid-template-columns: 1fr;
 }
 
 .detail-panel .release-detail-content .detail-hero-grid,
@@ -1994,6 +2155,74 @@ image-slot:hover {
   height: 60%;
   transform: translate(-50%, -50%);
   opacity: 0.25;
+}
+
+.song-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  aspect-ratio: var(--song-tile-aspect, 1 / 1);
+  padding: 16px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 5%) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 14%) 0 1px, transparent 1px 22px),
+    linear-gradient(135deg, var(--song-tile-color-a), var(--song-tile-color-b));
+  border: 1px solid color-mix(in oklab, var(--line) 55%, transparent);
+  isolation: isolate;
+}
+
+.song-tile::before {
+  position: absolute;
+  inset: 10px;
+  z-index: -1;
+  content: '';
+  border: 1px solid rgb(255 255 255 / 18%);
+}
+
+.song-tile::after {
+  position: absolute;
+  right: 18px;
+  bottom: -20%;
+  z-index: -1;
+  width: 24%;
+  height: 140%;
+  content: '';
+  background: rgb(255 255 255 / 10%);
+  transform: rotate(18deg);
+}
+
+.song-tile-top,
+.song-tile-bottom {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  color: rgb(255 255 255 / 72%);
+}
+
+.song-tile-meta-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-tile-signature {
+  align-self: center;
+  max-width: 100%;
+  font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1;
+  color: rgb(255 255 255 / 90%);
+  text-align: center;
+  text-shadow: 0 12px 30px rgb(0 0 0 / 28%);
 }
 
 .mv-thumb {
@@ -2196,6 +2425,7 @@ image-slot:hover {
   .release-grid,
   .media-card-grid,
   .recent-posts-grid,
+  .song-credit-grid,
   .songs-card-grid {
     grid-template-columns: 1fr;
   }
@@ -2206,11 +2436,15 @@ image-slot:hover {
   }
 
   .songs-table .tbl-row {
-    grid-template-columns: 48px minmax(0, 1fr) 48px 48px 48px;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
   }
 
   .songs-table .tbl-row > :nth-child(3) {
     display: none;
+  }
+
+  .song-row-credit {
+    white-space: normal;
   }
 
   .media-list-row {

@@ -1,0 +1,52 @@
+---
+interface Props {
+  songId: string;
+  title: string;
+  typeName: string;
+  mediaCount: number;
+  index: number;
+  aspectRatio?: string;
+}
+
+const { songId, title, typeName, mediaCount, index, aspectRatio = '1 / 1' } = Astro.props;
+
+const palettes = [
+  ['#b9414f', '#2f6f8f'],
+  ['#9b6a2f', '#496f48'],
+  ['#6a61a8', '#b95d5a'],
+  ['#2f7f73', '#a25878'],
+  ['#7f6540', '#365f8c'],
+  ['#7d5069', '#617745'],
+];
+
+function splitGraphemes(value: string): string[] {
+  if (typeof Intl.Segmenter === 'function') {
+    const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
+
+    return Array.from(segmenter.segment(value), segment => segment.segment);
+  }
+
+  return Array.from(value.normalize('NFC'));
+}
+
+const hash = Array.from(songId).reduce((total, char) => total + char.charCodeAt(0), 0);
+const [colorA, colorB] = palettes[hash % palettes.length];
+const sequence = String(index + 1).padStart(2, '0');
+const initials = splitGraphemes(title.replace(/\s/g, '')).slice(0, 2).join('');
+---
+
+<div
+  class="song-tile"
+  style={`--song-tile-color-a:${colorA};--song-tile-color-b:${colorB};--song-tile-aspect:${aspectRatio};`}
+  aria-hidden="true"
+>
+  <div class="song-tile-top">
+    <span class="song-tile-meta-text">TRACK</span>
+    <span class="song-tile-meta-text">{sequence}</span>
+  </div>
+  <div class="song-tile-signature">{initials}</div>
+  <div class="song-tile-bottom">
+    <span class="song-tile-meta-text">{typeName}</span>
+    <span class="song-tile-meta-text">{mediaCount} MEDIA</span>
+  </div>
+</div>

@@ -1,19 +1,15 @@
 ---
 interface Props {
-  num?: string;
   title: string;
-  titleEn: string;
 }
 
-const { num = '—', title, titleEn } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <div class="section-head">
   <div class="section-head-left">
-    <span class="section-num">§ {num}</span>
     <div>
       <h2 class="section-title">{title}</h2>
-      <div class="section-title-en">{titleEn}</div>
     </div>
   </div>
   <div>

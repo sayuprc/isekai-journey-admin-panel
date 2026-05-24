@@ -29,8 +29,14 @@ export default function FilterBar(props: Props) {
       const searchKey = props.searchAttr;
       const text = searchKey ? entry.dataset[searchKey] ?? '' : '';
       const searchMatch = !searchKey || q === '' || text.includes(q);
-      entry.style.display = categoryMatch && searchMatch ? '' : 'none';
+      const match = categoryMatch && searchMatch;
+      entry.dataset.viewerFilterMatch = match ? 'true' : 'false';
+      entry.style.display = match ? '' : 'none';
     }
+
+    document.dispatchEvent(new CustomEvent('viewer:filter-change', {
+      detail: { entrySelector: props.entrySelector },
+    }));
   });
 
   return (
