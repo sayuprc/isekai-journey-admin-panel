@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use App\Models\AdminUser\RegistrationToken;
 use App\Models\AdminUser\RegistrationTokenPermission;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -88,6 +87,43 @@ class InviteCommandTest extends DatabaseTestCase
         // ここではトークン行が 1 件・ハッシュとして妥当な値であることを担保する。
         $row = array_first($rows);
         $this->assertNotSame('', $row->token);
-        $this->assertFalse(Hash::check('', $row->token));
+        $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $row->token);
+    }
+
+    #[Test]
+    public function canRevokeUnusedTokens(): void
+    {
+        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
+        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
+
+        $this->artisan('admin:invite:revoke invitee@example.com')
+            ->expectsOutput('無効化した登録トークン数: 2')
+            ->assertSuccessful();
+
+        $this->assertSame(
+            [1, 1],
+            RegistrationToken::query()
+                ->where('email', 'invitee@example.com')
+                ->orderBy('created_at')
+                ->pluck('status')
+                ->all(),
+        );
+    }
+
+    #[Test]
+    public function revokeDoesNotChangeConsumedTokens(): void
+    {
+        $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
+
+        $token = RegistrationToken::query()->first();
+        $this->assertNotNull($token);
+        $token->status = 1;
+        $token->save();
+
+        $this->artisan('admin:invite:revoke invitee@example.com')
+            ->expectsOutput('無効化した登録トークン数: 0')
+            ->assertSuccessful();
+
+        $this->assertSame(1, RegistrationToken::query()->first()?->status);
     }
 }

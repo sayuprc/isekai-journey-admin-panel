@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AdminUser\Infrastructures\RegistrationToken;
 
 use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationToken;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
@@ -69,6 +70,39 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
             return null;
         }
 
+        return $this->hydrate($model);
+    }
+
+    /**
+     * @return list<RegistrationToken>
+     */
+    #[Override]
+    public function findUnusedByEmailForUpdate(Email $email): array
+    {
+        return array_values(ModelsRegistrationToken::query()
+            ->where('email', $email->value)
+            ->where('status', ConsumptionStatus::Unused->value)
+            ->orderByDesc('created_at')
+            ->lockForUpdate()
+            ->get()
+            ->map($this->hydrate(...))
+            ->all());
+    }
+
+    #[Override]
+    public function revokeUnusedByEmail(Email $email): int
+    {
+        return ModelsRegistrationToken::query()
+            ->where('email', $email->value)
+            ->where('status', ConsumptionStatus::Unused->value)
+            ->update([
+                'status' => ConsumptionStatus::Consumed->value,
+                'updated_at' => now(),
+            ]);
+    }
+
+    private function hydrate(ModelsRegistrationToken $model): RegistrationToken
+    {
         /** @var list<string> */
         $permissions = $model->permissions
             ->map(fn (RegistrationTokenPermission $row): string => $row->permission)

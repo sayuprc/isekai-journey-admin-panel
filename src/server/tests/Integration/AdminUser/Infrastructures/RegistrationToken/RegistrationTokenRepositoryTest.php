@@ -81,6 +81,56 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function findUnusedByEmailForUpdateReturnsAllUnusedRows(): void
+    {
+        $repository = $this->getInstance();
+
+        $consumed = $this->buildToken('invitee@example.com', 'consumed-hashed-token', ConsumptionStatus::Consumed);
+        $unused = $this->buildToken('invitee@example.com', 'unused-hashed-token', ConsumptionStatus::Unused);
+        $otherEmail = $this->buildToken('other@example.com', 'other-hashed-token', ConsumptionStatus::Unused);
+
+        $repository->save($consumed);
+        $repository->save($unused);
+        $repository->save($otherEmail);
+
+        $found = $repository->findUnusedByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+
+        $this->assertCount(1, $found);
+        $this->assertTrue($found[0]->equals($unused));
+    }
+
+    #[Test]
+    public function revokeUnusedByEmailConsumesOnlyUnusedRows(): void
+    {
+        $repository = $this->getInstance();
+
+        $consumed = $this->buildToken('invitee@example.com', 'consumed-hashed-token', ConsumptionStatus::Consumed);
+        $unused = $this->buildToken('invitee@example.com', 'unused-hashed-token', ConsumptionStatus::Unused);
+        $otherEmail = $this->buildToken('other@example.com', 'other-hashed-token', ConsumptionStatus::Unused);
+
+        $repository->save($consumed);
+        $repository->save($unused);
+        $repository->save($otherEmail);
+
+        $this->assertSame(1, $repository->revokeUnusedByEmail(Email::reconstruct('invitee@example.com')));
+
+        $this->assertSame(
+            [ConsumptionStatus::Consumed->value, ConsumptionStatus::Consumed->value],
+            ModelsRegistrationToken::query()
+                ->where('email', 'invitee@example.com')
+                ->orderBy('created_at')
+                ->pluck('status')
+                ->all(),
+        );
+        $this->assertSame(
+            ConsumptionStatus::Unused->value,
+            ModelsRegistrationToken::query()
+                ->where('email', 'other@example.com')
+                ->value('status'),
+        );
+    }
+
+    #[Test]
     public function findByEmailForUpdateIssuesSelectForUpdate(): void
     {
         $repository = $this->getInstance();
