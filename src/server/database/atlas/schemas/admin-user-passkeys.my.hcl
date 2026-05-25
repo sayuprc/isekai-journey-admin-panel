@@ -1,34 +1,62 @@
 table "admin_user_passkeys" {
   schema  = schema.db
-  comment = "管理ユーザーパスキー"
+  comment = "管理ユーザーのパスキー"
 
   column "admin_user_passkey_id" {
     null    = false
     type    = binary(16)
-    comment = "管理ユーザーパスキーID"
+    comment = "管理ユーザーのパスキーID"
   }
   column "admin_user_id" {
     null    = false
     type    = binary(16)
     comment = "管理ユーザーID"
   }
-  // credential_id は base64url 文字列として保持し、MySQL の unique index を素直に張れるよう varchar にする。
+  column "user_handle" {
+    null    = false
+    type    = varbinary(64)
+    comment = "WebAuthn ユーザーハンドル"
+  }
+  column "name" {
+    null    = false
+    type    = varchar(255)
+    comment = "パスキー名"
+  }
   column "credential_id" {
     null    = false
-    type    = varchar(512)
-    comment = "WebAuthn credential ID"
+    type    = varbinary(1023)
+    comment = "WebAuthn クレデンシャル ID"
   }
-  // 公開鍵は COSE 形式のシリアライズ結果を保持する想定。
   column "public_key" {
     null    = false
-    type    = text
-    comment = "WebAuthn 公開鍵"
+    type    = varbinary(4096)
+    comment = "WebAuthn 公開鍵(COSE Key)"
+  }
+  column "aaguid" {
+    null    = false
+    type    = char(36)
+    comment = "認証器 AAGUID"
+  }
+  column "transports" {
+    null    = false
+    type    = json
+    comment = "認証器のトランスポート"
+  }
+  column "backup_eligible" {
+    null    = true
+    type    = bool
+    comment = "バックアップ可能か"
+  }
+  column "backup_state" {
+    null    = true
+    type    = bool
+    comment = "バックアップ済みか"
   }
   column "sign_count" {
     null     = false
     type     = bigint
     unsigned = true
-    comment  = "署名カウンタ"
+    comment  = "署名カウンター"
   }
   column "last_used_at" {
     null    = true
@@ -52,6 +80,10 @@ table "admin_user_passkeys" {
 
   index "admin_user_passkeys_admin_user_id_index" {
     columns = [column.admin_user_id]
+  }
+
+  index "admin_user_passkeys_user_handle_index" {
+    columns = [column.user_handle]
   }
 
   index "admin_user_passkeys_credential_id_unique" {

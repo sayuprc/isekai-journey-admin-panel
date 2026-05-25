@@ -16,7 +16,7 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
-use Auth\Domain\Services\PasskeyVerificationResult;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use LogicException;
@@ -87,7 +87,7 @@ readonly class RegisterFinishUseCase
     private function persist(
         PasskeyCeremonyState $state,
         string $plainToken,
-        PasskeyVerificationResult $verification,
+        PasskeyRegistrationResult $verification,
     ): Result {
         if (is_null($state->name)) {
             return new Err(new BusinessLogicError('register_ceremony_not_found'));
@@ -131,8 +131,14 @@ readonly class RegisterFinishUseCase
         $this->passkeyRepository->save(new AdminUserPasskey(
             $this->uuidGenerator->generate(),
             $adminUser->adminUserId->value,
+            $verification->userHandle,
+            $state->name,
             $verification->credentialId,
             $verification->publicKey,
+            $verification->aaguid,
+            $verification->transports,
+            $verification->backupEligible,
+            $verification->backupState,
             $verification->signCount,
             $this->clock->now(),
             null,

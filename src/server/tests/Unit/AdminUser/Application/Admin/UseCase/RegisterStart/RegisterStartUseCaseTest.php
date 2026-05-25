@@ -21,6 +21,7 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyStartResult;
+use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\MockInterface;
@@ -44,6 +45,8 @@ class RegisterStartUseCaseTest extends TestCase
 
     private MockInterface&PasskeyAuthenticatorInterface $passkeyAuthenticator;
 
+    private MockInterface&PasskeyUserHandleGeneratorInterface $userHandleGenerator;
+
     private MockInterface&PasskeyCeremonyStoreInterface $ceremonyStore;
 
     private MockInterface&UuidGeneratorInterface $uuidGenerator;
@@ -56,6 +59,7 @@ class RegisterStartUseCaseTest extends TestCase
         $this->consumeService = Mockery::mock(RegistrationTokenConsumeService::class);
         $this->integrityService = Mockery::mock(AdminUserIntegrityService::class);
         $this->passkeyAuthenticator = Mockery::mock(PasskeyAuthenticatorInterface::class);
+        $this->userHandleGenerator = Mockery::mock(PasskeyUserHandleGeneratorInterface::class);
         $this->ceremonyStore = Mockery::mock(PasskeyCeremonyStoreInterface::class);
         $this->uuidGenerator = Mockery::mock(UuidGeneratorInterface::class);
     }
@@ -83,8 +87,14 @@ class RegisterStartUseCaseTest extends TestCase
             ->andReturn($authCeremonyId)
             ->once();
 
+        $this->userHandleGenerator->shouldReceive('generate')
+            ->andReturn('fixed-user-handle')
+            ->once();
+
         $this->passkeyAuthenticator->shouldReceive('startRegistration')
-            ->with($adminUserId, 'invitee@example.com', '名前')
+            ->withArgs(fn (string $userHandle, string $userName, string $displayName): bool => $userHandle === 'fixed-user-handle'
+                && $userName === 'invitee@example.com'
+                && $displayName === '名前')
             ->andReturn(new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']))
             ->once();
 
@@ -137,6 +147,7 @@ class RegisterStartUseCaseTest extends TestCase
             $this->consumeService,
             $this->integrityService,
             $this->passkeyAuthenticator,
+            $this->userHandleGenerator,
             $this->ceremonyStore,
             $this->uuidGenerator,
         );

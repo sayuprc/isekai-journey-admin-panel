@@ -11,6 +11,7 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
@@ -21,6 +22,7 @@ use Auth\Infrastructures\Auth\AuthUserProvider;
 use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use Auth\Infrastructures\PasskeyAuthenticator;
 use Auth\Infrastructures\PasskeyCeremonyStore;
+use Auth\Infrastructures\RandomPasskeyUserHandleGenerator;
 use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
@@ -44,6 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
         $this->app->bind(AdminUserPasskeyRepositoryInterface::class, AdminUserPasskeyRepository::class);
         $this->app->bind(PasskeyAuthenticatorInterface::class, PasskeyAuthenticator::class);
+        $this->app->bind(PasskeyUserHandleGeneratorInterface::class, RandomPasskeyUserHandleGenerator::class);
         $this->app->bind(PasskeyCeremonyStoreInterface::class, PasskeyCeremonyStore::class);
         $this->app->bind(AuthorizationContextInterface::class, UseCaseAuthorizationContext::class);
 

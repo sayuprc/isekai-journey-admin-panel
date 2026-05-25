@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Auth\Infrastructures;
 
 use Auth\Domain\Models\AdminUserPasskey;
+use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
-use Auth\Domain\Services\PasskeyVerificationResult;
 use Cose\Algorithms;
 use InvalidArgumentException;
 use Override;
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Throwable;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
@@ -34,25 +36,29 @@ use Webauthn\PublicKeyCredentialUserEntity;
 
 readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
 {
-    /**
-     * @var Serializer&NormalizerInterface&DenormalizerInterface
-     */
-    private Serializer $serializer;
+    private DenormalizerInterface&NormalizerInterface&Serializer $serializer;
 
-    public function __construct(
-        private PasskeyCredentialRecordConverter $credentialRecordConverter,
-    ) {
+    public function __construct(private PasskeyCredentialRecordConverter $credentialRecordConverter)
+    {
         $serializer = new WebauthnSerializerFactory(AttestationStatementSupportManager::create())->create();
         assert($serializer instanceof Serializer);
         $this->serializer = $serializer;
     }
 
+    /**
+     * @param list<AdminUserPasskey> $excludePasskeys
+     */
     #[Override]
     public function startRegistration(
         string $userHandle,
         string $userName,
         string $displayName,
+        array $excludePasskeys = [],
     ): PasskeyStartResult {
+        $excludeCredentials = array_map(
+            fn (AdminUserPasskey $passkey): PublicKeyCredentialDescriptor => $this->toDescriptor($passkey),
+            $excludePasskeys,
+        );
         $timeout = config('auth.passkey.timeout_ms');
 
         $options = PublicKeyCredentialCreationOptions::create(
@@ -68,10 +74,10 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             ],
             AuthenticatorSelectionCriteria::create(
                 userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
-                residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_PREFERRED,
+                residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
             ),
             PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
-            [],
+            $excludeCredentials,
             is_int($timeout) && $timeout > 0 ? $timeout : 60000,
         );
 
@@ -88,7 +94,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
      * @param array<string, mixed> $credential
      */
     #[Override]
-    public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
+    public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult
     {
         $publicKeyCredential = $this->deserializeCredential($credential);
         $response = $publicKeyCredential->response;
@@ -110,9 +116,18 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         $credentialRecord = AuthenticatorAttestationResponseValidator::create($factory->creationCeremony())
             ->check($response, $options, $this->host());
 
-        return new PasskeyVerificationResult(
-            Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
-            Base64UrlSafe::encodeUnpadded($credentialRecord->credentialPublicKey),
+        if (! hash_equals($publicKeyCredential->rawId, $credentialRecord->publicKeyCredentialId)) {
+            throw new InvalidArgumentException('Credential ID が一致しません');
+        }
+
+        return new PasskeyRegistrationResult(
+            $credentialRecord->publicKeyCredentialId,
+            $credentialRecord->credentialPublicKey,
+            $credentialRecord->userHandle,
+            $credentialRecord->aaguid->toRfc4122(),
+            array_values($credentialRecord->transports),
+            $credentialRecord->backupEligible,
+            $credentialRecord->backupStatus,
             $credentialRecord->counter,
         );
     }
@@ -123,13 +138,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
     #[Override]
     public function startAuthentication(array $passkeys): PasskeyStartResult
     {
-        $descriptors = array_map(
-            fn (AdminUserPasskey $passkey) => PublicKeyCredentialDescriptor::create(
-                PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                Base64UrlSafe::decodeNoPadding($passkey->credentialId),
-            ),
-            $passkeys,
-        );
+        $descriptors = array_map($this->toDescriptor(...), $passkeys);
 
         $timeout = config('auth.passkey.timeout_ms');
 
@@ -154,12 +163,37 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
      * @param array<string, mixed> $credential
      */
     #[Override]
+    public function credentialId(array $credential): ?string
+    {
+        $rawId = $credential['rawId'] ?? null;
+
+        if (is_string($rawId) && $rawId !== '') {
+            try {
+                return Base64UrlSafe::decodeNoPadding($rawId);
+            } catch (Throwable) {
+                return null;
+            }
+        }
+
+        $id = $credential['id'] ?? null;
+
+        if (! is_string($id) || $id === '') {
+            return null;
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param array<string, mixed> $credential
+     */
+    #[Override]
     public function finishAuthentication(
         array $credential,
         string $optionsJson,
         AdminUserPasskey $passkey,
         string $userHandle,
-    ): PasskeyVerificationResult {
+    ): PasskeyAuthenticationResult {
         $publicKeyCredential = $this->deserializeCredential($credential);
         $response = $publicKeyCredential->response;
 
@@ -186,9 +220,8 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
                 $userHandle,
             );
 
-        return new PasskeyVerificationResult(
-            Base64UrlSafe::encodeUnpadded($publicKeyCredential->rawId),
-            $passkey->publicKey,
+        return new PasskeyAuthenticationResult(
+            $publicKeyCredential->rawId,
             $credentialRecord->counter,
         );
     }
@@ -203,6 +236,15 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             $credential,
             PublicKeyCredential::class,
             JsonEncoder::FORMAT,
+        );
+    }
+
+    private function toDescriptor(AdminUserPasskey $passkey): PublicKeyCredentialDescriptor
+    {
+        return PublicKeyCredentialDescriptor::create(
+            PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
+            $passkey->credentialId,
+            $passkey->transports,
         );
     }
 

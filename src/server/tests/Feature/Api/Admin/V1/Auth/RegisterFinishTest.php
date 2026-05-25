@@ -19,9 +19,10 @@ use App\Models\AdminUser\AdminUserPasskey as ModelsAdminUserPasskey;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\AdminUserPasskey;
+use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
-use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -76,7 +77,14 @@ class RegisterFinishTest extends DatabaseTestCase
         $this->assertSame('新規ユーザー', $userRow->name);
         $this->assertArrayNotHasKey('password', $userRow->getAttributes());
 
-        $this->assertSame(1, ModelsAdminUserPasskey::query()->count());
+        $passkeyRow = ModelsAdminUserPasskey::query()->first();
+        $this->assertNotNull($passkeyRow);
+        $this->assertSame('credential-id', $passkeyRow->credential_id);
+        $this->assertSame('user-handle', $passkeyRow->user_handle);
+        $this->assertSame('00000000-0000-0000-0000-000000000000', $passkeyRow->aaguid);
+        $this->assertSame(['internal'], $passkeyRow->transports);
+        $this->assertTrue($passkeyRow->backup_eligible);
+        $this->assertFalse($passkeyRow->backup_state);
         $this->assertSame(1, AuthRefreshToken::query()->count());
     }
 
@@ -123,18 +131,18 @@ class RegisterFinishTest extends DatabaseTestCase
             {
             }
 
-            public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
+            public function startRegistration(string $userHandle, string $userName, string $displayName, array $excludePasskeys = []): PasskeyStartResult
             {
                 return new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']);
             }
 
-            public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
+            public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult
             {
                 if ($this->failFinish) {
                     throw new RuntimeException('verification failed');
                 }
 
-                return new PasskeyVerificationResult('credential-id', 'public-key', 123);
+                return new PasskeyRegistrationResult('credential-id', 'public-key', 'user-handle', '00000000-0000-0000-0000-000000000000', ['internal'], true, false, 123);
             }
 
             public function startAuthentication(array $passkeys): PasskeyStartResult
@@ -142,7 +150,12 @@ class RegisterFinishTest extends DatabaseTestCase
                 throw new RuntimeException('unused');
             }
 
-            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyVerificationResult
+            public function credentialId(array $credential): ?string
+            {
+                throw new RuntimeException('unused');
+            }
+
+            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyAuthenticationResult
             {
                 throw new RuntimeException('unused');
             }
