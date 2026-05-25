@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use App\Models\AdminUser\RegistrationToken;
 use App\Models\AdminUser\RegistrationTokenPermission;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -88,6 +87,6 @@ class InviteCommandTest extends DatabaseTestCase
         // ここではトークン行が 1 件・ハッシュとして妥当な値であることを担保する。
         $row = array_first($rows);
         $this->assertNotSame('', $row->token);
-        $this->assertFalse(Hash::check('', $row->token));
+        $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $row->token);
     }
 }

@@ -29,20 +29,20 @@ class RegistrationTokenConsumeService
      */
     public function verify(#[SensitiveParameter] string $plainToken, Email $email): Result
     {
-        $token = $this->repository->findByEmailForUpdate($email);
+        $tokens = $this->repository->findUnusedByEmailForUpdate($email);
 
-        if (is_null($token)) {
-            return new Err(new BusinessRuleViolationError('token_not_found'));
+        foreach ($tokens as $token) {
+            if (! $this->tokenHasher->verify($plainToken, $token->token->value)) {
+                continue;
+            }
+
+            if (! $token->isAvailable($this->clock->now())) {
+                return new Err(new BusinessRuleViolationError('token_not_found'));
+            }
+
+            return new Ok($token);
         }
 
-        if (! $this->tokenHasher->verify($plainToken, $token->token->value)) {
-            return new Err(new BusinessRuleViolationError('token_not_found'));
-        }
-
-        if (! $token->isAvailable($this->clock->now())) {
-            return new Err(new BusinessRuleViolationError('token_not_found'));
-        }
-
-        return new Ok($token);
+        return new Err(new BusinessRuleViolationError('token_not_found'));
     }
 }

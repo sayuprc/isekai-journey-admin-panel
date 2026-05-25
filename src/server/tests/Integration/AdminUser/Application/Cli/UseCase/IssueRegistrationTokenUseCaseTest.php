@@ -11,7 +11,6 @@ use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
 use AdminUser\Domain\Models\Role;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use App\Models\AdminUser\RegistrationTokenPermission;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 
@@ -33,7 +32,7 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
         $plain = $result->unwrap()->plainToken;
 
         $this->assertNotSame($plain, $row->token);
-        $this->assertTrue(Hash::check($plain, $row->token));
+        $this->assertTrue(hash_equals(hash('sha256', $plain), $row->token));
         $this->assertSame('invitee@example.com', $row->email);
         $this->assertSame(Role::General->value, $row->role);
         $this->assertSame(ConsumptionStatus::Unused->value, $row->status);
