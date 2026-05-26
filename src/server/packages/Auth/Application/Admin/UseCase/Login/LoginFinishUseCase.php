@@ -63,15 +63,30 @@ readonly class LoginFinishUseCase
             return new Err(new AuthenticationError());
         }
 
-        $passkey = $this->passkeyRepository->findByCredentialId($credentialId);
+        return $this->transaction->scope(
+            fn (): Result => $this->authenticateAndPersist($state, $credentialId, $inputData->credential),
+        );
+    }
 
-        if (is_null($passkey) || $passkey->adminUserId !== $state->adminUserId) {
+    /**
+     * @param array<string, mixed> $credential
+     *
+     * @return Result<LoginFinishOutputData, UseCaseError>
+     */
+    private function authenticateAndPersist(
+        PasskeyCeremonyState $state,
+        string $credentialId,
+        array $credential,
+    ): Result {
+        $passkey = $this->passkeyRepository->findByAdminUserIdAndCredentialIdForUpdate($state->adminUserId, $credentialId);
+
+        if (is_null($passkey)) {
             return new Err(new AuthenticationError());
         }
 
         try {
             $verification = $this->passkeyAuthenticator->finishAuthentication(
-                $inputData->credential,
+                $credential,
                 $state->optionsJson,
                 $passkey,
                 $passkey->userHandle,
@@ -84,9 +99,7 @@ readonly class LoginFinishUseCase
             return new Err(new AuthenticationError());
         }
 
-        return $this->transaction->scope(
-            fn (): Result => $this->persist($state, $passkey, $verification),
-        );
+        return $this->persist($state, $passkey, $verification);
     }
 
     /**
@@ -105,7 +118,11 @@ readonly class LoginFinishUseCase
 
         ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $refreshTokenResult->unwrap();
 
-        $this->passkeyRepository->update($passkey->withCounter($verification->signCount, $this->clock->now()));
+        $updatedPasskey = $passkey->withCounter($verification->signCount, $this->clock->now());
+
+        if (! $this->passkeyRepository->updateCounter($updatedPasskey, $passkey->signCount)) {
+            return new Err(new AuthenticationError());
+        }
 
         $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
 

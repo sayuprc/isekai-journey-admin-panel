@@ -53,6 +53,18 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
     }
 
     #[Override]
+    public function findByAdminUserIdAndCredentialIdForUpdate(string $adminUserId, string $credentialId): ?AdminUserPasskey
+    {
+        $found = Model::query()
+            ->where('admin_user_id', $this->converter->toBin($adminUserId))
+            ->where('credential_id', $credentialId)
+            ->lockForUpdate()
+            ->first();
+
+        return is_null($found) ? null : $this->hydrate($found);
+    }
+
+    #[Override]
     public function save(AdminUserPasskey $passkey): AdminUserPasskey
     {
         Model::query()->insert($this->toPersistence($passkey));
@@ -72,6 +84,19 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
             ]);
 
         return $passkey;
+    }
+
+    #[Override]
+    public function updateCounter(AdminUserPasskey $passkey, int $expectedSignCount): bool
+    {
+        return Model::query()
+            ->where('admin_user_passkey_id', $this->converter->toBin($passkey->adminUserPasskeyId))
+            ->where('sign_count', $expectedSignCount)
+            ->update([
+                'sign_count' => $passkey->signCount,
+                'last_used_at' => $passkey->lastUsedAt?->format('Y-m-d H:i:s'),
+                'updated_at' => now(),
+            ]) === 1;
     }
 
     private function hydrate(Model $model): AdminUserPasskey
