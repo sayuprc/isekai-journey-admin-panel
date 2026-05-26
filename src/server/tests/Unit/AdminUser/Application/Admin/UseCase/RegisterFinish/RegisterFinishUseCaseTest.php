@@ -27,7 +27,7 @@ use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus as RefreshConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
-use Auth\Domain\Services\PasskeyVerificationResult;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Closure;
@@ -105,7 +105,7 @@ class RegisterFinishUseCaseTest extends TestCase
         $refreshTokenId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD';
         $now = new DateTimeImmutable('2026-01-01 00:00:00');
         $state = new PasskeyCeremonyState('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', PasskeyCeremonyType::Register, 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
-        $verification = new PasskeyVerificationResult('credential-id', 'public-key', 123);
+        $verification = new PasskeyRegistrationResult('credential-id', 'public-key', 'user-handle', '00000000-0000-0000-0000-000000000000', ['internal'], true, false, 123);
         $token = $this->buildToken('invitee@example.com');
         $adminUser = $this->createAdminUser($adminUserId, 'invitee@example.com', name: '名前');
         $refreshToken = $this->createRefreshToken($refreshTokenId, $adminUserId, 'hashed-refresh', new DateTimeImmutable('+7 days'), RefreshConsumptionStatus::Unused);
@@ -138,7 +138,12 @@ class RegisterFinishUseCaseTest extends TestCase
         $this->passkeyRepository->shouldReceive('save')
             ->withArgs(fn (AdminUserPasskey $passkey): bool => $passkey->adminUserPasskeyId === $passkeyId
                 && $passkey->adminUserId === $adminUserId
-                && $passkey->credentialId === 'credential-id')
+                && $passkey->userHandle === 'user-handle'
+                && $passkey->credentialId === 'credential-id'
+                && $passkey->aaguid === '00000000-0000-0000-0000-000000000000'
+                && $passkey->transports === ['internal']
+                && $passkey->backupEligible === true
+                && $passkey->backupState === false)
             ->andReturnUsing(fn (AdminUserPasskey $passkey): AdminUserPasskey => $passkey)
             ->once();
         $this->registrationTokenRepository->shouldReceive('save')->andReturn($token->consume())->once();
@@ -178,7 +183,7 @@ class RegisterFinishUseCaseTest extends TestCase
     {
         $adminUserId = 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB';
         $state = new PasskeyCeremonyState('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', PasskeyCeremonyType::Register, 'invitee@example.com', '名前', $adminUserId, '{"challenge":"challenge"}');
-        $verification = new PasskeyVerificationResult('credential-id', 'public-key', 123);
+        $verification = new PasskeyRegistrationResult('credential-id', 'public-key', 'user-handle', '00000000-0000-0000-0000-000000000000', [], null, null, 123);
         $token = $this->buildToken('invitee@example.com');
         $adminUser = $this->createAdminUser($adminUserId, 'invitee@example.com', name: '名前');
 

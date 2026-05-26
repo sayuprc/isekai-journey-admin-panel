@@ -29,8 +29,14 @@ class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
         $passkey = new AdminUserPasskey(
             $this->generateUuid(),
             $adminUserId,
+            'user-handle',
+            'Primary passkey',
             'credential-id',
             'public-key',
+            '00000000-0000-0000-0000-000000000000',
+            ['internal', 'hybrid'],
+            true,
+            false,
             1,
             new DateTimeImmutable('2026-01-01 00:00:00'),
             null,
@@ -39,6 +45,7 @@ class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
         $repository->save($passkey);
 
         $this->assertEquals($passkey, $repository->findByCredentialId('credential-id'));
+        $this->assertEquals($passkey, $repository->findByUserHandle('user-handle'));
         $this->assertEquals([$passkey], $repository->findByAdminUserId($adminUserId));
 
         $updated = $passkey->withCounter(2, new DateTimeImmutable('2026-01-02 00:00:00'));

@@ -10,8 +10,8 @@ use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
+use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
-use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use LogicException;
@@ -57,7 +57,7 @@ readonly class LoginFinishUseCase
             return new Err(new AuthenticationError());
         }
 
-        $credentialId = $this->credentialId($inputData->credential);
+        $credentialId = $this->passkeyAuthenticator->credentialId($inputData->credential);
 
         if (is_null($credentialId)) {
             return new Err(new AuthenticationError());
@@ -74,7 +74,7 @@ readonly class LoginFinishUseCase
                 $inputData->credential,
                 $state->optionsJson,
                 $passkey,
-                $state->adminUserId,
+                $passkey->userHandle,
             );
         } catch (Throwable) {
             return new Err(new AuthenticationError());
@@ -95,7 +95,7 @@ readonly class LoginFinishUseCase
     private function persist(
         PasskeyCeremonyState $state,
         AdminUserPasskey $passkey,
-        PasskeyVerificationResult $verification,
+        PasskeyAuthenticationResult $verification,
     ): Result {
         $refreshTokenResult = $this->refreshTokenIssueService->issue($state->adminUserId);
 
@@ -127,16 +127,6 @@ readonly class LoginFinishUseCase
             $refreshToken->refreshTokenId->value,
             $plainRefreshToken,
         ));
-    }
-
-    /**
-     * @param array<string, mixed> $credential
-     */
-    private function credentialId(array $credential): ?string
-    {
-        $id = $credential['id'] ?? null;
-
-        return is_string($id) && $id !== '' ? $id : null;
     }
 
     private function handleError(DomainError $error): UseCaseError

@@ -13,6 +13,8 @@ interface AdminUserPasskeyRepositoryInterface
 
     public function findByCredentialId(string $credentialId): ?AdminUserPasskey;
 
+    public function findByUserHandle(string $userHandle): ?AdminUserPasskey;
+
     public function save(AdminUserPasskey $passkey): AdminUserPasskey;
 
     public function update(AdminUserPasskey $passkey): AdminUserPasskey;

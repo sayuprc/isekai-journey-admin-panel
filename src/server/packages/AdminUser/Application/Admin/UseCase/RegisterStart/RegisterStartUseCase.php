@@ -11,6 +11,7 @@ use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use LogicException;
 use ResultType\Err;
 use ResultType\Ok;
@@ -30,6 +31,7 @@ readonly class RegisterStartUseCase
         private RegistrationTokenConsumeService $consumeService,
         private AdminUserIntegrityService $integrityService,
         private PasskeyAuthenticatorInterface $passkeyAuthenticator,
+        private PasskeyUserHandleGeneratorInterface $userHandleGenerator,
         private PasskeyCeremonyStoreInterface $ceremonyStore,
         private UuidGeneratorInterface $uuidGenerator,
     ) {
@@ -67,7 +69,7 @@ readonly class RegisterStartUseCase
         $adminUser = $adminUserResult->unwrap();
         $authCeremonyId = $this->uuidGenerator->generate();
         $startResult = $this->passkeyAuthenticator->startRegistration(
-            $adminUser->adminUserId->value,
+            $this->userHandleGenerator->generate(),
             $adminUser->email->value,
             $adminUser->name->value,
         );

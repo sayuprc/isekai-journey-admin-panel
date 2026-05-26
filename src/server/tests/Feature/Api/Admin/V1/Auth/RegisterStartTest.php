@@ -18,9 +18,10 @@ use AdminUser\Infrastructures\AdminUserRepository;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use Auth\Domain\Models\AdminUserPasskey;
+use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
-use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -115,12 +116,12 @@ class RegisterStartTest extends DatabaseTestCase
     private function bindPasskeyAuthenticator(): void
     {
         $this->app->bind(PasskeyAuthenticatorInterface::class, fn (): PasskeyAuthenticatorInterface => new class () implements PasskeyAuthenticatorInterface {
-            public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
+            public function startRegistration(string $userHandle, string $userName, string $displayName, array $excludePasskeys = []): PasskeyStartResult
             {
                 return new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']);
             }
 
-            public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
+            public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult
             {
                 throw new RuntimeException('unused');
             }
@@ -130,7 +131,12 @@ class RegisterStartTest extends DatabaseTestCase
                 throw new RuntimeException('unused');
             }
 
-            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyVerificationResult
+            public function credentialId(array $credential): ?string
+            {
+                throw new RuntimeException('unused');
+            }
+
+            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyAuthenticationResult
             {
                 throw new RuntimeException('unused');
             }

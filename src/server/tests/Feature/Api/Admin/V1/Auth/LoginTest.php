@@ -11,9 +11,10 @@ use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
+use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
-use Auth\Domain\Services\PasskeyVerificationResult;
 use Auth\Route\AuthRouteMap;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
@@ -56,6 +57,7 @@ class LoginTest extends DatabaseTestCase
                 fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
                     ->where('publicKey.challenge', 'login-challenge')
                     ->where('publicKey.allowCredentials.0.id', 'credential-id')
+                    ->where('publicKey.allowCredentials.0.transports', ['internal'])
                     ->etc(),
             );
 
@@ -227,8 +229,14 @@ class LoginTest extends DatabaseTestCase
         $this->app->make(AdminUserPasskeyRepositoryInterface::class)->save(new AdminUserPasskey(
             $this->generateUuid(),
             $adminUserId,
+            'user-handle-' . $credentialId,
+            'Primary passkey',
             $credentialId,
             'public-key',
+            '00000000-0000-0000-0000-000000000000',
+            ['internal'],
+            true,
+            false,
             123,
             new DateTimeImmutable('2026-01-01 00:00:00'),
             null,
@@ -260,12 +268,12 @@ class LoginTest extends DatabaseTestCase
             {
             }
 
-            public function startRegistration(string $userHandle, string $userName, string $displayName): PasskeyStartResult
+            public function startRegistration(string $userHandle, string $userName, string $displayName, array $excludePasskeys = []): PasskeyStartResult
             {
                 throw new RuntimeException('unused');
             }
 
-            public function finishRegistration(array $credential, string $optionsJson): PasskeyVerificationResult
+            public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult
             {
                 throw new RuntimeException('unused');
             }
@@ -276,19 +284,26 @@ class LoginTest extends DatabaseTestCase
                 return new PasskeyStartResult('{"challenge":"login-challenge"}', [
                     'challenge' => 'login-challenge',
                     'allowCredentials' => array_map(
-                        fn (AdminUserPasskey $passkey): array => ['type' => 'public-key', 'id' => $passkey->credentialId],
+                        fn (AdminUserPasskey $passkey): array => ['type' => 'public-key', 'id' => $passkey->credentialId, 'transports' => $passkey->transports],
                         $passkeys,
                     ),
                 ]);
             }
 
-            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyVerificationResult
+            public function credentialId(array $credential): ?string
+            {
+                $id = $credential['id'] ?? null;
+
+                return is_string($id) && $id !== '' ? $id : null;
+            }
+
+            public function finishAuthentication(array $credential, string $optionsJson, AdminUserPasskey $passkey, string $userHandle): PasskeyAuthenticationResult
             {
                 if ($this->failFinish) {
                     throw new RuntimeException('verification failed');
                 }
 
-                return new PasskeyVerificationResult($passkey->credentialId, $passkey->publicKey, 456);
+                return new PasskeyAuthenticationResult($passkey->credentialId, 456);
             }
         });
     }
