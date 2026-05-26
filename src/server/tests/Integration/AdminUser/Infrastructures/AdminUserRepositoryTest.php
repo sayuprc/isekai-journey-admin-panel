@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\AdminUser\Infrastructures;
 
 use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
 use DateTimeImmutable;
@@ -86,6 +87,35 @@ class AdminUserRepositoryTest extends DatabaseTestCase
         $found = $repository->findByEmail($user->email);
 
         $this->assertNull($found);
+    }
+
+    #[Test]
+    public function findByEmailForUpdateIssuesSelectForUpdate(): void
+    {
+        $repository = $this->getInstance();
+
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
+
+        $repository->register($user);
+
+        DB::enableQueryLog();
+
+        $found = $repository->findByEmailForUpdate(Email::reconstruct('user@example.com'));
+
+        $queries = DB::getQueryLog();
+        DB::disableQueryLog();
+
+        $selectQueries = array_values(array_filter(
+            $queries,
+            fn (array $query): bool => str_starts_with(strtolower((string)$query['query']), 'select')
+                && str_contains((string)$query['query'], 'admin_users'),
+        ));
+
+        $this->assertNotNull($found);
+        $this->assertEquals($user, $found);
+        $this->assertNotSame([], $selectQueries);
+        $this->assertStringContainsString('for update', strtolower((string)$selectQueries[0]['query']));
     }
 
     #[Test]

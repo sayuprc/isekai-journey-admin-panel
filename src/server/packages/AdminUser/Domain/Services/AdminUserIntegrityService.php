@@ -74,7 +74,7 @@ class AdminUserIntegrityService
 
         $user = $result->unwrap();
 
-        if (! is_null($this->repository->findByEmail($user->email))) {
+        if (! is_null($this->repository->findByEmailForUpdate($user->email))) {
             return new Err(new BusinessRuleViolationError(sprintf('すでに使われているメールアドレスです "%s"', $email)));
         }
 

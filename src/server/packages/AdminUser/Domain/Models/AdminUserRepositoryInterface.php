@@ -15,5 +15,7 @@ interface AdminUserRepositoryInterface
 
     public function findByEmail(Email $email): ?AdminUser;
 
+    public function findByEmailForUpdate(Email $email): ?AdminUser;
+
     public function register(AdminUser $adminUser): AdminUser;
 }

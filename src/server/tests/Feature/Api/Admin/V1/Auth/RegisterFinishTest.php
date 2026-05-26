@@ -30,10 +30,15 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditTargetType;
+use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 
 class RegisterFinishTest extends DatabaseTestCase
 {
+    use AssertsAuditLog;
+
     #[Override]
     protected function setUp(): void
     {
@@ -86,6 +91,21 @@ class RegisterFinishTest extends DatabaseTestCase
         $this->assertTrue($passkeyRow->backup_eligible);
         $this->assertFalse($passkeyRow->backup_state);
         $this->assertSame(1, AuthRefreshToken::query()->count());
+
+        $converter = $this->app->make(UuidConverterInterface::class);
+        $adminUserId = $converter->toUuid($userRow->admin_user_id);
+        $passkeyId = $converter->toUuid($passkeyRow->admin_user_passkey_id);
+        $refreshTokenRow = AuthRefreshToken::query()->first();
+        $this->assertNotNull($refreshTokenRow);
+        $refreshTokenId = $converter->toUuid($refreshTokenRow->refresh_token_id);
+
+        $this->assertAuditLogCount(1);
+        $log = $this->findAuditLog(AuditAction::Register, AuditTargetType::AdminUser, $adminUserId);
+        $this->assertSame($adminUserId, $log['admin_user_id']);
+        $snapshot = $log['snapshot'];
+        $this->assertIsArray($snapshot);
+        $this->assertSame($passkeyId, $snapshot['admin_user_passkey_id'] ?? null);
+        $this->assertSame($refreshTokenId, $snapshot['refresh_token_id'] ?? null);
     }
 
     #[Test]
@@ -105,6 +125,7 @@ class RegisterFinishTest extends DatabaseTestCase
         $this->assertSame(0, ModelsAdminUser::query()->count());
         $this->assertSame(0, ModelsAdminUserPasskey::query()->count());
         $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertAuditLogCount(0);
         $token = ModelsRegistrationToken::query()->first();
         $this->assertNotNull($token);
         $this->assertSame(ConsumptionStatus::Unused->value, $token->status);

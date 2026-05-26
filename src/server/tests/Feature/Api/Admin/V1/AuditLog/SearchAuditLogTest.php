@@ -94,6 +94,43 @@ class SearchAuditLogTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canFilterRegisterAction(): void
+    {
+        $actorId = $this->generateUuid();
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+
+        $registerAuditLogId = $this->generateUuid();
+
+        $this->insertAuditLog(
+            $registerAuditLogId,
+            $actorId,
+            AuditAction::Register,
+            AuditTargetType::AdminUser,
+            $actorId,
+            ['refresh_token_id' => $this->generateUuid()],
+            new DateTimeImmutable('2026-04-02 10:00:00'),
+        );
+        $this->insertAuditLog(
+            $this->generateUuid(),
+            $actorId,
+            AuditAction::Login,
+            AuditTargetType::AdminUser,
+            $actorId,
+            ['refresh_token_id' => $this->generateUuid()],
+            new DateTimeImmutable('2026-04-03 10:00:00'),
+        );
+
+        $response = $this->withAuth()
+            ->get(route(AuditLogRouteMap::Search, ['action' => 'register']))
+            ->assertStatus(200)
+            ->json();
+        /** @var array{auditLogs: list<array{auditLogId: string, action: string}>} $response */
+        $this->assertCount(1, $response['auditLogs']);
+        $this->assertSame($registerAuditLogId, $response['auditLogs'][0]['auditLogId']);
+        $this->assertSame('register', $response['auditLogs'][0]['action']);
+    }
+
+    #[Test]
     public function filtersByAdminUserNameWithPartialMatch(): void
     {
         $actor1Id = $this->generateUuid();

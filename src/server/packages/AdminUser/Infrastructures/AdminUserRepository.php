@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace AdminUser\Infrastructures;
 
+use AdminUser\Domain\Exceptions\DuplicateAdminUserEmailException;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
 use App\Models\AdminUser\AdminUser as ModelsAdminUser;
 use App\Models\AdminUser\AdminUserPermission;
+use Illuminate\Database\QueryException;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
 
@@ -58,22 +60,48 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
     }
 
     #[Override]
+    public function findByEmailForUpdate(Email $email): ?AdminUser
+    {
+        $found = ModelsAdminUser::query()
+            ->where('email', $email->value)
+            ->lockForUpdate()
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
+    }
+
+    #[Override]
     public function register(AdminUser $adminUser): AdminUser
     {
         $data = $adminUser->toArray();
 
         $id = $this->converter->toBin($data['admin_user_id']);
 
-        ModelsAdminUser::query()->insert(
-            [
-                'admin_user_id' => $id,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'role' => $data['role'],
-                'created_at' => $data['created_at'],
-                'updated_at' => now(),
-            ],
-        );
+        try {
+            ModelsAdminUser::query()->insert(
+                [
+                    'admin_user_id' => $id,
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'role' => $data['role'],
+                    'created_at' => $data['created_at'],
+                    'updated_at' => now(),
+                ],
+            );
+        } catch (QueryException $exception) {
+            if ($this->isDuplicateEmail($exception)) {
+                throw new DuplicateAdminUserEmailException(
+                    sprintf('すでに使われているメールアドレスです "%s"', $data['email']),
+                    previous: $exception,
+                );
+            }
+
+            throw $exception;
+        }
 
         if ($data['permissions'] !== []) {
             AdminUserPermission::query()->insert(
@@ -85,6 +113,12 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
         }
 
         return $adminUser;
+    }
+
+    private function isDuplicateEmail(QueryException $exception): bool
+    {
+        return ($exception->errorInfo[0] ?? null) === '23000'
+            && str_contains($exception->getMessage(), 'admin_users_email_unique');
     }
 
     private function hydrate(ModelsAdminUser $model): AdminUser

@@ -20,7 +20,7 @@ export type AdminUserListResponse = {
 /**
  * 監査ログの操作種別
  */
-export type AuditAction = 'create' | 'update' | 'delete' | 'login' | 'refresh';
+export type AuditAction = 'create' | 'update' | 'delete' | 'register' | 'login' | 'refresh';
 
 /**
  * 監査ログ詳細

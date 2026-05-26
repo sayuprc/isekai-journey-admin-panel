@@ -1685,6 +1685,7 @@ components:
         - create
         - update
         - delete
+        - register
         - login
         - refresh
       description: 監査ログの操作種別
