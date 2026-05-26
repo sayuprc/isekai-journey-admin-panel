@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdminUser\Application\Admin\UseCase\RegisterFinish;
 
+use AdminUser\Domain\Exceptions\DuplicateAdminUserEmailException;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
@@ -30,6 +31,9 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\AuditLog\AuditAction;
+use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
@@ -49,6 +53,7 @@ readonly class RegisterFinishUseCase
         private RefreshTokenIssueService $refreshTokenIssueService,
         private AccessTokenIssueService $accessTokenIssueService,
         private RefreshTokenRepositoryInterface $refreshTokenRepository,
+        private AuditLogRecorderInterface $recorder,
         private UuidGeneratorInterface $uuidGenerator,
         private ClockInterface $clock,
     ) {
@@ -127,9 +132,16 @@ readonly class RegisterFinishUseCase
 
         ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $refreshTokenResult->unwrap();
 
-        $adminUser = $this->adminUserRepository->register($adminUser);
+        try {
+            $adminUser = $this->adminUserRepository->register($adminUser);
+        } catch (DuplicateAdminUserEmailException $exception) {
+            return new Err(new BusinessLogicError($exception->getMessage()));
+        }
+
+        $adminUserPasskeyId = $this->uuidGenerator->generate();
+
         $this->passkeyRepository->save(new AdminUserPasskey(
-            $this->uuidGenerator->generate(),
+            $adminUserPasskeyId,
             $adminUser->adminUserId->value,
             $verification->userHandle,
             $state->name,
@@ -149,6 +161,17 @@ readonly class RegisterFinishUseCase
         $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
 
         $this->refreshTokenRepository->save($refreshToken);
+
+        $this->recorder->record(
+            AuditAction::Register,
+            AuditTargetType::AdminUser,
+            $adminUser->adminUserId,
+            [
+                'admin_user_passkey_id' => $adminUserPasskeyId,
+                'refresh_token_id' => $refreshToken->refreshTokenId->value,
+            ],
+            $adminUser->adminUserId,
+        );
 
         return new Ok(new RegisterFinishOutputData(
             $accessToken,
