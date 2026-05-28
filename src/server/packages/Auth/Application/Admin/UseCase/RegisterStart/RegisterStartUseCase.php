@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AdminUser\Application\Admin\UseCase\RegisterStart;
+namespace Auth\Application\Admin\UseCase\RegisterStart;
 
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Services\AdminUserIntegrityService;

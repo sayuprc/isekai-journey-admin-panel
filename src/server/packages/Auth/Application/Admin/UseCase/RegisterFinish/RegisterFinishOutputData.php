@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AdminUser\Application\Admin\UseCase\RegisterFinish;
+namespace Auth\Application\Admin\UseCase\RegisterFinish;
 
 use Auth\Domain\Models\Token\AccessToken\AccessToken;
 

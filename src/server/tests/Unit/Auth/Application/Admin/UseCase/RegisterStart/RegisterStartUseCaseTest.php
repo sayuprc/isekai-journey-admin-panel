@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\AdminUser\Application\Admin\UseCase\RegisterStart;
+namespace Tests\Unit\Auth\Application\Admin\UseCase\RegisterStart;
 
-use AdminUser\Application\Admin\UseCase\RegisterStart\RegisterStartInputData;
-use AdminUser\Application\Admin\UseCase\RegisterStart\RegisterStartUseCase;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
@@ -16,6 +14,8 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenId;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
+use Auth\Application\Admin\UseCase\RegisterStart\RegisterStartInputData;
+use Auth\Application\Admin\UseCase\RegisterStart\RegisterStartUseCase;
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
