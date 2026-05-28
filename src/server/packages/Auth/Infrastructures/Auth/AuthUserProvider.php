@@ -40,10 +40,18 @@ readonly class AuthUserProvider implements UserProvider
     }
 
     /**
-     * @param array{email: string, password: string} $credentials
+     * Passkey login only uses the email address to resolve an authenticatable user.
+     *
+     * @internal Required by Laravel's UserProvider contract.
+     *
+     * @param array{email?: mixed} $credentials
      */
     public function retrieveByCredentials(array $credentials)
     {
+        if (! isset($credentials['email']) || ! is_string($credentials['email'])) {
+            return null;
+        }
+
         return Email::create($credentials['email'])
             ->match(
                 fn (Email $email): ?AuthUser => $this->toAuthUser($this->repository->findByEmail($email)),
@@ -52,7 +60,11 @@ readonly class AuthUserProvider implements UserProvider
     }
 
     /**
-     * @param array{password?: string} $credentials
+     * Passkey authentication does not validate passwords.
+     *
+     * @internal Required by Laravel's UserProvider contract.
+     *
+     * @param array<mixed> $credentials
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
@@ -60,6 +72,10 @@ readonly class AuthUserProvider implements UserProvider
     }
 
     /**
+     * Passkey authentication does not store password hashes.
+     *
+     * @internal Required by Laravel's UserProvider contract.
+     *
      * @param array<mixed> $credentials
      */
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)

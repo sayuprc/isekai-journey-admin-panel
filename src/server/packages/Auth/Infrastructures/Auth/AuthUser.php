@@ -21,11 +21,13 @@ readonly class AuthUser extends AuthenticatableAdminUser implements Authenticata
 
     public function getAuthPasswordName()
     {
+        // Passkey authentication does not use passwords; Laravel's Authenticatable contract still requires this.
         return 'password';
     }
 
     public function getAuthPassword()
     {
+        // Passkey authentication does not use passwords; keep this empty for the framework contract.
         return '';
     }
 

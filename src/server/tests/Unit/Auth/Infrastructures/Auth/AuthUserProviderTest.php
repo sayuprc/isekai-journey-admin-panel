@@ -74,6 +74,18 @@ class AuthUserProviderTest extends TestCase
     }
 
     #[Test]
+    public function retrieveByCredentialsWithoutEmail(): void
+    {
+        $this->repository->shouldNotReceive('findByEmail');
+
+        $result = $this->getInstance()->retrieveByCredentials([
+            'password' => 'plain-password',
+        ]);
+
+        $this->assertNull($result);
+    }
+
+    #[Test]
     public function validateCredentials(): void
     {
         $user = new AuthUser(
