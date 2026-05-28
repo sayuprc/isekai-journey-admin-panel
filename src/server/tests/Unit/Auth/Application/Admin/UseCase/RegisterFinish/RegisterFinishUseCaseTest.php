@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\AdminUser\Application\Admin\UseCase\RegisterFinish;
+namespace Tests\Unit\Auth\Application\Admin\UseCase\RegisterFinish;
 
-use AdminUser\Application\Admin\UseCase\RegisterFinish\RegisterFinishInputData;
-use AdminUser\Application\Admin\UseCase\RegisterFinish\RegisterFinishUseCase;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
@@ -19,6 +17,8 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterfa
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
+use Auth\Application\Admin\UseCase\RegisterFinish\RegisterFinishInputData;
+use Auth\Application\Admin\UseCase\RegisterFinish\RegisterFinishUseCase;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;

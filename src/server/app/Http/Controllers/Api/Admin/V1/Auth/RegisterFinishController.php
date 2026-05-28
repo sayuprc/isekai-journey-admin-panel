@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\Admin\V1\Auth;
 
-use AdminUser\Application\Admin\UseCase\RegisterFinish\RegisterFinishInputData;
-use AdminUser\Application\Admin\UseCase\RegisterFinish\RegisterFinishUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Admin\V1\Auth\RegisterFinishPresenter;
+use Auth\Application\Admin\UseCase\RegisterFinish\RegisterFinishInputData;
+use Auth\Application\Admin\UseCase\RegisterFinish\RegisterFinishUseCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
