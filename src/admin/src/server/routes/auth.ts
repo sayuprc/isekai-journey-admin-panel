@@ -6,6 +6,7 @@ import {
   authenticateServiceRegisterFinish,
   authenticateServiceRegisterStart,
 } from '../../generated';
+import type { LoginFinishRequest, RegisterFinishRequest } from '../../generated';
 import { client } from '../client';
 import { SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
@@ -14,6 +15,8 @@ import { storeSessionCredential } from '../session';
 const generateRandomBytes = (): string => {
   return randomBytes(32).toString('base64url');
 };
+
+const webAuthnCredentialSchema = t.Record(t.String(), t.Any());
 
 const setAuthCookies = async (
   session: { set: (value: Record<string, unknown>) => Promise<unknown> | unknown } | undefined,
@@ -55,8 +58,9 @@ export const auth = new Elysia({ prefix: '/auth' })
   .post(
     '/login/finish',
     async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
+      const body = { authCeremonyId, credential } satisfies LoginFinishRequest;
       const data = resolveApiResponse(
-        await authenticateServiceLoginFinish({ client: client, body: { authCeremonyId, credential } }),
+        await authenticateServiceLoginFinish({ client: client, body: body }),
       );
 
       const sessionId = generateRandomBytes();
@@ -69,7 +73,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     {
       body: t.Object({
         authCeremonyId: t.String(),
-        credential: t.Record(t.String(), t.Any()),
+        credential: webAuthnCredentialSchema,
       }),
     },
   )
@@ -91,8 +95,9 @@ export const auth = new Elysia({ prefix: '/auth' })
   .post(
     '/register/finish',
     async ({ body: { authCeremonyId, token, credential }, cookie: { session, csrf } }) => {
+      const body = { authCeremonyId, token, credential } satisfies RegisterFinishRequest;
       const data = resolveApiResponse(
-        await authenticateServiceRegisterFinish({ client: client, body: { authCeremonyId, token, credential } }),
+        await authenticateServiceRegisterFinish({ client: client, body: body }),
       );
 
       const sessionId = generateRandomBytes();
@@ -106,7 +111,7 @@ export const auth = new Elysia({ prefix: '/auth' })
       body: t.Object({
         authCeremonyId: t.String(),
         token: t.String(),
-        credential: t.Record(t.String(), t.Any()),
+        credential: webAuthnCredentialSchema,
       }),
     },
   );

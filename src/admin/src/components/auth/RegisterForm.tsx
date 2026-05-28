@@ -2,11 +2,15 @@ import { Show } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
-import { registerPasskey } from '../../utils/webauthn';
+import { passkeyErrorMessage, registerPasskey } from '../../utils/webauthn';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
-export const RegisterForm = () => {
+type RegisterFormProps = {
+  initialToken?: string;
+};
+
+export const RegisterForm = (props: RegisterFormProps) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
 
@@ -35,7 +39,7 @@ export const RegisterForm = () => {
     }
 
     try {
-      const credential = await registerPasskey(start.data.publicKey as Record<string, unknown>);
+      const credential = await registerPasskey(start.data.publicKey);
       const finish = await client.api.auth.register.finish.post({
         authCeremonyId: start.data.authCeremonyId,
         token,
@@ -55,7 +59,7 @@ export const RegisterForm = () => {
       setFlash('登録しました');
       window.location.href = '/song-types';
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'パスキー登録に失敗しました');
+      setFormError(passkeyErrorMessage(error, 'パスキー登録に失敗しました'));
     }
   });
 
@@ -68,6 +72,7 @@ export const RegisterForm = () => {
           type="text"
           class="input"
           name="token"
+          value={props.initialToken ?? ''}
           required
           classList={{ 'input-error': !!getFieldError('token') }}
         />

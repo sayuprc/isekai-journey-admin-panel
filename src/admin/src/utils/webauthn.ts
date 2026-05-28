@@ -1,3 +1,8 @@
+import type { LoginFinishRequest, LoginStartResponse, RegisterFinishRequest, RegisterStartResponse } from '../generated';
+
+export type WebAuthnPublicKeyOptions = LoginStartResponse['publicKey'] | RegisterStartResponse['publicKey'];
+export type WebAuthnCredential = LoginFinishRequest['credential'] | RegisterFinishRequest['credential'];
+
 type RegistrationOptionsJson = {
   challenge: string;
   rp: PublicKeyCredentialRpEntity;
@@ -47,7 +52,12 @@ const encodeBase64Url = (value: ArrayBuffer | Uint8Array): string => {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/u, '');
 };
 
-const toRegistrationOptions = (publicKey: Record<string, unknown>): PublicKeyCredentialCreationOptions => {
+type PasskeyAuthenticationOptions = {
+  mediation?: CredentialMediationRequirement;
+  signal?: AbortSignal;
+};
+
+const toRegistrationOptions = (publicKey: WebAuthnPublicKeyOptions): PublicKeyCredentialCreationOptions => {
   const options = publicKey as unknown as RegistrationOptionsJson;
   const excludeCredentials = options.excludeCredentials ?? [];
 
@@ -74,7 +84,7 @@ const toRegistrationOptions = (publicKey: Record<string, unknown>): PublicKeyCre
   } satisfies PublicKeyCredentialCreationOptions;
 };
 
-const toAuthenticationOptions = (publicKey: Record<string, unknown>): PublicKeyCredentialRequestOptions => {
+const toAuthenticationOptions = (publicKey: WebAuthnPublicKeyOptions): PublicKeyCredentialRequestOptions => {
   const options = publicKey as unknown as AuthenticationOptionsJson;
   const allowCredentials = options.allowCredentials ?? [];
 
@@ -94,11 +104,11 @@ const toAuthenticationOptions = (publicKey: Record<string, unknown>): PublicKeyC
   } satisfies PublicKeyCredentialRequestOptions;
 };
 
-type JsonCredential = {
+type JsonCredential = WebAuthnCredential & {
   id: string;
   rawId: string;
   type: string;
-  response: Record<string, unknown>;
+  response: WebAuthnCredential;
   clientExtensionResults: AuthenticationExtensionsClientOutputs;
   authenticatorAttachment?: string | null;
 };
@@ -140,7 +150,42 @@ const credentialToJson = (credential: PublicKeyCredential): JsonCredential => {
   throw new Error('未対応の credential response です');
 };
 
-export const registerPasskey = async (publicKey: Record<string, unknown>): Promise<JsonCredential> => {
+export const passkeyErrorMessage = (error: unknown, fallbackMessage: string): string => {
+  if (typeof DOMException !== 'undefined' && error instanceof DOMException) {
+    switch (error.name) {
+      case 'AbortError':
+        return 'パスキー操作を中断しました';
+      case 'InvalidStateError':
+        return 'このパスキーはすでに登録されています';
+      case 'NotAllowedError':
+        return 'パスキー操作がキャンセルされたか、許可されませんでした';
+      case 'NotSupportedError':
+        return 'このブラウザまたは端末はパスキーに対応していません';
+      case 'SecurityError':
+        return 'この環境ではパスキーを利用できません';
+      case 'TimeoutError':
+        return 'パスキー操作がタイムアウトしました';
+      default:
+        return fallbackMessage;
+    }
+  }
+
+  return error instanceof Error ? error.message : fallbackMessage;
+};
+
+export const isPasskeyConditionalMediationAvailable = async (): Promise<boolean> => {
+  if (
+    typeof window === 'undefined'
+    || typeof window.PublicKeyCredential === 'undefined'
+    || typeof window.PublicKeyCredential.isConditionalMediationAvailable !== 'function'
+  ) {
+    return false;
+  }
+
+  return await window.PublicKeyCredential.isConditionalMediationAvailable();
+};
+
+export const registerPasskey = async (publicKey: WebAuthnPublicKeyOptions): Promise<JsonCredential> => {
   if (typeof window.PublicKeyCredential === 'undefined') {
     throw new Error('このブラウザはパスキー登録に対応していません');
   }
@@ -156,13 +201,22 @@ export const registerPasskey = async (publicKey: Record<string, unknown>): Promi
   return credentialToJson(credential);
 };
 
-export const authenticatePasskey = async (publicKey: Record<string, unknown>): Promise<JsonCredential> => {
+export const authenticatePasskey = async (
+  publicKey: WebAuthnPublicKeyOptions,
+  options: PasskeyAuthenticationOptions = {},
+): Promise<JsonCredential> => {
   if (typeof window.PublicKeyCredential === 'undefined') {
     throw new Error('このブラウザはパスキーログインに対応していません');
   }
 
-  const credential = await navigator.credentials.get({
+  const requestOptions: CredentialRequestOptions & { signal?: AbortSignal } = {
     publicKey: toAuthenticationOptions(publicKey),
+    mediation: options.mediation,
+    signal: options.signal,
+  };
+
+  const credential = await navigator.credentials.get({
+    ...requestOptions,
   });
 
   if (!(credential instanceof PublicKeyCredential)) {

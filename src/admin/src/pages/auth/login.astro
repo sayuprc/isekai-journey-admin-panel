@@ -1,10 +1,13 @@
 ---
 import { LoginForm } from '../../components/auth/LoginForm';
 import SimpleLayout from '../../layouts/SimpleLayout.astro';
+import { resolveAuthReturnTo } from '../../utils/auth-redirect';
+
+const returnTo = resolveAuthReturnTo(Astro.url.searchParams.get('return_to'));
 ---
 
 <SimpleLayout pageTitle="ログイン">
   <div class="flex min-h-[70vh] items-center justify-center">
-    <LoginForm client:load />
+    <LoginForm returnTo={returnTo} client:load />
   </div>
 </SimpleLayout>
