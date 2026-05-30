@@ -60,17 +60,17 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('v1')->group(function () {
             Route::prefix('auth')->group(function () {
-                Route::post('/login/start', [LoginStartController::class, 'handle'])->name(AuthRouteMap::LoginStart);
+                Route::post('/login/start', [LoginStartController::class, 'handle'])
+                    ->middleware('throttle:passkey-login-start')
+                    ->name(AuthRouteMap::LoginStart);
                 Route::post('/login/finish', [LoginFinishController::class, 'handle'])->name(AuthRouteMap::LoginFinish);
-                Route::post('/refresh', [RefreshController::class, 'handle'])->name(AuthRouteMap::Refresh);
-                Route::post(
-                    '/register/start',
-                    [RegisterStartController::class, 'handle'],
-                )->name(AuthRouteMap::RegisterStart);
-                Route::post(
-                    '/register/finish',
-                    [RegisterFinishController::class, 'handle'],
-                )->name(AuthRouteMap::RegisterFinish);
+                Route::post('/refresh', [RefreshController::class, 'handle'])
+                    ->middleware('throttle:passkey-refresh')
+                    ->name(AuthRouteMap::Refresh);
+                Route::post('/register/start', [RegisterStartController::class, 'handle'])
+                    ->middleware('throttle:passkey-register-start')
+                    ->name(AuthRouteMap::RegisterStart);
+                Route::post('/register/finish', [RegisterFinishController::class, 'handle'])->name(AuthRouteMap::RegisterFinish);
             });
 
             Route::middleware(Authenticate::class)->group(function () {

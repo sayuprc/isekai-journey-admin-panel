@@ -129,5 +129,18 @@ return [
         'timeout_ms' => (int)env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
         'ceremony_ttl_seconds' => (int)env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
         'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'file'),
+
+        /*
+        | 認証系エンドポイントのレート制限 (1 分あたりの試行回数)
+        |
+        | API は通常 BFF 経由で呼ばれ送信元 IP が単一になるため、IP ではなく
+        | メールや ceremony / refresh token といった資源キーで制限する。
+        | 公開境界 (BFF) 側の IP 単位制限と合わせた多層防御の内側を担う。
+        */
+        'rate_limit' => [
+            'login' => (int)env('AUTH_PASSKEY_RATE_LIMIT_LOGIN', 10),
+            'register' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REGISTER', 5),
+            'refresh' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REFRESH', 30),
+        ],
     ],
 ];
