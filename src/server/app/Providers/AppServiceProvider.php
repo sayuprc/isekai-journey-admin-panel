@@ -24,8 +24,20 @@ class AppServiceProvider extends ServiceProvider
     /**
      * 認証系エンドポイントのレート制限。
      *
-     * BFF 経由だと送信元 IP が単一に集約されるため、IP ではなく
-     * メール / ceremony / refresh token といった資源キーで絞る。
+     * BFF 経由だと送信元 IP が単一に集約されるため、IP ではなく攻撃者が
+     * 差し替えられない「標的の資源キー」で絞る。
+     *
+     * - start 系は標的アカウントの email をキーにする (攻撃者は被害者の email を
+     *   使わざるを得ないため有効)。
+     * - refresh は標的トークンの refreshTokenId をキーにする (secret 総当たりは
+     *   id を固定して試すしかなく、失敗時はトークン未消費なので上限が効く)。
+     *
+     * finish 系は ceremony が単回消費 (pull で削除) のため同一 id で叩き直せず、
+     * 認証自体も公開鍵暗号で守られるため throttle を持たない。finish への大量
+     * リクエスト (DoS) は公開境界である BFF 側の実 IP 単位制限で抑制する。
+     *
+     * email / authCeremonyId / refreshTokenId は OpenAPI スキーマで必須かつ
+     * 形式検証されるため、この limiter に到達する時点で空文字にはならない。
      */
     private function registerPasskeyRateLimiters(): void
     {
@@ -35,18 +47,8 @@ class AppServiceProvider extends ServiceProvider
         );
 
         RateLimiter::for(
-            'passkey-login-finish',
-            fn (Request $request): Limit => $this->limit('login')->by('login-finish:' . $request->string('authCeremonyId')->toString()),
-        );
-
-        RateLimiter::for(
             'passkey-register-start',
             fn (Request $request): Limit => $this->limit('register')->by('register-start:' . $this->emailKey($request)),
-        );
-
-        RateLimiter::for(
-            'passkey-register-finish',
-            fn (Request $request): Limit => $this->limit('register')->by('register-finish:' . $request->string('authCeremonyId')->toString()),
         );
 
         RateLimiter::for(

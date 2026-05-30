@@ -95,6 +95,8 @@ class LoginTest extends DatabaseTestCase
     #[Test]
     public function startIsRateLimitedPerEmail(): void
     {
+        // レートリミッター用キャッシュが他テストから持ち越されないようにする
+        $this->app->make('cache')->flush();
         config()->set('auth.passkey.rate_limit.login', 2);
         $this->bindPasskeyAuthenticator();
 

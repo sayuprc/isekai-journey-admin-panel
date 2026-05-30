@@ -3,10 +3,13 @@ import { app } from '../../server';
 import { CLIENT_IP_HEADER } from '../../server/constants';
 
 const resolveClientAddress = (context: APIContext): string => {
+  // Astro アダプタが信頼できるプロキシ設定に基づいて解決した実 IP のみを採用する。
+  // 解決できない場合にクライアント送信の x-forwarded-for を信用すると、攻撃者が
+  // キーを自由に分散させてレート制限を無効化できるため、固定値に倒す。
   try {
     return context.clientAddress;
   } catch {
-    return context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    return 'unknown';
   }
 };
 
