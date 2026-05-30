@@ -8,8 +8,9 @@ import {
 } from '../../generated';
 import type { LoginFinishRequest, RegisterFinishRequest } from '../../generated';
 import { client } from '../client';
-import { SESSION_TTL_SECONDS } from '../constants';
+import { AUTH_RATE_LIMITS, SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
+import { enforceAuthRateLimit } from '../rate-limit';
 import { storeSessionCredential } from '../session';
 
 const generateRandomBytes = (): string => {
@@ -50,6 +51,7 @@ export const auth = new Elysia({ prefix: '/auth' })
       return resolveApiResponse(await authenticateServiceLoginStart({ client: client, body: { email } }));
     },
     {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'login/start', AUTH_RATE_LIMITS.loginStart),
       body: t.Object({
         email: t.String(),
       }),
@@ -71,6 +73,7 @@ export const auth = new Elysia({ prefix: '/auth' })
       await setAuthCookies(session, csrf, sessionId, csrfToken);
     },
     {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'login/finish', AUTH_RATE_LIMITS.loginFinish),
       body: t.Object({
         authCeremonyId: t.String(),
         credential: webAuthnCredentialSchema,
@@ -85,6 +88,7 @@ export const auth = new Elysia({ prefix: '/auth' })
       );
     },
     {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'register/start', AUTH_RATE_LIMITS.registerStart),
       body: t.Object({
         token: t.String(),
         email: t.String(),
@@ -108,6 +112,7 @@ export const auth = new Elysia({ prefix: '/auth' })
       await setAuthCookies(session, csrf, sessionId, csrfToken);
     },
     {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'register/finish', AUTH_RATE_LIMITS.registerFinish),
       body: t.Object({
         authCeremonyId: t.String(),
         token: t.String(),

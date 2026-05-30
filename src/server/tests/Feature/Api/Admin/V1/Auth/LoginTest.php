@@ -93,6 +93,25 @@ class LoginTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function startIsRateLimitedPerEmail(): void
+    {
+        config()->set('auth.passkey.rate_limit.login', 2);
+        $this->bindPasskeyAuthenticator();
+
+        foreach (range(1, 2) as $ignored) {
+            $this->postJson(route(AuthRouteMap::LoginStart), [
+                'email' => 'throttle@example.com',
+            ])->assertStatus(401);
+        }
+
+        $this->postJson(route(AuthRouteMap::LoginStart), [
+            'email' => 'throttle@example.com',
+        ])->assertStatus(429);
+
+        $this->assertSame(0, AuthRefreshToken::query()->count());
+    }
+
+    #[Test]
     public function canFinishLoginAndUpdatesPasskeyAndAuditLog(): void
     {
         CarbonImmutable::setTestNow('2026-01-02 03:04:05');
