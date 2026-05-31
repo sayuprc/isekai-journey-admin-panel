@@ -42,7 +42,6 @@ use App\Http\Controllers\Api\Admin\V1\SongType\ListSongTypeController;
 use App\Http\Middleware\Admin\AdminOpenApiValidator;
 use App\Http\Middleware\Admin\Authenticate;
 use Auth\Route\AuthRouteMap;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
@@ -51,10 +50,6 @@ use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
 use Support\Route\AuditLogRouteMap;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::middleware(AdminOpenApiValidator::class)->group(function () {
     Route::prefix('admin')->group(function () {
