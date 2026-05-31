@@ -101,4 +101,14 @@ return [
             'refresh' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REFRESH', 30),
         ],
     ],
+
+    'recovery_code' => [
+        /*
+        | リカバリーコードのハッシュ化に使うアプリ側秘密値 (pepper)。
+        | リカバリーコードはエントロピーが小さいため、DB に載らないこの秘密値を鍵にした
+        | HMAC でハッシュ化し、DB 単独漏洩時のオフライン総当たりを防ぐ。
+        | 各環境で十分に長いランダム値を必ず設定すること。
+        */
+        'pepper' => env('AUTH_RECOVERY_CODE_PEPPER'),
+    ],
 ];

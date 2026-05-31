@@ -55,7 +55,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(RandomRecoveryCodeGeneratorInterface::class, RandomRecoveryCodeGenerator::class);
         $this->app->bind(
             RecoveryCodeHasherInterface::class,
-            fn (): RecoveryCodeHasher => new RecoveryCodeHasher(config()->string('app.key')),
+            fn (): RecoveryCodeHasher => new RecoveryCodeHasher(config()->string('auth.recovery_code.pepper')),
         );
 
         $this->app->scoped(AuthContext::class);
