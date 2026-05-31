@@ -13,6 +13,7 @@ use Cose\Algorithms;
 use InvalidArgumentException;
 use Override;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use RuntimeException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -55,6 +56,9 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         string $displayName,
         array $excludePasskeys = [],
     ): PasskeyStartResult {
+        // origin 設定の不備をセレモニー開始時点で fail-fast する (finish 側は例外が握り潰されるため)
+        $this->host();
+
         $excludeCredentials = array_map(
             fn (AdminUserPasskey $passkey): PublicKeyCredentialDescriptor => $this->toDescriptor($passkey),
             $excludePasskeys,
@@ -138,6 +142,9 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
     #[Override]
     public function startAuthentication(array $passkeys): PasskeyStartResult
     {
+        // origin 設定の不備をセレモニー開始時点で fail-fast する (finish 側は例外が握り潰されるため)
+        $this->host();
+
         $descriptors = array_map($this->toDescriptor(...), $passkeys);
 
         $timeout = config('auth.passkey.timeout_ms');
@@ -250,6 +257,13 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
 
     private function host(): string
     {
-        return parse_url(config()->string('auth.passkey.origin'), PHP_URL_HOST) ?: '';
+        $origin = config()->string('auth.passkey.origin');
+        $host = parse_url($origin, PHP_URL_HOST);
+
+        if (! is_string($host) || $host === '') {
+            throw new RuntimeException(sprintf('auth.passkey.origin からホストを取得できません: [%s]', $origin));
+        }
+
+        return $host;
     }
 }
