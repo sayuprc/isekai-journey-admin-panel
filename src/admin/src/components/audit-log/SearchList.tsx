@@ -12,7 +12,7 @@ type TargetType = AuditTargetType;
 
 // 生成された型 (AuditAction / AuditTargetType) を網羅する const タプル。
 // 型注釈で完全性を担保し、生成型に値が増減したらコンパイルエラーで気付ける形にする。
-const ACTION_OPTIONS = ['create', 'update', 'delete', 'register', 'login', 'refresh'] as const satisfies readonly Action[];
+const ACTION_OPTIONS = ['create', 'update', 'delete', 'register', 'login', 'refresh', 'recovery_code_issue', 'recovery_code_use'] as const satisfies readonly Action[];
 
 const TARGET_TYPE_OPTIONS = ['AdminUser', 'Media', 'Person', 'Release', 'Song', 'SongTag'] as const satisfies readonly TargetType[];
 
@@ -23,6 +23,8 @@ const ACTION_LABEL: Record<Action, string> = {
   register: '登録',
   login: 'ログイン',
   refresh: 'リフレッシュ',
+  recovery_code_issue: 'リカバリーコード発行',
+  recovery_code_use: 'リカバリーコード使用',
 };
 
 const TARGET_TYPE_LABEL: Record<TargetType, string> = {

@@ -8,6 +8,8 @@ const ACTION_LABEL: Record<string, string> = {
   delete: '削除',
   login: 'ログイン',
   refresh: 'リフレッシュ',
+  recovery_code_issue: 'リカバリーコード発行',
+  recovery_code_use: 'リカバリーコード使用',
 };
 
 const TARGET_TYPE_LABEL: Record<string, string> = {

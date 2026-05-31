@@ -25,6 +25,8 @@ const loginStartCalls: unknown[] = [];
 const loginFinishCalls: unknown[] = [];
 const registerStartCalls: unknown[] = [];
 const registerFinishCalls: unknown[] = [];
+const recoveryStartCalls: unknown[] = [];
+const recoveryFinishCalls: unknown[] = [];
 
 mock.module('../../generated', () => {
   return {
@@ -97,6 +99,37 @@ mock.module('../../generated', () => {
           accessToken: 'register-access-token',
           refreshTokenId: 'register-refresh-token-id',
           refreshToken: 'register-refresh-token',
+        },
+        response: new Response(null, { status: 200 }),
+      };
+    },
+    authenticateServiceRecoveryStart: async ({ body }: { body: unknown }) => {
+      recoveryStartCalls.push(body);
+
+      return {
+        data: {
+          authCeremonyId: 'recovery-auth-ceremony-id',
+          publicKey: { challenge: 'recovery-challenge' },
+        },
+        response: new Response(null, { status: 200 }),
+      };
+    },
+    authenticateServiceRecoveryFinish: async ({ body }: { body: unknown }) => {
+      recoveryFinishCalls.push(body);
+
+      const payload = body as { credential: { fail?: boolean } };
+      if (payload.credential.fail) {
+        return {
+          error: { message: 'credential が不正です' },
+          response: new Response(null, { status: 401 }),
+        };
+      }
+
+      return {
+        data: {
+          accessToken: 'recovery-access-token',
+          refreshTokenId: 'recovery-refresh-token-id',
+          refreshToken: 'recovery-refresh-token',
         },
         response: new Response(null, { status: 200 }),
       };
@@ -301,6 +334,104 @@ describe('POST /auth/register/finish', () => {
     );
 
     expect(response.status).toBe(400);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
+  });
+});
+
+describe('POST /auth/recovery/start', () => {
+  beforeEach(() => {
+    for (const key of Object.keys(credentials)) {
+      delete credentials[key];
+    }
+    recoveryStartCalls.length = 0;
+    recoveryFinishCalls.length = 0;
+  });
+
+  it('email・リカバリーコード・名前でリカバリー開始 API を呼ぶ', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/recovery/start', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: 'user@example.com',
+          recoveryCode: 'A3KP-9QXR',
+          name: '新しいパスキー',
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      authCeremonyId: 'recovery-auth-ceremony-id',
+      publicKey: { challenge: 'recovery-challenge' },
+    });
+    expect(recoveryStartCalls).toHaveLength(1);
+    expect(recoveryStartCalls[0]).toEqual({
+      email: 'user@example.com',
+      recoveryCode: 'A3KP-9QXR',
+      name: '新しいパスキー',
+    });
+    expect(response.headers.getSetCookie()).toHaveLength(0);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
+  });
+});
+
+describe('POST /auth/recovery/finish', () => {
+  beforeEach(() => {
+    for (const key of Object.keys(credentials)) {
+      delete credentials[key];
+    }
+    recoveryStartCalls.length = 0;
+    recoveryFinishCalls.length = 0;
+  });
+
+  it('リカバリー完了 API を呼び、成功時にセッション/CSRF Cookie を発行する', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/recovery/finish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          authCeremonyId: 'recovery-auth-ceremony-id',
+          credential: { id: 'new-credential-id' },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(recoveryFinishCalls).toHaveLength(1);
+    expect(recoveryFinishCalls[0]).toEqual({
+      authCeremonyId: 'recovery-auth-ceremony-id',
+      credential: { id: 'new-credential-id' },
+    });
+
+    const cookies = response.headers.getSetCookie();
+    expect(cookies.some(cookie => cookie.startsWith('session='))).toBe(true);
+    expect(cookies.some(cookie => cookie.startsWith('csrf='))).toBe(true);
+
+    const sessionEntries = Object.entries(credentials).filter(([key]) => key.startsWith('session:'));
+    expect(sessionEntries).toHaveLength(1);
+    const [, stored] = sessionEntries[0]!;
+    expect(stored).toMatchObject({
+      accessToken: 'recovery-access-token',
+      refreshTokenId: 'recovery-refresh-token-id',
+      refreshToken: 'recovery-refresh-token',
+    });
+    expect((stored as { csrfToken: string }).csrfToken).toBeTruthy();
+  });
+
+  it('API エラー時はエラーレスポンスをそのまま返す', async () => {
+    const response = await auth.handle(
+      new Request('http://localhost/auth/recovery/finish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          authCeremonyId: 'recovery-auth-ceremony-id',
+          credential: { fail: true },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(401);
     expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
   });
 });

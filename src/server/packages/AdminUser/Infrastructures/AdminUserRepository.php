@@ -46,6 +46,21 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
     }
 
     #[Override]
+    public function findByIdForUpdate(AdminUserId $adminUserId): ?AdminUser
+    {
+        $found = ModelsAdminUser::query()
+            ->where('admin_user_id', $this->converter->toBin($adminUserId->value))
+            ->lockForUpdate()
+            ->first();
+
+        if (is_null($found)) {
+            return null;
+        }
+
+        return $this->hydrate($found);
+    }
+
+    #[Override]
     public function findByEmail(Email $email): ?AdminUser
     {
         $found = ModelsAdminUser::query()

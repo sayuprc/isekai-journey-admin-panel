@@ -7,11 +7,14 @@ namespace App\Providers\Domain;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Models\RecoveryCode\RecoveryCodeRepositoryInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyConfig;
 use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
+use Auth\Domain\Services\RecoveryCode\RandomRecoveryCodeGeneratorInterface;
+use Auth\Domain\Services\RecoveryCode\RecoveryCodeHasherInterface;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
@@ -21,6 +24,9 @@ use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use Auth\Infrastructures\PasskeyAuthenticator;
 use Auth\Infrastructures\PasskeyCeremonyStore;
 use Auth\Infrastructures\RandomPasskeyUserHandleGenerator;
+use Auth\Infrastructures\RecoveryCode\RandomRecoveryCodeGenerator;
+use Auth\Infrastructures\RecoveryCode\RecoveryCodeHasher;
+use Auth\Infrastructures\RecoveryCode\RecoveryCodeRepository;
 use Auth\Infrastructures\Token\AccessToken\AccessTokenFactory;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
@@ -45,6 +51,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(PasskeyUserHandleGeneratorInterface::class, RandomPasskeyUserHandleGenerator::class);
         $this->app->bind(PasskeyCeremonyStoreInterface::class, PasskeyCeremonyStore::class);
         $this->app->bind(AuthorizationContextInterface::class, UseCaseAuthorizationContext::class);
+        $this->app->bind(RecoveryCodeRepositoryInterface::class, RecoveryCodeRepository::class);
+        $this->app->bind(RandomRecoveryCodeGeneratorInterface::class, RandomRecoveryCodeGenerator::class);
+        $this->app->bind(
+            RecoveryCodeHasherInterface::class,
+            fn (): RecoveryCodeHasher => new RecoveryCodeHasher(config()->string('auth.recovery_code.pepper')),
+        );
 
         $this->app->scoped(AuthContext::class);
 

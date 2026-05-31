@@ -20,7 +20,7 @@ export type AdminUserListResponse = {
 /**
  * 監査ログの操作種別
  */
-export type AuditAction = 'create' | 'update' | 'delete' | 'register' | 'login' | 'refresh';
+export type AuditAction = 'create' | 'update' | 'delete' | 'register' | 'login' | 'refresh' | 'recovery_code_issue' | 'recovery_code_use';
 
 /**
  * 監査ログ詳細
@@ -70,6 +70,10 @@ export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Release' | 'So
 
 export type ErrorResponse = {
     message: string;
+};
+
+export type GenerateRecoveryCodesResponse = {
+    recoveryCodes: Array<RecoveryCode>;
 };
 
 export type IsekaiObservatoryAdminVersion = 'v1';
@@ -219,6 +223,32 @@ export type PersonUpdateRequest = {
 
 export type PersonUpdateResponse = {
     person: Person;
+};
+
+export type RecoveryFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    credential: {
+        [key: string]: unknown;
+    };
+};
+
+export type RecoveryFinishResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type RecoveryStartRequest = {
+    email: Email;
+    recoveryCode: RecoveryCode;
+    name: AdminUserName;
+};
+
+export type RecoveryStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
 };
 
 export type RefreshTokenRequest = {
@@ -632,6 +662,11 @@ export type PersonId = string;
 export type PersonName = string;
 
 /**
+ * リカバリーコード(平文)
+ */
+export type RecoveryCode = string;
+
+/**
  * リフレッシュトークン
  */
 export type RefreshToken = string;
@@ -919,6 +954,96 @@ export type AuthenticateServiceLoginStartResponses = {
 };
 
 export type AuthenticateServiceLoginStartResponse = AuthenticateServiceLoginStartResponses[keyof AuthenticateServiceLoginStartResponses];
+
+export type AuthenticateServiceRecoveryFinishData = {
+    body: RecoveryFinishRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/recovery/finish';
+};
+
+export type AuthenticateServiceRecoveryFinishErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRecoveryFinishError = AuthenticateServiceRecoveryFinishErrors[keyof AuthenticateServiceRecoveryFinishErrors];
+
+export type AuthenticateServiceRecoveryFinishResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RecoveryFinishResponse;
+};
+
+export type AuthenticateServiceRecoveryFinishResponse = AuthenticateServiceRecoveryFinishResponses[keyof AuthenticateServiceRecoveryFinishResponses];
+
+export type AuthenticateServiceRecoveryStartData = {
+    body: RecoveryStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/recovery/start';
+};
+
+export type AuthenticateServiceRecoveryStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRecoveryStartError = AuthenticateServiceRecoveryStartErrors[keyof AuthenticateServiceRecoveryStartErrors];
+
+export type AuthenticateServiceRecoveryStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RecoveryStartResponse;
+};
+
+export type AuthenticateServiceRecoveryStartResponse = AuthenticateServiceRecoveryStartResponses[keyof AuthenticateServiceRecoveryStartResponses];
 
 export type AuthenticateServiceRefreshData = {
     body: RefreshTokenRequest;
@@ -1592,6 +1717,41 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type RecoveryCodeServiceGenerateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/recovery-codes';
+};
+
+export type RecoveryCodeServiceGenerateErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type RecoveryCodeServiceGenerateResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: GenerateRecoveryCodesResponse;
+};
+
+export type RecoveryCodeServiceGenerateResponse = RecoveryCodeServiceGenerateResponses[keyof RecoveryCodeServiceGenerateResponses];
 
 export type ReleaseServiceCreateReleaseData = {
     body: ReleaseCreateRequest;

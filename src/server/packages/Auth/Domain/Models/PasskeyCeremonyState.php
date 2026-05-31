@@ -16,6 +16,9 @@ readonly class PasskeyCeremonyState
         public ?string $name,
         public string $adminUserId,
         public string $optionsJson,
+        // Recovery ceremony で start 時に検証成功したコードの id を束縛する。
+        // Recovery 以外の ceremony では null。
+        public ?string $recoveryCodeId = null,
     ) {
         AuthCeremonyId::reconstruct($this->authCeremonyId);
         Email::reconstruct($this->email);
@@ -29,7 +32,8 @@ readonly class PasskeyCeremonyState
      *   email: string,
      *   name: string|null,
      *   admin_user_id: string,
-     *   options_json: string
+     *   options_json: string,
+     *   recovery_code_id: string|null
      * }
      */
     public function toArray(): array
@@ -41,6 +45,7 @@ readonly class PasskeyCeremonyState
             'name' => $this->name,
             'admin_user_id' => $this->adminUserId,
             'options_json' => $this->optionsJson,
+            'recovery_code_id' => $this->recoveryCodeId,
         ];
     }
 
@@ -51,7 +56,8 @@ readonly class PasskeyCeremonyState
      *   email: string,
      *   name: string|null,
      *   admin_user_id: string,
-     *   options_json: string
+     *   options_json: string,
+     *   recovery_code_id?: string|null
      * } $data
      */
     public static function fromArray(array $data): self
@@ -63,6 +69,7 @@ readonly class PasskeyCeremonyState
             $data['name'],
             $data['admin_user_id'],
             $data['options_json'],
+            $data['recovery_code_id'] ?? null,
         );
     }
 }

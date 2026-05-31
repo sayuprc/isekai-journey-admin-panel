@@ -17,6 +17,10 @@ scalar refreshTokenId extends uuid;
 @secret
 scalar registrationToken extends string;
 
+@doc("リカバリーコード(平文)")
+@secret
+scalar recoveryCode extends string;
+
 @doc("認証セッションID")
 scalar authCeremonyId extends uuid;
 

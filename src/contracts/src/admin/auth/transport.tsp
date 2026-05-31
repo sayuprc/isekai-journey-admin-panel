@@ -58,3 +58,29 @@ model RegisterFinishResponse {
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
 }
+
+model RecoveryStartRequest {
+  email: email;
+  recoveryCode: recoveryCode;
+  name: adminUserName;
+}
+
+model RecoveryStartResponse {
+  authCeremonyId: authCeremonyId;
+  publicKey: webAuthnPublicKeyOptions;
+}
+
+model RecoveryFinishRequest {
+  authCeremonyId: authCeremonyId;
+  credential: webAuthnCredential;
+}
+
+model RecoveryFinishResponse {
+  accessToken: accessToken;
+  refreshTokenId: refreshTokenId;
+  refreshToken: refreshToken;
+}
+
+model GenerateRecoveryCodesResponse {
+  recoveryCodes: recoveryCode[];
+}
