@@ -128,7 +128,7 @@ return [
         'origin' => env('AUTH_PASSKEY_ORIGIN', 'https://local.admin.isekaijoucho.fan'),
         'timeout_ms' => (int)env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
         'ceremony_ttl_seconds' => (int)env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
-        'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'file'),
+        'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'redis'),
 
         /*
         | 認証系エンドポイントのレート制限 (1 分あたりの試行回数)
