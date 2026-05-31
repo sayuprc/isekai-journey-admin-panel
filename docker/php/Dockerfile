@@ -15,6 +15,7 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && install-php-extensions \
     pdo \
     pdo_mysql \
+    redis \
     xdebug \
   && echo "[client]\nssl-verify-server-cert=false" > /etc/mysql/conf.d/skip-ssl.cnf
 
