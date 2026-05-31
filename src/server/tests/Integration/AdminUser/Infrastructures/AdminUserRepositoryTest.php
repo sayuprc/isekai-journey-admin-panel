@@ -119,6 +119,35 @@ class AdminUserRepositoryTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function findByIdForUpdateIssuesSelectForUpdate(): void
+    {
+        $repository = $this->getInstance();
+
+        $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
+        $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
+
+        $repository->register($user);
+
+        DB::enableQueryLog();
+
+        $found = $repository->findByIdForUpdate($user->adminUserId);
+
+        $queries = DB::getQueryLog();
+        DB::disableQueryLog();
+
+        $selectQueries = array_values(array_filter(
+            $queries,
+            fn (array $query): bool => str_starts_with(strtolower((string)$query['query']), 'select')
+                && str_contains((string)$query['query'], 'admin_users'),
+        ));
+
+        $this->assertNotNull($found);
+        $this->assertEquals($user, $found);
+        $this->assertNotSame([], $selectQueries);
+        $this->assertStringContainsString('for update', strtolower((string)$selectQueries[0]['query']));
+    }
+
+    #[Test]
     public function registerWithPermissions(): void
     {
         $repository = $this->getInstance();

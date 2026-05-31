@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Application\Admin\UseCase\RecoveryCode\Generate;
 
+use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\RecoveryCode\RecoveryCodeRepositoryInterface;
 use Auth\Domain\Services\RecoveryCode\RecoveryCodeIssueService;
@@ -29,6 +30,7 @@ readonly class GenerateRecoveryCodesUseCase
         private AuthContext $authContext,
         private RecoveryCodeIssueService $issueService,
         private RecoveryCodeRepositoryInterface $repository,
+        private AdminUserRepositoryInterface $adminUserRepository,
         private AuditLogRecorderInterface $recorder,
     ) {
     }
@@ -47,6 +49,10 @@ readonly class GenerateRecoveryCodesUseCase
         $adminUserId = $adminUser->adminUserId;
 
         return $this->transaction->scope(function () use ($adminUserId): Result {
+            // 同一ユーザーの同時発行を直列化する。所有者行を FOR UPDATE でロックし、
+            // delete -> insert を他リクエストと交錯させない (両方のコードが残る・デッドロックを防ぐ)。
+            $this->adminUserRepository->findByIdForUpdate($adminUserId);
+
             $issueResult = $this->issueService->issue($adminUserId);
 
             if ($issueResult->isErr()) {

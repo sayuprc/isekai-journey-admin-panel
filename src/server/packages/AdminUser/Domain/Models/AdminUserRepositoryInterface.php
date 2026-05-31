@@ -13,6 +13,8 @@ interface AdminUserRepositoryInterface
 
     public function find(AdminUserId $adminUserId): ?AdminUser;
 
+    public function findByIdForUpdate(AdminUserId $adminUserId): ?AdminUser;
+
     public function findByEmail(Email $email): ?AdminUser;
 
     public function findByEmailForUpdate(Email $email): ?AdminUser;
