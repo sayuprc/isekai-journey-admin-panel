@@ -98,6 +98,7 @@ return [
         'rate_limit' => [
             'login' => (int)env('AUTH_PASSKEY_RATE_LIMIT_LOGIN', 10),
             'register' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REGISTER', 5),
+            'recovery' => (int)env('AUTH_PASSKEY_RATE_LIMIT_RECOVERY', 10),
             'refresh' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REFRESH', 30),
         ],
     ],

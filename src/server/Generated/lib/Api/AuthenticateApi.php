@@ -80,6 +80,12 @@ class AuthenticateApi
         'authenticateServiceLoginStart' => [
             'application/json',
         ],
+        'authenticateServiceRecoveryFinish' => [
+            'application/json',
+        ],
+        'authenticateServiceRecoveryStart' => [
+            'application/json',
+        ],
         'authenticateServiceRefresh' => [
             'application/json',
         ],
@@ -664,6 +670,580 @@ class AuthenticateApi
                 $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($login_start_request));
             } else {
                 $httpBody = $login_start_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryFinish
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryFinishRequest $recovery_finish_request recovery_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\RecoveryFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRecoveryFinish($recovery_finish_request, string $contentType = self::contentTypes['authenticateServiceRecoveryFinish'][0])
+    {
+        list($response) = $this->authenticateServiceRecoveryFinishWithHttpInfo($recovery_finish_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryFinishWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryFinishRequest $recovery_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryFinish'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\RecoveryFinishResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRecoveryFinishWithHttpInfo($recovery_finish_request, string $contentType = self::contentTypes['authenticateServiceRecoveryFinish'][0])
+    {
+        $request = $this->authenticateServiceRecoveryFinishRequest($recovery_finish_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\RecoveryFinishResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\RecoveryFinishResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\RecoveryFinishResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryFinishAsync
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryFinishRequest $recovery_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRecoveryFinishAsync($recovery_finish_request, string $contentType = self::contentTypes['authenticateServiceRecoveryFinish'][0])
+    {
+        return $this->authenticateServiceRecoveryFinishAsyncWithHttpInfo($recovery_finish_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryFinishAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryFinishRequest $recovery_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRecoveryFinishAsyncWithHttpInfo($recovery_finish_request, string $contentType = self::contentTypes['authenticateServiceRecoveryFinish'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\RecoveryFinishResponse';
+        $request = $this->authenticateServiceRecoveryFinishRequest($recovery_finish_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRecoveryFinish'
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryFinishRequest $recovery_finish_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryFinish'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRecoveryFinishRequest($recovery_finish_request, string $contentType = self::contentTypes['authenticateServiceRecoveryFinish'][0])
+    {
+
+        // verify the required parameter 'recovery_finish_request' is set
+        if ($recovery_finish_request === null || (is_array($recovery_finish_request) && count($recovery_finish_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $recovery_finish_request when calling authenticateServiceRecoveryFinish'
+            );
+        }
+
+
+        $resourcePath = '/auth/recovery/finish';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($recovery_finish_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($recovery_finish_request));
+            } else {
+                $httpBody = $recovery_finish_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryStart
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryStartRequest $recovery_start_request recovery_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \OpenAPI\Client\Model\RecoveryStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError
+     */
+    public function authenticateServiceRecoveryStart($recovery_start_request, string $contentType = self::contentTypes['authenticateServiceRecoveryStart'][0])
+    {
+        list($response) = $this->authenticateServiceRecoveryStartWithHttpInfo($recovery_start_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryStartWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryStartRequest $recovery_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryStart'] to see the possible values for this operation
+     *
+     * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \OpenAPI\Client\Model\RecoveryStartResponse|\OpenAPI\Client\Model\ErrorResponse|\OpenAPI\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateServiceRecoveryStartWithHttpInfo($recovery_start_request, string $contentType = self::contentTypes['authenticateServiceRecoveryStart'][0])
+    {
+        $request = $this->authenticateServiceRecoveryStartRequest($recovery_start_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\RecoveryStartResponse',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\OpenAPI\Client\Model\RecoveryStartResponse',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\RecoveryStartResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\ValidationError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryStartAsync
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryStartRequest $recovery_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRecoveryStartAsync($recovery_start_request, string $contentType = self::contentTypes['authenticateServiceRecoveryStart'][0])
+    {
+        return $this->authenticateServiceRecoveryStartAsyncWithHttpInfo($recovery_start_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateServiceRecoveryStartAsyncWithHttpInfo
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryStartRequest $recovery_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateServiceRecoveryStartAsyncWithHttpInfo($recovery_start_request, string $contentType = self::contentTypes['authenticateServiceRecoveryStart'][0])
+    {
+        $returnType = '\OpenAPI\Client\Model\RecoveryStartResponse';
+        $request = $this->authenticateServiceRecoveryStartRequest($recovery_start_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateServiceRecoveryStart'
+     *
+     * @param  \OpenAPI\Client\Model\RecoveryStartRequest $recovery_start_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateServiceRecoveryStart'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateServiceRecoveryStartRequest($recovery_start_request, string $contentType = self::contentTypes['authenticateServiceRecoveryStart'][0])
+    {
+
+        // verify the required parameter 'recovery_start_request' is set
+        if ($recovery_start_request === null || (is_array($recovery_start_request) && count($recovery_start_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $recovery_start_request when calling authenticateServiceRecoveryStart'
+            );
+        }
+
+
+        $resourcePath = '/auth/recovery/start';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($recovery_start_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($recovery_start_request));
+            } else {
+                $httpBody = $recovery_start_request;
             }
         } elseif (count($formParams) > 0) {
             if ($multipart) {

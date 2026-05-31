@@ -225,6 +225,32 @@ export type PersonUpdateResponse = {
     person: Person;
 };
 
+export type RecoveryFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    credential: {
+        [key: string]: unknown;
+    };
+};
+
+export type RecoveryFinishResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type RecoveryStartRequest = {
+    email: Email;
+    recoveryCode: RecoveryCode;
+    name: AdminUserName;
+};
+
+export type RecoveryStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
+};
+
 export type RefreshTokenRequest = {
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
@@ -928,6 +954,96 @@ export type AuthenticateServiceLoginStartResponses = {
 };
 
 export type AuthenticateServiceLoginStartResponse = AuthenticateServiceLoginStartResponses[keyof AuthenticateServiceLoginStartResponses];
+
+export type AuthenticateServiceRecoveryFinishData = {
+    body: RecoveryFinishRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/recovery/finish';
+};
+
+export type AuthenticateServiceRecoveryFinishErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRecoveryFinishError = AuthenticateServiceRecoveryFinishErrors[keyof AuthenticateServiceRecoveryFinishErrors];
+
+export type AuthenticateServiceRecoveryFinishResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RecoveryFinishResponse;
+};
+
+export type AuthenticateServiceRecoveryFinishResponse = AuthenticateServiceRecoveryFinishResponses[keyof AuthenticateServiceRecoveryFinishResponses];
+
+export type AuthenticateServiceRecoveryStartData = {
+    body: RecoveryStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/recovery/start';
+};
+
+export type AuthenticateServiceRecoveryStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRecoveryStartError = AuthenticateServiceRecoveryStartErrors[keyof AuthenticateServiceRecoveryStartErrors];
+
+export type AuthenticateServiceRecoveryStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RecoveryStartResponse;
+};
+
+export type AuthenticateServiceRecoveryStartResponse = AuthenticateServiceRecoveryStartResponses[keyof AuthenticateServiceRecoveryStartResponses];
 
 export type AuthenticateServiceRefreshData = {
     body: RefreshTokenRequest;

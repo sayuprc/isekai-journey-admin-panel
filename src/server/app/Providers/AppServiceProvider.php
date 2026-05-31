@@ -52,6 +52,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         RateLimiter::for(
+            'passkey-recovery-start',
+            fn (Request $request): Limit => $this->limit('recovery')->by('recovery-start:' . $this->emailKey($request)),
+        );
+
+        RateLimiter::for(
             'passkey-refresh',
             fn (Request $request): Limit => $this->limit('refresh')->by('refresh:' . $request->string('refreshTokenId')->toString()),
         );

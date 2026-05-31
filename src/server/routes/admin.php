@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\Admin\V1\AuditLog\SearchAuditLogController;
 use App\Http\Controllers\Api\Admin\V1\Auth\GenerateRecoveryCodesController;
 use App\Http\Controllers\Api\Admin\V1\Auth\LoginFinishController;
 use App\Http\Controllers\Api\Admin\V1\Auth\LoginStartController;
+use App\Http\Controllers\Api\Admin\V1\Auth\RecoveryFinishController;
+use App\Http\Controllers\Api\Admin\V1\Auth\RecoveryStartController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RefreshController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RegisterFinishController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RegisterStartController;
@@ -67,6 +69,10 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     ->middleware('throttle:passkey-register-start')
                     ->name(AuthRouteMap::RegisterStart);
                 Route::post('/register/finish', [RegisterFinishController::class, 'handle'])->name(AuthRouteMap::RegisterFinish);
+                Route::post('/recovery/start', [RecoveryStartController::class, 'handle'])
+                    ->middleware('throttle:passkey-recovery-start')
+                    ->name(AuthRouteMap::RecoveryStart);
+                Route::post('/recovery/finish', [RecoveryFinishController::class, 'handle'])->name(AuthRouteMap::RecoveryFinish);
             });
 
             Route::middleware(Authenticate::class)->group(function () {

@@ -235,6 +235,86 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginStartRequest'
+  /auth/recovery/finish:
+    post:
+      operationId: AuthenticateService_recoveryFinish
+      description: リカバリー完了API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecoveryFinishResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoveryFinishRequest'
+  /auth/recovery/start:
+    post:
+      operationId: AuthenticateService_recoveryStart
+      description: リカバリー開始API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecoveryStartResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoveryStartRequest'
   /auth/refresh:
     post:
       operationId: AuthenticateService_refresh
@@ -2147,6 +2227,54 @@ components:
       properties:
         person:
           $ref: '#/components/schemas/Person'
+    RecoveryFinishRequest:
+      type: object
+      required:
+        - authCeremonyId
+        - credential
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        credential:
+          type: object
+          unevaluatedProperties: {}
+    RecoveryFinishResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshTokenId
+        - refreshToken
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/accessToken'
+        refreshTokenId:
+          $ref: '#/components/schemas/refreshTokenId'
+        refreshToken:
+          $ref: '#/components/schemas/refreshToken'
+    RecoveryStartRequest:
+      type: object
+      required:
+        - email
+        - recoveryCode
+        - name
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        recoveryCode:
+          $ref: '#/components/schemas/recoveryCode'
+        name:
+          $ref: '#/components/schemas/adminUserName'
+    RecoveryStartResponse:
+      type: object
+      required:
+        - authCeremonyId
+        - publicKey
+      properties:
+        authCeremonyId:
+          $ref: '#/components/schemas/authCeremonyId'
+        publicKey:
+          type: object
+          unevaluatedProperties: {}
     RefreshTokenRequest:
       type: object
       required:
