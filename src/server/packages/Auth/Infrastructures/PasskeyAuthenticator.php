@@ -83,7 +83,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             ),
             PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
             $excludeCredentials,
-            $this->timeoutMs(),
+            $this->config->timeoutMs(),
         );
 
         /** @var array<string, mixed> $publicKey */
@@ -150,7 +150,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             $this->config->rpId,
             [],
             PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_REQUIRED,
-            $this->timeoutMs(),
+            $this->config->timeoutMs(),
         );
 
         /** @var array<string, mixed> $publicKey */
@@ -249,14 +249,6 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             $passkey->credentialId,
             $passkey->transports,
         );
-    }
-
-    /**
-     * @return int<1, max>
-     */
-    private function timeoutMs(): int
-    {
-        return $this->config->timeoutMs > 0 ? $this->config->timeoutMs : 60000;
     }
 
     private function host(): string
