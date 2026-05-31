@@ -6,8 +6,11 @@ use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\Admin\V1\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Admin\V1\AuditLog\GetAuditLogController;
 use App\Http\Controllers\Api\Admin\V1\AuditLog\SearchAuditLogController;
-use App\Http\Controllers\Api\Admin\V1\Auth\LoginController;
+use App\Http\Controllers\Api\Admin\V1\Auth\LoginFinishController;
+use App\Http\Controllers\Api\Admin\V1\Auth\LoginStartController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RefreshController;
+use App\Http\Controllers\Api\Admin\V1\Auth\RegisterFinishController;
+use App\Http\Controllers\Api\Admin\V1\Auth\RegisterStartController;
 use App\Http\Controllers\Api\Admin\V1\Media\CreateMediaController;
 use App\Http\Controllers\Api\Admin\V1\Media\DeleteMediaController;
 use App\Http\Controllers\Api\Admin\V1\Media\GetMediaController;
@@ -39,7 +42,6 @@ use App\Http\Controllers\Api\Admin\V1\SongType\ListSongTypeController;
 use App\Http\Middleware\Admin\AdminOpenApiValidator;
 use App\Http\Middleware\Admin\Authenticate;
 use Auth\Route\AuthRouteMap;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
@@ -49,16 +51,21 @@ use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
 use Support\Route\AuditLogRouteMap;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::middleware(AdminOpenApiValidator::class)->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('v1')->group(function () {
             Route::prefix('auth')->group(function () {
-                Route::post('/login', [LoginController::class, 'handle'])->name(AuthRouteMap::Login);
-                Route::post('/refresh', [RefreshController::class, 'handle'])->name(AuthRouteMap::Refresh);
+                Route::post('/login/start', [LoginStartController::class, 'handle'])
+                    ->middleware('throttle:passkey-login-start')
+                    ->name(AuthRouteMap::LoginStart);
+                Route::post('/login/finish', [LoginFinishController::class, 'handle'])->name(AuthRouteMap::LoginFinish);
+                Route::post('/refresh', [RefreshController::class, 'handle'])
+                    ->middleware('throttle:passkey-refresh')
+                    ->name(AuthRouteMap::Refresh);
+                Route::post('/register/start', [RegisterStartController::class, 'handle'])
+                    ->middleware('throttle:passkey-register-start')
+                    ->name(AuthRouteMap::RegisterStart);
+                Route::post('/register/finish', [RegisterFinishController::class, 'handle'])->name(AuthRouteMap::RegisterFinish);
             });
 
             Route::middleware(Authenticate::class)->group(function () {

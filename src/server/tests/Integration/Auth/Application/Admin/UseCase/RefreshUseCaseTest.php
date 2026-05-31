@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth\Application\Admin\UseCase;
 
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Application\Admin\UseCase\Refresh\RefreshInputData;
 use Auth\Application\Admin\UseCase\Refresh\RefreshUseCase;
@@ -37,7 +36,7 @@ class RefreshUseCaseTest extends DatabaseTestCase
         ]);
 
         $adminUser = $this->createAdminUser($this->generateUuid(), 'user@example.com');
-        $this->app->make(AdminUserRepository::class)->register($adminUser, HashedPassword::reconstruct('hashed'));
+        $this->app->make(AdminUserRepository::class)->register($adminUser);
 
         $plainToken = 'plain-refresh-token';
         $hashedToken = $this->app->make(TokenHasherInterface::class)->hash($plainToken);

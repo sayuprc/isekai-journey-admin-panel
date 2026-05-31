@@ -16,7 +16,6 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
     /*
@@ -76,49 +75,30 @@ return [
         // ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Resetting Passwords
-    |--------------------------------------------------------------------------
-    |
-    | These configuration options specify the behavior of Laravel's password
-    | reset functionality, including the table utilized for token storage
-    | and the user provider that is invoked to actually retrieve users.
-    |
-    | The expiry time is the number of minutes that each reset token will be
-    | considered valid. This security feature keeps tokens short-lived so
-    | they have less time to be guessed. You may change this as needed.
-    |
-    | The throttle setting is the number of seconds a user must wait before
-    | generating more password reset tokens. This prevents the user from
-    | quickly generating a very large amount of password reset tokens.
-    |
-    */
-
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Password Confirmation Timeout
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define the amount of seconds before a password confirmation
-    | window expires and users are asked to re-enter their password via the
-    | confirmation screen. By default, the timeout lasts for three hours.
-    |
-    */
-
-    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
-
     'jwt' => [
         'alg' => env('AUTH_JWT_ALG', 'HS256'),
         'key' => env('AUTH_JWT_KEY'),
+    ],
+
+    'passkey' => [
+        'rp_name' => env('AUTH_PASSKEY_RP_NAME', env('APP_NAME', 'IsekaiObservatory')),
+        'rp_id' => env('AUTH_PASSKEY_RP_ID', 'local.admin.isekaijoucho.fan'),
+        'origin' => env('AUTH_PASSKEY_ORIGIN', 'https://local.admin.isekaijoucho.fan'),
+        'timeout_ms' => (int)env('AUTH_PASSKEY_TIMEOUT_MS', 60000),
+        'ceremony_ttl_seconds' => (int)env('AUTH_PASSKEY_CEREMONY_TTL_SECONDS', 300),
+        'ceremony_cache_store' => env('AUTH_PASSKEY_CEREMONY_CACHE_STORE', 'redis'),
+
+        /*
+        | 認証系エンドポイントのレート制限 (1 分あたりの試行回数)
+        |
+        | API は通常 BFF 経由で呼ばれ送信元 IP が単一になるため、IP ではなく
+        | メールや ceremony / refresh token といった資源キーで制限する。
+        | 公開境界 (BFF) 側の IP 単位制限と合わせた多層防御の内側を担う。
+        */
+        'rate_limit' => [
+            'login' => (int)env('AUTH_PASSKEY_RATE_LIMIT_LOGIN', 10),
+            'register' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REGISTER', 5),
+            'refresh' => (int)env('AUTH_PASSKEY_RATE_LIMIT_REFRESH', 30),
+        ],
     ],
 ];

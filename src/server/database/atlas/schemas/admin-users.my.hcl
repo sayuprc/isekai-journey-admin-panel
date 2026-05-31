@@ -17,11 +17,6 @@ table "admin_users" {
     type    = varchar(255)
     comment = "メールアドレス"
   }
-  column "password" {
-    null    = false
-    type    = varchar(255)
-    comment = "パスワード"
-  }
   column "role" {
     null     = false
     type     = tinyint

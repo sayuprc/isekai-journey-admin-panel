@@ -10,6 +10,7 @@ enum AuditAction {
   create: "create",
   update: "update",
   delete: "delete",
+  register: "register",
   login: "login",
   refresh: "refresh",
 }

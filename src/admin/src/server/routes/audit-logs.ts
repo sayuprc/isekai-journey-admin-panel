@@ -12,6 +12,7 @@ const AuditActionSchema = t.Union([
   t.Literal('create'),
   t.Literal('update'),
   t.Literal('delete'),
+  t.Literal('register'),
   t.Literal('login'),
   t.Literal('refresh'),
 ]);

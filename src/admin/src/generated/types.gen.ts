@@ -20,7 +20,7 @@ export type AdminUserListResponse = {
 /**
  * 監査ログの操作種別
  */
-export type AuditAction = 'create' | 'update' | 'delete' | 'login' | 'refresh';
+export type AuditAction = 'create' | 'update' | 'delete' | 'register' | 'login' | 'refresh';
 
 /**
  * 監査ログ詳細
@@ -74,15 +74,28 @@ export type ErrorResponse = {
 
 export type IsekaiObservatoryAdminVersion = 'v1';
 
-export type LoginRequest = {
-    email: Email;
-    password: Password;
+export type LoginFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    credential: {
+        [key: string]: unknown;
+    };
 };
 
-export type LoginResponse = {
+export type LoginFinishResponse = {
     accessToken: AccessToken;
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
+};
+
+export type LoginStartRequest = {
+    email: Email;
+};
+
+export type LoginStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
 };
 
 export type Media = {
@@ -217,6 +230,33 @@ export type RefreshTokenResponse = {
     accessToken: AccessToken;
     refreshTokenId: RefreshTokenId;
     refreshToken: RefreshToken;
+};
+
+export type RegisterFinishRequest = {
+    authCeremonyId: AuthCeremonyId;
+    token: RegistrationToken;
+    credential: {
+        [key: string]: unknown;
+    };
+};
+
+export type RegisterFinishResponse = {
+    accessToken: AccessToken;
+    refreshTokenId: RefreshTokenId;
+    refreshToken: RefreshToken;
+};
+
+export type RegisterStartRequest = {
+    token: RegistrationToken;
+    email: Email;
+    name: AdminUserName;
+};
+
+export type RegisterStartResponse = {
+    authCeremonyId: AuthCeremonyId;
+    publicKey: {
+        [key: string]: unknown;
+    };
 };
 
 export type Release = {
@@ -502,6 +542,11 @@ export type AdminUserName = string;
 export type AuditLogId = string;
 
 /**
+ * 認証セッションID
+ */
+export type AuthCeremonyId = string;
+
+/**
  * 作成日時
  */
 export type CreatedAt = string;
@@ -572,11 +617,6 @@ export type OrderNo = number;
 export type Page = number;
 
 /**
- * 平文パスワード
- */
-export type Password = string;
-
-/**
  * 権限名
  */
 export type PermissionName = string;
@@ -600,6 +640,11 @@ export type RefreshToken = string;
  * リフレッシュトークンID
  */
 export type RefreshTokenId = string;
+
+/**
+ * 管理ユーザー登録トークン(平文)
+ */
+export type RegistrationToken = string;
 
 /**
  * リリースID
@@ -785,14 +830,14 @@ export type AuditLogServiceGetAuditLogResponses = {
 
 export type AuditLogServiceGetAuditLogResponse = AuditLogServiceGetAuditLogResponses[keyof AuditLogServiceGetAuditLogResponses];
 
-export type AuthenticateServiceLoginData = {
-    body: LoginRequest;
+export type AuthenticateServiceLoginFinishData = {
+    body: LoginFinishRequest;
     path?: never;
     query?: never;
-    url: '/auth/login';
+    url: '/auth/login/finish';
 };
 
-export type AuthenticateServiceLoginErrors = {
+export type AuthenticateServiceLoginFinishErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -819,16 +864,61 @@ export type AuthenticateServiceLoginErrors = {
     504: unknown;
 };
 
-export type AuthenticateServiceLoginError = AuthenticateServiceLoginErrors[keyof AuthenticateServiceLoginErrors];
+export type AuthenticateServiceLoginFinishError = AuthenticateServiceLoginFinishErrors[keyof AuthenticateServiceLoginFinishErrors];
 
-export type AuthenticateServiceLoginResponses = {
+export type AuthenticateServiceLoginFinishResponses = {
     /**
      * The request has succeeded.
      */
-    200: LoginResponse;
+    200: LoginFinishResponse;
 };
 
-export type AuthenticateServiceLoginResponse = AuthenticateServiceLoginResponses[keyof AuthenticateServiceLoginResponses];
+export type AuthenticateServiceLoginFinishResponse = AuthenticateServiceLoginFinishResponses[keyof AuthenticateServiceLoginFinishResponses];
+
+export type AuthenticateServiceLoginStartData = {
+    body: LoginStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/login/start';
+};
+
+export type AuthenticateServiceLoginStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceLoginStartError = AuthenticateServiceLoginStartErrors[keyof AuthenticateServiceLoginStartErrors];
+
+export type AuthenticateServiceLoginStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: LoginStartResponse;
+};
+
+export type AuthenticateServiceLoginStartResponse = AuthenticateServiceLoginStartResponses[keyof AuthenticateServiceLoginStartResponses];
 
 export type AuthenticateServiceRefreshData = {
     body: RefreshTokenRequest;
@@ -870,6 +960,96 @@ export type AuthenticateServiceRefreshResponses = {
 };
 
 export type AuthenticateServiceRefreshResponse = AuthenticateServiceRefreshResponses[keyof AuthenticateServiceRefreshResponses];
+
+export type AuthenticateServiceRegisterFinishData = {
+    body: RegisterFinishRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register/finish';
+};
+
+export type AuthenticateServiceRegisterFinishErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterFinishError = AuthenticateServiceRegisterFinishErrors[keyof AuthenticateServiceRegisterFinishErrors];
+
+export type AuthenticateServiceRegisterFinishResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RegisterFinishResponse;
+};
+
+export type AuthenticateServiceRegisterFinishResponse = AuthenticateServiceRegisterFinishResponses[keyof AuthenticateServiceRegisterFinishResponses];
+
+export type AuthenticateServiceRegisterStartData = {
+    body: RegisterStartRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/register/start';
+};
+
+export type AuthenticateServiceRegisterStartErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type AuthenticateServiceRegisterStartError = AuthenticateServiceRegisterStartErrors[keyof AuthenticateServiceRegisterStartErrors];
+
+export type AuthenticateServiceRegisterStartResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: RegisterStartResponse;
+};
+
+export type AuthenticateServiceRegisterStartResponse = AuthenticateServiceRegisterStartResponses[keyof AuthenticateServiceRegisterStartResponses];
 
 export type MediaServiceCreateMediaData = {
     body: MediaCreateRequest;

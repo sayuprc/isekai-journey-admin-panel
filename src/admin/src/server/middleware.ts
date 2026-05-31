@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia';
+import { isCsrfTokenMatch } from './csrf';
 import { ApiError } from './errors';
 import {
   acquireSessionRefreshLock,
@@ -36,7 +37,7 @@ export const authGuard = new Elysia({ name: 'authGuard' })
       throw new ApiError(401, {});
     }
 
-    if (credential.csrfToken !== headers['x-csrf-token']) {
+    if (!isCsrfTokenMatch(credential.csrfToken, headers['x-csrf-token'])) {
       throw new ApiError(403, {});
     }
 

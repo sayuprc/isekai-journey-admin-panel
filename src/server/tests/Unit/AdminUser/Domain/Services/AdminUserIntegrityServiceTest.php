@@ -109,6 +109,64 @@ class AdminUserIntegrityServiceTest extends TestCase
         $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $error->message);
     }
 
+    #[Test]
+    public function prepareForCreateWithIdUsesLockedEmailLookup(): void
+    {
+        $adminUserName = 'テストユーザー';
+        $email = 'example@example.com';
+        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $now = new DateTimeImmutable('2026-01-01 00:00:00');
+        $role = Role::General;
+        $permissions = [];
+
+        $this->clock->shouldReceive('now')
+            ->with()
+            ->andReturn($now)
+            ->once();
+
+        $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
+
+        $this->repository->shouldReceive('findByEmailForUpdate')
+            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->andReturnNull()
+            ->once();
+
+        $result = $this->getInstance()->prepareForCreateWithId($uuid, $adminUserName, $email, $role->value, $permissions);
+
+        $this->assertTrue($result->isOk());
+        $this->assertEquals($expectedUser, $result->unwrap());
+    }
+
+    #[Test]
+    public function prepareForCreateWithIdDuplicateEmail(): void
+    {
+        $adminUserName = 'テストユーザー';
+        $email = 'example@example.com';
+        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+        $now = new DateTimeImmutable('2026-01-01 00:00:00');
+        $role = Role::General;
+        $permissions = [];
+
+        $this->clock->shouldReceive('now')
+            ->with()
+            ->andReturn($now)
+            ->once();
+
+        $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
+
+        $this->repository->shouldReceive('findByEmailForUpdate')
+            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->andReturn($existingUser)
+            ->once();
+
+        $result = $this->getInstance()->prepareForCreateWithId($uuid, $adminUserName, $email, $role->value, $permissions);
+
+        $this->assertTrue($result->isErr());
+        $error = $result->unwrapErr();
+        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
+        $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $error->message);
+    }
+
     private function getInstance(): AdminUserIntegrityService
     {
         return new AdminUserIntegrityService(

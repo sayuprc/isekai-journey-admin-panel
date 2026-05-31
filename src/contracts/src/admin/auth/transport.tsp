@@ -5,12 +5,21 @@ using Http;
 
 namespace IsekaiObservatory.Admin;
 
-model LoginRequest {
+model LoginStartRequest {
   email: email;
-  password: password;
 }
 
-model LoginResponse {
+model LoginStartResponse {
+  authCeremonyId: authCeremonyId;
+  publicKey: webAuthnPublicKeyOptions;
+}
+
+model LoginFinishRequest {
+  authCeremonyId: authCeremonyId;
+  credential: webAuthnCredential;
+}
+
+model LoginFinishResponse {
   accessToken: accessToken;
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
@@ -22,6 +31,29 @@ model RefreshTokenRequest {
 }
 
 model RefreshTokenResponse {
+  accessToken: accessToken;
+  refreshTokenId: refreshTokenId;
+  refreshToken: refreshToken;
+}
+
+model RegisterStartRequest {
+  token: registrationToken;
+  email: email;
+  name: adminUserName;
+}
+
+model RegisterStartResponse {
+  authCeremonyId: authCeremonyId;
+  publicKey: webAuthnPublicKeyOptions;
+}
+
+model RegisterFinishRequest {
+  authCeremonyId: authCeremonyId;
+  token: registrationToken;
+  credential: webAuthnCredential;
+}
+
+model RegisterFinishResponse {
   accessToken: accessToken;
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;

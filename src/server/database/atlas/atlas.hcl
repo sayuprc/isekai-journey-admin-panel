@@ -4,6 +4,7 @@ variable "table_schemas" {
     "file://schemas/schema.my.hcl",
     "file://schemas/admin-users.my.hcl",
     "file://schemas/admin-user-permissions.my.hcl",
+    "file://schemas/admin-user-passkeys.my.hcl",
     "file://schemas/persons.my.hcl",
     "file://schemas/songs.my.hcl",
     "file://schemas/media.my.hcl",
@@ -14,6 +15,8 @@ variable "table_schemas" {
     "file://schemas/releases.my.hcl",
     "file://schemas/release-track-entries.my.hcl",
     "file://schemas/refresh-tokens.my.hcl",
+    "file://schemas/admin-user-registration-tokens.my.hcl",
+    "file://schemas/admin-user-registration-token-permissions.my.hcl",
     "file://schemas/audit-logs.my.hcl",
   ]
 }

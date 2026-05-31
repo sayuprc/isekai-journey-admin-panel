@@ -6,7 +6,6 @@ namespace Tests;
 
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\HashedPassword;
 use AdminUser\Domain\Models\Role;
 use Auth\Domain\Models\AuthContext;
 use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
@@ -55,7 +54,7 @@ abstract class TestCase extends BaseTestCase
             $repository = $this->app->make(AdminUserRepositoryInterface::class);
 
             if (is_null($repository->find($user->adminUserId))) {
-                $repository->register($user, HashedPassword::reconstruct('hashed-password'));
+                $repository->register($user);
             }
         }
 

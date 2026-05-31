@@ -6,7 +6,6 @@ namespace Tests\Support\Domain;
 
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
-use AdminUser\Domain\Models\HashedPassword;
 use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Media\Domain\Models\Media;
@@ -56,7 +55,7 @@ trait EntityStore
     {
         $repository = $this->makeRepository(AdminUserRepositoryInterface::class);
         array_map(
-            fn (AdminUser $item) => $repository->register($item, HashedPassword::reconstruct('hashed-password')),
+            fn (AdminUser $item) => $repository->register($item),
             $items,
         );
     }

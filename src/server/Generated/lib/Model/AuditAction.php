@@ -49,6 +49,8 @@ enum AuditAction: string
 
     case DELETE = 'delete';
 
+    case REGISTER = 'register';
+
     case LOGIN = 'login';
 
     case REFRESH = 'refresh';
