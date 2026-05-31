@@ -17,7 +17,7 @@ readonly class RandomRecoveryCodeGenerator implements RandomRecoveryCodeGenerato
 
     private const int GROUP_COUNT = 2;
 
-    public function __construct(private Randomizer $randomizer = new Randomizer())
+    public function __construct(private Randomizer $randomizer)
     {
     }
 

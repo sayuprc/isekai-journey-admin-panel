@@ -20,7 +20,7 @@ class RandomRecoveryCodeGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->generator = new RandomRecoveryCodeGenerator();
+        $this->generator = new RandomRecoveryCodeGenerator(new Randomizer());
     }
 
     #[Test]
