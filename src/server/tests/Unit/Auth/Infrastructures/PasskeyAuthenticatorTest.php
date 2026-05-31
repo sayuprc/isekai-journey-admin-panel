@@ -25,7 +25,7 @@ class PasskeyAuthenticatorTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
-        $this->authenticator()->startAuthentication([]);
+        $this->authenticator()->startAuthentication();
     }
 
     #[Test]
@@ -46,7 +46,7 @@ class PasskeyAuthenticatorTest extends TestCase
             'auth.passkey.rp_id' => 'admin.example.com',
         ]);
 
-        $result = $this->authenticator()->startAuthentication([]);
+        $result = $this->authenticator()->startAuthentication();
 
         $this->assertInstanceOf(PasskeyStartResult::class, $result);
     }

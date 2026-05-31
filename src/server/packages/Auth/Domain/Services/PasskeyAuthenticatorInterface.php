@@ -24,9 +24,10 @@ interface PasskeyAuthenticatorInterface
     public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult;
 
     /**
-     * @param list<AdminUserPasskey> $passkeys
+     * ユーザー列挙を防ぐため allowCredentials は含めない (discoverable credential を利用)。
+     * 入力メールの実在有無に依らず同一形状のオプションを返す。
      */
-    public function startAuthentication(array $passkeys): PasskeyStartResult;
+    public function startAuthentication(): PasskeyStartResult;
 
     /**
      * @param array<string, mixed> $credential

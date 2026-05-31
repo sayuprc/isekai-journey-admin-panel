@@ -136,23 +136,20 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         );
     }
 
-    /**
-     * @param list<AdminUserPasskey> $passkeys
-     */
     #[Override]
-    public function startAuthentication(array $passkeys): PasskeyStartResult
+    public function startAuthentication(): PasskeyStartResult
     {
         // origin 設定の不備をセレモニー開始時点で fail-fast する (finish 側は例外が握り潰されるため)
         $this->host();
 
-        $descriptors = array_map($this->toDescriptor(...), $passkeys);
-
         $timeout = config('auth.passkey.timeout_ms');
 
+        // ユーザー列挙を防ぐため allowCredentials は空にする。登録時に residentKey を
+        // 必須にしているため、discoverable credential でログインが成立する。
         $options = PublicKeyCredentialRequestOptions::create(
             random_bytes(32),
             config()->string('auth.passkey.rp_id'),
-            $descriptors,
+            [],
             PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_REQUIRED,
             is_int($timeout) && $timeout > 0 ? $timeout : 60000,
         );
