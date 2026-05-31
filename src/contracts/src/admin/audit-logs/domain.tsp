@@ -13,6 +13,7 @@ enum AuditAction {
   register: "register",
   login: "login",
   refresh: "refresh",
+  recoveryCodeIssue: "recovery_code_issue",
 }
 
 @doc("監査ログの対象種別")

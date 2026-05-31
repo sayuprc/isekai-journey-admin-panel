@@ -55,6 +55,8 @@ enum AuditAction: string
 
     case REFRESH = 'refresh';
 
+    case RECOVERY_CODE_ISSUE = 'recovery_code_issue';
+
 }
 
 
