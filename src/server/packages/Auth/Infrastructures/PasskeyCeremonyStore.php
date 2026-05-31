@@ -6,6 +6,7 @@ namespace Auth\Infrastructures;
 
 use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
+use Auth\Domain\Services\PasskeyConfig;
 use Illuminate\Cache\Repository;
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -13,20 +14,21 @@ use Override;
 
 readonly class PasskeyCeremonyStore implements PasskeyCeremonyStoreInterface
 {
-    public function __construct(private CacheFactory $cache)
-    {
+    public function __construct(
+        private CacheFactory $cache,
+        private PasskeyConfig $config,
+    ) {
     }
 
     #[Override]
     public function put(PasskeyCeremonyState $state): void
     {
-        $ttl = config()->integer('auth.passkey.ceremony_ttl_seconds', 300);
         $store = $this->store();
 
         $store->put(
             $this->key($state->authCeremonyId),
             $state->toArray(),
-            $ttl,
+            $this->config->ceremonyTtlSeconds,
         );
     }
 
@@ -75,7 +77,7 @@ readonly class PasskeyCeremonyStore implements PasskeyCeremonyStoreInterface
 
     private function store(): Repository
     {
-        $store = $this->cache->store(config()->string('auth.passkey.ceremony_cache_store'));
+        $store = $this->cache->store($this->config->ceremonyCacheStore);
         assert($store instanceof Repository);
 
         return $store;
