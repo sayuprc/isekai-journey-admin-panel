@@ -11,6 +11,7 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyConfig;
 use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use Auth\Domain\Services\Token\AccessToken\JwtConfig;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
@@ -58,6 +59,18 @@ class AuthServiceProvider extends ServiceProvider
                 config()->string('auth.jwt.alg'),
                 config()->string('auth.jwt.key'),
                 config()->string('app.url'),
+            ),
+        );
+
+        $this->app->bind(
+            PasskeyConfig::class,
+            fn (): PasskeyConfig => new PasskeyConfig(
+                config()->string('auth.passkey.rp_name'),
+                config()->string('auth.passkey.rp_id'),
+                config()->string('auth.passkey.origin'),
+                config()->integer('auth.passkey.timeout_ms', 60000),
+                config()->integer('auth.passkey.ceremony_ttl_seconds', 300),
+                config()->string('auth.passkey.ceremony_cache_store'),
             ),
         );
     }

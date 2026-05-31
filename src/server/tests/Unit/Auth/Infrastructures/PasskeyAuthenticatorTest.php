@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Infrastructures;
 
+use Auth\Domain\Services\PasskeyConfig;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Infrastructures\PasskeyAuthenticator;
 use Auth\Infrastructures\PasskeyCredentialRecordConverter;
@@ -15,7 +16,8 @@ class PasskeyAuthenticatorTest extends TestCase
 {
     private function authenticator(): PasskeyAuthenticator
     {
-        return new PasskeyAuthenticator(new PasskeyCredentialRecordConverter());
+        // config() の上書きを反映するため、設定後に毎回コンテナから解決する
+        return new PasskeyAuthenticator(new PasskeyCredentialRecordConverter(), $this->app->make(PasskeyConfig::class));
     }
 
     #[Test]

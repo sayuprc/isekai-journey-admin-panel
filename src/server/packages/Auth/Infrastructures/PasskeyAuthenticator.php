@@ -7,6 +7,7 @@ namespace Auth\Infrastructures;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
+use Auth\Domain\Services\PasskeyConfig;
 use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
 use Cose\Algorithms;
@@ -39,8 +40,10 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
 {
     private DenormalizerInterface&NormalizerInterface&Serializer $serializer;
 
-    public function __construct(private PasskeyCredentialRecordConverter $credentialRecordConverter)
-    {
+    public function __construct(
+        private PasskeyCredentialRecordConverter $credentialRecordConverter,
+        private PasskeyConfig $config,
+    ) {
         $serializer = new WebauthnSerializerFactory(AttestationStatementSupportManager::create())->create();
         assert($serializer instanceof Serializer);
         $this->serializer = $serializer;
@@ -63,12 +66,10 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             fn (AdminUserPasskey $passkey): PublicKeyCredentialDescriptor => $this->toDescriptor($passkey),
             $excludePasskeys,
         );
-        $timeout = config('auth.passkey.timeout_ms');
-
         $options = PublicKeyCredentialCreationOptions::create(
             PublicKeyCredentialRpEntity::create(
-                config()->string('auth.passkey.rp_name'),
-                config()->string('auth.passkey.rp_id'),
+                $this->config->rpName,
+                $this->config->rpId,
             ),
             PublicKeyCredentialUserEntity::create($userName, $userHandle, $displayName),
             random_bytes(32),
@@ -82,7 +83,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
             ),
             PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
             $excludeCredentials,
-            is_int($timeout) && $timeout > 0 ? $timeout : 60000,
+            $this->timeoutMs(),
         );
 
         /** @var array<string, mixed> $publicKey */
@@ -115,7 +116,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         );
 
         $factory = new CeremonyStepManagerFactory();
-        $factory->setAllowedOrigins([config()->string('auth.passkey.origin')]);
+        $factory->setAllowedOrigins([$this->config->origin]);
 
         $credentialRecord = AuthenticatorAttestationResponseValidator::create($factory->creationCeremony())
             ->check($response, $options, $this->host());
@@ -142,16 +143,14 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         // origin 設定の不備をセレモニー開始時点で fail-fast する (finish 側は例外が握り潰されるため)
         $this->host();
 
-        $timeout = config('auth.passkey.timeout_ms');
-
         // ユーザー列挙を防ぐため allowCredentials は空にする。登録時に residentKey を
         // 必須にしているため、discoverable credential でログインが成立する。
         $options = PublicKeyCredentialRequestOptions::create(
             random_bytes(32),
-            config()->string('auth.passkey.rp_id'),
+            $this->config->rpId,
             [],
             PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_REQUIRED,
-            is_int($timeout) && $timeout > 0 ? $timeout : 60000,
+            $this->timeoutMs(),
         );
 
         /** @var array<string, mixed> $publicKey */
@@ -213,7 +212,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         );
 
         $factory = new CeremonyStepManagerFactory();
-        $factory->setAllowedOrigins([config()->string('auth.passkey.origin')]);
+        $factory->setAllowedOrigins([$this->config->origin]);
 
         $credentialRecord = AuthenticatorAssertionResponseValidator::create($factory->requestCeremony())
             ->check(
@@ -252,13 +251,20 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         );
     }
 
+    /**
+     * @return int<1, max>
+     */
+    private function timeoutMs(): int
+    {
+        return $this->config->timeoutMs > 0 ? $this->config->timeoutMs : 60000;
+    }
+
     private function host(): string
     {
-        $origin = config()->string('auth.passkey.origin');
-        $host = parse_url($origin, PHP_URL_HOST);
+        $host = parse_url($this->config->origin, PHP_URL_HOST);
 
         if (! is_string($host) || $host === '') {
-            throw new RuntimeException(sprintf('auth.passkey.origin からホストを取得できません: [%s]', $origin));
+            throw new RuntimeException(sprintf('auth.passkey.origin からホストを取得できません: [%s]', $this->config->origin));
         }
 
         return $host;
