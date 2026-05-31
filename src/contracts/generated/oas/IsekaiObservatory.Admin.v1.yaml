@@ -1794,6 +1794,7 @@ components:
         - login
         - refresh
         - recovery_code_issue
+        - recovery_code_use
       description: 監査ログの操作種別
     AuditLog:
       type: object

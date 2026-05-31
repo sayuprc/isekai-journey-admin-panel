@@ -16,6 +16,7 @@ const AuditActionSchema = t.Union([
   t.Literal('login'),
   t.Literal('refresh'),
   t.Literal('recovery_code_issue'),
+  t.Literal('recovery_code_use'),
 ]);
 
 const AuditTargetTypeSchema = t.Union([
