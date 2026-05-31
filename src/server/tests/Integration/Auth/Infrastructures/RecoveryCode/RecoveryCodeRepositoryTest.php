@@ -48,17 +48,118 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
             $this->buildCode($this->generateUuid(), 'hashed-2', ConsumptionStatus::Unused, null),
         ];
 
-        $this->getInstance()->saveMany($codes);
+        $repository = $this->getInstance();
+        $repository->saveMany($codes);
 
-        $this->assertSame(2, ModelsRecoveryCode::query()->count());
+        $found = $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId);
+
+        $this->assertCount(2, $found);
     }
 
     #[Test]
-    public function saveManyDoesNothingForEmptyArray(): void
+    public function findUnusedByAdminUserIdForUpdateReturnsOnlyUnusedCodes(): void
     {
-        $this->getInstance()->saveMany([]);
+        $repository = $this->getInstance();
+        $repository->saveMany([
+            $this->buildCode($this->generateUuid(), 'hashed-unused', ConsumptionStatus::Unused, null),
+            $this->buildCode($this->generateUuid(), 'hashed-consumed', ConsumptionStatus::Consumed, now()->toDateTimeImmutable()),
+        ]);
 
-        $this->assertSame(0, ModelsRecoveryCode::query()->count());
+        $found = $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId);
+
+        $this->assertCount(1, $found);
+        $this->assertSame('hashed-unused', $found[0]->code->value);
+    }
+
+    #[Test]
+    public function findUnusedByAdminUserIdForUpdateReturnsEmptyWhenNoCodes(): void
+    {
+        $found = $this->getInstance()->findUnusedByAdminUserIdForUpdate($this->adminUserId);
+
+        $this->assertSame([], $found);
+    }
+
+    #[Test]
+    public function findUnusedByIdForUpdateReturnsMatchingUnusedCode(): void
+    {
+        $repository = $this->getInstance();
+        $targetId = $this->generateUuid();
+        $repository->saveMany([
+            $this->buildCode($targetId, 'hashed-target', ConsumptionStatus::Unused, null),
+            $this->buildCode($this->generateUuid(), 'hashed-other', ConsumptionStatus::Unused, null),
+        ]);
+
+        $found = $repository->findUnusedByIdForUpdate(RecoveryCodeId::reconstruct($targetId), $this->adminUserId);
+
+        $this->assertNotNull($found);
+        $this->assertSame('hashed-target', $found->code->value);
+    }
+
+    #[Test]
+    public function findUnusedByIdForUpdateReturnsNullForConsumedCode(): void
+    {
+        $repository = $this->getInstance();
+        $consumedId = $this->generateUuid();
+        $repository->saveMany([
+            $this->buildCode($consumedId, 'hashed-consumed', ConsumptionStatus::Consumed, now()->toDateTimeImmutable()),
+        ]);
+
+        $found = $repository->findUnusedByIdForUpdate(RecoveryCodeId::reconstruct($consumedId), $this->adminUserId);
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
+    public function findUnusedByIdForUpdateReturnsNullForUnknownId(): void
+    {
+        $found = $this->getInstance()->findUnusedByIdForUpdate(
+            RecoveryCodeId::reconstruct($this->generateUuid()),
+            $this->adminUserId,
+        );
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
+    public function findUnusedByIdForUpdateReturnsNullForOtherAdminUser(): void
+    {
+        $repository = $this->getInstance();
+        $targetId = $this->generateUuid();
+        $repository->saveMany([
+            $this->buildCode($targetId, 'hashed-target', ConsumptionStatus::Unused, null),
+        ]);
+
+        $otherAdminUser = $this->createAdminUser($this->generateUuid(), 'other@example.com', Role::General, [], new DateTimeImmutable());
+        $this->app->make(AdminUserRepository::class)->register($otherAdminUser);
+
+        $found = $repository->findUnusedByIdForUpdate(
+            RecoveryCodeId::reconstruct($targetId),
+            $otherAdminUser->adminUserId,
+        );
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
+    public function saveUpdatesStatusAndUsedAt(): void
+    {
+        $repository = $this->getInstance();
+        $code = $this->buildCode($this->generateUuid(), 'hashed-1', ConsumptionStatus::Unused, null);
+        $repository->saveMany([$code]);
+
+        $usedAt = now()->toDateTimeImmutable();
+        $repository->save($code->consume($usedAt));
+
+        $this->assertSame([], $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId));
+
+        $converter = $this->app->make(UuidConverterInterface::class);
+        $stored = ModelsRecoveryCode::query()
+            ->where('admin_user_recovery_code_id', $converter->toBin($code->recoveryCodeId->value))
+            ->first();
+
+        $this->assertNotNull($stored);
+        $this->assertSame(ConsumptionStatus::Consumed->value, $stored->status);
+        $this->assertSame($usedAt->format('Y-m-d H:i:s'), $stored->used_at?->format('Y-m-d H:i:s'));
     }
 
     #[Test]
@@ -72,39 +173,15 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
 
         $repository->deleteByAdminUserId($this->adminUserId);
 
+        $this->assertSame([], $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId));
         $this->assertSame(0, ModelsRecoveryCode::query()->count());
     }
 
-    #[Test]
-    public function deleteByAdminUserIdRemovesOnlyTargetAdminUserCodes(): void
-    {
-        $otherAdminUser = $this->createAdminUser($this->generateUuid(), 'other@example.com', Role::General, [], new DateTimeImmutable());
-        $this->app->make(AdminUserRepository::class)->register($otherAdminUser);
-
-        $repository = $this->getInstance();
-        $repository->saveMany([
-            $this->buildCode($this->generateUuid(), 'hashed-1', ConsumptionStatus::Unused, null),
-        ]);
-        $repository->saveMany([
-            $this->buildCode($this->generateUuid(), 'hashed-other', ConsumptionStatus::Unused, null, $otherAdminUser->adminUserId),
-        ]);
-
-        $repository->deleteByAdminUserId($this->adminUserId);
-
-        $converter = $this->app->make(UuidConverterInterface::class);
-        $remaining = ModelsRecoveryCode::query()
-            ->where('admin_user_id', $converter->toBin($otherAdminUser->adminUserId->value))
-            ->count();
-
-        $this->assertSame(1, ModelsRecoveryCode::query()->count());
-        $this->assertSame(1, $remaining);
-    }
-
-    private function buildCode(string $recoveryCodeId, string $hashedCode, ConsumptionStatus $status, ?DateTimeImmutable $usedAt, ?AdminUserId $adminUserId = null): RecoveryCode
+    private function buildCode(string $recoveryCodeId, string $hashedCode, ConsumptionStatus $status, ?DateTimeImmutable $usedAt): RecoveryCode
     {
         return new RecoveryCode(
             RecoveryCodeId::reconstruct($recoveryCodeId),
-            $adminUserId ?? $this->adminUserId,
+            $this->adminUserId,
             HashedCodeValue::reconstruct($hashedCode),
             $status,
             $usedAt,

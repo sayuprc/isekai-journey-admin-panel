@@ -57,6 +57,8 @@ enum AuditAction: string
 
     case RECOVERY_CODE_ISSUE = 'recovery_code_issue';
 
+    case RECOVERY_CODE_USE = 'recovery_code_use';
+
 }
 
 

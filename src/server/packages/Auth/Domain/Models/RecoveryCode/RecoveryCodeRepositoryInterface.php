@@ -13,5 +13,14 @@ interface RecoveryCodeRepositoryInterface
      */
     public function saveMany(array $codes): void;
 
+    /**
+     * @return list<RecoveryCode>
+     */
+    public function findUnusedByAdminUserIdForUpdate(AdminUserId $adminUserId): array;
+
+    public function findUnusedByIdForUpdate(RecoveryCodeId $recoveryCodeId, AdminUserId $adminUserId): ?RecoveryCode;
+
+    public function save(RecoveryCode $code): RecoveryCode;
+
     public function deleteByAdminUserId(AdminUserId $adminUserId): void;
 }

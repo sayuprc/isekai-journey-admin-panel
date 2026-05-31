@@ -3,10 +3,12 @@ import { Elysia, t } from 'elysia';
 import {
   authenticateServiceLoginFinish,
   authenticateServiceLoginStart,
+  authenticateServiceRecoveryFinish,
+  authenticateServiceRecoveryStart,
   authenticateServiceRegisterFinish,
   authenticateServiceRegisterStart,
 } from '../../generated';
-import type { LoginFinishRequest, RegisterFinishRequest } from '../../generated';
+import type { LoginFinishRequest, RecoveryFinishRequest, RegisterFinishRequest } from '../../generated';
 import { client } from '../client';
 import { AUTH_RATE_LIMITS, SESSION_TTL_SECONDS } from '../constants';
 import { resolveApiResponse } from '../errors';
@@ -116,6 +118,45 @@ export const auth = new Elysia({ prefix: '/auth' })
       body: t.Object({
         authCeremonyId: t.String(),
         token: t.String(),
+        credential: webAuthnCredentialSchema,
+      }),
+    },
+  )
+  .post(
+    '/recovery/start',
+    async ({ body: { email, recoveryCode, name } }) => {
+      return resolveApiResponse(
+        await authenticateServiceRecoveryStart({ client: client, body: { email, recoveryCode, name } }),
+      );
+    },
+    {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'recovery/start', AUTH_RATE_LIMITS.recoveryStart),
+      body: t.Object({
+        email: t.String(),
+        recoveryCode: t.String(),
+        name: t.String(),
+      }),
+    },
+  )
+  .post(
+    '/recovery/finish',
+    async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
+      const body = { authCeremonyId, credential } satisfies RecoveryFinishRequest;
+      const data = resolveApiResponse(
+        await authenticateServiceRecoveryFinish({ client: client, body: body }),
+      );
+
+      const sessionId = generateRandomBytes();
+      const csrfToken = generateRandomBytes();
+
+      await storeSessionCredential(sessionId, { ...data, csrfToken });
+
+      await setAuthCookies(session, csrf, sessionId, csrfToken);
+    },
+    {
+      beforeHandle: ({ request }) => enforceAuthRateLimit(request, 'recovery/finish', AUTH_RATE_LIMITS.recoveryFinish),
+      body: t.Object({
+        authCeremonyId: t.String(),
         credential: webAuthnCredentialSchema,
       }),
     },

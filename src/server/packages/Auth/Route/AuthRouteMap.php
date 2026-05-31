@@ -16,5 +16,9 @@ enum AuthRouteMap: string
 
     case RegisterFinish = 'register.finish';
 
+    case RecoveryStart = 'recovery.start';
+
+    case RecoveryFinish = 'recovery.finish';
+
     case GenerateRecoveryCodes = 'recovery-codes.generate';
 }
