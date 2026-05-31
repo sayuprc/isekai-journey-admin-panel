@@ -21,4 +21,6 @@ export const AUTH_RATE_LIMITS = {
   loginFinish: { limit: 20, windowSeconds: 60 },
   registerStart: { limit: 10, windowSeconds: 60 },
   registerFinish: { limit: 10, windowSeconds: 60 },
+  recoveryStart: { limit: 10, windowSeconds: 60 },
+  recoveryFinish: { limit: 10, windowSeconds: 60 },
 } as const;

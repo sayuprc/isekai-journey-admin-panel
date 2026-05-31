@@ -150,6 +150,7 @@ const navSections: NavSection[] = [
     title: '管理',
     items: [
       { href: '/admin-users', label: '管理ユーザー', icon: ShieldIcon },
+      { href: '/recovery-codes', label: 'リカバリーコード', icon: ShieldIcon },
       { href: '/audit-logs', label: '監査ログ', icon: ShieldIcon },
     ],
   },

@@ -17,4 +17,8 @@ enum AuditAction: string
     case Login = 'login';
 
     case Refresh = 'refresh';
+
+    case RecoveryCodeIssue = 'recovery_code_issue';
+
+    case RecoveryCodeUse = 'recovery_code_use';
 }

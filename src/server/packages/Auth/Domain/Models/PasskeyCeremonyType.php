@@ -9,4 +9,6 @@ enum PasskeyCeremonyType: string
     case Login = 'login';
 
     case Register = 'register';
+
+    case Recovery = 'recovery';
 }
