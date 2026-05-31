@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Providers\Domain;
 
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
-use Auth\Domain\Models\AuthAdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\Token\AccessToken\AccessTokenFactoryInterface;
@@ -18,8 +17,6 @@ use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
 use Auth\Domain\Services\Token\RefreshToken\RandomTokenGeneratorInterface;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Auth\Infrastructures\AdminUserPasskeyRepository;
-use Auth\Infrastructures\Auth\AuthAdminUserRepository;
-use Auth\Infrastructures\Auth\AuthUserProvider;
 use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use Auth\Infrastructures\PasskeyAuthenticator;
 use Auth\Infrastructures\PasskeyCeremonyStore;
@@ -29,7 +26,6 @@ use Auth\Infrastructures\Token\AccessToken\JwtHandler;
 use Auth\Infrastructures\Token\RefreshToken\RandomTokenGenerator;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Infrastructures\Token\RefreshToken\TokenHasher;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Support\UseCase\Authorizer\AuthorizationContextInterface;
@@ -44,7 +40,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(RandomTokenGeneratorInterface::class, RandomTokenGenerator::class);
         $this->app->bind(TokenHasherInterface::class, TokenHasher::class);
         $this->app->bind(RefreshTokenRepositoryInterface::class, RefreshTokenRepository::class);
-        $this->app->bind(AuthAdminUserRepositoryInterface::class, AuthAdminUserRepository::class);
         $this->app->bind(AdminUserPasskeyRepositoryInterface::class, AdminUserPasskeyRepository::class);
         $this->app->bind(PasskeyAuthenticatorInterface::class, PasskeyAuthenticator::class);
         $this->app->bind(PasskeyUserHandleGeneratorInterface::class, RandomPasskeyUserHandleGenerator::class);
@@ -73,10 +68,5 @@ class AuthServiceProvider extends ServiceProvider
                 config()->string('auth.passkey.ceremony_cache_store'),
             ),
         );
-    }
-
-    public function boot(): void
-    {
-        Auth::provider('custom', fn () => $this->app->make(AuthUserProvider::class));
     }
 }
