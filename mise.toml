@@ -5,6 +5,7 @@ lefthook = "2.1.4"
 mago = "1.14.1"
 mkcert = "1.4.4"
 pinact = "3.9.0"
+pnpm = "11.5.0"
 
 [vars]
 server_tag = "8.5"
@@ -36,7 +37,7 @@ run = [
   { task = "cert:make" },
   { task = "cert:copy-pem" },
   { task = "build" },
-  { tasks = ["api:composer:install", "bun:install"] },
+  { tasks = ["api:composer:install", "pnpm:install"] },
   { task = "up" },
   "lefthook install",
 ]
@@ -103,10 +104,10 @@ caroot_pem=$(mkcert -CAROOT)/rootCA.pem
 cp ${caroot_pem} docker/php/certs/
 '''
 
-[tasks."bun:install"]
-description = "bun のパッケージをインストールする"
+[tasks."pnpm:install"]
+description = "pnpm のパッケージをインストールする"
 dir = "src"
-run = "bun install"
+run = "pnpm install --frozen-lockfile"
 
 # -- worktree --
 
@@ -116,7 +117,7 @@ run = '''
 ./tools/worktree/init.sh
 mise run up
 mise run api:composer:install
-mise run bun:install
+mise run pnpm:install
 '''
 
 [tasks."worktree:status"]

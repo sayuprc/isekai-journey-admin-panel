@@ -13,3 +13,4 @@
 | ADR-0007 | accepted | BFF の実装に Astro と Elysia.js を採用する | [admin, client] |
 | ADR-0008 | accepted | タスクランナー・環境変数・ツール管理に mise を採用する | [api, admin, client] |
 | ADR-0009 | accepted | 開発環境に Docker を採用する | [api, admin, client] |
+| ADR-0010 | accepted | パッケージ管理に pnpm を採用する | [api, admin, client] |

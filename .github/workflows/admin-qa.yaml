@@ -37,7 +37,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+        run: mise run pnpm:install
 
       - name: Check generate code has diff
         run: mise run admin:generate
@@ -67,7 +67,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+        run: mise run pnpm:install
 
       - name: Run ESLint
         run: mise run admin:lint
@@ -97,7 +97,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+        run: mise run pnpm:install
 
       - name: Run Stylelint
         run: mise run admin:style

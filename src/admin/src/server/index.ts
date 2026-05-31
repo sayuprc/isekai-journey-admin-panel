@@ -11,7 +11,7 @@ import { songTags } from './routes/song-tags';
 import { songTypes } from './routes/song-types';
 import { songs } from './routes/songs';
 
-export const app = new Elysia({ prefix: '/api' })
+export const app = new Elysia({ prefix: '/api', normalize: 'typebox' })
   .onError(({ error, set }) => {
     if (error instanceof ApiError) {
       set.status = error.status;
