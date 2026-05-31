@@ -126,7 +126,7 @@ class RegisterStartTest extends DatabaseTestCase
                 throw new RuntimeException('unused');
             }
 
-            public function startAuthentication(array $passkeys): PasskeyStartResult
+            public function startAuthentication(): PasskeyStartResult
             {
                 throw new RuntimeException('unused');
             }

@@ -19,7 +19,6 @@ use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -45,27 +44,28 @@ readonly class LoginStartUseCase
             return new Err($this->handleError($emailResult->unwrapErr()));
         }
 
-        $adminUser = $this->adminUserRepository->findByEmail($emailResult->unwrap());
+        $email = $emailResult->unwrap();
+        $adminUser = $this->adminUserRepository->findByEmail($email);
+        $passkeys = is_null($adminUser)
+            ? []
+            : $this->passkeyRepository->findByAdminUserId($adminUser->adminUserId->value);
 
-        if (is_null($adminUser)) {
-            return new Err(new AuthenticationError());
-        }
-
-        $passkeys = $this->passkeyRepository->findByAdminUserId($adminUser->adminUserId->value);
-
-        if ($passkeys === []) {
-            return new Err(new AuthenticationError());
-        }
+        // ユーザー列挙を防ぐため、メールの実在やパスキー登録の有無に依らず常に同一形状の
+        // ceremony を返す。実在ユーザーのみ本物の adminUserId を束縛し、それ以外はダミーの
+        // adminUserId にすることで finish 時に必ず認証失敗となる (応答は区別できない)。
+        $adminUserId = is_null($adminUser) || $passkeys === []
+            ? $this->uuidGenerator->generate()
+            : $adminUser->adminUserId->value;
 
         $authCeremonyId = $this->uuidGenerator->generate();
-        $startResult = $this->passkeyAuthenticator->startAuthentication($passkeys);
+        $startResult = $this->passkeyAuthenticator->startAuthentication();
 
         $this->ceremonyStore->put(new PasskeyCeremonyState(
             $authCeremonyId,
             PasskeyCeremonyType::Login,
-            $adminUser->email->value,
+            $email->value,
             null,
-            $adminUser->adminUserId->value,
+            $adminUserId,
             $startResult->optionsJson,
         ));
 

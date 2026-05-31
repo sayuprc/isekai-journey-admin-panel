@@ -56,8 +56,7 @@ class LoginTest extends DatabaseTestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
                     ->where('publicKey.challenge', 'login-challenge')
-                    ->where('publicKey.allowCredentials.0.id', 'credential-id')
-                    ->where('publicKey.allowCredentials.0.transports', ['internal'])
+                    ->where('publicKey.allowCredentials', [])
                     ->etc(),
             );
 
@@ -66,20 +65,28 @@ class LoginTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function startFailsWithUnknownEmail(): void
+    public function startReturnsUniformCeremonyForUnknownEmail(): void
     {
+        // ユーザー列挙を防ぐため、未登録メールでも登録済みと同一形状の 200 を返す
         $this->bindPasskeyAuthenticator();
 
         $this->postJson(route(AuthRouteMap::LoginStart), [
             'email' => 'unknown@example.com',
-        ])->assertStatus(401);
+        ])->assertStatus(200)
+            ->assertJson(
+                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                    ->where('publicKey.challenge', 'login-challenge')
+                    ->where('publicKey.allowCredentials', [])
+                    ->etc(),
+            );
 
         $this->assertSame(0, AuthRefreshToken::query()->count());
     }
 
     #[Test]
-    public function startFailsWhenUserHasNoPasskey(): void
+    public function startReturnsUniformCeremonyWhenUserHasNoPasskey(): void
     {
+        // 登録済みでもパスキー未登録なら、未登録メールと区別できない 200 を返す
         $this->bindPasskeyAuthenticator();
         $this->app->make(AdminUserRepository::class)->register(
             $this->createAdminUser($this->generateUuid(), 'example@example.com'),
@@ -87,7 +94,13 @@ class LoginTest extends DatabaseTestCase
 
         $this->postJson(route(AuthRouteMap::LoginStart), [
             'email' => 'example@example.com',
-        ])->assertStatus(401);
+        ])->assertStatus(200)
+            ->assertJson(
+                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                    ->where('publicKey.challenge', 'login-challenge')
+                    ->where('publicKey.allowCredentials', [])
+                    ->etc(),
+            );
 
         $this->assertSame(0, AuthRefreshToken::query()->count());
     }
@@ -103,7 +116,7 @@ class LoginTest extends DatabaseTestCase
         foreach (range(1, 2) as $ignored) {
             $this->postJson(route(AuthRouteMap::LoginStart), [
                 'email' => 'throttle@example.com',
-            ])->assertStatus(401);
+            ])->assertStatus(200);
         }
 
         $this->postJson(route(AuthRouteMap::LoginStart), [
@@ -146,6 +159,23 @@ class LoginTest extends DatabaseTestCase
         $this->assertIsArray($snapshot);
         $this->assertArrayHasKey('refresh_token_id', $snapshot);
         $this->assertArrayHasKey('admin_user_passkey_id', $snapshot);
+    }
+
+    #[Test]
+    public function finishFailsForUnknownEmailCeremonyWithoutAuthenticating(): void
+    {
+        // ダミー ceremony では認証できない (列挙対策が認証バイパスを生まないこと)
+        $this->bindPasskeyAuthenticator();
+
+        $authCeremonyId = $this->startLogin('unknown@example.com');
+
+        $this->postJson(route(AuthRouteMap::LoginFinish), [
+            'authCeremonyId' => $authCeremonyId,
+            'credential' => ['id' => 'credential-id'],
+        ])->assertStatus(401);
+
+        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertAuditLogCount(0);
     }
 
     #[Test]
@@ -299,15 +329,11 @@ class LoginTest extends DatabaseTestCase
                 throw new RuntimeException('unused');
             }
 
-            public function startAuthentication(array $passkeys): PasskeyStartResult
+            public function startAuthentication(): PasskeyStartResult
             {
-                /** @var list<AdminUserPasskey> $passkeys */
                 return new PasskeyStartResult('{"challenge":"login-challenge"}', [
                     'challenge' => 'login-challenge',
-                    'allowCredentials' => array_map(
-                        fn (AdminUserPasskey $passkey): array => ['type' => 'public-key', 'id' => $passkey->credentialId, 'transports' => $passkey->transports],
-                        $passkeys,
-                    ),
+                    'allowCredentials' => [],
                 ]);
             }
 

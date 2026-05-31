@@ -166,7 +166,7 @@ class RegisterFinishTest extends DatabaseTestCase
                 return new PasskeyRegistrationResult('credential-id', 'public-key', 'user-handle', '00000000-0000-0000-0000-000000000000', ['internal'], true, false, 123);
             }
 
-            public function startAuthentication(array $passkeys): PasskeyStartResult
+            public function startAuthentication(): PasskeyStartResult
             {
                 throw new RuntimeException('unused');
             }
