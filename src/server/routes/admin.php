@@ -6,6 +6,7 @@ use AdminUser\Route\AdminUserRouteMap;
 use App\Http\Controllers\Api\Admin\V1\AdminUser\ListAdminUserController;
 use App\Http\Controllers\Api\Admin\V1\AuditLog\GetAuditLogController;
 use App\Http\Controllers\Api\Admin\V1\AuditLog\SearchAuditLogController;
+use App\Http\Controllers\Api\Admin\V1\Auth\GenerateRecoveryCodesController;
 use App\Http\Controllers\Api\Admin\V1\Auth\LoginFinishController;
 use App\Http\Controllers\Api\Admin\V1\Auth\LoginStartController;
 use App\Http\Controllers\Api\Admin\V1\Auth\RefreshController;
@@ -71,6 +72,10 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
             Route::middleware(Authenticate::class)->group(function () {
                 Route::prefix('admin-users')->group(function () {
                     Route::get('/', [ListAdminUserController::class, 'handle'])->name(AdminUserRouteMap::List);
+                });
+
+                Route::prefix('recovery-codes')->group(function () {
+                    Route::post('/', [GenerateRecoveryCodesController::class, 'handle'])->name(AuthRouteMap::GenerateRecoveryCodes);
                 });
 
                 Route::prefix('persons')->group(function () {

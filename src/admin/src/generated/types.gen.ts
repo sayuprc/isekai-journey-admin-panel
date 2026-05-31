@@ -72,6 +72,10 @@ export type ErrorResponse = {
     message: string;
 };
 
+export type GenerateRecoveryCodesResponse = {
+    recoveryCodes: Array<RecoveryCode>;
+};
+
 export type IsekaiObservatoryAdminVersion = 'v1';
 
 export type LoginFinishRequest = {
@@ -630,6 +634,11 @@ export type PersonId = string;
  * 人物名
  */
 export type PersonName = string;
+
+/**
+ * リカバリーコード(平文)
+ */
+export type RecoveryCode = string;
 
 /**
  * リフレッシュトークン
@@ -1592,6 +1601,41 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type RecoveryCodeServiceGenerateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/recovery-codes';
+};
+
+export type RecoveryCodeServiceGenerateErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type RecoveryCodeServiceGenerateResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: GenerateRecoveryCodesResponse;
+};
+
+export type RecoveryCodeServiceGenerateResponse = RecoveryCodeServiceGenerateResponses[keyof RecoveryCodeServiceGenerateResponses];
 
 export type ReleaseServiceCreateReleaseData = {
     body: ReleaseCreateRequest;
