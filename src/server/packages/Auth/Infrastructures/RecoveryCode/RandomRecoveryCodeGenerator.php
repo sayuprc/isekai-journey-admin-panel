@@ -6,6 +6,7 @@ namespace Auth\Infrastructures\RecoveryCode;
 
 use Auth\Domain\Services\RecoveryCode\RandomRecoveryCodeGeneratorInterface;
 use Override;
+use Random\Randomizer;
 
 readonly class RandomRecoveryCodeGenerator implements RandomRecoveryCodeGeneratorInterface
 {
@@ -16,21 +17,17 @@ readonly class RandomRecoveryCodeGenerator implements RandomRecoveryCodeGenerato
 
     private const int GROUP_COUNT = 2;
 
+    public function __construct(private Randomizer $randomizer = new Randomizer())
+    {
+    }
+
     #[Override]
     public function generate(): string
     {
-        $groups = [];
+        // Randomizer の既定エンジンは CSPRNG (Random\Engine\Secure)。
+        // getBytesFromString で文字集合から一様にサンプリングし、4 文字ごとにハイフン区切りにする。
+        $raw = $this->randomizer->getBytesFromString(self::ALPHABET, self::GROUP_LENGTH * self::GROUP_COUNT);
 
-        for ($g = 0; $g < self::GROUP_COUNT; $g++) {
-            $chars = '';
-
-            for ($i = 0; $i < self::GROUP_LENGTH; $i++) {
-                $chars .= self::ALPHABET[random_int(0, strlen(self::ALPHABET) - 1)];
-            }
-
-            $groups[] = $chars;
-        }
-
-        return implode('-', $groups);
+        return implode('-', str_split($raw, self::GROUP_LENGTH));
     }
 }
