@@ -1,0 +1,24 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import { RecoveryCodesPanel } from '../../components/recovery-code/RecoveryCodesPanel';
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../utils/client';
+
+export const prerender = false;
+
+const { status } = await client.api['admin-users'].get({
+  headers: {
+    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
+    'cookie': Astro.request.headers.get('cookie') ?? '',
+  },
+});
+
+if (status === 401) {
+  return Astro.redirect('/auth/login');
+}
+---
+
+<Layout pageTitle="リカバリーコード">
+  <FlashMessage client:only="solid-js" />
+  <RecoveryCodesPanel client:load />
+</Layout>

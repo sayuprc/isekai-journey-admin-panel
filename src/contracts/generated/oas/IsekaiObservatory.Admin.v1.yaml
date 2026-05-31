@@ -5,6 +5,7 @@ info:
 tags:
   - name: AdminUser
   - name: Authenticate
+  - name: RecoveryCode
   - name: AuditLog
   - name: Media
   - name: Person
@@ -855,6 +856,30 @@ paths:
         - Person
       security:
         - BearerAuth: []
+  /recovery-codes:
+    post:
+      operationId: RecoveryCodeService_generate
+      description: リカバリーコード発行/再生成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateRecoveryCodesResponse'
+        '401':
+          description: Access is unauthorized.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - RecoveryCode
+      security:
+        - BearerAuth: []
   /releases:
     post:
       operationId: ReleaseService_createRelease
@@ -1688,6 +1713,7 @@ components:
         - register
         - login
         - refresh
+        - recovery_code_issue
       description: 監査ログの操作種別
     AuditLog:
       type: object
@@ -1785,6 +1811,15 @@ components:
       properties:
         message:
           type: string
+    GenerateRecoveryCodesResponse:
+      type: object
+      required:
+        - recoveryCodes
+      properties:
+        recoveryCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/recoveryCode'
     IsekaiObservatory.Admin.Version:
       type: string
       enum:
@@ -2928,6 +2963,10 @@ components:
       type: string
       minLength: 1
       description: 人物名
+    recoveryCode:
+      type: string
+      format: password
+      description: リカバリーコード(平文)
     refreshToken:
       type: string
       format: password

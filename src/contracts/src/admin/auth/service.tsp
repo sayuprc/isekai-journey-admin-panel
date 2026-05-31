@@ -48,3 +48,12 @@ interface AuthenticateService {
     | Unprocessable
     | ServerError;
 }
+
+@tag("RecoveryCode")
+@route("/recovery-codes")
+@useAuth(BearerAuth)
+interface RecoveryCodeService {
+  @doc("リカバリーコード発行/再生成API")
+  @post
+  generate(): GenerateRecoveryCodesResponse | Unauthorized | ServerError;
+}

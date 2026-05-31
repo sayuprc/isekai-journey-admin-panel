@@ -58,3 +58,7 @@ model RegisterFinishResponse {
   refreshTokenId: refreshTokenId;
   refreshToken: refreshToken;
 }
+
+model GenerateRecoveryCodesResponse {
+  recoveryCodes: recoveryCode[];
+}

@@ -14,7 +14,7 @@ table "audit_logs" {
   }
   column "action" {
     null    = false
-    type    = varchar(16)
+    type    = varchar(64)
     comment = "操作種別"
   }
   column "target_type" {
