@@ -11,6 +11,8 @@ use Tests\TestCase;
 
 class RecoveryCodeHasherTest extends TestCase
 {
+    private const string PEPPER = 'test-pepper';
+
     private RecoveryCodeHasher $hasher;
 
     #[Override]
@@ -18,7 +20,7 @@ class RecoveryCodeHasherTest extends TestCase
     {
         parent::setUp();
 
-        $this->hasher = new RecoveryCodeHasher();
+        $this->hasher = new RecoveryCodeHasher(self::PEPPER);
     }
 
     #[Test]
@@ -29,7 +31,18 @@ class RecoveryCodeHasherTest extends TestCase
         $hashedCode = $this->hasher->hash($plainCode);
 
         $this->assertNotEquals($plainCode, $hashedCode);
-        $this->assertSame(hash('sha256', $plainCode), $hashedCode);
+        $this->assertSame(hash_hmac('sha256', $plainCode, self::PEPPER), $hashedCode);
+    }
+
+    #[Test]
+    public function hashDiffersByPepper(): void
+    {
+        $plainCode = 'A3KP-9QXR';
+
+        $this->assertNotSame(
+            $this->hasher->hash($plainCode),
+            new RecoveryCodeHasher('another-pepper')->hash($plainCode),
+        );
     }
 
     #[Test]
