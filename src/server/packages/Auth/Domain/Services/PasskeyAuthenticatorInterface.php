@@ -24,8 +24,9 @@ interface PasskeyAuthenticatorInterface
     public function finishRegistration(array $credential, string $optionsJson): PasskeyRegistrationResult;
 
     /**
-     * ユーザー列挙を防ぐため allowCredentials は含めない (discoverable credential を利用)。
-     * 入力メールの実在有無に依らず同一形状のオプションを返す。
+     * ユーザー列挙を防ぐため allowCredentials は空配列で返し資格情報を列挙しない
+     * (discoverable credential を利用)。入力メールの実在有無に依らず同一形状の
+     * オプションを返す。
      */
     public function startAuthentication(): PasskeyStartResult;
 
