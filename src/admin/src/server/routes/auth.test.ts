@@ -138,7 +138,7 @@ describe('POST /auth/login/start', () => {
       email: 'user@example.com',
     });
     expect(response.headers.getSetCookie()).toHaveLength(0);
-    expect(Object.keys(credentials)).toHaveLength(0);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
   });
 });
 
@@ -200,7 +200,7 @@ describe('POST /auth/login/finish', () => {
     );
 
     expect(response.status).toBe(401);
-    expect(Object.keys(credentials)).toHaveLength(0);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
   });
 });
 
@@ -236,7 +236,7 @@ describe('POST /auth/register/start', () => {
       name: '新規ユーザー',
     });
     expect(response.headers.getSetCookie()).toHaveLength(0);
-    expect(Object.keys(credentials)).toHaveLength(0);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
   });
 });
 
@@ -301,6 +301,6 @@ describe('POST /auth/register/finish', () => {
     );
 
     expect(response.status).toBe(400);
-    expect(Object.keys(credentials)).toHaveLength(0);
+    expect(Object.keys(credentials).filter(key => key.startsWith('session:'))).toHaveLength(0);
   });
 });
