@@ -45,7 +45,6 @@
     "stylelint-config-html": "catalog:lint",
     "@stylistic/stylelint-plugin": "catalog:lint",
     "postcss-html": "catalog:lint",
-    "@biomejs/biome": "catalog:lint",
-    "@stoplight/prism-cli": "catalog:debug"
+    "@biomejs/biome": "catalog:lint"
   }
 }

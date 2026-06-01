@@ -24,8 +24,8 @@
     "astro": "catalog:astro",
     "@astrojs/solid-js": "catalog:astro",
     "solid-js": "catalog:astro",
-    "elysia": "1.4.25",
-    "@elysiajs/eden": "1.4.8",
+    "elysia": "1.4.28",
+    "@elysiajs/eden": "1.4.9",
     "tailwindcss": "catalog:ui",
     "@tailwindcss/vite": "catalog:ui",
     "daisyui": "catalog:ui",
@@ -50,8 +50,6 @@
     "stylelint-config-html": "catalog:lint",
     "@stylistic/stylelint-plugin": "catalog:lint",
     "postcss-html": "catalog:lint",
-    "@biomejs/biome": "catalog:lint",
-    "@stoplight/prism-cli": "catalog:debug",
-    "redis-commander": "0.9.0"
+    "@biomejs/biome": "catalog:lint"
   }
 }

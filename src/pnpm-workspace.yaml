@@ -36,10 +36,8 @@ catalogs:
     typescript-eslint: 8.59.4
     postcss-html: 1.8.1
   gen:
-    "@hey-api/openapi-ts": 0.97.2
+    "@hey-api/openapi-ts": 0.97.3
     typed-css-modules: 0.9.1
-  debug:
-    "@stoplight/prism-cli": 5.15.10
 
 allowBuilds:
   bcrypt: false
