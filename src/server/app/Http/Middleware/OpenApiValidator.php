@@ -112,7 +112,9 @@ abstract class OpenApiValidator
             $field = '';
             $message = '予期せぬエラー';
         } else {
-            $field = implode('/', $breadcrumb->buildChain());
+            /** @var array<string> */
+            $chain = $breadcrumb->buildChain();
+            $field = implode('/', $chain);
 
             $message = match (true) {
                 $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),

@@ -102,6 +102,6 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 '''
 
-[tasks."bun:install"]
+[tasks."pnpm:install"]
 dir = "src"
-run = "bun i --frozen-lockfile"
+run = "pnpm i --frozen-lockfile"

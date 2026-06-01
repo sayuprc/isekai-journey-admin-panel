@@ -9,8 +9,7 @@ readonly class GenerateRecoveryCodesOutputData
     /**
      * @param list<string> $plainCodes
      */
-    public function __construct(
-        public array $plainCodes,
-    ) {
+    public function __construct(public array $plainCodes)
+    {
     }
 }

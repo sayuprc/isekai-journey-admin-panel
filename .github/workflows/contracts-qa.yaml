@@ -32,7 +32,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+        run: mise run pnpm:install
 
       - name: Check format
         run: mise run contract:format:check
@@ -62,7 +62,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: mise run bun:install
+        run: mise run pnpm:install
 
       - name: Check generate code has diff
         run: |

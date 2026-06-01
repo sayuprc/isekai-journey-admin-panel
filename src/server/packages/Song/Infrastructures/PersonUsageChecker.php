@@ -11,9 +11,8 @@ use Song\Domain\Models\SongRepositoryInterface;
 
 readonly class PersonUsageChecker implements PersonUsageCheckerInterface
 {
-    public function __construct(
-        private SongRepositoryInterface $repository,
-    ) {
+    public function __construct(private SongRepositoryInterface $repository)
+    {
     }
 
     #[Override]
