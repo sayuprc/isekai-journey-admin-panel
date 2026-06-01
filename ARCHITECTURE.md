@@ -10,7 +10,7 @@
 
 - `docker/`: ローカル開発用コンテナ定義と TLS 証明書設定
 - `docs/`: ADR、設計原則、実行計画、技術的負債の記録
-- `src/`: `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
+- `src/`: `admin` / `viewer` / `contracts` を束ねる pnpm workspace のルート
 - `src/server/`: PHP 8.5 / Laravel API サーバー
 - `src/contracts/`: TypeSpec による API 契約
 - `src/admin/`: Astro / SolidJS / Elysia による管理画面

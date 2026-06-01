@@ -28,7 +28,7 @@ jobs:
           path: |
             src/node_modules
             src/contracts/node_modules
-          key: contracts-node-modules-${{ hashFiles('**/bun.lock') }}
+          key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -58,7 +58,7 @@ jobs:
           path: |
             src/node_modules
             src/contracts/node_modules
-          key: contracts-node-modules-${{ hashFiles('**/bun.lock') }}
+          key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'

@@ -21,7 +21,7 @@ case "$file" in
 esac
 
 case "$file" in
-  src/contracts/*.tsp|*/src/contracts/*.tsp|src/contracts/scripts/*.ts|*/src/contracts/scripts/*.ts|src/contracts/scripts/*.js|*/src/contracts/scripts/*.js|src/contracts/package.json|*/src/contracts/package.json|src/contracts/bun.lock|*/src/contracts/bun.lock|src/contracts/tspconfig.yaml|*/src/contracts/tspconfig.yaml)
+  src/contracts/*.tsp|*/src/contracts/*.tsp|src/contracts/scripts/*.ts|*/src/contracts/scripts/*.ts|src/contracts/scripts/*.js|*/src/contracts/scripts/*.js|src/contracts/package.json|*/src/contracts/package.json|src/pnpm-lock.yaml|*/src/pnpm-lock.yaml|src/pnpm-workspace.yaml|*/src/pnpm-workspace.yaml|src/contracts/tspconfig.yaml|*/src/contracts/tspconfig.yaml)
     mkdir -p "$hook_state_dir"
     : > "$contracts_stop_marker"
     ;;

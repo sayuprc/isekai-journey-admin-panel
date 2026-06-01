@@ -33,7 +33,7 @@ jobs:
           path: |
             src/node_modules
             src/admin/node_modules
-          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
+          key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -63,7 +63,7 @@ jobs:
           path: |
             src/node_modules
             src/admin/node_modules
-          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
+          key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -93,7 +93,7 @@ jobs:
           path: |
             src/node_modules
             src/admin/node_modules
-          key: admin-node-modules-${{ hashFiles('**/bun.lock') }}
+          key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'

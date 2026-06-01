@@ -60,7 +60,7 @@
 - `src/contracts` と `src/contracts/generated/`: 契約と生成物の owner を固定する
 - `src/server/Generated/`, `src/admin/src/generated/`, `src/viewer/src/generated/`: 生成責任は contracts owner に寄せる
 - `mise.toml`, `compose.yaml`, `docker/`: 開発基盤 owner から早めに再取り込みする
-- `bun.lock`, `composer.lock` などの lockfile: 更新 worktree を 1 つに固定する
+- `src/pnpm-lock.yaml`, `composer.lock` などの lockfile: 更新 worktree を 1 つに固定する
 - `.env` と `mise.local.toml`: `mise run worktree:init` の生成結果を尊重し、手編集で競合を作らない
 - `docker/nginx/certs` と `docker/php/certs/rootCA.pem`: 最初の 1 worktree で生成した証明書を他 worktree へ複製する
 
