@@ -11,7 +11,8 @@
 - 360px 幅とデスクトップ幅の両方で破綻しないことを前提にする。
 - 非同期処理やフォームには loading / error / empty state を用意する。
 - 既存スタックで解けるなら依存を増やしすぎない。
-- `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する。
+- パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。
+- 各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する。
 
 ## 境界の参照先
 

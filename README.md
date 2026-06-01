@@ -23,7 +23,7 @@
 
 `git worktree` を使うローカル開発運用は `docs/design-docs/local-runtime-topology.md` を参照する。
 
-TypeScript 関連: `src/` を Bun workspace のルートとして扱い、各 package script は `cd src && bun --filter <package> <script>` で実行する
+TypeScript 関連: パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する。
 
 ## ドキュメント
 
