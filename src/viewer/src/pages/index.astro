@@ -3,15 +3,17 @@ import JacketArt from '../components/viewer/JacketArt.astro';
 import MVThumb from '../components/viewer/MVThumb.astro';
 import PostCard from '../components/viewer/PostCard.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
-import { Q, SITE_DATA } from '../data/mock/site-data';
+import { Q } from '../data/mock/site-data';
 import { mediaTypeLabel } from '../features/media/labels';
 import { latestMedia, latestPosts } from '../features/media/sort';
 import { latestRelease } from '../features/releases/sort';
+import { siteStatsRepository } from '../features/site-stats/api';
 import Layout from '../layouts/Layout.astro';
 
 const release = latestRelease();
 const media = latestMedia(3);
 const posts = latestPosts(3);
+const siteStats = await siteStatsRepository.get();
 ---
 
 <Layout pageTitle="Home">
@@ -27,7 +29,7 @@ const posts = latestPosts(3);
       </div>
       <div class="hero-data-stats">
         <div class="hero-data-stat hero-data-stat-row">
-          <strong>{SITE_DATA.songs.length}</strong>
+          <strong>{siteStats.songCount}</strong>
           <div class="hero-data-stat-copy">
             <span>楽曲</span>
             <em>songs</em>

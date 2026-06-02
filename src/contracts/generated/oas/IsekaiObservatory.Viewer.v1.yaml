@@ -4,6 +4,7 @@ info:
   version: v1
 tags:
   - name: Media
+  - name: SiteStats
   - name: Song
 paths:
   /media:
@@ -61,6 +62,22 @@ paths:
           description: Server error
       tags:
         - Media
+  /site-stats:
+    get:
+      operationId: SiteStatsService_getSiteStats
+      description: サイト集計取得API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteStatsResponse'
+        '500':
+          description: Server error
+      tags:
+        - SiteStats
   /songs:
     get:
       operationId: SongService_listSongs
@@ -339,6 +356,17 @@ components:
         - 4
         - 99
       description: 関連メディア種別の値
+    SiteStatsResponse:
+      type: object
+      required:
+        - songCount
+      properties:
+        songCount:
+          type: integer
+          format: int32
+          description: 公開対象楽曲数
+      examples:
+        - songCount: 42
     SongDetail:
       type: object
       required:
