@@ -6,12 +6,12 @@ namespace SiteStats\Application\Viewer\UseCase\Get;
 
 use ResultType\Ok;
 use ResultType\Result;
-use Song\Application\Viewer\Query\SongQueryServiceInterface;
+use SiteStats\Application\Viewer\Query\SiteStatsQueryServiceInterface;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class GetUseCase
 {
-    public function __construct(private SongQueryServiceInterface $songQuery)
+    public function __construct(private SiteStatsQueryServiceInterface $query)
     {
     }
 
@@ -20,6 +20,8 @@ readonly class GetUseCase
      */
     public function handle(): Result
     {
-        return new Ok(new GetOutputData($this->songQuery->countDisplayable()));
+        $siteStats = $this->query->get();
+
+        return new Ok(new GetOutputData($siteStats->songCount));
     }
 }
