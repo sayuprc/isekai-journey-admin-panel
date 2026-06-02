@@ -8,8 +8,9 @@ applyTo: 'src/admin/**'
 
 ## 実行環境
 
-- 依存管理とスクリプト実行には `bun` を使う
-- `src/` は `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
+- 依存管理には `pnpm` を使い、インストールは root から `mise run pnpm:install` を実行する
+- スクリプト実行には `bun` を使う
+- `src/` は `admin` / `viewer` / `contracts` を束ねる pnpm workspace のルート
 - 共有タスクは `mise`、パッケージ固有タスクは `src/` で `bun --filter admin <script>` として実行する
 
 ## 構成

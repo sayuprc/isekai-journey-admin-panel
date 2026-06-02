@@ -2,7 +2,18 @@ lockfile_version: '1'
 generated_at: '2026-04-26T01:59:24.805263+00:00'
 dependencies: []
 local_deployed_files:
+- .agents/skills/cloud-run-basics
 - .agents/skills/code-reviewer
+- .agents/skills/gcloud
+- .agents/skills/google-cloud-networking-observability
+- .agents/skills/google-cloud-recipe-auth
+- .agents/skills/google-cloud-recipe-onboarding
+- .agents/skills/google-cloud-waf-cost-optimization
+- .agents/skills/google-cloud-waf-operational-excellence
+- .agents/skills/google-cloud-waf-performance-optimization
+- .agents/skills/google-cloud-waf-reliability
+- .agents/skills/google-cloud-waf-security
+- .agents/skills/google-cloud-waf-sustainability
 - .agents/skills/orchestrator
 - .agents/skills/php-feature-test-creator
 - .agents/skills/php-integration-test-creator
@@ -13,7 +24,18 @@ local_deployed_files:
 - .claude/rules/02-admin.md
 - .claude/rules/03-contracts.md
 - .claude/rules/04-docs.md
+- .claude/skills/cloud-run-basics
 - .claude/skills/code-reviewer
+- .claude/skills/gcloud
+- .claude/skills/google-cloud-networking-observability
+- .claude/skills/google-cloud-recipe-auth
+- .claude/skills/google-cloud-recipe-onboarding
+- .claude/skills/google-cloud-waf-cost-optimization
+- .claude/skills/google-cloud-waf-operational-excellence
+- .claude/skills/google-cloud-waf-performance-optimization
+- .claude/skills/google-cloud-waf-reliability
+- .claude/skills/google-cloud-waf-security
+- .claude/skills/google-cloud-waf-sustainability
 - .claude/skills/orchestrator
 - .claude/skills/php-feature-test-creator
 - .claude/skills/php-integration-test-creator
@@ -25,7 +47,18 @@ local_deployed_files:
 - .github/instructions/02-admin.instructions.md
 - .github/instructions/03-contracts.instructions.md
 - .github/instructions/04-docs.instructions.md
+- .github/skills/cloud-run-basics
 - .github/skills/code-reviewer
+- .github/skills/gcloud
+- .github/skills/google-cloud-networking-observability
+- .github/skills/google-cloud-recipe-auth
+- .github/skills/google-cloud-recipe-onboarding
+- .github/skills/google-cloud-waf-cost-optimization
+- .github/skills/google-cloud-waf-operational-excellence
+- .github/skills/google-cloud-waf-performance-optimization
+- .github/skills/google-cloud-waf-reliability
+- .github/skills/google-cloud-waf-security
+- .github/skills/google-cloud-waf-sustainability
 - .github/skills/orchestrator
 - .github/skills/php-feature-test-creator
 - .github/skills/php-integration-test-creator
@@ -34,12 +67,12 @@ local_deployed_files:
 local_deployed_file_hashes:
   .claude/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
   .claude/rules/01-backend.md: sha256:8eee1bc000c5f14a27da280992b305ee3e44b5956c6066c2b33fca811c016ecd
-  .claude/rules/02-admin.md: sha256:d8125f4f6b1b59c5b66de44ca294958d03ef06aed7fc6ba636e5263c57b23998
-  .claude/rules/03-contracts.md: sha256:b5898112b84449b1315226336fd664e77cb4814eee69a3f26de065037b67283d
+  .claude/rules/02-admin.md: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
+  .claude/rules/03-contracts.md: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
   .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
   .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
   .github/agents/docs-curator.agent.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
   .github/instructions/01-backend.instructions.md: sha256:6f69789ca2111695f38426b9d5085dabcc0dfd2b5aebe331c45c38bc8fc656f7
-  .github/instructions/02-admin.instructions.md: sha256:62287d0a80f2aa6cf4459186c44bf70e79b64ab73baad8c28ddd993091511696
-  .github/instructions/03-contracts.instructions.md: sha256:e1e0b368d5c57711033b47166629e61f455524eee7e870dccba861776d09acbb
+  .github/instructions/02-admin.instructions.md: sha256:6e436831975289a09429ce1d0147e1f027122da3c6d2ab4c0289edd28df82ed5
+  .github/instructions/03-contracts.instructions.md: sha256:c0396efe3ce50db95e0c2cde16ad945dea7cb24fb6b3729c4f056d081d3048cb
   .github/instructions/04-docs.instructions.md: sha256:bd052f95e8b9b6ac5308dd9f17084b014d08b0a49edd859471665c0775c8459c
