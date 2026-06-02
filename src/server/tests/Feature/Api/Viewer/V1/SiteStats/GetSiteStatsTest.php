@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Viewer\V1\SiteStats;
 
 use PHPUnit\Framework\Attributes\Test;
+use SiteStats\Route\ViewerSiteStatsRouteMap;
 use Song\Domain\Models\SongType;
-use Support\Route\ViewerSiteStatsRouteMap;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;

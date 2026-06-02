@@ -7,7 +7,7 @@ namespace App\Http\Presenters\Api\Viewer\V1\SiteStats;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use ResultType\Result;
-use Song\Application\Viewer\UseCase\Count\CountOutputData;
+use SiteStats\Application\Viewer\UseCase\Get\GetOutputData;
 use Support\UseCase\Error\UseCaseError;
 
 class GetPresenter
@@ -15,12 +15,12 @@ class GetPresenter
     use ResolvesUseCaseError;
 
     /**
-     * @param Result<CountOutputData, UseCaseError> $result
+     * @param Result<GetOutputData, UseCaseError> $result
      */
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (CountOutputData $outputData) => [
+            fn (GetOutputData $outputData) => [
                 ['songCount' => $outputData->songCount],
                 200,
             ],

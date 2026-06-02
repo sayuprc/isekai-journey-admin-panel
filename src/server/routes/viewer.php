@@ -10,8 +10,8 @@ use App\Http\Controllers\Api\Viewer\V1\Song\ListSongController;
 use App\Http\Middleware\Viewer\ViewerOpenApiValidator;
 use Illuminate\Support\Facades\Route;
 use Media\Route\ViewerMediaRouteMap;
+use SiteStats\Route\ViewerSiteStatsRouteMap;
 use Song\Route\ViewerSongRouteMap;
-use Support\Route\ViewerSiteStatsRouteMap;
 
 Route::middleware(ViewerOpenApiValidator::class)->group(function () {
     Route::prefix('v1')->group(function () {

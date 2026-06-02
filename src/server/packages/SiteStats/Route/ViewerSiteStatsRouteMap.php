@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Support\Route;
+namespace SiteStats\Route;
 
 enum ViewerSiteStatsRouteMap: string
 {

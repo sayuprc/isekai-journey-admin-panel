@@ -7,12 +7,12 @@ namespace App\Http\Controllers\Api\Viewer\V1\SiteStats;
 use App\Http\Controllers\Controller;
 use App\Http\Presenters\Api\Viewer\V1\SiteStats\GetPresenter;
 use Illuminate\Http\JsonResponse;
-use Song\Application\Viewer\UseCase\Count\CountUseCase;
+use SiteStats\Application\Viewer\UseCase\Get\GetUseCase;
 
 class GetSiteStatsController extends Controller
 {
     public function __construct(
-        private readonly CountUseCase $useCase,
+        private readonly GetUseCase $useCase,
         private readonly GetPresenter $presenter,
     ) {
     }

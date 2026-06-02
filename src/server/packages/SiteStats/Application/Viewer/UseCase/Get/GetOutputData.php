@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Song\Application\Viewer\UseCase\Count;
+namespace SiteStats\Application\Viewer\UseCase\Get;
 
-readonly class CountOutputData
+readonly class GetOutputData
 {
     public function __construct(public int $songCount)
     {
