@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { MediaServiceGetMediaData, MediaServiceGetMediaErrors, MediaServiceGetMediaResponses, MediaServiceListMediaData, MediaServiceListMediaErrors, MediaServiceListMediaResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
+import type { MediaServiceGetMediaData, MediaServiceGetMediaErrors, MediaServiceGetMediaResponses, MediaServiceListMediaData, MediaServiceListMediaErrors, MediaServiceListMediaResponses, SiteStatsServiceGetSiteStatsData, SiteStatsServiceGetSiteStatsErrors, SiteStatsServiceGetSiteStatsResponses, SongServiceGetSongData, SongServiceGetSongErrors, SongServiceGetSongResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -27,6 +27,11 @@ export const mediaServiceListMedia = <ThrowOnError extends boolean = false>(opti
  * メディア詳細取得API
  */
 export const mediaServiceGetMedia = <ThrowOnError extends boolean = false>(options: Options<MediaServiceGetMediaData, ThrowOnError>) => (options.client ?? client).get<MediaServiceGetMediaResponses, MediaServiceGetMediaErrors, ThrowOnError>({ url: '/media/{mediaId}', ...options });
+
+/**
+ * サイト集計取得API
+ */
+export const siteStatsServiceGetSiteStats = <ThrowOnError extends boolean = false>(options?: Options<SiteStatsServiceGetSiteStatsData, ThrowOnError>) => (options?.client ?? client).get<SiteStatsServiceGetSiteStatsResponses, SiteStatsServiceGetSiteStatsErrors, ThrowOnError>({ url: '/site-stats', ...options });
 
 /**
  * 楽曲一覧取得API

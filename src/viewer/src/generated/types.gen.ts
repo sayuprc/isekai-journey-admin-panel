@@ -75,6 +75,13 @@ export type MediaType = {
  */
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
 
+export type SiteStatsResponse = {
+    /**
+     * 公開対象楽曲数
+     */
+    songCount: number;
+};
+
 export type SongDetail = {
     songId: SongId;
     title: Title;
@@ -252,6 +259,29 @@ export type MediaServiceGetMediaResponses = {
 };
 
 export type MediaServiceGetMediaResponse = MediaServiceGetMediaResponses[keyof MediaServiceGetMediaResponses];
+
+export type SiteStatsServiceGetSiteStatsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/site-stats';
+};
+
+export type SiteStatsServiceGetSiteStatsErrors = {
+    /**
+     * Server error
+     */
+    500: unknown;
+};
+
+export type SiteStatsServiceGetSiteStatsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: SiteStatsResponse;
+};
+
+export type SiteStatsServiceGetSiteStatsResponse = SiteStatsServiceGetSiteStatsResponses[keyof SiteStatsServiceGetSiteStatsResponses];
 
 export type SongServiceListSongsData = {
     body?: never;

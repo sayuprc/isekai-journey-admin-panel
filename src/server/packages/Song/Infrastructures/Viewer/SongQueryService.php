@@ -149,6 +149,14 @@ readonly class SongQueryService implements SongQueryServiceInterface
         );
     }
 
+    #[Override]
+    public function countDisplayable(): int
+    {
+        return Song::query()
+            ->where('is_display', true)
+            ->count();
+    }
+
     /**
      * @return array<string>
      */
