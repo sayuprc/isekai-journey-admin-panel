@@ -23,7 +23,7 @@
 - 採番した開発用変数は `mise.local.toml` の自動生成ブロックに保存する
 - アプリ設定は `src/server/.env`, `src/server/.env.testing`, `src/admin/.env`, `src/viewer/.env` に書き戻す
 - `src/server/.env` と `.env.testing` の `DB_PORT` は Docker network 向けの `3306` を維持し、host 側 task 用の `ATLAS_DB_PORT` を worktree ごとの MySQL 公開ポートへ更新する
-- TLS 証明書 (`docker/nginx/certs`, `docker/php/certs/rootCA.pem`) は共有キャッシュ経由で worktree 間に複製する
+- TLS 証明書 (`infra/local/docker/nginx/certs`, `infra/local/docker/php/certs/rootCA.pem`) は共有キャッシュ経由で worktree 間に複製する
 - proxy は同一 worktree の `php` サービスと、その worktree に割り当てられた Admin / Viewer dev server へ接続し、Astro dev server の WebSocket も forward する
 - 現在の割り当ては `mise run worktree:status` で確認する
 - `compose.yaml` の fallback ポートは、`worktree:init` を使わない手動起動向けに従来の値を維持する
@@ -33,7 +33,7 @@
 - 原則として `contracts` / `server` / `admin` / `viewer` / 開発基盤の各変更は別 worktree で並列着手してよい
 - 競合しやすい変更は「直列化」ではなく「owner を 1 worktree に固定して他 worktree が再取り込みする」ことで扱う
 - `src/contracts` と生成物更新は波及範囲が広いため、生成責任を 1 worktree に寄せる
-- `mise.toml` / `compose.yaml` / `docker/` / lockfile の変更も専用 worktree に閉じ込め、他 worktree へ早めに取り込む
+- `mise.toml` / `compose.yaml` / `infra/local/docker/` / lockfile の変更も専用 worktree に閉じ込め、他 worktree へ早めに取り込む
 - 同じ Source of Truth を複数 worktree で同時編集する場合は、着手前に owner と取り込み順を Decision Log に残す
 
 ## Start Flow
@@ -50,7 +50,7 @@
 
 - 1 つの Source of Truth に複数人が触れる場合は、変更を止めるのではなく owner worktree を先に決める
 - `src/contracts` を触る worktree は、OpenAPI と各生成物の更新責任も持つ
-- `mise.toml` / `compose.yaml` / `docker/` / lockfile の変更は、専用 worktree を owner にする
+- `mise.toml` / `compose.yaml` / `infra/local/docker/` / lockfile の変更は、専用 worktree を owner にする
 - `src/server` / `src/admin` / `src/viewer` の独立実装は、同じ機能に関わっていても別 worktree に分けてよい
 - 同じディレクトリの近接ファイルを複数 worktree で触る場合は、先にファイル ownership を分ける
 - owner は変更を確定した時点で、他 worktree が再取り込みすべき基準 commit を共有する
@@ -59,10 +59,10 @@
 
 - `src/contracts` と `src/contracts/generated/`: 契約と生成物の owner を固定する
 - `src/server/Generated/`, `src/admin/src/generated/`, `src/viewer/src/generated/`: 生成責任は contracts owner に寄せる
-- `mise.toml`, `compose.yaml`, `docker/`: 開発基盤 owner から早めに再取り込みする
+- `mise.toml`, `compose.yaml`, `infra/local/docker/`: 開発基盤 owner から早めに再取り込みする
 - `src/pnpm-lock.yaml`, `composer.lock` などの lockfile: 更新 worktree を 1 つに固定する
 - `.env` と `mise.local.toml`: `mise run worktree:init` の生成結果を尊重し、手編集で競合を作らない
-- `docker/nginx/certs` と `docker/php/certs/rootCA.pem`: 最初の 1 worktree で生成した証明書を他 worktree へ複製する
+- `infra/local/docker/nginx/certs` と `infra/local/docker/php/certs/rootCA.pem`: 最初の 1 worktree で生成した証明書を他 worktree へ複製する
 
 ## Integration Order
 
@@ -92,7 +92,7 @@
 - worktree A: `src/contracts` と生成物更新の owner
 - worktree B: `src/server` の業務ロジック実装
 - worktree C: `src/admin` または `src/viewer` の UI 実装
-- worktree D: `mise.toml` / `compose.yaml` / `docker/` のような基盤変更
+- worktree D: `mise.toml` / `compose.yaml` / `infra/local/docker/` のような基盤変更
 
 この分け方では、A の変更を B/C が再取り込みし、D の変更を全 worktree が早めに取り込む。
 
@@ -105,7 +105,7 @@
 ## Source Files
 
 - `compose.yaml`
-- `docker/`
+- `infra/local/docker/`
 - `mise.toml`
 
 起動構成や URL を変えるときは、近接する入口文書も同じ変更で更新します。

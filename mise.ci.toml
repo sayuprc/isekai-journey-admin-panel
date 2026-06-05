@@ -14,8 +14,8 @@ MYSQL_DOCKER_KEY_PREFIX = "docker-mysql-"
 [tasks."build:php"]
 description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
 run = '''
-touch ./docker/php/certs/rootCA.pem
-docker build -t $SERVER_IMAGE ./docker/php \
+touch ./infra/local/docker/php/certs/rootCA.pem
+docker build -t $SERVER_IMAGE ./infra/local/docker/php \
   --build-arg TAG={{vars.server_tag}} \
   --build-arg UID=$(id -u) \
   --build-arg GID=$(id -g) \
@@ -28,7 +28,7 @@ mkdir -p $SERVER_DOCKER_PATH
 [tasks."build:openapi-generator"]
 description = "CI 向けに OpenAPI Generator イメージをビルドして GHCR にプッシュする"
 run = '''
-docker build -t $OPENAPI_IMAGE ./docker/openapi-generator \
+docker build -t $OPENAPI_IMAGE ./infra/local/docker/openapi-generator \
   --build-arg TAG={{vars.openapi_tag}} \
   --build-arg UID=$(id -u) \
   --build-arg GID=$(id -g) \
@@ -41,7 +41,7 @@ mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
 [tasks."build:mysql"]
 description = "CI 向けに MySQL イメージをビルドして GHCR にプッシュする"
 run = '''
-docker build -t $MYSQL_IMAGE ./docker/mysql \
+docker build -t $MYSQL_IMAGE ./infra/local/docker/mysql \
   --build-arg TAG={{vars.mysql_tag}}
 docker push $MYSQL_IMAGE
 mkdir -p $MYSQL_DOCKER_PATH

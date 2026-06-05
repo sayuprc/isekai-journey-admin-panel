@@ -9,7 +9,7 @@ state_dir="$(worktree_state_dir)"
 shared_state_dir="$(worktree_shared_state_dir)"
 shared_env_file="$(worktree_shared_env_file)"
 mise_local_toml_file="$(worktree_mise_local_toml_file)"
-template_file="${repo_root}/docker/nginx/site.conf.template"
+template_file="${repo_root}/infra/local/docker/nginx/site.conf.template"
 
 mkdir -p "$state_dir/docker/nginx" "$shared_state_dir"
 
@@ -263,38 +263,38 @@ ensure_worktree_certs() {
   shared_cert_dir="${shared_state_dir}/certs"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/nginx/certs/server.crt" \
-    "${shared_cert_dir}/docker/nginx/certs/server.crt"
+    "infra/local/docker/nginx/certs/server.crt" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.crt"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/nginx/certs/server.key" \
-    "${shared_cert_dir}/docker/nginx/certs/server.key"
+    "infra/local/docker/nginx/certs/server.key" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.key"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/php/certs/rootCA.pem" \
-    "${shared_cert_dir}/docker/php/certs/rootCA.pem"
+    "infra/local/docker/php/certs/rootCA.pem" \
+    "${shared_cert_dir}/infra/local/docker/php/certs/rootCA.pem"
 
   sync_shared_file \
-    "${repo_root}/docker/nginx/certs/server.crt" \
-    "${shared_cert_dir}/docker/nginx/certs/server.crt" \
-    "${repo_root}/docker/nginx/certs/server.crt"
+    "${repo_root}/infra/local/docker/nginx/certs/server.crt" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.crt" \
+    "${repo_root}/infra/local/docker/nginx/certs/server.crt"
 
   sync_shared_file \
-    "${repo_root}/docker/nginx/certs/server.key" \
-    "${shared_cert_dir}/docker/nginx/certs/server.key" \
-    "${repo_root}/docker/nginx/certs/server.key"
+    "${repo_root}/infra/local/docker/nginx/certs/server.key" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.key" \
+    "${repo_root}/infra/local/docker/nginx/certs/server.key"
 
   sync_shared_file \
-    "${repo_root}/docker/php/certs/rootCA.pem" \
-    "${shared_cert_dir}/docker/php/certs/rootCA.pem" \
-    "${repo_root}/docker/php/certs/rootCA.pem"
+    "${repo_root}/infra/local/docker/php/certs/rootCA.pem" \
+    "${shared_cert_dir}/infra/local/docker/php/certs/rootCA.pem" \
+    "${repo_root}/infra/local/docker/php/certs/rootCA.pem"
 
-  if [[ ! -f "${repo_root}/docker/nginx/certs/server.crt" || ! -f "${repo_root}/docker/nginx/certs/server.key" ]]; then
+  if [[ ! -f "${repo_root}/infra/local/docker/nginx/certs/server.crt" || ! -f "${repo_root}/infra/local/docker/nginx/certs/server.key" ]]; then
     echo "nginx certificates are missing; run 'mise run cert:make' once in any worktree" >&2
     exit 1
   fi
 
-  if [[ ! -f "${repo_root}/docker/php/certs/rootCA.pem" ]]; then
+  if [[ ! -f "${repo_root}/infra/local/docker/php/certs/rootCA.pem" ]]; then
     echo "rootCA.pem is missing; run 'mise run cert:copy-pem' once in any worktree" >&2
     exit 1
   fi

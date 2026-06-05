@@ -8,7 +8,7 @@
 
 ## Top-Level Map
 
-- `docker/`: ローカル開発用コンテナ定義と TLS 証明書設定
+- `infra/local/docker/`: ローカル開発用コンテナ定義と TLS 証明書設定
 - `docs/`: ADR、設計原則、実行計画、技術的負債の記録
 - `src/`: `admin` / `viewer` / `contracts` を束ねる pnpm workspace のルート
 - `src/server/`: PHP 8.5 / Laravel API サーバー
@@ -40,7 +40,7 @@
 | サーバーの業務ロジック | `src/server` | 必要なら `src/contracts` | `mise run ecs`, `phpstan`, `arkitect`, `test` |
 | 管理画面の UI / BFF | `src/admin` | 必要なら `src/contracts` | `cd src && bun --filter admin lint:check`, `style:check`, `build` |
 | 閲覧サイトの UI | `src/viewer` | 必要なら `src/contracts` | `cd src && bun --filter viewer lint:check`, `style:check`, `build` |
-| 開発環境 | `mise.toml`, `compose.yaml`, `docker/` | 関連 docs | 起動確認と影響範囲の明記 |
+| 開発環境 | `mise.toml`, `compose.yaml`, `infra/local/docker/` | 関連 docs | 起動確認と影響範囲の明記 |
 
 ## Detail Documents
 
