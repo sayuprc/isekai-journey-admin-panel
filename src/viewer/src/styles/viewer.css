@@ -339,13 +339,6 @@ a {
   display: block;
 }
 
-.footer-brand-mark {
-  font-family: "Shippori Mincho", serif;
-  font-size: 22px;
-  color: var(--fg);
-  letter-spacing: 0.12em;
-}
-
 .hero-index-title:hover {
   color: var(--accent-strong) !important;
 }
@@ -1003,9 +996,9 @@ image-slot:hover {
 }
 
 .footer-brand-mark {
-  margin-bottom: 12px;
   font-family: "Shippori Mincho", serif;
   font-size: 28px;
+  color: var(--fg);
   letter-spacing: 0.1em;
 }
 
