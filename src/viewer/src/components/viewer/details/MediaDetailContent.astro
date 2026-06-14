@@ -37,8 +37,7 @@ const formatPublishedAt = (value: string): string =>
   {/* API に description が無いため未提供セクションとして雛形を残す */}
   {/* {entry.description && <p class="detail-description" style="margin-top: 16px;">{entry.description}</p>} */}
 
-  <hr class="hairline" style="margin: 32px 0;" />
-  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;margin-bottom:8px;">
     <a class="btn" href={media.url} target="_blank" rel="noopener noreferrer">{media.type.name}で開く ↗</a>
   </div>
 
@@ -50,7 +49,7 @@ const formatPublishedAt = (value: string): string =>
             <span class="label-mono">SONGS</span>
             <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">関連楽曲</span>
           </div>
-          <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
+          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
         </div>
         <div class="rel-list">
           {
