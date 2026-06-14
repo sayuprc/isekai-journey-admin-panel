@@ -1002,6 +1002,14 @@ image-slot:hover {
   letter-spacing: 0.1em;
 }
 
+.footer-disclaimer {
+  max-width: 320px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--fg-muted);
+}
+
 .footer-tagline {
   font-family: "Cormorant Garamond", serif;
   font-size: 14px;
@@ -1036,18 +1044,6 @@ image-slot:hover {
 
 .footer-col li:hover {
   color: var(--fg);
-}
-
-.footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 24px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  color: var(--fg-faint);
-  letter-spacing: 0.1em;
-  border-top: 1px solid var(--line-soft);
 }
 
 /* ─── Detail Panel ─── */
@@ -1368,6 +1364,10 @@ image-slot:hover {
   font-style: italic;
   letter-spacing: 0.04em;
   color: var(--fg-faint);
+}
+
+.hero-data-stat-date {
+  font-family: Spectral, serif;
 }
 
 .hero-symbol {
@@ -2653,8 +2653,7 @@ image-slot:hover {
     padding-left: 20px;
   }
 
-  .hero-actions,
-  .footer-bottom {
+  .hero-actions {
     flex-direction: column;
   }
 
@@ -2738,4 +2737,47 @@ image-slot:hover {
   .media-mosaic {
     grid-auto-rows: 116px;
   }
+}
+
+/* ポリシー文書（サイトポリシー / プライバシーポリシー） */
+
+.policy-doc {
+  max-width: 920px;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--fg);
+}
+
+.policy-updated {
+  margin: 8px 0 40px;
+}
+
+.policy-doc h2 {
+  margin: 48px 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.policy-doc h2:first-of-type {
+  margin-top: 0;
+}
+
+.policy-doc p {
+  margin: 0 0 18px;
+}
+
+.policy-doc ul {
+  margin: 0 0 18px;
+  padding-left: 1.4em;
+}
+
+.policy-doc li {
+  margin-bottom: 8px;
+}
+
+.policy-doc a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

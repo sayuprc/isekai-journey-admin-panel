@@ -1,0 +1,18 @@
+---
+import SectionHead from '../components/viewer/SectionHead.astro';
+import Layout from '../layouts/Layout.astro';
+import { CONTACT_X_HANDLE, CONTACT_X_URL } from '../shared/contact';
+---
+
+<Layout pageTitle="お問い合わせ" pageDescription="ヰ世界観測所のお問い合わせ">
+  <section class="shell page-section">
+    <SectionHead title="お問い合わせ" />
+
+    <div class="policy-doc">
+      <p>
+        当サイトに関するお問い合わせは、
+        <a href={CONTACT_X_URL} target="_blank" rel="noopener noreferrer">X(旧 Twitter) {CONTACT_X_HANDLE}</a> までご連絡ください。
+      </p>
+    </div>
+  </section>
+</Layout>
