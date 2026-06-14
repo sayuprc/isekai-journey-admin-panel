@@ -42,7 +42,7 @@ export default function EntryStatus(props: Props) {
 
   return (
     <div class="entry-status">
-      {count()} 件の{props.label}を表示しています
+      {count()} 件
     </div>
   );
 }
