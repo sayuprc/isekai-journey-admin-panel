@@ -14,6 +14,24 @@ const release = latestRelease();
 const media = latestMedia(3);
 const posts = latestPosts(3);
 const siteStats = await siteStatsRepository.get();
+
+const observationYears = (() => {
+  const OBSERVATION_START = new Date('2019-12-09');
+
+  const now = new Date();
+
+  let years = now.getFullYear() - OBSERVATION_START.getFullYear();
+
+  const beforeAnniversary = now.getMonth() < OBSERVATION_START.getMonth()
+    || (now.getMonth() === OBSERVATION_START.getMonth() && now.getDate() < OBSERVATION_START.getDate());
+
+  if (beforeAnniversary) {
+    years -= 1;
+  }
+
+  return years;
+})();
+
 ---
 
 <Layout pageTitle="Home">
@@ -52,10 +70,10 @@ const siteStats = await siteStatsRepository.get();
         </div>
         */}
         <div class="hero-data-stat hero-data-stat-row">
-          <strong>{new Date().getFullYear() - 2020}</strong>
+          <strong>{observationYears}</strong>
           <div class="hero-data-stat-copy">
             <span>観測年</span>
-            <em>since 2020</em>
+            <em>since 2019.12.09</em>
           </div>
         </div>
       </div>
