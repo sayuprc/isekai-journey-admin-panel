@@ -8,7 +8,7 @@ async function get(): Promise<SiteStats> {
   });
 
   if (!data) {
-    throw new Error(`siteStatsServiceGetSiteStats failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+    throw new Error(`siteStatsServiceGetSiteStats failed: HTTP ${response?.status ?? 'unknown'} ${JSON.stringify(error)}`);
   }
 
   return data;

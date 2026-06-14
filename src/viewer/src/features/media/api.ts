@@ -14,7 +14,7 @@ async function all(): Promise<Media[]> {
     });
 
     if (!data) {
-      throw new Error(`mediaServiceListMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      throw new Error(`mediaServiceListMedia failed: HTTP ${response?.status ?? 'unknown'} ${JSON.stringify(error)}`);
     }
 
     media.push(...data.media);
@@ -36,7 +36,7 @@ async function get(mediaId: string): Promise<MediaDetail> {
     });
 
     if (!data) {
-      throw new Error(`mediaServiceGetMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      throw new Error(`mediaServiceGetMedia failed: HTTP ${response?.status ?? 'unknown'} ${JSON.stringify(error)}`);
     }
 
     return data.media;

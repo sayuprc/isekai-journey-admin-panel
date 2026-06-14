@@ -14,7 +14,7 @@ async function all(): Promise<Song[]> {
     });
 
     if (!data) {
-      throw new Error(`songServiceListSongs failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      throw new Error(`songServiceListSongs failed: HTTP ${response?.status ?? 'unknown'} ${JSON.stringify(error)}`);
     }
 
     songs.push(...data.songs);
@@ -36,7 +36,7 @@ async function get(songId: string): Promise<SongDetail> {
     });
 
     if (!data) {
-      throw new Error(`songServiceGetSong failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      throw new Error(`songServiceGetSong failed: HTTP ${response?.status ?? 'unknown'} ${JSON.stringify(error)}`);
     }
 
     return data.song;
