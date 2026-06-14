@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Logging\CloudLoggingFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -98,7 +99,9 @@ return [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
-            'formatter' => env('LOG_STDERR_FORMATTER'),
+            // Cloud Run では stderr を Cloud Logging が回収するため、severity 付きの
+            // 構造化 JSON で出す。トレース相関フィールドはこのフォーマッタが昇格させる。
+            'formatter' => env('LOG_STDERR_FORMATTER', CloudLoggingFormatter::class),
             'with' => [
                 'stream' => 'php://stderr',
             ],

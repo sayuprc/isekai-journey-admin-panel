@@ -35,4 +35,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
+    'google_cloud' => [
+        // Cloud Logging のトレース相関に使うプロジェクト ID (Cloud Run の環境変数)
+        'project_id' => env('GOOGLE_CLOUD_PROJECT'),
+    ],
 ];

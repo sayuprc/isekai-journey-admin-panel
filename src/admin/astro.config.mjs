@@ -27,6 +27,8 @@ export default defineConfig({
       API_URL: envField.string({ context: 'server', access: 'secret' }),
       CACHE_URL: envField.string({ context: 'server', access: 'secret' }),
       CACHE_TOKEN: envField.string({ context: 'server', access: 'secret' }),
+      // Cloud Logging のトレース相関に使う (Cloud Run の環境変数)。未設定なら相関なしで出力する
+      GOOGLE_CLOUD_PROJECT: envField.string({ context: 'server', access: 'secret', optional: true }),
       PUBLIC_APP_URL: envField.string({ context: 'client', access: 'public' }),
     },
   },
