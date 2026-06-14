@@ -3,7 +3,7 @@ export function kindLabel(kind: string): string {
     {
       song: '楽曲',
       release: 'リリース',
-      media: '映像',
+      media: 'メディア',
       event: '出来事',
     }[kind] ?? kind
   );

@@ -94,12 +94,14 @@ scalar mediaPublishedAt extends string;
   mediaId: "11111111-1111-1111-1111-111111111111",
   title: "描き続けた君へ MV",
   type: #{ name: "動画", value: MediaTypeValue.video },
+  format: #{ name: "MV", value: MediaFormatValue.mv },
   publishedAt: "2024-03-01",
 })
 model SongDetailMediaSummary {
   mediaId: mediaId;
   title: mediaTitle;
   type: MediaType;
+  format: MediaFormat;
   publishedAt: mediaPublishedAt;
 }
 
@@ -117,6 +119,7 @@ model SongDetailMediaSummary {
       mediaId: "11111111-1111-1111-1111-111111111111",
       title: "描き続けた君へ MV",
       type: #{ name: "動画", value: MediaTypeValue.video },
+      format: #{ name: "MV", value: MediaFormatValue.mv },
       publishedAt: "2024-03-01",
     }
   ],

@@ -10,6 +10,7 @@ use App\Models\Song\SongPerson;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Override;
 use Song\Application\Viewer\Query\SongDetail;
@@ -118,7 +119,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true))
                     ->orderBy('order_no'),
                 'songMediaLinks.media' => fn (BelongsTo $query) => $query
-                    ->select(['media_id', 'title', 'type', 'published_at']),
+                    ->select(['media_id', 'title', 'type', 'format', 'published_at']),
             ])
             ->first();
 
@@ -132,6 +133,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                 $this->converter->toUuid($link->media->media_id),
                 $link->media->title,
                 MediaType::from($link->media->type),
+                MediaFormat::from($link->media->format),
                 $link->media->published_at->toDateTimeImmutable(),
             ))
             ->values()

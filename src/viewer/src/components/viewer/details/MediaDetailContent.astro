@@ -28,8 +28,9 @@ const formatPublishedAt = (value: string): string =>
 <div class="detail-page-content media-detail-content">
   {/* <MVThumb color={tileColor} label={`${media.type.name}`} /> */}
 
-  <div class="label-mono" style="margin-top: 28px;">
-    {formatPublishedAt(media.publishedAt)} · {media.type.name} · {media.format.name}
+  <div class="label-mono">
+    {/* {formatPublishedAt(media.publishedAt)} · {media.type.name} · {media.format.name} */}
+    {formatPublishedAt(media.publishedAt)} · {media.format.name}
     {/* API に views が無いため未提供セクションとして雛形を残す */}
     {/* {entry.views ? ` · ${entry.views} views` : ''} */}
   </div>
@@ -38,7 +39,8 @@ const formatPublishedAt = (value: string): string =>
   {/* {entry.description && <p class="detail-description" style="margin-top: 16px;">{entry.description}</p>} */}
 
   <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;margin-bottom:8px;">
-    <a class="btn" href={media.url} target="_blank" rel="noopener noreferrer">{media.type.name}で開く ↗</a>
+    {/* 将来的に様々なプラットフォーム名を表示できるようにする */}
+    <a class="btn" href={media.url} target="_blank" rel="noopener noreferrer">YouTube で開く ↗</a>
   </div>
 
   {
