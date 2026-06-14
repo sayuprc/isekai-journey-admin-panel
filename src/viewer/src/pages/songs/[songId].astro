@@ -8,8 +8,8 @@ export async function getStaticPaths() {
     (await songRepository.all()).map(async song => ({
       params: { songId: song.songId },
       props: { song: await songRepository.get(song.songId) },
-    }))
-  )
+    })),
+  );
 }
 
 const { song } = Astro.props;

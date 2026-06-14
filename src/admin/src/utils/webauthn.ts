@@ -1,4 +1,9 @@
-import type { LoginFinishRequest, LoginStartResponse, RegisterFinishRequest, RegisterStartResponse } from '../generated';
+import type {
+  LoginFinishRequest,
+  LoginStartResponse,
+  RegisterFinishRequest,
+  RegisterStartResponse,
+} from '../generated';
 
 export type WebAuthnPublicKeyOptions = LoginStartResponse['publicKey'] | RegisterStartResponse['publicKey'];
 export type WebAuthnCredential = LoginFinishRequest['credential'] | RegisterFinishRequest['credential'];

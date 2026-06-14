@@ -121,12 +121,12 @@ export const DetailView = (props: DetailViewProps) => {
       <Match when={resource.error || resource()?.status === 'error'}>
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">データの取得に失敗しました。</p>
-          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>
+            再試行
+          </button>
         </div>
       </Match>
-      <Match when={loadedData()}>
-        {data => <EditableForm data={data()} />}
-      </Match>
+      <Match when={loadedData()}>{data => <EditableForm data={data()} />}</Match>
     </Switch>
   );
 };
@@ -245,7 +245,9 @@ const EditableForm = (props: EditableFormProps) => {
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
-            <Show when={getFieldError('publishedAt')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('publishedAt')}>
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="grid gap-4 md:grid-cols-2">
               <div>
@@ -256,9 +258,13 @@ const EditableForm = (props: EditableFormProps) => {
                   value={props.data.media.type.value}
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
-                  {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_TYPE_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('typeValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -269,9 +275,13 @@ const EditableForm = (props: EditableFormProps) => {
                   value={props.data.media.format.value}
                   classList={{ 'select-error': !!getFieldError('formatValue') }}
                 >
-                  {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_FORMAT_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('formatValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('formatValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
             </div>
 
@@ -285,7 +295,9 @@ const EditableForm = (props: EditableFormProps) => {
               <option value="true">表示する</option>
               <option value="false">表示しない</option>
             </select>
-            <Show when={getFieldError('isDisplay')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('isDisplay')}>
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="mt-6 flex justify-end">
               <button onClick={handleUpdate} class="btn btn-primary" disabled={isSubmitting()}>
@@ -332,7 +344,9 @@ const EditableForm = (props: EditableFormProps) => {
 
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
-          <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。参照中の楽曲があるメディアは削除できません。</p>
+          <p class="mt-1 text-sm text-base-content/60">
+            この操作は取り消せません。参照中の楽曲があるメディアは削除できません。
+          </p>
           <div class="mt-4">
             <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isSubmitting()}>
               {isSubmitting() ? '削除中...' : 'このメディアを削除する'}

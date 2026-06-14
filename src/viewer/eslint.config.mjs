@@ -21,6 +21,7 @@ const defaultRules = {
     },
   ],
   '@stylistic/brace-style': ['error', '1tbs'],
+  '@stylistic/comma-dangle': ['error', 'always-multiline'],
   '@typescript-eslint/consistent-type-imports': [
     'error',
     {

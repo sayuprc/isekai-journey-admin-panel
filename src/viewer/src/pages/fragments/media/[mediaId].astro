@@ -8,8 +8,8 @@ export async function getStaticPaths() {
   return Promise.all(
     (await mediaRepository.all()).map(async media => ({
       params: { mediaId: media.mediaId },
-      props: {media: await mediaRepository.get(media.mediaId)}
-    }))
+      props: { media: await mediaRepository.get(media.mediaId) },
+    })),
   );
 }
 

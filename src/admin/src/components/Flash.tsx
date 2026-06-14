@@ -40,24 +40,57 @@ const FLASH_STYLE: Record<FlashType, { alertClass: string; icon: () => JSX.Eleme
   success: {
     alertClass: 'alert-success',
     icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
     ),
   },
   error: {
     alertClass: 'alert-error',
     icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0Zm-9 6.75h.008v.008H12v-.008Z" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0Zm-9 6.75h.008v.008H12v-.008Z"
+        />
       </svg>
     ),
   },
   warning: {
     alertClass: 'alert-warning',
     icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.25-3.75a8.25 8.25 0 11-16.5 0 8.25 8.25 0 0116.5 0Z" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.25-3.75a8.25 8.25 0 11-16.5 0 8.25 8.25 0 0116.5 0Z"
+        />
       </svg>
     ),
   },
@@ -81,7 +114,10 @@ export const FlashMessage = () => {
   return (
     <>
       {visible() && (
-        <div role="alert" class={`alert mb-4 items-start gap-3 rounded-lg shadow-sm ${FLASH_STYLE[flash()!.type].alertClass}`}>
+        <div
+          role="alert"
+          class={`alert mb-4 items-start gap-3 rounded-lg shadow-sm ${FLASH_STYLE[flash()!.type].alertClass}`}
+        >
           {FLASH_STYLE[flash()!.type].icon()}
           <span class="grow leading-relaxed">{flash()!.message}</span>
           <button type="button" class="btn btn-ghost btn-xs btn-circle" onClick={closeFlash} aria-label="閉じる">

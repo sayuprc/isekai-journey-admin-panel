@@ -1,68 +1,136 @@
 name: Viewer QA
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
   pull_request:
   push:
     branches:
       - dev
 
+env:
+  MISE_ENV: ci
+
 jobs:
-  none:
-    name: None
+  diff:
+    name: Generated Code Diff Check
 
     runs-on: ubuntu-latest
 
-    # TODO 将来的に整備する
     steps:
-      - run: echo 1
+      - name: Checkout the code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: ${{ github.ref }}
 
-  # check:
-  #   name: Check (Node ${{ matrix.node-versions }})
+      - name: Setup mise
+        uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run pnpm:install
+
+      - name: Check generate code has diff
+        run: mise run viewer:generate
+
+  format:
+    name: Format
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: mise run pnpm:install
+
+      - name: Run Format Check
+        run: mise run viewer:format:check
+
+  # lint:
+  #   name: ESLint
 
   #   runs-on: ubuntu-latest
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       node-versions: ["22"]
-
   #   steps:
   #     - name: Checkout the code
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
   #       with:
   #         ref: ${{ github.ref }}
 
-  #     - name: npm cache
-  #       id: npm-cache
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ./src/node_modules
-  #         key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-package-
+  #     - name: Setup mise
+  #       uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
 
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v4
+  #     - name: Cache node modules
+  #       id: cache-node-modules
+  #       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
   #       with:
-  #         node-version: ${{ matrix.node-versions }}
+  #         path: |
+  #           src/node_modules
+  #           src/viewer/node_modules
+  #         key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
   #     - name: Install packages
-  #       if: steps.npm-cache.outputs.cache-hit != 'true'
-  #       run: |
-  #         cd src
-  #         npm i
+  #       if: steps.cache-node-modules.outputs.cache-hit != 'true'
+  #       run: mise run pnpm:install
 
   #     - name: Run ESLint
-  #       run: |
-  #         cd src
-  #         npm run lint
+  #       run: mise run viewer:lint
+
+  # style:
+  #   name: Stylelint
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout the code
+  #       uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+  #       with:
+  #         ref: ${{ github.ref }}
+
+  #     - name: Setup mise
+  #       uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
+
+  #     - name: Cache node modules
+  #       id: cache-node-modules
+  #       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+  #       with:
+  #         path: |
+  #           src/node_modules
+  #           src/viewer/node_modules
+  #         key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+  #     - name: Install packages
+  #       if: steps.cache-node-modules.outputs.cache-hit != 'true'
+  #       run: mise run pnpm:install
 
   #     - name: Run Stylelint
-  #       run: |
-  #         cd src
-  #         npm run style
+  #       run: mise run viewer:style
 
       # - name: Run Build
-      #   run: |
-      #     cd src
-      #     npm run build
+      #   run: bun run build

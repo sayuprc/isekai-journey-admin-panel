@@ -17,7 +17,9 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
     lyricists.length > 0 ? `作詞 ${lyricists.join(' / ')}` : null,
     composers.length > 0 ? `作曲 ${composers.join(' / ')}` : null,
     arrangers.length > 0 ? `編曲 ${arrangers.join(' / ')}` : null,
-  ].filter((value): value is string => Boolean(value)).join(' ・ ');
+  ]
+    .filter((value): value is string => Boolean(value))
+    .join(' ・ ');
 ---
 
 <Layout pageTitle="楽曲">

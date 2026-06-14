@@ -1,175 +1,180 @@
 /* ヰ世界情緒ファンサイト - 共通スタイル */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap");
 
 :root {
-  --bg: #0F0F11;
-  --bg-elev: #1A1A1E;
+  --bg: #0f0f11;
+  --bg-elev: #1a1a1e;
   --bg-elev-2: #232328;
-  --fg: #F4F4F6;
-  --fg-muted: #9CA3AF;
-  --fg-faint: #5A606C;
-  --line: #2C2C32;
-  --line-soft: #1F1F24;
-  --accent: #E63946;
-  --accent-strong: #F25661;
+  --fg: #f4f4f6;
+  --fg-muted: #9ca3af;
+  --fg-faint: #5a606c;
+  --line: #2c2c32;
+  --line-soft: #1f1f24;
+  --accent: #e63946;
+  --accent-strong: #f25661;
   --accent-faint: #5a1f23;
-  --accent-2: #3A6D8C;
-  --accent-2-strong: #5688AB;
+  --accent-2: #3a6d8c;
+  --accent-2-strong: #5688ab;
   --accent-2-faint: #1d3849;
-  --special: #9CA3AF;
-  --special-strong: #C8CDD6;
-  --special-faint: #3A3F48;
+  --special: #9ca3af;
+  --special-strong: #c8cdd6;
+  --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
 }
 
 [data-palette="anemone-1"] {
-  --bg: #0F0F11;
-  --bg-elev: #1A1A1E;
+  --bg: #0f0f11;
+  --bg-elev: #1a1a1e;
   --bg-elev-2: #232328;
-  --fg: #F4F4F6;
-  --fg-muted: #9CA3AF;
-  --fg-faint: #5A606C;
-  --line: #2C2C32;
-  --line-soft: #1F1F24;
-  --accent: #E63946;
-  --accent-strong: #F25661;
+  --fg: #f4f4f6;
+  --fg-muted: #9ca3af;
+  --fg-faint: #5a606c;
+  --line: #2c2c32;
+  --line-soft: #1f1f24;
+  --accent: #e63946;
+  --accent-strong: #f25661;
   --accent-faint: #5a1f23;
-  --accent-2: #3A6D8C;
-  --accent-2-strong: #5688AB;
+  --accent-2: #3a6d8c;
+  --accent-2-strong: #5688ab;
   --accent-2-faint: #1d3849;
-  --special: #9CA3AF;
-  --special-strong: #C8CDD6;
-  --special-faint: #3A3F48;
+  --special: #9ca3af;
+  --special-strong: #c8cdd6;
+  --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
 }
 
 [data-palette="anemone-2"] {
-  --bg: #F0F5F9;
-  --bg-elev: #FFFFFF;
-  --bg-elev-2: #E4ECF3;
-  --fg: #2A323C;
-  --fg-muted: #788A9E;
-  --fg-faint: #B0BCCC;
-  --line: #D2DCE6;
-  --line-soft: #E2EAF2;
-  --accent: #38BDF8;
-  --accent-strong: #0EA5E0;
-  --accent-faint: #B5E4FA;
-  --accent-2: #E05A65;
-  --accent-2-strong: #C44552;
-  --accent-2-faint: #F4B7BD;
-  --special: #8B7BB1;
-  --special-strong: #6F5F95;
-  --special-faint: #D5CDE3;
-  --paper: #F0F5F9;
-  --shadow: 0 20px 60px rgba(30,50,80,0.07);
+  --bg: #f0f5f9;
+  --bg-elev: #fff;
+  --bg-elev-2: #e4ecf3;
+  --fg: #2a323c;
+  --fg-muted: #788a9e;
+  --fg-faint: #b0bccc;
+  --line: #d2dce6;
+  --line-soft: #e2eaf2;
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e0;
+  --accent-faint: #b5e4fa;
+  --accent-2: #e05a65;
+  --accent-2-strong: #c44552;
+  --accent-2-faint: #f4b7bd;
+  --special: #8b7bb1;
+  --special-strong: #6f5f95;
+  --special-faint: #d5cde3;
+  --paper: #f0f5f9;
+  --shadow: 0 20px 60px rgb(30 50 80 / 7%);
 }
 
 [data-palette="nemophila-1"] {
-  --bg: #FFFFFF;
-  --bg-elev: #F0F8FF;
-  --bg-elev-2: #E2EEF8;
-  --fg: #1B2A49;
-  --fg-muted: #6B8EB8;
-  --fg-faint: #A8BCD3;
-  --line: #C8DAEC;
-  --line-soft: #DEE9F4;
-  --accent: #3A8DDE;
-  --accent-strong: #2270BD;
-  --accent-faint: #B6D5F0;
-  --accent-2: #8BC6EC;
-  --accent-2-strong: #5BA8DB;
-  --accent-2-faint: #D6E9F7;
-  --special: #E2F0F9;
-  --special-strong: #B7D4E8;
-  --special-faint: #F2F8FC;
-  --paper: #F0F8FF;
-  --shadow: 0 20px 60px rgba(20,40,80,0.06);
+  --bg: #fff;
+  --bg-elev: #f0f8ff;
+  --bg-elev-2: #e2eef8;
+  --fg: #1b2a49;
+  --fg-muted: #6b8eb8;
+  --fg-faint: #a8bcd3;
+  --line: #c8daec;
+  --line-soft: #dee9f4;
+  --accent: #3a8dde;
+  --accent-strong: #2270bd;
+  --accent-faint: #b6d5f0;
+  --accent-2: #8bc6ec;
+  --accent-2-strong: #5ba8db;
+  --accent-2-faint: #d6e9f7;
+  --special: #e2f0f9;
+  --special-strong: #b7d4e8;
+  --special-faint: #f2f8fc;
+  --paper: #f0f8ff;
+  --shadow: 0 20px 60px rgb(20 40 80 / 6%);
 }
 
 [data-palette="nemophila-2"] {
-  --bg: #0B1121;
+  --bg: #0b1121;
   --bg-elev: #162035;
-  --bg-elev-2: #1F2C45;
-  --fg: #D4E0ED;
-  --fg-muted: #7A91A8;
-  --fg-faint: #4A5C72;
+  --bg-elev-2: #1f2c45;
+  --fg: #d4e0ed;
+  --fg-muted: #7a91a8;
+  --fg-faint: #4a5c72;
   --line: #243353;
   --line-soft: #182340;
-  --accent: #2B70B5;
-  --accent-strong: #4A8FD0;
+  --accent: #2b70b5;
+  --accent-strong: #4a8fd0;
   --accent-faint: #143352;
-  --accent-2: #63A4D9;
-  --accent-2-strong: #84BDE8;
-  --accent-2-faint: #1F4570;
-  --special: #1E508A;
-  --special-strong: #3974AE;
+  --accent-2: #63a4d9;
+  --accent-2-strong: #84bde8;
+  --accent-2-faint: #1f4570;
+  --special: #1e508a;
+  --special-strong: #3974ae;
   --special-faint: #102945;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow: 0 20px 60px rgb(0 0 0 / 50%);
 }
 
 [data-palette="sunflower-1"] {
-  --bg: #FFFDF5;
-  --bg-elev: #FFF7D6;
-  --bg-elev-2: #FFEFB3;
-  --fg: #4A3F2C;
-  --fg-muted: #8C7B65;
-  --fg-faint: #B8A88E;
-  --line: #E6D9B8;
-  --line-soft: #F0E6CA;
-  --accent: #FFB300;
-  --accent-strong: #E69D00;
-  --accent-faint: #FFE08A;
-  --accent-2: #E68A00;
-  --accent-2-strong: #C77400;
-  --accent-2-faint: #FFCD7A;
-  --special: #6B4E31;
-  --special-strong: #4A3520;
-  --special-faint: #C9B294;
-  --paper: #FFFDF5;
-  --shadow: 0 20px 60px rgba(80,60,20,0.08);
+  --bg: #fffdf5;
+  --bg-elev: #fff7d6;
+  --bg-elev-2: #ffefb3;
+  --fg: #4a3f2c;
+  --fg-muted: #8c7b65;
+  --fg-faint: #b8a88e;
+  --line: #e6d9b8;
+  --line-soft: #f0e6ca;
+  --accent: #ffb300;
+  --accent-strong: #e69d00;
+  --accent-faint: #ffe08a;
+  --accent-2: #e68a00;
+  --accent-2-strong: #c77400;
+  --accent-2-faint: #ffcd7a;
+  --special: #6b4e31;
+  --special-strong: #4a3520;
+  --special-faint: #c9b294;
+  --paper: #fffdf5;
+  --shadow: 0 20px 60px rgb(80 60 20 / 8%);
 }
 
 [data-palette="sunflower-2"] {
   --bg: #232428;
-  --bg-elev: #2E3036;
-  --bg-elev-2: #383A41;
-  --fg: #F2F3F5;
-  --fg-muted: #A3A6AA;
-  --fg-faint: #6E7176;
-  --line: #44464D;
-  --line-soft: #33353B;
-  --accent: #F5C033;
-  --accent-strong: #FFD050;
-  --accent-faint: #6B5316;
-  --accent-2: #8B5A2B;
-  --accent-2-strong: #B57939;
-  --accent-2-faint: #3D2911;
-  --special: #E09E19;
-  --special-strong: #F5B73A;
-  --special-faint: #4F390C;
+  --bg-elev: #2e3036;
+  --bg-elev-2: #383a41;
+  --fg: #f2f3f5;
+  --fg-muted: #a3a6aa;
+  --fg-faint: #6e7176;
+  --line: #44464d;
+  --line-soft: #33353b;
+  --accent: #f5c033;
+  --accent-strong: #ffd050;
+  --accent-faint: #6b5316;
+  --accent-2: #8b5a2b;
+  --accent-2-strong: #b57939;
+  --accent-2-faint: #3d2911;
+  --special: #e09e19;
+  --special-strong: #f5b73a;
+  --special-faint: #4f390c;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
-  margin: 0;
+html,
+body {
   padding: 0;
-  background: var(--bg);
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
-  color: var(--fg);
-  font-weight: 400;
+  margin: 0;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
   font-size: 16px;
+  font-weight: 400;
   line-height: 1.75;
+  color: var(--fg);
+  background: var(--bg);
+  text-rendering: optimizelegibility;
+  transition:
+    background-color 0.5s ease,
+    color 0.3s ease;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  transition: background-color 0.5s ease, color 0.3s ease;
 }
 
 body {
@@ -180,46 +185,69 @@ body {
   background-attachment: fixed;
 }
 
-a { color: inherit; text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-::selection { background: color-mix(in oklab, var(--accent) 40%, transparent); color: var(--fg); }
+::selection {
+  color: var(--fg);
+  background: color-mix(in oklab, var(--accent) 40%, transparent);
+}
 
-.font-serif { font-family: 'Noto Serif JP', 'Shippori Mincho', serif; }
-.font-mincho { font-family: 'Shippori Mincho', 'Noto Serif JP', serif; }
-.font-mono { font-family: 'JetBrains Mono', monospace; }
-.font-cormorant { font-family: 'EB Garamond', 'Cormorant Garamond', serif; }
-.font-en { font-family: 'EB Garamond', 'Cormorant Garamond', serif; letter-spacing: 0.02em; }
+.font-serif {
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
+}
+
+.font-mincho {
+  font-family: "Shippori Mincho", "Noto Serif JP", serif;
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+.font-cormorant {
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
+}
+
+.font-en {
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  letter-spacing: 0.02em;
+}
 
 .num {
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-style: normal;
   font-weight: 500;
-  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-feature-settings:
+    "lnum" 1,
+    "tnum" 1;
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: 0.02em;
 }
 
 .eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
   font-weight: 400;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
 }
 
 .label-mono {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
-  letter-spacing: 0.06em;
-  color: var(--fg-muted);
   font-weight: 400;
+  color: var(--fg-muted);
+  letter-spacing: 0.06em;
 }
 
 .shell {
   max-width: 1480px;
-  margin: 0 auto;
   padding: 0 48px;
+  margin: 0 auto;
 }
 
 .site-nav {
@@ -227,26 +255,26 @@ a { color: inherit; text-decoration: none; }
   top: 0;
   z-index: 50;
   background: color-mix(in oklab, var(--bg) 88%, transparent);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
   border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
 }
 
 .nav-inner {
-  max-width: 1480px;
-  margin: 0 auto;
-  padding: 18px 48px;
   display: flex;
+  gap: 32px;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  max-width: 1480px;
+  padding: 18px 48px;
+  margin: 0 auto;
 }
 
 .brand {
   display: flex;
-  align-items: center;
-  gap: 12px;
   flex-shrink: 0;
+  gap: 12px;
+  align-items: center;
 }
 
 .brand-text {
@@ -256,36 +284,36 @@ a { color: inherit; text-decoration: none; }
 }
 
 .brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 19px;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--fg);
-  white-space: nowrap;
   line-height: 1;
+  color: var(--fg);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
 }
 
 .brand-en {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
+  font-size: 12px;
   font-style: italic;
   font-weight: 500;
-  font-size: 12px;
+  line-height: 1;
   color: var(--fg-muted);
   letter-spacing: 0.1em;
   white-space: nowrap;
-  line-height: 1;
 }
 
 .brand-logo {
-  height: 38px;
-  width: auto;
   display: block;
+  width: auto;
+  height: 38px;
 }
 
 .footer-logo {
-  height: 44px;
-  width: auto;
   display: block;
+  width: auto;
+  height: 44px;
 }
 
 .brand-logo-light,
@@ -312,13 +340,15 @@ a { color: inherit; text-decoration: none; }
 }
 
 .footer-brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 22px;
-  letter-spacing: 0.12em;
   color: var(--fg);
+  letter-spacing: 0.12em;
 }
 
-.hero-index-title:hover { color: var(--accent-strong) !important; }
+.hero-index-title:hover {
+  color: var(--accent-strong) !important;
+}
 
 .nav-links {
   display: flex;
@@ -326,72 +356,79 @@ a { color: inherit; text-decoration: none; }
 }
 
 .nav-links a {
-  padding: 8px 18px;
-  font-family: 'Noto Serif JP', serif;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  color: var(--fg-muted);
   position: relative;
+  padding: 8px 18px;
+  font-family: "Noto Serif JP", serif;
+  font-size: 14px;
+  color: var(--fg-muted);
+  letter-spacing: 0.08em;
   transition: color 0.2s ease;
 }
 
-.nav-links a:hover { color: var(--fg); }
-.nav-links a.active { color: var(--fg); }
+.nav-links a:hover {
+  color: var(--fg);
+}
+
+.nav-links a.active {
+  color: var(--fg);
+}
 
 .nav-links a.active::after {
-  content: '';
   position: absolute;
   bottom: -19px;
   left: 50%;
-  transform: translateX(-50%);
   width: 4px;
   height: 4px;
+  content: "";
   background: var(--accent);
   border-radius: 50%;
+  transform: translateX(-50%);
 }
 
 .nav-utils {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .nav-toggle {
   display: none;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   padding: 0;
+  color: var(--fg);
+  background: transparent;
   border: 1px solid var(--line);
   border-radius: 50%;
-  background: transparent;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 4px;
-  color: var(--fg);
 }
 
 .nav-toggle span {
   width: 16px;
   height: 1px;
-  background: currentColor;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  background: currentcolor;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--fg-muted);
+  cursor: pointer;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 50%;
-  color: var(--fg-muted);
-  cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
 }
 
 .icon-btn:hover {
@@ -399,21 +436,23 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--accent);
 }
 
-.theme-picker { position: relative; }
+.theme-picker {
+  position: relative;
+}
 
 .theme-trigger {
   display: inline-flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
+  height: 36px;
   padding: 6px 14px 6px 8px;
+  font-family: "Noto Serif JP", serif;
+  color: var(--fg-muted);
+  cursor: pointer;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 999px;
-  color: var(--fg-muted);
-  cursor: pointer;
-  font-family: 'Noto Serif JP', serif;
   transition: all 0.2s ease;
-  height: 36px;
 }
 
 .theme-trigger:hover {
@@ -422,9 +461,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-trigger .hanger-icon {
-  color: var(--fg-muted);
   flex-shrink: 0;
-  transition: color .2s ease;
+  color: var(--fg-muted);
+  transition: color 0.2s ease;
 }
 
 .theme-trigger:hover .hanger-icon {
@@ -434,32 +473,32 @@ a { color: inherit; text-decoration: none; }
 .theme-trigger .label {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0;
+  align-items: flex-start;
   line-height: 1;
 }
 
 .theme-trigger .label .jp {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 12px;
-  letter-spacing: 0.1em;
   color: var(--fg);
+  letter-spacing: 0.1em;
 }
 
 .theme-trigger .label .en {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  margin-top: 2px;
+  font-family: "EB Garamond", serif;
   font-size: 10px;
+  font-style: italic;
   color: var(--fg-muted);
   letter-spacing: 0.04em;
-  margin-top: 2px;
 }
 
 .theme-trigger .caret {
-  font-family: 'JetBrains Mono', monospace;
+  margin-left: 2px;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   color: var(--fg-faint);
-  margin-left: 2px;
 }
 
 .theme-pop-overlay {
@@ -479,29 +518,29 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
 }
 
 .theme-pop-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 12px;
   padding-bottom: 10px;
+  margin-bottom: 12px;
   border-bottom: 1px solid var(--line-soft);
 }
 
 .theme-pop-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 14px;
-  letter-spacing: 0.12em;
   color: var(--fg);
+  letter-spacing: 0.12em;
 }
 
 .theme-pop-title-en {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: "EB Garamond", serif;
   font-size: 11px;
+  font-style: italic;
   color: var(--fg-muted);
 }
 
@@ -513,13 +552,13 @@ a { color: inherit; text-decoration: none; }
 
 .theme-opt {
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
   padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
   background: transparent;
   border: 1px solid transparent;
-  cursor: pointer;
-  text-align: left;
   transition: all 0.15s ease;
 }
 
@@ -529,8 +568,8 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-opt.active {
-  border-color: var(--accent);
   background: color-mix(in oklab, var(--accent) 12%, transparent);
+  border-color: var(--accent);
 }
 
 .theme-opt .meta {
@@ -541,28 +580,28 @@ a { color: inherit; text-decoration: none; }
 }
 
 .theme-opt .meta .name {
-  font-family: 'Shippori Mincho', serif;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: var(--fg);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Shippori Mincho", serif;
+  font-size: 13px;
+  color: var(--fg);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .theme-opt .meta .sub {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
-  font-size: 11px;
-  color: var(--fg-muted);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "EB Garamond", serif;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--fg-muted);
+  white-space: nowrap;
 }
 
 .theme-opt .check {
   margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--accent);
   opacity: 0;
@@ -591,7 +630,7 @@ a { color: inherit; text-decoration: none; }
 
 .section-title {
   margin: 0;
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 42px;
   font-weight: 500;
   line-height: 1.15;
@@ -608,63 +647,71 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ボタン */
+
 .btn {
   display: inline-flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
   padding: 12px 22px;
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
   font-size: 13px;
-  letter-spacing: 0.1em;
-  background: transparent;
   color: var(--fg);
-  border: 1px solid var(--line);
-  cursor: pointer;
-  transition: all 0.25s ease;
+  letter-spacing: 0.1em;
   white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line);
+  transition: all 0.25s ease;
 }
+
 .btn:hover {
-  border-color: var(--accent);
   background: color-mix(in oklab, var(--accent) 10%, transparent);
+  border-color: var(--accent);
 }
+
 .btn-primary {
+  color: var(--bg);
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--bg);
 }
+
 .btn-primary:hover {
   background: var(--accent-strong);
   border-color: var(--accent-strong);
 }
 
 /* ピル / バッジ */
+
 .pill {
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  letter-spacing: 0.12em;
-  border: 1px solid var(--line);
   color: var(--fg-muted);
-  border-radius: 999px;
+  letter-spacing: 0.12em;
   white-space: nowrap;
+  border: 1px solid var(--line);
+  border-radius: 999px;
 }
+
 .pill.solid {
-  background: color-mix(in oklab, var(--accent) 18%, transparent);
   color: var(--accent-strong);
+  background: color-mix(in oklab, var(--accent) 18%, transparent);
   border-color: transparent;
 }
 
 /* セグメンテッドコントロール */
+
 .seg {
   display: inline-flex;
+  gap: 4px;
+  padding: 4px;
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 4px;
-  gap: 4px;
 }
+
 .seg button {
   display: inline-flex;
   align-items: center;
@@ -672,83 +719,93 @@ a { color: inherit; text-decoration: none; }
   width: 46px;
   height: 38px;
   padding: 0;
-  background: transparent;
-  border: none;
   color: var(--fg-muted);
   cursor: pointer;
+  background: transparent;
+  border: none;
   border-radius: 6px;
   transition: all 0.16s ease;
 }
+
 .seg button svg {
   width: 16px;
   height: 16px;
   fill: none;
-  stroke: currentColor;
+  stroke: currentcolor;
   stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
 .seg button .seg-fill {
-  fill: currentColor;
-  stroke: none;
   opacity: 0.28;
+  fill: currentcolor;
+  stroke: none;
 }
+
 .seg button.active {
-  background: color-mix(in oklab, var(--accent) 18%, var(--bg-elev-2));
   color: var(--accent-strong);
+  background: color-mix(in oklab, var(--accent) 18%, var(--bg-elev-2));
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent);
 }
+
 .seg button:not(.active):hover {
   color: var(--fg);
   background: color-mix(in oklab, var(--fg) 5%, transparent);
 }
+
 .seg button:active {
   transform: translateY(1px);
 }
 
 /* image-slot 共通 */
+
 image-slot {
+  color: var(--fg-faint);
   background: var(--bg-elev-2);
   border: 1px dashed var(--line);
-  color: var(--fg-faint);
   transition: border-color 0.25s ease;
 }
+
 image-slot:hover {
   border-color: var(--accent);
 }
 
 /* Songs / Events 用 */
+
 .song-meta {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .song-meta-cell {
   display: inline-flex;
-  align-items: baseline;
   gap: 3px;
+  align-items: baseline;
 }
 
 .timeline-row {
   display: grid;
   grid-template-columns: 56px 1fr auto auto auto;
   gap: 24px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line-soft);
   align-items: center;
+  padding: 18px 0;
   cursor: pointer;
+  border-bottom: 1px solid var(--line-soft);
   transition: padding 0.15s;
 }
+
 .timeline-row:hover {
   padding-left: 8px;
 }
 
 .song-card {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  cursor: pointer;
   display: grid;
   grid-template-columns: 200px 1fr;
+  cursor: pointer;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
   transition: border-color 0.18s;
 }
 
@@ -780,7 +837,7 @@ image-slot:hover {
 }
 
 .songs-table-heading {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
@@ -792,7 +849,7 @@ image-slot:hover {
 }
 
 .song-row-index {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-size: 20px;
   font-style: italic;
   line-height: 1;
@@ -807,7 +864,7 @@ image-slot:hover {
   margin-top: 3px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 12px;
   line-height: 1.5;
   color: var(--fg-muted);
@@ -815,7 +872,7 @@ image-slot:hover {
 }
 
 .song-row-type {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   line-height: 1.5;
   color: var(--fg-muted);
@@ -826,7 +883,7 @@ image-slot:hover {
   gap: 3px;
   align-items: baseline;
   justify-content: flex-end;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 12px;
   line-height: 1;
   color: var(--fg-muted);
@@ -834,7 +891,7 @@ image-slot:hover {
 }
 
 .song-row-media strong {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-size: 22px;
   font-style: italic;
   font-weight: 500;
@@ -842,9 +899,9 @@ image-slot:hover {
 }
 
 .num-cell {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
   font-size: 16px;
+  font-style: italic;
   color: var(--accent);
   text-align: center;
 }
@@ -857,219 +914,259 @@ image-slot:hover {
 }
 
 /* 罫線とディテール */
+
 .hairline {
   height: 1px;
+  margin: 0;
   background: var(--line);
   border: none;
-  margin: 0;
 }
 
 /* スクロールバー */
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--line);
   border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-faint);
 }
 
 /* フッター */
+
 .site-footer {
-  margin-top: 96px;
   padding: 64px 0 48px;
+  margin-top: 96px;
   border-top: 1px solid var(--line);
 }
+
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 48px;
   margin-bottom: 48px;
 }
+
 .viewer-filters {
   display: flex;
-  gap: 8px;
-  margin-bottom: 32px;
   flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
+  margin-bottom: 32px;
 }
+
 .viewer-filters .btn.is-active {
+  color: var(--accent-strong);
   background: color-mix(in oklab, var(--accent) 18%, transparent);
   border-color: var(--accent);
-  color: var(--accent-strong);
 }
+
 .viewer-filters-spacer {
   flex: 1;
 }
+
 .viewer-search {
   min-width: 280px;
   padding: 8px 16px;
-  border: 1px solid var(--line);
+  font-family: "Noto Serif JP", serif;
+  font-size: 13px;
+  color: var(--fg);
   outline: none;
   background: var(--bg-elev);
-  color: var(--fg);
-  font-family: 'Noto Serif JP', serif;
-  font-size: 13px;
+  border: 1px solid var(--line);
 }
 
 .viewer-search,
 .viewer-filters {
   max-width: 100%;
 }
+
 .footer-brand {
   display: flex;
-  align-items: center;
   gap: 14px;
+  align-items: center;
   margin-bottom: 16px;
 }
+
 .footer-brand-mark {
-  font-family: 'Shippori Mincho', serif;
+  margin-bottom: 12px;
+  font-family: "Shippori Mincho", serif;
   font-size: 28px;
   letter-spacing: 0.1em;
-  margin-bottom: 12px;
 }
+
 .footer-tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--fg-muted);
+  font-family: "Cormorant Garamond", serif;
   font-size: 14px;
+  font-style: italic;
   line-height: 1.6;
-}
-.footer-col h4 {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
   color: var(--fg-muted);
-  font-weight: 400;
-  text-transform: uppercase;
-  margin: 0 0 16px;
 }
+
+.footer-col h4 {
+  margin: 0 0 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
 .footer-col ul {
-  list-style: none;
   padding: 0;
   margin: 0;
+  list-style: none;
 }
+
 .footer-col li {
   font-size: 13px;
-  color: var(--fg-muted);
   line-height: 2;
+  color: var(--fg-muted);
   cursor: pointer;
   transition: color 0.2s ease;
 }
-.footer-col li:hover { color: var(--fg); }
+
+.footer-col li:hover {
+  color: var(--fg);
+}
 
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding-top: 24px;
-  border-top: 1px solid var(--line-soft);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-faint);
   letter-spacing: 0.1em;
+  border-top: 1px solid var(--line-soft);
 }
 
 /* ─── Detail Panel ─── */
+
 .detail-overlay {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: color-mix(in oklab, var(--bg) 78%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   display: flex;
   justify-content: flex-end;
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   animation: pageIn 0.25s ease;
 }
+
 .detail-panel {
+  display: flex;
+  flex-direction: column;
   width: min(620px, 92vw);
   height: 100%;
   background: var(--bg-elev);
   border-left: 1px solid var(--line);
   box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
   animation: slideIn 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+
 @keyframes slideIn {
-  from { transform: translateX(40px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
+
 .detail-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 28px;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg-elev);
   position: sticky;
   top: 0;
   z-index: 1;
-}
-.drawer-head-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 20px 28px;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--line);
 }
+
+.drawer-head-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .drawer-share-btn {
   width: auto;
   min-width: 64px;
   padding: 0 12px;
   border-radius: 999px;
 }
+
 .drawer-open-link {
   text-decoration: none;
 }
+
 .detail-body {
   position: relative;
+  flex: 1;
   padding: 32px 36px 64px;
   overflow-y: auto;
-  flex: 1;
 }
+
 .detail-body-loading .detail-page-content {
   opacity: 0.72;
 }
+
 .drawer-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 240px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
-  letter-spacing: 0.12em;
   color: var(--fg-muted);
+  letter-spacing: 0.12em;
 }
+
 .drawer-loading-overlay {
   position: absolute;
   top: 16px;
   right: 20px;
   padding: 6px 10px;
-  border: 1px solid var(--line);
-  background: color-mix(in oklab, var(--bg-elev) 92%, transparent);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  letter-spacing: 0.12em;
   color: var(--fg-muted);
+  letter-spacing: 0.12em;
   pointer-events: none;
+  background: color-mix(in oklab, var(--bg-elev) 92%, transparent);
+  border: 1px solid var(--line);
 }
+
 .detail-title {
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
-  font-size: 32px;
-  letter-spacing: 0.04em;
   margin: 10px 0 4px;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
+  font-size: 32px;
   line-height: 1.25;
+  letter-spacing: 0.04em;
 }
+
 .detail-title-en {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
   font-size: 18px;
+  font-style: italic;
   color: var(--fg-muted);
 }
 
@@ -1077,14 +1174,15 @@ image-slot:hover {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
+  margin-top: 32px;
   background: var(--line);
   border: 1px solid var(--line);
-  margin-top: 32px;
 }
+
 .stat-cell {
-  background: var(--bg-elev);
   padding: 18px 16px;
   text-align: left;
+  background: var(--bg-elev);
 }
 
 .rel-list {
@@ -1092,40 +1190,69 @@ image-slot:hover {
   flex-direction: column;
   gap: 6px;
 }
+
 .rel-chip {
   display: flex;
-  align-items: center;
   gap: 14px;
+  align-items: center;
   padding: 12px 14px;
+  cursor: pointer;
   background: var(--bg-elev-2);
   border: 1px solid transparent;
-  cursor: pointer;
   transition: all 0.18s ease;
 }
+
 .rel-chip:hover {
-  border-color: var(--accent);
   background: color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2));
+  border-color: var(--accent);
   transform: translateX(2px);
 }
 
 /* ユーティリティ */
-.spacer-lg { height: 96px; }
-.spacer-md { height: 48px; }
-.spacer-sm { height: 24px; }
+
+.spacer-lg {
+  height: 96px;
+}
+
+.spacer-md {
+  height: 48px;
+}
+
+.spacer-sm {
+  height: 24px;
+}
 
 /* ページ間遷移 */
+
 .page {
   animation: pageIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* プレースホルダー画像（パターン付き） */
+
 .placeholder-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   background:
     repeating-linear-gradient(
       135deg,
@@ -1135,14 +1262,6 @@ image-slot:hover {
       transparent 24px
     ),
     color-mix(in oklab, var(--accent) 12%, var(--bg-elev-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--fg-faint);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
 }
 
 .page-section {
@@ -1173,6 +1292,7 @@ image-slot:hover {
 
 .hero-data {
   padding: 88px 0 84px;
+
   /* border-bottom: 1px solid var(--line); */
 }
 
@@ -1189,8 +1309,8 @@ image-slot:hover {
 
 .hero-mark.hero-mark-data {
   font-size: clamp(56px, 8.5vw, 116px);
-  letter-spacing: 0.06em;
   line-height: 1;
+  letter-spacing: 0.06em;
 }
 
 .hero-mark.hero-mark-data span {
@@ -1198,9 +1318,9 @@ image-slot:hover {
 }
 
 .hero-en.hero-en-whisper {
+  margin-top: 12px;
   font-size: 17px;
   color: var(--fg-faint);
-  margin-top: 12px;
   letter-spacing: 0.05em;
 }
 
@@ -1212,8 +1332,8 @@ image-slot:hover {
 
 .hero-data-stat {
   padding: 28px 0;
-  border-bottom: 1px solid var(--line);
   background: transparent;
+  border-bottom: 1px solid var(--line);
 }
 
 .hero-data-stat-row {
@@ -1224,10 +1344,10 @@ image-slot:hover {
 }
 
 .hero-data-stat strong {
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
-  font-weight: 500;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-size: 52px;
   font-style: italic;
+  font-weight: 500;
   line-height: 1;
   color: var(--accent);
 }
@@ -1239,23 +1359,23 @@ image-slot:hover {
 }
 
 .hero-data-stat span {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 17px;
   color: var(--fg);
   letter-spacing: 0.08em;
 }
 
 .hero-data-stat em {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
   font-size: 12px;
+  font-style: italic;
   color: var(--fg-faint);
 }
 
 .hero-symbol {
   position: relative;
-  overflow: hidden;
   padding: 120px 0 96px;
+  overflow: hidden;
 }
 
 .hero-stars {
@@ -1263,8 +1383,8 @@ image-slot:hover {
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.18;
   pointer-events: none;
+  opacity: 0.18;
 }
 
 .hero-symbol-inner {
@@ -1273,26 +1393,26 @@ image-slot:hover {
 }
 
 .hero-mark {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: clamp(56px, 9vw, 128px);
-  letter-spacing: 0.18em;
   line-height: 1;
+  letter-spacing: 0.18em;
 }
 
 .hero-en {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 22px;
-  color: var(--accent);
   margin-top: 24px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--accent);
   letter-spacing: 0.15em;
 }
 
 .hero-divider {
   width: 64px;
   height: 1px;
-  background: var(--line);
   margin: 48px auto;
+  background: var(--line);
 }
 
 .hero-copy {
@@ -1303,8 +1423,8 @@ image-slot:hover {
 
 .hero-actions {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
+  gap: 16px;
   margin-top: 40px;
 }
 
@@ -1313,23 +1433,23 @@ image-slot:hover {
 }
 
 .hero-stats-grid {
-  margin: 96px auto 0;
-  max-width: 800px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
+  max-width: 800px;
+  margin: 96px auto 0;
   background: var(--line);
   border: 1px solid var(--line);
 }
 
 .hero-stats-grid div {
-  background: var(--bg-elev);
   padding: 24px;
+  background: var(--bg-elev);
 }
 
 .hero-stats-grid strong,
 .detail-index {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
   color: var(--accent);
 }
@@ -1373,9 +1493,9 @@ image-slot:hover {
 }
 
 .feature-title {
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
-  font-size: 40px;
   margin: 12px 0 6px;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
+  font-size: 40px;
   letter-spacing: 0.06em;
 }
 
@@ -1383,8 +1503,8 @@ image-slot:hover {
 .detail-description,
 .event-row-description,
 .song-grid-description {
-  color: var(--fg-muted);
   line-height: 1.85;
+  color: var(--fg-muted);
 }
 
 .media-card-grid,
@@ -1423,7 +1543,7 @@ image-slot:hover {
 .media-card-title,
 .song-grid-title,
 .event-row-title {
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
   letter-spacing: 0.04em;
 }
 
@@ -1449,7 +1569,7 @@ image-slot:hover {
 
 .timeline-title,
 .table-title {
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.04em;
 }
@@ -1459,11 +1579,11 @@ image-slot:hover {
 }
 
 .song-grid-title-en {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 12px;
-  color: var(--fg-muted);
   margin-top: 2px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--fg-muted);
 }
 
 .song-grid-description {
@@ -1474,16 +1594,16 @@ image-slot:hover {
 .song-grid-meta,
 .release-card-meta {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 12px;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 8px;
 }
 
 .media-card-tags {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 6px;
   margin-top: 10px;
 }
 
@@ -1498,8 +1618,8 @@ image-slot:hover {
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  border: 1px solid var(--line);
   background: var(--bg-elev);
+  border: 1px solid var(--line);
 }
 
 .post-card-compact {
@@ -1508,56 +1628,60 @@ image-slot:hover {
 
 .post-card-head {
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
 }
 
 .platform-badge {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 15px;
   line-height: 1;
-  flex-shrink: 0;
+  border-radius: 4px;
 }
+
 .platform-badge-x {
+  color: #fff;
   background: #000;
-  color: #fff;
 }
+
 .platform-badge-ig {
+  color: #fff;
   background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  color: #fff;
 }
+
 .platform-badge-yt {
-  background: #ff0033;
   color: #fff;
+  background: #f03;
 }
+
 .platform-badge-blog {
-  background: var(--fg);
   color: var(--bg);
+  background: var(--fg);
 }
 
 .post-card-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 18px;
-  letter-spacing: 0.04em;
   line-height: 1.4;
+  letter-spacing: 0.04em;
 }
 
 .post-card-text,
 .post-detail-text {
   display: -webkit-box;
   overflow: hidden;
-  color: var(--fg);
-  font-family: 'Noto Serif JP', serif;
+  -webkit-line-clamp: 6;
+  font-family: "Noto Serif JP", serif;
   font-size: 14px;
   line-height: 1.85;
+  color: var(--fg);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
 }
 
 .post-card-compact .post-card-text {
@@ -1568,8 +1692,12 @@ image-slot:hover {
 .post-detail-image {
   aspect-ratio: 4 / 3;
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 70%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent)),
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 8px);
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 70%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    ),
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 4%) 0 2px, transparent 2px 8px);
 }
 
 .post-card-stats,
@@ -1577,10 +1705,10 @@ image-slot:hover {
   display: flex;
   gap: 16px;
   margin-top: auto;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  letter-spacing: 0.1em;
   color: var(--fg-muted);
+  letter-spacing: 0.1em;
 }
 
 .post-detail-card {
@@ -1588,36 +1716,36 @@ image-slot:hover {
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  border: 1px solid var(--line);
   background: var(--bg-elev);
+  border: 1px solid var(--line);
 }
 
 .upcoming-event-card {
-  border: 1px solid var(--line);
-  padding: 48px;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 48px;
   align-items: center;
+  padding: 48px;
   background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 8%, transparent), transparent);
+  border: 1px solid var(--line);
 }
 
 .upcoming-date {
+  padding-right: 48px;
   text-align: center;
   border-right: 1px solid var(--line);
-  padding-right: 48px;
 }
 
 .upcoming-date div {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
   font-size: 14px;
+  font-style: italic;
   color: var(--accent);
 }
 
 .upcoming-date strong {
   display: block;
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 56px;
   line-height: 1;
 }
@@ -1625,7 +1753,7 @@ image-slot:hover {
 .upcoming-date span {
   display: block;
   margin-top: 8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   color: var(--fg-muted);
 }
@@ -1639,8 +1767,8 @@ image-slot:hover {
 .media-list-row,
 .event-row {
   display: grid;
-  align-items: center;
   gap: 24px;
+  align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid var(--line-soft);
 }
@@ -1648,10 +1776,11 @@ image-slot:hover {
 .media-list-row {
   grid-template-columns: 80px 240px 1fr auto;
 }
+
 .song-meta-inline {
   display: inline-flex;
   gap: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
   color: var(--fg-muted);
   letter-spacing: 0.08em;
@@ -1667,14 +1796,14 @@ image-slot:hover {
 }
 
 .event-row-highlight {
-  padding-left: 24px;
   padding-right: 24px;
-  border-left: 2px solid var(--accent);
+  padding-left: 24px;
   background: color-mix(in oklab, var(--accent) 6%, transparent);
+  border-left: 2px solid var(--accent);
 }
 
 .event-row-date {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.04em;
 }
@@ -1683,10 +1812,10 @@ image-slot:hover {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  text-align: right;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-muted);
+  text-align: right;
 }
 
 .songs-table {
@@ -1713,7 +1842,7 @@ image-slot:hover {
 
 .entry-status {
   margin-bottom: 12px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   line-height: 1.5;
   color: var(--fg-muted);
@@ -1734,7 +1863,7 @@ image-slot:hover {
 }
 
 .entry-empty-title {
-  font-family: 'Noto Serif JP', 'Shippori Mincho', serif;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
   font-size: 18px;
   line-height: 1.6;
   color: var(--fg);
@@ -1742,7 +1871,7 @@ image-slot:hover {
 
 .entry-empty-description {
   margin-top: 6px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   line-height: 1.6;
   color: var(--fg-muted);
@@ -1764,8 +1893,8 @@ image-slot:hover {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 4px;
-  margin-top: 16px;
   padding-top: 16px;
+  margin-top: 16px;
   border-top: 1px solid var(--line-soft);
 }
 
@@ -1789,9 +1918,9 @@ image-slot:hover {
 
 .feature-subtitle {
   margin-bottom: 24px;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
   font-size: 18px;
+  font-style: italic;
   color: var(--accent);
 }
 
@@ -1808,8 +1937,8 @@ image-slot:hover {
 }
 
 .media-mosaic-lg {
-  grid-column: span 2;
   grid-row: span 2;
+  grid-column: span 2;
 }
 
 .media-mosaic-md {
@@ -1822,7 +1951,11 @@ image-slot:hover {
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 80%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent));
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 80%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    );
 }
 
 .media-mosaic-copy {
@@ -1834,7 +1967,7 @@ image-slot:hover {
 }
 
 .media-mosaic-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255 255 255 / 70%);
 }
 
 .events-group {
@@ -1852,13 +1985,13 @@ image-slot:hover {
 }
 
 .events-year {
-  margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  margin-bottom: 16px;
+  font-family: "Cormorant Garamond", serif;
   font-size: 48px;
+  font-style: italic;
   color: var(--accent);
+  border-bottom: 1px solid var(--line);
 }
 
 .events-month {
@@ -1897,7 +2030,7 @@ image-slot:hover {
 }
 
 .events-category-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: "Shippori Mincho", serif;
   font-size: 20px;
   letter-spacing: 0.08em;
 }
@@ -1924,15 +2057,15 @@ image-slot:hover {
 }
 
 .profile-portrait-meta {
-  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
   padding: 16px;
-  border: 1px solid var(--line);
-  font-family: 'JetBrains Mono', monospace;
+  margin-top: 16px;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--fg-muted);
   letter-spacing: 0.1em;
-  display: flex;
-  justify-content: space-between;
+  border: 1px solid var(--line);
 }
 
 .chronology-grid {
@@ -1940,45 +2073,49 @@ image-slot:hover {
   grid-template-columns: 200px 1fr;
   gap: 24px 32px;
 }
+
 .chronology-grid-mock {
   gap: 32px;
 }
+
 .chronology-grid-mock > :nth-child(odd) {
   padding-right: 32px;
-  border-right: 1px solid var(--line);
-  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
-  font-weight: 500;
+  font-family: "EB Garamond", "Cormorant Garamond", serif;
   font-size: 36px;
-  color: var(--accent);
+  font-weight: 500;
   line-height: 1.2;
+  color: var(--accent);
+  border-right: 1px solid var(--line);
 }
+
 .chronology-grid-mock > :nth-child(even) {
   padding: 8px 0 24px;
   margin-bottom: 24px;
-  border-bottom: 1px solid var(--line-soft);
   font-size: 16px;
   line-height: 1.9;
+  border-bottom: 1px solid var(--line-soft);
 }
+
 .media-posts-grid {
   margin-top: 32px;
 }
 
 .chronology-grid > :nth-child(odd) {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  padding-right: 32px;
+  font-family: "Cormorant Garamond", serif;
   font-size: 36px;
+  font-style: italic;
+  line-height: 1.2;
   color: var(--accent);
   border-right: 1px solid var(--line);
-  padding-right: 32px;
-  line-height: 1.2;
 }
 
 .chronology-grid > :nth-child(even) {
   padding-bottom: 24px;
   margin-bottom: 24px;
-  border-bottom: 1px solid var(--line-soft);
   font-size: 16px;
   line-height: 1.9;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .detail-meta-grid {
@@ -2015,7 +2152,7 @@ image-slot:hover {
 
 .song-credit-label,
 .song-credit-value {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .song-credit-label {
@@ -2095,10 +2232,10 @@ image-slot:hover {
 }
 
 .rel-main {
-  font-family: 'Shippori Mincho', serif;
-  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Shippori Mincho", serif;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -2110,9 +2247,9 @@ image-slot:hover {
 }
 
 .color-block {
+  flex-shrink: 0;
   width: 38px;
   height: 38px;
-  flex-shrink: 0;
   background: linear-gradient(135deg, var(--tile-color), color-mix(in oklab, var(--tile-color) 50%, transparent));
 }
 
@@ -2126,25 +2263,25 @@ image-slot:hover {
 
 .jacket-art::before,
 .mv-thumb::before {
-  content: '';
   position: absolute;
   inset: 0;
+  content: "";
 }
 
 .jacket-art::before {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 8px);
+  background: repeating-linear-gradient(45deg, rgb(255 255 255 / 3%) 0 2px, transparent 2px 8px);
 }
 
 .jacket-art-label {
   position: absolute;
-  left: 10px;
   right: 10px;
   bottom: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  left: 10px;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
-  letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgb(255 255 255 / 50%);
   text-transform: uppercase;
+  letter-spacing: 0.15em;
 }
 
 .jacket-art-mark {
@@ -2153,8 +2290,8 @@ image-slot:hover {
   left: 50%;
   width: 60%;
   height: 60%;
-  transform: translate(-50%, -50%);
   opacity: 0.25;
+  transform: translate(-50%, -50%);
 }
 
 .song-tile {
@@ -2178,7 +2315,7 @@ image-slot:hover {
   position: absolute;
   inset: 10px;
   z-index: -1;
-  content: '';
+  content: "";
   border: 1px solid rgb(255 255 255 / 18%);
 }
 
@@ -2189,7 +2326,7 @@ image-slot:hover {
   z-index: -1;
   width: 24%;
   height: 140%;
-  content: '';
+  content: "";
   background: rgb(255 255 255 / 10%);
   transform: rotate(18deg);
 }
@@ -2200,7 +2337,7 @@ image-slot:hover {
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   line-height: 1.2;
   color: rgb(255 255 255 / 72%);
@@ -2216,7 +2353,7 @@ image-slot:hover {
 .song-tile-signature {
   align-self: center;
   max-width: 100%;
-  font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+  font-family: "Shippori Mincho", "Noto Serif JP", serif;
   font-size: 56px;
   font-weight: 500;
   line-height: 1;
@@ -2230,11 +2367,15 @@ image-slot:hover {
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
-    linear-gradient(135deg, color-mix(in oklab, var(--tile-color) 80%, transparent), color-mix(in oklab, var(--tile-color) 30%, transparent));
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--tile-color) 80%, transparent),
+      color-mix(in oklab, var(--tile-color) 30%, transparent)
+    );
 }
 
 .mv-thumb::before {
-  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px);
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 4%) 0 1px, transparent 1px 4px);
 }
 
 .mv-thumb-label {
@@ -2242,9 +2383,9 @@ image-slot:hover {
   top: 10px;
   left: 12px;
   z-index: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgb(255 255 255 / 65%);
   letter-spacing: 0.15em;
 }
 
@@ -2253,14 +2394,14 @@ image-slot:hover {
   top: 50%;
   left: 50%;
   z-index: 1;
-  width: 60px;
-  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 60px;
+  height: 60px;
+  background: rgb(0 0 0 / 40%);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   transform: translate(-50%, -50%);
 }
@@ -2273,11 +2414,15 @@ image-slot:hover {
 
 .event-hero {
   padding: 36px;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)), color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2)));
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)),
+    color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2))
+  );
   border: 1px solid var(--line);
 }
 
-@media (max-width: 1100px) {
+@media (width <= 1100px) {
   .two-col-section,
   .hero-data-grid,
   .detail-hero-grid,
@@ -2308,8 +2453,8 @@ image-slot:hover {
   }
 
   .upcoming-date {
-    border-right: 0;
     padding-right: 0;
+    border-right: 0;
   }
 
   .hero-data-stats {
@@ -2321,7 +2466,7 @@ image-slot:hover {
   }
 }
 
-@media (max-width: 1280px) {
+@media (width <= 1280px) {
   .song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2332,7 +2477,7 @@ image-slot:hover {
   }
 }
 
-@media (max-width: 960px) {
+@media (width <= 960px) {
   .release-grid,
   .media-card-grid,
   .recent-posts-grid,
@@ -2350,19 +2495,19 @@ image-slot:hover {
   }
 
   .viewer-search {
+    flex-basis: 100%;
     order: 10;
     width: 100%;
     min-width: 100%;
-    flex-basis: 100%;
   }
 }
 
-@media (max-width: 720px) {
+@media (width <= 720px) {
   .nav-inner {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    align-items: center;
     gap: 12px;
+    align-items: center;
   }
 
   .nav-toggle {
@@ -2371,8 +2516,8 @@ image-slot:hover {
 
   .nav-links {
     display: none;
-    grid-column: 1 / -1;
     flex-direction: column;
+    grid-column: 1 / -1;
     gap: 0;
     padding-top: 8px;
     border-top: 1px solid var(--line);
@@ -2403,9 +2548,9 @@ image-slot:hover {
   }
 
   .theme-trigger {
+    justify-content: center;
     width: 40px;
     padding: 0;
-    justify-content: center;
   }
 
   .theme-trigger .label,
@@ -2488,11 +2633,11 @@ image-slot:hover {
   }
 }
 
-@media (max-width: 800px) {
+@media (width <= 800px) {
   .shell,
   .nav-inner {
-    padding-left: 20px;
     padding-right: 20px;
+    padding-left: 20px;
   }
 
   .nav-inner,
@@ -2553,7 +2698,7 @@ image-slot:hover {
   }
 }
 
-@media (max-width: 420px) {
+@media (width <= 420px) {
   .brand-text {
     display: none;
   }

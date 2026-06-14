@@ -1,5 +1,13 @@
 import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
-import type { Media, Person, RequestSongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
+import type {
+  Media,
+  Person,
+  RequestSongPerson,
+  SongPersonRole,
+  SongTag,
+  SongType,
+  SongTypeValue,
+} from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -67,12 +75,12 @@ export const CreateView = () => {
       <Match when={resource.error || resource()?.status === 'error'}>
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">データの取得に失敗しました。</p>
-          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>
+            再試行
+          </button>
         </div>
       </Match>
-      <Match when={loadedData()}>
-        {data => <CreateForm data={data()} />}
-      </Match>
+      <Match when={loadedData()}>{data => <CreateForm data={data()} />}</Match>
     </Switch>
   );
 };
@@ -105,12 +113,15 @@ export const CreateForm = (props: CreateFormProps) => {
   };
 
   const removeEntry = (setter: typeof setLyricists, index: number) => {
-    setter(prev =>
-      prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })),
-    );
+    setter(prev => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
   };
 
-  const updateEntry = (setter: typeof setLyricists, index: number, field: keyof PersonEntry, value: string | number) => {
+  const updateEntry = (
+    setter: typeof setLyricists,
+    index: number,
+    field: keyof PersonEntry,
+    value: string | number,
+  ) => {
     setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
@@ -158,9 +169,7 @@ export const CreateForm = (props: CreateFormProps) => {
 
   const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
     const selectedPersonIds = new Set(
-      entries
-        .filter(entry => entry.personId !== '' && entry.personId !== currentPersonId)
-        .map(entry => entry.personId),
+      entries.filter(entry => entry.personId !== '' && entry.personId !== currentPersonId).map(entry => entry.personId),
     );
 
     return persons()
@@ -181,7 +190,12 @@ export const CreateForm = (props: CreateFormProps) => {
       .map(entry => availableTags().find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
 
-  const PersonSection = (props: { label: string; entries: () => PersonEntry[]; setter: typeof setLyricists; role: SongPersonRole }) => (
+  const PersonSection = (props: {
+    label: string;
+    entries: () => PersonEntry[];
+    setter: typeof setLyricists;
+    role: SongPersonRole;
+  }) => (
     <div class="mt-4">
       <div class="flex items-center gap-2">
         <span class="label">{props.label}</span>
@@ -295,7 +309,9 @@ export const CreateForm = (props: CreateFormProps) => {
                   required
                   classList={{ 'input-error': !!getFieldError('title') }}
                 />
-                <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('title')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -304,7 +320,8 @@ export const CreateForm = (props: CreateFormProps) => {
                   class="select select-bordered w-full"
                   name="typeValue"
                   value={typeValue()}
-                  onChange={e => setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
+                  onChange={e =>
+                    setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
                   required
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
@@ -313,7 +330,9 @@ export const CreateForm = (props: CreateFormProps) => {
                   </option>
                   <For each={types()}>{type => <option value={type.value}>{type.name}</option>}</For>
                 </select>
-                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('typeValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div class="md:col-span-2">

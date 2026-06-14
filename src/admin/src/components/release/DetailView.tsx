@@ -137,12 +137,12 @@ export const DetailView = (props: DetailViewProps) => {
       <Match when={resource.error || resource()?.status === 'error'}>
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">データの取得に失敗しました。</p>
-          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>
+            再試行
+          </button>
         </div>
       </Match>
-      <Match when={loadedData()}>
-        {data => <ReleaseForm data={data()} />}
-      </Match>
+      <Match when={loadedData()}>{data => <ReleaseForm data={data()} />}</Match>
     </Switch>
   );
 };
@@ -333,7 +333,9 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                   onInput={e => setTitle(e.currentTarget.value)}
                   classList={{ 'input-error': !!getFieldError('title') }}
                 />
-                <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('title')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -345,7 +347,9 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                   onInput={e => setReleasedOn(e.currentTarget.value)}
                   classList={{ 'input-error': !!getFieldError('releasedOn') }}
                 />
-                <Show when={getFieldError('releasedOn')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('releasedOn')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -355,9 +359,13 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                   value={String(typeValue())}
                   onChange={e => setTypeValue(Number(e.currentTarget.value) as ReleaseTypeValue)}
                 >
-                  <For each={RELEASE_TYPE_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
+                  <For each={RELEASE_TYPE_OPTIONS}>
+                    {option => <option value={option.value}>{option.label}</option>}
+                  </For>
                 </select>
-                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('typeValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -365,9 +373,12 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                 <select
                   class="select select-bordered w-full"
                   value={String(distributionTypeValue())}
-                  onChange={e => setDistributionTypeValue(Number(e.currentTarget.value) as ReleaseDistributionTypeValue)}
+                  onChange={e =>
+                    setDistributionTypeValue(Number(e.currentTarget.value) as ReleaseDistributionTypeValue)}
                 >
-                  <For each={DISTRIBUTION_TYPE_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
+                  <For each={DISTRIBUTION_TYPE_OPTIONS}>
+                    {option => <option value={option.value}>{option.label}</option>}
+                  </For>
                 </select>
                 <Show when={getFieldError('distributionTypeValue')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
@@ -398,7 +409,9 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                   <option value="true">表示する</option>
                   <option value="false">表示しない</option>
                 </select>
-                <Show when={getFieldError('isDisplay')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('isDisplay')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
             </div>
 
@@ -412,7 +425,9 @@ const ReleaseForm = (props: ReleaseFormProps) => {
 
         <fieldset class="rounded-box border border-base-300 bg-base-200 p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">収録楽曲</legend>
-          <Show when={getFieldError('trackEntries')}>{message => <p class="mb-4 text-sm text-error">{message()}</p>}</Show>
+          <Show when={getFieldError('trackEntries')}>
+            {message => <p class="mb-4 text-sm text-error">{message()}</p>}
+          </Show>
           <div class="space-y-6">
             <div>
               <label class="label">現在の収録楽曲</label>
@@ -456,7 +471,11 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                                 <a href={`/songs/${entry.songId}`} class="btn btn-ghost btn-xs">
                                   楽曲を見る
                                 </a>
-                                <button type="button" class="btn btn-outline btn-error btn-xs" onClick={() => removeTrackEntry(entry.songId)}>
+                                <button
+                                  type="button"
+                                  class="btn btn-outline btn-error btn-xs"
+                                  onClick={() => removeTrackEntry(entry.songId)}
+                                >
                                   削除
                                 </button>
                               </div>
@@ -488,9 +507,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                 </button>
               </form>
 
-              <Show when={searchError()}>
-                {message => <p class="mt-3 text-sm text-error">{message()}</p>}
-              </Show>
+              <Show when={searchError()}>{message => <p class="mt-3 text-sm text-error">{message()}</p>}</Show>
 
               <Show when={hasSearched()}>
                 <div class="mt-4 overflow-x-auto rounded-box border border-base-300 bg-base-100">
@@ -506,7 +523,13 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                     <tbody>
                       <Show
                         when={searchResults().length > 0}
-                        fallback={<tr><td colSpan={4} class="text-center text-sm text-base-content/60">条件に一致する楽曲はありません。</td></tr>}
+                        fallback={(
+                          <tr>
+                            <td colSpan={4} class="text-center text-sm text-base-content/60">
+                              条件に一致する楽曲はありません。
+                            </td>
+                          </tr>
+                        )}
                       >
                         <For each={searchResults()}>
                           {song => (
@@ -540,7 +563,11 @@ const ReleaseForm = (props: ReleaseFormProps) => {
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
           <p class="mt-1 text-sm text-base-content/60">この操作は取り消せません。</p>
           <div class="mt-4">
-            <button onClick={handleDelete} class="btn btn-outline btn-error btn-sm" disabled={isDeleting() || isUpdating()}>
+            <button
+              onClick={handleDelete}
+              class="btn btn-outline btn-error btn-sm"
+              disabled={isDeleting() || isUpdating()}
+            >
               {isDeleting() ? '削除中...' : 'このリリースを削除する'}
             </button>
           </div>

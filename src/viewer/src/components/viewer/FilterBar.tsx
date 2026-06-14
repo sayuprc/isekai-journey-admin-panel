@@ -27,16 +27,18 @@ export default function FilterBar(props: Props) {
       if (!(entry instanceof HTMLElement)) continue;
       const categoryMatch = f === 'all' || props.categoryAttrs.some(attr => entry.dataset[attr] === f);
       const searchKey = props.searchAttr;
-      const text = searchKey ? entry.dataset[searchKey] ?? '' : '';
+      const text = searchKey ? (entry.dataset[searchKey] ?? '') : '';
       const searchMatch = !searchKey || q === '' || text.includes(q);
       const match = categoryMatch && searchMatch;
       entry.dataset.viewerFilterMatch = match ? 'true' : 'false';
       entry.style.display = match ? '' : 'none';
     }
 
-    document.dispatchEvent(new CustomEvent('viewer:filter-change', {
-      detail: { entrySelector: props.entrySelector },
-    }));
+    document.dispatchEvent(
+      new CustomEvent('viewer:filter-change', {
+        detail: { entrySelector: props.entrySelector },
+      }),
+    );
   });
 
   return (

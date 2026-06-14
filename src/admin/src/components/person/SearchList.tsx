@@ -41,7 +41,13 @@ export const SearchList = () => {
   const [inputOrder, setInputOrder] = createSignal(initial.order);
   const [inputPerPage, setInputPerPage] = createSignal<PerPage>(initial.perPage);
 
-  const updateUrl = (params: { name: string; sort: PersonSearchSortBy; order: SortOrder; page: number; perPage: number }) => {
+  const updateUrl = (params: {
+    name: string;
+    sort: PersonSearchSortBy;
+    order: SortOrder;
+    page: number;
+    perPage: number;
+  }) => {
     const searchParams = new URLSearchParams();
     if (params.name) searchParams.set('name', params.name);
     if (params.sort) searchParams.set('sort', params.sort);
@@ -178,7 +184,13 @@ export const SearchList = () => {
             class="select select-bordered select-sm"
             onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>
+              {n => (
+                <option value={n} selected={inputPerPage() === n}>
+                  {n}件
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm mb-1">
@@ -221,7 +233,10 @@ export const SearchList = () => {
                         <td>{person.name}</td>
                         <td>{person.orderNo}</td>
                         <td>
-                          <a href={`/persons/${person.personId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                          <a
+                            href={`/persons/${person.personId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="btn btn-ghost btn-xs"
+                          >
                             編集
                           </a>
                         </td>

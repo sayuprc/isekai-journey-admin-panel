@@ -1,5 +1,15 @@
 import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
-import type { Media, Person, RequestSongPerson, Song, SongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
+import type {
+  Media,
+  Person,
+  RequestSongPerson,
+  Song,
+  SongPerson,
+  SongPersonRole,
+  SongTag,
+  SongType,
+  SongTypeValue,
+} from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -100,12 +110,12 @@ export const DetailView = (props: DetailViewProps) => {
       <Match when={resource.error || resource()?.status === 'error'}>
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">データの取得に失敗しました。</p>
-          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>
+            再試行
+          </button>
         </div>
       </Match>
-      <Match when={loadedData()}>
-        {data => <EditableForm data={data()} />}
-      </Match>
+      <Match when={loadedData()}>{data => <EditableForm data={data()} />}</Match>
     </Switch>
   );
 };
@@ -142,9 +152,7 @@ export const EditableForm = (props: EditableFormProps) => {
   const [lyricists, setLyricists] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 1));
   const [composers, setComposers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 2));
   const [arrangers, setArrangers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 3));
-  const [tags, setTags] = createSignal<SongTagEntry[]>(
-    props.data.song.tags.map(tag => ({ songTagId: tag.songTagId })),
-  );
+  const [tags, setTags] = createSignal<SongTagEntry[]>(props.data.song.tags.map(tag => ({ songTagId: tag.songTagId })));
   const [availableMedia, setAvailableMedia] = createSignal<Media[]>(initialAvailableMedia);
   const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>(props.data.song.media.map(toMediaEntry));
   const [tagPickerValue, setTagPickerValue] = createSignal('');
@@ -163,12 +171,15 @@ export const EditableForm = (props: EditableFormProps) => {
   };
 
   const removeEntry = (setter: typeof setLyricists, index: number) => {
-    setter(prev =>
-      prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })),
-    );
+    setter(prev => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
   };
 
-  const updateEntry = (setter: typeof setLyricists, index: number, field: keyof PersonEntry, value: string | number) => {
+  const updateEntry = (
+    setter: typeof setLyricists,
+    index: number,
+    field: keyof PersonEntry,
+    value: string | number,
+  ) => {
     setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
@@ -259,9 +270,7 @@ export const EditableForm = (props: EditableFormProps) => {
 
   const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
     const selectedPersonIds = new Set(
-      entries
-        .filter(entry => entry.personId !== '' && entry.personId !== currentPersonId)
-        .map(entry => entry.personId),
+      entries.filter(entry => entry.personId !== '' && entry.personId !== currentPersonId).map(entry => entry.personId),
     );
 
     return persons
@@ -282,7 +291,12 @@ export const EditableForm = (props: EditableFormProps) => {
       .map(entry => availableTags.find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
 
-  const PersonSection = (props: { label: string; entries: () => PersonEntry[]; setter: typeof setLyricists; role: SongPersonRole }) => (
+  const PersonSection = (props: {
+    label: string;
+    entries: () => PersonEntry[];
+    setter: typeof setLyricists;
+    role: SongPersonRole;
+  }) => (
     <div class="mt-4">
       <div class="flex items-center gap-2">
         <span class="label">{props.label}</span>
@@ -398,7 +412,9 @@ export const EditableForm = (props: EditableFormProps) => {
                     value={props.data.song.title}
                     classList={{ 'input-error': !!getFieldError('title') }}
                   />
-                  <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                  <Show when={getFieldError('title')}>
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  </Show>
                 </div>
 
                 <div>
@@ -407,18 +423,19 @@ export const EditableForm = (props: EditableFormProps) => {
                     class="select select-bordered w-full"
                     name="typeValue"
                     value={typeValue()}
-                    onChange={e => setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
+                    onChange={e =>
+                      setTypeValue(e.currentTarget.value === '' ? '' : (Number(e.currentTarget.value) as SongTypeValue))}
                     required
                     classList={{ 'select-error': !!getFieldError('typeValue') }}
                   >
                     <option value="" disabled>
                       選択してください
                     </option>
-                    <For each={types}>
-                      {type => <option value={type.value}>{type.name}</option>}
-                    </For>
+                    <For each={types}>{type => <option value={type.value}>{type.name}</option>}</For>
                   </select>
-                  <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                  <Show when={getFieldError('typeValue')}>
+                    {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                  </Show>
                 </div>
 
                 <div class="md:col-span-2">
@@ -464,7 +481,14 @@ export const EditableForm = (props: EditableFormProps) => {
 
                 <div>
                   <label class="label">表示順</label>
-                  <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data.song.orderNo} />
+                  <input
+                    type="number"
+                    class="input w-full"
+                    name="orderNo"
+                    required
+                    min="1"
+                    value={props.data.song.orderNo}
+                  />
                 </div>
               </div>
             </fieldset>

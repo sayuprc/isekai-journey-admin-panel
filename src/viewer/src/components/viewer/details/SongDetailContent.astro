@@ -43,12 +43,12 @@ const formatPublishedAt = (value: string): string =>
   {/* {
     releases.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
           <div>
             <span class="label-mono">RELEASES</span>
-            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">収録リリース</span>
+            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">収録リリース</span>
           </div>
-          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{releases.length}</span>
+          <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{releases.length}</span>
         </div>
         <div class="rel-list">
           {
@@ -57,9 +57,9 @@ const formatPublishedAt = (value: string): string =>
                 <div class="color-block" style={`--tile-color:${release.color};width:38px;height:38px;flex-shrink:0;`}></div>
                 <div class="rel-copy">
                   <div class="rel-main">{release.title}</div>
-                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{release.date} · {release.type}</div>
+                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{release.date} · {release.type}</div>
                 </div>
-                <span style="color:var(--fg-faint);font-size:14px;">→</span>
+                <span style="font-size:14px;color:var(--fg-faint);">→</span>
               </a>
             ))
           }
@@ -71,23 +71,27 @@ const formatPublishedAt = (value: string): string =>
   {
     media.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
           <div>
             <span class="label-mono">MEDIA</span>
-            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">関連メディア</span>
+            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">関連メディア</span>
           </div>
-          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{media.length}</span>
+          <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{media.length}</span>
         </div>
         <div class="rel-list">
           {media.map(entry => (
             <a class="rel-chip" href={`/media/${entry.mediaId}`}>
               {/* TODO メディアのサムネイルを表示する */}
-              {/* <div class="color-block" style="--tile-color:var(--accent);width:38px;height:38px;flex-shrink:0;" /> */}
+              {/* <div class="color-block" style="
+
+--tile-color:var(--accent);
+
+flex-shrink:0;width:38px;height:38px;" /> */}
               <div class="rel-copy">
                 <div class="rel-main">{entry.title}</div>
-                <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{formatPublishedAt(entry.publishedAt)} · {entry.type.name}</div>
+                <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)} · {entry.type.name}</div>
               </div>
-              <span style="color:var(--fg-faint);font-size:14px;">→</span>
+              <span style="font-size:14px;color:var(--fg-faint);">→</span>
             </a>
           ))}
         </div>

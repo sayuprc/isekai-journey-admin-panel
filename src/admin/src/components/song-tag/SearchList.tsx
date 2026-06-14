@@ -182,7 +182,13 @@ export const SearchList = () => {
             class="select select-bordered select-sm"
             onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>
+              {n => (
+                <option value={n} selected={inputPerPage() === n}>
+                  {n}件
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm mb-1">
@@ -225,7 +231,10 @@ export const SearchList = () => {
                         <td>{tag.name}</td>
                         <td>{tag.orderNo}</td>
                         <td>
-                          <a href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                          <a
+                            href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="btn btn-ghost btn-xs"
+                          >
                             編集
                           </a>
                         </td>

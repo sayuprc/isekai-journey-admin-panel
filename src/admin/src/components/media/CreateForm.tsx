@@ -106,7 +106,9 @@ export const CreateForm = () => {
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
-            <Show when={getFieldError('publishedAt')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('publishedAt')}>
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="grid gap-4 md:grid-cols-2">
               <div>
@@ -117,9 +119,13 @@ export const CreateForm = () => {
                   required
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
-                  {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_TYPE_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('typeValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('typeValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
 
               <div>
@@ -130,22 +136,24 @@ export const CreateForm = () => {
                   required
                   classList={{ 'select-error': !!getFieldError('formatValue') }}
                 >
-                  {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
+                  {MEDIA_FORMAT_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
                 </select>
-                <Show when={getFieldError('formatValue')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+                <Show when={getFieldError('formatValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
               </div>
             </div>
 
             <label class="label">表示設定</label>
-            <select
-              class="select w-full"
-              name="isDisplay"
-              classList={{ 'select-error': !!getFieldError('isDisplay') }}
-            >
+            <select class="select w-full" name="isDisplay" classList={{ 'select-error': !!getFieldError('isDisplay') }}>
               <option value="true">表示する</option>
               <option value="false">表示しない</option>
             </select>
-            <Show when={getFieldError('isDisplay')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
+            <Show when={getFieldError('isDisplay')}>
+              {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+            </Show>
 
             <div class="mt-6 flex justify-end">
               <button class="btn btn-primary" disabled={isSubmitting()}>

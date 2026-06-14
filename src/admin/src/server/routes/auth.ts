@@ -63,9 +63,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     '/login/finish',
     async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
       const body = { authCeremonyId, credential } satisfies LoginFinishRequest;
-      const data = resolveApiResponse(
-        await authenticateServiceLoginFinish({ client: client, body: body }),
-      );
+      const data = resolveApiResponse(await authenticateServiceLoginFinish({ client: client, body: body }));
 
       const sessionId = generateRandomBytes();
       const csrfToken = generateRandomBytes();
@@ -102,9 +100,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     '/register/finish',
     async ({ body: { authCeremonyId, token, credential }, cookie: { session, csrf } }) => {
       const body = { authCeremonyId, token, credential } satisfies RegisterFinishRequest;
-      const data = resolveApiResponse(
-        await authenticateServiceRegisterFinish({ client: client, body: body }),
-      );
+      const data = resolveApiResponse(await authenticateServiceRegisterFinish({ client: client, body: body }));
 
       const sessionId = generateRandomBytes();
       const csrfToken = generateRandomBytes();
@@ -142,9 +138,7 @@ export const auth = new Elysia({ prefix: '/auth' })
     '/recovery/finish',
     async ({ body: { authCeremonyId, credential }, cookie: { session, csrf } }) => {
       const body = { authCeremonyId, credential } satisfies RecoveryFinishRequest;
-      const data = resolveApiResponse(
-        await authenticateServiceRecoveryFinish({ client: client, body: body }),
-      );
+      const data = resolveApiResponse(await authenticateServiceRecoveryFinish({ client: client, body: body }));
 
       const sessionId = generateRandomBytes();
       const csrfToken = generateRandomBytes();

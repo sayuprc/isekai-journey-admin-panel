@@ -89,13 +89,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         <Show when={getFieldError('email')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <label class="label">名前</label>
-        <input
-          type="text"
-          class="input"
-          name="name"
-          required
-          classList={{ 'input-error': !!getFieldError('name') }}
-        />
+        <input type="text" class="input" name="name" required classList={{ 'input-error': !!getFieldError('name') }} />
         <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
