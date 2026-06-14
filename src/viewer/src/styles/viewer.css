@@ -2471,6 +2471,10 @@ image-slot:hover {
   .hero-data {
     padding-top: 72px;
   }
+
+  .hero-mark.hero-mark-data span {
+    display: inline;
+  }
 }
 
 @media (width <= 1280px) {
@@ -2708,6 +2712,10 @@ image-slot:hover {
 @media (width <= 420px) {
   .brand-text {
     display: none;
+  }
+
+  .hero-mark.hero-mark-data {
+    font-size: clamp(40px, 13vw, 52px);
   }
 
   .footer-grid {
