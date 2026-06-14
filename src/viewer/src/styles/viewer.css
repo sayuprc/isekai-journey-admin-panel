@@ -1364,8 +1364,9 @@ image-slot:hover {
 
 .hero-data-stat em {
   font-family: "Cormorant Garamond", serif;
-  font-size: 12px;
+  font-size: 15px;
   font-style: italic;
+  letter-spacing: 0.04em;
   color: var(--fg-faint);
 }
 
