@@ -475,6 +475,8 @@ a {
   flex-direction: column;
   gap: 0;
   align-items: flex-start;
+  /* テーマ名の長さで幅が変わると nav-links がずれるため、最長名に合わせて固定する */
+  width: 104px;
   line-height: 1;
 }
 
@@ -483,6 +485,7 @@ a {
   font-size: 12px;
   color: var(--fg);
   letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 .theme-trigger .label .en {
@@ -492,6 +495,7 @@ a {
   font-style: italic;
   color: var(--fg-muted);
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .theme-trigger .caret {
