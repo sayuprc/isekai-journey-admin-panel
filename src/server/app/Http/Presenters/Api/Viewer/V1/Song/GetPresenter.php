@@ -33,7 +33,7 @@ class GetPresenter
     }
 
     /**
-     * @return array{songId: string, title: string, description: string, type: array{name: string, value: 1|2}, counts: array{mediaCount: int}, lyricists: array<string>, composers: array<string>, arrangers: array<string>, media: array<array{mediaId: string, title: string, type: array{name: string, value: int}, publishedAt: string}>}
+     * @return array{songId: string, title: string, description: string, type: array{name: string, value: 1|2}, counts: array{mediaCount: int}, lyricists: array<string>, composers: array<string>, arrangers: array<string>, media: array<array{mediaId: string, title: string, type: array{name: string, value: int}, format: array{name: string, value: int}, publishedAt: string}>}
      */
     private function toArray(SongDetail $song): array
     {
@@ -58,7 +58,7 @@ class GetPresenter
     }
 
     /**
-     * @return array{mediaId: string, title: string, type: array{name: string, value: int}, publishedAt: string}
+     * @return array{mediaId: string, title: string, type: array{name: string, value: int}, format: array{name: string, value: int}, publishedAt: string}
      */
     private function toMediaArray(SongDetailMediaSummary $media): array
     {
@@ -68,6 +68,10 @@ class GetPresenter
             'type' => [
                 'name' => $media->type->getName(),
                 'value' => $media->type->value,
+            ],
+            'format' => [
+                'name' => $media->format->getName(),
+                'value' => $media->format->value,
             ],
             'publishedAt' => $media->publishedAt->format('Y-m-d'),
         ];

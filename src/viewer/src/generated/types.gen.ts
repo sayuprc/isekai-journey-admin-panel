@@ -98,6 +98,7 @@ export type SongDetailMediaSummary = {
     mediaId: MediaId;
     title: MediaTitle;
     type: MediaType;
+    format: MediaFormat;
     publishedAt: MediaPublishedAt;
 };
 

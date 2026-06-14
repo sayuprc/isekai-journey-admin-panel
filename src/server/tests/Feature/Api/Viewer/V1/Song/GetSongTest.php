@@ -117,6 +117,10 @@ class GetSongTest extends DatabaseTestCase
                                 'name' => '動画',
                                 'value' => 1,
                             ],
+                            'format' => [
+                                'name' => 'MV',
+                                'value' => 1,
+                            ],
                             'publishedAt' => '2024-03-01',
                         ],
                         [
@@ -125,6 +129,10 @@ class GetSongTest extends DatabaseTestCase
                             'type' => [
                                 'name' => '記事',
                                 'value' => 2,
+                            ],
+                            'format' => [
+                                'name' => 'その他',
+                                'value' => 99,
                             ],
                             'publishedAt' => '2024-05-01',
                         ],

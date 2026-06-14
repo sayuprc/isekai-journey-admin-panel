@@ -427,6 +427,9 @@ components:
               type:
                 name: 動画
                 value: 1
+              format:
+                name: MV
+                value: 1
               publishedAt: '2024-03-01'
     SongDetailMediaSummary:
       type: object
@@ -434,6 +437,7 @@ components:
         - mediaId
         - title
         - type
+        - format
         - publishedAt
       properties:
         mediaId:
@@ -442,6 +446,8 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         type:
           $ref: '#/components/schemas/MediaType'
+        format:
+          $ref: '#/components/schemas/MediaFormat'
         publishedAt:
           $ref: '#/components/schemas/mediaPublishedAt'
       examples:
@@ -449,6 +455,9 @@ components:
           title: 描き続けた君へ MV
           type:
             name: 動画
+            value: 1
+          format:
+            name: MV
             value: 1
           publishedAt: '2024-03-01'
     SongDetailResponse:
@@ -479,6 +488,9 @@ components:
                 title: 描き続けた君へ MV
                 type:
                   name: 動画
+                  value: 1
+                format:
+                  name: MV
                   value: 1
                 publishedAt: '2024-03-01'
     SongListItem:
