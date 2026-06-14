@@ -143,7 +143,7 @@ set_mise_local_env_block() {
       skip = 1
       next
     }
-    /^# <<< worktree:init <<<$/{ 
+    /^# <<< worktree:init <<<$/{
       skip = 0
       next
     }
@@ -326,8 +326,6 @@ WORKTREE_NGINX_SITE_CONF="${repo_root}/.worktree/docker/nginx/site.conf"
 WORKTREE_ADMIN_URL="https://local.admin.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
 WORKTREE_VIEWER_URL="https://local.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
 WORKTREE_API_BASE_URL="https://local.api.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
-WORKTREE_API_ADMIN_URL="${WORKTREE_API_BASE_URL}/admin/v1"
-WORKTREE_API_VIEWER_URL="${WORKTREE_API_BASE_URL}/v1"
 
 {
   write_shell_value "WORKTREE_ROOT" "$WORKTREE_ROOT"
@@ -345,8 +343,6 @@ WORKTREE_API_VIEWER_URL="${WORKTREE_API_BASE_URL}/v1"
   write_shell_value "WORKTREE_ADMIN_URL" "$WORKTREE_ADMIN_URL"
   write_shell_value "WORKTREE_VIEWER_URL" "$WORKTREE_VIEWER_URL"
   write_shell_value "WORKTREE_API_BASE_URL" "$WORKTREE_API_BASE_URL"
-  write_shell_value "WORKTREE_API_ADMIN_URL" "$WORKTREE_API_ADMIN_URL"
-  write_shell_value "WORKTREE_API_VIEWER_URL" "$WORKTREE_API_VIEWER_URL"
 } >"$shared_env_file"
 
 if [[ -d "$WORKTREE_NGINX_SITE_CONF" ]]; then
@@ -363,13 +359,13 @@ rm -f "${state_dir}/env"
 ensure_worktree_certs
 
 ensure_env_file "${repo_root}/src/admin/.env" "${repo_root}/src/admin/.env.example"
-set_env_value "${repo_root}/src/admin/.env" "API_URL" "$WORKTREE_API_ADMIN_URL"
+set_env_value "${repo_root}/src/admin/.env" "API_URL" "$WORKTREE_API_BASE_URL"
 set_env_value "${repo_root}/src/admin/.env" "CACHE_URL" "http://127.0.0.1:${WORKTREE_REDIS_HTTP_PORT}"
 set_env_value "${repo_root}/src/admin/.env" "CACHE_TOKEN" "${REDIS_HTTP_TOKEN:-example_token}"
 set_env_value "${repo_root}/src/admin/.env" "PUBLIC_APP_URL" "$WORKTREE_ADMIN_URL"
 
 ensure_env_file "${repo_root}/src/viewer/.env" "${repo_root}/src/viewer/.env.example"
-set_env_value "${repo_root}/src/viewer/.env" "API_URL" "$WORKTREE_API_VIEWER_URL"
+set_env_value "${repo_root}/src/viewer/.env" "API_URL" "$WORKTREE_API_BASE_URL"
 
 ensure_env_file "${repo_root}/src/server/.env" "${repo_root}/src/server/.env.example"
 set_env_value "${repo_root}/src/server/.env" "APP_URL" "$WORKTREE_API_BASE_URL"
