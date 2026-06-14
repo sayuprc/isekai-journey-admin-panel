@@ -12,6 +12,9 @@ export default {
     'rule-empty-line-before': ['always'],
     '@stylistic/max-empty-lines': [1],
     '@stylistic/no-empty-first-line': [true],
+    'alpha-value-notation': null,
+    'color-function-alias-notation': null,
+    'color-function-notation': null,
     'selector-class-pattern': ['^[a-z][a-zA-Z0-9-]+$'],
   },
 };

@@ -21,7 +21,7 @@
   --special-strong: #c8cdd6;
   --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 [data-palette="anemone-1"] {
@@ -43,7 +43,7 @@
   --special-strong: #c8cdd6;
   --special-faint: #3a3f48;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 [data-palette="anemone-2"] {
@@ -65,7 +65,7 @@
   --special-strong: #6f5f95;
   --special-faint: #d5cde3;
   --paper: #f0f5f9;
-  --shadow: 0 20px 60px rgb(30 50 80 / 7%);
+  --shadow: 0 20px 60px rgba(30, 50, 80, 0.07);
 }
 
 [data-palette="nemophila-1"] {
@@ -87,7 +87,7 @@
   --special-strong: #b7d4e8;
   --special-faint: #f2f8fc;
   --paper: #f0f8ff;
-  --shadow: 0 20px 60px rgb(20 40 80 / 6%);
+  --shadow: 0 20px 60px rgba(20, 40, 80, 0.06);
 }
 
 [data-palette="nemophila-2"] {
@@ -109,7 +109,7 @@
   --special-strong: #3974ae;
   --special-faint: #102945;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgb(0 0 0 / 50%);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 [data-palette="sunflower-1"] {
@@ -131,7 +131,7 @@
   --special-strong: #4a3520;
   --special-faint: #c9b294;
   --paper: #fffdf5;
-  --shadow: 0 20px 60px rgb(80 60 20 / 8%);
+  --shadow: 0 20px 60px rgba(80, 60, 20, 0.08);
 }
 
 [data-palette="sunflower-2"] {
@@ -153,7 +153,7 @@
   --special-strong: #f5b73a;
   --special-faint: #4f390c;
   --paper: #f4f1e8;
-  --shadow: 0 20px 60px rgb(0 0 0 / 45%);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 * {
@@ -1697,7 +1697,7 @@ image-slot:hover {
       color-mix(in oklab, var(--tile-color) 70%, transparent),
       color-mix(in oklab, var(--tile-color) 30%, transparent)
     ),
-    repeating-linear-gradient(45deg, rgb(255 255 255 / 4%) 0 2px, transparent 2px 8px);
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 8px);
 }
 
 .post-card-stats,
@@ -1967,7 +1967,7 @@ image-slot:hover {
 }
 
 .media-mosaic-label {
-  color: rgb(255 255 255 / 70%);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .events-group {
@@ -2269,7 +2269,7 @@ image-slot:hover {
 }
 
 .jacket-art::before {
-  background: repeating-linear-gradient(45deg, rgb(255 255 255 / 3%) 0 2px, transparent 2px 8px);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 8px);
 }
 
 .jacket-art-label {
@@ -2279,7 +2279,7 @@ image-slot:hover {
   left: 10px;
   font-family: "JetBrains Mono", monospace;
   font-size: 9px;
-  color: rgb(255 255 255 / 50%);
+  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.15em;
 }
@@ -2304,8 +2304,8 @@ image-slot:hover {
   padding: 16px;
   overflow: hidden;
   background:
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 5%) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(0deg, rgb(0 0 0 / 14%) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 22px),
     linear-gradient(135deg, var(--song-tile-color-a), var(--song-tile-color-b));
   border: 1px solid color-mix(in oklab, var(--line) 55%, transparent);
   isolation: isolate;
@@ -2316,7 +2316,7 @@ image-slot:hover {
   inset: 10px;
   z-index: -1;
   content: "";
-  border: 1px solid rgb(255 255 255 / 18%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .song-tile::after {
@@ -2327,7 +2327,7 @@ image-slot:hover {
   width: 24%;
   height: 140%;
   content: "";
-  background: rgb(255 255 255 / 10%);
+  background: rgba(255, 255, 255, 0.1);
   transform: rotate(18deg);
 }
 
@@ -2340,7 +2340,7 @@ image-slot:hover {
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   line-height: 1.2;
-  color: rgb(255 255 255 / 72%);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .song-tile-meta-text {
@@ -2357,9 +2357,9 @@ image-slot:hover {
   font-size: 56px;
   font-weight: 500;
   line-height: 1;
-  color: rgb(255 255 255 / 90%);
+  color: rgba(255, 255, 255, 0.9);
   text-align: center;
-  text-shadow: 0 12px 30px rgb(0 0 0 / 28%);
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
 }
 
 .mv-thumb {
@@ -2375,7 +2375,7 @@ image-slot:hover {
 }
 
 .mv-thumb::before {
-  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 4%) 0 1px, transparent 1px 4px);
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px);
 }
 
 .mv-thumb-label {
@@ -2385,7 +2385,7 @@ image-slot:hover {
   z-index: 1;
   font-family: "JetBrains Mono", monospace;
   font-size: 9px;
-  color: rgb(255 255 255 / 65%);
+  color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.15em;
 }
 
@@ -2399,8 +2399,8 @@ image-slot:hover {
   justify-content: center;
   width: 60px;
   height: 60px;
-  background: rgb(0 0 0 / 40%);
-  border: 1px solid rgb(255 255 255 / 30%);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   backdrop-filter: blur(8px);
   transform: translate(-50%, -50%);
