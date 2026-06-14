@@ -49,7 +49,7 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: ${{ env.SERVER_DOCKER_PATH }}
-          key: ${{ env.SERVER_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/php/Dockerfile') }}
+          key: ${{ env.SERVER_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/php/Dockerfile') }}
 
       - name: Build server image
         if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
@@ -60,7 +60,7 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
-          key: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/openapi-generator/Dockerfile') }}
+          key: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/openapi-generator/Dockerfile') }}
 
       - name: Build openapi-generator-cli image
         if: steps.cache-openapi-generator-cli-docker-image.outputs.cache-hit != 'true'
@@ -71,7 +71,7 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: ${{ env.MYSQL_DOCKER_PATH }}
-          key: ${{ env.MYSQL_DOCKER_KEY_PREFIX }}${{ hashFiles('./docker/mysql/Dockerfile', './docker/mysql/my.cnf', './docker/mysql/init/*') }}
+          key: ${{ env.MYSQL_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/mysql/Dockerfile', './infra/local/docker/mysql/my.cnf', './infra/local/docker/mysql/init/*') }}
 
       - name: Build mysql image
         if: steps.cache-mysql-docker-image.outputs.cache-hit != 'true'

@@ -7,13 +7,13 @@ async function all(): Promise<Song[]> {
   let cursor: string | undefined;
 
   while (true) {
-    const { data } = await songServiceListSongs({
+    const { data, error, response } = await songServiceListSongs({
       client: apiClient,
       query: { limit: 50, cursor },
     });
 
     if (!data) {
-      throw new Error('songServiceListSongs returned no data');
+      throw new Error(`songServiceListSongs failed: HTTP ${response.status} ${JSON.stringify(error)}`);
     }
 
     songs.push(...data.songs);
@@ -28,13 +28,13 @@ async function all(): Promise<Song[]> {
 }
 
 async function get(songId: string): Promise<SongDetail> {
-  const { data } = await songServiceGetSong({
+  const { data, error, response } = await songServiceGetSong({
     client: apiClient,
     path: { songId },
   });
 
   if (!data) {
-    throw new Error('songServiceGetSong returned no data');
+    throw new Error(`songServiceGetSong failed: HTTP ${response.status} ${JSON.stringify(error)}`);
   }
 
   return data.song;

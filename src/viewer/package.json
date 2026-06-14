@@ -7,6 +7,7 @@
     "dev": "astro dev --host",
     "build": "astro build",
     "preview": "astro preview",
+    "deploy": "wrangler deploy",
     "astro": "astro",
     "format": "biome format --write",
     "format:check": "biome format",
@@ -19,32 +20,33 @@
     "generate:api": "openapi-ts"
   },
   "dependencies": {
-    "astro": "catalog:astro",
     "@astrojs/solid-js": "catalog:astro",
+    "@tailwindcss/vite": "catalog:ui",
+    "astro": "catalog:astro",
+    "daisyui": "catalog:ui",
     "solid-js": "catalog:astro",
     "tailwindcss": "catalog:ui",
-    "@tailwindcss/vite": "catalog:ui",
-    "daisyui": "catalog:ui"
+    "wrangler": "4.98.0"
   },
   "devDependencies": {
-    "typescript": "catalog:",
-    "@types/bun": "catalog:",
-    "typed-css-modules": "catalog:gen",
-    "@hey-api/openapi-ts": "catalog:gen",
+    "@biomejs/biome": "catalog:lint",
     "@eslint/js": "catalog:lint",
+    "@hey-api/openapi-ts": "catalog:gen",
+    "@stylistic/eslint-plugin": "catalog:lint",
+    "@stylistic/stylelint-plugin": "catalog:lint",
+    "@types/bun": "catalog:",
+    "@typescript-eslint/parser": "catalog:lint",
     "eslint": "catalog:lint",
     "eslint-plugin-astro": "catalog:lint",
     "eslint-plugin-import": "catalog:lint",
-    "@typescript-eslint/parser": "catalog:lint",
-    "typescript-eslint": "catalog:lint",
-    "@stylistic/eslint-plugin": "catalog:lint",
-    "stylelint": "catalog:lint",
-    "stylelint-config-standard": "catalog:lint",
-    "stylelint-config-recess-order": "catalog:lint",
-    "stylelint-order": "catalog:lint",
-    "stylelint-config-html": "catalog:lint",
-    "@stylistic/stylelint-plugin": "catalog:lint",
     "postcss-html": "catalog:lint",
-    "@biomejs/biome": "catalog:lint"
+    "stylelint": "catalog:lint",
+    "stylelint-config-html": "catalog:lint",
+    "stylelint-config-recess-order": "catalog:lint",
+    "stylelint-config-standard": "catalog:lint",
+    "stylelint-order": "catalog:lint",
+    "typed-css-modules": "catalog:gen",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:lint"
   }
 }

@@ -1,10 +1,11 @@
+import { API_URL } from 'astro:env/server';
 import { createClient, createConfig } from '../generated/client';
 import type { Client } from '../generated/client';
 import { authenticateServiceRefresh } from '../generated/index';
 import { ApiError, resolveApiResponse } from './errors';
 import type { AuthSession, Credential } from './types';
 
-const apiUrl = import.meta.env.API_URL;
+const apiUrl = API_URL + '/admin/v1';
 
 export const createAuthClient = (credential: Credential) => {
   return createClient(

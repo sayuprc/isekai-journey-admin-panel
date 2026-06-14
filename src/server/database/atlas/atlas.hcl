@@ -31,3 +31,13 @@ env "testing" {
   src = var.table_schemas
   url = "mysql://${getenv("DB_USERNAME")}:${getenv("DB_PASSWORD")}@localhost:${getenv("ATLAS_DB_PORT")}/${getenv("DB_DATABASE")}"
 }
+
+env "staging" {
+  src = var.table_schemas
+  url = "mysql://${getenv("DB_USERNAME")}:${urlescape(getenv("DB_PASSWORD"))}@${getenv("DB_HOST")}:${getenv("DB_PORT")}/${getenv("DB_DATABASE")}?tls=true"
+}
+
+env "production" {
+  src = var.table_schemas
+  url = "mysql://${getenv("DB_USERNAME")}:${urlescape(getenv("DB_PASSWORD"))}@${getenv("DB_HOST")}:${getenv("DB_PORT")}/${getenv("DB_DATABASE")}?tls=true"
+}

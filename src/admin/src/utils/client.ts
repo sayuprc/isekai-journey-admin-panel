@@ -1,4 +1,5 @@
 import { treaty } from '@elysiajs/eden';
+import { PUBLIC_APP_URL } from 'astro:env/client';
 import type { App } from '../server';
 
 const getCookie = (name: string): string | undefined => {
@@ -15,7 +16,7 @@ const getCookie = (name: string): string | undefined => {
   return value ? decodeURIComponent(value) : undefined;
 };
 
-export const client = treaty<App>(import.meta.env.PUBLIC_APP_URL, {
+export const client = treaty<App>(PUBLIC_APP_URL, {
   headers: () => {
     const csrfToken = getCookie('csrf');
     return csrfToken ? { 'x-csrf-token': csrfToken } : {};

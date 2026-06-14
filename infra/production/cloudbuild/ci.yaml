@@ -1,0 +1,237 @@
+steps:
+  - id: pull-api-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:latest || exit 0
+
+  - id: pull-cli-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest || exit 0
+
+  - id: pull-admin-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:latest || exit 0
+
+  - id: pull-viewer-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest || exit 0
+
+  - id: build-api-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - pull-api-image
+    args:
+      - build
+      - -f
+      - infra/production/docker/api/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:$COMMIT_SHA
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:latest
+      - --cache-from
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:latest
+      - .
+
+  - id: build-cli-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - pull-cli-image
+    args:
+      - build
+      - -f
+      - infra/production/docker/cli/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest
+      - --cache-from
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest
+      - .
+
+  - id: build-admin-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor:
+      - pull-admin-image
+    args:
+      - -c
+      - |
+        set -euo pipefail
+
+        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+
+        docker build \
+          -f infra/production/docker/admin/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:latest \
+          --build-arg "BUN_VERSION=$${BUN_VERSION}" \
+          --build-arg "PUBLIC_APP_URL=${_PUBLIC_APP_URL}" \
+          .
+
+  - id: build-viewer-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor:
+      - pull-viewer-image
+    args:
+      - -c
+      - |
+        set -euo pipefail
+
+        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+
+        docker build \
+          -f infra/production/docker/viewer/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
+          --build-arg "BUN_VERSION=$${BUN_VERSION}" \
+          .
+
+  - id: push-api-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-api-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}
+
+  - id: push-cli-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-cli-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}
+
+  - id: push-admin-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-admin-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}
+
+  - id: push-viewer-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-viewer-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}
+
+  # TODO マイグレーションを別で行う
+  - id: deploy-db-migrate-job
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-cli-image
+    args:
+      - run
+      - jobs
+      - deploy
+      - prod-db-migrate
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_DB_MIGRATE_JOB_SERVICE_ACCOUNT}
+      # - --wait
+      - --quiet
+
+  - id: deploy-api
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-api-image
+    args:
+      - run
+      - deploy
+      - prod-isekai-api
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_API_SERVICE_ACCOUNT}
+      - --ingress
+      - ${_API_INGRESS}
+      - --quiet
+
+  - id: deploy-admin
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-admin-image
+    args:
+      - run
+      - deploy
+      - prod-isekai-admin
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_ADMIN_SERVICE_ACCOUNT}
+      - --ingress
+      - ${_ADMIN_INGRESS}
+      - --quiet
+
+  # TODO デプロイは別に行う
+  - id: deploy-viewer
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      # - deploy-db-migrate-job
+      - push-viewer-image
+      - deploy-api
+    args:
+      - run
+      - jobs
+      - deploy
+      - prod-viewer-deploy
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_VIEWER_JOB_SERVICE_ACCOUNT}
+      - --network
+      - prod-cloud-run-egress
+      - --subnet
+      - prod-cloud-run-egress-asia-northeast1
+      - --vpc-egress
+      - all-traffic
+      - --set-env-vars
+      - API_URL=${_API_URL},CLOUDFLARE_WORKER_NAME=${_CLOUDFLARE_WORKER_NAME},CLOUDFLARE_ACCOUNT_ID=${_CLOUDFLARE_ACCOUNT_ID}
+      - --set-secrets
+      - CLOUDFLARE_API_TOKEN=${_CLOUDFLARE_API_TOKEN_SECRET_ID}:latest
+      # - --wait
+      - --quiet
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  # 費用を抑えるためにスペックを下げる
+  # 費用と効果が見合うかを改めて試算してから設定する
+  # machineType: 'E2_HIGHCPU_8'

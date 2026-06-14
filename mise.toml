@@ -1,14 +1,15 @@
 [tools]
-atlas = "1.1.0"
+atlas = "1.2.0"
 bun = "1.3.12"
 lefthook = "2.1.4"
 mago = "1.14.1"
 mkcert = "1.4.4"
+node = "24"
 pinact = "3.9.0"
 pnpm = "11.5.0"
 
 [vars]
-server_tag = "8.5"
+server_tag = "8.5.7"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
 mysql_tag = "8.4"
@@ -25,7 +26,7 @@ SERVER_IMAGE = "isekai-observatory-api:{{vars.server_tag}}"
 PROXY_IMAGE = "isekai-observatory-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
 MYSQL_IMAGE = "isekai-observatory-mysql:{{vars.mysql_tag}}"
-NODE_EXTRA_CA_CERTS = "../../docker/php/certs/rootCA.pem"
+NODE_EXTRA_CA_CERTS = "../../infra/local/docker/php/certs/rootCA.pem"
 ADMIN_OAS_FILE = "IsekaiObservatory.Admin.v1.yaml"
 VIEWER_OAS_FILE = "IsekaiObservatory.Viewer.v1.yaml"
 
@@ -48,12 +49,12 @@ depends = "build:*"
 
 [tasks."build:proxy"]
 description = "Nginx のイメージをビルドする"
-run = "docker build -t ${PROXY_IMAGE} ./docker/nginx --build-arg TAG=${PROXY_TAG}"
+run = "docker build -t ${PROXY_IMAGE} ./infra/local/docker/nginx --build-arg TAG=${PROXY_TAG}"
 
 [tasks."build:php"]
 description = "PHP のイメージをビルドする"
 run = '''
-docker build -t ${SERVER_IMAGE} ./docker/php \
+docker build -t ${SERVER_IMAGE} ./infra/local/docker/php \
   --build-arg TAG=${SERVER_TAG} \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
@@ -64,7 +65,7 @@ docker build -t ${SERVER_IMAGE} ./docker/php \
 [tasks."build:openapi-generator"]
 description = "OpenAPI Generator のイメージをビルドする"
 run = '''
-docker build -t ${OPENAPI_IMAGE} ./docker/openapi-generator \
+docker build -t ${OPENAPI_IMAGE} ./infra/local/docker/openapi-generator \
   --build-arg TAG=${OPENAPI_TAG} \
   --build-arg UID={{vars.uid}} \
   --build-arg GID={{vars.gid}} \
@@ -74,7 +75,7 @@ docker build -t ${OPENAPI_IMAGE} ./docker/openapi-generator \
 
 [tasks."build:mysql"]
 description = "MySQL のイメージをビルドする"
-run = "docker build -t ${MYSQL_IMAGE} ./docker/mysql --build-arg TAG={{vars.mysql_tag}}"
+run = "docker build -t ${MYSQL_IMAGE} ./infra/local/docker/mysql --build-arg TAG={{vars.mysql_tag}}"
 
 [tasks.up]
 description = "コンテナを起動する"
@@ -88,8 +89,8 @@ run = "docker compose down"
 description = "自己署名証明書を作成する"
 run = '''
 mkcert \
-  --key-file docker/nginx/certs/server.key \
-  --cert-file docker/nginx/certs/server.crt \
+  --key-file infra/local/docker/nginx/certs/server.key \
+  --cert-file infra/local/docker/nginx/certs/server.crt \
   localhost \
   127.0.0.1 \
   local.admin.isekaijoucho.fan \
@@ -101,7 +102,7 @@ mkcert \
 description = "rootCA.pem をコピーする"
 run = '''
 caroot_pem=$(mkcert -CAROOT)/rootCA.pem
-cp ${caroot_pem} docker/php/certs/
+cp ${caroot_pem} infra/local/docker/php/certs/
 '''
 
 [tasks."pnpm:install"]
@@ -281,7 +282,7 @@ depends = ["migrate:local", "migrate:testing"]
 [tasks."migrate:local"]
 description = "スキーマを local データベースに適用する"
 dir = "src/server/database/atlas"
-run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}"'
+run = 'atlas schema apply --env local --var "schema_name=${DB_DATABASE}"'
 
 [tasks."migrate:local".env]
 _.file = "src/server/.env"
@@ -289,7 +290,7 @@ _.file = "src/server/.env"
 [tasks."migrate:testing"]
 description = "スキーマを testing データベースに適用する"
 dir = "src/server/database/atlas"
-run = 'atlas schema apply --env testing --var "db_name=${DB_DATABASE}"'
+run = 'atlas schema apply --env testing --var "schema_name=${DB_DATABASE}"'
 
 [tasks."migrate:testing".env]
 _.file = "src/server/.env.testing"
@@ -298,7 +299,7 @@ _.file = "src/server/.env.testing"
 quiet = true
 description = "適用されるスキーマの差分を確認する（適用はしない）"
 dir = "src/server/database/atlas"
-run = 'atlas schema apply --env local --var "db_name=${DB_DATABASE}" --dry-run'
+run = 'atlas schema apply --env local --var "schema_name=${DB_DATABASE}" --dry-run'
 
 [tasks."migrate:dry-run".env]
 _.file = "src/server/.env"

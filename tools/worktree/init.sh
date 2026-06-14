@@ -9,7 +9,7 @@ state_dir="$(worktree_state_dir)"
 shared_state_dir="$(worktree_shared_state_dir)"
 shared_env_file="$(worktree_shared_env_file)"
 mise_local_toml_file="$(worktree_mise_local_toml_file)"
-template_file="${repo_root}/docker/nginx/site.conf.template"
+template_file="${repo_root}/infra/local/docker/nginx/site.conf.template"
 
 mkdir -p "$state_dir/docker/nginx" "$shared_state_dir"
 
@@ -143,7 +143,7 @@ set_mise_local_env_block() {
       skip = 1
       next
     }
-    /^# <<< worktree:init <<<$/{ 
+    /^# <<< worktree:init <<<$/{
       skip = 0
       next
     }
@@ -263,38 +263,38 @@ ensure_worktree_certs() {
   shared_cert_dir="${shared_state_dir}/certs"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/nginx/certs/server.crt" \
-    "${shared_cert_dir}/docker/nginx/certs/server.crt"
+    "infra/local/docker/nginx/certs/server.crt" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.crt"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/nginx/certs/server.key" \
-    "${shared_cert_dir}/docker/nginx/certs/server.key"
+    "infra/local/docker/nginx/certs/server.key" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.key"
 
   bootstrap_shared_file_from_worktrees \
-    "docker/php/certs/rootCA.pem" \
-    "${shared_cert_dir}/docker/php/certs/rootCA.pem"
+    "infra/local/docker/php/certs/rootCA.pem" \
+    "${shared_cert_dir}/infra/local/docker/php/certs/rootCA.pem"
 
   sync_shared_file \
-    "${repo_root}/docker/nginx/certs/server.crt" \
-    "${shared_cert_dir}/docker/nginx/certs/server.crt" \
-    "${repo_root}/docker/nginx/certs/server.crt"
+    "${repo_root}/infra/local/docker/nginx/certs/server.crt" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.crt" \
+    "${repo_root}/infra/local/docker/nginx/certs/server.crt"
 
   sync_shared_file \
-    "${repo_root}/docker/nginx/certs/server.key" \
-    "${shared_cert_dir}/docker/nginx/certs/server.key" \
-    "${repo_root}/docker/nginx/certs/server.key"
+    "${repo_root}/infra/local/docker/nginx/certs/server.key" \
+    "${shared_cert_dir}/infra/local/docker/nginx/certs/server.key" \
+    "${repo_root}/infra/local/docker/nginx/certs/server.key"
 
   sync_shared_file \
-    "${repo_root}/docker/php/certs/rootCA.pem" \
-    "${shared_cert_dir}/docker/php/certs/rootCA.pem" \
-    "${repo_root}/docker/php/certs/rootCA.pem"
+    "${repo_root}/infra/local/docker/php/certs/rootCA.pem" \
+    "${shared_cert_dir}/infra/local/docker/php/certs/rootCA.pem" \
+    "${repo_root}/infra/local/docker/php/certs/rootCA.pem"
 
-  if [[ ! -f "${repo_root}/docker/nginx/certs/server.crt" || ! -f "${repo_root}/docker/nginx/certs/server.key" ]]; then
+  if [[ ! -f "${repo_root}/infra/local/docker/nginx/certs/server.crt" || ! -f "${repo_root}/infra/local/docker/nginx/certs/server.key" ]]; then
     echo "nginx certificates are missing; run 'mise run cert:make' once in any worktree" >&2
     exit 1
   fi
 
-  if [[ ! -f "${repo_root}/docker/php/certs/rootCA.pem" ]]; then
+  if [[ ! -f "${repo_root}/infra/local/docker/php/certs/rootCA.pem" ]]; then
     echo "rootCA.pem is missing; run 'mise run cert:copy-pem' once in any worktree" >&2
     exit 1
   fi
@@ -326,8 +326,6 @@ WORKTREE_NGINX_SITE_CONF="${repo_root}/.worktree/docker/nginx/site.conf"
 WORKTREE_ADMIN_URL="https://local.admin.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
 WORKTREE_VIEWER_URL="https://local.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
 WORKTREE_API_BASE_URL="https://local.api.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
-WORKTREE_API_ADMIN_URL="${WORKTREE_API_BASE_URL}/admin/v1"
-WORKTREE_API_VIEWER_URL="${WORKTREE_API_BASE_URL}/v1"
 
 {
   write_shell_value "WORKTREE_ROOT" "$WORKTREE_ROOT"
@@ -345,8 +343,6 @@ WORKTREE_API_VIEWER_URL="${WORKTREE_API_BASE_URL}/v1"
   write_shell_value "WORKTREE_ADMIN_URL" "$WORKTREE_ADMIN_URL"
   write_shell_value "WORKTREE_VIEWER_URL" "$WORKTREE_VIEWER_URL"
   write_shell_value "WORKTREE_API_BASE_URL" "$WORKTREE_API_BASE_URL"
-  write_shell_value "WORKTREE_API_ADMIN_URL" "$WORKTREE_API_ADMIN_URL"
-  write_shell_value "WORKTREE_API_VIEWER_URL" "$WORKTREE_API_VIEWER_URL"
 } >"$shared_env_file"
 
 if [[ -d "$WORKTREE_NGINX_SITE_CONF" ]]; then
@@ -363,13 +359,13 @@ rm -f "${state_dir}/env"
 ensure_worktree_certs
 
 ensure_env_file "${repo_root}/src/admin/.env" "${repo_root}/src/admin/.env.example"
-set_env_value "${repo_root}/src/admin/.env" "API_URL" "$WORKTREE_API_ADMIN_URL"
+set_env_value "${repo_root}/src/admin/.env" "API_URL" "$WORKTREE_API_BASE_URL"
 set_env_value "${repo_root}/src/admin/.env" "CACHE_URL" "http://127.0.0.1:${WORKTREE_REDIS_HTTP_PORT}"
 set_env_value "${repo_root}/src/admin/.env" "CACHE_TOKEN" "${REDIS_HTTP_TOKEN:-example_token}"
 set_env_value "${repo_root}/src/admin/.env" "PUBLIC_APP_URL" "$WORKTREE_ADMIN_URL"
 
 ensure_env_file "${repo_root}/src/viewer/.env" "${repo_root}/src/viewer/.env.example"
-set_env_value "${repo_root}/src/viewer/.env" "API_URL" "$WORKTREE_API_VIEWER_URL"
+set_env_value "${repo_root}/src/viewer/.env" "API_URL" "$WORKTREE_API_BASE_URL"
 
 ensure_env_file "${repo_root}/src/server/.env" "${repo_root}/src/server/.env.example"
 set_env_value "${repo_root}/src/server/.env" "APP_URL" "$WORKTREE_API_BASE_URL"

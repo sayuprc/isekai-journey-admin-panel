@@ -45,7 +45,7 @@ completed
 2. 競合面の棚卸し
    並列化の阻害要因を整理する。最低でも次を対象にする。
    - `src/contracts` 起点の変更と生成物更新
-   - `mise.toml` / `compose.yaml` / `docker/` のような開発基盤変更
+   - `mise.toml` / `compose.yaml` / `infra/local/docker/` のような開発基盤変更
    - 同一サブプロジェクト内の近接ファイル集中
    - lockfile や共通設定ファイルの更新
 3. タスク分割ルールの定義
