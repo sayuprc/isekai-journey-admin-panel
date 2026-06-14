@@ -7,13 +7,13 @@ async function all(): Promise<Media[]> {
   let cursor: string | undefined;
 
   while (true) {
-    const { data } = await mediaServiceListMedia({
+    const { data, error, response } = await mediaServiceListMedia({
       client: apiClient,
       query: { limit: 50, cursor },
     });
 
     if (!data) {
-      throw new Error('mediaServiceListMedia returned no data');
+      throw new Error(`mediaServiceListMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
     }
 
     media.push(...data.media);
@@ -28,13 +28,13 @@ async function all(): Promise<Media[]> {
 }
 
 async function get(mediaId: string): Promise<MediaDetail> {
-  const { data } = await mediaServiceGetMedia({
+  const { data, error, response } = await mediaServiceGetMedia({
     client: apiClient,
     path: { mediaId },
   });
 
   if (!data) {
-    throw new Error('mediaServiceGetMedia returned no data');
+    throw new Error(`mediaServiceGetMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
   }
 
   return data.media;
