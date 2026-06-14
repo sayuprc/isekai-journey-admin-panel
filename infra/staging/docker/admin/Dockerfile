@@ -32,6 +32,7 @@ COPY src/admin admin
 
 ARG PUBLIC_APP_URL
 ENV PUBLIC_APP_URL=${PUBLIC_APP_URL}
+ENV ADMIN_SSR_NO_EXTERNAL=true
 
 RUN mise exec -- bun --filter admin build
 
