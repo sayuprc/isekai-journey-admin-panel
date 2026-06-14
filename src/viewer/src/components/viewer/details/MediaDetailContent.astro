@@ -35,13 +35,13 @@ const formatPublishedAt = (value: string): string =>
           {/* <span class={`platform-badge ${platform.className}`}>{platform.mark}</span> */}
           <div class="label-mono">{media.type.name} · {formatPublishedAt(media.publishedAt)}</div>
         </div>
-        <div style="font-family:'Shippori Mincho',serif;font-size:22px;letter-spacing:0.04em;line-height:1.4;">{media.title}</div>
+        <div style="font-family:'Shippori Mincho',serif;font-size:22px;line-height:1.4;letter-spacing:0.04em;">{media.title}</div>
         {/* API に投稿本文 (text) が無いため未提供セクションとして雛形を残す */}
         {/* <div style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:var(--fg);white-space:pre-wrap;">{entry.text}</div> */}
         {/* API に hasImage / color が無いため未提供セクションとして雛形を残す */}
         {/* {entry.hasImage && <div class="post-detail-image" style={`--tile-color:${entry.color};`}></div>} */}
         {/* API に likes / reposts / readTime が無いため未提供セクションとして雛形を残す */}
-        {/* <div style="display:flex;gap:20px;font-size:12px;color:var(--fg-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
+        {/* <div style="display:flex;gap:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;">
           {entry.likes && <span>♥ {entry.likes}</span>}
           {entry.reposts && <span>↻ {entry.reposts}</span>}
           {entry.readTime && <span>⏱ {entry.readTime}</span>}
@@ -68,19 +68,19 @@ const formatPublishedAt = (value: string): string =>
   }
 
   <hr class="hairline" style="margin: 32px 0;" />
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
     <a class="btn" href={media.url} target="_blank" rel="noopener noreferrer">{media.type.name}で開く ↗</a>
   </div>
 
   {
     songs.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
           <div>
             <span class="label-mono">SONGS</span>
-            <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">{songs.length === 1 ? '関連楽曲' : '関連楽曲（複数）'}</span>
+            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">{songs.length === 1 ? '関連楽曲' : '関連楽曲（複数）'}</span>
           </div>
-          <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{songs.length}</span>
+          <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
         </div>
         <div class="rel-list">
           {
@@ -88,9 +88,9 @@ const formatPublishedAt = (value: string): string =>
               <a class="rel-chip" href={`/songs/${song.songId}`}>
                 <div class="rel-copy">
                   <div class="rel-main">{song.title}</div>
-                  <div class="label-mono" style="font-size: 10px; margin-top: 2px;">{song.type.name}</div>
+                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{song.type.name}</div>
                 </div>
-                <span style="color:var(--fg-faint);font-size:14px;">→</span>
+                <span style="font-size:14px;color:var(--fg-faint);">→</span>
               </a>
             ))
           }

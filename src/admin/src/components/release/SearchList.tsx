@@ -38,7 +38,9 @@ const getInitialParams = () => {
   return {
     title: params.get('title') ?? DEFAULT_PARAMS.title,
     type: (params.get('type') ?? DEFAULT_PARAMS.type) as '' | `${ReleaseTypeValue}`,
-    distributionType: (params.get('distribution_type') ?? DEFAULT_PARAMS.distributionType) as '' | `${ReleaseDistributionTypeValue}`,
+    distributionType: (params.get('distribution_type') ?? DEFAULT_PARAMS.distributionType) as
+    | ''
+    | `${ReleaseDistributionTypeValue}`,
     isDisplay: (params.get('is_display') ?? DEFAULT_PARAMS.isDisplay) as DisplayFilter,
     page: Number(params.get('page') ?? String(DEFAULT_PARAMS.page)) || DEFAULT_PARAMS.page,
     perPage: (PER_PAGE_OPTIONS.includes(perPageRaw as PerPage) ? perPageRaw : DEFAULT_PARAMS.perPage) as PerPage,
@@ -216,7 +218,13 @@ export const SearchList = () => {
             class="select select-bordered select-sm"
             onChange={e => setInputType(e.currentTarget.value as '' | `${ReleaseTypeValue}`)}
           >
-            <For each={RELEASE_TYPE_OPTIONS}>{option => <option value={option.value} selected={inputType() === option.value}>{option.label}</option>}</For>
+            <For each={RELEASE_TYPE_OPTIONS}>
+              {option => (
+                <option value={option.value} selected={inputType() === option.value}>
+                  {option.label}
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -230,7 +238,11 @@ export const SearchList = () => {
             onChange={e => setInputDistributionType(e.currentTarget.value as '' | `${ReleaseDistributionTypeValue}`)}
           >
             <For each={DISTRIBUTION_TYPE_OPTIONS}>
-              {option => <option value={option.value} selected={inputDistributionType() === option.value}>{option.label}</option>}
+              {option => (
+                <option value={option.value} selected={inputDistributionType() === option.value}>
+                  {option.label}
+                </option>
+              )}
             </For>
           </select>
         </fieldset>
@@ -244,9 +256,15 @@ export const SearchList = () => {
             class="select select-bordered select-sm"
             onChange={e => setInputIsDisplay(e.currentTarget.value as DisplayFilter)}
           >
-            <option value="" selected={inputIsDisplay() === ''}>すべて</option>
-            <option value="true" selected={inputIsDisplay() === 'true'}>表示する</option>
-            <option value="false" selected={inputIsDisplay() === 'false'}>表示しない</option>
+            <option value="" selected={inputIsDisplay() === ''}>
+              すべて
+            </option>
+            <option value="true" selected={inputIsDisplay() === 'true'}>
+              表示する
+            </option>
+            <option value="false" selected={inputIsDisplay() === 'false'}>
+              表示しない
+            </option>
           </select>
         </fieldset>
         <fieldset class="fieldset">
@@ -259,7 +277,13 @@ export const SearchList = () => {
             class="select select-bordered select-sm"
             onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
-            <For each={PER_PAGE_OPTIONS}>{n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}</For>
+            <For each={PER_PAGE_OPTIONS}>
+              {n => (
+                <option value={n} selected={inputPerPage() === n}>
+                  {n}件
+                </option>
+              )}
+            </For>
           </select>
         </fieldset>
         <button type="submit" class="btn btn-primary btn-sm mb-1">
@@ -305,11 +329,20 @@ export const SearchList = () => {
                     {release => (
                       <tr>
                         <td class="min-w-56 font-medium">{release.title}</td>
-                        <td>{RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label ?? '不明'}</td>
-                        <td>{DISTRIBUTION_TYPE_OPTIONS.find(option => option.value === String(release.distributionTypeValue))?.label ?? '不明'}</td>
+                        <td>
+                          {RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label
+                            ?? '不明'}
+                        </td>
+                        <td>
+                          {DISTRIBUTION_TYPE_OPTIONS.find(
+                            option => option.value === String(release.distributionTypeValue),
+                          )?.label ?? '不明'}
+                        </td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(release.releasedOn)}</td>
                         <td>
-                          <span class={`badge badge-sm ${release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
+                          <span
+                            class={`badge badge-sm ${release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}
+                          >
                             {release.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>

@@ -1,4 +1,8 @@
-import type { MediaDetail as GeneratedMediaDetail, MediaDetailSongSummary, MediaListItem } from '../../generated/types.gen.js';
+import type {
+  MediaDetail as GeneratedMediaDetail,
+  MediaDetailSongSummary,
+  MediaListItem,
+} from '../../generated/types.gen.js';
 
 export type Media = MediaListItem;
 

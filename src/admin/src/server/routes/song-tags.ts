@@ -1,5 +1,12 @@
 import { Elysia, t } from 'elysia';
-import { songTagServiceCreateSongTag, songTagServiceDeleteSongTag, songTagServiceGetSongTag, songTagServiceListSongTags, songTagServiceSearchSongTags, songTagServiceUpdateSongTag } from '../../generated';
+import {
+  songTagServiceCreateSongTag,
+  songTagServiceDeleteSongTag,
+  songTagServiceGetSongTag,
+  songTagServiceListSongTags,
+  songTagServiceSearchSongTags,
+  songTagServiceUpdateSongTag,
+} from '../../generated';
 import type { PerPage, SongTagSearchSortBy, SortOrder } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
@@ -70,7 +77,9 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
     '/:songTagId',
     async ({ params: { songTagId }, body: { name, orderNo }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await songTagServiceUpdateSongTag({ client, path: { songTagId }, body: { name, orderNo } }));
+        return resolveApiResponse(
+          await songTagServiceUpdateSongTag({ client, path: { songTagId }, body: { name, orderNo } }),
+        );
       });
     },
     {

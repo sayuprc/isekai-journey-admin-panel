@@ -19,10 +19,10 @@ export function mediaTypeLabel(type: string): string {
       'live-clip': 'Live Clip',
       'interview': 'Interview',
       'short': 'Short',
-      tweet: 'X / Twitter',
-      instagram: 'Instagram',
+      'tweet': 'X / Twitter',
+      'instagram': 'Instagram',
       'youtube-community': 'YT Community',
-      blog: 'Blog',
+      'blog': 'Blog',
     }[type] ?? type
   );
 }

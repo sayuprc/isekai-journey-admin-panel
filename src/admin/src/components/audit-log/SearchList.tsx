@@ -12,9 +12,25 @@ type TargetType = AuditTargetType;
 
 // 生成された型 (AuditAction / AuditTargetType) を網羅する const タプル。
 // 型注釈で完全性を担保し、生成型に値が増減したらコンパイルエラーで気付ける形にする。
-const ACTION_OPTIONS = ['create', 'update', 'delete', 'register', 'login', 'refresh', 'recovery_code_issue', 'recovery_code_use'] as const satisfies readonly Action[];
+const ACTION_OPTIONS = [
+  'create',
+  'update',
+  'delete',
+  'register',
+  'login',
+  'refresh',
+  'recovery_code_issue',
+  'recovery_code_use',
+] as const satisfies readonly Action[];
 
-const TARGET_TYPE_OPTIONS = ['AdminUser', 'Media', 'Person', 'Release', 'Song', 'SongTag'] as const satisfies readonly TargetType[];
+const TARGET_TYPE_OPTIONS = [
+  'AdminUser',
+  'Media',
+  'Person',
+  'Release',
+  'Song',
+  'SongTag',
+] as const satisfies readonly TargetType[];
 
 const ACTION_LABEL: Record<Action, string> = {
   create: '作成',
@@ -242,7 +258,9 @@ export const SearchList = () => {
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="from">期間 From</label>
+          <label class="fieldset-label" for="from">
+            期間 From
+          </label>
           <input
             type="datetime-local"
             id="from"
@@ -253,7 +271,9 @@ export const SearchList = () => {
           />
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="to">期間 To</label>
+          <label class="fieldset-label" for="to">
+            期間 To
+          </label>
           <input
             type="datetime-local"
             id="to"
@@ -264,39 +284,54 @@ export const SearchList = () => {
           />
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="action">操作</label>
+          <label class="fieldset-label" for="action">
+            操作
+          </label>
           <select
             id="action"
             name="action"
             class="select select-bordered select-sm"
             onChange={e => setInputAction(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as Action))}
           >
-            <option value="" selected={inputAction() === undefined}>すべて</option>
+            <option value="" selected={inputAction() === undefined}>
+              すべて
+            </option>
             <For each={ACTION_OPTIONS}>
               {a => (
-                <option value={a} selected={inputAction() === a}>{ACTION_LABEL[a]}</option>
+                <option value={a} selected={inputAction() === a}>
+                  {ACTION_LABEL[a]}
+                </option>
               )}
             </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="target_type">対象種別</label>
+          <label class="fieldset-label" for="target_type">
+            対象種別
+          </label>
           <select
             id="target_type"
             name="target_type"
             class="select select-bordered select-sm"
-            onChange={e => setInputTargetType(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as TargetType))}
+            onChange={e =>
+              setInputTargetType(e.currentTarget.value === '' ? undefined : (e.currentTarget.value as TargetType))}
           >
-            <option value="" selected={inputTargetType() === undefined}>すべて</option>
+            <option value="" selected={inputTargetType() === undefined}>
+              すべて
+            </option>
             <For each={TARGET_TYPE_OPTIONS}>
               {t => (
-                <option value={t} selected={inputTargetType() === t}>{TARGET_TYPE_LABEL[t]}</option>
+                <option value={t} selected={inputTargetType() === t}>
+                  {TARGET_TYPE_LABEL[t]}
+                </option>
               )}
             </For>
           </select>
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="target_id">対象ID</label>
+          <label class="fieldset-label" for="target_id">
+            対象ID
+          </label>
           <input
             type="text"
             id="target_id"
@@ -308,7 +343,9 @@ export const SearchList = () => {
           />
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="admin_user_name">実行者名</label>
+          <label class="fieldset-label" for="admin_user_name">
+            実行者名
+          </label>
           <input
             type="text"
             id="admin_user_name"
@@ -320,7 +357,9 @@ export const SearchList = () => {
           />
         </fieldset>
         <fieldset class="fieldset">
-          <label class="fieldset-label" for="per_page">表示件数</label>
+          <label class="fieldset-label" for="per_page">
+            表示件数
+          </label>
           <select
             id="per_page"
             name="per_page"
@@ -328,12 +367,20 @@ export const SearchList = () => {
             onChange={e => setInputPerPage(Number(e.currentTarget.value) as PerPage)}
           >
             <For each={PER_PAGE_OPTIONS}>
-              {n => <option value={n} selected={inputPerPage() === n}>{n}件</option>}
+              {n => (
+                <option value={n} selected={inputPerPage() === n}>
+                  {n}件
+                </option>
+              )}
             </For>
           </select>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-sm mb-1">適用</button>
-        <button type="button" class="btn btn-ghost btn-sm mb-1" onClick={handleReset}>リセット</button>
+        <button type="submit" class="btn btn-primary btn-sm mb-1">
+          適用
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm mb-1" onClick={handleReset}>
+          リセット
+        </button>
       </form>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
         <table class="table table-zebra">
@@ -369,7 +416,10 @@ export const SearchList = () => {
                         <td>{TARGET_TYPE_LABEL[log.targetType as TargetType] ?? log.targetType}</td>
                         <td class="font-mono text-xs">{log.targetId}</td>
                         <td>
-                          <a href={`/audit-logs/${log.auditLogId}?back=${encodeURIComponent(window.location.search)}`} class="btn btn-ghost btn-xs">
+                          <a
+                            href={`/audit-logs/${log.auditLogId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="btn btn-ghost btn-xs"
+                          >
                             詳細
                           </a>
                         </td>

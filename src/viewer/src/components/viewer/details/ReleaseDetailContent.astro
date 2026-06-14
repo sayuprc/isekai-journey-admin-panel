@@ -33,12 +33,12 @@ const songs = Q.songsOfRelease(release.id);
     <div><div class="label-mono">LABEL</div><div style="margin-top:4px;">{release.label ?? '—'}</div></div>
   </div>
 
-  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:36px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
     <div>
       <span class="label-mono">TRACKLIST</span>
-      <span style="font-family:'Shippori Mincho',serif;font-size:14px;margin-left:12px;color:var(--fg);">収録曲</span>
+      <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">収録曲</span>
     </div>
-    <span style="font-family:'EB Garamond',serif;font-weight:500;font-size:18px;color:var(--accent);">{songs.length}</span>
+    <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
   </div>
   <div class="rel-list">
     {
@@ -49,7 +49,7 @@ const songs = Q.songsOfRelease(release.id);
           <div class="rel-copy">
             <div class="rel-main">{song.title}</div>
           </div>
-          <span style="color:var(--fg-faint);font-size:14px;">→</span>
+          <span style="font-size:14px;color:var(--fg-faint);">→</span>
         </a>
       ))
     }

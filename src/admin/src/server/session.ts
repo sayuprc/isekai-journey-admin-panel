@@ -22,7 +22,10 @@ export const storeSessionCredential = async (sessionId: string, credential: Cred
   await redis.set(createSessionKey(sessionId), credential, { ex: SESSION_TTL_SECONDS });
 };
 
-export const replaceSessionCredential = async (sessionId: string, credential: Credential): Promise<Credential | null> => {
+export const replaceSessionCredential = async (
+  sessionId: string,
+  credential: Credential,
+): Promise<Credential | null> => {
   const result = await redis.set(createSessionKey(sessionId), credential, { xx: true, keepTtl: true });
 
   if (result === 'OK') {

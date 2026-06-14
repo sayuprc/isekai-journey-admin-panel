@@ -99,7 +99,9 @@ export const DetailView = (props: Props) => {
       <Match when={resource()?.status === 'error'}>
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">データの取得に失敗しました。</p>
-          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>
+            再試行
+          </button>
         </div>
       </Match>
       <Match when={resource()?.status === 'ok' && resource()!.data}>
@@ -130,7 +132,9 @@ export const DetailView = (props: Props) => {
             </div>
             <div class="rounded-box border border-base-300 bg-base-100 p-4">
               <h2 class="mb-2 font-semibold">スナップショット</h2>
-              <pre class="overflow-x-auto rounded bg-base-200 p-3 text-xs">{JSON.stringify(data().snapshot, null, 2)}</pre>
+              <pre class="overflow-x-auto rounded bg-base-200 p-3 text-xs">
+                {JSON.stringify(data().snapshot, null, 2)}
+              </pre>
             </div>
           </div>
         )}

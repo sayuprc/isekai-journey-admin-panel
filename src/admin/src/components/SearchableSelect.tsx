@@ -149,7 +149,11 @@ export const SearchableSelect = (props: Props) => {
         >
           <Show
             when={filtered().length > 0}
-            fallback={<li class="px-3 py-2 text-sm text-base-content/60" aria-live="polite">候補が見つかりません</li>}
+            fallback={(
+              <li class="px-3 py-2 text-sm text-base-content/60" aria-live="polite">
+                候補が見つかりません
+              </li>
+            )}
           >
             <For each={filtered()}>
               {(option, index) => (
