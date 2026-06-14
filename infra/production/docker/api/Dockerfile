@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:php8.5
+FROM dunglas/frankenphp:php8.5.7
 
 ENV TZ=Asia/Tokyo
 
@@ -15,10 +15,7 @@ RUN apt-get update \
     pdo_mysql \
     redis
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-COPY infra/production/docker/api/php.ini /usr/local/etc/php/php.ini
-
+COPY --from=composer:2.10.1 /usr/bin/composer /usr/bin/composer
 COPY src/server/composer.json src/server/composer.lock ./
 
 RUN composer install \
@@ -29,6 +26,7 @@ RUN composer install \
   --optimize-autoloader \
   --no-scripts
 
+COPY infra/production/docker/api/php.ini /usr/local/etc/php/php.ini
 COPY src/contracts/generated/oas ../contracts/generated/oas
 COPY src/server ./
 

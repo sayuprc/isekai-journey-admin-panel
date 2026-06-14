@@ -19,7 +19,6 @@ ARCHITECTURE.md
 CLAUDE.md
 FRONTEND.md
 PLANS.md
-README.md
 apm.lock.yaml
 apm.yml
 compose.yaml
@@ -31,9 +30,10 @@ mise.local.toml
 
 **/.vscode/
 
-**/.env.*
 **/.editorconfig
+**/.env.*
 **/.gitignore
+**/README.md
 
 # contracts
 
@@ -43,7 +43,6 @@ src/contracts/
 
 # admin
 
-src/admin/biome.json
 src/admin/.stylelintignore
 src/admin/biome.json
 src/admin/env.d.ts

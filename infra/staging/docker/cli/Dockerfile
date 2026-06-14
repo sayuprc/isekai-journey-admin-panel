@@ -1,4 +1,4 @@
-FROM jdxcode/mise:2026.6 AS atlas
+FROM jdxcode/mise:2026.6.6 AS atlas
 
 WORKDIR /workspace
 
@@ -8,7 +8,7 @@ RUN mise trust \
   && mise install atlas \
   && install -Dm755 "$(mise which atlas)" /out/atlas
 
-FROM php:8.5-cli
+FROM php:8.5.7-cli
 
 ENV TZ=Asia/Tokyo
 
@@ -27,11 +27,7 @@ RUN apt-get update \
   && docker-php-ext-install \
     pdo_mysql
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-COPY --from=atlas /out/atlas /usr/local/bin/atlas
-
-COPY infra/staging/docker/cli/php.ini /usr/local/etc/php/php.ini
-
+COPY --from=composer:2.10.1 /usr/bin/composer /usr/bin/composer
 COPY src/server/composer.json src/server/composer.lock ./
 
 RUN composer install \
@@ -42,6 +38,8 @@ RUN composer install \
   --optimize-autoloader \
   --no-scripts
 
+COPY --from=atlas /out/atlas /usr/local/bin/atlas
+COPY infra/staging/docker/cli/php.ini /usr/local/etc/php/php.ini
 COPY src/server ./
 
 RUN composer dump-autoload --optimize --no-dev --no-interaction
