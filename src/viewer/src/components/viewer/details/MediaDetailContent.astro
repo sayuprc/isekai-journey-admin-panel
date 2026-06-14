@@ -8,11 +8,9 @@ interface Props {
 
 const { media } = Astro.props;
 const songs = media.songs;
-// MediaType.value: 1=Video, 2=Article, 3=SocialPost, 4=OfficialPage, 99=Other
-const postEntry = media.type.value === 3 || media.type.value === 2;
 
 // TODO MV / 投稿のサムネ色とチップ色は API に色情報が無いため暫定値を使う。Non-Scope の最終デザイン決定まで `var(--accent)` を仮置きする。
-const tileColor = 'var(--accent)';
+// const tileColor = 'var(--accent)';
 
 const formatPublishedAt = (value: string): string =>
   new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -28,44 +26,16 @@ const formatPublishedAt = (value: string): string =>
 ---
 
 <div class="detail-page-content media-detail-content">
-  {
-    postEntry ? (
-      <div class="post-detail-card">
-        <div class="post-card-head">
-          {/* <span class={`platform-badge ${platform.className}`}>{platform.mark}</span> */}
-          <div class="label-mono">{media.type.name} · {formatPublishedAt(media.publishedAt)}</div>
-        </div>
-        <div style="font-family:'Shippori Mincho',serif;font-size:22px;line-height:1.4;letter-spacing:0.04em;">{media.title}</div>
-        {/* API に投稿本文 (text) が無いため未提供セクションとして雛形を残す */}
-        {/* <div style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:var(--fg);white-space:pre-wrap;">{entry.text}</div> */}
-        {/* API に hasImage / color が無いため未提供セクションとして雛形を残す */}
-        {/* {entry.hasImage && <div class="post-detail-image" style={`--tile-color:${entry.color};`}></div>} */}
-        {/* API に likes / reposts / readTime が無いため未提供セクションとして雛形を残す */}
-        {/* <div style="display:flex;gap:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;">
-          {entry.likes && <span>♥ {entry.likes}</span>}
-          {entry.reposts && <span>↻ {entry.reposts}</span>}
-          {entry.readTime && <span>⏱ {entry.readTime}</span>}
-        </div> */}
-      </div>
-    ) : (
-      <MVThumb color={tileColor} label={`${media.type.name}`} />
-    )
-  }
+  {/* <MVThumb color={tileColor} label={`${media.type.name}`} /> */}
 
-  {
-    !postEntry && (
-      <>
-        <div class="label-mono" style="margin-top: 28px;">
-          {formatPublishedAt(media.publishedAt)} · {media.type.name} · {media.format.name}
-          {/* API に views が無いため未提供セクションとして雛形を残す */}
-          {/* {entry.views ? ` · ${entry.views} views` : ''} */}
-        </div>
-        <h1 class="detail-title">{media.title}</h1>
-        {/* API に description が無いため未提供セクションとして雛形を残す */}
-        {/* {entry.description && <p class="detail-description" style="margin-top: 16px;">{entry.description}</p>} */}
-      </>
-    )
-  }
+  <div class="label-mono" style="margin-top: 28px;">
+    {formatPublishedAt(media.publishedAt)} · {media.type.name} · {media.format.name}
+    {/* API に views が無いため未提供セクションとして雛形を残す */}
+    {/* {entry.views ? ` · ${entry.views} views` : ''} */}
+  </div>
+  <h1 class="detail-title">{media.title}</h1>
+  {/* API に description が無いため未提供セクションとして雛形を残す */}
+  {/* {entry.description && <p class="detail-description" style="margin-top: 16px;">{entry.description}</p>} */}
 
   <hr class="hairline" style="margin: 32px 0;" />
   <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
@@ -78,7 +48,7 @@ const formatPublishedAt = (value: string): string =>
         <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
           <div>
             <span class="label-mono">SONGS</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">{songs.length === 1 ? '関連楽曲' : '関連楽曲（複数）'}</span>
+            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">関連楽曲</span>
           </div>
           <span style="font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
         </div>
