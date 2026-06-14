@@ -5,8 +5,8 @@
   "workspaces": {
     "packages": [
       "admin",
-      "viewer",
-      "contracts"
+      "contracts",
+      "viewer"
     ]
   }
 }

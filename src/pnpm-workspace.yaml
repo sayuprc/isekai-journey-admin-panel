@@ -12,7 +12,7 @@ catalog:
 
 catalogs:
   astro:
-    astro: 6.3.7
+    astro: 6.4.2
     "@astrojs/solid-js": 6.0.1
     solid-js: 1.9.13
   ui:
@@ -44,3 +44,4 @@ allowBuilds:
   esbuild: false
   redis-commander: false
   sharp: false
+  workerd: false
