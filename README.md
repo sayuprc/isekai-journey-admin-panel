@@ -5,7 +5,8 @@
 ## 構成
 
 - アプリケーション本体: `src/`
-- 開発環境と共通タスク: `compose.yaml`, `infra/local/docker/`, `mise.toml`
+- ローカル開発環境: `compose.yaml`, `infra/local/docker/`, `mise.toml`
+- 環境別インフラ定義: `infra/staging/`, `infra/production/`
 - 詳細: `ARCHITECTURE.md`
 
 ## セットアップ
