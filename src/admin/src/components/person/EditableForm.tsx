@@ -1,4 +1,4 @@
-import { Show, onMount } from 'solid-js';
+import { createResource, Match, Show, Switch } from 'solid-js';
 import type { Person } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -6,12 +6,26 @@ import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 
-interface Props {
-  data?: { person: Person };
-  status: number;
+interface DetailViewProps {
+  personId: string;
 }
 
-export const EditableForm = (props: Props) => {
+interface EditableFormProps {
+  data: { person: Person };
+}
+
+interface FetchOkState {
+  status: 'ok';
+  data: { person: Person };
+}
+
+interface FetchErrorState {
+  status: 'error';
+}
+
+type FetchState = FetchOkState | FetchErrorState;
+
+const getListUrl = () => {
   const back = new URLSearchParams(window.location.search).get('back') ?? '';
   const listQuery = (() => {
     if (!back.startsWith('?')) return '';
@@ -22,7 +36,68 @@ export const EditableForm = (props: Props) => {
       return '';
     }
   })();
-  const listUrl = `/persons${listQuery}`;
+
+  return `/persons${listQuery}`;
+};
+
+export const DetailView = (props: DetailViewProps) => {
+  const listUrl = getListUrl();
+
+  const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
+    const { data, status } = await client.api.persons({ personId: props.personId }).get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return { status: 'error' };
+    }
+
+    if (status === 404) {
+      setFlash('データがありません', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (status === 422) {
+      setFlash('不正なリクエストです', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (!data) {
+      return { status: 'error' };
+    }
+
+    return { status: 'ok', data };
+  });
+
+  const loadedData = () => {
+    const state = resource();
+    return state?.status === 'ok' ? state.data : undefined;
+  };
+
+  return (
+    <Switch>
+      <Match when={resource.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={resource()?.status === 'error'}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={loadedData()}>
+        {data => <EditableForm data={data()} />}
+      </Match>
+    </Switch>
+  );
+};
+
+const EditableForm = (props: EditableFormProps) => {
+  const listUrl = getListUrl();
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
@@ -38,7 +113,7 @@ export const EditableForm = (props: Props) => {
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
 
-    const personId = props.data?.person.personId;
+    const personId = props.data.person.personId;
 
     if (!personId) {
       setFormError('更新対象の人物IDを取得できませんでした');
@@ -74,7 +149,7 @@ export const EditableForm = (props: Props) => {
 
     clearErrors();
 
-    const personId = props.data?.person.personId;
+    const personId = props.data.person.personId;
 
     if (!personId) {
       setFormError('削除対象の人物IDを取得できませんでした');
@@ -92,20 +167,8 @@ export const EditableForm = (props: Props) => {
     window.location.href = listUrl;
   });
 
-  onMount(() => {
-    if (props.status === 404) {
-      setFlash('データがありません', 'error');
-      window.location.href = listUrl;
-    } else if (props.status === 422) {
-      setFlash('不正なリクエストです', 'error');
-      window.location.href = listUrl;
-    } else if (!props.data) {
-      setFormError('予期しないエラーが発生しました');
-    }
-  });
-
   return (
-    <Show when={props.data} fallback={<p>読み込み中...</p>}>
+    <>
       <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
@@ -119,7 +182,7 @@ export const EditableForm = (props: Props) => {
               type="text"
               class="input w-full"
               name="name"
-              value={props.data?.person.name}
+              value={props.data.person.name}
               classList={{ 'input-error': !!getFieldError('name') }}
             />
             <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
@@ -131,7 +194,7 @@ export const EditableForm = (props: Props) => {
               name="orderNo"
               required
               min="1"
-              value={props.data?.person.orderNo}
+              value={props.data.person.orderNo}
               classList={{ 'input-error': !!getFieldError('orderNo') }}
             />
             <Show when={getFieldError('orderNo')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
@@ -154,6 +217,6 @@ export const EditableForm = (props: Props) => {
           </div>
         </fieldset>
       </div>
-    </Show>
+    </>
   );
 };

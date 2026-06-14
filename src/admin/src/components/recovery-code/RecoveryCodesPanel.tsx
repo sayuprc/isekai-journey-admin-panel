@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from 'solid-js';
+import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -9,6 +9,17 @@ export const RecoveryCodesPanel = () => {
   const { formError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
   const [codes, setCodes] = createSignal<string[]>([]);
+
+  const [authCheck, { refetch }] = createResource(async () => {
+    const { status } = await client.api['admin-users'].get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return false;
+    }
+
+    return status === 200;
+  });
 
   const generate = withSubmitting(async () => {
     clearErrors();
@@ -41,37 +52,53 @@ export const RecoveryCodesPanel = () => {
   };
 
   return (
-    <div class="max-w-2xl space-y-6">
-      <FormError message={formError()} onClose={clearErrors} />
+    <Switch>
+      <Match when={authCheck.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={authCheck() === false}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={authCheck() === true}>
+        <div class="max-w-2xl space-y-6">
+          <FormError message={formError()} onClose={clearErrors} />
 
-      <div class="rounded-box border border-base-300 bg-base-200 p-6">
-        <p class="text-sm text-base-content/70">
-          リカバリーコードはパスキーを紛失した際にアカウントへのアクセスを回復するためのワンタイムコードです。
-          発行すると既存のコードは無効になります。コードは発行時に一度だけ表示され、再表示はできません。安全な場所に保管してください。
-        </p>
-        <button class="btn btn-primary mt-4" disabled={isSubmitting()} onClick={generate}>
-          {isSubmitting() ? '発行中...' : 'リカバリーコードを発行/再生成'}
-        </button>
-      </div>
-
-      <Show when={codes().length > 0}>
-        <div class="rounded-box border border-base-300 bg-base-100 p-6">
-          <p class="mb-4 text-sm font-semibold text-warning">
-            このコードは再表示できません。今すぐコピーまたはダウンロードして保管してください。
-          </p>
-          <ul class="grid grid-cols-2 gap-2 font-mono text-sm">
-            <For each={codes()}>{code => <li class="rounded bg-base-200 px-3 py-2">{code}</li>}</For>
-          </ul>
-          <div class="mt-4 flex gap-2">
-            <button class="btn btn-sm" onClick={copyAll}>
-              コピー
-            </button>
-            <button class="btn btn-sm" onClick={download}>
-              ダウンロード
+          <div class="rounded-box border border-base-300 bg-base-200 p-6">
+            <p class="text-sm text-base-content/70">
+              リカバリーコードはパスキーを紛失した際にアカウントへのアクセスを回復するためのワンタイムコードです。
+              発行すると既存のコードは無効になります。コードは発行時に一度だけ表示され、再表示はできません。安全な場所に保管してください。
+            </p>
+            <button class="btn btn-primary mt-4" disabled={isSubmitting()} onClick={generate}>
+              {isSubmitting() ? '発行中...' : 'リカバリーコードを発行/再生成'}
             </button>
           </div>
+
+          <Show when={codes().length > 0}>
+            <div class="rounded-box border border-base-300 bg-base-100 p-6">
+              <p class="mb-4 text-sm font-semibold text-warning">
+                このコードは再表示できません。今すぐコピーまたはダウンロードして保管してください。
+              </p>
+              <ul class="grid grid-cols-2 gap-2 font-mono text-sm">
+                <For each={codes()}>{code => <li class="rounded bg-base-200 px-3 py-2">{code}</li>}</For>
+              </ul>
+              <div class="mt-4 flex gap-2">
+                <button class="btn btn-sm" onClick={copyAll}>
+                  コピー
+                </button>
+                <button class="btn btn-sm" onClick={download}>
+                  ダウンロード
+                </button>
+              </div>
+            </div>
+          </Show>
         </div>
-      </Show>
-    </div>
+      </Match>
+    </Switch>
   );
 };

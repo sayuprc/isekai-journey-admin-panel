@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, Show } from 'solid-js';
+import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
 import type { Media, Person, RequestSongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -18,17 +18,71 @@ type SongTagEntry = {
   songTagId: string;
 };
 
-interface Props {
-  data?: { persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
-  status: number;
+type CreateFormData = { persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
+
+interface CreateFormProps {
+  data: CreateFormData;
 }
 
-export const CreateForm = (props: Props) => {
-  const [persons] = createSignal<Person[]>(props.data?.persons ?? []);
-  const [types] = createSignal<SongType[]>(props.data?.types ?? []);
+interface FetchOkState {
+  status: 'ok';
+  data: CreateFormData;
+}
+
+interface FetchErrorState {
+  status: 'error';
+}
+
+type FetchState = FetchOkState | FetchErrorState;
+
+export const CreateView = () => {
+  const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
+    const { data, status } = await client.api.songs['create-form'].get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return { status: 'error' };
+    }
+
+    if (!data) {
+      return { status: 'error' };
+    }
+
+    return { status: 'ok', data };
+  });
+
+  const loadedData = () => {
+    const state = resource();
+    return state?.status === 'ok' ? state.data : undefined;
+  };
+
+  return (
+    <Switch>
+      <Match when={resource.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={resource()?.status === 'error'}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={loadedData()}>
+        {data => <CreateForm data={data()} />}
+      </Match>
+    </Switch>
+  );
+};
+
+export const CreateForm = (props: CreateFormProps) => {
+  const [persons] = createSignal<Person[]>(props.data.persons);
+  const [types] = createSignal<SongType[]>(props.data.types);
   const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>('');
-  const [availableTags] = createSignal<SongTag[]>(props.data?.tags ?? []);
-  const [availableMedia, setAvailableMedia] = createSignal<Media[]>(props.data?.media ?? []);
+  const [availableTags] = createSignal<SongTag[]>(props.data.tags);
+  const [availableMedia, setAvailableMedia] = createSignal<Media[]>(props.data.media);
 
   const [lyricists, setLyricists] = createSignal<PersonEntry[]>([]);
   const [composers, setComposers] = createSignal<PersonEntry[]>([]);
@@ -45,12 +99,6 @@ export const CreateForm = (props: Props) => {
 
     return normalized === '' ? null : normalized;
   };
-
-  createEffect(() => {
-    if (props.status !== 200) {
-      handleError(props.status, undefined);
-    }
-  });
 
   const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
     setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);

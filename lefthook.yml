@@ -17,7 +17,7 @@ pre-commit:
     admin-lint:
       root: "src/admin/"
       glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
-      run: mise run admin:lint -- {staged_files}
+      run: mise run admin:lint
 
     admin-style:
       root: "src/admin/"

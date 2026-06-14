@@ -1,34 +1,16 @@
 ---
-import { EditableForm } from '../../components/person/EditableForm';
+import { DetailView } from '../../components/person/EditableForm';
 import Layout from '../../layouts/Layout.astro';
-import { client } from '../../utils/client';
-
-export const prerender = false;
-
-interface Props {
-  id: string;
-}
 
 const { id } = Astro.params;
 
 if (typeof id !== 'string') {
   throw new Error('URL が不正');
 }
-
-const { data, status } = await client.api.persons({ personId: id }).get({
-  headers: {
-    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
-    'cookie': Astro.request.headers.get('cookie') ?? '',
-  },
-});
-
-if (status === 401) {
-  return Astro.redirect('/auth/login');
-}
 ---
 
 <Layout pageTitle="人物詳細">
   <div>
-    <EditableForm data={data ?? undefined} status={status} client:only="solid-js" />
+    <DetailView personId={id} client:only="solid-js" />
   </div>
 </Layout>

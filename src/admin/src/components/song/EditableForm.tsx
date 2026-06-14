@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, Show } from 'solid-js';
+import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
 import type { Media, Person, RequestSongPerson, Song, SongPerson, SongPersonRole, SongTag, SongType, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -18,12 +18,28 @@ type SongTagEntry = {
   songTagId: string;
 };
 
-interface Props {
-  data?: { song: Song; persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
-  status: number;
+interface DetailViewProps {
+  songId: string;
 }
 
-export const EditableForm = (props: Props) => {
+type EditableFormData = { song: Song; persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
+
+interface EditableFormProps {
+  data: EditableFormData;
+}
+
+interface FetchOkState {
+  status: 'ok';
+  data: EditableFormData;
+}
+
+interface FetchErrorState {
+  status: 'error';
+}
+
+type FetchState = FetchOkState | FetchErrorState;
+
+const getListUrl = () => {
   const back = new URLSearchParams(window.location.search).get('back') ?? '';
   const listQuery = (() => {
     if (!back.startsWith('?')) return '';
@@ -34,20 +50,82 @@ export const EditableForm = (props: Props) => {
       return '';
     }
   })();
-  const listUrl = `/songs${listQuery}`;
 
-  const persons = props.data?.persons ?? [];
-  const types = props.data?.types ?? [];
-  const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>(props.data?.song.type.value ?? '');
-  const availableTags = props.data?.tags ?? [];
+  return `/songs${listQuery}`;
+};
+
+export const DetailView = (props: DetailViewProps) => {
+  const listUrl = getListUrl();
+
+  const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
+    const { data, status } = await client.api.songs({ songId: props.songId })['edit-form'].get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return { status: 'error' };
+    }
+
+    if (status === 404) {
+      setFlash('データがありません', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (status === 422) {
+      setFlash('不正なリクエストです', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (!data) {
+      return { status: 'error' };
+    }
+
+    return { status: 'ok', data };
+  });
+
+  const loadedData = () => {
+    const state = resource();
+    return state?.status === 'ok' ? state.data : undefined;
+  };
+
+  return (
+    <Switch>
+      <Match when={resource.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={resource()?.status === 'error'}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={loadedData()}>
+        {data => <EditableForm data={data()} />}
+      </Match>
+    </Switch>
+  );
+};
+
+export const EditableForm = (props: EditableFormProps) => {
+  const listUrl = getListUrl();
+
+  const persons = props.data.persons;
+  const types = props.data.types;
+  const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>(props.data.song.type.value);
+  const availableTags = props.data.tags;
   const initialAvailableMedia = (() => {
-    const items = [...(props.data?.media ?? [])];
-    for (const item of props.data?.song.media ?? []) {
+    const items = [...props.data.media];
+    for (const item of props.data.song.media) {
       if (!items.some(media => media.mediaId === item.mediaId)) {
         items.push({
           mediaId: item.mediaId,
           title: item.title,
           url: item.url,
+          publishedAt: item.publishedAt,
           type: item.type,
           format: item.format,
           isDisplay: item.isDisplay,
@@ -60,15 +138,15 @@ export const EditableForm = (props: Props) => {
   const toEntries = (items: SongPerson[] | undefined): PersonEntry[] =>
     (items ?? []).map(item => ({ personId: item.personId, role: item.role, orderNo: item.orderNo }));
 
-  const initialEntries = toEntries(props.data?.song.persons);
+  const initialEntries = toEntries(props.data.song.persons);
   const [lyricists, setLyricists] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 1));
   const [composers, setComposers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 2));
   const [arrangers, setArrangers] = createSignal<PersonEntry[]>(initialEntries.filter(entry => entry.role === 3));
   const [tags, setTags] = createSignal<SongTagEntry[]>(
-    (props.data?.song.tags ?? []).map(tag => ({ songTagId: tag.songTagId })),
+    props.data.song.tags.map(tag => ({ songTagId: tag.songTagId })),
   );
   const [availableMedia, setAvailableMedia] = createSignal<Media[]>(initialAvailableMedia);
-  const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>((props.data?.song.media ?? []).map(toMediaEntry));
+  const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>(props.data.song.media.map(toMediaEntry));
   const [tagPickerValue, setTagPickerValue] = createSignal('');
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -79,16 +157,6 @@ export const EditableForm = (props: Props) => {
 
     return normalized === '' ? null : normalized;
   };
-
-  createEffect(() => {
-    if (props.status === 404) {
-      setFlash('データがありません', 'error');
-      window.location.href = listUrl;
-    } else if (props.status === 422) {
-      setFlash('不正なリクエストです', 'error');
-      window.location.href = listUrl;
-    }
-  });
 
   const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
     setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
@@ -130,7 +198,7 @@ export const EditableForm = (props: Props) => {
 
     clearErrors();
 
-    const songId = props.data?.song.songId;
+    const songId = props.data.song.songId;
 
     if (!songId) {
       setFormError('削除対象の楽曲IDを取得できませんでした');
@@ -155,7 +223,7 @@ export const EditableForm = (props: Props) => {
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
 
-    const songId = props.data?.song.songId;
+    const songId = props.data.song.songId;
 
     if (!songId) {
       setFormError('更新対象の楽曲IDを取得できませんでした');
@@ -309,7 +377,7 @@ export const EditableForm = (props: Props) => {
   );
 
   return (
-    <Show when={props.data} fallback={<p>読み込み中...</p>}>
+    <>
       <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
@@ -327,7 +395,7 @@ export const EditableForm = (props: Props) => {
                     class="input w-full"
                     name="title"
                     required
-                    value={props.data?.song.title}
+                    value={props.data.song.title}
                     classList={{ 'input-error': !!getFieldError('title') }}
                   />
                   <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
@@ -359,7 +427,7 @@ export const EditableForm = (props: Props) => {
                     type="text"
                     class="input w-full"
                     name="description"
-                    value={props.data?.song.description}
+                    value={props.data.song.description}
                     classList={{ 'input-error': !!getFieldError('description') }}
                   />
                   <Show when={getFieldError('description')}>
@@ -373,7 +441,7 @@ export const EditableForm = (props: Props) => {
                     type="url"
                     class="input w-full"
                     name="lyricsLink"
-                    value={props.data?.song.lyricsLink ?? ''}
+                    value={props.data.song.lyricsLink ?? ''}
                     placeholder="https://example.com/lyrics"
                     classList={{ 'input-error': !!getFieldError('lyricsLink') }}
                   />
@@ -385,10 +453,10 @@ export const EditableForm = (props: Props) => {
                 <div>
                   <label class="label">表示設定</label>
                   <select class="select select-bordered w-full" name="isDisplay">
-                    <option value="true" selected={props.data?.song.isDisplay === true}>
+                    <option value="true" selected={props.data.song.isDisplay === true}>
                       表示する
                     </option>
-                    <option value="false" selected={props.data?.song.isDisplay === false}>
+                    <option value="false" selected={props.data.song.isDisplay === false}>
                       表示しない
                     </option>
                   </select>
@@ -396,7 +464,7 @@ export const EditableForm = (props: Props) => {
 
                 <div>
                   <label class="label">表示順</label>
-                  <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data?.song.orderNo} />
+                  <input type="number" class="input w-full" name="orderNo" required min="1" value={props.data.song.orderNo} />
                 </div>
               </div>
             </fieldset>
@@ -440,6 +508,6 @@ export const EditableForm = (props: Props) => {
           </button>
         </div>
       </div>
-    </Show>
+    </>
   );
 };

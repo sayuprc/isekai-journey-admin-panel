@@ -1,4 +1,4 @@
-import { Show, onMount } from 'solid-js';
+import { createResource, Match, Show, Switch } from 'solid-js';
 import type { Media, MediaFormatValue, MediaReferencedSong, MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
@@ -23,30 +23,44 @@ const MEDIA_FORMAT_OPTIONS: Array<{ value: MediaFormatValue; label: string }> = 
   { value: 99, label: 'その他' },
 ];
 
-interface Props {
-  data?: { media: Media; songs: MediaReferencedSong[] };
-  status: number;
+interface DetailViewProps {
+  mediaId: string;
 }
 
-export const EditableForm = (props: Props) => {
-  const normalizeDateInputValue = (value: unknown): string => {
-    if (value instanceof Date) {
-      return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
-    }
+interface EditableFormProps {
+  data: { media: Media; songs: MediaReferencedSong[] };
+}
 
-    if (typeof value !== 'string') {
-      return '';
-    }
+interface FetchOkState {
+  status: 'ok';
+  data: { media: Media; songs: MediaReferencedSong[] };
+}
 
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return value;
-    }
+interface FetchErrorState {
+  status: 'error';
+}
 
-    const parsed = new Date(value);
+type FetchState = FetchOkState | FetchErrorState;
 
-    return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
-  };
+const normalizeDateInputValue = (value: unknown): string => {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
+  }
 
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const parsed = new Date(value);
+
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
+};
+
+const getListUrl = () => {
   const back = new URLSearchParams(window.location.search).get('back') ?? '';
   const listQuery = (() => {
     if (!back.startsWith('?')) return '';
@@ -57,7 +71,68 @@ export const EditableForm = (props: Props) => {
       return '';
     }
   })();
-  const listUrl = `/media${listQuery}`;
+
+  return `/media${listQuery}`;
+};
+
+export const DetailView = (props: DetailViewProps) => {
+  const listUrl = getListUrl();
+
+  const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
+    const { data, status } = await client.api.media({ mediaId: props.mediaId }).get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return { status: 'error' };
+    }
+
+    if (status === 404) {
+      setFlash('データがありません', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (status === 422) {
+      setFlash('不正なリクエストです', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
+    }
+
+    if (!data) {
+      return { status: 'error' };
+    }
+
+    return { status: 'ok', data };
+  });
+
+  const loadedData = () => {
+    const state = resource();
+    return state?.status === 'ok' ? state.data : undefined;
+  };
+
+  return (
+    <Switch>
+      <Match when={resource.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={resource()?.status === 'error'}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={loadedData()}>
+        {data => <EditableForm data={data()} />}
+      </Match>
+    </Switch>
+  );
+};
+
+const EditableForm = (props: EditableFormProps) => {
+  const listUrl = getListUrl();
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
@@ -73,7 +148,7 @@ export const EditableForm = (props: Props) => {
     const form = (e.target as HTMLButtonElement).form as HTMLFormElement;
     const formData = new FormData(form);
 
-    const mediaId = props.data?.media.mediaId;
+    const mediaId = props.data.media.mediaId;
 
     if (!mediaId) {
       setFormError('更新対象のメディアIDを取得できませんでした');
@@ -113,7 +188,7 @@ export const EditableForm = (props: Props) => {
 
     clearErrors();
 
-    const mediaId = props.data?.media.mediaId;
+    const mediaId = props.data.media.mediaId;
 
     if (!mediaId) {
       setFormError('削除対象のメディアIDを取得できませんでした');
@@ -131,20 +206,8 @@ export const EditableForm = (props: Props) => {
     window.location.href = listUrl;
   });
 
-  onMount(() => {
-    if (props.status === 404) {
-      setFlash('データがありません', 'error');
-      window.location.href = listUrl;
-    } else if (props.status === 422) {
-      setFlash('不正なリクエストです', 'error');
-      window.location.href = listUrl;
-    } else if (!props.data) {
-      setFormError('予期しないエラーが発生しました');
-    }
-  });
-
   return (
-    <Show when={props.data} fallback={<p>読み込み中...</p>}>
+    <>
       <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
@@ -158,7 +221,7 @@ export const EditableForm = (props: Props) => {
               type="text"
               class="input w-full"
               name="title"
-              value={props.data?.media.title}
+              value={props.data.media.title}
               classList={{ 'input-error': !!getFieldError('title') }}
             />
             <Show when={getFieldError('title')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
@@ -168,7 +231,7 @@ export const EditableForm = (props: Props) => {
               type="url"
               class="input w-full"
               name="url"
-              value={props.data?.media.url}
+              value={props.data.media.url}
               classList={{ 'input-error': !!getFieldError('url') }}
             />
             <Show when={getFieldError('url')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
@@ -178,7 +241,7 @@ export const EditableForm = (props: Props) => {
               type="date"
               class="input w-full"
               name="publishedAt"
-              value={normalizeDateInputValue(props.data?.media.publishedAt)}
+              value={normalizeDateInputValue(props.data.media.publishedAt)}
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />
@@ -190,7 +253,7 @@ export const EditableForm = (props: Props) => {
                 <select
                   class="select w-full"
                   name="typeValue"
-                  value={props.data?.media.type.value}
+                  value={props.data.media.type.value}
                   classList={{ 'select-error': !!getFieldError('typeValue') }}
                 >
                   {MEDIA_TYPE_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
@@ -203,7 +266,7 @@ export const EditableForm = (props: Props) => {
                 <select
                   class="select w-full"
                   name="formatValue"
-                  value={props.data?.media.format.value}
+                  value={props.data.media.format.value}
                   classList={{ 'select-error': !!getFieldError('formatValue') }}
                 >
                   {MEDIA_FORMAT_OPTIONS.map(option => <option value={option.value}>{option.label}</option>)}
@@ -216,7 +279,7 @@ export const EditableForm = (props: Props) => {
             <select
               class="select w-full"
               name="isDisplay"
-              value={String(props.data?.media.isDisplay)}
+              value={String(props.data.media.isDisplay)}
               classList={{ 'select-error': !!getFieldError('isDisplay') }}
             >
               <option value="true">表示する</option>
@@ -235,7 +298,7 @@ export const EditableForm = (props: Props) => {
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">参照中の楽曲</legend>
           <Show
-            when={(props.data?.songs.length ?? 0) > 0}
+            when={props.data.songs.length > 0}
             fallback={<p class="text-sm text-base-content/60">参照中の楽曲はありません。</p>}
           >
             <div class="overflow-x-auto">
@@ -249,7 +312,7 @@ export const EditableForm = (props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {props.data?.songs.map(song => (
+                  {props.data.songs.map(song => (
                     <tr>
                       <td>{song.title}</td>
                       <td>{song.songOrderNo}</td>
@@ -277,6 +340,6 @@ export const EditableForm = (props: Props) => {
           </div>
         </fieldset>
       </div>
-    </Show>
+    </>
   );
 };
