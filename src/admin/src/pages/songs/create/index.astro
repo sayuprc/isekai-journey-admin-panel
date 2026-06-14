@@ -1,24 +1,10 @@
 ---
 import { FlashMessage } from '../../../components/Flash';
-import { CreateForm } from '../../../components/song/CreateForm';
+import { CreateView } from '../../../components/song/CreateForm';
 import Layout from '../../../layouts/Layout.astro';
-import { client } from '../../../utils/client';
-
-export const prerender = false;
-
-const { data, status } = await client.api.songs['create-form'].get({
-  headers: {
-    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
-    'cookie': Astro.request.headers.get('cookie') ?? '',
-  },
-});
-
-if (status === 401) {
-  return Astro.redirect('/auth/login');
-}
 ---
 
 <Layout pageTitle="楽曲作成">
   <FlashMessage client:only="solid-js" />
-  <CreateForm data={data ?? undefined} status={status} client:only="solid-js" />
+  <CreateView client:only="solid-js" />
 </Layout>

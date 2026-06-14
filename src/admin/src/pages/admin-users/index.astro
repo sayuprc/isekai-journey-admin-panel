@@ -1,54 +1,10 @@
 ---
+import { AdminUserList } from '../../components/admin-user/List';
 import { FlashMessage } from '../../components/Flash';
 import Layout from '../../layouts/Layout.astro';
-import { client } from '../../utils/client';
-import { formatter } from '../../utils/date';
-
-export const prerender = false;
-
-const { data, status } = await client.api['admin-users'].get({
-  headers: {
-    'x-csrf-token': Astro.cookies.get('csrf')?.value ?? '',
-    'cookie': Astro.request.headers.get('cookie') ?? '',
-  },
-});
-
-if (status === 401) {
-  return Astro.redirect('/auth/login');
-}
-
-if (!data) {
-  throw new Error();
-}
 ---
 
 <Layout pageTitle="管理ユーザー一覧">
   <FlashMessage client:only="solid-js" />
-  <!-- TODO コンポーネント化する -->
-  <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-    <table class="table table-zebra">
-      <thead>
-        <tr>
-          <th>名前</th>
-          <th>メールアドレス</th>
-          <th>役割</th>
-          <th>作成日</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          data.adminUsers.map((adminUser) => {
-            return (
-              <tr>
-                <td>{adminUser.name}</td>
-                <td>{adminUser.email}</td>
-                <td>{adminUser.role.name}</td>
-                <td>{formatter.format(new Date(adminUser.createdAt))}</td>
-              </tr>
-            );
-          })
-        }
-      </tbody>
-    </table>
-  </div>
+  <AdminUserList client:only="solid-js" />
 </Layout>

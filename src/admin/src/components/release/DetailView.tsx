@@ -1,4 +1,4 @@
-import { For, Show, createMemo, createSignal, onMount } from 'solid-js';
+import { For, Match, Show, Switch, createMemo, createResource, createSignal } from 'solid-js';
 import type {
   ReleaseDistributionTypeValue,
   ReleaseGetResponse,
@@ -30,10 +30,24 @@ type TrackEntryForm = {
   title: string;
 };
 
-interface Props {
-  data?: ReleaseGetResponse;
-  status: number;
+interface DetailViewProps {
+  releaseId: string;
 }
+
+interface ReleaseFormProps {
+  data: ReleaseGetResponse;
+}
+
+interface FetchOkState {
+  status: 'ok';
+  data: ReleaseGetResponse;
+}
+
+interface FetchErrorState {
+  status: 'error';
+}
+
+type FetchState = FetchOkState | FetchErrorState;
 
 const normalizeDateValue = (value: unknown): string => {
   if (value instanceof Date) {
@@ -58,35 +72,93 @@ const toTrackEntryForm = (song: ReleaseReferencedSong): TrackEntryForm => ({
   title: song.title,
 });
 
-export const DetailView = (props: Props) => {
-  const listUrl = (() => {
-    if (typeof window === 'undefined') {
-      return '/releases';
+const getListUrl = () => {
+  if (typeof window === 'undefined') {
+    return '/releases';
+  }
+
+  const back = new URLSearchParams(window.location.search).get('back') ?? '';
+
+  if (!back.startsWith('?')) {
+    return '/releases';
+  }
+
+  try {
+    const query = new URLSearchParams(back.slice(1)).toString();
+    return query ? `/releases?${query}` : '/releases';
+  } catch {
+    return '/releases';
+  }
+};
+
+export const DetailView = (props: DetailViewProps) => {
+  const listUrl = getListUrl();
+
+  const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
+    const { data, status } = await client.api.releases({ releaseId: props.releaseId }).get();
+
+    if (status === 401) {
+      window.location.href = '/auth/login';
+      return { status: 'error' };
     }
 
-    const back = new URLSearchParams(window.location.search).get('back') ?? '';
-
-    if (!back.startsWith('?')) {
-      return '/releases';
+    if (status === 404) {
+      setFlash('データがありません', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
     }
 
-    try {
-      const query = new URLSearchParams(back.slice(1)).toString();
-      return query ? `/releases?${query}` : '/releases';
-    } catch {
-      return '/releases';
+    if (status === 422) {
+      setFlash('不正なリクエストです', 'error');
+      window.location.href = listUrl;
+      return { status: 'error' };
     }
-  })();
 
-  const [title, setTitle] = createSignal(props.data?.release.title ?? '');
-  const [typeValue, setTypeValue] = createSignal<ReleaseTypeValue>(props.data?.release.typeValue ?? 1);
-  const [distributionTypeValue, setDistributionTypeValue] = createSignal<ReleaseDistributionTypeValue>(
-    props.data?.release.distributionTypeValue ?? 1,
+    if (!data) {
+      return { status: 'error' };
+    }
+
+    return { status: 'ok', data };
+  });
+
+  const loadedData = () => {
+    const state = resource();
+    return state?.status === 'ok' ? state.data : undefined;
+  };
+
+  return (
+    <Switch>
+      <Match when={resource.loading}>
+        <div class="flex items-center justify-center gap-3 py-10 text-base-content/70" role="status" aria-live="polite">
+          <span class="loading loading-spinner loading-md" aria-hidden="true" />
+          <span>読み込み中...</span>
+        </div>
+      </Match>
+      <Match when={resource.error || resource()?.status === 'error'}>
+        <div class="flex flex-col items-start gap-3">
+          <p class="text-error">データの取得に失敗しました。</p>
+          <button type="button" class="btn btn-outline btn-sm" onClick={() => refetch()}>再試行</button>
+        </div>
+      </Match>
+      <Match when={loadedData()}>
+        {data => <ReleaseForm data={data()} />}
+      </Match>
+    </Switch>
   );
-  const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data?.release.releasedOn));
-  const [description, setDescription] = createSignal(props.data?.release.description ?? '');
-  const [isDisplay, setIsDisplay] = createSignal(props.data?.release.isDisplay ?? true);
-  const [trackEntries, setTrackEntries] = createSignal<TrackEntryForm[]>((props.data?.songs ?? []).map(toTrackEntryForm));
+};
+
+const ReleaseForm = (props: ReleaseFormProps) => {
+  const listUrl = getListUrl();
+
+  const [title, setTitle] = createSignal(props.data.release.title);
+  const [typeValue, setTypeValue] = createSignal<ReleaseTypeValue>(props.data.release.typeValue);
+  const [distributionTypeValue, setDistributionTypeValue] = createSignal<ReleaseDistributionTypeValue>(
+    props.data.release.distributionTypeValue,
+  );
+  const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data.release.releasedOn));
+  const [description, setDescription] = createSignal(props.data.release.description);
+  const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
+  const [trackEntries, setTrackEntries] = createSignal<TrackEntryForm[]>(props.data.songs.map(toTrackEntryForm));
 
   const [searchTitle, setSearchTitle] = createSignal('');
   const [searchResults, setSearchResults] = createSignal<SongSummary[]>([]);
@@ -179,7 +251,7 @@ export const DetailView = (props: Props) => {
     e.preventDefault();
     clearErrors();
 
-    const releaseId = props.data?.release.releaseId;
+    const releaseId = props.data.release.releaseId;
 
     if (!releaseId) {
       setFormError('更新対象のリリースIDを取得できませんでした');
@@ -223,7 +295,7 @@ export const DetailView = (props: Props) => {
 
     clearErrors();
 
-    const releaseId = props.data?.release.releaseId;
+    const releaseId = props.data.release.releaseId;
 
     if (!releaseId) {
       setFormError('削除対象のリリースIDを取得できませんでした');
@@ -241,26 +313,8 @@ export const DetailView = (props: Props) => {
     window.location.href = listUrl;
   });
 
-  onMount(() => {
-    if (props.status === 404) {
-      setFlash('データがありません', 'error');
-      window.location.href = listUrl;
-      return;
-    }
-
-    if (props.status === 422) {
-      setFlash('不正なリクエストです', 'error');
-      window.location.href = listUrl;
-      return;
-    }
-
-    if (!props.data) {
-      setFormError('予期しないエラーが発生しました');
-    }
-  });
-
   return (
-    <Show when={props.data} fallback={<p>読み込み中...</p>}>
+    <>
       <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
         ← 一覧に戻る
       </a>
@@ -492,6 +546,6 @@ export const DetailView = (props: Props) => {
           </div>
         </fieldset>
       </div>
-    </Show>
+    </>
   );
 };
