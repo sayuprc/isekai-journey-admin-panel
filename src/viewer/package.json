@@ -30,6 +30,7 @@
     "@tailwindcss/vite": "catalog:ui",
     "astro": "catalog:astro",
     "daisyui": "catalog:ui",
+    "p-limit": "7.3.0",
     "solid-js": "catalog:astro",
     "tailwindcss": "catalog:ui",
     "wrangler": "4.98.0"

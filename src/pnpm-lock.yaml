@@ -225,6 +225,9 @@ importers:
       daisyui:
         specifier: catalog:ui
         version: 5.5.20
+      p-limit:
+        specifier: 7.3.0
+        version: 7.3.0
       solid-js:
         specifier: catalog:astro
         version: 1.9.13

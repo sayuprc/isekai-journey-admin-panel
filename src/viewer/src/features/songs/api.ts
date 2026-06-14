@@ -1,5 +1,6 @@
 import { songServiceGetSong, songServiceListSongs } from '../../generated/sdk.gen.js';
 import { apiClient } from '../../shared/api/client.js';
+import { apiLimit } from '../../shared/api/concurrency.js';
 import type { Song, SongDetail } from './types.js';
 
 async function all(): Promise<Song[]> {
@@ -28,16 +29,18 @@ async function all(): Promise<Song[]> {
 }
 
 async function get(songId: string): Promise<SongDetail> {
-  const { data, error, response } = await songServiceGetSong({
-    client: apiClient,
-    path: { songId },
+  return apiLimit(async () => {
+    const { data, error, response } = await songServiceGetSong({
+      client: apiClient,
+      path: { songId },
+    });
+
+    if (!data) {
+      throw new Error(`songServiceGetSong failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+    }
+
+    return data.song;
   });
-
-  if (!data) {
-    throw new Error(`songServiceGetSong failed: HTTP ${response.status} ${JSON.stringify(error)}`);
-  }
-
-  return data.song;
 }
 
 export const songRepository = {
