@@ -239,9 +239,9 @@ export const SearchList = () => {
       </form>
 
       <div class="mb-4 flex justify-end">
-        <button type="button" class="btn btn-primary btn-sm" disabled>
+        <a href={`/media/create?back=${encodeURIComponent(window.location.search)}`} class="btn btn-primary btn-sm">
           新規作成
-        </button>
+        </a>
       </div>
 
       <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
