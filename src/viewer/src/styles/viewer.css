@@ -1,6 +1,6 @@
 /* ヰ世界情緒ファンサイト - 共通スタイル */
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap");
 
 :root {
   --bg: #0f0f11;
@@ -217,7 +217,7 @@ a {
 }
 
 .num {
-  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-style: normal;
   font-weight: 500;
   font-feature-settings:
@@ -849,7 +849,7 @@ image-slot:hover {
 }
 
 .song-row-index {
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 20px;
   font-style: italic;
   line-height: 1;
@@ -891,7 +891,7 @@ image-slot:hover {
 }
 
 .song-row-media strong {
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 22px;
   font-style: italic;
   font-weight: 500;
@@ -899,7 +899,7 @@ image-slot:hover {
 }
 
 .num-cell {
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 16px;
   font-style: italic;
   color: var(--accent);
@@ -1344,7 +1344,7 @@ image-slot:hover {
 }
 
 .hero-data-stat strong {
-  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 52px;
   font-style: italic;
   font-weight: 500;
@@ -1449,7 +1449,7 @@ image-slot:hover {
 
 .hero-stats-grid strong,
 .detail-index {
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-style: italic;
   color: var(--accent);
 }
@@ -1987,7 +1987,7 @@ image-slot:hover {
 .events-year {
   padding-bottom: 12px;
   margin-bottom: 16px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 48px;
   font-style: italic;
   color: var(--accent);
@@ -2080,7 +2080,7 @@ image-slot:hover {
 
 .chronology-grid-mock > :nth-child(odd) {
   padding-right: 32px;
-  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 36px;
   font-weight: 500;
   line-height: 1.2;
@@ -2102,7 +2102,7 @@ image-slot:hover {
 
 .chronology-grid > :nth-child(odd) {
   padding-right: 32px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: Spectral, serif;
   font-size: 36px;
   font-style: italic;
   line-height: 1.2;
