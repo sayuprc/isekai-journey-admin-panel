@@ -2138,7 +2138,7 @@ image-slot:hover {
 
 .song-credit-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
   margin: 0;
 }
@@ -2148,24 +2148,34 @@ image-slot:hover {
   padding: 14px 16px;
   background: color-mix(in oklab, var(--bg-elev) 70%, transparent);
   border: 1px solid var(--line-soft);
-}
-
-.song-credit-label,
-.song-credit-value {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border-left: 2px solid color-mix(in oklab, var(--accent) 45%, var(--line-soft));
 }
 
 .song-credit-label {
-  margin: 0 0 6px;
-  font-size: 12px;
-  font-weight: 600;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 0 0 8px;
+}
+
+.song-credit-en {
+  font-size: 10px;
+  color: color-mix(in oklab, var(--accent) 80%, var(--fg-muted));
+  letter-spacing: 0.12em;
+}
+
+.song-credit-jp {
+  font-family: "Shippori Mincho", serif;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   color: var(--fg-muted);
 }
 
 .song-credit-value {
   margin: 0;
-  font-size: 14px;
+  font-family: "Shippori Mincho", serif;
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.7;
   color: var(--fg);
