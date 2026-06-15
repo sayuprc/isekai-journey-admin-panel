@@ -15,6 +15,14 @@ steps:
       - -c
       - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest || exit 0
 
+  - id: pull-db-migrate-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest || exit 0
+
   - id: pull-admin-image
     name: gcr.io/cloud-builders/docker
     entrypoint: bash
@@ -63,6 +71,22 @@ steps:
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest
       - .
 
+  - id: build-db-migrate-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - pull-db-migrate-image
+    args:
+      - build
+      - -f
+      - infra/staging/docker/db-migrate/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:$COMMIT_SHA
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest
+      - --cache-from
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest
+      - .
+
   - id: build-admin-image
     name: gcr.io/cloud-builders/docker
     entrypoint: bash
@@ -94,14 +118,14 @@ steps:
       - |
         set -euo pipefail
 
-        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+        NODE_VERSION=$$(sed -n 's/^node = "\(.*\)"$$/\1/p' mise.toml)
 
         docker build \
           -f infra/staging/docker/viewer/Dockerfile \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:$COMMIT_SHA \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
-          --build-arg "BUN_VERSION=$${BUN_VERSION}" \
+          --build-arg "NODE_VERSION=$${NODE_VERSION}" \
           .
 
   - id: push-api-image
@@ -121,6 +145,15 @@ steps:
       - push
       - --all-tags
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}
+
+  - id: push-db-migrate-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-db-migrate-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}
 
   - id: push-admin-image
     name: gcr.io/cloud-builders/docker
@@ -145,19 +178,37 @@ steps:
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     waitFor:
-      - push-cli-image
+      - push-db-migrate-image
     args:
       - run
       - jobs
       - deploy
       - stg-db-migrate
       - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_JOB_SERVICE_ACCOUNT}
+      # - --wait
+      - --quiet
+
+  - id: deploy-admin-invite
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-cli-image
+    args:
+      - run
+      - jobs
+      - deploy
+      - stg-admin-invite
+      - --image
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
       - --region
       - ${_REGION}
       - --service-account
-      - ${_DB_MIGRATE_JOB_SERVICE_ACCOUNT}
-      # - --wait
+      - ${_JOB_SERVICE_ACCOUNT}
       - --quiet
 
   - id: deploy-api
@@ -203,9 +254,7 @@ steps:
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     waitFor:
-      # - deploy-db-migrate-job
       - push-viewer-image
-      - deploy-api
     args:
       - run
       - jobs
@@ -216,7 +265,7 @@ steps:
       - --region
       - ${_REGION}
       - --service-account
-      - ${_VIEWER_JOB_SERVICE_ACCOUNT}
+      - ${_JOB_SERVICE_ACCOUNT}
       - --network
       - stg-cloud-run-egress
       - --subnet
