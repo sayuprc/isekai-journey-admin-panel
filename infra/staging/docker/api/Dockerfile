@@ -1,14 +1,12 @@
-FROM dunglas/frankenphp:php8.5.7
+FROM dunglas/frankenphp:php8.5.7-alpine
 
 ENV TZ=Asia/Tokyo
 
 WORKDIR /var/www/html
 
-RUN apt-get update \
-  && apt-get install -y \
+RUN apk add --no-cache \
+    libcap \
     unzip \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
   && install-php-extensions \
     opcache \
     pdo \
