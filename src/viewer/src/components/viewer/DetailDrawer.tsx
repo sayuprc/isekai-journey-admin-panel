@@ -10,6 +10,10 @@ interface DrawerTarget {
   pathname: string;
 }
 
+const maxCachedFragments = 8;
+const fragmentHtmlCache = new Map<string, string>();
+const fragmentRequestCache = new Map<string, Promise<string>>();
+
 const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
   const patterns = [
     { fragment: '/fragments/songs/', kind: 'song' as const, prefix: '/songs/' },
@@ -32,11 +36,64 @@ const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
   return null;
 };
 
+const resolveAnchorTarget = (eventTarget: EventTarget | null): DrawerTarget | null => {
+  if (!(eventTarget instanceof Element)) return null;
+
+  const anchor = eventTarget.closest('a[href]');
+  if (!(anchor instanceof HTMLAnchorElement)) return null;
+  if (anchor.dataset.drawerBypass === 'true') return null;
+  if (anchor.target && anchor.target !== '_self') return null;
+
+  const url = new URL(anchor.href, window.location.origin);
+  if (url.origin !== window.location.origin) return null;
+
+  return resolveDrawerTarget(url.pathname);
+};
+
+const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
+  const cachedHtml = fragmentHtmlCache.get(target.fragmentPath);
+  if (cachedHtml !== undefined) {
+    fragmentHtmlCache.delete(target.fragmentPath);
+    fragmentHtmlCache.set(target.fragmentPath, cachedHtml);
+    return Promise.resolve(cachedHtml);
+  }
+
+  const cachedRequest = fragmentRequestCache.get(target.fragmentPath);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetch(target.fragmentPath)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${target.fragmentPath}: ${response.status}`);
+      }
+
+      return response.text();
+    })
+    .then((html) => {
+      fragmentHtmlCache.set(target.fragmentPath, html);
+      if (fragmentHtmlCache.size > maxCachedFragments) {
+        const oldestKey = fragmentHtmlCache.keys().next().value;
+        if (oldestKey !== undefined) {
+          fragmentHtmlCache.delete(oldestKey);
+        }
+      }
+      fragmentRequestCache.delete(target.fragmentPath);
+      return html;
+    })
+    .catch((error: unknown) => {
+      fragmentRequestCache.delete(target.fragmentPath);
+      throw error;
+    });
+
+  fragmentRequestCache.set(target.fragmentPath, request);
+  return request;
+};
+
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
-  const [isLoading, setIsLoading] = createSignal(false);
   const [shareLabel, setShareLabel] = createSignal('共有');
+  let loadSequence = 0;
   let bodyRef: HTMLDivElement | undefined;
 
   const current = createMemo(() => {
@@ -44,44 +101,43 @@ export const DetailDrawer = () => {
     return items[items.length - 1] ?? null;
   });
 
-  const loadTarget = async (target: DrawerTarget) => {
-    setIsLoading(true);
+  const loadTarget = async (target: DrawerTarget, commitStack: () => void) => {
+    const sequence = loadSequence + 1;
+    loadSequence = sequence;
 
     try {
-      const response = await fetch(target.fragmentPath);
-      if (!response.ok) {
-        window.location.href = target.pathname;
-        return;
-      }
+      const html = await fetchTargetFragment(target);
+      if (sequence !== loadSequence) return false;
 
-      const html = await response.text();
+      commitStack();
       setContent(html);
       bodyRef?.scrollTo({ top: 0, behavior: 'auto' });
       setShareLabel('共有');
+      return true;
     } catch {
-      window.location.href = target.pathname;
-    } finally {
-      setIsLoading(false);
+      if (sequence === loadSequence) {
+        window.location.href = target.pathname;
+      }
+      return false;
     }
   };
 
   const openDrawer = async (pathname: string) => {
     const target = resolveDrawerTarget(pathname);
     if (!target) return false;
+    if (current()?.pathname === target.pathname) return true;
 
-    setStack((prev) => {
+    return loadTarget(target, () => setStack((prev) => {
       const last = prev[prev.length - 1];
       if (last?.pathname === target.pathname) return prev;
       return [...prev, target];
-    });
-    await loadTarget(target);
-    return true;
+    }));
   };
 
   const closeDrawer = () => {
+    loadSequence += 1;
     setStack([]);
     setContent('');
-    setIsLoading(false);
     setShareLabel('共有');
   };
 
@@ -94,8 +150,7 @@ export const DetailDrawer = () => {
 
     const nextStack = prev.slice(0, -1);
     const target = nextStack[nextStack.length - 1];
-    setStack(nextStack);
-    await loadTarget(target);
+    await loadTarget(target, () => setStack(nextStack));
   };
 
   const handleShare = async () => {
@@ -126,22 +181,11 @@ export const DetailDrawer = () => {
     if (event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-
-    const anchor = target.closest('a[href]');
-    if (!(anchor instanceof HTMLAnchorElement)) return;
-    if (anchor.dataset.drawerBypass === 'true') return;
-    if (anchor.target && anchor.target !== '_self') return;
-
-    const url = new URL(anchor.href, window.location.origin);
-    if (url.origin !== window.location.origin) return;
-
-    const drawerTarget = resolveDrawerTarget(url.pathname);
+    const drawerTarget = resolveAnchorTarget(event.target);
     if (!drawerTarget) return;
 
     event.preventDefault();
-    void openDrawer(url.pathname);
+    void openDrawer(drawerTarget.pathname);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -196,12 +240,9 @@ export const DetailDrawer = () => {
                 </button>
               </div>
             </div>
-            <div class={`detail-body ${isLoading() ? 'detail-body-loading' : ''}`} ref={bodyRef}>
-              <Show when={content()} fallback={<div class="drawer-loading">Loading…</div>}>
+            <div class="detail-body" ref={bodyRef}>
+              <Show when={content()}>
                 <div innerHTML={content()}></div>
-              </Show>
-              <Show when={isLoading() && content()}>
-                <div class="drawer-loading-overlay">Loading…</div>
               </Show>
             </div>
           </aside>
