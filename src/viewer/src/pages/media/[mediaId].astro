@@ -1,10 +1,10 @@
 ---
 import MediaDetailContent from '../../components/viewer/details/MediaDetailContent.astro';
-import { mediaRepository } from '../../features/media/api';
+import { mediaContentRepository } from '../../features/media/content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  return (await mediaRepository.all()).map(media => ({
+  return (await mediaContentRepository.all()).map(media => ({
     params: { mediaId: media.mediaId },
     props: { media },
   }));

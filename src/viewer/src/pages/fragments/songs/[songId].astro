@@ -1,11 +1,11 @@
 ---
 import SongDetailContent from '../../../components/viewer/details/SongDetailContent.astro';
-import { songRepository } from '../../../features/songs/api';
+import { songContentRepository } from '../../../features/songs/content';
 
 export const partial = true;
 
 export async function getStaticPaths() {
-  return (await songRepository.all()).map(song => ({
+  return (await songContentRepository.all()).map(song => ({
     params: { songId: song.songId },
     props: { song },
   }));
