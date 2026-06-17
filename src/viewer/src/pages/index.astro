@@ -1,18 +1,18 @@
 ---
-import JacketArt from '../components/viewer/JacketArt.astro';
-import MVThumb from '../components/viewer/MVThumb.astro';
-import PostCard from '../components/viewer/PostCard.astro';
-import SectionHead from '../components/viewer/SectionHead.astro';
-import { Q } from '../data/mock/site-data';
-import { mediaTypeLabel } from '../features/media/labels';
-import { latestMedia, latestPosts } from '../features/media/sort';
-import { latestRelease } from '../features/releases/sort';
+// import JacketArt from '../components/viewer/JacketArt.astro';
+// import MVThumb from '../components/viewer/MVThumb.astro';
+// import PostCard from '../components/viewer/PostCard.astro';
+// import SectionHead from '../components/viewer/SectionHead.astro';
+// import { Q } from '../data/mock/site-data';
+// import { mediaTypeLabel } from '../features/media/labels';
+// import { latestMedia, latestPosts } from '../features/media/sort';
+// import { latestRelease } from '../features/releases/sort';
 import { siteStatsRepository } from '../features/site-stats/api';
 import Layout from '../layouts/Layout.astro';
 
-const release = latestRelease();
-const media = latestMedia(3);
-const posts = latestPosts(3);
+// const release = latestRelease();
+// const media = latestMedia(3);
+// const posts = latestPosts(3);
 const siteStats = await siteStatsRepository.get();
 
 const observationYears = (() => {

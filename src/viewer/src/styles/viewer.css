@@ -257,7 +257,6 @@ a {
   background: color-mix(in oklab, var(--bg) 88%, transparent);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(20px) saturate(140%);
-  backdrop-filter: blur(20px) saturate(140%);
 }
 
 .nav-inner {
@@ -468,6 +467,7 @@ a {
   flex-direction: column;
   gap: 0;
   align-items: flex-start;
+
   /* テーマ名の長さで幅が変わると nav-links がずれるため、最長名に合わせて固定する */
   width: 104px;
   line-height: 1;
@@ -514,7 +514,6 @@ a {
   background: color-mix(in oklab, var(--bg) 94%, transparent);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(20px) saturate(140%);
   backdrop-filter: blur(20px) saturate(140%);
 }
 
@@ -746,13 +745,13 @@ a {
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent);
 }
 
+.seg button:active {
+  transform: translateY(1px);
+}
+
 .seg button:not(.active):hover {
   color: var(--fg);
   background: color-mix(in oklab, var(--fg) 5%, transparent);
-}
-
-.seg button:active {
-  transform: translateY(1px);
 }
 
 /* image-slot 共通 */
@@ -1056,8 +1055,7 @@ image-slot:hover {
   justify-content: flex-end;
   background: color-mix(in oklab, var(--bg) 78%, transparent);
   backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  animation: pageIn 0.25s ease;
+  animation: page-in 0.25s ease;
 }
 
 .detail-panel {
@@ -1068,10 +1066,11 @@ image-slot:hover {
   background: var(--bg-elev);
   border-left: 1px solid var(--line);
   box-shadow: var(--shadow);
-  animation: slideIn 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: slide-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
+
   from {
     opacity: 0;
     transform: translateX(40px);
@@ -1218,10 +1217,11 @@ image-slot:hover {
 /* ページ間遷移 */
 
 .page {
-  animation: pageIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-@keyframes pageIn {
+@keyframes page-in {
+
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -1351,7 +1351,7 @@ image-slot:hover {
   gap: 6px;
 }
 
-.hero-data-stat span {
+.hero-data .hero-data-stat span {
   font-family: "Shippori Mincho", serif;
   font-size: 17px;
   color: var(--fg);
@@ -1362,8 +1362,8 @@ image-slot:hover {
   font-family: "Cormorant Garamond", serif;
   font-size: 15px;
   font-style: italic;
-  letter-spacing: 0.04em;
   color: var(--fg-faint);
+  letter-spacing: 0.04em;
 }
 
 .hero-data-stat-date {
@@ -1458,7 +1458,7 @@ image-slot:hover {
   line-height: 1;
 }
 
-.hero-stats-grid span {
+.hero-symbol .hero-stats-grid span {
   display: block;
   margin-top: 8px;
   font-size: 11px;
@@ -1748,7 +1748,7 @@ image-slot:hover {
   line-height: 1;
 }
 
-.upcoming-date span {
+.upcoming-event-card .upcoming-date span {
   display: block;
   margin-top: 8px;
   font-family: "JetBrains Mono", monospace;
@@ -2180,60 +2180,6 @@ image-slot:hover {
   overflow-wrap: anywhere;
 }
 
-.detail-panel .song-detail-content .detail-hero-grid {
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-.detail-panel .song-detail-content .jacket-art {
-  max-width: 280px;
-}
-
-.detail-panel .song-detail-content .detail-title {
-  font-size: 28px;
-}
-
-.detail-panel .song-detail-content .detail-title-en {
-  display: block;
-  margin-top: 6px;
-}
-
-.detail-panel .song-detail-content .detail-meta-grid {
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-.detail-panel .song-credit-grid {
-  grid-template-columns: 1fr;
-}
-
-.detail-panel .release-detail-content .detail-hero-grid,
-.detail-panel .media-detail-content .detail-hero-grid,
-.detail-panel .media-detail-content .detail-hero-grid-wide {
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-.detail-panel .release-detail-content .jacket-art,
-.detail-panel .media-detail-content .mv-thumb {
-  max-width: 280px;
-}
-
-.detail-panel .release-detail-content .detail-title,
-.detail-panel .media-detail-content .detail-title {
-  font-size: 28px;
-}
-
-.detail-panel .release-detail-content .detail-title-en {
-  display: block;
-  margin-top: 6px;
-}
-
-.detail-panel .release-detail-content .detail-meta-grid {
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
 .rel-copy {
   flex: 1;
   min-width: 0;
@@ -2414,10 +2360,64 @@ image-slot:hover {
   transform: translate(-50%, -50%);
 }
 
-.mv-thumb-play svg {
+.mv-thumb .mv-thumb-play svg {
   width: 18px;
   height: 18px;
   fill: white;
+}
+
+.detail-panel .song-detail-content .detail-hero-grid {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.detail-panel .song-detail-content .jacket-art {
+  max-width: 280px;
+}
+
+.detail-panel .song-detail-content .detail-title {
+  font-size: 28px;
+}
+
+.detail-panel .song-detail-content .detail-title-en {
+  display: block;
+  margin-top: 6px;
+}
+
+.detail-panel .song-detail-content .detail-meta-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.detail-panel .song-credit-grid {
+  grid-template-columns: 1fr;
+}
+
+.detail-panel .release-detail-content .detail-hero-grid,
+.detail-panel .media-detail-content .detail-hero-grid,
+.detail-panel .media-detail-content .detail-hero-grid-wide {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.detail-panel .release-detail-content .jacket-art,
+.detail-panel .media-detail-content .mv-thumb {
+  max-width: 280px;
+}
+
+.detail-panel .release-detail-content .detail-title,
+.detail-panel .media-detail-content .detail-title {
+  font-size: 28px;
+}
+
+.detail-panel .release-detail-content .detail-title-en {
+  display: block;
+  margin-top: 6px;
+}
+
+.detail-panel .release-detail-content .detail-meta-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
 }
 
 .event-hero {
@@ -2431,6 +2431,7 @@ image-slot:hover {
 }
 
 @media (width <= 1100px) {
+
   .two-col-section,
   .hero-data-grid,
   .detail-hero-grid,
@@ -2479,6 +2480,7 @@ image-slot:hover {
 }
 
 @media (width <= 1280px) {
+
   .song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2490,6 +2492,7 @@ image-slot:hover {
 }
 
 @media (width <= 960px) {
+
   .release-grid,
   .media-card-grid,
   .recent-posts-grid,
@@ -2515,6 +2518,7 @@ image-slot:hover {
 }
 
 @media (width <= 720px) {
+
   .nav-inner {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -2531,8 +2535,8 @@ image-slot:hover {
     flex-direction: column;
     grid-column: 1 / -1;
     gap: 0;
-    margin-left: 0;
     padding-top: 8px;
+    margin-left: 0;
     border-top: 1px solid var(--line);
   }
 
@@ -2647,6 +2651,7 @@ image-slot:hover {
 }
 
 @media (width <= 800px) {
+
   .shell,
   .nav-inner {
     padding-right: 20px;
@@ -2683,7 +2688,7 @@ image-slot:hover {
     font-size: 36px;
   }
 
-  .hero-data-stat span {
+  .hero-data .hero-data-stat span {
     font-size: 14px;
   }
 
@@ -2710,6 +2715,7 @@ image-slot:hover {
 }
 
 @media (width <= 420px) {
+
   .brand-text {
     display: none;
   }
@@ -2767,16 +2773,16 @@ image-slot:hover {
   margin: 0 0 18px;
 }
 
-.policy-doc ul {
-  margin: 0 0 18px;
+.shell.page-section .policy-doc ul {
   padding-left: 1.4em;
+  margin: 0 0 18px;
 }
 
-.policy-doc li {
+.shell.page-section .policy-doc li {
   margin-bottom: 8px;
 }
 
-.policy-doc a {
+.shell.page-section .policy-doc a {
   color: var(--fg);
   text-decoration: underline;
   text-underline-offset: 3px;
