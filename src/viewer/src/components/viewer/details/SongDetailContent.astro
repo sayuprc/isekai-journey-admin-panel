@@ -90,11 +90,6 @@ const formatPublishedAt = (value: string): string =>
           {media.map(entry => (
             <a class="rel-chip" href={`/media/${entry.mediaId}`}>
               {/* TODO メディアのサムネイルを表示する */}
-              {/* <div class="color-block" style="
-
---tile-color:var(--accent);
-
-flex-shrink:0;width:38px;height:38px;" /> */}
               <div class="rel-copy">
                 <div class="rel-main">{entry.title}</div>
                 <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)}{/* · {entry.type.name} */} · {entry.format.name}</div>
