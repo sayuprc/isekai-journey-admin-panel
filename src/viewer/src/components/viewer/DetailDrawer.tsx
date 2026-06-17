@@ -188,22 +188,6 @@ export const DetailDrawer = () => {
     void openDrawer(drawerTarget.pathname);
   };
 
-  const prefetchDrawerTarget = (eventTarget: EventTarget | null) => {
-    const target = resolveAnchorTarget(eventTarget);
-    if (!target) return;
-
-    void fetchTargetFragment(target).catch(() => undefined);
-  };
-
-  const handleDocumentPointerOver = (event: PointerEvent) => {
-    if (event.pointerType === 'touch') return;
-    prefetchDrawerTarget(event.target);
-  };
-
-  const handleDocumentFocusIn = (event: FocusEvent) => {
-    prefetchDrawerTarget(event.target);
-  };
-
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && current()) {
       closeDrawer();
@@ -212,14 +196,10 @@ export const DetailDrawer = () => {
 
   onMount(() => {
     document.addEventListener('click', handleDocumentClick);
-    document.addEventListener('pointerover', handleDocumentPointerOver);
-    document.addEventListener('focusin', handleDocumentFocusIn);
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('click', handleDocumentClick);
-      document.removeEventListener('pointerover', handleDocumentPointerOver);
-      document.removeEventListener('focusin', handleDocumentFocusIn);
       window.removeEventListener('keydown', handleKeyDown);
     };
   });
