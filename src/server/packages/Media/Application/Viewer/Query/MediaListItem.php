@@ -10,6 +10,9 @@ use Media\Domain\Models\MediaType;
 
 readonly class MediaListItem
 {
+    /**
+     * @param array<MediaSongSummary> $songs
+     */
     public function __construct(
         public string $mediaId,
         public string $title,
@@ -17,6 +20,7 @@ readonly class MediaListItem
         public DateTimeImmutable $publishedAt,
         public MediaType $type,
         public MediaFormat $format,
+        public array $songs,
     ) {
     }
 }

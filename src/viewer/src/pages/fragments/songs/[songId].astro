@@ -5,12 +5,10 @@ import { songRepository } from '../../../features/songs/api';
 export const partial = true;
 
 export async function getStaticPaths() {
-  return Promise.all(
-    (await songRepository.all()).map(async song => ({
-      params: { songId: song.songId },
-      props: { song: await songRepository.get(song.songId) },
-    })),
-  );
+  return (await songRepository.all()).map(song => ({
+    params: { songId: song.songId },
+    props: { song },
+  }));
 }
 
 const { song } = Astro.props;

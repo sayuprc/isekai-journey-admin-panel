@@ -13,11 +13,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Override;
-use Song\Application\Viewer\Query\SongDetail;
-use Song\Application\Viewer\Query\SongDetailMediaSummary;
 use Song\Application\Viewer\Query\SongListCursor;
 use Song\Application\Viewer\Query\SongListItem;
 use Song\Application\Viewer\Query\SongListPage;
+use Song\Application\Viewer\Query\SongMediaSummary;
 use Song\Application\Viewer\Query\SongQueryServiceInterface;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
@@ -43,12 +42,12 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     ->orderBy('order_no'),
                 'persons.person' => fn (BelongsTo $query) => $query
                     ->select(['person_id', 'name']),
-            ])
-            ->withCount([
-                'songMediaLinks as media_count' => fn (Builder $query) => $query
-                    ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true)),
-                // 'releases as release_count' => fn (Builder $query) => $query
-                //     ->where('is_display', true),
+                'songMediaLinks' => fn (HasMany $query) => $query
+                    ->select(['song_id', 'media_id', 'order_no'])
+                    ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true))
+                    ->orderBy('order_no'),
+                'songMediaLinks.media' => fn (BelongsTo $query) => $query
+                    ->select(['media_id', 'title', 'type', 'format', 'published_at']),
             ])
             ->orderBy('order_no')
             ->orderBy('song_id');
@@ -69,10 +68,17 @@ readonly class SongQueryService implements SongQueryServiceInterface
             ->limit($limit + 1)
             ->get()
             ->map(function (Song $song): SongListItem {
-                // 直接 $song から取得しようとすると静的解析でエラーになるため回避策として getAttribute を呼び出している
-                // 将来的に Eloquent をやめてこの回避策をしなくてもいいようにする
-                // $releaseCount = $song->getAttribute('release_count');
-                $mediaCount = $song->getAttribute('media_count');
+                $media = $song->songMediaLinks
+                    ->toBase()
+                    ->map(fn (SongMediaLink $link): SongMediaSummary => new SongMediaSummary(
+                        $this->converter->toUuid($link->media->media_id),
+                        $link->media->title,
+                        MediaType::from($link->media->type),
+                        MediaFormat::from($link->media->format),
+                        $link->media->published_at->toDateTimeImmutable(),
+                    ))
+                    ->values()
+                    ->all();
 
                 return new SongListItem(
                     $this->converter->toUuid($song->song_id),
@@ -82,8 +88,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     $this->personNamesByRole($song, SongPersonRole::Lyricist),
                     $this->personNamesByRole($song, SongPersonRole::Composer),
                     $this->personNamesByRole($song, SongPersonRole::Arranger),
-                    // is_numeric($releaseCount) ? (int)$releaseCount : 0,
-                    is_numeric($mediaCount) ? (int)$mediaCount : 0,
+                    $media,
                     $song->order_no,
                 );
             });
@@ -97,58 +102,6 @@ readonly class SongQueryService implements SongQueryServiceInterface
             : SongListCursor::encode($lastSong->orderNo, $lastSong->songId);
 
         return new SongListPage($currentSongs->all(), $nextCursor);
-    }
-
-    #[Override]
-    public function get(string $songId): ?SongDetail
-    {
-        $song = Song::query()
-            ->select(['song_id', 'title', 'description', 'type', 'order_no'])
-            ->where('song_id', $this->converter->toBin($songId))
-            ->where('is_display', true)
-            // 将来的に Eloquent やめるので黙らせる
-            // @phpstan-ignore-next-line
-            ->with([
-                'persons' => fn (HasMany $query) => $query
-                    ->select(['song_id', 'person_id', 'role', 'order_no'])
-                    ->orderBy('order_no'),
-                'persons.person' => fn (BelongsTo $query) => $query
-                    ->select(['person_id', 'name']),
-                'songMediaLinks' => fn (HasMany $query) => $query
-                    ->select(['song_id', 'media_id', 'order_no'])
-                    ->whereHas('media', fn (Builder $mediaQuery) => $mediaQuery->where('is_display', true))
-                    ->orderBy('order_no'),
-                'songMediaLinks.media' => fn (BelongsTo $query) => $query
-                    ->select(['media_id', 'title', 'type', 'format', 'published_at']),
-            ])
-            ->first();
-
-        if (is_null($song)) {
-            return null;
-        }
-
-        $media = $song->songMediaLinks
-            ->toBase()
-            ->map(fn (SongMediaLink $link): SongDetailMediaSummary => new SongDetailMediaSummary(
-                $this->converter->toUuid($link->media->media_id),
-                $link->media->title,
-                MediaType::from($link->media->type),
-                MediaFormat::from($link->media->format),
-                $link->media->published_at->toDateTimeImmutable(),
-            ))
-            ->values()
-            ->all();
-
-        return new SongDetail(
-            $this->converter->toUuid($song->song_id),
-            $song->title,
-            $song->description,
-            SongType::from($song->type),
-            $this->personNamesByRole($song, SongPersonRole::Lyricist),
-            $this->personNamesByRole($song, SongPersonRole::Composer),
-            $this->personNamesByRole($song, SongPersonRole::Arranger),
-            $media,
-        );
     }
 
     /**

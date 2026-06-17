@@ -8,6 +8,7 @@ use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use ResultType\Result;
 use Song\Application\Viewer\Query\SongListItem;
+use Song\Application\Viewer\Query\SongMediaSummary;
 use Song\Application\Viewer\UseCase\List\ListOutputData;
 use Support\UseCase\Error\UseCaseError;
 
@@ -35,10 +36,12 @@ class ListPresenter
     }
 
     /**
-     * @return array{songId: string, title: string, type: array{name: string, value: 1|2}, description: string, lyricists: array<string>, composers: array<string>, arrangers: array<string>, counts: array{mediaCount: int}}
+     * @return array{songId: string, title: string, type: array{name: string, value: 1|2}, description: string, lyricists: array<string>, composers: array<string>, arrangers: array<string>, counts: array{mediaCount: int}, media: array<array{mediaId: string, title: string, type: array{name: string, value: int}, format: array{name: string, value: int}, publishedAt: string}>}
      */
     private function toArray(SongListItem $song): array
     {
+        $media = array_map($this->toMediaArray(...), $song->media);
+
         return [
             'songId' => $song->songId,
             'title' => $song->title,
@@ -52,8 +55,29 @@ class ListPresenter
             'arrangers' => $song->arrangers,
             'counts' => [
                 // 'releaseCount' => $song->releaseCount,
-                'mediaCount' => $song->mediaCount,
+                'mediaCount' => count($media),
             ],
+            'media' => $media,
+        ];
+    }
+
+    /**
+     * @return array{mediaId: string, title: string, type: array{name: string, value: int}, format: array{name: string, value: int}, publishedAt: string}
+     */
+    private function toMediaArray(SongMediaSummary $media): array
+    {
+        return [
+            'mediaId' => $media->mediaId,
+            'title' => $media->title,
+            'type' => [
+                'name' => $media->type->getName(),
+                'value' => $media->type->value,
+            ],
+            'format' => [
+                'name' => $media->format->getName(),
+                'value' => $media->format->value,
+            ],
+            'publishedAt' => $media->publishedAt->format('Y-m-d'),
         ];
     }
 }

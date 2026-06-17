@@ -42,11 +42,20 @@ model SongRelationCounts {
   type: #{ name: "オリジナル曲", value: SongTypeValue.original },
   counts: #{
     // releaseCount: 1,
-    mediaCount: 3,
+    mediaCount: 1,
   },
   lyricists: #["作詞者"],
   composers: #["作曲者"],
   arrangers: #["編曲者"],
+  media: #[
+    #{
+      mediaId: "11111111-1111-1111-1111-111111111111",
+      title: "描き続けた君へ MV",
+      type: #{ name: "動画", value: MediaTypeValue.video },
+      format: #{ name: "MV", value: MediaFormatValue.mv },
+      publishedAt: "2024-03-01",
+    }
+  ],
 })
 model SongListItem {
   songId: songId;
@@ -57,6 +66,7 @@ model SongListItem {
   lyricists: string[];
   composers: string[];
   arrangers: string[];
+  media: SongMediaSummary[];
 }
 
 @doc("関連メディアID")
@@ -97,41 +107,10 @@ scalar mediaPublishedAt extends string;
   format: #{ name: "MV", value: MediaFormatValue.mv },
   publishedAt: "2024-03-01",
 })
-model SongDetailMediaSummary {
+model SongMediaSummary {
   mediaId: mediaId;
   title: mediaTitle;
   type: MediaType;
   format: MediaFormat;
   publishedAt: mediaPublishedAt;
-}
-
-@example(#{
-  songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-  title: "描き続けた君へ",
-  description: "楽曲説明",
-  type: #{ name: "オリジナル曲", value: SongTypeValue.original },
-  counts: #{ mediaCount: 1 },
-  lyricists: #["作詞者"],
-  composers: #["作曲者"],
-  arrangers: #["編曲者"],
-  media: #[
-    #{
-      mediaId: "11111111-1111-1111-1111-111111111111",
-      title: "描き続けた君へ MV",
-      type: #{ name: "動画", value: MediaTypeValue.video },
-      format: #{ name: "MV", value: MediaFormatValue.mv },
-      publishedAt: "2024-03-01",
-    }
-  ],
-})
-model SongDetail {
-  songId: songId;
-  title: title;
-  description: description;
-  type: SongType;
-  counts: SongRelationCounts;
-  lyricists: string[];
-  composers: string[];
-  arrangers: string[];
-  media: SongDetailMediaSummary[];
 }

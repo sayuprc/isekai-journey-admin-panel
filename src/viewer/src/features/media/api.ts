@@ -1,6 +1,6 @@
-import { mediaServiceGetMedia, mediaServiceListMedia } from '../../generated/sdk.gen.js';
+import { mediaServiceListMedia } from '../../generated/sdk.gen.js';
 import { apiClient } from '../../shared/api/client.js';
-import type { Media, MediaDetail } from './types.js';
+import type { Media } from './types.js';
 
 async function all(): Promise<Media[]> {
   const media: Media[] = [];
@@ -27,20 +27,6 @@ async function all(): Promise<Media[]> {
   return media;
 }
 
-async function get(mediaId: string): Promise<MediaDetail> {
-  const { data, error, response } = await mediaServiceGetMedia({
-    client: apiClient,
-    path: { mediaId },
-  });
-
-  if (!data) {
-    throw new Error(`mediaServiceGetMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
-  }
-
-  return data.media;
-}
-
 export const mediaRepository = {
   all,
-  get,
 };
