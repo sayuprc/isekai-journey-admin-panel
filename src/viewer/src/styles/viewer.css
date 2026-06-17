@@ -1118,10 +1118,6 @@ image-slot:hover {
   overflow-y: auto;
 }
 
-.detail-body-loading .detail-page-content {
-  opacity: 0.72;
-}
-
 .detail-title {
   margin: 10px 0 4px;
   font-family: "Noto Serif JP", "Shippori Mincho", serif;

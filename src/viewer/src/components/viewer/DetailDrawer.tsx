@@ -92,7 +92,6 @@ const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
-  const [isLoading, setIsLoading] = createSignal(false);
   const [shareLabel, setShareLabel] = createSignal('共有');
   let loadSequence = 0;
   let bodyRef: HTMLDivElement | undefined;
@@ -105,7 +104,6 @@ export const DetailDrawer = () => {
   const loadTarget = async (target: DrawerTarget, commitStack: () => void) => {
     const sequence = loadSequence + 1;
     loadSequence = sequence;
-    setIsLoading(true);
 
     try {
       const html = await fetchTargetFragment(target);
@@ -121,10 +119,6 @@ export const DetailDrawer = () => {
         window.location.href = target.pathname;
       }
       return false;
-    } finally {
-      if (sequence === loadSequence) {
-        setIsLoading(false);
-      }
     }
   };
 
@@ -144,7 +138,6 @@ export const DetailDrawer = () => {
     loadSequence += 1;
     setStack([]);
     setContent('');
-    setIsLoading(false);
     setShareLabel('共有');
   };
 
@@ -267,7 +260,7 @@ export const DetailDrawer = () => {
                 </button>
               </div>
             </div>
-            <div class={`detail-body ${isLoading() ? 'detail-body-loading' : ''}`} aria-busy={isLoading()} ref={bodyRef}>
+            <div class="detail-body" ref={bodyRef}>
               <Show when={content()}>
                 <div innerHTML={content()}></div>
               </Show>
