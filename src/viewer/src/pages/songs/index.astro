@@ -4,10 +4,10 @@ import FilterBar from '../../components/viewer/FilterBar';
 import LayoutSwitcher from '../../components/viewer/LayoutSwitcher';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import SongTile from '../../components/viewer/SongTile.astro';
-import { songRepository } from '../../features/songs/api';
+import { songContentRepository } from '../../features/songs/content';
 import Layout from '../../layouts/Layout.astro';
 
-const songs = await songRepository.all();
+const songs = await songContentRepository.all();
 
 // 今後のローンチでジャケットアートの見せ方を定義する
 const showSongVisualLayouts = false;

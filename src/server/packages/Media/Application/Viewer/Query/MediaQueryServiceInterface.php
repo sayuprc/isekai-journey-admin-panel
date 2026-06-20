@@ -7,6 +7,4 @@ namespace Media\Application\Viewer\Query;
 interface MediaQueryServiceInterface
 {
     public function list(?string $cursor, int $limit): MediaListPage;
-
-    public function get(string $mediaId): ?MediaDetail;
 }

@@ -7,6 +7,4 @@ namespace Song\Route;
 enum ViewerSongRouteMap: string
 {
     case List = 'viewer.songs.list';
-
-    case Get = 'viewer.songs.get';
 }

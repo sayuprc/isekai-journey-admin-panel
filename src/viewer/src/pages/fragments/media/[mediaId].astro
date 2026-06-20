@@ -1,16 +1,14 @@
 ---
 import MediaDetailContent from '../../../components/viewer/details/MediaDetailContent.astro';
-import { mediaRepository } from '../../../features/media/api';
+import { mediaContentRepository } from '../../../features/media/content';
 
 export const partial = true;
 
 export async function getStaticPaths() {
-  return Promise.all(
-    (await mediaRepository.all()).map(async media => ({
-      params: { mediaId: media.mediaId },
-      props: { media: await mediaRepository.get(media.mediaId) },
-    })),
-  );
+  return (await mediaContentRepository.all()).map(media => ({
+    params: { mediaId: media.mediaId },
+    props: { media },
+  }));
 }
 
 const { media } = Astro.props;

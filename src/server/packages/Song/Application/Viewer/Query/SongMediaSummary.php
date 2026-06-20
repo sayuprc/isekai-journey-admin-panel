@@ -2,25 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Media\Application\Viewer\Query;
+namespace Song\Application\Viewer\Query;
 
 use DateTimeImmutable;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 
-readonly class MediaDetail
+readonly class SongMediaSummary
 {
-    /**
-     * @param array<MediaDetailSongSummary> $songs
-     */
     public function __construct(
         public string $mediaId,
         public string $title,
-        public string $url,
-        public DateTimeImmutable $publishedAt,
         public MediaType $type,
         public MediaFormat $format,
-        public array $songs,
+        public DateTimeImmutable $publishedAt,
     ) {
     }
 }

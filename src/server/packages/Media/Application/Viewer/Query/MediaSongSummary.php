@@ -6,7 +6,7 @@ namespace Media\Application\Viewer\Query;
 
 use Song\Domain\Models\SongType;
 
-readonly class MediaDetailSongSummary
+readonly class MediaSongSummary
 {
     public function __construct(
         public string $songId,

@@ -9,6 +9,7 @@ use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Route\ViewerMediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
+use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -24,6 +25,9 @@ class ListMediaTest extends DatabaseTestCase
         $firstMediaId = $this->generateUuid();
         $secondMediaId = $this->generateUuid();
         $hiddenMediaId = $this->generateUuid();
+        $firstSongId = $this->generateUuid();
+        $secondSongId = $this->generateUuid();
+        $hiddenSongId = $this->generateUuid();
 
         $this->storeMedia(
             $this->createMedia(
@@ -55,6 +59,57 @@ class ListMediaTest extends DatabaseTestCase
             ),
         );
 
+        $this->storeSongs(
+            $this->createSong(
+                $firstSongId,
+                '公開楽曲 1',
+                '公開楽曲 1 の説明',
+                SongType::Original,
+                true,
+                1,
+                [],
+                [],
+                [],
+                [],
+                [],
+                [
+                    ['mediaId' => $firstMediaId, 'orderNo' => 1],
+                ],
+            ),
+            $this->createSong(
+                $secondSongId,
+                '公開楽曲 2',
+                '公開楽曲 2 の説明',
+                SongType::Cover,
+                true,
+                2,
+                [],
+                [],
+                [],
+                [],
+                [],
+                [
+                    ['mediaId' => $firstMediaId, 'orderNo' => 2],
+                ],
+            ),
+            $this->createSong(
+                $hiddenSongId,
+                '非公開楽曲',
+                '非公開楽曲の説明',
+                SongType::Original,
+                false,
+                3,
+                [],
+                [],
+                [],
+                [],
+                [],
+                [
+                    ['mediaId' => $firstMediaId, 'orderNo' => 3],
+                ],
+            ),
+        );
+
         $response = $this->get(route(ViewerMediaRouteMap::List, ['limit' => 1]))
             ->assertStatus(200)
             ->assertExactJson([
@@ -71,6 +126,27 @@ class ListMediaTest extends DatabaseTestCase
                         'format' => [
                             'name' => 'MV',
                             'value' => 1,
+                        ],
+                        'counts' => [
+                            'songCount' => 2,
+                        ],
+                        'songs' => [
+                            [
+                                'songId' => $firstSongId,
+                                'title' => '公開楽曲 1',
+                                'type' => [
+                                    'name' => 'オリジナル曲',
+                                    'value' => 1,
+                                ],
+                            ],
+                            [
+                                'songId' => $secondSongId,
+                                'title' => '公開楽曲 2',
+                                'type' => [
+                                    'name' => 'カバー曲',
+                                    'value' => 2,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -101,6 +177,10 @@ class ListMediaTest extends DatabaseTestCase
                             'name' => '音源動画',
                             'value' => 2,
                         ],
+                        'counts' => [
+                            'songCount' => 0,
+                        ],
+                        'songs' => [],
                     ],
                 ],
             ]);

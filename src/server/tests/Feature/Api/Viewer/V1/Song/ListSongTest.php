@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Viewer\V1\Song;
 
+use DateType\ImmutableDate;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
@@ -28,6 +29,7 @@ class ListSongTest extends DatabaseTestCase
         $secondSongId = $this->generateUuid();
         $hiddenSongId = $this->generateUuid();
         $visibleMediaId = $this->generateUuid();
+        $secondVisibleMediaId = $this->generateUuid();
         $hiddenMediaId = $this->generateUuid();
         $visibleReleaseId = $this->generateUuid();
         $hiddenReleaseId = $this->generateUuid();
@@ -42,8 +44,33 @@ class ListSongTest extends DatabaseTestCase
         );
 
         $this->storeMedia(
-            $this->createMedia($visibleMediaId, '公開 MV', 'https://example.com/public', MediaType::Video, true, MediaFormat::Mv),
-            $this->createMedia($hiddenMediaId, '非公開 MV', 'https://example.com/private', MediaType::Video, false, MediaFormat::Mv),
+            $this->createMedia(
+                $visibleMediaId,
+                '公開 MV',
+                'https://example.com/public',
+                MediaType::Video,
+                true,
+                MediaFormat::Mv,
+                new ImmutableDate('2024-03-01'),
+            ),
+            $this->createMedia(
+                $secondVisibleMediaId,
+                '公開記事',
+                'https://example.com/article',
+                MediaType::Article,
+                true,
+                MediaFormat::Other,
+                new ImmutableDate('2024-05-01'),
+            ),
+            $this->createMedia(
+                $hiddenMediaId,
+                '非公開 MV',
+                'https://example.com/private',
+                MediaType::Video,
+                false,
+                MediaFormat::Mv,
+                new ImmutableDate('2024-04-01'),
+            ),
         );
 
         $this->storeSongs(
@@ -64,8 +91,9 @@ class ListSongTest extends DatabaseTestCase
                 [],
                 [],
                 [
+                    ['mediaId' => $secondVisibleMediaId, 'orderNo' => 2],
                     ['mediaId' => $visibleMediaId, 'orderNo' => 1],
-                    ['mediaId' => $hiddenMediaId, 'orderNo' => 2],
+                    ['mediaId' => $hiddenMediaId, 'orderNo' => 3],
                 ],
             ),
             $this->createSong(
@@ -75,6 +103,7 @@ class ListSongTest extends DatabaseTestCase
                 SongType::Cover,
                 true,
                 2,
+                [],
                 [],
                 [],
                 [],
@@ -140,7 +169,35 @@ class ListSongTest extends DatabaseTestCase
                         'arrangers' => ['編曲次郎'],
                         'counts' => [
                             // 'releaseCount' => 1,
-                            'mediaCount' => 1,
+                            'mediaCount' => 2,
+                        ],
+                        'media' => [
+                            [
+                                'mediaId' => $visibleMediaId,
+                                'title' => '公開 MV',
+                                'type' => [
+                                    'name' => '動画',
+                                    'value' => 1,
+                                ],
+                                'format' => [
+                                    'name' => 'MV',
+                                    'value' => 1,
+                                ],
+                                'publishedAt' => '2024-03-01',
+                            ],
+                            [
+                                'mediaId' => $secondVisibleMediaId,
+                                'title' => '公開記事',
+                                'type' => [
+                                    'name' => '記事',
+                                    'value' => 2,
+                                ],
+                                'format' => [
+                                    'name' => 'その他',
+                                    'value' => 99,
+                                ],
+                                'publishedAt' => '2024-05-01',
+                            ],
                         ],
                     ],
                 ],
@@ -172,6 +229,21 @@ class ListSongTest extends DatabaseTestCase
                         'counts' => [
                             // 'releaseCount' => 0,
                             'mediaCount' => 1,
+                        ],
+                        'media' => [
+                            [
+                                'mediaId' => $visibleMediaId,
+                                'title' => '公開 MV',
+                                'type' => [
+                                    'name' => '動画',
+                                    'value' => 1,
+                                ],
+                                'format' => [
+                                    'name' => 'MV',
+                                    'value' => 1,
+                                ],
+                                'publishedAt' => '2024-03-01',
+                            ],
                         ],
                     ],
                 ],

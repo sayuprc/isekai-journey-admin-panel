@@ -1,6 +1,6 @@
-import { songServiceGetSong, songServiceListSongs } from '../../generated/sdk.gen.js';
+import { songServiceListSongs } from '../../generated/sdk.gen.js';
 import { apiClient } from '../../shared/api/client.js';
-import type { Song, SongDetail } from './types.js';
+import type { Song } from './types.js';
 
 async function all(): Promise<Song[]> {
   const songs: Song[] = [];
@@ -27,20 +27,6 @@ async function all(): Promise<Song[]> {
   return songs;
 }
 
-async function get(songId: string): Promise<SongDetail> {
-  const { data, error, response } = await songServiceGetSong({
-    client: apiClient,
-    path: { songId },
-  });
-
-  if (!data) {
-    throw new Error(`songServiceGetSong failed: HTTP ${response.status} ${JSON.stringify(error)}`);
-  }
-
-  return data.song;
-}
-
 export const songRepository = {
   all,
-  get,
 };
