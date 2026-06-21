@@ -27,20 +27,20 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $personId = $this->generateUuid();
 
-        $this->storePersons($this->createPerson($personId, '人物', 10));
+        $this->storePersons($this->createPerson($personId, 'テスト用人物（更新前）', 10));
 
-        $result = $this->getInstance()->handle(new UpdateInputData($personId, 'ヰ世界情緒', 20));
+        $result = $this->getInstance()->handle(new UpdateInputData($personId, 'テスト用人物（更新後）', 20));
 
         $this->assertTrue($result->isOk());
 
         $persons = $this->app->make(PersonRepositoryInterface::class)->all();
         $this->assertCount(1, $persons);
-        $this->assertSame('ヰ世界情緒', array_first($persons)->name->value);
+        $this->assertSame('テスト用人物（更新後）', array_first($persons)->name->value);
         $this->assertSame(20, array_first($persons)->orderNo->value);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Person, $personId);
-        $this->assertSame('ヰ世界情緒', $log['snapshot']['name']);
+        $this->assertSame('テスト用人物（更新後）', $log['snapshot']['name']);
         $this->assertSame(20, $log['snapshot']['order_no']);
     }
 
@@ -49,7 +49,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $personId = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($personId, 'ヰ世界情緒', 20));
+        $result = $this->getInstance()->handle(new UpdateInputData($personId, 'テスト用人物（未存在更新）', 20));
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();

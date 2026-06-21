@@ -26,9 +26,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function canUpdate(): void
     {
-        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
-        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト用作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト用作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト用編曲者', 1);
 
         $this->storePersons($person1, $person2, $person3);
 
@@ -37,8 +37,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->storeSongs(
             $this->createSong(
                 $songId,
-                '曲名',
-                '説明',
+                'テスト用楽曲名（更新前）',
+                'テスト用楽曲説明（更新前）',
                 SongType::Original,
                 true,
                 1,
@@ -54,8 +54,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(
             new UpdateInputData(
                 $songId,
-                '描き続けた君へ',
-                'オリジナル楽曲',
+                'テスト用楽曲名（更新後）',
+                'テスト用楽曲説明（更新後）',
                 'https://example.com/lyrics',
                 SongType::Cover->value,
                 false,
@@ -73,8 +73,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $songs = Song::query()->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
-        $this->assertSame('描き続けた君へ', $song->title);
-        $this->assertSame('オリジナル楽曲', $song->description);
+        $this->assertSame('テスト用楽曲名（更新後）', $song->title);
+        $this->assertSame('テスト用楽曲説明（更新後）', $song->description);
         $this->assertSame('https://example.com/lyrics', $song->lyrics_link);
         $this->assertSame(SongType::Cover->value, $song->type);
         $this->assertFalse($song->is_display);
@@ -87,7 +87,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
-        $this->assertSame('描き続けた君へ', $log['snapshot']['title']);
+        $this->assertSame('テスト用楽曲名（更新後）', $log['snapshot']['title']);
         $this->assertCount(2, $log['snapshot']['persons']);
     }
 
@@ -99,8 +99,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(
             new UpdateInputData(
                 $songId,
-                '描き続けた君へ',
-                'オリジナル楽曲',
+                'テスト用楽曲名（未存在更新）',
+                'テスト用楽曲説明（未存在更新）',
                 'https://example.com/lyrics',
                 SongType::Cover->value,
                 false,
