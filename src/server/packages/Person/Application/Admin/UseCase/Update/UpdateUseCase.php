@@ -6,6 +6,7 @@ namespace Person\Application\Admin\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
 use LogicException;
+use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonIntegrityService;
 use ResultType\Err;
@@ -22,6 +23,7 @@ use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateUseCase
@@ -49,26 +51,32 @@ readonly class UpdateUseCase
      */
     private function updatePerson(UpdateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForUpdate($inputData->personId, $inputData->name, $inputData->orderNo);
+        return PersonId::create($inputData->personId)
+            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($inputData, $personId): Result {
+                if (is_null($this->repository->find($personId))) {
+                    return new Err(new NotFoundError('Person', $personId->value));
+                }
 
-            if ($result->isErr()) {
-                return new Err($this->handleError($result->unwrapErr()));
-            }
+                $result = $this->service->prepareForUpdate($inputData->personId, $inputData->name, $inputData->orderNo);
 
-            $person = $result->unwrap();
+                if ($result->isErr()) {
+                    return new Err($this->handleError($result->unwrapErr()));
+                }
 
-            $this->repository->save($person);
+                $person = $result->unwrap();
 
-            $this->recorder->record(
-                AuditAction::Update,
-                AuditTargetType::Person,
-                $person->personId,
-                $person->toArray(),
-            );
+                $this->repository->save($person);
 
-            return new Ok(new UpdateOutputData($person));
-        });
+                $this->recorder->record(
+                    AuditAction::Update,
+                    AuditTargetType::Person,
+                    $person->personId,
+                    $person->toArray(),
+                );
+
+                return new Ok(new UpdateOutputData($person));
+            }));
     }
 
     private function handleError(DomainError $error): UseCaseError

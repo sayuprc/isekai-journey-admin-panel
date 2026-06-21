@@ -254,6 +254,25 @@ class UpdateSongTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function updateFailsWhenSongDoesNotExist(): void
+    {
+        $songId = $this->generateUuid();
+
+        $this->withAuth()
+            ->putJson(route(SongRouteMap::Update, $songId), [
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
+                'lyricsLink' => null,
+                'typeValue' => SongType::Original->value,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'persons' => [],
+                'tags' => [],
+                'media' => [],
+            ])->assertStatus(404);
+    }
+
+    #[Test]
     public function updateFailsWithNotExistsSongTag(): void
     {
         $songId = $this->generateUuid();

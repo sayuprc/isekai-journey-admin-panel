@@ -63,6 +63,18 @@ class UpdatePersonTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function updateFailsWhenPersonDoesNotExist(): void
+    {
+        $personId = $this->generateUuid();
+
+        $this->withAuth()
+            ->putJson(route(PersonRouteMap::Update, $personId), [
+                'name' => 'テスト人物',
+                'orderNo' => 20,
+            ])->assertStatus(404);
+    }
+
+    #[Test]
     public function updateFailsWhenNameAlreadyExists(): void
     {
         $targetId = $this->generateUuid();

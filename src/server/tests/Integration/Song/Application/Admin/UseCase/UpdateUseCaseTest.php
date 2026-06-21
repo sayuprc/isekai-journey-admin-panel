@@ -11,6 +11,7 @@ use Song\Application\Admin\UseCase\Update\UpdateUseCase;
 use Song\Domain\Models\SongType;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -88,6 +89,30 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
         $this->assertSame('テスト楽曲', $log['snapshot']['title']);
         $this->assertCount(2, $log['snapshot']['persons']);
+    }
+
+    #[Test]
+    public function updateFailsWhenSongDoesNotExist(): void
+    {
+        $songId = $this->generateUuid();
+
+        $result = $this->getInstance()->handle(
+            new UpdateInputData(
+                $songId,
+                'テスト楽曲',
+                'テスト楽曲説明',
+                null,
+                SongType::Original->value,
+                true,
+                1,
+                [],
+                [],
+            ),
+        );
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
+        $this->assertDatabaseMissing(Song::class, ['title' => 'テスト楽曲']);
     }
 
     private function getInstance(): UpdateUseCase

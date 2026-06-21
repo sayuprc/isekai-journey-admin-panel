@@ -10,6 +10,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Song\Application\Admin\Assemble\SongAssembler;
+use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
@@ -23,6 +24,7 @@ use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateUseCase
@@ -51,35 +53,41 @@ readonly class UpdateUseCase
      */
     private function updateSong(UpdateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForUpdate(
-                $inputData->songId,
-                $inputData->title,
-                $inputData->description,
-                $inputData->lyricsLink,
-                $inputData->typeValue,
-                $inputData->isDisplay,
-                $inputData->orderNo,
-                $inputData->tags,
-                $inputData->persons,
-                $inputData->media,
-            );
+        return SongId::create($inputData->songId)
+            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->andThen(fn (SongId $songId): Result => $this->transaction->scope(function () use ($inputData, $songId): Result {
+                if (is_null($this->repository->find($songId))) {
+                    return new Err(new NotFoundError('Song', $songId->value));
+                }
 
-            if ($result->isErr()) {
-                return new Err($this->handleError($result->unwrapErr()));
-            }
+                $result = $this->service->prepareForUpdate(
+                    $inputData->songId,
+                    $inputData->title,
+                    $inputData->description,
+                    $inputData->lyricsLink,
+                    $inputData->typeValue,
+                    $inputData->isDisplay,
+                    $inputData->orderNo,
+                    $inputData->tags,
+                    $inputData->persons,
+                    $inputData->media,
+                );
 
-            $song = $this->repository->save($result->unwrap());
+                if ($result->isErr()) {
+                    return new Err($this->handleError($result->unwrapErr()));
+                }
 
-            $this->recorder->record(
-                AuditAction::Update,
-                AuditTargetType::Song,
-                $song->songId,
-                $song->toArray(),
-            );
+                $song = $this->repository->save($result->unwrap());
 
-            return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
-        });
+                $this->recorder->record(
+                    AuditAction::Update,
+                    AuditTargetType::Song,
+                    $song->songId,
+                    $song->toArray(),
+                );
+
+                return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
+            }));
     }
 
     private function handleError(DomainError $error): UseCaseError
