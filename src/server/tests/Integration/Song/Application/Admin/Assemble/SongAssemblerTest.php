@@ -21,8 +21,8 @@ class SongAssemblerTest extends DatabaseTestCase
     public function canAssemble(): void
     {
         $uuid = $this->generateUuid();
-        $title = '描き続けた君へ';
-        $description = 'オリジナル楽曲';
+        $title = 'テスト楽曲';
+        $description = 'テスト楽曲説明';
         $type = SongType::Original;
         $orderNo = 1;
 
@@ -46,9 +46,9 @@ class SongAssemblerTest extends DatabaseTestCase
         );
 
         $this->storePersons(
-            $this->createPerson($lyricistId, '作詞者', 1),
-            $this->createPerson($composerId, '作曲者', 1),
-            $this->createPerson($arrangerId, '編曲者', 1),
+            $this->createPerson($lyricistId, 'テスト作詞者', 1),
+            $this->createPerson($composerId, 'テスト作曲者', 1),
+            $this->createPerson($arrangerId, 'テスト編曲者', 1),
         );
 
         $assembled = $this->getInstance()->assemble($song);
@@ -61,7 +61,7 @@ class SongAssemblerTest extends DatabaseTestCase
         $this->assertSame($orderNo, $assembled->orderNo);
         $this->assertCount(3, $assembled->persons);
         $this->assertSame($lyricistId, $assembled->persons[0]->personId);
-        $this->assertSame('作詞者', $assembled->persons[0]->name);
+        $this->assertSame('テスト作詞者', $assembled->persons[0]->name);
         $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
         $this->assertSame($composerId, $assembled->persons[1]->personId);
         $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);

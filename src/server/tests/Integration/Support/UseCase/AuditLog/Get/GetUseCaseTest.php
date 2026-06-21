@@ -30,11 +30,11 @@ class GetUseCaseTest extends DatabaseTestCase
     public function returnsAuditLogDetail(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $auditLogId = $this->generateUuid();
         $targetId = $this->generateUuid();
-        $snapshot = ['title' => '描き続けた君へ', 'order_no' => 1];
+        $snapshot = ['title' => 'テスト楽曲', 'order_no' => 1];
 
         $this->insertAuditLog($auditLogId, $actorId, AuditAction::Update, AuditTargetType::Song, $targetId, $snapshot);
 
@@ -46,7 +46,7 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $this->assertSame($auditLogId, $detail->auditLogId);
         $this->assertSame($actorId, $detail->adminUserId);
-        $this->assertSame('監査太郎', $detail->adminUserName);
+        $this->assertSame('監査テストユーザーA', $detail->adminUserName);
         $this->assertSame(AuditAction::Update, $detail->action);
         $this->assertSame(AuditTargetType::Song, $detail->targetType);
         $this->assertSame($targetId, $detail->targetId);

@@ -48,7 +48,7 @@ class SongIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreate(): void
     {
-        $title = '描き続けた君へ';
+        $title = 'テスト楽曲';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $type = SongType::Original->value;
         $isDisplay = true;
@@ -117,7 +117,7 @@ class SongIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreateNotExistsPerson(): void
     {
-        $title = '描き続けた君へ';
+        $title = 'テスト楽曲';
         $type = SongType::Original->value;
         $isDisplay = true;
         $description = '説明';
@@ -161,7 +161,7 @@ class SongIntegrityServiceTest extends TestCase
     public function prepareForUpdate(): void
     {
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $title = '描き続けた君へ';
+        $title = 'テスト楽曲';
         $description = '説明';
         $type = SongType::Original->value;
         $isDisplay = true;
@@ -221,7 +221,7 @@ class SongIntegrityServiceTest extends TestCase
     public function prepareForUpdateNotExistsPerson(): void
     {
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $title = '描き続けた君へ';
+        $title = 'テスト楽曲';
         $description = '説明';
         $type = SongType::Original->value;
         $isDisplay = true;

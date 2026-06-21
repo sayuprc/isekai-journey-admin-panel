@@ -22,7 +22,7 @@ class ListPersonTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->storePersons($this->createPerson($uuid, 'ヰ世界情緒', 1));
+        $this->storePersons($this->createPerson($uuid, 'テスト人物', 1));
 
         $this->withAuth()
             ->get(route(PersonRouteMap::List))
@@ -31,7 +31,7 @@ class ListPersonTest extends DatabaseTestCase
                 'persons' => [
                     [
                         'personId' => $uuid,
-                        'name' => 'ヰ世界情緒',
+                        'name' => 'テスト人物',
                         'orderNo' => 1,
                     ],
                 ],

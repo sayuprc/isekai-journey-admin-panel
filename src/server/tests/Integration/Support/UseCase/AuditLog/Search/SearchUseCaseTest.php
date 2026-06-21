@@ -98,8 +98,8 @@ class SearchUseCaseTest extends DatabaseTestCase
     #[Test]
     public function filtersByTargetIdAndAdminUserName(): void
     {
-        $actorId = $this->seedActor(name: '監査太郎');
-        $otherActorId = $this->seedActor(email: 'other@example.com', name: '別人花子');
+        $actorId = $this->seedActor(name: '監査テストユーザーA');
+        $otherActorId = $this->seedActor(email: 'other@example.com', name: '検索テストユーザーB');
         $targetId = $this->generateUuid();
 
         $this->insertAuditLog($actorId, AuditAction::Create, AuditTargetType::Song, $targetId, new DateTimeImmutable('2026-04-01 10:00:00'));
@@ -110,20 +110,20 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->assertTrue($resultByTarget->isOk());
         $this->assertCount(2, $resultByTarget->unwrap()->auditLogs);
 
-        // 前方一致でヒット（'別人' は '別人花子' の前方に一致）
-        $resultByActor = $this->getInstance()->handle(new SearchInputData(adminUserName: '別人'));
+        // 前方一致でヒット（'検索' は '検索テストユーザーB' の前方に一致）
+        $resultByActor = $this->getInstance()->handle(new SearchInputData(adminUserName: '検索'));
         $this->assertTrue($resultByActor->isOk());
         $this->assertCount(1, $resultByActor->unwrap()->auditLogs);
         $this->assertSame($targetId, $resultByActor->unwrap()->auditLogs[0]->targetId);
-        $this->assertSame('別人花子', $resultByActor->unwrap()->auditLogs[0]->adminUserName);
+        $this->assertSame('検索テストユーザーB', $resultByActor->unwrap()->auditLogs[0]->adminUserName);
 
         // 名前完全一致
-        $resultExact = $this->getInstance()->handle(new SearchInputData(adminUserName: '監査太郎'));
+        $resultExact = $this->getInstance()->handle(new SearchInputData(adminUserName: '監査テストユーザーA'));
         $this->assertTrue($resultExact->isOk());
         $this->assertCount(2, $resultExact->unwrap()->auditLogs);
 
-        // 中間/後方は前方一致なのでヒットしない（'太郎' は '監査太郎' の前方ではない）
-        $resultSuffix = $this->getInstance()->handle(new SearchInputData(adminUserName: '太郎'));
+        // 中間/後方は前方一致なのでヒットしない（'テストユーザーA' は '監査テストユーザーA' の前方ではない）
+        $resultSuffix = $this->getInstance()->handle(new SearchInputData(adminUserName: 'テストユーザーA'));
         $this->assertTrue($resultSuffix->isOk());
         $this->assertCount(0, $resultSuffix->unwrap()->auditLogs);
 

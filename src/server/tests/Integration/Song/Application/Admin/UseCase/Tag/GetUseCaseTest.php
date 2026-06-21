@@ -21,7 +21,7 @@ class GetUseCaseTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->storeSongTags($this->createSongTag($uuid, '派生曲', 1));
+        $this->storeSongTags($this->createSongTag($uuid, 'テストタグA', 1));
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 
@@ -30,7 +30,7 @@ class GetUseCaseTest extends DatabaseTestCase
         $response = $result->unwrap();
 
         $this->assertSame($uuid, $response->tag->songTagId->value);
-        $this->assertSame('派生曲', $response->tag->name->value);
+        $this->assertSame('テストタグA', $response->tag->name->value);
         $this->assertSame(1, $response->tag->orderNo->value);
     }
 

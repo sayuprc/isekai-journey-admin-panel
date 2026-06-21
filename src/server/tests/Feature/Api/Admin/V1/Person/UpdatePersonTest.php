@@ -27,13 +27,13 @@ class UpdatePersonTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(PersonRouteMap::Update, $uuid), [
-                'name' => 'ヰ世界情緒',
+                'name' => 'テスト人物',
                 'orderNo' => 20,
             ])->assertStatus(200)
             ->assertExactJson([
                 'person' => [
                     'personId' => $uuid,
-                    'name' => 'ヰ世界情緒',
+                    'name' => 'テスト人物',
                     'orderNo' => 20,
                 ],
             ]);
@@ -50,13 +50,13 @@ class UpdatePersonTest extends DatabaseTestCase
         $this->withAuth()
             ->putJson(route(PersonRouteMap::Update, $routePersonId), [
                 'personId' => $bodyPersonId,
-                'name' => 'ヰ世界情緒',
+                'name' => 'テスト人物',
                 'orderNo' => 20,
             ])->assertStatus(200)
             ->assertExactJson([
                 'person' => [
                     'personId' => $routePersonId,
-                    'name' => 'ヰ世界情緒',
+                    'name' => 'テスト人物',
                     'orderNo' => 20,
                 ],
             ]);
@@ -70,16 +70,16 @@ class UpdatePersonTest extends DatabaseTestCase
 
         $this->storePersons(
             $this->createPerson($targetId, '人物', 10),
-            $this->createPerson($otherId, 'ヰ世界情緒', 20),
+            $this->createPerson($otherId, 'テスト人物', 20),
         );
 
         $this->withAuth()
             ->putJson(route(PersonRouteMap::Update, $targetId), [
-                'name' => 'ヰ世界情緒',
+                'name' => 'テスト人物',
                 'orderNo' => 30,
             ])->assertStatus(400)
             ->assertExactJson([
-                'message' => 'すでに使われている名前です "ヰ世界情緒"',
+                'message' => 'すでに使われている名前です "テスト人物"',
             ]);
     }
 

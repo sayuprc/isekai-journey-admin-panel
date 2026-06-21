@@ -47,7 +47,7 @@ class DeleteReleaseTest extends DatabaseTestCase
         $repository = $this->app->make(ReleaseRepository::class);
 
         $this->storeSongs(
-            $this->createSong($songId, '一曲目', '説明', SongType::Original, true, 1),
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
 
         $repository->save(

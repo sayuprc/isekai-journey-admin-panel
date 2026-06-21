@@ -35,7 +35,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $this->storeMedia(
             $this->createMedia(
                 $mediaId,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,
@@ -50,7 +50,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Media, $mediaId);
-        $this->assertSame('描き続けた君へ MV', $log['snapshot']['title']);
+        $this->assertSame('テストメディアMV', $log['snapshot']['title']);
     }
 
     #[Test]
@@ -61,7 +61,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $this->storeMedia(
             $this->createMedia(
                 $mediaId,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,

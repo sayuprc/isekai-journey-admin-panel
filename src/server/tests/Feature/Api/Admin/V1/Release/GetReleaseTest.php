@@ -27,7 +27,7 @@ class GetReleaseTest extends DatabaseTestCase
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($songId, '一曲目', '説明', SongType::Original, true, 10),
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10),
         );
         $this->storeReleases(
             $this->createRelease(
@@ -64,7 +64,7 @@ class GetReleaseTest extends DatabaseTestCase
                 'songs' => [
                     [
                         'songId' => $songId,
-                        'title' => '一曲目',
+                        'title' => 'テスト楽曲1',
                         'trackNo' => 1,
                     ],
                 ],

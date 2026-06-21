@@ -42,7 +42,7 @@ class SearchUseCaseTest extends TestCase
     {
         $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            '描き続けた君へ',
+            'テスト楽曲',
             SongType::Original,
             true,
             1,
@@ -73,29 +73,29 @@ class SearchUseCaseTest extends TestCase
     {
         $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            '描き続けた君へ',
+            'テスト楽曲',
             SongType::Original,
             true,
             1,
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === '描き続けた君へ')
+            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
             ->andReturn(1)
             ->once();
 
-        $result = $this->getInstance()->handle(new SearchInputData(title: '描き続けた君へ'));
+        $result = $this->getInstance()->handle(new SearchInputData(title: 'テスト楽曲'));
 
         $this->assertTrue($result->isOk());
 
         $output = $result->unwrap();
         $this->assertCount(1, $output->songs);
-        $this->assertSame('描き続けた君へ', $output->songs[0]->title);
+        $this->assertSame('テスト楽曲', $output->songs[0]->title);
     }
 
     #[Test]
@@ -103,7 +103,7 @@ class SearchUseCaseTest extends TestCase
     {
         $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            '描き続けた君へ',
+            'テスト楽曲',
             SongType::Original,
             true,
             1,
@@ -133,7 +133,7 @@ class SearchUseCaseTest extends TestCase
     {
         $summary = new SongSummary(
             'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
-            '描き続けた君へ',
+            'テスト楽曲',
             SongType::Original,
             false,
             1,

@@ -48,8 +48,8 @@ class GetUseCaseTest extends TestCase
 
         $song = $this->createSong(
             $songId,
-            '描き続けた君へ',
-            'オリジナル楽曲',
+            'テスト楽曲',
+            'テスト楽曲説明',
             SongType::Original,
             true,
             1,
@@ -79,9 +79,9 @@ class GetUseCaseTest extends TestCase
                     $song->isDisplay,
                     $song->orderNo->value,
                     [
-                        new AssembledPerson($lyricistId, '作詞者A', SongPersonRole::Lyricist, 1),
-                        new AssembledPerson($composerId, '作曲者A', SongPersonRole::Composer, 2),
-                        new AssembledPerson($arrangerId, '編曲者A', SongPersonRole::Arranger, 3),
+                        new AssembledPerson($lyricistId, 'テスト作詞者A', SongPersonRole::Lyricist, 1),
+                        new AssembledPerson($composerId, 'テスト作曲者A', SongPersonRole::Composer, 2),
+                        new AssembledPerson($arrangerId, 'テスト編曲者A', SongPersonRole::Arranger, 3),
                     ],
                 ),
             )
@@ -94,8 +94,8 @@ class GetUseCaseTest extends TestCase
         $response = $result->unwrap();
 
         $this->assertSame($songId, $response->song->songId);
-        $this->assertSame('描き続けた君へ', $response->song->title);
-        $this->assertSame('オリジナル楽曲', $response->song->description);
+        $this->assertSame('テスト楽曲', $response->song->title);
+        $this->assertSame('テスト楽曲説明', $response->song->description);
         $this->assertSame(SongType::Original->getName(), $response->song->typeName);
         $this->assertSame(SongType::Original->value, $response->song->typeValue);
         $this->assertTrue($response->song->isDisplay);
@@ -103,7 +103,7 @@ class GetUseCaseTest extends TestCase
 
         $this->assertCount(3, $response->song->persons);
         $this->assertSame($lyricistId, $response->song->persons[0]->personId);
-        $this->assertSame('作詞者A', $response->song->persons[0]->name);
+        $this->assertSame('テスト作詞者A', $response->song->persons[0]->name);
         $this->assertSame(SongPersonRole::Lyricist, $response->song->persons[0]->role);
         $this->assertSame($composerId, $response->song->persons[1]->personId);
         $this->assertSame(SongPersonRole::Composer, $response->song->persons[1]->role);

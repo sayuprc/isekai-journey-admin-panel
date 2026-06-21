@@ -14,7 +14,7 @@ scalar createdAt extends utcDateTime;
 
 @example(#{
   adminUserId: "0cc5f492-22fe-4f38-b702-8b2375bc0254",
-  name: "管理ユーザー名",
+  name: "テスト管理ユーザー",
   email: "example@example.com",
   createdAt: createdAt.fromISO("2019-12-09T10:30:20+09:00"),
   role: #{ name: "一般", value: RoleValue.General },

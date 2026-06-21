@@ -21,8 +21,8 @@ scalar lyricsLink extends string;
 
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-  title: "描き続けた君へ",
-  description: "オリジナル楽曲",
+  title: "テスト楽曲",
+  description: "テスト楽曲説明",
   lyricsLink: "https://example.com/lyrics",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   isDisplay: true,
@@ -30,17 +30,17 @@ scalar lyricsLink extends string;
   persons: #[
     #{
       personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd",
-      name: "ヰ世界情緒",
+      name: "テスト人物",
       role: SongPersonRole.Lyricist,
       orderNo: 1,
     },
-    #{ personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "ヰ世界情緒", role: SongPersonRole.Composer, orderNo: 2 }
+    #{ personId: "a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd", name: "テスト人物", role: SongPersonRole.Composer, orderNo: 2 }
   ],
-  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "派生曲" }],
+  tags: #[#{ songTagId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", name: "テストタグA" }],
   media: #[
     #{
       mediaId: "11111111-1111-1111-1111-111111111111",
-      title: "描き続けた君へ MV",
+      title: "テストメディアMV",
       url: "https://example.com/media",
       publishedAt: "2024-03-01",
       type: #{ name: "動画", value: MediaTypeValue.Video },
@@ -81,7 +81,7 @@ model SongType {
 
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-  title: "描き続けた君へ",
+  title: "テスト楽曲",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   isDisplay: true,
   orderNo: 1,
@@ -114,7 +114,7 @@ model SongAttachedTag {
 
 @example(#{
   mediaId: "11111111-1111-1111-1111-111111111111",
-  title: "描き続けた君へ MV",
+  title: "テストメディアMV",
   url: "https://example.com/media",
   publishedAt: "2024-03-01",
   type: #{ name: "動画", value: MediaTypeValue.Video },

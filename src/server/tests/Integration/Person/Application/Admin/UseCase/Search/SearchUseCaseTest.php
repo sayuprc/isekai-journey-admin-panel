@@ -21,10 +21,10 @@ class SearchUseCaseTest extends DatabaseTestCase
     #[Test]
     public function search(): void
     {
-        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
         $this->storePersons($person, $this->createPerson($this->generateUuid(), '春猿火', 2));
 
-        $result = $this->getInstance()->handle(new SearchInputData(name: 'ヰ世界情緒'));
+        $result = $this->getInstance()->handle(new SearchInputData(name: 'テスト人物'));
 
         $this->assertTrue($result->isOk());
         $this->assertEquals([$person], $result->unwrap()->persons);

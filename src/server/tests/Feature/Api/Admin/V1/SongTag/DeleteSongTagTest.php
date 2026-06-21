@@ -25,20 +25,20 @@ class DeleteSongTagTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $repository = $this->app->make(SongTagRepository::class);
-        $repository->save($this->createSongTag($uuid, '派生曲', 1));
+        $repository->save($this->createSongTag($uuid, 'テストタグA', 1));
 
         $this->withAuth()
             ->delete(route(SongTagRouteMap::Delete, $uuid))
             ->assertStatus(204);
 
-        $this->assertNull($repository->find($this->createSongTag($uuid, '派生曲', 1)->songTagId));
+        $this->assertNull($repository->find($this->createSongTag($uuid, 'テストタグA', 1)->songTagId));
     }
 
     #[Test]
     public function cannotDeleteWhenUsedInSong(): void
     {
         $songTagId = $this->generateUuid();
-        $songTag = $this->createSongTag($songTagId, '派生曲', 1);
+        $songTag = $this->createSongTag($songTagId, 'テストタグA', 1);
         $repository = $this->app->make(SongTagRepository::class);
 
         $this->storeSongTags($songTag);

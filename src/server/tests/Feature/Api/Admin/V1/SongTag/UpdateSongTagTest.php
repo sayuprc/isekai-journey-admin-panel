@@ -26,13 +26,13 @@ class UpdateSongTagTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongTagRouteMap::Update, $uuid), [
-                'name' => '派生曲',
+                'name' => 'テストタグA',
                 'orderNo' => 2,
             ])->assertStatus(200)
             ->assertExactJson([
                 'tag' => [
                     'songTagId' => $uuid,
-                    'name' => '派生曲',
+                    'name' => 'テストタグA',
                     'orderNo' => 2,
                 ],
             ]);
@@ -49,13 +49,13 @@ class UpdateSongTagTest extends DatabaseTestCase
         $this->withAuth()
             ->putJson(route(SongTagRouteMap::Update, $routeSongTagId), [
                 'songTagId' => $bodySongTagId,
-                'name' => '派生曲',
+                'name' => 'テストタグA',
                 'orderNo' => 2,
             ])->assertStatus(200)
             ->assertExactJson([
                 'tag' => [
                     'songTagId' => $routeSongTagId,
-                    'name' => '派生曲',
+                    'name' => 'テストタグA',
                     'orderNo' => 2,
                 ],
             ]);
@@ -69,15 +69,15 @@ class UpdateSongTagTest extends DatabaseTestCase
 
         $repository = $this->app->make(SongTagRepository::class);
         $repository->save($this->createSongTag($targetId, '旧タグ', 1));
-        $repository->save($this->createSongTag($otherId, '派生曲', 2));
+        $repository->save($this->createSongTag($otherId, 'テストタグA', 2));
 
         $this->withAuth()
             ->putJson(route(SongTagRouteMap::Update, $targetId), [
-                'name' => '派生曲',
+                'name' => 'テストタグA',
                 'orderNo' => 3,
             ])->assertStatus(400)
             ->assertExactJson([
-                'message' => 'すでに使われている名前です "派生曲"',
+                'message' => 'すでに使われている名前です "テストタグA"',
             ]);
     }
 
@@ -88,7 +88,7 @@ class UpdateSongTagTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongTagRouteMap::Update, $uuid), [
-                'name' => '派生曲',
+                'name' => 'テストタグA',
                 'orderNo' => 2,
             ])->assertStatus(404);
     }

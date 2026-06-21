@@ -23,19 +23,19 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function create(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('ヰ世界情緒'));
+        $result = $this->getInstance()->handle(new CreateInputData('テスト人物'));
 
         $this->assertTrue($result->isOk());
 
         $persons = ModelsPerson::query()->get();
         $this->assertCount(1, $persons);
-        $this->assertSame('ヰ世界情緒', $persons->first()->name);
+        $this->assertSame('テスト人物', $persons->first()->name);
 
         $personId = $this->toUuid($persons->first()->person_id);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::Person, $personId);
-        $this->assertSame('ヰ世界情緒', $log['snapshot']['name']);
+        $this->assertSame('テスト人物', $log['snapshot']['name']);
         $this->assertSame($personId, $log['target_id']);
     }
 

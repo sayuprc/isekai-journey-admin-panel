@@ -52,7 +52,7 @@ class UpdateUseCaseTest extends TestCase
     public function editSongTag(): void
     {
         $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $name = '派生曲';
+        $name = 'テストタグA';
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
@@ -88,7 +88,7 @@ class UpdateUseCaseTest extends TestCase
     public function editFailsIfValidationErrorOccurs(): void
     {
         $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $name = '派生曲';
+        $name = 'テストタグA';
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
@@ -126,7 +126,7 @@ class UpdateUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, '派生曲', 1));
+        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, 'テストタグA', 1));
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();

@@ -38,7 +38,7 @@ class SearchUseCaseTest extends TestCase
     #[Test]
     public function searchWithoutName(): void
     {
-        $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '派生曲', 1);
+        $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'テストタグA', 1);
 
         $this->repository->shouldReceive('search')
             ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isEmpty())
@@ -63,25 +63,25 @@ class SearchUseCaseTest extends TestCase
     #[Test]
     public function searchWithName(): void
     {
-        $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '派生曲', 1);
+        $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'テストタグA', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === '派生')
+            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
             ->andReturn([$songTag])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === '派生')
+            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
             ->andReturn(1)
             ->once();
 
-        $result = $this->getInstance()->handle(new SearchInputData(name: '派生'));
+        $result = $this->getInstance()->handle(new SearchInputData(name: 'テスト'));
 
         $this->assertTrue($result->isOk());
 
         $output = $result->unwrap();
         $this->assertCount(1, $output->tags);
-        $this->assertSame('派生曲', $output->tags[0]->name->value);
+        $this->assertSame('テストタグA', $output->tags[0]->name->value);
     }
 
     #[Test]

@@ -23,14 +23,14 @@ class SearchMediaTest extends DatabaseTestCase
     public function canSearchByTitle(): void
     {
         $repository = $this->app->make(MediaRepository::class);
-        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv, new ImmutableDate('2024-03-01')));
+        $repository->save($this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv, new ImmutableDate('2024-03-01')));
         $repository->save($this->createMedia($this->generateUuid(), '別の動画', 'https://example.com/other', MediaType::Article, true, MediaFormat::Other));
 
         $this->withAuth()
-            ->getJson(route(MediaRouteMap::Search, ['title' => '描き続けた君へ']))
+            ->getJson(route(MediaRouteMap::Search, ['title' => 'テストメディア']))
             ->assertStatus(200)
             ->assertJsonCount(1, 'media')
-            ->assertJsonPath('media.0.title', '描き続けた君へ MV')
+            ->assertJsonPath('media.0.title', 'テストメディアMV')
             ->assertJsonPath('media.0.publishedAt', '2024-03-01')
             ->assertJsonPath('maxPage', 1);
     }
@@ -39,13 +39,13 @@ class SearchMediaTest extends DatabaseTestCase
     public function canSearchWithoutTitle(): void
     {
         $repository = $this->app->make(MediaRepository::class);
-        $repository->save($this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv));
+        $repository->save($this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/mv', MediaType::Video, true, MediaFormat::Mv));
 
         $this->withAuth()
             ->getJson(route(MediaRouteMap::Search, ['per_page' => 25]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'media')
-            ->assertJsonPath('media.0.title', '描き続けた君へ MV')
+            ->assertJsonPath('media.0.title', 'テストメディアMV')
             ->assertJsonPath('maxPage', 1);
     }
 

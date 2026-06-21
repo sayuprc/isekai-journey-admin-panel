@@ -23,7 +23,7 @@ class GetSiteStatsTest extends DatabaseTestCase
             $this->createSong(
                 $this->generateUuid(),
                 '公開楽曲 1',
-                '公開楽曲説明 1',
+                '公開テスト楽曲説明 1',
                 SongType::Original,
                 true,
                 1,
@@ -31,7 +31,7 @@ class GetSiteStatsTest extends DatabaseTestCase
             $this->createSong(
                 $this->generateUuid(),
                 '公開楽曲 2',
-                '公開楽曲説明 2',
+                '公開テスト楽曲説明 2',
                 SongType::Cover,
                 true,
                 2,
@@ -39,7 +39,7 @@ class GetSiteStatsTest extends DatabaseTestCase
             $this->createSong(
                 $this->generateUuid(),
                 '非公開楽曲',
-                '非公開楽曲説明',
+                '非公開テスト楽曲説明',
                 SongType::Cover,
                 false,
                 3,

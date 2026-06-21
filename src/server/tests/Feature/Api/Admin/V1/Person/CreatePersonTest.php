@@ -22,7 +22,7 @@ class CreatePersonTest extends DatabaseTestCase
     {
         $this->withAuth()
             ->postJson(route(PersonRouteMap::Create), [
-                'name' => 'ヰ世界情緒',
+                'name' => 'テスト人物',
             ])->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) => $json
@@ -30,7 +30,7 @@ class CreatePersonTest extends DatabaseTestCase
                         'person',
                         fn (AssertableJson $json) => $json
                             ->whereType('personId', 'string')
-                            ->where('name', 'ヰ世界情緒')
+                            ->where('name', 'テスト人物')
                             ->whereType('orderNo', 'integer'),
                     ),
             );
@@ -40,15 +40,15 @@ class CreatePersonTest extends DatabaseTestCase
     public function createFailsWhenNameAlreadyExists(): void
     {
         $this->app->make(PersonRepository::class)->save(
-            $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 10),
+            $this->createPerson($this->generateUuid(), 'テスト人物', 10),
         );
 
         $this->withAuth()
             ->postJson(route(PersonRouteMap::Create), [
-                'name' => 'ヰ世界情緒',
+                'name' => 'テスト人物',
             ])->assertStatus(400)
             ->assertExactJson([
-                'message' => 'すでに使われている名前です "ヰ世界情緒"',
+                'message' => 'すでに使われている名前です "テスト人物"',
             ]);
     }
 

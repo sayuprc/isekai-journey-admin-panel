@@ -22,7 +22,7 @@ class SearchPersonTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->storePersons($this->createPerson($uuid, 'ヰ世界情緒', 1));
+        $this->storePersons($this->createPerson($uuid, 'テスト人物', 1));
 
         $this->withAuth()
             ->get(route(PersonRouteMap::Search))
@@ -31,7 +31,7 @@ class SearchPersonTest extends DatabaseTestCase
                 'persons' => [
                     [
                         'personId' => $uuid,
-                        'name' => 'ヰ世界情緒',
+                        'name' => 'テスト人物',
                         'orderNo' => 1,
                     ],
                 ],
@@ -46,18 +46,18 @@ class SearchPersonTest extends DatabaseTestCase
         $uuid2 = $this->generateUuid();
 
         $this->storePersons(
-            $this->createPerson($uuid1, 'ヰ世界情緒', 1),
-            $this->createPerson($uuid2, '香椎モイミ', 2),
+            $this->createPerson($uuid1, 'テスト人物1', 1),
+            $this->createPerson($uuid2, 'テスト人物2', 2),
         );
 
         $this->withAuth()
-            ->get(route(PersonRouteMap::Search, ['name' => 'ヰ世界情緒']))
+            ->get(route(PersonRouteMap::Search, ['name' => 'テスト人物1']))
             ->assertStatus(200)
             ->assertExactJson([
                 'persons' => [
                     [
                         'personId' => $uuid1,
-                        'name' => 'ヰ世界情緒',
+                        'name' => 'テスト人物1',
                         'orderNo' => 1,
                     ],
                 ],

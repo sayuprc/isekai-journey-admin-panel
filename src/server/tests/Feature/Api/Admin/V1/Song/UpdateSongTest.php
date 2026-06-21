@@ -25,9 +25,9 @@ class UpdateSongTest extends DatabaseTestCase
     #[Test]
     public function canUpdate(): void
     {
-        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
-        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト編曲者', 1);
 
         $personRepo = $this->app->make(PersonRepository::class);
         $personRepo->save($person1);
@@ -66,8 +66,8 @@ class UpdateSongTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongRouteMap::Update, $songId), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => 'https://example.com/new-lyrics',
                 'typeValue' => SongType::Cover->value,
                 'isDisplay' => false,
@@ -82,8 +82,8 @@ class UpdateSongTest extends DatabaseTestCase
             ->assertExactJson([
                 'song' => [
                     'songId' => $songId,
-                    'title' => '描き続けた君へ',
-                    'description' => 'オリジナル楽曲',
+                    'title' => 'テスト楽曲',
+                    'description' => 'テスト楽曲説明',
                     'lyricsLink' => 'https://example.com/new-lyrics',
                     'type' => [
                         'name' => SongType::Cover->getName(),
@@ -156,8 +156,8 @@ class UpdateSongTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongRouteMap::Update, $songId), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
@@ -173,9 +173,9 @@ class UpdateSongTest extends DatabaseTestCase
     #[Test]
     public function routeSongIdIsPrioritizedOverBodySongId(): void
     {
-        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
-        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト編曲者', 1);
 
         $personRepo = $this->app->make(PersonRepository::class);
         $personRepo->save($person1);
@@ -208,8 +208,8 @@ class UpdateSongTest extends DatabaseTestCase
         $this->withAuth()
             ->putJson(route(SongRouteMap::Update, $routeSongId), [
                 'songId' => $bodySongId,
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Cover->value,
                 'isDisplay' => false,
@@ -224,8 +224,8 @@ class UpdateSongTest extends DatabaseTestCase
             ->assertExactJson([
                 'song' => [
                     'songId' => $routeSongId,
-                    'title' => '描き続けた君へ',
-                    'description' => 'オリジナル楽曲',
+                    'title' => 'テスト楽曲',
+                    'description' => 'テスト楽曲説明',
                     'lyricsLink' => null,
                     'type' => [
                         'name' => SongType::Cover->getName(),
@@ -264,8 +264,8 @@ class UpdateSongTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongRouteMap::Update, $songId), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
@@ -290,8 +290,8 @@ class UpdateSongTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(SongRouteMap::Update, $songId), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,

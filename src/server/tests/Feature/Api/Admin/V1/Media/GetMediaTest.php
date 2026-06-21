@@ -31,7 +31,7 @@ class GetMediaTest extends DatabaseTestCase
         $repository->save(
             $this->createMedia(
                 $uuid,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,
@@ -42,7 +42,7 @@ class GetMediaTest extends DatabaseTestCase
         $this->app->make(SongRepository::class)->save(
             $this->createSong(
                 $songId,
-                '描き続けた君へ',
+                'テスト楽曲',
                 '説明',
                 SongType::Original,
                 true,
@@ -62,7 +62,7 @@ class GetMediaTest extends DatabaseTestCase
             ->assertExactJson([
                 'media' => [
                     'mediaId' => $uuid,
-                    'title' => '描き続けた君へ MV',
+                    'title' => 'テストメディアMV',
                     'url' => 'https://example.com/media',
                     'publishedAt' => '2024-03-01',
                     'type' => [
@@ -77,7 +77,7 @@ class GetMediaTest extends DatabaseTestCase
                 ],
                 'songs' => [[
                     'songId' => $songId,
-                    'title' => '描き続けた君へ',
+                    'title' => 'テスト楽曲',
                     'songOrderNo' => 10,
                     'mediaOrderNo' => 2,
                 ]],

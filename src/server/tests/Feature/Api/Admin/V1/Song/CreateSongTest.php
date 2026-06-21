@@ -26,19 +26,19 @@ class CreateSongTest extends DatabaseTestCase
     public function canCreate(): void
     {
         $personRepo = $this->app->make(PersonRepository::class);
-        $personRepo->save($person1 = $this->createPerson($this->generateUuid(), '作詞者', 1));
-        $personRepo->save($person2 = $this->createPerson($this->generateUuid(), '作曲者', 1));
-        $personRepo->save($person3 = $this->createPerson($this->generateUuid(), '編曲者', 1));
+        $personRepo->save($person1 = $this->createPerson($this->generateUuid(), 'テスト作詞者', 1));
+        $personRepo->save($person2 = $this->createPerson($this->generateUuid(), 'テスト作曲者', 1));
+        $personRepo->save($person3 = $this->createPerson($this->generateUuid(), 'テスト編曲者', 1));
         $tagRepo = $this->app->make(SongTagRepository::class);
         $tagRepo->save($tag1 = $this->createSongTag($this->generateUuid(), 'タグA', 10));
         $tagRepo->save($tag2 = $this->createSongTag($this->generateUuid(), 'タグB', 20));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => 'https://example.com/lyrics',
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
@@ -61,8 +61,8 @@ class CreateSongTest extends DatabaseTestCase
                         'song',
                         fn (AssertableJson $json) => $json
                             ->whereType('songId', 'string')
-                            ->where('title', '描き続けた君へ')
-                            ->where('description', 'オリジナル楽曲')
+                            ->where('title', 'テスト楽曲')
+                            ->where('description', 'テスト楽曲説明')
                             ->where('lyricsLink', 'https://example.com/lyrics')
                             ->where('type', [
                                 'name' => SongType::Original->getName(),
@@ -118,8 +118,8 @@ class CreateSongTest extends DatabaseTestCase
     {
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
@@ -136,8 +136,8 @@ class CreateSongTest extends DatabaseTestCase
     {
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,
@@ -155,8 +155,8 @@ class CreateSongTest extends DatabaseTestCase
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
-                'title' => '描き続けた君へ',
-                'description' => 'オリジナル楽曲',
+                'title' => 'テスト楽曲',
+                'description' => 'テスト楽曲説明',
                 'lyricsLink' => null,
                 'typeValue' => SongType::Original->value,
                 'isDisplay' => true,

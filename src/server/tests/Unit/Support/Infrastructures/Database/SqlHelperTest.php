@@ -63,8 +63,8 @@ class SqlHelperTest extends TestCase
                 'expected' => '\%\_\\\\',
             ],
             'Japanese characters with special chars' => [
-                'input' => 'ヰ世界%情緒',
-                'expected' => 'ヰ世界\%情緒',
+                'input' => 'テスト%文字列',
+                'expected' => 'テスト\%文字列',
             ],
         ];
     }
