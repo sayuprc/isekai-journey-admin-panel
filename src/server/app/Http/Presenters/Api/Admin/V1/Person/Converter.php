@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\Person;
 
-use OpenAPI\Client\Model\Person as OpenApiPerson;
+use OpenAPI\Admin\Client\Model\Person as OpenApiPerson;
 use Person\Domain\Models\Person;
 
 class Converter

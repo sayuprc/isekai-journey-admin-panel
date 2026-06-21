@@ -130,6 +130,9 @@ export type MediaFormat = {
     value: MediaFormatValue;
 };
 
+/**
+ * メディア形式の値
+ */
 export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
 
 export type MediaGetResponse = {
@@ -154,6 +157,9 @@ export type MediaType = {
     value: MediaTypeValue;
 };
 
+/**
+ * メディア種別の値
+ */
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
 
 export type MediaUpdateRequest = {

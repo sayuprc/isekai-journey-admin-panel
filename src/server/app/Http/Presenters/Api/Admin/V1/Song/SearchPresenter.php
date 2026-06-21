@@ -6,10 +6,10 @@ namespace App\Http\Presenters\Api\Admin\V1\Song;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\SongSearchResponse;
-use OpenAPI\Client\Model\SongSummary as OpenApiSongSummary;
-use OpenAPI\Client\Model\SongType as OpenApiSongType;
-use OpenAPI\Client\Model\SongTypeValue;
+use OpenAPI\Admin\Client\Model\SongSearchResponse;
+use OpenAPI\Admin\Client\Model\SongSummary as OpenApiSongSummary;
+use OpenAPI\Admin\Client\Model\SongType as OpenApiSongType;
+use OpenAPI\Admin\Client\Model\SongTypeValue;
 use ResultType\Result;
 use Song\Application\Admin\Query\SongSummary;
 use Song\Application\Admin\UseCase\Search\SearchOutputData;

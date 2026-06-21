@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\AdminUser;
 
 use AdminUser\Application\Admin\UseCase\List\ListOutputData;
-use AdminUser\Domain\Models\AdminUser;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\AdminUserListResponse;
+use OpenAPI\Admin\Client\Model\AdminUserListResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
@@ -27,12 +26,7 @@ class ListPresenter
     {
         [$data, $status] = $result->match(
             fn (ListOutputData $outputData) => [
-                new AdminUserListResponse()->setAdminUsers(
-                    array_map(
-                        fn (AdminUser $adminUser) => $this->converter->toOpenApiAdminUser($adminUser),
-                        $outputData->adminUsers,
-                    ),
-                ),
+                new AdminUserListResponse()->setAdminUsers(array_map($this->converter->toOpenApiAdminUser(...), $outputData->adminUsers)),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),

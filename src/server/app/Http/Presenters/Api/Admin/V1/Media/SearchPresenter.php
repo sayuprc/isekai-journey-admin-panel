@@ -7,8 +7,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Media;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use Media\Application\Admin\UseCase\Search\SearchOutputData;
-use Media\Domain\Models\Media;
-use OpenAPI\Client\Model\MediaSearchResponse;
+use OpenAPI\Admin\Client\Model\MediaSearchResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
@@ -28,10 +27,7 @@ class SearchPresenter
         [$data, $status] = $result->match(
             fn (SearchOutputData $outputData) => [
                 new MediaSearchResponse()
-                    ->setMedia(array_map(
-                        fn (Media $media) => $this->converter->toOpenApiMedia($media),
-                        $outputData->media,
-                    ))
+                    ->setMedia(array_map($this->converter->toOpenApiMedia(...), $outputData->media))
                     ->setMaxPage($outputData->maxPage),
                 200,
             ],

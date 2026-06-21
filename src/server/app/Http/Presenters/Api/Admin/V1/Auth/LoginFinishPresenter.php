@@ -7,7 +7,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Auth;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Auth\Application\Admin\UseCase\Login\LoginFinishOutputData;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\LoginFinishResponse;
+use OpenAPI\Admin\Client\Model\LoginFinishResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 

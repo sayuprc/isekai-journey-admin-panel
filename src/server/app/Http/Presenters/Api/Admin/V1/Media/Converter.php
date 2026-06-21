@@ -6,12 +6,12 @@ namespace App\Http\Presenters\Api\Admin\V1\Media;
 
 use Media\Application\Admin\Query\MediaReferencedSong;
 use Media\Domain\Models\Media;
-use OpenAPI\Client\Model\Media as OpenApiMedia;
-use OpenAPI\Client\Model\MediaFormat as OpenApiMediaFormat;
-use OpenAPI\Client\Model\MediaFormatValue;
-use OpenAPI\Client\Model\MediaReferencedSong as OpenApiMediaReferencedSong;
-use OpenAPI\Client\Model\MediaType as OpenApiMediaType;
-use OpenAPI\Client\Model\MediaTypeValue;
+use OpenAPI\Admin\Client\Model\Media as OpenApiMedia;
+use OpenAPI\Admin\Client\Model\MediaFormat as OpenApiMediaFormat;
+use OpenAPI\Admin\Client\Model\MediaFormatValue;
+use OpenAPI\Admin\Client\Model\MediaReferencedSong as OpenApiMediaReferencedSong;
+use OpenAPI\Admin\Client\Model\MediaType as OpenApiMediaType;
+use OpenAPI\Admin\Client\Model\MediaTypeValue;
 
 class Converter
 {

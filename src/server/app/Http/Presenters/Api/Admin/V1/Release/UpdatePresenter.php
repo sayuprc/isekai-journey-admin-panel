@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Release;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\ReleaseUpdateResponse;
+use OpenAPI\Admin\Client\Model\ReleaseUpdateResponse;
 use Release\Application\Admin\UseCase\Update\UpdateOutputData;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;

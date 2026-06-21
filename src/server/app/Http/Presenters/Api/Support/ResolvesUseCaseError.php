@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Support;
 
-use OpenAPI\Client\Model\ErrorResponse;
-use OpenAPI\Client\Model\ValidationError;
-use OpenAPI\Client\Model\ValidationErrorDetail;
+use OpenAPI\Admin\Client\Model\ErrorResponse;
+use OpenAPI\Admin\Client\Model\ValidationError;
+use OpenAPI\Admin\Client\Model\ValidationErrorDetail;
 use Support\UseCase\Error\AuthenticationError;
 use Support\UseCase\Error\AuthorizationError;
 use Support\UseCase\Error\BusinessLogicError;

@@ -6,10 +6,9 @@ namespace App\Http\Presenters\Api\Admin\V1\SongType;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\SongTypeListResponse;
+use OpenAPI\Admin\Client\Model\SongTypeListResponse;
 use ResultType\Result;
 use Song\Application\Admin\UseCase\Type\ListOutputData;
-use Song\Domain\Models\SongType;
 use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
@@ -27,12 +26,7 @@ class ListPresenter
     {
         [$data, $status] = $result->match(
             fn (ListOutputData $outputData) => [
-                new SongTypeListResponse()->setTypes(
-                    array_map(
-                        fn (SongType $type) => $this->converter->toOpenApiSongType($type),
-                        $outputData->types,
-                    ),
-                ),
+                new SongTypeListResponse()->setTypes(array_map($this->converter->toOpenApiSongType(...), $outputData->types)),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),

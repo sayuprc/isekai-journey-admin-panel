@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\SongTag;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\SongTagUpdateResponse;
+use OpenAPI\Admin\Client\Model\SongTagUpdateResponse;
 use ResultType\Result;
 use Song\Application\Admin\UseCase\Tag\Update\UpdateOutputData;
 use Support\UseCase\Error\UseCaseError;

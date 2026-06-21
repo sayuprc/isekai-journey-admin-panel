@@ -54,7 +54,7 @@ export type MediaType = {
 };
 
 /**
- * 関連メディア種別の値
+ * メディア種別の値
  */
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
 
@@ -133,22 +133,22 @@ export type Limit = number;
 export type MediaFormatName = string;
 
 /**
- * 関連メディアID
+ * メディアID
  */
 export type MediaId = string;
 
 /**
- * 関連メディア公開日
+ * 公開日
  */
 export type MediaPublishedAt = string;
 
 /**
- * 関連メディアタイトル
+ * メディアタイトル
  */
 export type MediaTitle = string;
 
 /**
- * 関連メディア種別名
+ * メディア種別名
  */
 export type MediaTypeName = string;
 

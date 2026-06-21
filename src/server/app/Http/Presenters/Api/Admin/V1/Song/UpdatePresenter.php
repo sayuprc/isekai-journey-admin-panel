@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Song;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\SongUpdateResponse;
+use OpenAPI\Admin\Client\Model\SongUpdateResponse;
 use ResultType\Result;
 use Song\Application\Admin\UseCase\Update\UpdateOutputData;
 use Support\UseCase\Error\UseCaseError;
@@ -25,14 +25,10 @@ class UpdatePresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            function (UpdateOutputData $outputData) {
-                $song = $outputData->song;
-
-                return [
-                    new SongUpdateResponse()->setSong($this->converter->toOpenApiSong($song)),
-                    200,
-                ];
-            },
+            fn (UpdateOutputData $outputData) => [
+                new SongUpdateResponse()->setSong($this->converter->toOpenApiSong($outputData->song)),
+                200,
+            ],
             fn (UseCaseError $error) => $this->resolveError($error),
         );
 

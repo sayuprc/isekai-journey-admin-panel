@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Person;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\PersonCreateResponse;
+use OpenAPI\Admin\Client\Model\PersonCreateResponse;
 use Person\Application\Admin\UseCase\Create\CreateOutputData;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
@@ -25,14 +25,10 @@ class CreatePresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            function (CreateOutputData $outputData) {
-                $person = $outputData->person;
-
-                return [
-                    new PersonCreateResponse()->setPerson($this->converter->toOpenApiPerson($person)),
-                    200,
-                ];
-            },
+            fn (CreateOutputData $outputData) => [
+                new PersonCreateResponse()->setPerson($this->converter->toOpenApiPerson($outputData->person)),
+                200,
+            ],
             fn (UseCaseError $error) => $this->resolveError($error),
         );
 

@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Person;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\PersonGetResponse;
+use OpenAPI\Admin\Client\Model\PersonGetResponse;
 use Person\Application\Admin\UseCase\Get\GetOutputData;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;

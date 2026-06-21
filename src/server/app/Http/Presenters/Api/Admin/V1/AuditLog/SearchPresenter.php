@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\AuditLog;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\AuditLogSearchResponse;
+use OpenAPI\Admin\Client\Model\AuditLogSearchResponse;
 use ResultType\Result;
 use Support\UseCase\AuditLog\Search\SearchOutputData;
 use Support\UseCase\Error\UseCaseError;
