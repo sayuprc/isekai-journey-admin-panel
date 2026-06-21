@@ -12,6 +12,7 @@ use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -68,6 +69,28 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame(MediaType::SocialPost->value, $log['snapshot']['type']);
         $this->assertSame(MediaFormat::StreamArchive->value, $log['snapshot']['format']);
         $this->assertFalse($log['snapshot']['is_display']);
+    }
+
+    #[Test]
+    public function updateFailsWhenMediaDoesNotExist(): void
+    {
+        $mediaId = $this->generateUuid();
+
+        $result = $this->getInstance()->handle(
+            new UpdateInputData(
+                $mediaId,
+                'テストメディア',
+                'https://example.com/media',
+                '2024-04-02',
+                MediaType::Video->value,
+                MediaFormat::Mv->value,
+                true,
+            ),
+        );
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
+        $this->assertDatabaseMissing(ModelsMedia::class, ['title' => 'テストメディア']);
     }
 
     private function getInstance(): UpdateUseCase

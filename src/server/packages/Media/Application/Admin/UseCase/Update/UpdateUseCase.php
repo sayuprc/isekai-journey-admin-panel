@@ -6,6 +6,7 @@ namespace Media\Application\Admin\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
 use LogicException;
+use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Services\MediaIntegrityService;
 use ResultType\Err;
@@ -20,6 +21,7 @@ use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Error\NotFoundError;
 use Support\UseCase\Error\UseCaseError;
 
 readonly class UpdateUseCase
@@ -47,32 +49,38 @@ readonly class UpdateUseCase
      */
     private function updateMedia(UpdateInputData $inputData): Result
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForUpdate(
-                $inputData->mediaId,
-                $inputData->title,
-                $inputData->url,
-                $inputData->publishedAt,
-                $inputData->typeValue,
-                $inputData->formatValue,
-                $inputData->isDisplay,
-            );
+        return MediaId::create($inputData->mediaId)
+            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->andThen(fn (MediaId $mediaId): Result => $this->transaction->scope(function () use ($inputData, $mediaId): Result {
+                if (is_null($this->repository->find($mediaId))) {
+                    return new Err(new NotFoundError('Media', $mediaId->value));
+                }
 
-            if ($result->isErr()) {
-                return new Err($this->handleError($result->unwrapErr()));
-            }
+                $result = $this->service->prepareForUpdate(
+                    $inputData->mediaId,
+                    $inputData->title,
+                    $inputData->url,
+                    $inputData->publishedAt,
+                    $inputData->typeValue,
+                    $inputData->formatValue,
+                    $inputData->isDisplay,
+                );
 
-            $media = $this->repository->save($result->unwrap());
+                if ($result->isErr()) {
+                    return new Err($this->handleError($result->unwrapErr()));
+                }
 
-            $this->recorder->record(
-                AuditAction::Update,
-                AuditTargetType::Media,
-                $media->mediaId,
-                $media->toArray(),
-            );
+                $media = $this->repository->save($result->unwrap());
 
-            return new Ok(new UpdateOutputData($media));
-        });
+                $this->recorder->record(
+                    AuditAction::Update,
+                    AuditTargetType::Media,
+                    $media->mediaId,
+                    $media->toArray(),
+                );
+
+                return new Ok(new UpdateOutputData($media));
+            }));
     }
 
     private function handleError(DomainError $error): UseCaseError

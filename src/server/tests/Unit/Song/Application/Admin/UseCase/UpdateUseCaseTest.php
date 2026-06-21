@@ -18,12 +18,14 @@ use Song\Application\Admin\UseCase\Update\UpdateInputData;
 use Song\Application\Admin\UseCase\Update\UpdateUseCase;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\Song;
+use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Error\DomainValidationError;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\Error\NotFoundError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -73,6 +75,11 @@ class UpdateUseCaseTest extends TestCase
         $this->transaction->shouldReceive('scope')
             ->withArgs(fn (Closure $_) => true)
             ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
+        $this->repository->shouldReceive('find')
+            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->andReturn($this->createSong($songId, $title, $description, $lyricsLink, SongType::from($typeValue), true, 1))
             ->once();
 
         $this->service->shouldReceive('prepareForUpdate')
@@ -156,6 +163,11 @@ class UpdateUseCaseTest extends TestCase
             ->andReturnUsing(fn (Closure $arg) => $arg())
             ->once();
 
+        $this->repository->shouldReceive('find')
+            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->andReturn($this->createSong($songId, $title, $description, $lyricsLink, SongType::Original, true, 1))
+            ->once();
+
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
             ->andReturn(new Err(new DomainValidationError([])))
@@ -176,6 +188,42 @@ class UpdateUseCaseTest extends TestCase
         );
 
         $this->assertTrue($result->isErr());
+    }
+
+    #[Test]
+    public function updateFailsIfSongDoesNotExist(): void
+    {
+        $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+
+        $this->transaction->shouldReceive('scope')
+            ->withArgs(fn (Closure $_) => true)
+            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->once();
+
+        $this->repository->shouldReceive('find')
+            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->andReturnNull()
+            ->once();
+
+        $this->service->shouldNotReceive('prepareForUpdate');
+        $this->repository->shouldNotReceive('save');
+
+        $result = $this->getInstance()->handle(
+            new UpdateInputData(
+                $songId,
+                '曲名',
+                '説明',
+                null,
+                SongType::Original->value,
+                true,
+                1,
+                [],
+                [],
+            ),
+        );
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
     }
 
     /**

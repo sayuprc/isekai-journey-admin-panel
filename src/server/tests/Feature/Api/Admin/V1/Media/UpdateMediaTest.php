@@ -96,6 +96,22 @@ class UpdateMediaTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function updateFailsWhenMediaDoesNotExist(): void
+    {
+        $mediaId = $this->generateUuid();
+
+        $this->withAuth()
+            ->putJson(route(MediaRouteMap::Update, $mediaId), [
+                'title' => 'テストメディア',
+                'url' => 'https://example.com/media',
+                'publishedAt' => '2024-04-02',
+                'typeValue' => MediaType::Video->value,
+                'formatValue' => MediaFormat::Mv->value,
+                'isDisplay' => true,
+            ])->assertStatus(404);
+    }
+
+    #[Test]
     public function emptyParameters(): void
     {
         $uuid = $this->generateUuid();
