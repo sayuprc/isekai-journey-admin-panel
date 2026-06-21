@@ -52,7 +52,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($songId, '一曲目', '説明', SongType::Original, true, 1),
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
         $this->storeReleases(
             $this->createRelease(

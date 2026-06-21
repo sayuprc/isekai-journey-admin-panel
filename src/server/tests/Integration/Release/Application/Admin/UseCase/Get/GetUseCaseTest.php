@@ -29,8 +29,8 @@ class GetUseCaseTest extends DatabaseTestCase
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
-            $this->createSong($songId1, '一曲目', '説明', SongType::Original, true, 10),
-            $this->createSong($songId2, '二曲目', '説明', SongType::Original, true, 20),
+            $this->createSong($songId1, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+            $this->createSong($songId2, 'テスト楽曲2', '説明', SongType::Original, true, 20),
         );
         $this->storeReleases(
             $this->createRelease(
@@ -51,9 +51,9 @@ class GetUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isOk());
         $this->assertSame($releaseId, $result->unwrap()->release->releaseId->value);
         $this->assertCount(2, $result->unwrap()->songs);
-        $this->assertSame('一曲目', $result->unwrap()->songs[0]->title);
+        $this->assertSame('テスト楽曲1', $result->unwrap()->songs[0]->title);
         $this->assertSame(1, $result->unwrap()->songs[0]->trackNo);
-        $this->assertSame('二曲目', $result->unwrap()->songs[1]->title);
+        $this->assertSame('テスト楽曲2', $result->unwrap()->songs[1]->title);
         $this->assertSame(2, $result->unwrap()->songs[1]->trackNo);
     }
 

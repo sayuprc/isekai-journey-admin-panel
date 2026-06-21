@@ -58,8 +58,8 @@ class UpdateUseCaseTest extends TestCase
     public function update(): void
     {
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $title = '描き続けた君へ';
-        $description = 'オリジナル楽曲';
+        $title = 'テスト楽曲';
+        $description = 'テスト楽曲説明';
         $lyricsLink = 'https://example.com/lyrics';
         $typeValue = SongType::Original->value;
         $isDisplay = false;
@@ -110,9 +110,9 @@ class UpdateUseCaseTest extends TestCase
                     $song->isDisplay,
                     $song->orderNo->value,
                     [
-                        new AssembledPerson($lyricistId, '作詞者', SongPersonRole::Lyricist, 1),
-                        new AssembledPerson($composerId, '作曲者', SongPersonRole::Composer, 2),
-                        new AssembledPerson($arrangerId, '編曲者', SongPersonRole::Arranger, 3),
+                        new AssembledPerson($lyricistId, 'テスト作詞者', SongPersonRole::Lyricist, 1),
+                        new AssembledPerson($composerId, 'テスト作曲者', SongPersonRole::Composer, 2),
+                        new AssembledPerson($arrangerId, 'テスト編曲者', SongPersonRole::Arranger, 3),
                     ],
                 ),
             )

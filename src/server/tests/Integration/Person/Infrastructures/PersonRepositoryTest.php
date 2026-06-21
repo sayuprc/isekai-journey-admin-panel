@@ -24,7 +24,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
         $person2 = $this->createPerson($this->generateUuid(), '春猿火', 2);
 
         $repository->save($person1);
@@ -38,7 +38,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
         $repository->save($person);
 
         $found = $repository->find($person->personId);
@@ -60,7 +60,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
 
         $repository->save($person);
 
@@ -75,7 +75,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
 
         $repository->save($person);
         $repository->delete($person->personId);
@@ -88,7 +88,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 10);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 10);
         $person2 = $this->createPerson($this->generateUuid(), '春猿火', 20);
 
         $repository->save($person1);
@@ -104,13 +104,13 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 10);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 10);
         $person2 = $this->createPerson($this->generateUuid(), '春猿火', 20);
 
         $repository->save($person1);
         $repository->save($person2);
 
-        $persons = $repository->search(new PersonSearchCriteria(new Some('ヰ世界情緒')));
+        $persons = $repository->search(new PersonSearchCriteria(new Some('テスト人物')));
 
         $this->assertCount(1, $persons);
         $this->assertEquals($person1, $persons[0]);
@@ -139,7 +139,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $repository->save($this->createPerson($this->generateUuid(), 'ヰ世界情緒', 10));
+        $repository->save($this->createPerson($this->generateUuid(), 'テスト人物', 10));
 
         $this->assertSame(1, $repository->maxPage(new PersonSearchCriteria(new None())));
     }

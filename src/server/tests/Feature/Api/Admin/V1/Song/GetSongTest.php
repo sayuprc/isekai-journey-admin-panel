@@ -25,9 +25,9 @@ class GetSongTest extends DatabaseTestCase
     #[Test]
     public function found(): void
     {
-        $lyricist = $this->createPerson($lyricistId = $this->generateUuid(), '作詞者A', 1);
-        $composer = $this->createPerson($composerId = $this->generateUuid(), '作曲者A', 1);
-        $arranger = $this->createPerson($arrangerId = $this->generateUuid(), '編曲者A', 1);
+        $lyricist = $this->createPerson($lyricistId = $this->generateUuid(), 'テスト作詞者A', 1);
+        $composer = $this->createPerson($composerId = $this->generateUuid(), 'テスト作曲者A', 1);
+        $arranger = $this->createPerson($arrangerId = $this->generateUuid(), 'テスト編曲者A', 1);
 
         $personRepo = $this->app->make(PersonRepository::class);
         $personRepo->save($lyricist);
@@ -37,15 +37,15 @@ class GetSongTest extends DatabaseTestCase
         $tagRepo->save($tagA = $this->createSongTag($this->generateUuid(), 'タグA', 20));
         $tagRepo->save($tagB = $this->createSongTag($this->generateUuid(), 'タグB', 10));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
 
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
             $this->createSong(
                 $songId,
-                '描き続けた君へ',
-                'オリジナル楽曲',
+                'テスト楽曲',
+                'テスト楽曲説明',
                 'https://example.com/lyrics',
                 SongType::Original,
                 true,
@@ -72,8 +72,8 @@ class GetSongTest extends DatabaseTestCase
             ->assertExactJson([
                 'song' => [
                     'songId' => $songId,
-                    'title' => '描き続けた君へ',
-                    'description' => 'オリジナル楽曲',
+                    'title' => 'テスト楽曲',
+                    'description' => 'テスト楽曲説明',
                     'lyricsLink' => 'https://example.com/lyrics',
                     'type' => [
                         'name' => 'オリジナル曲',
@@ -82,9 +82,9 @@ class GetSongTest extends DatabaseTestCase
                     'isDisplay' => true,
                     'orderNo' => 1,
                     'persons' => [
-                        ['personId' => $lyricistId, 'name' => '作詞者A', 'role' => 1, 'orderNo' => 1],
-                        ['personId' => $composerId, 'name' => '作曲者A', 'role' => 2, 'orderNo' => 2],
-                        ['personId' => $arrangerId, 'name' => '編曲者A', 'role' => 3, 'orderNo' => 3],
+                        ['personId' => $lyricistId, 'name' => 'テスト作詞者A', 'role' => 1, 'orderNo' => 1],
+                        ['personId' => $composerId, 'name' => 'テスト作曲者A', 'role' => 2, 'orderNo' => 2],
+                        ['personId' => $arrangerId, 'name' => 'テスト編曲者A', 'role' => 3, 'orderNo' => 3],
                     ],
                     'tags' => [
                         ['songTagId' => $tagB->songTagId->value, 'name' => 'タグB'],
@@ -118,7 +118,7 @@ class GetSongTest extends DatabaseTestCase
         $songId = $this->generateUuid();
 
         $this->app->make(SongRepository::class)->save(
-            $this->createSong($songId, '描き続けた君へ', 'オリジナル楽曲', null, SongType::Original, true, 1, [], [], [], []),
+            $this->createSong($songId, 'テスト楽曲', 'テスト楽曲説明', null, SongType::Original, true, 1, [], [], [], []),
         );
 
         $this->withAuth()

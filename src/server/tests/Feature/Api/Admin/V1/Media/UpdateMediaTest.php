@@ -28,7 +28,7 @@ class UpdateMediaTest extends DatabaseTestCase
         $repository->save(
             $this->createMedia(
                 $uuid,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,
@@ -38,7 +38,7 @@ class UpdateMediaTest extends DatabaseTestCase
 
         $this->withAuth()
             ->putJson(route(MediaRouteMap::Update, $uuid), [
-                'title' => '描き続けた君へ 配信アーカイブ',
+                'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
                 'publishedAt' => '2024-04-02',
                 'typeValue' => MediaType::SocialPost->value,
@@ -48,7 +48,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->assertExactJson([
                 'media' => [
                     'mediaId' => $uuid,
-                    'title' => '描き続けた君へ 配信アーカイブ',
+                    'title' => 'テストメディア配信アーカイブ',
                     'url' => 'https://example.com/archive',
                     'publishedAt' => '2024-04-02',
                     'type' => [
@@ -74,7 +74,7 @@ class UpdateMediaTest extends DatabaseTestCase
         $repository->save(
             $this->createMedia(
                 $routeMediaId,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,
@@ -85,7 +85,7 @@ class UpdateMediaTest extends DatabaseTestCase
         $this->withAuth()
             ->putJson(route(MediaRouteMap::Update, $routeMediaId), [
                 'mediaId' => $bodyMediaId,
-                'title' => '描き続けた君へ 配信アーカイブ',
+                'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
                 'publishedAt' => '2024-04-02',
                 'typeValue' => MediaType::Video->value,
@@ -104,7 +104,7 @@ class UpdateMediaTest extends DatabaseTestCase
         $repository->save(
             $this->createMedia(
                 $uuid,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,

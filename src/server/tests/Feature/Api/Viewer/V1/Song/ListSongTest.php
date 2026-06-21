@@ -38,9 +38,9 @@ class ListSongTest extends DatabaseTestCase
         $arrangerId = $this->generateUuid();
 
         $this->storePersons(
-            $this->createPerson($lyricistId, '作詞太郎', 1),
-            $this->createPerson($composerId, '作曲花子', 2),
-            $this->createPerson($arrangerId, '編曲次郎', 3),
+            $this->createPerson($lyricistId, 'テスト作詞者A', 1),
+            $this->createPerson($composerId, 'テスト作曲者A', 2),
+            $this->createPerson($arrangerId, 'テスト編曲者A', 3),
         );
 
         $this->storeMedia(
@@ -76,8 +76,8 @@ class ListSongTest extends DatabaseTestCase
         $this->storeSongs(
             $this->createSong(
                 $visibleSongId,
-                '描き続けた君へ',
-                'Viewer の一覧表示向けに集約された楽曲説明',
+                'テスト楽曲',
+                'Viewer の一覧表示向けに集約されたテスト楽曲説明',
                 SongType::Original,
                 true,
                 1,
@@ -114,7 +114,7 @@ class ListSongTest extends DatabaseTestCase
             ),
             $this->createSong(
                 $hiddenSongId,
-                '全部夢だった！',
+                '比較テスト楽曲B',
                 '非公開楽曲',
                 SongType::Cover,
                 false,
@@ -158,15 +158,15 @@ class ListSongTest extends DatabaseTestCase
                 'songs' => [
                     [
                         'songId' => $visibleSongId,
-                        'title' => '描き続けた君へ',
+                        'title' => 'テスト楽曲',
                         'type' => [
                             'name' => 'オリジナル曲',
                             'value' => 1,
                         ],
-                        'description' => 'Viewer の一覧表示向けに集約された楽曲説明',
-                        'lyricists' => ['作詞太郎'],
-                        'composers' => ['作曲花子'],
-                        'arrangers' => ['編曲次郎'],
+                        'description' => 'Viewer の一覧表示向けに集約されたテスト楽曲説明',
+                        'lyricists' => ['テスト作詞者A'],
+                        'composers' => ['テスト作曲者A'],
+                        'arrangers' => ['テスト編曲者A'],
                         'counts' => [
                             // 'releaseCount' => 1,
                             'mediaCount' => 2,

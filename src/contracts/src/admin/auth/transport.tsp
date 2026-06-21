@@ -1,5 +1,6 @@
 import "@typespec/http";
 import "../lib";
+import "../admin-users";
 
 using Http;
 

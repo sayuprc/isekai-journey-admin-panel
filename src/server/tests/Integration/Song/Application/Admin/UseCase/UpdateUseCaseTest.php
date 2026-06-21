@@ -25,9 +25,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function canUpdate(): void
     {
-        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
-        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト編曲者', 1);
 
         $this->storePersons($person1, $person2, $person3);
 
@@ -53,8 +53,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(
             new UpdateInputData(
                 $songId,
-                '描き続けた君へ',
-                'オリジナル楽曲',
+                'テスト楽曲',
+                'テスト楽曲説明',
                 'https://example.com/lyrics',
                 SongType::Cover->value,
                 false,
@@ -72,8 +72,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $songs = Song::query()->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
-        $this->assertSame('描き続けた君へ', $song->title);
-        $this->assertSame('オリジナル楽曲', $song->description);
+        $this->assertSame('テスト楽曲', $song->title);
+        $this->assertSame('テスト楽曲説明', $song->description);
         $this->assertSame('https://example.com/lyrics', $song->lyrics_link);
         $this->assertSame(SongType::Cover->value, $song->type);
         $this->assertFalse($song->is_display);
@@ -86,7 +86,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
-        $this->assertSame('描き続けた君へ', $log['snapshot']['title']);
+        $this->assertSame('テスト楽曲', $log['snapshot']['title']);
         $this->assertCount(2, $log['snapshot']['persons']);
     }
 

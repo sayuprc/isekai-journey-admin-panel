@@ -26,7 +26,7 @@ class SearchAuditLogTest extends DatabaseTestCase
     public function returnsListWithPermission(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $auditLogId = $this->generateUuid();
         $targetId = $this->generateUuid();
@@ -37,7 +37,7 @@ class SearchAuditLogTest extends DatabaseTestCase
             AuditAction::Update,
             AuditTargetType::Song,
             $targetId,
-            ['title' => '描き続けた君へ'],
+            ['title' => 'テスト楽曲'],
             new DateTimeImmutable('2026-04-02 10:00:00'),
         );
 
@@ -50,7 +50,7 @@ class SearchAuditLogTest extends DatabaseTestCase
         $this->assertCount(1, $response['auditLogs']);
         $this->assertSame($auditLogId, $response['auditLogs'][0]['auditLogId']);
         $this->assertSame($actorId, $response['auditLogs'][0]['adminUserId']);
-        $this->assertSame('監査太郎', $response['auditLogs'][0]['adminUserName']);
+        $this->assertSame('監査テストユーザーA', $response['auditLogs'][0]['adminUserName']);
         $this->assertSame('update', $response['auditLogs'][0]['action']);
         $this->assertSame('Song', $response['auditLogs'][0]['targetType']);
         $this->assertSame($targetId, $response['auditLogs'][0]['targetId']);
@@ -60,7 +60,7 @@ class SearchAuditLogTest extends DatabaseTestCase
     public function canFilterReleaseTargetType(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $releaseAuditLogId = $this->generateUuid();
 
@@ -79,7 +79,7 @@ class SearchAuditLogTest extends DatabaseTestCase
             AuditAction::Update,
             AuditTargetType::Song,
             $this->generateUuid(),
-            ['title' => '描き続けた君へ'],
+            ['title' => 'テスト楽曲'],
             new DateTimeImmutable('2026-04-03 10:00:00'),
         );
 
@@ -97,7 +97,7 @@ class SearchAuditLogTest extends DatabaseTestCase
     public function canFilterRegisterAction(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $registerAuditLogId = $this->generateUuid();
 
@@ -136,8 +136,8 @@ class SearchAuditLogTest extends DatabaseTestCase
         $actor1Id = $this->generateUuid();
         $actor2Id = $this->generateUuid();
         $this->storeAdminUsers(
-            $this->createAdminUser($actor1Id, 'actor1@example.com', Role::Privilege, name: '監査太郎'),
-            $this->createAdminUser($actor2Id, 'actor2@example.com', Role::Privilege, name: '別人花子'),
+            $this->createAdminUser($actor1Id, 'actor1@example.com', Role::Privilege, name: '監査テストユーザーA'),
+            $this->createAdminUser($actor2Id, 'actor2@example.com', Role::Privilege, name: '検索テストユーザーB'),
         );
 
         $this->insertAuditLog(
@@ -165,7 +165,7 @@ class SearchAuditLogTest extends DatabaseTestCase
             ->json();
         /** @var array{auditLogs: list<array{adminUserName: string}>} $response */
         $this->assertCount(1, $response['auditLogs']);
-        $this->assertSame('監査太郎', $response['auditLogs'][0]['adminUserName']);
+        $this->assertSame('監査テストユーザーA', $response['auditLogs'][0]['adminUserName']);
     }
 
     #[Test]

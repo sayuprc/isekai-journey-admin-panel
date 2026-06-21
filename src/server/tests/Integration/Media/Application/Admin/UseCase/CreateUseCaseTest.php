@@ -27,7 +27,7 @@ class CreateUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(
             new CreateInputData(
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 '2024-03-01',
                 MediaType::Video->value,
@@ -40,14 +40,14 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $media = ModelsMedia::query()->first();
         $this->assertNotNull($media);
-        $this->assertSame('描き続けた君へ MV', $media->title);
+        $this->assertSame('テストメディアMV', $media->title);
         $this->assertSame('https://example.com/media', $media->url);
         $this->assertSame('2024-03-01', $media->published_at?->format('Y-m-d'));
 
         $mediaId = $this->toUuid($media->media_id);
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::Media, $mediaId);
-        $this->assertSame('描き続けた君へ MV', $log['snapshot']['title']);
+        $this->assertSame('テストメディアMV', $log['snapshot']['title']);
         $this->assertSame(MediaType::Video->value, $log['snapshot']['type']);
         $this->assertSame(MediaFormat::Mv->value, $log['snapshot']['format']);
     }

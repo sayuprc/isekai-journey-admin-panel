@@ -34,9 +34,9 @@ class UpdateReleaseTest extends DatabaseTestCase
         $converter = $this->app->make(UuidConverterInterface::class);
 
         $this->storeSongs(
-            $this->createSong($songId1, '一曲目', '説明', SongType::Original, true, 10),
-            $this->createSong($songId2, '二曲目', '説明', SongType::Original, true, 20),
-            $this->createSong($songId3, '三曲目', '説明', SongType::Cover, false, 30),
+            $this->createSong($songId1, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+            $this->createSong($songId2, 'テスト楽曲2', '説明', SongType::Original, true, 20),
+            $this->createSong($songId3, 'テスト楽曲3', '説明', SongType::Cover, false, 30),
         );
         $this->storeReleases(
             $this->createRelease(
@@ -158,7 +158,7 @@ class UpdateReleaseTest extends DatabaseTestCase
         $songId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
-        $this->storeSongs($this->createSong($songId, '一曲目', '説明', SongType::Original, true, 10));
+        $this->storeSongs($this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10));
         $this->storeReleases(
             $this->createRelease(
                 $releaseId,

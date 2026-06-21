@@ -24,7 +24,7 @@ class CreateMediaTest extends DatabaseTestCase
     {
         $this->withAuth()
             ->postJson(route(MediaRouteMap::Create), [
-                'title' => '描き続けた君へ MV',
+                'title' => 'テストメディアMV',
                 'url' => 'https://example.com/media',
                 'publishedAt' => '2024-03-01',
                 'typeValue' => MediaType::Video->value,
@@ -33,7 +33,7 @@ class CreateMediaTest extends DatabaseTestCase
             ])->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) => $json
                 ->whereType('media.mediaId', 'string')
-                ->where('media.title', '描き続けた君へ MV')
+                ->where('media.title', 'テストメディアMV')
                 ->where('media.url', 'https://example.com/media')
                 ->where('media.publishedAt', '2024-03-01')
                 ->where('media.type', [

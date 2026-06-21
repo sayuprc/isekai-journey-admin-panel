@@ -36,7 +36,7 @@ class SongTagIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreate(): void
     {
-        $name = '派生曲';
+        $name = 'テストタグA';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $maxOrderNo = 20;
 
@@ -66,7 +66,7 @@ class SongTagIntegrityServiceTest extends TestCase
     #[Test]
     public function prepareForCreateDuplicateName(): void
     {
-        $name = '派生曲';
+        $name = 'テストタグA';
         $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $maxOrderNo = 20;
 
@@ -92,14 +92,14 @@ class SongTagIntegrityServiceTest extends TestCase
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
         $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われている名前です "派生曲"', $error->message);
+        $this->assertSame('すでに使われている名前です "テストタグA"', $error->message);
     }
 
     #[Test]
     public function prepareForUpdate(): void
     {
         $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $name = '派生曲';
+        $name = 'テストタグA';
         $orderNo = 20;
 
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
@@ -119,7 +119,7 @@ class SongTagIntegrityServiceTest extends TestCase
     public function prepareForUpdateDuplicateName(): void
     {
         $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
-        $name = '派生曲';
+        $name = 'テストタグA';
         $orderNo = 20;
 
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
@@ -134,7 +134,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
         $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われている名前です "派生曲"', $error->message);
+        $this->assertSame('すでに使われている名前です "テストタグA"', $error->message);
     }
 
     private function getInstance(): SongTagIntegrityService

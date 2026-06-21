@@ -9,9 +9,9 @@ tags:
   - name: AuditLog
   - name: Media
   - name: Person
-  - name: Release
   - name: SongTag
   - name: Song
+  - name: Release
   - name: SongType
 paths:
   /admin-users:
@@ -1766,7 +1766,7 @@ components:
             $ref: '#/components/schemas/Permission'
       examples:
         - adminUserId: 0cc5f492-22fe-4f38-b702-8b2375bc0254
-          name: 管理ユーザー名
+          name: テスト管理ユーザー
           email: example@example.com
           createdAt: '2019-12-09T10:30:20+09:00'
           role:
@@ -2160,7 +2160,7 @@ components:
           $ref: '#/components/schemas/orderNo'
       examples:
         - personId: 0cc5f492-22fe-4f38-b702-8b2375bc0254
-          name: ヰ世界情緒
+          name: テスト人物
           orderNo: 10
     PersonCreateRequest:
       type: object
@@ -2598,8 +2598,8 @@ components:
             $ref: '#/components/schemas/SongLinkedMedia'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          title: 描き続けた君へ
-          description: オリジナル楽曲
+          title: テスト楽曲
+          description: テスト楽曲説明
           lyricsLink: https://example.com/lyrics
           type:
             name: オリジナル曲
@@ -2608,19 +2608,19 @@ components:
           orderNo: 1
           persons:
             - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-              name: ヰ世界情緒
+              name: テスト人物
               role: 1
               orderNo: 1
             - personId: a4d01e9d-e593-4bd9-ba83-e9a7dd3887cd
-              name: ヰ世界情緒
+              name: テスト人物
               role: 2
               orderNo: 2
           tags:
             - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-              name: 派生曲
+              name: テストタグA
           media:
             - mediaId: 11111111-1111-1111-1111-111111111111
-              title: 描き続けた君へ MV
+              title: テストメディアMV
               url: https://example.com/media
               publishedAt: '2024-03-01'
               type:
@@ -2721,7 +2721,7 @@ components:
           $ref: '#/components/schemas/orderNo'
       examples:
         - mediaId: 11111111-1111-1111-1111-111111111111
-          title: 描き続けた君へ MV
+          title: テストメディアMV
           url: https://example.com/media
           publishedAt: '2024-03-01'
           type:
@@ -2801,7 +2801,7 @@ components:
           $ref: '#/components/schemas/orderNo'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          title: 描き続けた君へ
+          title: テスト楽曲
           type:
             name: オリジナル曲
             value: 1
@@ -2822,7 +2822,7 @@ components:
           $ref: '#/components/schemas/orderNo'
       examples:
         - songTagId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          name: 派生曲
+          name: テストタグA
           orderNo: 10
     SongTagCreateRequest:
       type: object

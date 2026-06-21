@@ -28,8 +28,8 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag1 = $this->createSongTag($this->generateUuid(), '派生曲', 10);
-        $songTag2 = $this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20);
+        $songTag1 = $this->createSongTag($this->generateUuid(), 'テストタグA', 10);
+        $songTag2 = $this->createSongTag($this->generateUuid(), 'テストタグB', 20);
 
         $repository->save($songTag1);
         $repository->save($songTag2);
@@ -45,11 +45,11 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag = $this->createSongTag($this->generateUuid(), '派生曲', 1);
+        $songTag = $this->createSongTag($this->generateUuid(), 'テストタグA', 1);
 
         $repository->save($songTag);
 
-        $criteria = new SongTagSearchCriteria(new Some('派生'));
+        $criteria = new SongTagSearchCriteria(new Some('テストタグA'));
 
         $found = $repository->search($criteria);
 
@@ -62,8 +62,8 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag1 = $this->createSongTag($this->generateUuid(), '派生曲', 10);
-        $songTag2 = $this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20);
+        $songTag1 = $this->createSongTag($this->generateUuid(), 'テストタグA', 10);
+        $songTag2 = $this->createSongTag($this->generateUuid(), 'テストタグB', 20);
 
         $repository->save($songTag1);
         $repository->save($songTag2);
@@ -81,13 +81,13 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag1 = $this->createSongTag($this->generateUuid(), '派生曲', 10);
-        $songTag2 = $this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20);
+        $songTag1 = $this->createSongTag($this->generateUuid(), 'テストタグA', 10);
+        $songTag2 = $this->createSongTag($this->generateUuid(), 'テストタグB', 20);
 
         $repository->save($songTag1);
         $repository->save($songTag2);
 
-        $criteria = new SongTagSearchCriteria(new Some('派生'));
+        $criteria = new SongTagSearchCriteria(new Some('テストタグA'));
 
         $songTags = $repository->search($criteria);
 
@@ -100,7 +100,7 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag = $this->createSongTag($this->generateUuid(), '派生曲', 10);
+        $songTag = $this->createSongTag($this->generateUuid(), 'テストタグA', 10);
 
         $repository->save($songTag);
 
@@ -116,8 +116,8 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag1 = $this->createSongTag($this->generateUuid(), 'アルファ', 10);
-        $songTag2 = $this->createSongTag($this->generateUuid(), 'ベータ', 20);
+        $songTag1 = $this->createSongTag($this->generateUuid(), 'ソートテストタグA', 10);
+        $songTag2 = $this->createSongTag($this->generateUuid(), 'ソートテストタグB', 20);
 
         $repository->save($songTag1);
         $repository->save($songTag2);
@@ -136,9 +136,9 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $songTag1 = $this->createSongTag($this->generateUuid(), '派生曲', 10);
-        $songTag2 = $this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20);
-        $songTag3 = $this->createSongTag($this->generateUuid(), 'カバー曲', 30);
+        $songTag1 = $this->createSongTag($this->generateUuid(), 'テストタグA', 10);
+        $songTag2 = $this->createSongTag($this->generateUuid(), 'テストタグB', 20);
+        $songTag3 = $this->createSongTag($this->generateUuid(), 'テストタグC', 30);
 
         $repository->save($songTag1);
         $repository->save($songTag2);
@@ -156,8 +156,8 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $repository->save($this->createSongTag($this->generateUuid(), '派生曲', 10));
-        $repository->save($this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20));
+        $repository->save($this->createSongTag($this->generateUuid(), 'テストタグA', 10));
+        $repository->save($this->createSongTag($this->generateUuid(), 'テストタグB', 20));
 
         $criteria = new SongTagSearchCriteria(new None(), SongTagSort::OrderNo, Order::Asc, 1, PerPage::TwentyFive);
 
@@ -169,10 +169,10 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $repository->save($this->createSongTag($this->generateUuid(), '派生曲', 10));
-        $repository->save($this->createSongTag($this->generateUuid(), 'ライブ披露曲', 20));
+        $repository->save($this->createSongTag($this->generateUuid(), 'テストタグA', 10));
+        $repository->save($this->createSongTag($this->generateUuid(), 'テストタグB', 20));
 
-        $criteria = new SongTagSearchCriteria(new Some('派生'));
+        $criteria = new SongTagSearchCriteria(new Some('テストタグA'));
 
         $this->assertSame(1, $repository->maxPage($criteria));
     }
@@ -190,7 +190,7 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $songTagId = $this->generateUuid();
 
-        $this->storeSongTags($this->createSongTag($songTagId, '派生曲', 1));
+        $this->storeSongTags($this->createSongTag($songTagId, 'テストタグA', 1));
         $this->storeSongs($this->createSong(
             $this->generateUuid(),
             '曲名',
@@ -214,7 +214,7 @@ class SongTagRepositoryTest extends DatabaseTestCase
     {
         $songTagId = $this->generateUuid();
 
-        $this->storeSongTags($this->createSongTag($songTagId, '派生曲', 1));
+        $this->storeSongTags($this->createSongTag($songTagId, 'テストタグA', 1));
 
         $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($songTagId)));
         $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($this->generateUuid())));

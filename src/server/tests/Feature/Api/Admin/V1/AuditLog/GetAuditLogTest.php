@@ -26,13 +26,13 @@ class GetAuditLogTest extends DatabaseTestCase
     public function found(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $auditLogId = $this->generateUuid();
         $targetId = $this->generateUuid();
 
         $snapshot = [
-            'title' => '描き続けた君へ',
+            'title' => 'テスト楽曲',
             'tags' => ['オリジナル', '感動'],
             'meta' => ['version' => 3, 'isDisplay' => true],
         ];
@@ -55,12 +55,12 @@ class GetAuditLogTest extends DatabaseTestCase
         $this->assertArrayHasKey('auditLog', $response);
         $this->assertSame($auditLogId, $response['auditLog']['auditLogId']);
         $this->assertSame($actorId, $response['auditLog']['adminUserId']);
-        $this->assertSame('監査太郎', $response['auditLog']['adminUserName']);
+        $this->assertSame('監査テストユーザーA', $response['auditLog']['adminUserName']);
         $this->assertSame('update', $response['auditLog']['action']);
         $this->assertSame('Song', $response['auditLog']['targetType']);
         $this->assertSame($targetId, $response['auditLog']['targetId']);
         $this->assertArrayHasKey('createdAt', $response['auditLog']);
-        $this->assertSame('描き続けた君へ', $response['auditLog']['snapshot']['title']);
+        $this->assertSame('テスト楽曲', $response['auditLog']['snapshot']['title']);
         $this->assertSame(['オリジナル', '感動'], $response['auditLog']['snapshot']['tags']);
         $this->assertSame(3, $response['auditLog']['snapshot']['meta']['version']);
         $this->assertTrue($response['auditLog']['snapshot']['meta']['isDisplay']);
@@ -70,7 +70,7 @@ class GetAuditLogTest extends DatabaseTestCase
     public function foundForRelease(): void
     {
         $actorId = $this->generateUuid();
-        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査太郎'));
+        $this->storeAdminUsers($this->createAdminUser($actorId, 'actor@example.com', Role::Privilege, name: '監査テストユーザーA'));
 
         $auditLogId = $this->generateUuid();
         $targetId = $this->generateUuid();
@@ -108,7 +108,7 @@ class GetAuditLogTest extends DatabaseTestCase
             AuditAction::Update,
             AuditTargetType::Song,
             $this->generateUuid(),
-            ['title' => '描き続けた君へ'],
+            ['title' => 'テスト楽曲'],
             new DateTimeImmutable('2026-04-02 10:00:00'),
         );
 

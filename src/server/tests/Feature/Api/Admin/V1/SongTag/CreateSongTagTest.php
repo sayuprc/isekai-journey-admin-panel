@@ -22,7 +22,7 @@ class CreateSongTagTest extends DatabaseTestCase
     {
         $this->withAuth()
             ->postJson(route(SongTagRouteMap::Create), [
-                'name' => '派生曲',
+                'name' => 'テストタグA',
             ])->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) => $json
@@ -30,7 +30,7 @@ class CreateSongTagTest extends DatabaseTestCase
                         'tag',
                         fn (AssertableJson $json) => $json
                             ->whereType('songTagId', 'string')
-                            ->where('name', '派生曲')
+                            ->where('name', 'テストタグA')
                             ->where('orderNo', 10),
                     ),
             );
@@ -40,15 +40,15 @@ class CreateSongTagTest extends DatabaseTestCase
     public function createFailsWhenNameAlreadyExists(): void
     {
         $this->app->make(SongTagRepository::class)->save(
-            $this->createSongTag($this->generateUuid(), '派生曲', 10),
+            $this->createSongTag($this->generateUuid(), 'テストタグA', 10),
         );
 
         $this->withAuth()
             ->postJson(route(SongTagRouteMap::Create), [
-                'name' => '派生曲',
+                'name' => 'テストタグA',
             ])->assertStatus(400)
             ->assertExactJson([
-                'message' => 'すでに使われている名前です "派生曲"',
+                'message' => 'すでに使われている名前です "テストタグA"',
             ]);
     }
 

@@ -31,7 +31,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->storeMedia(
             $this->createMedia(
                 $mediaId,
-                '描き続けた君へ MV',
+                'テストメディアMV',
                 'https://example.com/media',
                 MediaType::Video,
                 true,
@@ -42,7 +42,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(
             new UpdateInputData(
                 $mediaId,
-                '描き続けた君へ 配信アーカイブ',
+                'テストメディア配信アーカイブ',
                 'https://example.com/archive',
                 '2024-04-02',
                 MediaType::SocialPost->value,
@@ -55,7 +55,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $media = ModelsMedia::query()->first();
         $this->assertNotNull($media);
-        $this->assertSame('描き続けた君へ 配信アーカイブ', $media->title);
+        $this->assertSame('テストメディア配信アーカイブ', $media->title);
         $this->assertSame('https://example.com/archive', $media->url);
         $this->assertSame('2024-04-02', $media->published_at?->format('Y-m-d'));
         $this->assertSame(MediaType::SocialPost->value, $media->type);
@@ -64,7 +64,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Media, $mediaId);
-        $this->assertSame('描き続けた君へ 配信アーカイブ', $log['snapshot']['title']);
+        $this->assertSame('テストメディア配信アーカイブ', $log['snapshot']['title']);
         $this->assertSame(MediaType::SocialPost->value, $log['snapshot']['type']);
         $this->assertSame(MediaFormat::StreamArchive->value, $log['snapshot']['format']);
         $this->assertFalse($log['snapshot']['is_display']);

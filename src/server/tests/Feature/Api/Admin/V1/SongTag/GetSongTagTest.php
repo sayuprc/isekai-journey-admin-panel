@@ -21,7 +21,7 @@ class GetSongTagTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $this->app->make(SongTagRepository::class)->save($this->createSongTag($uuid, '派生曲', 1));
+        $this->app->make(SongTagRepository::class)->save($this->createSongTag($uuid, 'テストタグA', 1));
 
         $this->withAuth()
             ->get(route(SongTagRouteMap::Get, $uuid))
@@ -29,7 +29,7 @@ class GetSongTagTest extends DatabaseTestCase
             ->assertExactJson([
                 'tag' => [
                     'songTagId' => $uuid,
-                    'name' => '派生曲',
+                    'name' => 'テストタグA',
                     'orderNo' => 1,
                 ],
             ]);

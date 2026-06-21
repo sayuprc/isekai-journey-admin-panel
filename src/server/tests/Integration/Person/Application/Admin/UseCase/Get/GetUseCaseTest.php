@@ -19,7 +19,7 @@ class GetUseCaseTest extends DatabaseTestCase
     #[Test]
     public function getting(): void
     {
-        $person = $this->createPerson($this->generateUuid(), 'ヰ世界情緒', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
         $this->storePersons($person);
 
         $result = $this->getInstance()->handle(new GetInputData($person->personId->value));

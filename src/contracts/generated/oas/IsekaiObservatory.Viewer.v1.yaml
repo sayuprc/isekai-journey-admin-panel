@@ -141,7 +141,7 @@ components:
             $ref: '#/components/schemas/MediaSongSummary'
       examples:
         - mediaId: 11111111-1111-1111-1111-111111111111
-          title: 描き続けた君へ MV
+          title: テストメディアMV
           url: https://example.com/media/1
           publishedAt: '2024-03-01'
           type:
@@ -154,7 +154,7 @@ components:
             songCount: 1
           songs:
             - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-              title: 描き続けた君へ
+              title: テスト楽曲
               type:
                 name: オリジナル曲
                 value: 1
@@ -174,7 +174,7 @@ components:
       examples:
         - media:
             - mediaId: 11111111-1111-1111-1111-111111111111
-              title: 描き続けた君へ MV
+              title: テストメディアMV
               url: https://example.com/media/1
               publishedAt: '2024-03-01'
               type:
@@ -187,7 +187,7 @@ components:
                 songCount: 1
               songs:
                 - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-                  title: 描き続けた君へ
+                  title: テスト楽曲
                   type:
                     name: オリジナル曲
                     value: 1
@@ -216,7 +216,7 @@ components:
           $ref: '#/components/schemas/SongType'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          title: 描き続けた君へ
+          title: テスト楽曲
           type:
             name: オリジナル曲
             value: 1
@@ -295,22 +295,22 @@ components:
             $ref: '#/components/schemas/SongMediaSummary'
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-          title: 描き続けた君へ
-          description: 楽曲説明
+          title: テスト楽曲
+          description: テスト楽曲説明
           type:
             name: オリジナル曲
             value: 1
           counts:
             mediaCount: 1
           lyricists:
-            - 作詞者
+            - テスト作詞者
           composers:
-            - 作曲者
+            - テスト作曲者
           arrangers:
-            - 編曲者
+            - テスト編曲者
           media:
             - mediaId: 11111111-1111-1111-1111-111111111111
-              title: 描き続けた君へ MV
+              title: テストメディアMV
               type:
                 name: 動画
                 value: 1
@@ -334,22 +334,22 @@ components:
       examples:
         - songs:
             - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
-              title: 描き続けた君へ
-              description: 楽曲説明
+              title: テスト楽曲
+              description: テスト楽曲説明
               type:
                 name: オリジナル曲
                 value: 1
               counts:
                 mediaCount: 1
               lyricists:
-                - 作詞者
+                - テスト作詞者
               composers:
-                - 作曲者
+                - テスト作曲者
               arrangers:
-                - 編曲者
+                - テスト編曲者
               media:
                 - mediaId: 11111111-1111-1111-1111-111111111111
-                  title: 描き続けた君へ MV
+                  title: テストメディアMV
                   type:
                     name: 動画
                     value: 1
@@ -379,7 +379,7 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
       examples:
         - mediaId: 11111111-1111-1111-1111-111111111111
-          title: 描き続けた君へ MV
+          title: テストメディアMV
           type:
             name: 動画
             value: 1

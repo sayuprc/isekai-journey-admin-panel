@@ -30,7 +30,7 @@ class SearchSongTagTest extends DatabaseTestCase
         $songTagId = $this->generateUuid();
 
         $this->storeSongTags(
-            $this->createSongTag($songTagId, '派生曲', 1),
+            $this->createSongTag($songTagId, 'テストタグA', 1),
         );
 
         $this->withAuth()
@@ -40,7 +40,7 @@ class SearchSongTagTest extends DatabaseTestCase
                 'tags' => [
                     [
                         'songTagId' => $songTagId,
-                        'name' => '派生曲',
+                        'name' => 'テストタグA',
                         'orderNo' => 1,
                     ],
                 ],
@@ -55,18 +55,18 @@ class SearchSongTagTest extends DatabaseTestCase
         $otherId = $this->generateUuid();
 
         $this->storeSongTags(
-            $this->createSongTag($matchedId, '派生曲', 1),
-            $this->createSongTag($otherId, 'ライブ披露曲', 2),
+            $this->createSongTag($matchedId, 'テストタグA', 1),
+            $this->createSongTag($otherId, 'テストタグB', 2),
         );
 
         $this->withAuth()
-            ->get(route(SongTagRouteMap::Search, ['name' => '派生']))
+            ->get(route(SongTagRouteMap::Search, ['name' => 'テストタグA']))
             ->assertStatus(200)
             ->assertExactJson([
                 'tags' => [
                     [
                         'songTagId' => $matchedId,
-                        'name' => '派生曲',
+                        'name' => 'テストタグA',
                         'orderNo' => 1,
                     ],
                 ],
@@ -80,7 +80,7 @@ class SearchSongTagTest extends DatabaseTestCase
         $songTagId = $this->generateUuid();
 
         $this->storeSongTags(
-            $this->createSongTag($songTagId, '派生曲', 1),
+            $this->createSongTag($songTagId, 'テストタグA', 1),
         );
 
         $this->withAuth()

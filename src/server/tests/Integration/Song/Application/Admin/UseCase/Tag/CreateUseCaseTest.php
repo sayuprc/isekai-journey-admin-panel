@@ -23,19 +23,19 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function create(): void
     {
-        $result = $this->getInstance()->handle(new CreateInputData('派生曲'));
+        $result = $this->getInstance()->handle(new CreateInputData('テストタグA'));
 
         $this->assertTrue($result->isOk());
 
         $tags = ModelsSongTag::query()->orderBy('order_no')->get();
         $this->assertCount(1, $tags);
-        $this->assertSame('派生曲', $tags->first()->name);
+        $this->assertSame('テストタグA', $tags->first()->name);
         $this->assertSame(10, $tags->first()->order_no);
 
         $tagId = $this->toUuid($tags->first()->song_tag_id);
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::SongTag, $tagId);
-        $this->assertSame('派生曲', $log['snapshot']['name']);
+        $this->assertSame('テストタグA', $log['snapshot']['name']);
     }
 
     #[Test]
@@ -45,13 +45,13 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->createSongTag($this->generateUuid(), '既存タグ', 40),
         );
 
-        $result = $this->getInstance()->handle(new CreateInputData('派生曲'));
+        $result = $this->getInstance()->handle(new CreateInputData('テストタグA'));
 
         $this->assertTrue($result->isOk());
 
         $tags = ModelsSongTag::query()->orderBy('order_no')->get();
         $this->assertCount(2, $tags);
-        $this->assertSame('派生曲', $tags->last()->name);
+        $this->assertSame('テストタグA', $tags->last()->name);
         $this->assertSame(50, $tags->last()->order_no);
     }
 

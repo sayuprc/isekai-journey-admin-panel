@@ -28,18 +28,18 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->storeSongTags($this->createSongTag($uuid, '旧タグ', 1));
 
-        $result = $this->getInstance()->handle(new UpdateInputData($uuid, '派生曲', 2));
+        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'テストタグA', 2));
 
         $this->assertTrue($result->isOk());
 
         $tags = $this->app->make(SongTagRepositoryInterface::class)->all();
         $this->assertCount(1, $tags);
-        $this->assertSame('派生曲', array_first($tags)->name->value);
+        $this->assertSame('テストタグA', array_first($tags)->name->value);
         $this->assertSame(2, array_first($tags)->orderNo->value);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::SongTag, $uuid);
-        $this->assertSame('派生曲', $log['snapshot']['name']);
+        $this->assertSame('テストタグA', $log['snapshot']['name']);
     }
 
     #[Test]
@@ -47,7 +47,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($uuid, '派生曲', 2));
+        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'テストタグA', 2));
 
         $this->assertTrue($result->isErr());
     }

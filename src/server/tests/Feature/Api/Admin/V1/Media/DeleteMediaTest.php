@@ -26,7 +26,7 @@ class DeleteMediaTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $repository = $this->app->make(MediaRepository::class);
-        $media = $this->createMedia($uuid, '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
+        $media = $this->createMedia($uuid, 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
         $repository->save($media);
 
         $this->withAuth()
@@ -42,7 +42,7 @@ class DeleteMediaTest extends DatabaseTestCase
         $mediaId = $this->generateUuid();
 
         $repository = $this->app->make(MediaRepository::class);
-        $media = $this->createMedia($mediaId, '描き続けた君へ MV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
+        $media = $this->createMedia($mediaId, 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
         $repository->save($media);
 
         $this->app->make(SongRepository::class)->save(

@@ -26,7 +26,7 @@ model MediaFormat {
 
 @example(#{
   mediaId: "11111111-1111-1111-1111-111111111111",
-  title: "描き続けた君へ MV",
+  title: "テストメディアMV",
   url: "https://example.com/media/1",
   publishedAt: "2024-03-01",
   type: #{ name: "動画", value: MediaTypeValue.video },
@@ -35,7 +35,7 @@ model MediaFormat {
   songs: #[
     #{
       songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-      title: "描き続けた君へ",
+      title: "テスト楽曲",
       type: #{ name: "オリジナル曲", value: SongTypeValue.original },
     }
   ],
@@ -58,7 +58,7 @@ model MediaRelationCounts {
 
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
-  title: "描き続けた君へ",
+  title: "テスト楽曲",
   type: #{ name: "オリジナル曲", value: SongTypeValue.original },
 })
 model MediaSongSummary {

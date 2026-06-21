@@ -45,8 +45,8 @@ class SongAssemblerTest extends TestCase
     public function canAssemble(): void
     {
         $uuid = $this->generateUuid();
-        $title = '描き続けた君へ';
-        $description = 'オリジナル楽曲';
+        $title = 'テスト楽曲';
+        $description = 'テスト楽曲説明';
         $type = SongType::Original;
         $orderNo = 1;
 
@@ -75,9 +75,9 @@ class SongAssemblerTest extends TestCase
                 return $idValues === $expectedIds;
             })
             ->andReturn([
-                new Person(PersonId::reconstruct($lyricistId), PersonName::reconstruct('作詞者'), OrderNo::reconstruct(1)),
-                new Person(PersonId::reconstruct($composerId), PersonName::reconstruct('作曲者'), OrderNo::reconstruct(1)),
-                new Person(PersonId::reconstruct($arrangerId), PersonName::reconstruct('編曲者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($lyricistId), PersonName::reconstruct('テスト作詞者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($composerId), PersonName::reconstruct('テスト作曲者'), OrderNo::reconstruct(1)),
+                new Person(PersonId::reconstruct($arrangerId), PersonName::reconstruct('テスト編曲者'), OrderNo::reconstruct(1)),
             ])
             ->once();
 
@@ -91,7 +91,7 @@ class SongAssemblerTest extends TestCase
         $this->assertSame($orderNo, $assembled->orderNo);
         $this->assertCount(3, $assembled->persons);
         $this->assertSame($lyricistId, $assembled->persons[0]->personId);
-        $this->assertSame('作詞者', $assembled->persons[0]->name);
+        $this->assertSame('テスト作詞者', $assembled->persons[0]->name);
         $this->assertSame(SongPersonRole::Lyricist, $assembled->persons[0]->role);
         $this->assertSame($composerId, $assembled->persons[1]->personId);
         $this->assertSame(SongPersonRole::Composer, $assembled->persons[1]->role);

@@ -25,16 +25,16 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function create(): void
     {
-        $person1 = $this->createPerson($this->generateUuid(), '作詞者', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '作曲者', 1);
-        $person3 = $this->createPerson($this->generateUuid(), '編曲者', 1);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト作詞者', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト作曲者', 1);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト編曲者', 1);
 
         $this->storePersons($person1, $person2, $person3);
 
         $result = $this->getInstance()->handle(
             new CreateInputData(
-                '描き続けた君へ',
-                'オリジナル楽曲',
+                'テスト楽曲',
+                'テスト楽曲説明',
                 'https://example.com/lyrics',
                 SongType::Original->value,
                 true,
@@ -52,8 +52,8 @@ class CreateUseCaseTest extends DatabaseTestCase
         $songs = Song::query()->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
-        $this->assertSame('描き続けた君へ', $song->title);
-        $this->assertSame('オリジナル楽曲', $song->description);
+        $this->assertSame('テスト楽曲', $song->title);
+        $this->assertSame('テスト楽曲説明', $song->description);
         $this->assertSame('https://example.com/lyrics', $song->lyrics_link);
         $this->assertSame(SongType::Original->value, $song->type);
         $this->assertTrue($song->is_display);
@@ -72,7 +72,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $songId = $this->toUuid($song->song_id);
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::Song, $songId);
-        $this->assertSame('描き続けた君へ', $log['snapshot']['title']);
+        $this->assertSame('テスト楽曲', $log['snapshot']['title']);
         $this->assertCount(3, $log['snapshot']['persons']);
     }
 
