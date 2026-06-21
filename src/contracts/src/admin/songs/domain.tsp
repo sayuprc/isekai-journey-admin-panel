@@ -1,19 +1,15 @@
-import "../lib";
+import "../../shared";
+import "../../packages/media";
+import "../../packages/song";
 import "../media";
 import "../persons";
 import "../song-tags";
 
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Media;
+using IsekaiObservatory.Packages.Song;
+
 namespace IsekaiObservatory.Admin;
-
-@doc("楽曲ID")
-scalar songId extends uuid;
-
-@doc("楽曲名")
-@minLength(1)
-scalar title extends string;
-
-@doc("楽曲の説明")
-scalar description extends string;
 
 @doc("歌詞リンク")
 @format("uri")
@@ -61,22 +57,6 @@ model Song {
   persons: SongPerson[];
   tags: SongAttachedTag[];
   media: SongLinkedMedia[];
-}
-
-@doc("楽曲種別名")
-@minLength(1)
-scalar songTypeName extends string;
-
-@doc("楽曲種別の値")
-enum SongTypeValue {
-  Original: 1,
-  Cover: 2,
-}
-
-@example(#{ name: "オリジナル曲", value: SongTypeValue.Original })
-model SongType {
-  name: songTypeName;
-  value: SongTypeValue;
 }
 
 @example(#{

@@ -2,6 +2,8 @@ import "@typespec/http";
 
 using Http;
 
+namespace IsekaiObservatory.Shared;
+
 model Ok<T> {
   @statusCode _: 200;
   @body body: T;
@@ -34,10 +36,12 @@ model Unprocessable {
   @body body: ValidationError;
 }
 
+@friendlyName("ValidationError")
 model ValidationError {
   errors: ValidationErrorDetail[];
 }
 
+@friendlyName("ValidationErrorDetail")
 model ValidationErrorDetail {
   field: string;
   message: string;
@@ -55,6 +59,7 @@ model GatewayTimeout {
   @statusCode _: 504;
 }
 
+@friendlyName("ErrorResponse")
 model ErrorResponse {
   message: string;
 }

@@ -1,5 +1,8 @@
 import "@typespec/http";
 import "@typespec/versioning";
+import "../packages/media";
+import "../packages/song";
+import "../shared";
 import "./admin-users";
 import "./audit-logs";
 import "./auth";

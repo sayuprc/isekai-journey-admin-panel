@@ -1,3 +1,9 @@
+import "../../shared";
+import "../../packages/song";
+
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Song;
+
 namespace IsekaiObservatory.Admin;
 
 model SongSearchResponse {

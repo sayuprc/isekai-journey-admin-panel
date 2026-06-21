@@ -2011,6 +2011,9 @@ components:
           $ref: '#/components/schemas/mediaFormatName'
         value:
           $ref: '#/components/schemas/MediaFormatValue'
+      examples:
+        - name: MV
+          value: 1
     MediaFormatValue:
       type: integer
       format: int32
@@ -2021,6 +2024,7 @@ components:
         - 4
         - 5
         - 99
+      description: メディア形式の値
     MediaGetResponse:
       type: object
       required:
@@ -2072,6 +2076,9 @@ components:
           $ref: '#/components/schemas/mediaTypeName'
         value:
           $ref: '#/components/schemas/MediaTypeValue'
+      examples:
+        - name: 動画
+          value: 1
     MediaTypeValue:
       type: integer
       format: int32
@@ -2081,6 +2088,7 @@ components:
         - 3
         - 4
         - 99
+      description: メディア種別の値
     MediaUpdateRequest:
       type: object
       required:

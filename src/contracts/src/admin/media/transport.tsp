@@ -1,3 +1,7 @@
+import "../../packages/media";
+
+using IsekaiObservatory.Packages.Media;
+
 namespace IsekaiObservatory.Admin;
 
 model MediaSearchResponse {
