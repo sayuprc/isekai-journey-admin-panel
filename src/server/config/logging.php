@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Logging\GoogleCloudLoggingFormatter;
+use App\Logging\GoogleCloudTraceProcessor;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -98,11 +100,20 @@ return [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
-            'formatter' => env('LOG_STDERR_FORMATTER'),
+            // Cloud Run の stderr を Cloud Logging が構造化ログとして解釈できるよう、
+            // 既定で severity / message / time を JSON 出力する。env で上書き可能。
+            'formatter' => env('LOG_STDERR_FORMATTER', GoogleCloudLoggingFormatter::class),
             'with' => [
                 'stream' => 'php://stderr',
             ],
-            'processors' => [PsrLogMessageProcessor::class],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                // Cloud Run のリクエスト単位でログをグルーピングするためトレース情報を付与する。
+                [
+                    'processor' => GoogleCloudTraceProcessor::class,
+                    'with' => ['projectId' => env('GOOGLE_CLOUD_PROJECT', '')],
+                ],
+            ],
         ],
 
         'syslog' => [

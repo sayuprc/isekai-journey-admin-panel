@@ -18,4 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->remove(ConvertEmptyStringsToNull::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // API のみのアプリのため、Accept ヘッダに依存せず常に JSON で例外を返す
+        $exceptions->shouldRenderJsonWhen(fn (): bool => true);
     })->create();
