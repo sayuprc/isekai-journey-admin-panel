@@ -50,7 +50,8 @@
       "AdminUser\\": "packages/AdminUser/",
       "Auth\\": "packages/Auth/",
       "Tools\\": "tools/",
-      "OpenAPI\\Client\\": "Generated/lib/"
+      "OpenAPI\\Admin\\Client\\": "Generated/Admin/lib/",
+      "OpenAPI\\Viewer\\Client\\": "Generated/Viewer/lib/"
     },
     "files": [
       "app/helpers.php"

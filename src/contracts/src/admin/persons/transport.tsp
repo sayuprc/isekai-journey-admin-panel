@@ -1,3 +1,7 @@
+import "../../shared";
+
+using IsekaiObservatory.Shared;
+
 namespace IsekaiObservatory.Admin;
 
 model PersonListResponse {

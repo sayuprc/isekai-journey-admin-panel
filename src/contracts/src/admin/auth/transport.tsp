@@ -1,8 +1,8 @@
 import "@typespec/http";
-import "../lib";
+import "../../shared";
 import "../admin-users";
 
-using Http;
+using IsekaiObservatory.Shared;
 
 namespace IsekaiObservatory.Admin;
 

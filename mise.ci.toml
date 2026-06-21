@@ -59,22 +59,6 @@ run = "docker compose up -d php mysql"
 description = "CI 環境で composer install を実行する"
 run = "docker compose exec -T php composer install -n --prefer-dist"
 
-[tasks."api:generate"]
-description = "CI 環境でコード生成を行い、差分をチェックする"
-run = '''
-docker run --rm -u $(id -u):$(id -g) -v ".:/local" $OPENAPI_IMAGE generate \
-  -i /local/src/contracts/generated/oas/${ADMIN_OAS_FILE} \
-  -g php \
-  -t /local/src/server/tools/openapi-generator/templates \
-  -o /local/src/server/Generated
-
-if [ -n "$(git status --porcelain)" ]; then
-  echo "自動生成コードに差分があります"
-  git status
-  exit 1
-fi
-'''
-
 [tasks."setup:env"]
 description = "CI 環境の環境変数をセットアップする"
 run = '''

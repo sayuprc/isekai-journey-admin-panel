@@ -1,5 +1,7 @@
 import "@typespec/http";
+import "../../shared";
 
+using IsekaiObservatory.Shared;
 using Http;
 
 namespace IsekaiObservatory.Viewer;

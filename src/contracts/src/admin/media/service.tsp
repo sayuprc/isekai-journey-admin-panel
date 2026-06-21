@@ -1,7 +1,10 @@
 import "@typespec/http";
 import "../auth";
-import "../lib";
+import "../../packages/media";
+import "../../shared";
 
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Media;
 using Http;
 
 namespace IsekaiObservatory.Admin;

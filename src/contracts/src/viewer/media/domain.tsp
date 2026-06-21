@@ -1,42 +1,24 @@
+import "../../packages/media";
+import "../../packages/song";
+
+using IsekaiObservatory.Packages.Media;
+using IsekaiObservatory.Packages.Song;
+
 namespace IsekaiObservatory.Viewer;
-
-@doc("メディアURL")
-@format("uri")
-scalar mediaUrl extends string;
-
-@doc("メディア形式名")
-@minLength(1)
-scalar mediaFormatName extends string;
-
-@doc("メディア形式の値")
-enum MediaFormatValue {
-  mv: 1,
-  audioVideo: 2,
-  streamArchive: 3,
-  shortVideo: 4,
-  liveClip: 5,
-  other: 99,
-}
-
-@example(#{ name: "MV", value: MediaFormatValue.mv })
-model MediaFormat {
-  name: mediaFormatName;
-  value: MediaFormatValue;
-}
 
 @example(#{
   mediaId: "11111111-1111-1111-1111-111111111111",
   title: "テストメディアMV",
   url: "https://example.com/media/1",
   publishedAt: "2024-03-01",
-  type: #{ name: "動画", value: MediaTypeValue.video },
-  format: #{ name: "MV", value: MediaFormatValue.mv },
+  type: #{ name: "動画", value: MediaTypeValue.Video },
+  format: #{ name: "MV", value: MediaFormatValue.Mv },
   counts: #{ songCount: 1 },
   songs: #[
     #{
       songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
       title: "テスト楽曲",
-      type: #{ name: "オリジナル曲", value: SongTypeValue.original },
+      type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
     }
   ],
 })
@@ -59,7 +41,7 @@ model MediaRelationCounts {
 @example(#{
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "テスト楽曲",
-  type: #{ name: "オリジナル曲", value: SongTypeValue.original },
+  type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
 })
 model MediaSongSummary {
   songId: songId;

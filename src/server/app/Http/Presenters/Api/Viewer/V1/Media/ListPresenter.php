@@ -5,10 +5,21 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Viewer\V1\Media;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
+use DateTime;
 use Illuminate\Http\JsonResponse;
 use Media\Application\Viewer\Query\MediaListItem;
 use Media\Application\Viewer\Query\MediaSongSummary;
 use Media\Application\Viewer\UseCase\List\ListOutputData;
+use OpenAPI\Viewer\Client\Model\MediaFormat;
+use OpenAPI\Viewer\Client\Model\MediaFormatValue;
+use OpenAPI\Viewer\Client\Model\MediaListItem as OpenApiMediaListItem;
+use OpenAPI\Viewer\Client\Model\MediaListResponse;
+use OpenAPI\Viewer\Client\Model\MediaRelationCounts;
+use OpenAPI\Viewer\Client\Model\MediaSongSummary as OpenApiMediaSongSummary;
+use OpenAPI\Viewer\Client\Model\MediaType;
+use OpenAPI\Viewer\Client\Model\MediaTypeValue;
+use OpenAPI\Viewer\Client\Model\SongType;
+use OpenAPI\Viewer\Client\Model\SongTypeValue;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
@@ -23,10 +34,8 @@ class ListPresenter
     {
         [$data, $status] = $result->match(
             fn (ListOutputData $outputData) => [
-                array_filter([
-                    'media' => array_map($this->toArray(...), $outputData->media),
-                    'nextCursor' => $outputData->nextCursor,
-                ], static fn (mixed $value): bool => $value !== null),
+                new MediaListResponse(['next_cursor' => $outputData->nextCursor])
+                    ->setMedia(array_map($this->toOpenApiMediaListItem(...), $outputData->media)),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),
@@ -35,45 +44,24 @@ class ListPresenter
         return response()->json($data, $status);
     }
 
-    /**
-     * @return array{mediaId: string, title: string, url: string, publishedAt: string, type: array{name: string, value: 1|2|3|4|99}, format: array{name: string, value: 1|2|3|4|5|99}, counts: array{songCount: int}, songs: array<array{songId: string, title: string, type: array{name: string, value: 1|2}}>}
-     */
-    private function toArray(MediaListItem $media): array
+    private function toOpenApiMediaListItem(MediaListItem $media): OpenApiMediaListItem
     {
-        $songs = array_map($this->toSongArray(...), $media->songs);
+        $songs = array_map($this->toOpenApiMediaSongSummary(...), $media->songs);
 
-        return [
-            'mediaId' => $media->mediaId,
-            'title' => $media->title,
-            'url' => $media->url,
-            'publishedAt' => $media->publishedAt->format('Y-m-d'),
-            'type' => [
-                'name' => $media->type->getName(),
-                'value' => $media->type->value,
-            ],
-            'format' => [
-                'name' => $media->format->getName(),
-                'value' => $media->format->value,
-            ],
-            'counts' => [
-                'songCount' => count($songs),
-            ],
-            'songs' => $songs,
-        ];
+        return new OpenApiMediaListItem()->setMediaId($media->mediaId)
+            ->setTitle($media->title)
+            ->setUrl($media->url)
+            ->setPublishedAt(DateTime::createFromImmutable($media->publishedAt))
+            ->setType(new MediaType()->setName($media->type->getName())->setValue(MediaTypeValue::from($media->type->value)))
+            ->setFormat(new MediaFormat()->setName($media->format->getName())->setValue(MediaFormatValue::from($media->format->value)))
+            ->setCounts(new MediaRelationCounts()->setSongCount(count($songs)))
+            ->setSongs($songs);
     }
 
-    /**
-     * @return array{songId: string, title: string, type: array{name: string, value: 1|2}}
-     */
-    private function toSongArray(MediaSongSummary $song): array
+    private function toOpenApiMediaSongSummary(MediaSongSummary $song): OpenApiMediaSongSummary
     {
-        return [
-            'songId' => $song->songId,
-            'title' => $song->title,
-            'type' => [
-                'name' => $song->type->getName(),
-                'value' => $song->type->value,
-            ],
-        ];
+        return new OpenApiMediaSongSummary()->setSongId($song->songId)
+            ->setTitle($song->title)
+            ->setType(new SongType()->setName($song->type->getName())->setValue(SongTypeValue::from($song->type->value)));
     }
 }

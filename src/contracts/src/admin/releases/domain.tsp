@@ -1,5 +1,9 @@
-import "../lib";
+import "../../shared";
+import "../../packages/song";
 import "../songs";
+
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Song;
 
 namespace IsekaiObservatory.Admin;
 

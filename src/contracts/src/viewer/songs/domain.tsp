@@ -1,31 +1,12 @@
+import "../../shared";
+import "../../packages/media";
+import "../../packages/song";
+
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Media;
+using IsekaiObservatory.Packages.Song;
+
 namespace IsekaiObservatory.Viewer;
-
-@doc("楽曲ID")
-@format("uuid")
-scalar songId extends string;
-
-@doc("楽曲名")
-@minLength(1)
-scalar title extends string;
-
-@doc("楽曲の説明")
-scalar description extends string;
-
-@doc("楽曲種別名")
-@minLength(1)
-scalar songTypeName extends string;
-
-@doc("楽曲種別の値")
-enum SongTypeValue {
-  original: 1,
-  cover: 2,
-}
-
-@example(#{ name: "オリジナル曲", value: SongTypeValue.original })
-model SongType {
-  name: songTypeName;
-  value: SongTypeValue;
-}
 
 model SongRelationCounts {
   // @doc("関連リリース数")
@@ -39,7 +20,7 @@ model SongRelationCounts {
   songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
   title: "テスト楽曲",
   description: "テスト楽曲説明",
-  type: #{ name: "オリジナル曲", value: SongTypeValue.original },
+  type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
   counts: #{
     // releaseCount: 1,
     mediaCount: 1,
@@ -51,8 +32,8 @@ model SongRelationCounts {
     #{
       mediaId: "11111111-1111-1111-1111-111111111111",
       title: "テストメディアMV",
-      type: #{ name: "動画", value: MediaTypeValue.video },
-      format: #{ name: "MV", value: MediaFormatValue.mv },
+      type: #{ name: "動画", value: MediaTypeValue.Video },
+      format: #{ name: "MV", value: MediaFormatValue.Mv },
       publishedAt: "2024-03-01",
     }
   ],
@@ -69,42 +50,11 @@ model SongListItem {
   media: SongMediaSummary[];
 }
 
-@doc("関連メディアID")
-@format("uuid")
-scalar mediaId extends string;
-
-@doc("関連メディアタイトル")
-@minLength(1)
-scalar mediaTitle extends string;
-
-@doc("関連メディア種別名")
-@minLength(1)
-scalar mediaTypeName extends string;
-
-@doc("関連メディア種別の値")
-enum MediaTypeValue {
-  video: 1,
-  article: 2,
-  socialPost: 3,
-  officialPage: 4,
-  other: 99,
-}
-
-@example(#{ name: "動画", value: MediaTypeValue.video })
-model MediaType {
-  name: mediaTypeName;
-  value: MediaTypeValue;
-}
-
-@doc("関連メディア公開日")
-@format("date")
-scalar mediaPublishedAt extends string;
-
 @example(#{
   mediaId: "11111111-1111-1111-1111-111111111111",
   title: "テストメディアMV",
-  type: #{ name: "動画", value: MediaTypeValue.video },
-  format: #{ name: "MV", value: MediaFormatValue.mv },
+  type: #{ name: "動画", value: MediaTypeValue.Video },
+  format: #{ name: "MV", value: MediaFormatValue.Mv },
   publishedAt: "2024-03-01",
 })
 model SongMediaSummary {

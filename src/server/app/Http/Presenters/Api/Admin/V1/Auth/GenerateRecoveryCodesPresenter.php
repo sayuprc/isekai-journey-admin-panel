@@ -7,7 +7,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Auth;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Auth\Application\Admin\UseCase\RecoveryCode\Generate\GenerateRecoveryCodesOutputData;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\GenerateRecoveryCodesResponse;
+use OpenAPI\Admin\Client\Model\GenerateRecoveryCodesResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 

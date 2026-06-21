@@ -1,4 +1,6 @@
-import "../lib";
+import "../../shared";
+
+using IsekaiObservatory.Shared;
 
 namespace IsekaiObservatory.Admin;
 

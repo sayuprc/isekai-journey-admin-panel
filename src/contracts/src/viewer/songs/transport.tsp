@@ -1,15 +1,13 @@
 import "@typespec/http";
-import "../../admin/lib/response.tsp";
+import "../../shared";
+import "../../packages/media";
+import "../../packages/song";
+
+using IsekaiObservatory.Shared;
+using IsekaiObservatory.Packages.Media;
+using IsekaiObservatory.Packages.Song;
 
 namespace IsekaiObservatory.Viewer;
-
-@doc("次ページを記すキー")
-scalar cursor extends string;
-
-@doc("1 度に取得する件数")
-@minValue(1)
-@maxValue(50)
-scalar limit extends int32;
 
 @example(#{
   songs: #[
@@ -17,7 +15,7 @@ scalar limit extends int32;
       songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4",
       title: "テスト楽曲",
       description: "テスト楽曲説明",
-      type: #{ name: "オリジナル曲", value: SongTypeValue.original },
+      type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
       counts: #{
         // releaseCount: 1,
         mediaCount: 1,
@@ -29,8 +27,8 @@ scalar limit extends int32;
         #{
           mediaId: "11111111-1111-1111-1111-111111111111",
           title: "テストメディアMV",
-          type: #{ name: "動画", value: MediaTypeValue.video },
-          format: #{ name: "MV", value: MediaFormatValue.mv },
+          type: #{ name: "動画", value: MediaTypeValue.Video },
+          format: #{ name: "MV", value: MediaFormatValue.Mv },
           publishedAt: "2024-03-01",
         }
       ],

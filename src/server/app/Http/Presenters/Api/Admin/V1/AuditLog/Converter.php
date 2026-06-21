@@ -6,10 +6,10 @@ namespace App\Http\Presenters\Api\Admin\V1\AuditLog;
 
 use DateTime;
 use DateTimeInterface;
-use OpenAPI\Client\Model\AuditAction as OpenApiAuditAction;
-use OpenAPI\Client\Model\AuditLog as OpenApiAuditLog;
-use OpenAPI\Client\Model\AuditLogSummary as OpenApiAuditLogSummary;
-use OpenAPI\Client\Model\AuditTargetType as OpenApiAuditTargetType;
+use OpenAPI\Admin\Client\Model\AuditAction as OpenApiAuditAction;
+use OpenAPI\Admin\Client\Model\AuditLog as OpenApiAuditLog;
+use OpenAPI\Admin\Client\Model\AuditLogSummary as OpenApiAuditLogSummary;
+use OpenAPI\Admin\Client\Model\AuditTargetType as OpenApiAuditTargetType;
 use Support\UseCase\AuditLog\Query\AuditLogDetail;
 use Support\UseCase\AuditLog\Query\AuditLogSummary;
 

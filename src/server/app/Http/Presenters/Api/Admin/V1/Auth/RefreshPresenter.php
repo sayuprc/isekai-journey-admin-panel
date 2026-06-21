@@ -6,7 +6,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Auth;
 
 use Auth\Application\Admin\UseCase\Refresh\RefreshOutputData;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\RefreshTokenResponse;
+use OpenAPI\Admin\Client\Model\RefreshTokenResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 

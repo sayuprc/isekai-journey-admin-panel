@@ -7,7 +7,7 @@ namespace App\Http\Presenters\Api\Admin\V1\Media;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use Media\Application\Admin\UseCase\Update\UpdateOutputData;
-use OpenAPI\Client\Model\MediaUpdateResponse;
+use OpenAPI\Admin\Client\Model\MediaUpdateResponse;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 

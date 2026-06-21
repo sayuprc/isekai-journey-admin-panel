@@ -197,14 +197,32 @@ run = "docker compose exec -T php composer dump-autoload"
 
 [tasks."api:generate"]
 description = "OAS からサーバーのコードを生成する"
+depends = ["api:generate:*"]
+
+[tasks."api:generate:admin"]
+description = "OAS から Admin のコードを生成する"
 run = '''
-rm -rf ./src/server/Generated
+rm -rf ./src/server/Generated/Admin
 
 docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
   -i /local/src/contracts/generated/oas/${ADMIN_OAS_FILE} \
   -g php \
   -t /local/src/server/tools/openapi-generator/templates \
-  -o /local/src/server/Generated
+  -o /local/src/server/Generated/Admin \
+  -p invokerPackage=OpenAPI\\Admin\\Client
+'''
+
+[tasks."api:generate:viewer"]
+description = "OAS から Viewer のコードを生成する"
+run = '''
+rm -rf ./src/server/Generated/Viewer
+
+docker run --rm -u {{vars.uid}}:{{vars.gid}} -v ".:/local" ${OPENAPI_IMAGE} generate \
+  -i /local/src/contracts/generated/oas/${VIEWER_OAS_FILE} \
+  -g php \
+  -t /local/src/server/tools/openapi-generator/templates \
+  -o /local/src/server/Generated/Viewer \
+  -p invokerPackage=OpenAPI\\Viewer\\Client
 '''
 
 [tasks."api:phpstan"]

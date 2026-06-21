@@ -10,11 +10,11 @@ use AdminUser\Domain\Models\Role;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeImmutable;
-use OpenAPI\Client\Model\AdminUser as OpenApiAdminUser;
-use OpenAPI\Client\Model\Permission as OpenApiPermission;
-use OpenAPI\Client\Model\PermissionValue;
-use OpenAPI\Client\Model\Role as OpenApiRole;
-use OpenAPI\Client\Model\RoleValue;
+use OpenAPI\Admin\Client\Model\AdminUser as OpenApiAdminUser;
+use OpenAPI\Admin\Client\Model\Permission as OpenApiPermission;
+use OpenAPI\Admin\Client\Model\PermissionValue;
+use OpenAPI\Admin\Client\Model\Role as OpenApiRole;
+use OpenAPI\Admin\Client\Model\RoleValue;
 
 class Converter
 {

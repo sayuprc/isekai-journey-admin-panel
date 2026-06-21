@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\SongTag;
 
-use OpenAPI\Client\Model\SongTag as OpenApiSongTag;
+use OpenAPI\Admin\Client\Model\SongTag as OpenApiSongTag;
 use Song\Domain\Models\Tag\SongTag;
 
 class Converter

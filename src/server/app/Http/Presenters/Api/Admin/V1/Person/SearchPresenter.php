@@ -6,9 +6,8 @@ namespace App\Http\Presenters\Api\Admin\V1\Person;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Client\Model\PersonSearchResponse;
+use OpenAPI\Admin\Client\Model\PersonSearchResponse;
 use Person\Application\Admin\UseCase\Search\SearchOutputData;
-use Person\Domain\Models\Person;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
@@ -27,12 +26,9 @@ class SearchPresenter
     {
         [$data, $status] = $result->match(
             fn (SearchOutputData $outputData) => [
-                new PersonSearchResponse()->setPersons(
-                    array_map(
-                        fn (Person $person) => $this->converter->toOpenApiPerson($person),
-                        $outputData->persons,
-                    ),
-                )->setMaxPage($outputData->maxPage),
+                new PersonSearchResponse()
+                    ->setPersons(array_map($this->converter->toOpenApiPerson(...), $outputData->persons))
+                    ->setMaxPage($outputData->maxPage),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),

@@ -242,7 +242,7 @@ components:
         - 3
         - 4
         - 99
-      description: 関連メディア種別の値
+      description: メディア種別の値
     SiteStatsResponse:
       type: object
       required:
@@ -439,19 +439,19 @@ components:
     mediaId:
       type: string
       format: uuid
-      description: 関連メディアID
+      description: メディアID
     mediaPublishedAt:
       type: string
       format: date
-      description: 関連メディア公開日
+      description: 公開日
     mediaTitle:
       type: string
       minLength: 1
-      description: 関連メディアタイトル
+      description: メディアタイトル
     mediaTypeName:
       type: string
       minLength: 1
-      description: 関連メディア種別名
+      description: メディア種別名
     mediaUrl:
       type: string
       format: uri
