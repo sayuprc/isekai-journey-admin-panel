@@ -7,8 +7,9 @@ paths:
 
 ## 実行環境
 
-- 依存管理とスクリプト実行には `bun` を使う
-- `src/` は `admin` / `viewer` / `contracts` を束ねる Bun workspace のルート
+- 依存管理には `pnpm` を使い、インストールは root から `mise run pnpm:install` を実行する
+- スクリプト実行には `bun` を使う
+- `src/` は `admin` / `viewer` / `contracts` を束ねる pnpm workspace のルート
 - 契約まわりの共通タスクはリポジトリ root の `mise.toml` で `mise run contract:<task>` として実行する
 - root の `contract:*` task は内部で `cd src && bun --filter contracts <script>` を使う
 - package script を直接叩く場合は `cd src && bun --filter contracts <script>` を使う
