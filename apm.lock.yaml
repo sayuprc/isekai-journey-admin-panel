@@ -1,6 +1,64 @@
 lockfile_version: '1'
-generated_at: '2026-04-26T01:59:24.805263+00:00'
-dependencies: []
+generated_at: '2026-06-23T13:15:26.088667+00:00'
+apm_version: 0.9.2
+dependencies:
+- repo_url: mattpocock/skills
+  host: github.com
+  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  package_type: apm_package
+  deployed_files:
+  - .agents/skills/ask-matt
+  - .agents/skills/codebase-design
+  - .agents/skills/diagnosing-bugs
+  - .agents/skills/domain-modeling
+  - .agents/skills/grill-me
+  - .agents/skills/grill-with-docs
+  - .agents/skills/grilling
+  - .agents/skills/handoff
+  - .agents/skills/improve-codebase-architecture
+  - .agents/skills/prototype
+  - .agents/skills/setup-matt-pocock-skills
+  - .agents/skills/tdd
+  - .agents/skills/teach
+  - .agents/skills/to-issues
+  - .agents/skills/to-prd
+  - .agents/skills/triage
+  - .agents/skills/writing-great-skills
+  - .claude/skills/ask-matt
+  - .claude/skills/codebase-design
+  - .claude/skills/diagnosing-bugs
+  - .claude/skills/domain-modeling
+  - .claude/skills/grill-me
+  - .claude/skills/grill-with-docs
+  - .claude/skills/grilling
+  - .claude/skills/handoff
+  - .claude/skills/improve-codebase-architecture
+  - .claude/skills/prototype
+  - .claude/skills/setup-matt-pocock-skills
+  - .claude/skills/tdd
+  - .claude/skills/teach
+  - .claude/skills/to-issues
+  - .claude/skills/to-prd
+  - .claude/skills/triage
+  - .claude/skills/writing-great-skills
+  - .github/skills/ask-matt
+  - .github/skills/codebase-design
+  - .github/skills/diagnosing-bugs
+  - .github/skills/domain-modeling
+  - .github/skills/grill-me
+  - .github/skills/grill-with-docs
+  - .github/skills/grilling
+  - .github/skills/handoff
+  - .github/skills/improve-codebase-architecture
+  - .github/skills/prototype
+  - .github/skills/setup-matt-pocock-skills
+  - .github/skills/tdd
+  - .github/skills/teach
+  - .github/skills/to-issues
+  - .github/skills/to-prd
+  - .github/skills/triage
+  - .github/skills/writing-great-skills
+  content_hash: sha256:0f141b68d72e78d13a9000f99542aaecd53ed7eea15f4611dbc2961ab79efcee
 local_deployed_files:
 - .agents/skills/code-reviewer
 - .agents/skills/orchestrator
