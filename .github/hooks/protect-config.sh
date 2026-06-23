@@ -17,6 +17,7 @@ PROTECTED_FILES=(
   "phparkitect.php"
   "eslint.config.mjs"
   "stylelint.config.mjs"
+  "biome.json"
   ".editorconfig"
   "lefthook.yml"
   "tsconfig.json"

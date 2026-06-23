@@ -140,6 +140,78 @@ case "$file" in
     fi
     ;;
 
+  */src/viewer/*.ts|*/src/viewer/*.tsx|*/src/viewer/*.js|*/src/viewer/*.jsx|*/src/viewer/*.mjs)
+    cd "$repo_root/src/viewer"
+
+    # Biome フォーマット + ESLint 自動修正
+    bunx biome format --write "$file" >/dev/null 2>&1 || true
+    bunx eslint --fix "$file" >/dev/null 2>&1 || true
+
+    # 残った違反をチェック
+    diag="$(bunx eslint "$file" 2>&1 | head -20)" || true
+
+    if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: $msg
+        }
+      }'
+    fi
+    ;;
+
+  */src/viewer/*.astro)
+    cd "$repo_root/src/viewer"
+
+    # Biome フォーマット
+    bunx biome format --write "$file" >/dev/null 2>&1 || true
+
+    # ESLint
+    bunx eslint --fix "$file" >/dev/null 2>&1 || true
+    diag_eslint="$(bunx eslint "$file" 2>&1 | head -10)" || true
+
+    # Stylelint
+    bunx stylelint --fix "$file" >/dev/null 2>&1 || true
+    diag_style="$(bunx stylelint "$file" 2>&1 | head -10)" || true
+
+    diag=""
+    if [ -n "$diag_eslint" ] && echo "$diag_eslint" | grep -qiE 'error|warning'; then
+      diag="$diag_eslint"
+    fi
+    if [ -n "$diag_style" ] && echo "$diag_style" | grep -qiE 'error|warning'; then
+      diag="${diag:+$diag\n}$diag_style"
+    fi
+
+    if [ -n "$diag" ]; then
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: $msg
+        }
+      }'
+    fi
+    ;;
+
+  */src/viewer/*.css)
+    cd "$repo_root/src/viewer"
+
+    # Biome フォーマット + Stylelint 自動修正
+    bunx biome format --write "$file" >/dev/null 2>&1 || true
+    bunx stylelint --fix "$file" >/dev/null 2>&1 || true
+
+    # 残った違反
+    diag="$(bunx stylelint "$file" 2>&1 | head -20)" || true
+
+    if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
+      jq -n --arg msg "$diag" '{
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext: $msg
+        }
+      }'
+    fi
+    ;;
+
   src/contracts/*.tsp|*/src/contracts/*.tsp)
     cd "$repo_root"
 

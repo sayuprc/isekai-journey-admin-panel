@@ -23,5 +23,6 @@
 ## 参照メモ
 
 - 背景メモ: `docs/references/harness-engineering-notes.md`
+- Agent 指示の置き場所: `docs/references/agent-instruction-placement.md`
 
 共通ルールをこの文書に増やしすぎず、詳細は下位文書へ分けます。
