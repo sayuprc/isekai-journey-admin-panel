@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Release\Application\Admin\UseCase\Create;
 
-use App\Models\Release\Release as ModelsRelease;
-use App\Models\Release\TrackEntry as ModelsTrackEntry;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Create\CreateInputData;
 use Release\Application\Admin\UseCase\Create\CreateUseCase;
@@ -47,14 +45,14 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertSame('観測された春', $result->unwrap()->release->title->value);
         $this->assertCount(1, $result->unwrap()->release->trackEntries->toGeneric());
 
-        $this->assertDatabaseHas(ModelsRelease::class, [
+        $this->assertDatabaseHas('releases', [
             'title' => '観測された春',
             'type' => ReleaseType::Album->value,
             'distribution_type' => ReleaseDistributionType::Digital->value,
             'description' => '',
             'is_display' => true,
         ]);
-        $this->assertDatabaseCount(ModelsTrackEntry::class, 1);
+        $this->assertDatabaseCount('release_track_entries', 1);
     }
 
     #[Test]

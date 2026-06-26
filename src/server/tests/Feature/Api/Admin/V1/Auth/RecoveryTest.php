@@ -6,9 +6,6 @@ namespace Tests\Feature\Api\Admin\V1\Auth;
 
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\AdminUser\AdminUserPasskey as ModelsAdminUserPasskey;
-use App\Models\AdminUser\RecoveryCode as ModelsRecoveryCode;
-use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\RecoveryCode\ConsumptionStatus;
@@ -23,6 +20,7 @@ use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Domain\Services\RecoveryCode\RecoveryCodeHasherInterface;
 use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
@@ -72,7 +70,7 @@ class RecoveryTest extends DatabaseTestCase
             );
 
         // 新しい passkey が追加され、既存の passkey も残っている
-        $this->assertSame(2, ModelsAdminUserPasskey::query()->count());
+        $this->assertSame(2, DB::table('admin_user_passkeys')->count());
         $this->assertNotNull(
             $this->app->make(AdminUserPasskeyRepositoryInterface::class)->findByCredentialId('new-credential-id'),
         );
@@ -80,12 +78,12 @@ class RecoveryTest extends DatabaseTestCase
             $this->app->make(AdminUserPasskeyRepositoryInterface::class)->findByCredentialId('credential-id'),
         );
 
-        $this->assertSame(1, AuthRefreshToken::query()->count());
+        $this->assertSame(1, DB::table('refresh_tokens')->count());
 
         // コードは消費済みになる
         $this->assertCount(0, $this->app->make(RecoveryCodeRepositoryInterface::class)
             ->findUnusedByAdminUserIdForUpdate(AdminUserId::reconstruct($adminUserId)));
-        $this->assertSame(ConsumptionStatus::Consumed->value, ModelsRecoveryCode::query()->first()?->status);
+        $this->assertSame(ConsumptionStatus::Consumed->value, (int)DB::table('admin_user_recovery_codes')->first()?->status);
 
         $log = $this->findAuditLog(AuditAction::RecoveryCodeUse, AuditTargetType::AdminUser, $adminUserId);
         $snapshot = $log['snapshot'];
@@ -114,7 +112,7 @@ class RecoveryTest extends DatabaseTestCase
         // 消費されたのは入力したコード A のみで、コード B は未使用のまま
         $this->assertSame(
             ConsumptionStatus::Consumed->value,
-            ModelsRecoveryCode::query()->find($this->toBin($codeAId))?->status,
+            (int)DB::table('admin_user_recovery_codes')->where('admin_user_recovery_code_id', $this->toBin($codeAId))->first()?->status,
         );
         $unusedCodes = $this->app->make(RecoveryCodeRepositoryInterface::class)
             ->findUnusedByAdminUserIdForUpdate(AdminUserId::reconstruct($adminUserId));
@@ -131,7 +129,7 @@ class RecoveryTest extends DatabaseTestCase
         $this->assertNull(
             $this->app->make(AdminUserPasskeyRepositoryInterface::class)->findByCredentialId('second-credential-id'),
         );
-        $this->assertSame(1, AuthRefreshToken::query()->count());
+        $this->assertSame(1, DB::table('refresh_tokens')->count());
 
         // 2 回目失敗後もコード B は消費されていない
         $this->assertCount(1, $this->app->make(RecoveryCodeRepositoryInterface::class)
@@ -155,7 +153,7 @@ class RecoveryTest extends DatabaseTestCase
                     ->etc(),
             );
 
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
     }
 
     #[Test]
@@ -191,8 +189,8 @@ class RecoveryTest extends DatabaseTestCase
             'credential' => ['id' => 'new-credential-id'],
         ])->assertStatus(401);
 
-        $this->assertSame(0, ModelsAdminUserPasskey::query()->count());
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('admin_user_passkeys')->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
@@ -210,10 +208,10 @@ class RecoveryTest extends DatabaseTestCase
             'credential' => ['id' => 'new-credential-id'],
         ])->assertStatus(401);
 
-        $this->assertSame(1, ModelsAdminUserPasskey::query()->count());
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(1, DB::table('admin_user_passkeys')->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
-        $this->assertSame(ConsumptionStatus::Unused->value, ModelsRecoveryCode::query()->first()?->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)DB::table('admin_user_recovery_codes')->first()?->status);
     }
 
     #[Test]

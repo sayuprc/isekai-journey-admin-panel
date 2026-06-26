@@ -15,8 +15,6 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterfa
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationToken\TokenHasherInterface;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\AdminUser\AdminUser as ModelsAdminUser;
-use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
@@ -24,6 +22,7 @@ use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
@@ -51,10 +50,10 @@ class RegisterStartTest extends DatabaseTestCase
                     ->etc(),
             );
 
-        $this->assertSame(0, ModelsAdminUser::query()->count());
-        $token = ModelsRegistrationToken::query()->first();
+        $this->assertSame(0, DB::table('admin_users')->count());
+        $token = DB::table('admin_user_registration_tokens')->first();
         $this->assertNotNull($token);
-        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$token->status);
     }
 
     #[Test]
@@ -69,10 +68,10 @@ class RegisterStartTest extends DatabaseTestCase
             'name' => '新規ユーザー',
         ])->assertStatus(400);
 
-        $this->assertSame(0, ModelsAdminUser::query()->count());
-        $token = ModelsRegistrationToken::query()->first();
+        $this->assertSame(0, DB::table('admin_users')->count());
+        $token = DB::table('admin_user_registration_tokens')->first();
         $this->assertNotNull($token);
-        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$token->status);
     }
 
     #[Test]
@@ -90,10 +89,10 @@ class RegisterStartTest extends DatabaseTestCase
             'name' => '新規ユーザー',
         ])->assertStatus(400);
 
-        $this->assertSame(1, ModelsAdminUser::query()->count());
-        $token = ModelsRegistrationToken::query()->first();
+        $this->assertSame(1, DB::table('admin_users')->count());
+        $token = DB::table('admin_user_registration_tokens')->first();
         $this->assertNotNull($token);
-        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$token->status);
     }
 
     #[Test]
@@ -107,10 +106,10 @@ class RegisterStartTest extends DatabaseTestCase
             'name' => '新規ユーザー',
         ])->assertStatus(422);
 
-        $this->assertSame(0, ModelsAdminUser::query()->count());
-        $token = ModelsRegistrationToken::query()->first();
+        $this->assertSame(0, DB::table('admin_users')->count());
+        $token = DB::table('admin_user_registration_tokens')->first();
         $this->assertNotNull($token);
-        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$token->status);
     }
 
     private function bindPasskeyAuthenticator(): void

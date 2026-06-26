@@ -14,10 +14,6 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenId;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationToken\TokenHasherInterface;
-use App\Models\AdminUser\AdminUser as ModelsAdminUser;
-use App\Models\AdminUser\AdminUserPasskey as ModelsAdminUserPasskey;
-use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
-use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
@@ -25,6 +21,7 @@ use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Route\AuthRouteMap;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
@@ -71,33 +68,33 @@ class RegisterFinishTest extends DatabaseTestCase
                 ])->etc(),
             );
 
-        $tokenRow = ModelsRegistrationToken::query()
+        $tokenRow = DB::table('admin_user_registration_tokens')
             ->where('admin_user_registration_token_id', $this->app->make(UuidConverterInterface::class)->toBin($tokenId))
             ->first();
         $this->assertNotNull($tokenRow);
-        $this->assertSame(ConsumptionStatus::Consumed->value, $tokenRow->status);
+        $this->assertSame(ConsumptionStatus::Consumed->value, (int)$tokenRow->status);
 
-        $userRow = ModelsAdminUser::query()->where('email', 'invitee@example.com')->first();
+        $userRow = DB::table('admin_users')->where('email', 'invitee@example.com')->first();
         $this->assertNotNull($userRow);
         $this->assertSame('新規ユーザー', $userRow->name);
-        $this->assertArrayNotHasKey('password', $userRow->getAttributes());
+        $this->assertArrayNotHasKey('password', (array)$userRow);
 
-        $passkeyRow = ModelsAdminUserPasskey::query()->first();
+        $passkeyRow = DB::table('admin_user_passkeys')->first();
         $this->assertNotNull($passkeyRow);
         $this->assertSame('credential-id', $passkeyRow->credential_id);
         $this->assertSame('user-handle', $passkeyRow->user_handle);
         $this->assertSame('00000000-0000-0000-0000-000000000000', $passkeyRow->aaguid);
-        $this->assertSame(['internal'], $passkeyRow->transports);
-        $this->assertTrue($passkeyRow->backup_eligible);
-        $this->assertFalse($passkeyRow->backup_state);
-        $this->assertSame(1, AuthRefreshToken::query()->count());
+        $this->assertSame(['internal'], json_decode((string)$passkeyRow->transports, true));
+        $this->assertSame(1, (int)$passkeyRow->backup_eligible);
+        $this->assertSame(0, (int)$passkeyRow->backup_state);
+        $this->assertSame(1, DB::table('refresh_tokens')->count());
 
         $converter = $this->app->make(UuidConverterInterface::class);
-        $adminUserId = $converter->toUuid($userRow->admin_user_id);
-        $passkeyId = $converter->toUuid($passkeyRow->admin_user_passkey_id);
-        $refreshTokenRow = AuthRefreshToken::query()->first();
+        $adminUserId = $converter->toUuid((string)$userRow->admin_user_id);
+        $passkeyId = $converter->toUuid((string)$passkeyRow->admin_user_passkey_id);
+        $refreshTokenRow = DB::table('refresh_tokens')->first();
         $this->assertNotNull($refreshTokenRow);
-        $refreshTokenId = $converter->toUuid($refreshTokenRow->refresh_token_id);
+        $refreshTokenId = $converter->toUuid((string)$refreshTokenRow->refresh_token_id);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Register, AuditTargetType::AdminUser, $adminUserId);
@@ -122,13 +119,13 @@ class RegisterFinishTest extends DatabaseTestCase
             'credential' => ['id' => 'credential-id'],
         ])->assertStatus(400);
 
-        $this->assertSame(0, ModelsAdminUser::query()->count());
-        $this->assertSame(0, ModelsAdminUserPasskey::query()->count());
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('admin_users')->count());
+        $this->assertSame(0, DB::table('admin_user_passkeys')->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
-        $token = ModelsRegistrationToken::query()->first();
+        $token = DB::table('admin_user_registration_tokens')->first();
         $this->assertNotNull($token);
-        $this->assertSame(ConsumptionStatus::Unused->value, $token->status);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$token->status);
     }
 
     private function startRegistration(): string

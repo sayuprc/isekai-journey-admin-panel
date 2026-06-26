@@ -6,8 +6,7 @@ namespace Tests\Feature\Console\Commands\AdminUser;
 
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\AdminUser\RegistrationToken;
-use App\Models\AdminUser\RegistrationTokenPermission;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -21,13 +20,13 @@ class InviteCommandTest extends DatabaseTestCase
     {
         $this->artisan('admin:invite invitee@example.com')->assertSuccessful();
 
-        $rows = RegistrationToken::query()->get()->all();
+        $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         $row = array_first($rows);
         $this->assertSame('invitee@example.com', $row->email);
-        $this->assertSame(Role::General->value, $row->role);
-        $this->assertSame(0, RegistrationTokenPermission::query()->count());
+        $this->assertSame(Role::General->value, (int)$row->role);
+        $this->assertSame(0, DB::table('admin_user_registration_token_permissions')->count());
     }
 
     #[Test]
@@ -36,13 +35,13 @@ class InviteCommandTest extends DatabaseTestCase
         $this->artisan('admin:invite priv@example.com --privilege read_admin_user write_admin_user')
             ->assertSuccessful();
 
-        $rows = RegistrationToken::query()->get()->all();
+        $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         $row = array_first($rows);
-        $this->assertSame(Role::Privilege->value, $row->role);
+        $this->assertSame(Role::Privilege->value, (int)$row->role);
 
-        $permissions = RegistrationTokenPermission::query()
+        $permissions = DB::table('admin_user_registration_token_permissions')
             ->where('admin_user_registration_token_id', $row->admin_user_registration_token_id)
             ->pluck('permission')
             ->all();
@@ -57,7 +56,7 @@ class InviteCommandTest extends DatabaseTestCase
             ->expectsOutput('不正な権限です: invalid_permission')
             ->assertFailed();
 
-        $this->assertSame(0, RegistrationToken::query()->count());
+        $this->assertSame(0, DB::table('admin_user_registration_tokens')->count());
     }
 
     #[Test]
@@ -71,7 +70,7 @@ class InviteCommandTest extends DatabaseTestCase
             ->expectsOutput('すでに使われているメールアドレスです "taken@example.com"')
             ->assertFailed();
 
-        $this->assertSame(0, RegistrationToken::query()->count());
+        $this->assertSame(0, DB::table('admin_user_registration_tokens')->count());
     }
 
     #[Test]
@@ -79,7 +78,7 @@ class InviteCommandTest extends DatabaseTestCase
     {
         $this->artisan('admin:invite invitee@example.com')->assertSuccessful()->run();
 
-        $rows = RegistrationToken::query()->get()->all();
+        $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         // ハッシュ済みで保存されているため、ハッシュとは平文を直接比較できない。

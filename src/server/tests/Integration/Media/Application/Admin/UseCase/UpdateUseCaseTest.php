@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Media\Application\Admin\UseCase;
 
-use App\Models\Media\Media as ModelsMedia;
+use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Update\UpdateInputData;
 use Media\Application\Admin\UseCase\Update\UpdateUseCase;
 use Media\Domain\Models\MediaFormat;
@@ -54,14 +54,14 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $media = ModelsMedia::query()->first();
+        $media = DB::table('media')->first();
         $this->assertNotNull($media);
         $this->assertSame('テストメディア配信アーカイブ', $media->title);
         $this->assertSame('https://example.com/archive', $media->url);
-        $this->assertSame('2024-04-02', $media->published_at?->format('Y-m-d'));
-        $this->assertSame(MediaType::SocialPost->value, $media->type);
-        $this->assertSame(MediaFormat::StreamArchive->value, $media->format);
-        $this->assertFalse($media->is_display);
+        $this->assertSame('2024-04-02', $media->published_at);
+        $this->assertSame(MediaType::SocialPost->value, (int)$media->type);
+        $this->assertSame(MediaFormat::StreamArchive->value, (int)$media->format);
+        $this->assertSame(0, (int)$media->is_display);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Media, $mediaId);
@@ -90,7 +90,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
-        $this->assertDatabaseMissing(ModelsMedia::class, ['title' => 'テストメディア']);
+        $this->assertDatabaseMissing('media', ['title' => 'テストメディア']);
     }
 
     private function getInstance(): UpdateUseCase

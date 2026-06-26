@@ -5,18 +5,27 @@ declare(strict_types=1);
 namespace Auth\Infrastructures\RecoveryCode;
 
 use AdminUser\Domain\Models\AdminUserId;
-use App\Models\AdminUser\RecoveryCode as ModelsRecoveryCode;
 use Auth\Domain\Models\RecoveryCode\ConsumptionStatus;
 use Auth\Domain\Models\RecoveryCode\RecoveryCode;
 use Auth\Domain\Models\RecoveryCode\RecoveryCodeId;
 use Auth\Domain\Models\RecoveryCode\RecoveryCodeRepositoryInterface;
+use DateTimeImmutable;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 
 readonly class RecoveryCodeRepository implements RecoveryCodeRepositoryInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    private const string TABLE = 'admin_user_recovery_codes';
+
+    /** @var list<string> */
+    private const array COLUMNS = ['admin_user_recovery_code_id', 'admin_user_id', 'code', 'status', 'used_at'];
+
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     /**
@@ -29,21 +38,26 @@ readonly class RecoveryCodeRepository implements RecoveryCodeRepositoryInterface
             return;
         }
 
-        $rows = array_map(function (RecoveryCode $code): array {
+        $now = now()->toDateTimeString();
+
+        $rows = array_map(function (RecoveryCode $code) use ($now): array {
             $data = $code->toArray();
 
             return [
-                'admin_user_recovery_code_id' => $this->converter->toBin($data['admin_user_recovery_code_id']),
-                'admin_user_id' => $this->converter->toBin($data['admin_user_id']),
-                'code' => $data['code'],
-                'status' => $data['status'],
-                'used_at' => $data['used_at'],
-                'created_at' => now(),
-                'updated_at' => now(),
+                $this->converter->toBin($data['admin_user_recovery_code_id']),
+                $this->converter->toBin($data['admin_user_id']),
+                $data['code'],
+                $data['status'],
+                $data['used_at'],
+                $now,
+                $now,
             ];
         }, $codes);
 
-        ModelsRecoveryCode::query()->insert($rows);
+        $this->queryFactory->insert()
+            ->into(self::TABLE, ['admin_user_recovery_code_id', 'admin_user_id', 'code', 'status', 'used_at', 'created_at', 'updated_at'])
+            ->values(...$rows)
+            ->execute($this->queryFactory->pdo());
     }
 
     /**
@@ -52,53 +66,58 @@ readonly class RecoveryCodeRepository implements RecoveryCodeRepositoryInterface
     #[Override]
     public function findUnusedByAdminUserIdForUpdate(AdminUserId $adminUserId): array
     {
-        return array_values(ModelsRecoveryCode::query()
-            ->where('admin_user_id', $this->converter->toBin($adminUserId->value))
-            ->where('status', ConsumptionStatus::Unused->value)
-            ->orderByDesc('created_at')
-            ->lockForUpdate()
-            ->get()
-            ->map($this->hydrate(...))
-            ->all());
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('admin_user_id', '=', $this->converter->toBin($adminUserId->value))
+                ->where('status', '=', ConsumptionStatus::Unused->value)
+                ->orderBy('created_at', 'desc')
+                ->forUpdate(),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function findUnusedByIdForUpdate(RecoveryCodeId $recoveryCodeId, AdminUserId $adminUserId): ?RecoveryCode
     {
-        $model = ModelsRecoveryCode::query()
-            ->where('admin_user_recovery_code_id', $this->converter->toBin($recoveryCodeId->value))
-            ->where('admin_user_id', $this->converter->toBin($adminUserId->value))
-            ->where('status', ConsumptionStatus::Unused->value)
-            ->lockForUpdate()
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('admin_user_recovery_code_id', '=', $this->converter->toBin($recoveryCodeId->value))
+                ->where('admin_user_id', '=', $this->converter->toBin($adminUserId->value))
+                ->where('status', '=', ConsumptionStatus::Unused->value)
+                ->limit(1)
+                ->forUpdate(),
+        );
 
-        if (is_null($model)) {
-            return null;
-        }
+        $row = $rows[0] ?? null;
 
-        return $this->hydrate($model);
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function save(RecoveryCode $code): RecoveryCode
     {
         $data = $code->toArray();
+        $now = now()->toDateTimeString();
 
-        ModelsRecoveryCode::query()->upsert(
-            [
-                [
-                    'admin_user_recovery_code_id' => $this->converter->toBin($data['admin_user_recovery_code_id']),
-                    'admin_user_id' => $this->converter->toBin($data['admin_user_id']),
-                    'code' => $data['code'],
-                    'status' => $data['status'],
-                    'used_at' => $data['used_at'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ],
-            ['admin_user_recovery_code_id'],
-            ['status', 'used_at', 'updated_at'],
-        );
+        $this->queryFactory->insert()
+            ->into(self::TABLE, ['admin_user_recovery_code_id', 'admin_user_id', 'code', 'status', 'used_at', 'created_at', 'updated_at'])
+            ->values([
+                $this->converter->toBin($data['admin_user_recovery_code_id']),
+                $this->converter->toBin($data['admin_user_id']),
+                $data['code'],
+                $data['status'],
+                $data['used_at'],
+                $now,
+                $now,
+            ])
+            ->build()
+            ->append('ON DUPLICATE KEY UPDATE `status` = VALUES(`status`), `used_at` = VALUES(`used_at`), `updated_at` = VALUES(`updated_at`)')
+            ->execute($this->queryFactory->pdo());
 
         return $code;
     }
@@ -106,19 +125,25 @@ readonly class RecoveryCodeRepository implements RecoveryCodeRepositoryInterface
     #[Override]
     public function deleteByAdminUserId(AdminUserId $adminUserId): void
     {
-        ModelsRecoveryCode::query()
-            ->where('admin_user_id', $this->converter->toBin($adminUserId->value))
-            ->delete();
+        $this->queryFactory->delete()
+            ->from(self::TABLE)
+            ->where('admin_user_id', '=', $this->converter->toBin($adminUserId->value))
+            ->execute($this->queryFactory->pdo());
     }
 
-    private function hydrate(ModelsRecoveryCode $model): RecoveryCode
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function hydrate(array $row): RecoveryCode
     {
+        $usedAt = Row::nullableString($row, 'used_at');
+
         return RecoveryCode::reconstruct(
-            $this->converter->toUuid($model->admin_user_recovery_code_id),
-            $this->converter->toUuid($model->admin_user_id),
-            $model->code,
-            $model->status,
-            $model->used_at?->toDateTimeImmutable(),
+            $this->converter->toUuid(Row::string($row, 'admin_user_recovery_code_id')),
+            $this->converter->toUuid(Row::string($row, 'admin_user_id')),
+            Row::string($row, 'code'),
+            Row::int($row, 'status'),
+            is_null($usedAt) ? null : new DateTimeImmutable($usedAt),
         );
     }
 }

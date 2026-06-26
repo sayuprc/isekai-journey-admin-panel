@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Release;
 
-use App\Models\Release\TrackEntry as ModelsTrackEntry;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\ReleaseDistributionType;
@@ -84,7 +84,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                     ),
             );
 
-        $entries = ModelsTrackEntry::query()
+        $entries = DB::table('release_track_entries')
             ->where('release_id', $converter->toBin($releaseId))
             ->orderBy('track_no')
             ->get()

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Admin\UseCase;
 
-use App\Models\Song\Song;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Admin\UseCase\Delete\DeleteInputData;
 use Song\Application\Admin\UseCase\Delete\DeleteUseCase;
@@ -35,7 +35,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = Song::query()->get();
+        $songs = DB::table('songs')->get();
         $this->assertCount(0, $songs);
 
         $this->assertAuditLogCount(1);

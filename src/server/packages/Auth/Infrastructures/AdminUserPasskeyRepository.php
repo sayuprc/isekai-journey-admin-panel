@@ -4,17 +4,39 @@ declare(strict_types=1);
 
 namespace Auth\Infrastructures;
 
-use App\Models\AdminUser\AdminUserPasskey as Model;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
-use Illuminate\Support\Carbon;
+use DateTimeImmutable;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 
 readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    private const string TABLE = 'admin_user_passkeys';
+
+    /** @var list<string> */
+    private const array COLUMNS = [
+        'admin_user_passkey_id',
+        'admin_user_id',
+        'user_handle',
+        'name',
+        'credential_id',
+        'public_key',
+        'aaguid',
+        'transports',
+        'backup_eligible',
+        'backup_state',
+        'sign_count',
+        'created_at',
+        'last_used_at',
+    ];
+
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     /**
@@ -23,51 +45,107 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
     #[Override]
     public function findByAdminUserId(string $adminUserId): array
     {
-        return array_values(Model::query()
-            ->where('admin_user_id', $this->converter->toBin($adminUserId))
-            ->orderBy('created_at')
-            ->get()
-            ->map($this->hydrate(...))
-            ->all());
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('admin_user_id', '=', $this->converter->toBin($adminUserId))
+                ->orderBy('created_at'),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function findByCredentialId(string $credentialId): ?AdminUserPasskey
     {
-        $found = Model::query()
-            ->where('credential_id', $credentialId)
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('credential_id', '=', $credentialId)
+                ->limit(1),
+        );
 
-        return is_null($found) ? null : $this->hydrate($found);
+        $row = $rows[0] ?? null;
+
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function findByUserHandle(string $userHandle): ?AdminUserPasskey
     {
-        $found = Model::query()
-            ->where('user_handle', $userHandle)
-            ->orderBy('created_at')
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('user_handle', '=', $userHandle)
+                ->orderBy('created_at')
+                ->limit(1),
+        );
 
-        return is_null($found) ? null : $this->hydrate($found);
+        $row = $rows[0] ?? null;
+
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function findByAdminUserIdAndCredentialIdForUpdate(string $adminUserId, string $credentialId): ?AdminUserPasskey
     {
-        $found = Model::query()
-            ->where('admin_user_id', $this->converter->toBin($adminUserId))
-            ->where('credential_id', $credentialId)
-            ->lockForUpdate()
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('admin_user_id', '=', $this->converter->toBin($adminUserId))
+                ->where('credential_id', '=', $credentialId)
+                ->limit(1)
+                ->forUpdate(),
+        );
 
-        return is_null($found) ? null : $this->hydrate($found);
+        $row = $rows[0] ?? null;
+
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function save(AdminUserPasskey $passkey): AdminUserPasskey
     {
-        Model::query()->insert($this->toPersistence($passkey));
+        $now = now()->toDateTimeString();
+
+        $this->queryFactory->insert()
+            ->into(self::TABLE, [
+                'admin_user_passkey_id',
+                'admin_user_id',
+                'user_handle',
+                'name',
+                'credential_id',
+                'public_key',
+                'aaguid',
+                'transports',
+                'backup_eligible',
+                'backup_state',
+                'sign_count',
+                'last_used_at',
+                'created_at',
+                'updated_at',
+            ])
+            ->values([
+                $this->converter->toBin($passkey->adminUserPasskeyId),
+                $this->converter->toBin($passkey->adminUserId),
+                $passkey->userHandle,
+                $passkey->name,
+                $passkey->credentialId,
+                $passkey->publicKey,
+                $passkey->aaguid,
+                (string)json_encode($passkey->transports, JSON_THROW_ON_ERROR),
+                $passkey->backupEligible,
+                $passkey->backupState,
+                $passkey->signCount,
+                $passkey->lastUsedAt?->format('Y-m-d H:i:s'),
+                $passkey->createdAt->format('Y-m-d H:i:s'),
+                $now,
+            ])
+            ->execute($this->queryFactory->pdo());
 
         return $passkey;
     }
@@ -75,13 +153,15 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
     #[Override]
     public function update(AdminUserPasskey $passkey): AdminUserPasskey
     {
-        Model::query()
-            ->where('admin_user_passkey_id', $this->converter->toBin($passkey->adminUserPasskeyId))
-            ->update([
+        $this->queryFactory->update()
+            ->table(self::TABLE)
+            ->withSet([
                 'sign_count' => $passkey->signCount,
                 'last_used_at' => $passkey->lastUsedAt?->format('Y-m-d H:i:s'),
-                'updated_at' => now(),
-            ]);
+                'updated_at' => now()->toDateTimeString(),
+            ])
+            ->where('admin_user_passkey_id', '=', $this->converter->toBin($passkey->adminUserPasskeyId))
+            ->execute($this->queryFactory->pdo());
 
         return $passkey;
     }
@@ -89,71 +169,46 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
     #[Override]
     public function updateCounter(AdminUserPasskey $passkey, int $expectedSignCount): bool
     {
-        return Model::query()
-            ->where('admin_user_passkey_id', $this->converter->toBin($passkey->adminUserPasskeyId))
-            ->where('sign_count', $expectedSignCount)
-            ->update([
+        $statement = $this->queryFactory->update()
+            ->table(self::TABLE)
+            ->withSet([
                 'sign_count' => $passkey->signCount,
                 'last_used_at' => $passkey->lastUsedAt?->format('Y-m-d H:i:s'),
-                'updated_at' => now(),
-            ]) === 1;
-    }
+                'updated_at' => now()->toDateTimeString(),
+            ])
+            ->where('admin_user_passkey_id', '=', $this->converter->toBin($passkey->adminUserPasskeyId))
+            ->where('sign_count', '=', $expectedSignCount)
+            ->prepare($this->queryFactory->pdo());
 
-    private function hydrate(Model $model): AdminUserPasskey
-    {
-        return new AdminUserPasskey(
-            $this->converter->toUuid($model->admin_user_passkey_id),
-            $this->converter->toUuid($model->admin_user_id),
-            $model->user_handle,
-            $model->name,
-            $model->credential_id,
-            $model->public_key,
-            $model->aaguid,
-            $this->transports($model->transports),
-            $model->backup_eligible,
-            $model->backup_state,
-            $model->sign_count,
-            $model->created_at->toDateTimeImmutable(),
-            $model->last_used_at?->toDateTimeImmutable(),
-        );
+        $statement->execute();
+
+        return $statement->rowCount() === 1;
     }
 
     /**
-     * @return array{
-     *   admin_user_passkey_id: string,
-     *   admin_user_id: string,
-     *   user_handle: string,
-     *   name: string,
-     *   credential_id: string,
-     *   public_key: string,
-     *   aaguid: string,
-     *   transports: string,
-     *   backup_eligible: bool|null,
-     *   backup_state: bool|null,
-     *   sign_count: int,
-     *   last_used_at: string|null,
-     *   created_at: string,
-     *   updated_at: Carbon
-     * }
+     * @param array<string, mixed> $row
      */
-    private function toPersistence(AdminUserPasskey $passkey): array
+    private function hydrate(array $row): AdminUserPasskey
     {
-        return [
-            'admin_user_passkey_id' => $this->converter->toBin($passkey->adminUserPasskeyId),
-            'admin_user_id' => $this->converter->toBin($passkey->adminUserId),
-            'user_handle' => $passkey->userHandle,
-            'name' => $passkey->name,
-            'credential_id' => $passkey->credentialId,
-            'public_key' => $passkey->publicKey,
-            'aaguid' => $passkey->aaguid,
-            'transports' => json_encode($passkey->transports, JSON_THROW_ON_ERROR),
-            'backup_eligible' => $passkey->backupEligible,
-            'backup_state' => $passkey->backupState,
-            'sign_count' => $passkey->signCount,
-            'last_used_at' => $passkey->lastUsedAt?->format('Y-m-d H:i:s'),
-            'created_at' => $passkey->createdAt->format('Y-m-d H:i:s'),
-            'updated_at' => now(),
-        ];
+        $lastUsedAt = Row::nullableString($row, 'last_used_at');
+
+        $transports = json_decode(Row::string($row, 'transports'), true, flags: JSON_THROW_ON_ERROR);
+
+        return new AdminUserPasskey(
+            $this->converter->toUuid(Row::string($row, 'admin_user_passkey_id')),
+            $this->converter->toUuid(Row::string($row, 'admin_user_id')),
+            Row::string($row, 'user_handle'),
+            Row::string($row, 'name'),
+            Row::string($row, 'credential_id'),
+            Row::string($row, 'public_key'),
+            Row::string($row, 'aaguid'),
+            $this->transports($transports),
+            Row::nullableBool($row, 'backup_eligible'),
+            Row::nullableBool($row, 'backup_state'),
+            Row::int($row, 'sign_count'),
+            new DateTimeImmutable(Row::string($row, 'created_at')),
+            is_null($lastUsedAt) ? null : new DateTimeImmutable($lastUsedAt),
+        );
     }
 
     /**

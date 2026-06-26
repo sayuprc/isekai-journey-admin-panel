@@ -11,11 +11,13 @@ use AdminUser\Infrastructures\AdminUserRepository;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Database\CapturesQueries;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 
 class AdminUserRepositoryTest extends DatabaseTestCase
 {
+    use CapturesQueries;
     use EntityFactory;
 
     #[Test]
@@ -92,59 +94,49 @@ class AdminUserRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findByEmailForUpdateIssuesSelectForUpdate(): void
     {
-        $repository = $this->getInstance();
-
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
 
-        $repository->register($user);
+        $this->getInstance()->register($user);
 
-        DB::enableQueryLog();
+        $this->startCapturingQueries();
 
-        $found = $repository->findByEmailForUpdate(Email::reconstruct('user@example.com'));
-
-        $queries = DB::getQueryLog();
-        DB::disableQueryLog();
+        $found = $this->getInstance()->findByEmailForUpdate(Email::reconstruct('user@example.com'));
 
         $selectQueries = array_values(array_filter(
-            $queries,
-            fn (array $query): bool => str_starts_with(strtolower((string)$query['query']), 'select')
-                && str_contains((string)$query['query'], 'admin_users'),
+            $this->capturedQueries(),
+            fn (string $query): bool => str_starts_with(strtolower($query), 'select')
+                && str_contains($query, 'admin_users'),
         ));
 
         $this->assertNotNull($found);
         $this->assertEquals($user, $found);
         $this->assertNotSame([], $selectQueries);
-        $this->assertStringContainsString('for update', strtolower((string)$selectQueries[0]['query']));
+        $this->assertStringContainsString('for update', strtolower($selectQueries[0]));
     }
 
     #[Test]
     public function findByIdForUpdateIssuesSelectForUpdate(): void
     {
-        $repository = $this->getInstance();
-
         $createdAt = new DateTimeImmutable('2026-01-01 00:00:00');
         $user = $this->createAdminUser($this->generateUuid(), 'user@example.com', Role::General, [], $createdAt);
 
-        $repository->register($user);
+        $this->getInstance()->register($user);
 
-        DB::enableQueryLog();
+        $this->startCapturingQueries();
 
-        $found = $repository->findByIdForUpdate($user->adminUserId);
-
-        $queries = DB::getQueryLog();
-        DB::disableQueryLog();
+        $found = $this->getInstance()->findByIdForUpdate($user->adminUserId);
 
         $selectQueries = array_values(array_filter(
-            $queries,
-            fn (array $query): bool => str_starts_with(strtolower((string)$query['query']), 'select')
-                && str_contains((string)$query['query'], 'admin_users'),
+            $this->capturedQueries(),
+            fn (string $query): bool => str_starts_with(strtolower($query), 'select')
+                && str_contains($query, 'admin_users'),
         ));
 
         $this->assertNotNull($found);
         $this->assertEquals($user, $found);
         $this->assertNotSame([], $selectQueries);
-        $this->assertStringContainsString('for update', strtolower((string)$selectQueries[0]['query']));
+        $this->assertStringContainsString('for update', strtolower($selectQueries[0]));
     }
 
     #[Test]

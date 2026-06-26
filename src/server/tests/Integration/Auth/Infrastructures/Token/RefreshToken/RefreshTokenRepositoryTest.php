@@ -6,13 +6,13 @@ namespace Tests\Integration\Auth\Infrastructures\Token\RefreshToken;
 
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Carbon\Carbon;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Tests\Support\DatabaseTestCase;
@@ -186,7 +186,7 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
         $repository->save($refreshToken);
 
         $converter = $this->app->make(UuidConverterInterface::class);
-        $stored = AuthRefreshToken::query()
+        $stored = DB::table('refresh_tokens')
             ->where('refresh_token_id', $converter->toBin($refreshToken->refreshTokenId->value))
             ->first();
 

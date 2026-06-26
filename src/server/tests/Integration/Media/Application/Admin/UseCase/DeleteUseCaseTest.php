@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Media\Application\Admin\UseCase;
 
-use App\Models\Media\Media as ModelsMedia;
+use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Delete\DeleteInputData;
 use Media\Application\Admin\UseCase\Delete\DeleteUseCase;
 use Media\Domain\Models\MediaFormat;
@@ -46,7 +46,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(new DeleteInputData($mediaId));
 
         $this->assertTrue($result->isOk());
-        $this->assertCount(0, ModelsMedia::query()->get()->all());
+        $this->assertCount(0, DB::table('media')->get()->all());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Media, $mediaId);
@@ -88,7 +88,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isErr());
         $this->assertSame('このメディアは楽曲に使用されているため削除できません', $result->unwrapErr()->message);
-        $this->assertCount(1, ModelsMedia::query()->get()->all());
+        $this->assertCount(1, DB::table('media')->get()->all());
         $this->assertAuditLogCount(0);
     }
 
@@ -121,7 +121,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
             $this->assertSame('audit log failure', $e->getMessage());
         }
 
-        $this->assertCount(1, ModelsMedia::query()->where('title', 'ロールバック対象')->get());
+        $this->assertCount(1, DB::table('media')->where('title', 'ロールバック対象')->get());
         $this->assertAuditLogCount(0);
     }
 

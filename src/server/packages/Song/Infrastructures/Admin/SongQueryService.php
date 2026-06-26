@@ -4,79 +4,85 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures\Admin;
 
-use App\Models\Song\Song;
-use Illuminate\Database\Eloquent\Builder;
+use Emonkak\Orm\SelectBuilder;
 use Override;
 use Song\Application\Admin\Query\SongQueryServiceInterface;
 use Song\Application\Admin\Query\SongSummary;
 use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 use Support\Infrastructures\Database\SqlHelper;
 
 readonly class SongQueryService implements SongQueryServiceInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    /** @var list<string> */
+    private const array COLUMNS = ['song_id', 'title', 'type', 'is_display', 'order_no'];
+
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     #[Override]
     public function search(SongSearchCriteria $criteria): array
     {
-        $query = $this->buildQuery($criteria);
-
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
 
-        return $query->orderBy($criteria->sort->value, $criteria->order->value)
-            ->limit($criteria->perPage->value)
-            ->offset($offset)
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
+        $rows = $this->queryFactory->fetchAll(
+            $this->buildQuery($criteria)
+                ->withSelect(self::COLUMNS)
+                ->orderBy($criteria->sort->value, $criteria->order->value)
+                ->limit($criteria->perPage->value)
+                ->offset($offset),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function maxPage(SongSearchCriteria $criteria): int
     {
-        $query = $this->buildQuery($criteria);
+        $count = Row::intValue($this->buildQuery($criteria)->aggregate($this->queryFactory->pdo(), 'COUNT(*)'));
 
-        return (int)ceil($query->count() / $criteria->perPage->value);
+        return (int)ceil($count / $criteria->perPage->value);
     }
 
-    /**
-     * @return Builder<Song>
-     */
-    private function buildQuery(SongSearchCriteria $criteria): Builder
+    private function buildQuery(SongSearchCriteria $criteria): SelectBuilder
     {
-        $query = Song::query()
-            ->select(['song_id', 'title', 'type', 'is_display', 'order_no']);
+        $query = $this->queryFactory->select()->from('songs');
 
         if ($criteria->title->isPresent()) {
             // 前方一致検索でインデックスを活用
             // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
             $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
-            $query = $query->whereLike('title_lower', $keyword . '%');
+            $query = $query->where('title_lower', 'LIKE', $keyword . '%');
         }
 
         if ($criteria->type->isPresent()) {
-            $query = $query->where('type', $criteria->type->get()->value);
+            $query = $query->where('type', '=', $criteria->type->get()->value);
         }
 
         if ($criteria->isDisplay->isPresent()) {
-            $query = $query->where('is_display', $criteria->isDisplay->get());
+            $query = $query->where('is_display', '=', $criteria->isDisplay->get());
         }
 
         return $query;
     }
 
-    private function hydrate(Song $model): SongSummary
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function hydrate(array $row): SongSummary
     {
         return new SongSummary(
-            $this->converter->toUuid($model->song_id),
-            $model->title,
-            SongType::from($model->type),
-            $model->is_display,
-            $model->order_no,
+            $this->converter->toUuid(Row::string($row, 'song_id')),
+            Row::string($row, 'title'),
+            SongType::from(Row::int($row, 'type')),
+            Row::bool($row, 'is_display'),
+            Row::int($row, 'order_no'),
         );
     }
 }

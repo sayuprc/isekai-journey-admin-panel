@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Admin\UseCase\Tag;
 
-use App\Models\Song\SongTag as ModelsSongTag;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Admin\UseCase\Tag\Delete\DeleteInputData;
 use Song\Application\Admin\UseCase\Tag\Delete\DeleteUseCase;
@@ -31,7 +31,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
         $this->assertTrue($result->isOk());
-        $this->assertCount(0, ModelsSongTag::query()->get()->all());
+        $this->assertCount(0, DB::table('song_tags')->get()->all());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::SongTag, $uuid);
