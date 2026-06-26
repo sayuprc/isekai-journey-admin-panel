@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\SongTag;
 
-use App\Models\Song\SongTag as SongTagModel;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Route\Tag\SongTagRouteMap;
 use Support\Contracts\Uuid\UuidConverterInterface;
@@ -22,7 +22,7 @@ class ListSongTagTest extends DatabaseTestCase
         $tag1 = '95f4d89a-a6af-4df9-9df9-9ac57a12dc51';
         $tag2 = '2f4ae940-2baa-42ad-ad13-07ed1135e97b';
 
-        SongTagModel::query()->insert([
+        DB::table('song_tags')->insert([
             [
                 'song_tag_id' => $converter->toBin($tag1),
                 'name' => '後攻',

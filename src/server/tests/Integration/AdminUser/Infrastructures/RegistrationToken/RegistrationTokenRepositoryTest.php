@@ -13,9 +13,8 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationToken;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenId;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\RegistrationToken\RegistrationTokenRepository;
-use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
-use App\Models\AdminUser\RegistrationTokenPermission;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Tests\Support\Database\CapturesQueries;
@@ -63,7 +62,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $newerId = $this->generateUuid();
         $converter = $this->app->make(UuidConverterInterface::class);
-        ModelsRegistrationToken::query()->insert([
+        DB::table('admin_user_registration_tokens')->insert([
             'admin_user_registration_token_id' => $converter->toBin($newerId),
             'token' => 'new-hashed-token',
             'email' => 'invitee@example.com',
@@ -135,7 +134,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $this->assertNotNull($found);
         $this->assertSame(ConsumptionStatus::Consumed, $found->status);
-        $this->assertSame(1, ModelsRegistrationToken::query()->count());
+        $this->assertSame(1, DB::table('admin_user_registration_tokens')->count());
     }
 
     #[Test]
@@ -148,7 +147,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $repository->save($token->consume());
 
-        $permissions = RegistrationTokenPermission::query()
+        $permissions = DB::table('admin_user_registration_token_permissions')
             ->where('admin_user_registration_token_id', $this->app->make(UuidConverterInterface::class)->toBin($token->registrationTokenId->value))
             ->pluck('permission')
             ->all();

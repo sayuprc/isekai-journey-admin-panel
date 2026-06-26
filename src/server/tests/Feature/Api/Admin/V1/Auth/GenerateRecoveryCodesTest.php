@@ -7,12 +7,12 @@ namespace Tests\Feature\Api\Admin\V1\Auth;
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\AdminUser\RecoveryCode as ModelsRecoveryCode;
 use Auth\Domain\Services\RecoveryCode\RecoveryCodeHasherInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Auth\Infrastructures\Token\RefreshToken\RefreshTokenRepository;
 use Auth\Route\AuthRouteMap;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
@@ -52,10 +52,10 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
         /** @var list<string> $plainCodes */
         $plainCodes = $response->json('recoveryCodes');
 
-        $this->assertCount(10, ModelsRecoveryCode::query()->get());
+        $this->assertCount(10, DB::table('admin_user_recovery_codes')->get());
 
         $hasher = $this->app->make(RecoveryCodeHasherInterface::class);
-        $storedCodes = ModelsRecoveryCode::query()->pluck('code')->all();
+        $storedCodes = DB::table('admin_user_recovery_codes')->pluck('code')->all();
 
         foreach ($plainCodes as $plainCode) {
             $this->assertNotContains($plainCode, $storedCodes);
@@ -83,10 +83,10 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
 
         $this->postJson(route(AuthRouteMap::GenerateRecoveryCodes))->assertStatus(200);
 
-        $this->assertSame(10, ModelsRecoveryCode::query()->count());
+        $this->assertSame(10, DB::table('admin_user_recovery_codes')->count());
 
         $hasher = $this->app->make(RecoveryCodeHasherInterface::class);
-        $storedCodes = ModelsRecoveryCode::query()->pluck('code')->all();
+        $storedCodes = DB::table('admin_user_recovery_codes')->pluck('code')->all();
 
         foreach ($firstCodes as $oldCode) {
             $matched = array_filter($storedCodes, fn (string $stored): bool => $hasher->verify($oldCode, $stored));
@@ -99,7 +99,7 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
     {
         $this->postJson(route(AuthRouteMap::GenerateRecoveryCodes))->assertStatus(401);
 
-        $this->assertSame(0, ModelsRecoveryCode::query()->count());
+        $this->assertSame(0, DB::table('admin_user_recovery_codes')->count());
     }
 
     private function authenticate(): AdminUser

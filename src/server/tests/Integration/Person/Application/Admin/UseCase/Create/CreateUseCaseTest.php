@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Person\Application\Admin\UseCase\Create;
 
-use App\Models\Person\Person as ModelsPerson;
+use Illuminate\Support\Facades\DB;
 use Mockery;
 use Person\Application\Admin\UseCase\Create\CreateInputData;
 use Person\Application\Admin\UseCase\Create\CreateUseCase;
@@ -27,7 +27,7 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $persons = ModelsPerson::query()->get();
+        $persons = DB::table('persons')->get();
         $this->assertCount(1, $persons);
         $this->assertSame('テスト人物', $persons->first()->name);
 
@@ -55,7 +55,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->assertSame('audit log failure', $e->getMessage());
         }
 
-        $this->assertCount(0, ModelsPerson::query()->where('name', 'ロールバック対象')->get());
+        $this->assertCount(0, DB::table('persons')->where('name', 'ロールバック対象')->get());
         $this->assertAuditLogCount(0);
     }
 

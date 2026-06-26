@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Release\Application\Admin\UseCase\Update;
 
-use App\Models\Release\Release as ModelsRelease;
-use App\Models\Release\TrackEntry as ModelsTrackEntry;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Update\UpdateInputData;
 use Release\Application\Admin\UseCase\Update\UpdateUseCase;
@@ -72,7 +71,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame('新タイトル', $result->unwrap()->release->title->value);
         $this->assertSame(2, $result->unwrap()->release->trackEntries->count());
 
-        $this->assertDatabaseHas(ModelsRelease::class, [
+        $this->assertDatabaseHas('releases', [
             'release_id' => $converter->toBin($releaseId),
             'title' => '新タイトル',
             'type' => ReleaseType::Single->value,
@@ -81,7 +80,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             'is_display' => false,
         ]);
 
-        $entries = ModelsTrackEntry::query()
+        $entries = DB::table('release_track_entries')
             ->where('release_id', $converter->toBin($releaseId))
             ->orderBy('track_no')
             ->get()
@@ -89,9 +88,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertCount(2, $entries);
         $this->assertSame($songId3, $this->toUuid($entries[0]->song_id));
-        $this->assertSame(1, $entries[0]->track_no);
+        $this->assertSame(1, (int)$entries[0]->track_no);
         $this->assertSame($songId1, $this->toUuid($entries[1]->song_id));
-        $this->assertSame(2, $entries[1]->track_no);
+        $this->assertSame(2, (int)$entries[1]->track_no);
     }
 
     #[Test]

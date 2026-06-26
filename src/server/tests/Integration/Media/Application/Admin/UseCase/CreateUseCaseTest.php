@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Media\Application\Admin\UseCase;
 
-use App\Models\Media\Media as ModelsMedia;
+use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Create\CreateInputData;
 use Media\Application\Admin\UseCase\Create\CreateUseCase;
 use Media\Domain\Models\MediaFormat;
@@ -38,11 +38,11 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $media = ModelsMedia::query()->first();
+        $media = DB::table('media')->first();
         $this->assertNotNull($media);
         $this->assertSame('テストメディアMV', $media->title);
         $this->assertSame('https://example.com/media', $media->url);
-        $this->assertSame('2024-03-01', $media->published_at?->format('Y-m-d'));
+        $this->assertSame('2024-03-01', $media->published_at);
 
         $mediaId = $this->toUuid($media->media_id);
         $this->assertAuditLogCount(1);
@@ -77,7 +77,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->assertSame('audit log failure', $e->getMessage());
         }
 
-        $this->assertCount(0, ModelsMedia::query()->where('title', 'ロールバック対象')->get());
+        $this->assertCount(0, DB::table('media')->where('title', 'ロールバック対象')->get());
         $this->assertAuditLogCount(0);
     }
 

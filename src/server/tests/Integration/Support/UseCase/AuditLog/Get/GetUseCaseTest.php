@@ -6,9 +6,9 @@ namespace Tests\Integration\Support\UseCase\AuditLog\Get;
 
 use AdminUser\Domain\Models\AdminUser;
 use AdminUser\Domain\Models\Role;
-use App\Models\AuditLog as ModelsAuditLog;
 use Auth\Domain\Models\AuthContext;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\UseCase\AuditLog\AuditAction;
@@ -109,7 +109,7 @@ class GetUseCaseTest extends DatabaseTestCase
     ): void {
         $converter = $this->app->make(UuidConverterInterface::class);
 
-        ModelsAuditLog::query()->insert([
+        DB::table('audit_logs')->insert([
             'audit_log_id' => $converter->toBin($auditLogId),
             'admin_user_id' => $converter->toBin($actorId),
             'action' => $action->value,

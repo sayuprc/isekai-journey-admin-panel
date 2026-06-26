@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Person\Application\Admin\UseCase\Delete;
 
-use App\Models\Person\Person as ModelsPerson;
+use Illuminate\Support\Facades\DB;
 use Person\Application\Admin\UseCase\Delete\DeleteInputData;
 use Person\Application\Admin\UseCase\Delete\DeleteUseCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,7 +32,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
         $this->assertTrue($result->isOk());
-        $this->assertCount(0, ModelsPerson::query()->get()->all());
+        $this->assertCount(0, DB::table('persons')->get()->all());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Person, $uuid);
@@ -60,7 +60,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isErr());
         $this->assertSame('この人物は楽曲に使用されているため削除できません', $result->unwrapErr()->message);
-        $this->assertCount(1, ModelsPerson::query()->get()->all());
+        $this->assertCount(1, DB::table('persons')->get()->all());
 
         $this->assertAuditLogCount(0);
     }

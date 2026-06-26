@@ -9,8 +9,7 @@ use AdminUser\Application\Cli\UseCase\IssueRegistrationToken\IssueRegistrationTo
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
 use AdminUser\Domain\Models\Role;
-use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
-use App\Models\AdminUser\RegistrationTokenPermission;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\DatabaseTestCase;
 
@@ -25,7 +24,7 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $rows = ModelsRegistrationToken::query()->get()->all();
+        $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         $row = array_first($rows);
@@ -34,10 +33,10 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
         $this->assertNotSame($plain, $row->token);
         $this->assertTrue(hash_equals(hash('sha256', $plain), $row->token));
         $this->assertSame('invitee@example.com', $row->email);
-        $this->assertSame(Role::General->value, $row->role);
-        $this->assertSame(ConsumptionStatus::Unused->value, $row->status);
-        $this->assertGreaterThan(now(), $row->expired_at);
-        $this->assertSame(0, RegistrationTokenPermission::query()->count());
+        $this->assertSame(Role::General->value, (int)$row->role);
+        $this->assertSame(ConsumptionStatus::Unused->value, (int)$row->status);
+        $this->assertGreaterThan(now()->format('Y-m-d H:i:s'), $row->expired_at);
+        $this->assertSame(0, DB::table('admin_user_registration_token_permissions')->count());
     }
 
     #[Test]
@@ -53,13 +52,13 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $rows = ModelsRegistrationToken::query()->get()->all();
+        $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         $row = array_first($rows);
-        $this->assertSame(Role::Privilege->value, $row->role);
+        $this->assertSame(Role::Privilege->value, (int)$row->role);
 
-        $permissions = RegistrationTokenPermission::query()
+        $permissions = DB::table('admin_user_registration_token_permissions')
             ->where('admin_user_registration_token_id', $row->admin_user_registration_token_id)
             ->pluck('permission')
             ->all();

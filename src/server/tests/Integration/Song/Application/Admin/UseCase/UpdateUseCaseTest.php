@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Admin\UseCase;
 
-use App\Models\Song\Song;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Admin\UseCase\Update\UpdateInputData;
 use Song\Application\Admin\UseCase\Update\UpdateUseCase;
@@ -70,20 +70,26 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $songs = Song::query()->get()->all();
+        $songs = DB::table('songs')->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
         $this->assertSame('テスト楽曲', $song->title);
         $this->assertSame('テスト楽曲説明', $song->description);
         $this->assertSame('https://example.com/lyrics', $song->lyrics_link);
-        $this->assertSame(SongType::Cover->value, $song->type);
-        $this->assertFalse($song->is_display);
-        $this->assertSame(2, $song->order_no);
-        $this->assertCount(2, $song->persons);
-        $this->assertSame($person2->personId->value, $this->toUuid($song->persons[0]->person_id));
-        $this->assertSame(2, $song->persons[0]->role);
-        $this->assertSame($person3->personId->value, $this->toUuid($song->persons[1]->person_id));
-        $this->assertSame(3, $song->persons[1]->role);
+        $this->assertSame(SongType::Cover->value, (int)$song->type);
+        $this->assertSame(0, (int)$song->is_display);
+        $this->assertSame(2, (int)$song->order_no);
+
+        $persons = DB::table('song_persons')
+            ->where('song_id', $song->song_id)
+            ->orderBy('order_no')
+            ->get()
+            ->all();
+        $this->assertCount(2, $persons);
+        $this->assertSame($person2->personId->value, $this->toUuid($persons[0]->person_id));
+        $this->assertSame(2, (int)$persons[0]->role);
+        $this->assertSame($person3->personId->value, $this->toUuid($persons[1]->person_id));
+        $this->assertSame(3, (int)$persons[1]->role);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Song, $songId);
@@ -112,7 +118,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
-        $this->assertDatabaseMissing(Song::class, ['title' => 'テスト楽曲']);
+        $this->assertDatabaseMissing('songs', ['title' => 'テスト楽曲']);
     }
 
     private function getInstance(): UpdateUseCase

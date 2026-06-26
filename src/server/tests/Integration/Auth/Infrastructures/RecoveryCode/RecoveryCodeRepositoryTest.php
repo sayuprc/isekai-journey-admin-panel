@@ -7,7 +7,6 @@ namespace Tests\Integration\Auth\Infrastructures\RecoveryCode;
 use AdminUser\Domain\Models\AdminUserId;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\AdminUser\RecoveryCode as ModelsRecoveryCode;
 use Auth\Domain\Models\RecoveryCode\ConsumptionStatus;
 use Auth\Domain\Models\RecoveryCode\HashedCodeValue;
 use Auth\Domain\Models\RecoveryCode\RecoveryCode;
@@ -15,6 +14,7 @@ use Auth\Domain\Models\RecoveryCode\RecoveryCodeId;
 use Auth\Infrastructures\RecoveryCode\RecoveryCodeRepository;
 use Carbon\Carbon;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
@@ -153,13 +153,13 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
         $this->assertSame([], $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId));
 
         $converter = $this->app->make(UuidConverterInterface::class);
-        $stored = ModelsRecoveryCode::query()
+        $stored = DB::table('admin_user_recovery_codes')
             ->where('admin_user_recovery_code_id', $converter->toBin($code->recoveryCodeId->value))
             ->first();
 
         $this->assertNotNull($stored);
-        $this->assertSame(ConsumptionStatus::Consumed->value, $stored->status);
-        $this->assertSame($usedAt->format('Y-m-d H:i:s'), $stored->used_at?->format('Y-m-d H:i:s'));
+        $this->assertSame(ConsumptionStatus::Consumed->value, (int)$stored->status);
+        $this->assertSame($usedAt->format('Y-m-d H:i:s'), $stored->used_at);
     }
 
     #[Test]
@@ -174,7 +174,7 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
         $repository->deleteByAdminUserId($this->adminUserId);
 
         $this->assertSame([], $repository->findUnusedByAdminUserIdForUpdate($this->adminUserId));
-        $this->assertSame(0, ModelsRecoveryCode::query()->count());
+        $this->assertSame(0, DB::table('admin_user_recovery_codes')->count());
     }
 
     private function buildCode(string $recoveryCodeId, string $hashedCode, ConsumptionStatus $status, ?DateTimeImmutable $usedAt): RecoveryCode

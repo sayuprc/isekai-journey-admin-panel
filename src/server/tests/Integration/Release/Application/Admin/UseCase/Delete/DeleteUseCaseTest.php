@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Release\Application\Admin\UseCase\Delete;
 
-use App\Models\Release\Release as ModelsRelease;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Delete\DeleteInputData;
 use Release\Application\Admin\UseCase\Delete\DeleteUseCase;
@@ -36,7 +36,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(new DeleteInputData($releaseId));
 
         $this->assertTrue($result->isOk());
-        $this->assertCount(0, ModelsRelease::query()->get()->all());
+        $this->assertCount(0, DB::table('releases')->get()->all());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Release, $releaseId);
@@ -70,7 +70,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $result = $this->getInstance()->handle(new DeleteInputData($releaseId));
 
         $this->assertTrue($result->isOk());
-        $this->assertCount(0, ModelsRelease::query()->get()->all());
+        $this->assertCount(0, DB::table('releases')->get()->all());
     }
 
     #[Test]

@@ -15,8 +15,8 @@ use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterfa
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
 use AdminUser\Domain\Services\RegistrationToken\TokenHasherInterface;
-use App\Models\AdminUser\RegistrationToken as ModelsRegistrationToken;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Tests\Support\DatabaseTestCase;
@@ -52,7 +52,7 @@ class RegistrationTokenConsumeServiceTest extends DatabaseTestCase
 
         $this->app->make(RegistrationTokenRepositoryInterface::class)->save($token);
 
-        ModelsRegistrationToken::query()
+        DB::table('admin_user_registration_tokens')
             ->where(
                 'admin_user_registration_token_id',
                 $this->app->make(UuidConverterInterface::class)->toBin($token->registrationTokenId->value),

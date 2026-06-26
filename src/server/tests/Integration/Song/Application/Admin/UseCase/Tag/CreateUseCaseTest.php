@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Song\Application\Admin\UseCase\Tag;
 
-use App\Models\Song\SongTag as ModelsSongTag;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Admin\UseCase\Tag\Create\CreateInputData;
 use Song\Application\Admin\UseCase\Tag\Create\CreateUseCase;
@@ -27,10 +27,10 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $tags = ModelsSongTag::query()->orderBy('order_no')->get();
+        $tags = DB::table('song_tags')->orderBy('order_no')->get();
         $this->assertCount(1, $tags);
         $this->assertSame('テストタグA', $tags->first()->name);
-        $this->assertSame(10, $tags->first()->order_no);
+        $this->assertSame(10, (int)$tags->first()->order_no);
 
         $tagId = $this->toUuid($tags->first()->song_tag_id);
         $this->assertAuditLogCount(1);
@@ -49,10 +49,10 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
 
-        $tags = ModelsSongTag::query()->orderBy('order_no')->get();
+        $tags = DB::table('song_tags')->orderBy('order_no')->get();
         $this->assertCount(2, $tags);
         $this->assertSame('テストタグA', $tags->last()->name);
-        $this->assertSame(50, $tags->last()->order_no);
+        $this->assertSame(50, (int)$tags->last()->order_no);
     }
 
     private function getInstance(): CreateUseCase

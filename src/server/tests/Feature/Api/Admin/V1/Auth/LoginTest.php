@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Auth;
 
 use AdminUser\Infrastructures\AdminUserRepository;
-use App\Models\Auth\RefreshToken as AuthRefreshToken;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Domain\Models\AdminUserPasskeyRepositoryInterface;
 use Auth\Domain\Models\PasskeyCeremonyState;
@@ -18,6 +17,7 @@ use Auth\Domain\Services\PasskeyStartResult;
 use Auth\Route\AuthRouteMap;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
@@ -61,7 +61,7 @@ class LoginTest extends DatabaseTestCase
             );
 
         $this->assertSame($adminUserId, $this->findPasskey('credential-id')->adminUserId);
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
     }
 
     #[Test]
@@ -80,7 +80,7 @@ class LoginTest extends DatabaseTestCase
                     ->etc(),
             );
 
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
     }
 
     #[Test]
@@ -102,7 +102,7 @@ class LoginTest extends DatabaseTestCase
                     ->etc(),
             );
 
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
     }
 
     #[Test]
@@ -123,7 +123,7 @@ class LoginTest extends DatabaseTestCase
             'email' => 'throttle@example.com',
         ])->assertStatus(429);
 
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
     }
 
     #[Test]
@@ -150,7 +150,7 @@ class LoginTest extends DatabaseTestCase
         $passkey = $this->findPasskey('credential-id');
         $this->assertSame(456, $passkey->signCount);
         $this->assertSame('2026-01-02 03:04:05', $passkey->lastUsedAt?->format('Y-m-d H:i:s'));
-        $this->assertSame(1, AuthRefreshToken::query()->count());
+        $this->assertSame(1, DB::table('refresh_tokens')->count());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Login, AuditTargetType::AdminUser, $adminUserId);
@@ -174,7 +174,7 @@ class LoginTest extends DatabaseTestCase
             'credential' => ['id' => 'credential-id'],
         ])->assertStatus(401);
 
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
@@ -190,7 +190,7 @@ class LoginTest extends DatabaseTestCase
         ])->assertStatus(401);
 
         $this->assertPasskeyUnchanged('credential-id');
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
@@ -216,7 +216,7 @@ class LoginTest extends DatabaseTestCase
         ])->assertStatus(401);
 
         $this->assertPasskeyUnchanged('credential-id');
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
@@ -236,7 +236,7 @@ class LoginTest extends DatabaseTestCase
 
         $this->assertPasskeyUnchanged('credential-id');
         $this->assertPasskeyUnchanged('other-credential-id');
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
@@ -254,7 +254,7 @@ class LoginTest extends DatabaseTestCase
         ])->assertStatus(401);
 
         $this->assertPasskeyUnchanged('credential-id');
-        $this->assertSame(0, AuthRefreshToken::query()->count());
+        $this->assertSame(0, DB::table('refresh_tokens')->count());
         $this->assertAuditLogCount(0);
     }
 
