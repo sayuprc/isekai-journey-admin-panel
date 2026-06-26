@@ -52,10 +52,7 @@
       "Tools\\": "tools/",
       "OpenAPI\\Admin\\Client\\": "Generated/Admin/lib/",
       "OpenAPI\\Viewer\\Client\\": "Generated/Viewer/lib/"
-    },
-    "files": [
-      "app/helpers.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {
