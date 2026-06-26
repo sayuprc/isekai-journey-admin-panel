@@ -287,10 +287,6 @@ run = "docker compose exec php composer metrics"
 description = "Laravel tinker を実行する"
 run = "docker compose exec php php artisan tinker"
 
-[tasks."api:ide:doc"]
-description = "Eloquent にカラム情報を書き込む"
-run = "docker compose exec php php artisan ide-helper:models -RW -n"
-
 # -- migrate --
 
 [tasks.migrate]
