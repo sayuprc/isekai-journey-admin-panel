@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Song\Infrastructures\Tag;
 
-use App\Models\Song\SongTag as ModelsSongTag;
-use App\Models\Song\SongTagging;
+use Emonkak\Orm\SelectBuilder;
 use Override;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Models\Tag\SongTag;
@@ -13,116 +12,134 @@ use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 use Support\Infrastructures\Database\SqlHelper;
 
 readonly class SongTagRepository implements SongTagRepositoryInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    private const string TABLE = 'song_tags';
+
+    /** @var list<string> */
+    private const array COLUMNS = ['song_tag_id', 'name', 'order_no'];
+
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     #[Override]
     public function all(): array
     {
-        return ModelsSongTag::query()
-            ->orderBy('order_no')
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->orderBy('order_no'),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function search(SongTagSearchCriteria $criteria): array
     {
-        $query = ModelsSongTag::query();
-
-        if ($criteria->name->isPresent()) {
-            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
-            $query = $query->whereLike('name_lower', $keyword . '%');
-        }
-
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
 
-        return $query->orderBy($criteria->sort->value, $criteria->order->value)
-            ->limit($criteria->perPage->value)
-            ->offset($offset)
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
+        $rows = $this->queryFactory->fetchAll(
+            $this->applyNameFilter(
+                $this->queryFactory->select()->withSelect(self::COLUMNS)->from(self::TABLE),
+                $criteria,
+            )
+                ->orderBy($criteria->sort->value, $criteria->order->value)
+                ->limit($criteria->perPage->value)
+                ->offset($offset),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function maxPage(SongTagSearchCriteria $criteria): int
     {
-        $query = ModelsSongTag::query();
+        $count = Row::intValue(
+            $this->applyNameFilter($this->queryFactory->select()->from(self::TABLE), $criteria)
+                ->aggregate($this->queryFactory->pdo(), 'COUNT(*)'),
+        );
 
-        if ($criteria->name->isPresent()) {
-            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
-            $query = $query->whereLike('name_lower', $keyword . '%');
-        }
-
-        return (int)ceil($query->count() / $criteria->perPage->value);
+        return (int)ceil($count / $criteria->perPage->value);
     }
 
     #[Override]
     public function find(SongTagId $songTagId): ?SongTag
     {
-        $found = ModelsSongTag::query()
-            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('song_tag_id', '=', $this->converter->toBin($songTagId->value))
+                ->limit(1),
+        );
 
-        if (is_null($found)) {
-            return null;
-        }
+        $row = $rows[0] ?? null;
 
-        return $this->hydrate($found);
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function findByName(SongTagName $name): ?SongTag
     {
-        $found = ModelsSongTag::query()
-            ->where('name', $name->value)
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('name', '=', $name->value)
+                ->limit(1),
+        );
 
-        if (is_null($found)) {
-            return null;
-        }
+        $row = $rows[0] ?? null;
 
-        return $this->hydrate($found);
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function findByIds(SongTagId ...$songTagIds): array
     {
-        return ModelsSongTag::query()
-            ->whereIn(
-                'song_tag_id',
-                array_map(fn (SongTagId $songTagId): string => $this->converter->toBin($songTagId->value), $songTagIds),
-            )
-            ->orderBy('order_no')
-            ->get()
-            ->map($this->hydrate(...))
-            ->all();
+        if ($songTagIds === []) {
+            return [];
+        }
+
+        $binIds = array_map(fn (SongTagId $songTagId): string => $this->converter->toBin($songTagId->value), $songTagIds);
+
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('song_tag_id', 'IN', $binIds)
+                ->orderBy('order_no'),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function save(SongTag $tag): SongTag
     {
-        ModelsSongTag::query()->upsert(
-            [
-                ...$tag->toArray(),
-                'song_tag_id' => $this->converter->toBin($tag->songTagId->value),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            ['song_tag_id'],
-            [
-                'name',
-                'order_no',
-                'updated_at',
-            ],
-        );
+        $now = now()->toDateTimeString();
+
+        $this->queryFactory->insert()
+            ->into(self::TABLE, ['song_tag_id', 'name', 'order_no', 'created_at', 'updated_at'])
+            ->values([
+                $this->converter->toBin($tag->songTagId->value),
+                $tag->name->value,
+                $tag->orderNo->value,
+                $now,
+                $now,
+            ])
+            ->build()
+            ->append('ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `order_no` = VALUES(`order_no`), `updated_at` = VALUES(`updated_at`)')
+            ->execute($this->queryFactory->pdo());
 
         return $tag;
     }
@@ -130,32 +147,55 @@ readonly class SongTagRepository implements SongTagRepositoryInterface
     #[Override]
     public function isUsed(SongTagId $songTagId): bool
     {
-        return SongTagging::query()
-            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
-            ->exists();
+        $count = Row::intValue(
+            $this->queryFactory->select()
+                ->from('song_taggings')
+                ->where('song_tag_id', '=', $this->converter->toBin($songTagId->value))
+                ->aggregate($this->queryFactory->pdo(), 'COUNT(*)'),
+        );
+
+        return $count > 0;
     }
 
     #[Override]
     public function delete(SongTagId $songTagId): void
     {
-        ModelsSongTag::query()
-            ->where('song_tag_id', $this->converter->toBin($songTagId->value))
-            ->delete();
+        $this->queryFactory->delete()
+            ->from(self::TABLE)
+            ->where('song_tag_id', '=', $this->converter->toBin($songTagId->value))
+            ->execute($this->queryFactory->pdo());
     }
 
     #[Override]
     public function getMaxOrderNo(): int
     {
-        /** @var int */
-        return ModelsSongTag::query()->max('order_no') ?? 0;
+        $max = $this->queryFactory->select()
+            ->from(self::TABLE)
+            ->aggregate($this->queryFactory->pdo(), 'MAX(order_no)');
+
+        return Row::intValue($max);
     }
 
-    private function hydrate(ModelsSongTag $model): SongTag
+    private function applyNameFilter(SelectBuilder $query, SongTagSearchCriteria $criteria): SelectBuilder
+    {
+        if (! $criteria->name->isPresent()) {
+            return $query;
+        }
+
+        $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
+
+        return $query->where('name_lower', 'LIKE', $keyword . '%');
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function hydrate(array $row): SongTag
     {
         return SongTag::reconstruct(
-            $this->converter->toUuid($model->song_tag_id),
-            $model->name,
-            $model->order_no,
+            $this->converter->toUuid(Row::string($row, 'song_tag_id')),
+            Row::string($row, 'name'),
+            Row::int($row, 'order_no'),
         );
     }
 }

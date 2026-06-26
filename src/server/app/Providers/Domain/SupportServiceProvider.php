@@ -15,7 +15,7 @@ use Support\Infrastructures\AuditLog\AuditLogRecorder;
 use Support\Infrastructures\Clock;
 use Support\Infrastructures\DbTransaction;
 use Support\Infrastructures\Mapper;
-use Support\Infrastructures\Query\AuditLog\EloquentAuditLogQueryService;
+use Support\Infrastructures\Query\AuditLog\AuditLogQueryService;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
@@ -32,6 +32,6 @@ class SupportServiceProvider extends ServiceProvider
         $this->app->bind(TransactionInterface::class, DbTransaction::class);
         $this->app->bind(ClockInterface::class, Clock::class);
         $this->app->bind(AuditLogRecorderInterface::class, AuditLogRecorder::class);
-        $this->app->bind(AuditLogQueryServiceInterface::class, EloquentAuditLogQueryService::class);
+        $this->app->bind(AuditLogQueryServiceInterface::class, AuditLogQueryService::class);
     }
 }

@@ -9,6 +9,7 @@ use Emonkak\Orm\DeleteBuilder;
 use Emonkak\Orm\Fetcher\ArrayFetcher;
 use Emonkak\Orm\Grammar\GrammarInterface;
 use Emonkak\Orm\InsertBuilder;
+use Emonkak\Orm\QueryBuilderInterface;
 use Emonkak\Orm\SelectBuilder;
 use Emonkak\Orm\UpdateBuilder;
 
@@ -49,6 +50,19 @@ final readonly class QueryFactory
     public function arrayFetcher(): ArrayFetcher
     {
         return new ArrayFetcher($this->pdo);
+    }
+
+    /**
+     * SELECT を実行して行を連想配列の一覧として取得する
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function fetchAll(QueryBuilderInterface $query): array
+    {
+        /** @var array<array<string, mixed>> $rows */
+        $rows = $this->arrayFetcher()->fetch($query)->toArray();
+
+        return array_values($rows);
     }
 
     public function pdo(): PDOInterface

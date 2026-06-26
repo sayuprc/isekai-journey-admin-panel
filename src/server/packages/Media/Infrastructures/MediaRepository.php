@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Media\Infrastructures;
 
-use App\Models\Media\Media as ModelsMedia;
+use DateTimeImmutable;
 use DateType\ImmutableDate;
-use Illuminate\Database\Eloquent\Builder;
+use Emonkak\Orm\SelectBuilder;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaId;
@@ -14,70 +14,88 @@ use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaUrl;
 use Override;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 use Support\Infrastructures\Database\SqlHelper;
 
 readonly class MediaRepository implements MediaRepositoryInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    private const string TABLE = 'media';
+
+    /** @var list<string> */
+    private const array COLUMNS = ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display'];
+
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     #[Override]
     public function find(MediaId $mediaId): ?Media
     {
-        $found = ModelsMedia::query()
-            ->where('media_id', $this->converter->toBin($mediaId->value))
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('media_id', '=', $this->converter->toBin($mediaId->value))
+                ->limit(1),
+        );
 
-        if (is_null($found)) {
-            return null;
-        }
+        $row = $rows[0] ?? null;
 
-        return $this->hydrate($found);
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function findByUrl(MediaUrl $url): ?Media
     {
-        $found = ModelsMedia::query()
-            ->where('url', $url->value)
-            ->first();
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('url', '=', $url->value)
+                ->limit(1),
+        );
 
-        if (is_null($found)) {
-            return null;
-        }
+        $row = $rows[0] ?? null;
 
-        return $this->hydrate($found);
+        return is_null($row) ? null : $this->hydrate($row);
     }
 
     #[Override]
     public function isUsed(MediaId $mediaId): bool
     {
-        return ModelsMedia::query()
-            ->where('media_id', $this->converter->toBin($mediaId->value))
-            ->whereHas('songMediaLinks')
-            ->exists();
+        $count = Row::intValue(
+            $this->queryFactory->select()
+                ->from('song_media_links')
+                ->where('media_id', '=', $this->converter->toBin($mediaId->value))
+                ->aggregate($this->queryFactory->pdo(), 'COUNT(*)'),
+        );
+
+        return $count > 0;
     }
 
     #[Override]
     public function search(MediaSearchCriteria $criteria): array
     {
-        $query = $this->buildSearchQuery($criteria);
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
 
-        return array_values($query
-            ->orderBy('title')
-            ->limit($criteria->perPage->value)
-            ->offset($offset)
-            ->get()
-            ->map($this->hydrate(...))
-            ->all());
+        $rows = $this->queryFactory->fetchAll(
+            $this->buildSearchQuery($criteria)
+                ->withSelect(self::COLUMNS)
+                ->orderBy('title')
+                ->limit($criteria->perPage->value)
+                ->offset($offset),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function maxPage(MediaSearchCriteria $criteria): int
     {
-        $count = $this->buildSearchQuery($criteria)->count();
+        $count = Row::intValue($this->buildSearchQuery($criteria)->aggregate($this->queryFactory->pdo(), 'COUNT(*)'));
 
         return (int)ceil($count / $criteria->perPage->value);
     }
@@ -85,37 +103,53 @@ readonly class MediaRepository implements MediaRepositoryInterface
     #[Override]
     public function findByIds(MediaId ...$mediaIds): array
     {
-        return array_values(ModelsMedia::query()
-            ->whereIn(
-                'media_id',
-                array_map(fn (MediaId $mediaId): string => $this->converter->toBin($mediaId->value), $mediaIds),
-            )
-            ->get()
-            ->map($this->hydrate(...))
-            ->all());
+        if ($mediaIds === []) {
+            return [];
+        }
+
+        $binIds = array_map(fn (MediaId $mediaId): string => $this->converter->toBin($mediaId->value), $mediaIds);
+
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(self::COLUMNS)
+                ->from(self::TABLE)
+                ->where('media_id', 'IN', $binIds),
+        );
+
+        return array_map($this->hydrate(...), $rows);
     }
 
     #[Override]
     public function save(Media $media): Media
     {
-        ModelsMedia::query()->upsert(
-            [
-                ...$media->toArray(),
-                'media_id' => $this->converter->toBin($media->mediaId->value),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            ['media_id'],
-            [
-                'title',
-                'url',
-                'published_at',
-                'type',
-                'format',
-                'is_display',
-                'updated_at',
-            ],
-        );
+        $data = $media->toArray();
+        $now = now()->toDateTimeString();
+
+        $this->queryFactory->insert()
+            ->into(self::TABLE, ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'created_at', 'updated_at'])
+            ->values([
+                $this->converter->toBin($media->mediaId->value),
+                $data['title'],
+                $data['url'],
+                $data['published_at'],
+                $data['type'],
+                $data['format'],
+                $data['is_display'],
+                $now,
+                $now,
+            ])
+            ->build()
+            ->append(
+                'ON DUPLICATE KEY UPDATE '
+                . '`title` = VALUES(`title`), '
+                . '`url` = VALUES(`url`), '
+                . '`published_at` = VALUES(`published_at`), '
+                . '`type` = VALUES(`type`), '
+                . '`format` = VALUES(`format`), '
+                . '`is_display` = VALUES(`is_display`), '
+                . '`updated_at` = VALUES(`updated_at`)',
+            )
+            ->execute($this->queryFactory->pdo());
 
         return $media;
     }
@@ -123,48 +157,49 @@ readonly class MediaRepository implements MediaRepositoryInterface
     #[Override]
     public function delete(MediaId $mediaId): void
     {
-        ModelsMedia::query()
-            ->where('media_id', $this->converter->toBin($mediaId->value))
-            ->delete();
+        $this->queryFactory->delete()
+            ->from(self::TABLE)
+            ->where('media_id', '=', $this->converter->toBin($mediaId->value))
+            ->execute($this->queryFactory->pdo());
     }
 
-    /**
-     * @return Builder<ModelsMedia>
-     */
-    private function buildSearchQuery(MediaSearchCriteria $criteria)
+    private function buildSearchQuery(MediaSearchCriteria $criteria): SelectBuilder
     {
-        $query = ModelsMedia::query();
+        $query = $this->queryFactory->select()->from(self::TABLE);
 
         if ($criteria->title->isPresent()) {
             $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->whereLike('title', '%' . $keyword . '%');
+            $query = $query->where('title', 'LIKE', '%' . $keyword . '%');
         }
 
         if ($criteria->type->isPresent()) {
-            $query = $query->where('type', $criteria->type->get()->value);
+            $query = $query->where('type', '=', $criteria->type->get()->value);
         }
 
         if ($criteria->format->isPresent()) {
-            $query = $query->where('format', $criteria->format->get()->value);
+            $query = $query->where('format', '=', $criteria->format->get()->value);
         }
 
         if ($criteria->isDisplay->isPresent()) {
-            $query = $query->where('is_display', $criteria->isDisplay->get());
+            $query = $query->where('is_display', '=', $criteria->isDisplay->get());
         }
 
         return $query;
     }
 
-    private function hydrate(ModelsMedia $row): Media
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function hydrate(array $row): Media
     {
         return Media::reconstruct(
-            $this->converter->toUuid($row->media_id),
-            $row->title,
-            $row->url,
-            ImmutableDate::createFromInterface($row->published_at),
-            $row->type,
-            $row->format,
-            $row->is_display,
+            $this->converter->toUuid(Row::string($row, 'media_id')),
+            Row::string($row, 'title'),
+            Row::string($row, 'url'),
+            ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($row, 'published_at'))),
+            Row::int($row, 'type'),
+            Row::int($row, 'format'),
+            Row::bool($row, 'is_display'),
         );
     }
 }

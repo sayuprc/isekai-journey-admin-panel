@@ -25,7 +25,7 @@ API の ORM を Eloquent から `emonkak/orm` へ移行し、`app/Models` の El
 - **接続・トランザクションは Laravel の Connection を共有する。** `emonkak` の `PDOInterface` には `new PDOAdapter(DB::connection()->getPdo())` をバインドし、接続設定は `config/database.php` に一元化する。Eloquent（ActiveRecord 層）は撤去するが、`Illuminate\Database` の接続・トランザクション層は引き続き利用する。`DB::transaction`（`DbTransaction`）はそのまま emonkak のクエリを包む。専用コネクタ（`SQLiteConnector` など）は作らず削除する。
 - **文法は `DefaultGrammar`** を用いる。識別子をバッククォートで囲むため MySQL / TiDB と互換。
 - **行→ドメインの復元は明示的な `Entity::reconstruct(...)` に統一する。** `ArrayFetcher` で行を配列取得し、Repository 内で明示的に再構築する。valinor ベースの `Mapper` は廃止する（実行時 reflection で静的解析と相性が悪く、移行の主動機に反するため）。
-- **リレーション/集約のネスト取得は emonkak の `RelationFetcher`**（`Relations::oneToMany` / `manyToMany` ほか）で行い、N+1 を回避する。
+- **リレーション/集約のネスト取得は明示的なマルチクエリで行う。** 親を取得して識別子を集め、子を `WHERE ... IN (...)` で一括取得し、PHP 側で親ごとに group して組み立てる（子は 1 クエリなので N+1 にならない）。当初は emonkak の `RelationFetcher` を採用する想定だったが、`with()` が期待する `RelationInterface` と `Relations::oneToMany()` が返す `Relation` のジェネリクスが食い違い、`ArrayFetcher` を不変テンプレート引数へ渡す箇所も covariance 誤検知となるため、PHPStan level 10 では `@phpstan-ignore` 無しに通せない。本移行の主目的（静的解析の健全性）と矛盾するため、RelationFetcher は使わない。
 - **段階移行**：共通足場（PDO 共有の再配線 + クエリ生成のヘルパ）を整えたのち、簡単なパッケージでパターンを確定 → Song（リレーション / upsert / カーソルページング）で難所を検証 → 残りを順に移行し、最後に `app/Models` を撤去する。各段階でテストを緑に保つ。
 
 ## Consequences

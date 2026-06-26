@@ -6,6 +6,7 @@ namespace Tests\Integration\Person\Infrastructures;
 
 use Person\Domain\Criteria\PersonSearchCriteria;
 use Person\Domain\Criteria\Sort;
+use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Infrastructures\PersonRepository;
 use PHPUnit\Framework\Attributes\Test;
@@ -24,8 +25,8 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
-        $person2 = $this->createPerson($this->generateUuid(), '春猿火', 2);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物1', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト人物2', 2);
 
         $repository->save($person1);
         $repository->save($person2);
@@ -38,7 +39,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物1', 1);
         $repository->save($person);
 
         $found = $repository->find($person->personId);
@@ -60,7 +61,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物1', 1);
 
         $repository->save($person);
 
@@ -75,7 +76,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person = $this->createPerson($this->generateUuid(), 'テスト人物', 1);
+        $person = $this->createPerson($this->generateUuid(), 'テスト人物1', 1);
 
         $repository->save($person);
         $repository->delete($person->personId);
@@ -88,8 +89,8 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 10);
-        $person2 = $this->createPerson($this->generateUuid(), '春猿火', 20);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物1', 10);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト人物2', 20);
 
         $repository->save($person1);
         $repository->save($person2);
@@ -104,13 +105,13 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物', 10);
-        $person2 = $this->createPerson($this->generateUuid(), '春猿火', 20);
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物1', 10);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト人物2', 20);
 
         $repository->save($person1);
         $repository->save($person2);
 
-        $persons = $repository->search(new PersonSearchCriteria(new Some('テスト人物')));
+        $persons = $repository->search(new PersonSearchCriteria(new Some('テスト人物1')));
 
         $this->assertCount(1, $persons);
         $this->assertEquals($person1, $persons[0]);
@@ -139,9 +140,66 @@ class PersonRepositoryTest extends DatabaseTestCase
     {
         $repository = $this->getInstance();
 
-        $repository->save($this->createPerson($this->generateUuid(), 'テスト人物', 10));
+        $repository->save($this->createPerson($this->generateUuid(), 'テスト人物1', 10));
 
         $this->assertSame(1, $repository->maxPage(new PersonSearchCriteria(new None())));
+    }
+
+    #[Test]
+    public function findByIds(): void
+    {
+        $repository = $this->getInstance();
+
+        $person1 = $this->createPerson($this->generateUuid(), 'テスト人物1', 1);
+        $person2 = $this->createPerson($this->generateUuid(), 'テスト人物2', 2);
+        $person3 = $this->createPerson($this->generateUuid(), 'テスト人物3', 3);
+
+        $repository->save($person1);
+        $repository->save($person2);
+        $repository->save($person3);
+
+        $found = $repository->findByIds($person1->personId, $person3->personId);
+
+        $this->assertCount(2, $found);
+        $this->assertEqualsCanonicalizing(
+            [$person1->personId->value, $person3->personId->value],
+            array_map(fn (Person $person): string => $person->personId->value, $found),
+        );
+    }
+
+    #[Test]
+    public function findByIdsReturnsEmptyWhenNoIdsGiven(): void
+    {
+        $this->assertSame([], $this->getInstance()->findByIds());
+    }
+
+    #[Test]
+    public function saveUpdatesExistingPerson(): void
+    {
+        $repository = $this->getInstance();
+
+        $id = $this->generateUuid();
+        $repository->save($this->createPerson($id, '旧名', 1));
+
+        $updated = $this->createPerson($id, '新名', 5);
+        $repository->save($updated);
+
+        $found = $repository->find($updated->personId);
+
+        $this->assertNotNull($found);
+        $this->assertEquals($updated, $found);
+        $this->assertCount(1, $repository->all());
+    }
+
+    #[Test]
+    public function getMaxOrderNo(): void
+    {
+        $repository = $this->getInstance();
+
+        $repository->save($this->createPerson($this->generateUuid(), 'テスト人物1', 3));
+        $repository->save($this->createPerson($this->generateUuid(), 'テスト人物2', 7));
+
+        $this->assertSame(7, $repository->getMaxOrderNo());
     }
 
     #[Test]

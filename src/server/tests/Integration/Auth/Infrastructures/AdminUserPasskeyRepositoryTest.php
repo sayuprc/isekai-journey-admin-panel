@@ -9,13 +9,14 @@ use AdminUser\Infrastructures\AdminUserRepository;
 use Auth\Domain\Models\AdminUserPasskey;
 use Auth\Infrastructures\AdminUserPasskeyRepository;
 use DateTimeImmutable;
-use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\Database\CapturesQueries;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 
 class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
 {
+    use CapturesQueries;
     use EntityFactory;
 
     #[Test]
@@ -101,8 +102,7 @@ class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
             $this->createAdminUser($adminUserId, 'user@example.com', Role::General),
         );
 
-        $repository = $this->app->make(AdminUserPasskeyRepository::class);
-        $repository->save(new AdminUserPasskey(
+        $this->app->make(AdminUserPasskeyRepository::class)->save(new AdminUserPasskey(
             $this->generateUuid(),
             $adminUserId,
             'user-handle',
@@ -118,21 +118,19 @@ class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
             null,
         ));
 
-        DB::enableQueryLog();
+        $this->startCapturingQueries();
 
-        $repository->findByAdminUserIdAndCredentialIdForUpdate($adminUserId, 'credential-id');
-
-        $queries = DB::getQueryLog();
-        DB::disableQueryLog();
+        $this->app->make(AdminUserPasskeyRepository::class)
+            ->findByAdminUserIdAndCredentialIdForUpdate($adminUserId, 'credential-id');
 
         $selectQueries = array_values(array_filter(
-            $queries,
-            fn (array $query): bool => str_starts_with(strtolower((string)$query['query']), 'select')
-                && str_contains((string)$query['query'], 'admin_user_passkeys'),
+            $this->capturedQueries(),
+            fn (string $query): bool => str_starts_with(strtolower($query), 'select')
+                && str_contains($query, 'admin_user_passkeys'),
         ));
 
         $this->assertNotSame([], $selectQueries);
-        $this->assertStringContainsString('for update', strtolower((string)$selectQueries[0]['query']));
+        $this->assertStringContainsString('for update', strtolower($selectQueries[0]));
     }
 
     #[Test]
