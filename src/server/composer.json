@@ -22,7 +22,6 @@
     "web-auth/webauthn-lib": "^5.2.5"
   },
   "require-dev": {
-    "barryvdh/laravel-ide-helper": "^3.6",
     "brianium/paratest": "^7.15",
     "fakerphp/faker": "^1.24",
     "infection/infection": "^0.32",
