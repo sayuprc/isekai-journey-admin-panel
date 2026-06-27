@@ -17,12 +17,11 @@ Claude Code の記事「Steering Claude Code: CLAUDE.md files, skills, hooks, ru
 
 - 常時入口: `AGENTS.md`, `CLAUDE.md`, `docs/agent-map.md`
 - Claude path rules: `.claude/rules/*.md`
-- GitHub Copilot instructions: `.github/instructions/*.instructions.md`
 - APM instructions: `.apm/instructions/*.instructions.md`
 - Claude skills: `.claude/skills/*/SKILL.md`
 - Codex skills: `.agents/skills/*/SKILL.md`
 - Subagents: `.claude/agents/`, `.codex/agents/`
-- Deterministic hooks: `.github/hooks/`, `.claude/settings.json`, `.codex/hooks.json`
+- Deterministic hooks: `tools/hooks/`, `.claude/settings.json`, `.codex/hooks.json`
 
 ## 判断基準
 

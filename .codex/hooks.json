@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .github/hooks/protect-config.sh"
+            "command": "bash tools/hooks/protect-config.sh"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .github/hooks/post-lint.sh"
+            "command": "bash tools/hooks/post-lint.sh"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .github/hooks/stop-verify.sh"
+            "command": "bash tools/hooks/stop-verify.sh"
           }
         ]
       }

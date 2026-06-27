@@ -4,19 +4,19 @@
     "preToolUse": [
       {
         "type": "command",
-        "bash": ".github/hooks/protect-config.sh"
+        "bash": "tools/hooks/protect-config.sh"
       }
     ],
     "postToolUse": [
       {
         "type": "command",
-        "bash": ".github/hooks/post-lint.sh"
+        "bash": "tools/hooks/post-lint.sh"
       }
     ],
     "agentStop": [
       {
         "type": "command",
-        "bash": ".github/hooks/stop-verify.sh"
+        "bash": "tools/hooks/stop-verify.sh"
       }
     ]
   }
