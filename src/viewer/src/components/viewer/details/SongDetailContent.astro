@@ -11,7 +11,7 @@ const creditItems = [
   { en: 'LYRICS', label: '作詞', names: song.lyricists },
   { en: 'MUSIC', label: '作曲', names: song.composers },
   { en: 'ARRANGE', label: '編曲', names: song.arrangers },
-].filter(item => item.names.length > 0);
+].map(item => item.names.length > 0 ? item : { ...item, names: ['-'] });
 
 const formatPublishedAt = (value: string): string =>
   new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -22,31 +22,25 @@ const formatPublishedAt = (value: string): string =>
   <h1 class="detail-title">{song.title}</h1>
   <p class="detail-description" style="margin-top: 24px;">{song.description}</p>
 
-  {
-    creditItems.length > 0 && (
-      <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-          <div>
-            <span class="label-mono">CREDITS</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">クレジット</span>
-          </div>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
+    <div>
+      <span class="label-mono">CREDITS</span>
+      <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">クレジット</span>
+    </div>
+  </div>
+  <dl class="song-credit-grid">
+    {
+      creditItems.map(item => (
+        <div class="song-credit-item">
+          <dt class="song-credit-label">
+            <span class="song-credit-en label-mono">{item.en}</span>
+            <span class="song-credit-jp">{item.label}</span>
+          </dt>
+          <dd class="song-credit-value">{item.names.join(' / ')}</dd>
         </div>
-        <dl class="song-credit-grid">
-          {
-            creditItems.map(item => (
-              <div class="song-credit-item">
-                <dt class="song-credit-label">
-                  <span class="song-credit-en label-mono">{item.en}</span>
-                  <span class="song-credit-jp">{item.label}</span>
-                </dt>
-                <dd class="song-credit-value">{item.names.join(' / ')}</dd>
-              </div>
-            ))
-          }
-        </dl>
-      </>
-    )
-  }
+      ))
+    }
+  </dl>
 
   {/* {
     releases.length > 0 && (
