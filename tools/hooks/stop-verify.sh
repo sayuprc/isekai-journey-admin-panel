@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
-hook_state_dir="$repo_root/.git/copilot-hooks"
+hook_state_dir="$repo_root/.git/agent-hooks"
 contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
 
 [ -f "$contracts_stop_marker" ] || exit 0

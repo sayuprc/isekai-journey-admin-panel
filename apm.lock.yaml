@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-06-23T13:15:26.088667+00:00'
+generated_at: '2026-06-27T05:48:24.571357+00:00'
 apm_version: 0.9.2
 dependencies:
 - repo_url: mattpocock/skills
@@ -41,23 +41,6 @@ dependencies:
   - .claude/skills/to-prd
   - .claude/skills/triage
   - .claude/skills/writing-great-skills
-  - .github/skills/ask-matt
-  - .github/skills/codebase-design
-  - .github/skills/diagnosing-bugs
-  - .github/skills/domain-modeling
-  - .github/skills/grill-me
-  - .github/skills/grill-with-docs
-  - .github/skills/grilling
-  - .github/skills/handoff
-  - .github/skills/improve-codebase-architecture
-  - .github/skills/prototype
-  - .github/skills/setup-matt-pocock-skills
-  - .github/skills/tdd
-  - .github/skills/teach
-  - .github/skills/to-issues
-  - .github/skills/to-prd
-  - .github/skills/triage
-  - .github/skills/writing-great-skills
   content_hash: sha256:0f141b68d72e78d13a9000f99542aaecd53ed7eea15f4611dbc2961ab79efcee
 local_deployed_files:
 - .agents/skills/code-reviewer
@@ -78,18 +61,6 @@ local_deployed_files:
 - .claude/skills/php-unit-test-creator
 - .claude/skills/pr-creator
 - .codex/agents/docs-curator.toml
-- .github/agents/docs-curator.agent.md
-- .github/instructions/01-backend.instructions.md
-- .github/instructions/02-admin.instructions.md
-- .github/instructions/03-contracts.instructions.md
-- .github/instructions/04-docs.instructions.md
-- .github/instructions/05-viewer.instructions.md
-- .github/skills/code-reviewer
-- .github/skills/orchestrator
-- .github/skills/php-feature-test-creator
-- .github/skills/php-integration-test-creator
-- .github/skills/php-unit-test-creator
-- .github/skills/pr-creator
 local_deployed_file_hashes:
   .claude/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
   .claude/rules/01-backend.md: sha256:8eee1bc000c5f14a27da280992b305ee3e44b5956c6066c2b33fca811c016ecd
@@ -97,9 +68,3 @@ local_deployed_file_hashes:
   .claude/rules/03-contracts.md: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
   .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
   .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
-  .github/agents/docs-curator.agent.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
-  .github/instructions/01-backend.instructions.md: sha256:6f69789ca2111695f38426b9d5085dabcc0dfd2b5aebe331c45c38bc8fc656f7
-  .github/instructions/02-admin.instructions.md: sha256:6e436831975289a09429ce1d0147e1f027122da3c6d2ab4c0289edd28df82ed5
-  .github/instructions/03-contracts.instructions.md: sha256:c0396efe3ce50db95e0c2cde16ad945dea7cb24fb6b3729c4f056d081d3048cb
-  .github/instructions/04-docs.instructions.md: sha256:bd052f95e8b9b6ac5308dd9f17084b014d08b0a49edd859471665c0775c8459c
-  .github/instructions/05-viewer.instructions.md: sha256:3f38228dee643e6fe266becf107ea29d695fee10f34b6cd680d6b4a5c1c30c16

@@ -10,7 +10,7 @@ file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")
 [ -z "$file" ] && exit 0
 
 repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
-hook_state_dir="$repo_root/.git/copilot-hooks"
+hook_state_dir="$repo_root/.git/agent-hooks"
 contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
 
 # 自動生成ファイルはスキップ
