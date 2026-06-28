@@ -110,6 +110,8 @@ export type Media = {
     type: MediaType;
     format: MediaFormat;
     isDisplay: boolean;
+    platform: MediaPlatform;
+    thumbnailUrl?: MediaThumbnailUrl;
 };
 
 export type MediaCreateRequest = {
@@ -119,6 +121,7 @@ export type MediaCreateRequest = {
     typeValue: MediaTypeValue;
     formatValue: MediaFormatValue;
     isDisplay: boolean;
+    platformValue?: MediaPlatformValue;
 };
 
 export type MediaCreateResponse = {
@@ -139,6 +142,16 @@ export type MediaGetResponse = {
     media: Media;
     songs: Array<MediaReferencedSong>;
 };
+
+export type MediaPlatform = {
+    name: MediaPlatformName;
+    value: MediaPlatformValue;
+};
+
+/**
+ * プラットフォーム種別の値
+ */
+export type MediaPlatformValue = 1 | 2 | 99;
 
 export type MediaReferencedSong = {
     songId: MediaReferencedSongId;
@@ -169,6 +182,7 @@ export type MediaUpdateRequest = {
     typeValue: MediaTypeValue;
     formatValue: MediaFormatValue;
     isDisplay: boolean;
+    platformValue?: MediaPlatformValue;
 };
 
 export type MediaUpdateResponse = {
@@ -430,6 +444,8 @@ export type SongLinkedMedia = {
     type: MediaType;
     format: MediaFormat;
     isDisplay: boolean;
+    platform: MediaPlatform;
+    thumbnailUrl?: MediaThumbnailUrl;
     orderNo: OrderNo;
 };
 
@@ -613,6 +629,11 @@ export type MediaFormatName = string;
 export type MediaId = string;
 
 /**
+ * プラットフォーム種別名
+ */
+export type MediaPlatformName = string;
+
+/**
  * 公開日
  */
 export type MediaPublishedAt = string;
@@ -626,6 +647,11 @@ export type MediaReferencedSongId = string;
  * メディアを参照している楽曲名
  */
 export type MediaReferencedSongTitle = string;
+
+/**
+ * サムネイルURL
+ */
+export type MediaThumbnailUrl = string;
 
 /**
  * メディアタイトル

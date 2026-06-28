@@ -1957,6 +1957,7 @@ components:
         - type
         - format
         - isDisplay
+        - platform
       properties:
         mediaId:
           $ref: '#/components/schemas/mediaId'
@@ -1972,6 +1973,10 @@ components:
           $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
+        platform:
+          $ref: '#/components/schemas/MediaPlatform'
+        thumbnailUrl:
+          $ref: '#/components/schemas/mediaThumbnailUrl'
     MediaCreateRequest:
       type: object
       required:
@@ -1994,6 +1999,8 @@ components:
           $ref: '#/components/schemas/MediaFormatValue'
         isDisplay:
           type: boolean
+        platformValue:
+          $ref: '#/components/schemas/MediaPlatformValue'
     MediaCreateResponse:
       type: object
       required:
@@ -2037,6 +2044,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MediaReferencedSong'
+    MediaPlatform:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaPlatformName'
+        value:
+          $ref: '#/components/schemas/MediaPlatformValue'
+      examples:
+        - name: YouTube
+          value: 1
+    MediaPlatformValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 99
+      description: プラットフォーム種別の値
     MediaReferencedSong:
       type: object
       required:
@@ -2111,6 +2139,8 @@ components:
           $ref: '#/components/schemas/MediaFormatValue'
         isDisplay:
           type: boolean
+        platformValue:
+          $ref: '#/components/schemas/MediaPlatformValue'
     MediaUpdateResponse:
       type: object
       required:
@@ -2638,6 +2668,9 @@ components:
                 name: MV
                 value: 1
               isDisplay: true
+              platform:
+                name: その他
+                value: 99
               orderNo: 1
     SongAttachedTag:
       type: object
@@ -2709,6 +2742,7 @@ components:
         - type
         - format
         - isDisplay
+        - platform
         - orderNo
       properties:
         mediaId:
@@ -2725,6 +2759,10 @@ components:
           $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
+        platform:
+          $ref: '#/components/schemas/MediaPlatform'
+        thumbnailUrl:
+          $ref: '#/components/schemas/mediaThumbnailUrl'
         orderNo:
           $ref: '#/components/schemas/orderNo'
       examples:
@@ -2739,6 +2777,9 @@ components:
             name: MV
             value: 1
           isDisplay: true
+          platform:
+            name: その他
+            value: 99
           orderNo: 1
     SongPerson:
       type: object
@@ -3054,6 +3095,10 @@ components:
       type: string
       format: uuid
       description: メディアID
+    mediaPlatformName:
+      type: string
+      minLength: 1
+      description: プラットフォーム種別名
     mediaPublishedAt:
       type: string
       format: date
@@ -3066,6 +3111,10 @@ components:
       type: string
       minLength: 1
       description: メディアを参照している楽曲名
+    mediaThumbnailUrl:
+      type: string
+      format: uri
+      description: サムネイルURL
     mediaTitle:
       type: string
       minLength: 1

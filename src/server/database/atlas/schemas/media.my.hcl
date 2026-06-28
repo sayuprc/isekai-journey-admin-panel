@@ -41,6 +41,17 @@ table "media" {
     type    = bool
     comment = "表示するか"
   }
+  column "platform" {
+    null     = false
+    type     = tinyint
+    unsigned = true
+    comment  = "プラットフォーム種別"
+  }
+  column "thumbnail_url" {
+    null    = true
+    type    = text
+    comment = "サムネイルURL"
+  }
   column "created_at" {
     null    = false
     type    = datetime
@@ -54,5 +65,10 @@ table "media" {
 
   primary_key {
     columns = [column.media_id]
+  }
+
+  // YouTube (platform = 1) のときだけサムネイル URL を持つことを保証する
+  check "media_youtube_thumbnail" {
+    expr = "(platform = 1) = (thumbnail_url IS NOT NULL)"
   }
 }

@@ -34,6 +34,7 @@ model SongRelationCounts {
       title: "テストメディアMV",
       type: #{ name: "動画", value: MediaTypeValue.Video },
       format: #{ name: "MV", value: MediaFormatValue.Mv },
+      platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
       publishedAt: "2024-03-01",
     }
   ],
@@ -55,6 +56,7 @@ model SongListItem {
   title: "テストメディアMV",
   type: #{ name: "動画", value: MediaTypeValue.Video },
   format: #{ name: "MV", value: MediaFormatValue.Mv },
+  platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
   publishedAt: "2024-03-01",
 })
 model SongMediaSummary {
@@ -62,5 +64,6 @@ model SongMediaSummary {
   title: mediaTitle;
   type: MediaType;
   format: MediaFormat;
+  platform: MediaPlatform;
   publishedAt: mediaPublishedAt;
 }

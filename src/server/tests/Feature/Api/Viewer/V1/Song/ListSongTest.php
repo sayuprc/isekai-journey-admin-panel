@@ -183,6 +183,10 @@ class ListSongTest extends DatabaseTestCase
                                     'name' => 'MV',
                                     'value' => 1,
                                 ],
+                                'platform' => [
+                                    'name' => 'その他',
+                                    'value' => 99,
+                                ],
                                 'publishedAt' => '2024-03-01',
                             ],
                             [
@@ -193,6 +197,10 @@ class ListSongTest extends DatabaseTestCase
                                     'value' => 2,
                                 ],
                                 'format' => [
+                                    'name' => 'その他',
+                                    'value' => 99,
+                                ],
+                                'platform' => [
                                     'name' => 'その他',
                                     'value' => 99,
                                 ],
@@ -241,6 +249,10 @@ class ListSongTest extends DatabaseTestCase
                                 'format' => [
                                     'name' => 'MV',
                                     'value' => 1,
+                                ],
+                                'platform' => [
+                                    'name' => 'その他',
+                                    'value' => 99,
                                 ],
                                 'publishedAt' => '2024-03-01',
                             ],

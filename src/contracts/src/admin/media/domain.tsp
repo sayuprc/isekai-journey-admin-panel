@@ -14,6 +14,8 @@ model Media {
   type: MediaType;
   format: MediaFormat;
   isDisplay: boolean;
+  platform: MediaPlatform;
+  thumbnailUrl?: mediaThumbnailUrl;
 }
 
 @doc("メディアを参照している楽曲ID")

@@ -86,7 +86,7 @@ const formatPublishedAt = (value: string): string =>
               {/* TODO メディアのサムネイルを表示する */}
               <div class="rel-copy">
                 <div class="rel-main">{entry.title}</div>
-                <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)}{/* · {entry.type.name} */} · {entry.format.name}</div>
+                <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)} · {entry.platform.name} · {entry.format.name}</div>
               </div>
               <span style="font-size:14px;color:var(--fg-faint);">→</span>
             </a>

@@ -2178,6 +2178,59 @@ image-slot:hover {
   overflow: hidden;
 }
 
+.media-detail-thumbnail-link {
+  position: relative;
+  display: block;
+}
+
+.media-detail-thumbnail-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.08em;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.media-detail-thumbnail-link:hover .media-detail-thumbnail-overlay,
+.media-detail-thumbnail-link:focus-visible .media-detail-thumbnail-overlay {
+  opacity: 1;
+}
+
+.media-detail-thumbnail {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.media-detail-thumbnail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)),
+    color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2))
+  );
+}
+
+.media-detail-thumbnail-placeholder-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
+  color: var(--fg-muted);
+  letter-spacing: 0.1em;
+}
+
 .color-block {
   flex-shrink: 0;
   width: 38px;

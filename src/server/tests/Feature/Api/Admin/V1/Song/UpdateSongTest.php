@@ -126,6 +126,10 @@ class UpdateSongTest extends DatabaseTestCase
                                 'value' => $newMedia->format->value,
                             ],
                             'isDisplay' => true,
+                            'platform' => [
+                                'name' => $newMedia->platform->getName(),
+                                'value' => $newMedia->platform->value,
+                            ],
                             'orderNo' => 1,
                         ],
                     ],

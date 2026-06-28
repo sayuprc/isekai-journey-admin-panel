@@ -17,6 +17,8 @@ namespace IsekaiObservatory.Viewer;
       publishedAt: "2024-03-01",
       type: #{ name: "動画", value: MediaTypeValue.Video },
       format: #{ name: "MV", value: MediaFormatValue.Mv },
+      platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
+      thumbnailUrl: "https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg",
       counts: #{ songCount: 1 },
       songs: #[
         #{

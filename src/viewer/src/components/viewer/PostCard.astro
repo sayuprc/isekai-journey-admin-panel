@@ -1,6 +1,6 @@
 ---
 import { Q } from '../../data/mock/site-data';
-import { mediaTypeLabel } from '../../features/media/labels';
+import { mediaTypeLabel, youtubeThumbnailSrcset } from '../../features/media/labels';
 
 interface Props {
   entry: {
@@ -14,6 +14,7 @@ interface Props {
     reposts?: string;
     readTime?: string;
     hasImage?: boolean;
+    thumbnailUrl?: string;
     color: string;
   };
   compact?: boolean;
@@ -39,7 +40,22 @@ const platform = platformMeta[entry.platform as keyof typeof platformMeta] ?? pl
   </div>
   {entry.title && <div class="post-card-title">{entry.title}</div>}
   <div class="post-card-text">{entry.text}</div>
-  {entry.hasImage && <div class="post-card-image" style={`--tile-color:${entry.color};`}></div>}
+  {
+    entry.thumbnailUrl
+      ? (
+          <img
+            class="post-card-thumbnail"
+            src={entry.thumbnailUrl}
+            srcset={youtubeThumbnailSrcset(entry.thumbnailUrl)}
+            sizes="(max-width: 640px) 100vw, 320px"
+            loading="lazy"
+            alt={entry.title ?? ''}
+          />
+        )
+      : (
+          entry.hasImage && <div class="post-card-image" style={`--tile-color:${entry.color};`} />
+        )
+  }
   {
     songs.length > 0 && (
       <div class="media-card-tags">

@@ -1,5 +1,5 @@
 import { createResource, Match, Show, Switch } from 'solid-js';
-import type { Media, MediaFormatValue, MediaReferencedSong, MediaTypeValue } from '../../generated';
+import type { Media, MediaFormatValue, MediaPlatformValue, MediaReferencedSong, MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -20,6 +20,12 @@ const MEDIA_FORMAT_OPTIONS: Array<{ value: MediaFormatValue; label: string }> = 
   { value: 3, label: '配信アーカイブ' },
   { value: 4, label: 'ショート動画' },
   { value: 5, label: 'ライブ切り抜き' },
+  { value: 99, label: 'その他' },
+];
+
+const MEDIA_PLATFORM_OPTIONS: Array<{ value: MediaPlatformValue; label: string }> = [
+  { value: 1, label: 'YouTube' },
+  { value: 2, label: 'X' },
   { value: 99, label: 'その他' },
 ];
 
@@ -162,6 +168,9 @@ const EditableForm = (props: EditableFormProps) => {
       typeValue: Number(formData.get('typeValue')) as MediaTypeValue,
       formatValue: Number(formData.get('formatValue')) as MediaFormatValue,
       isDisplay: formData.get('isDisplay') === 'true',
+      platformValue: formData.get('platformValue')
+        ? (Number(formData.get('platformValue')) as MediaPlatformValue)
+        : undefined,
     });
 
     if (data) {
@@ -283,7 +292,34 @@ const EditableForm = (props: EditableFormProps) => {
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
+
+              <div>
+                <label class="label">プラットフォーム</label>
+                <select
+                  class="select w-full"
+                  name="platformValue"
+                  value={props.data.media.platform.value}
+                  classList={{ 'select-error': !!getFieldError('platformValue') }}
+                >
+                  <option value="">自動判定</option>
+                  {MEDIA_PLATFORM_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                <Show when={getFieldError('platformValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
             </div>
+
+            <Show when={props.data.media.thumbnailUrl}>
+              {thumbnailUrl => (
+                <div class="mt-4">
+                  <label class="label">サムネイル</label>
+                  <img src={thumbnailUrl()} alt="サムネイル" class="max-w-xs rounded-box border border-base-300" />
+                </div>
+              )}
+            </Show>
 
             <label class="label">表示設定</label>
             <select

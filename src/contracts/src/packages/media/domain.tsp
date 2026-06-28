@@ -67,3 +67,28 @@ model MediaFormat {
   name: mediaFormatName;
   value: MediaFormatValue;
 }
+
+@doc("プラットフォーム種別名")
+@minLength(1)
+@friendlyName("mediaPlatformName")
+scalar mediaPlatformName extends string;
+
+@doc("プラットフォーム種別の値")
+@friendlyName("MediaPlatformValue")
+enum MediaPlatformValue {
+  YouTube: 1,
+  X: 2,
+  Other: 99,
+}
+
+@example(#{ name: "YouTube", value: MediaPlatformValue.YouTube })
+@friendlyName("MediaPlatform")
+model MediaPlatform {
+  name: mediaPlatformName;
+  value: MediaPlatformValue;
+}
+
+@doc("サムネイルURL")
+@format("uri")
+@friendlyName("mediaThumbnailUrl")
+scalar mediaThumbnailUrl extends string;

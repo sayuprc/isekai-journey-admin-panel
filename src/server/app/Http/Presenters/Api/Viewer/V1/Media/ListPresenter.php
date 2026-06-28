@@ -14,6 +14,8 @@ use OpenAPI\Viewer\Client\Model\MediaFormat;
 use OpenAPI\Viewer\Client\Model\MediaFormatValue;
 use OpenAPI\Viewer\Client\Model\MediaListItem as OpenApiMediaListItem;
 use OpenAPI\Viewer\Client\Model\MediaListResponse;
+use OpenAPI\Viewer\Client\Model\MediaPlatform as OpenApiMediaPlatform;
+use OpenAPI\Viewer\Client\Model\MediaPlatformValue;
 use OpenAPI\Viewer\Client\Model\MediaRelationCounts;
 use OpenAPI\Viewer\Client\Model\MediaSongSummary as OpenApiMediaSongSummary;
 use OpenAPI\Viewer\Client\Model\MediaType;
@@ -48,14 +50,21 @@ class ListPresenter
     {
         $songs = array_map($this->toOpenApiMediaSongSummary(...), $media->songs);
 
-        return new OpenApiMediaListItem()->setMediaId($media->mediaId)
+        $item = new OpenApiMediaListItem()->setMediaId($media->mediaId)
             ->setTitle($media->title)
             ->setUrl($media->url)
             ->setPublishedAt(DateTime::createFromImmutable($media->publishedAt))
             ->setType(new MediaType()->setName($media->type->getName())->setValue(MediaTypeValue::from($media->type->value)))
             ->setFormat(new MediaFormat()->setName($media->format->getName())->setValue(MediaFormatValue::from($media->format->value)))
+            ->setPlatform(new OpenApiMediaPlatform()->setName($media->platform->getName())->setValue(MediaPlatformValue::from($media->platform->value)))
             ->setCounts(new MediaRelationCounts()->setSongCount(count($songs)))
             ->setSongs($songs);
+
+        if (! is_null($media->thumbnailUrl)) {
+            $item->setThumbnailUrl($media->thumbnailUrl);
+        }
+
+        return $item;
     }
 
     private function toOpenApiMediaSongSummary(MediaSongSummary $song): OpenApiMediaSongSummary

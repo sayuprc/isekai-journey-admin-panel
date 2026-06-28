@@ -12,6 +12,7 @@ use Media\Application\Viewer\Query\MediaListPage;
 use Media\Application\Viewer\Query\MediaQueryServiceInterface;
 use Media\Application\Viewer\Query\MediaSongSummary;
 use Media\Domain\Models\MediaFormat;
+use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Override;
 use Song\Domain\Models\SongType;
@@ -31,7 +32,7 @@ readonly class MediaQueryService implements MediaQueryServiceInterface
     public function list(?string $cursor, int $limit): MediaListPage
     {
         $query = $this->queryFactory->select()
-            ->withSelect(['media_id', 'title', 'url', 'published_at', 'type', 'format'])
+            ->withSelect(['media_id', 'title', 'url', 'published_at', 'type', 'format', 'platform', 'thumbnail_url'])
             ->from('media')
             ->where('is_display', '=', true);
 
@@ -74,6 +75,8 @@ readonly class MediaQueryService implements MediaQueryServiceInterface
                     MediaType::from(Row::int($mediaRow, 'type')),
                     MediaFormat::from(Row::int($mediaRow, 'format')),
                     array_map($this->toSongSummary(...), $songRows),
+                    MediaPlatform::from(Row::int($mediaRow, 'platform')),
+                    Row::nullableString($mediaRow, 'thumbnail_url'),
                 );
             },
             $pageRows,

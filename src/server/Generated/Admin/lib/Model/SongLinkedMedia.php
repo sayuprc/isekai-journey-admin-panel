@@ -64,6 +64,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => '\OpenAPI\Admin\Client\Model\MediaType',
         'format' => '\OpenAPI\Admin\Client\Model\MediaFormat',
         'is_display' => 'bool',
+        'platform' => '\OpenAPI\Admin\Client\Model\MediaPlatform',
+        'thumbnail_url' => 'string',
         'order_no' => 'int'
     ];
 
@@ -82,6 +84,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => null,
         'format' => null,
         'is_display' => null,
+        'platform' => null,
+        'thumbnail_url' => 'uri',
         'order_no' => 'int32'
     ];
 
@@ -98,6 +102,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => false,
         'format' => false,
         'is_display' => false,
+        'platform' => false,
+        'thumbnail_url' => false,
         'order_no' => false
     ];
 
@@ -194,6 +200,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'type',
         'format' => 'format',
         'is_display' => 'isDisplay',
+        'platform' => 'platform',
+        'thumbnail_url' => 'thumbnailUrl',
         'order_no' => 'orderNo'
     ];
 
@@ -210,6 +218,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'setType',
         'format' => 'setFormat',
         'is_display' => 'setIsDisplay',
+        'platform' => 'setPlatform',
+        'thumbnail_url' => 'setThumbnailUrl',
         'order_no' => 'setOrderNo'
     ];
 
@@ -226,6 +236,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         'type' => 'getType',
         'format' => 'getFormat',
         'is_display' => 'getIsDisplay',
+        'platform' => 'getPlatform',
+        'thumbnail_url' => 'getThumbnailUrl',
         'order_no' => 'getOrderNo'
     ];
 
@@ -293,6 +305,8 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('format', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('platform', $data ?? [], null);
+        $this->setIfExists('thumbnail_url', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
     }
 
@@ -347,6 +361,9 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
+        }
+        if ($this->container['platform'] === null) {
+            $invalidProperties[] = "'platform' can't be null";
         }
         if ($this->container['order_no'] === null) {
             $invalidProperties[] = "'order_no' can't be null";
@@ -560,6 +577,60 @@ class SongLinkedMedia implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets platform
+     *
+     * @return \OpenAPI\Admin\Client\Model\MediaPlatform
+     */
+    public function getPlatform()
+    {
+        return $this->container['platform'];
+    }
+
+    /**
+     * Sets platform
+     *
+     * @param \OpenAPI\Admin\Client\Model\MediaPlatform $platform platform
+     *
+     * @return self
+     */
+    public function setPlatform($platform)
+    {
+        if (is_null($platform)) {
+            throw new \InvalidArgumentException('non-nullable platform cannot be null');
+        }
+        $this->container['platform'] = $platform;
+
+        return $this;
+    }
+
+    /**
+     * Gets thumbnail_url
+     *
+     * @return string|null
+     */
+    public function getThumbnailUrl()
+    {
+        return $this->container['thumbnail_url'];
+    }
+
+    /**
+     * Sets thumbnail_url
+     *
+     * @param string|null $thumbnail_url サムネイルURL
+     *
+     * @return self
+     */
+    public function setThumbnailUrl($thumbnail_url)
+    {
+        if (is_null($thumbnail_url)) {
+            throw new \InvalidArgumentException('non-nullable thumbnail_url cannot be null');
+        }
+        $this->container['thumbnail_url'] = $thumbnail_url;
 
         return $this;
     }

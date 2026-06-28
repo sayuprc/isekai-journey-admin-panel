@@ -16,6 +16,9 @@ readonly class AssembledMedia
         public string $formatName,
         public int $formatValue,
         public bool $isDisplay,
+        public string $platformName,
+        public int $platformValue,
+        public ?string $thumbnailUrl,
         public int $orderNo,
     ) {
     }

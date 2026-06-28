@@ -99,6 +99,9 @@ class SongAssembler
                 $found->format->getName(),
                 $found->format->value,
                 $found->isDisplay,
+                $found->platform->getName(),
+                $found->platform->value,
+                $found->thumbnail?->value,
                 $link->orderNo->value,
             );
         };

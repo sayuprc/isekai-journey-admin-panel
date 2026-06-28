@@ -6,6 +6,7 @@ namespace Tests\Feature\Api\Admin\V1\Media;
 
 use DateType\ImmutableDate;
 use Media\Domain\Models\MediaFormat;
+use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -74,6 +75,10 @@ class GetMediaTest extends DatabaseTestCase
                         'value' => MediaFormat::Mv->value,
                     ],
                     'isDisplay' => true,
+                    'platform' => [
+                        'name' => MediaPlatform::Other->getName(),
+                        'value' => MediaPlatform::Other->value,
+                    ],
                 ],
                 'songs' => [[
                     'songId' => $songId,

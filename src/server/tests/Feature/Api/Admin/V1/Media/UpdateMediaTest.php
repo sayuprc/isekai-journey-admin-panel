@@ -6,6 +6,7 @@ namespace Tests\Feature\Api\Admin\V1\Media;
 
 use Illuminate\Testing\Fluent\AssertableJson;
 use Media\Domain\Models\MediaFormat;
+use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -60,6 +61,10 @@ class UpdateMediaTest extends DatabaseTestCase
                         'value' => MediaFormat::StreamArchive->value,
                     ],
                     'isDisplay' => false,
+                    'platform' => [
+                        'name' => MediaPlatform::Other->getName(),
+                        'value' => MediaPlatform::Other->value,
+                    ],
                 ],
             ]);
     }
