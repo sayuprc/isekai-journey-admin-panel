@@ -2,17 +2,6 @@
 // 各エンティティをID付き正規化データとして保持し、IDで関係を結ぶ
 // すべて架空のダミーデータ（後で差し替え可能）
 
-export type ThemeTone = 'dark' | 'light';
-
-export type Theme = {
-  value: string;
-  jp: string;
-  en: string;
-  tone: ThemeTone;
-  costume: string | null;
-  swatch: [string, string, string, string];
-};
-
 export type SongCategory = 'オリジナル' | 'カバー';
 
 export type Song = {
@@ -113,61 +102,6 @@ export type SiteData = {
   media: MediaEntry[];
   news: NewsItem[];
 };
-
-export const THEMES: Theme[] = [
-  {
-    value: 'anemone-1',
-    jp: 'アネモネ Ⅰ',
-    en: 'Anemone I',
-    tone: 'dark',
-    costume: null,
-    swatch: ['#0F0F11', '#E63946', '#3A6D8C', '#9CA3AF'],
-  },
-  {
-    value: 'anemone-2',
-    jp: 'アネモネ Ⅱ',
-    en: 'Anemone II',
-    tone: 'light',
-    costume: null,
-    swatch: ['#F0F5F9', '#38BDF8', '#E05A65', '#8B7BB1'],
-  },
-  {
-    value: 'nemophila-1',
-    jp: 'ネモフィラ Ⅰ',
-    en: 'Nemophila I',
-    tone: 'light',
-    costume: null,
-    swatch: ['#F0F8FF', '#3A8DDE', '#8BC6EC', '#E2F0F9'],
-  },
-  {
-    value: 'nemophila-2',
-    jp: 'ネモフィラ Ⅱ',
-    en: 'Nemophila II',
-    tone: 'dark',
-    costume: null,
-    swatch: ['#0B1121', '#2B70B5', '#63A4D9', '#1E508A'],
-  },
-  {
-    value: 'sunflower-1',
-    jp: 'サンフラワー Ⅰ',
-    en: 'Sunflower I',
-    tone: 'light',
-    costume: null,
-    swatch: ['#FFFDF5', '#FFB300', '#E68A00', '#6B4E31'],
-  },
-  {
-    value: 'sunflower-2',
-    jp: 'サンフラワー Ⅱ',
-    en: 'Sunflower II',
-    tone: 'dark',
-    costume: null,
-    swatch: ['#232428', '#F5C033', '#8B5A2B', '#E09E19'],
-  },
-];
-
-export const LIGHT_PALETTES: Set<string> = new Set(
-  THEMES.filter(theme => theme.tone === 'light').map(theme => theme.value),
-);
 
 export const SITE_DATA: SiteData = {
   artist: {
