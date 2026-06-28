@@ -1,6 +1,6 @@
 <?php
 /**
- * SongMediaSummary
+ * MediaPlatform
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * SongMediaSummary Class Doc Comment
+ * MediaPlatform Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Viewer\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
+class MediaPlatform implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SongMediaSummary';
+    protected static $openAPIModelName = 'MediaPlatform';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,12 +57,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'media_id' => 'string',
-        'title' => 'string',
-        'type' => '\OpenAPI\Viewer\Client\Model\MediaType',
-        'format' => '\OpenAPI\Viewer\Client\Model\MediaFormat',
-        'platform' => '\OpenAPI\Viewer\Client\Model\MediaPlatform',
-        'published_at' => '\DateTime'
+        'name' => 'string',
+        'value' => '\OpenAPI\Viewer\Client\Model\MediaPlatformValue'
     ];
 
     /**
@@ -73,12 +69,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'media_id' => 'uuid',
-        'title' => null,
-        'type' => null,
-        'format' => null,
-        'platform' => null,
-        'published_at' => 'date'
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -87,12 +79,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'media_id' => false,
-        'title' => false,
-        'type' => false,
-        'format' => false,
-        'platform' => false,
-        'published_at' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -181,12 +169,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'media_id' => 'mediaId',
-        'title' => 'title',
-        'type' => 'type',
-        'format' => 'format',
-        'platform' => 'platform',
-        'published_at' => 'publishedAt'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -195,12 +179,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'media_id' => 'setMediaId',
-        'title' => 'setTitle',
-        'type' => 'setType',
-        'format' => 'setFormat',
-        'platform' => 'setPlatform',
-        'published_at' => 'setPublishedAt'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -209,12 +189,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'media_id' => 'getMediaId',
-        'title' => 'getTitle',
-        'type' => 'getType',
-        'format' => 'getFormat',
-        'platform' => 'getPlatform',
-        'published_at' => 'getPublishedAt'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -274,12 +250,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('media_id', $data ?? [], null);
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('format', $data ?? [], null);
-        $this->setIfExists('platform', $data ?? [], null);
-        $this->setIfExists('published_at', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -309,27 +281,15 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['media_id'] === null) {
-            $invalidProperties[] = "'media_id' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
-        }
-        if ((mb_strlen($this->container['title']) < 1)) {
-            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['type'] === null) {
-            $invalidProperties[] = "'type' can't be null";
-        }
-        if ($this->container['format'] === null) {
-            $invalidProperties[] = "'format' can't be null";
-        }
-        if ($this->container['platform'] === null) {
-            $invalidProperties[] = "'platform' can't be null";
-        }
-        if ($this->container['published_at'] === null) {
-            $invalidProperties[] = "'published_at' can't be null";
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
         }
         return $invalidProperties;
     }
@@ -347,168 +307,60 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets media_id
+     * Gets name
      *
      * @return string
      */
-    public function getMediaId()
+    public function getName()
     {
-        return $this->container['media_id'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets media_id
+     * Sets name
      *
-     * @param string $media_id メディアID
+     * @param string $name プラットフォーム種別名
      *
      * @return self
      */
-    public function setMediaId($media_id)
+    public function setName($name)
     {
-        if (is_null($media_id)) {
-            throw new \InvalidArgumentException('non-nullable media_id cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['media_id'] = $media_id;
+
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling MediaPlatform., must be bigger than or equal to 1.');
+        }
+
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets title
+     * Gets value
      *
-     * @return string
+     * @return \OpenAPI\Viewer\Client\Model\MediaPlatformValue
      */
-    public function getTitle()
+    public function getValue()
     {
-        return $this->container['title'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets title
+     * Sets value
      *
-     * @param string $title メディアタイトル
+     * @param \OpenAPI\Viewer\Client\Model\MediaPlatformValue $value value
      *
      * @return self
      */
-    public function setTitle($title)
+    public function setValue($value)
     {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-
-        if ((mb_strlen($title) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $title when calling SongMediaSummary., must be bigger than or equal to 1.');
-        }
-
-        $this->container['title'] = $title;
-
-        return $this;
-    }
-
-    /**
-     * Gets type
-     *
-     * @return \OpenAPI\Viewer\Client\Model\MediaType
-     */
-    public function getType()
-    {
-        return $this->container['type'];
-    }
-
-    /**
-     * Sets type
-     *
-     * @param \OpenAPI\Viewer\Client\Model\MediaType $type type
-     *
-     * @return self
-     */
-    public function setType($type)
-    {
-        if (is_null($type)) {
-            throw new \InvalidArgumentException('non-nullable type cannot be null');
-        }
-        $this->container['type'] = $type;
-
-        return $this;
-    }
-
-    /**
-     * Gets format
-     *
-     * @return \OpenAPI\Viewer\Client\Model\MediaFormat
-     */
-    public function getFormat()
-    {
-        return $this->container['format'];
-    }
-
-    /**
-     * Sets format
-     *
-     * @param \OpenAPI\Viewer\Client\Model\MediaFormat $format format
-     *
-     * @return self
-     */
-    public function setFormat($format)
-    {
-        if (is_null($format)) {
-            throw new \InvalidArgumentException('non-nullable format cannot be null');
-        }
-        $this->container['format'] = $format;
-
-        return $this;
-    }
-
-    /**
-     * Gets platform
-     *
-     * @return \OpenAPI\Viewer\Client\Model\MediaPlatform
-     */
-    public function getPlatform()
-    {
-        return $this->container['platform'];
-    }
-
-    /**
-     * Sets platform
-     *
-     * @param \OpenAPI\Viewer\Client\Model\MediaPlatform $platform platform
-     *
-     * @return self
-     */
-    public function setPlatform($platform)
-    {
-        if (is_null($platform)) {
-            throw new \InvalidArgumentException('non-nullable platform cannot be null');
-        }
-        $this->container['platform'] = $platform;
-
-        return $this;
-    }
-
-    /**
-     * Gets published_at
-     *
-     * @return \DateTime
-     */
-    public function getPublishedAt()
-    {
-        return $this->container['published_at'];
-    }
-
-    /**
-     * Sets published_at
-     *
-     * @param \DateTime $published_at 公開日
-     *
-     * @return self
-     */
-    public function setPublishedAt($published_at)
-    {
-        if (is_null($published_at)) {
-            throw new \InvalidArgumentException('non-nullable published_at cannot be null');
-        }
-        $this->container['published_at'] = $published_at;
+        $this->container['value'] = $value;
 
         return $this;
     }

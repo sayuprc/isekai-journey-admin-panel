@@ -23,6 +23,8 @@ export type MediaListItem = {
     publishedAt: MediaPublishedAt;
     type: MediaType;
     format: MediaFormat;
+    platform: MediaPlatform;
+    thumbnailUrl?: MediaThumbnailUrl;
     counts: MediaRelationCounts;
     songs: Array<MediaSongSummary>;
 };
@@ -34,6 +36,16 @@ export type MediaListResponse = {
      */
     nextCursor?: Cursor;
 };
+
+export type MediaPlatform = {
+    name: MediaPlatformName;
+    value: MediaPlatformValue;
+};
+
+/**
+ * プラットフォーム種別の値
+ */
+export type MediaPlatformValue = 1 | 2 | 99;
 
 export type MediaRelationCounts = {
     /**
@@ -90,6 +102,7 @@ export type SongMediaSummary = {
     title: MediaTitle;
     type: MediaType;
     format: MediaFormat;
+    platform: MediaPlatform;
     publishedAt: MediaPublishedAt;
 };
 
@@ -138,9 +151,19 @@ export type MediaFormatName = string;
 export type MediaId = string;
 
 /**
+ * プラットフォーム種別名
+ */
+export type MediaPlatformName = string;
+
+/**
  * 公開日
  */
 export type MediaPublishedAt = string;
+
+/**
+ * サムネイルURL
+ */
+export type MediaThumbnailUrl = string;
 
 /**
  * メディアタイトル

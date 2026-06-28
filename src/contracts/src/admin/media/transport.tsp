@@ -21,6 +21,7 @@ model MediaCreateRequest {
   typeValue: MediaTypeValue;
   formatValue: MediaFormatValue;
   isDisplay: boolean;
+  platformValue?: MediaPlatformValue;
 }
 
 model MediaCreateResponse {
@@ -34,6 +35,7 @@ model MediaUpdateRequest {
   typeValue: MediaTypeValue;
   formatValue: MediaFormatValue;
   isDisplay: boolean;
+  platformValue?: MediaPlatformValue;
 }
 
 model MediaUpdateResponse {

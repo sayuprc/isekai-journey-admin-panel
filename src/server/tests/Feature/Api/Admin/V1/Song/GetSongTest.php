@@ -105,6 +105,10 @@ class GetSongTest extends DatabaseTestCase
                                 'value' => $media->format->value,
                             ],
                             'isDisplay' => true,
+                            'platform' => [
+                                'name' => $media->platform->getName(),
+                                'value' => $media->platform->value,
+                            ],
                             'orderNo' => 1,
                         ],
                     ],

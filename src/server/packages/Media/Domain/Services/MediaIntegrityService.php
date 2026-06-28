@@ -9,8 +9,10 @@ use DateType\ImmutableDate;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Domain\Models\MediaThumbnail;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -40,6 +42,7 @@ class MediaIntegrityService
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
+        ?int $platformValue = null,
     ): Result {
         $result = $this->build(
             $this->generator->generate(),
@@ -49,6 +52,7 @@ class MediaIntegrityService
             $typeValue,
             $formatValue,
             $isDisplay,
+            $platformValue,
         );
 
         if ($result->isErr()) {
@@ -75,6 +79,7 @@ class MediaIntegrityService
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
+        ?int $platformValue = null,
     ): Result {
         $result = $this->build(
             $mediaId,
@@ -84,6 +89,7 @@ class MediaIntegrityService
             $typeValue,
             $formatValue,
             $isDisplay,
+            $platformValue,
         );
 
         if ($result->isErr()) {
@@ -111,6 +117,7 @@ class MediaIntegrityService
         int $typeValue,
         int $formatValue,
         bool $isDisplay,
+        ?int $platformValue,
     ): Result {
         return Result::collect7(
             MediaId::create($mediaId),
@@ -121,7 +128,7 @@ class MediaIntegrityService
             $this->toMediaFormat($formatValue),
             new Ok($isDisplay),
         )
-            ->mapErr(function (array $errors): DomainValidationError {
+            ->mapErr(function (array $errors): DomainError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -132,7 +139,52 @@ class MediaIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Media => new Media(...$values));
+            ->andThen(fn (array $values): Result => $this->toMedia($values, $platformValue));
+    }
+
+    /**
+     * @param array{MediaId, MediaTitle, MediaUrl, MediaPublishedAt, MediaType, MediaFormat, bool} $values
+     *
+     * @return Result<Media, DomainError>
+     */
+    private function toMedia(array $values, ?int $platformValue): Result
+    {
+        [$mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay] = $values;
+
+        return $this->toPlatform($platformValue, $url)
+            ->andThen(fn (MediaPlatform $platform): Result => match ($platform) {
+                MediaPlatform::YouTube => MediaThumbnail::fromYouTubeUrl($url)
+                    ->map(fn (MediaThumbnail $thumbnail): Media => Media::youtube(
+                        $mediaId,
+                        $title,
+                        $url,
+                        $publishedAt,
+                        $type,
+                        $format,
+                        $isDisplay,
+                        $thumbnail,
+                    )),
+                MediaPlatform::X => new Ok(Media::x($mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay)),
+                MediaPlatform::Other => new Ok(Media::other($mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay)),
+            });
+    }
+
+    /**
+     * @return Result<MediaPlatform, DomainError>
+     */
+    private function toPlatform(?int $platformValue, MediaUrl $url): Result
+    {
+        if (is_null($platformValue)) {
+            return new Ok(MediaPlatform::fromUrl($url));
+        }
+
+        $platform = MediaPlatform::tryFrom($platformValue);
+
+        if (is_null($platform)) {
+            return new Err(new EntityRuleViolationError('platformValue', "不正なプラットフォームです: {$platformValue}"));
+        }
+
+        return new Ok($platform);
     }
 
     /**

@@ -19,7 +19,9 @@ use DateType\ImmutableDate;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
+use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaPublishedAt;
+use Media\Domain\Models\MediaThumbnail;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -196,6 +198,8 @@ trait EntityFactory
         bool $isDisplay,
         MediaFormat $format = MediaFormat::Other,
         ?ImmutableDate $publishedAt = null,
+        MediaPlatform $platform = MediaPlatform::Other,
+        ?MediaThumbnail $thumbnail = null,
     ): Media {
         return new Media(
             MediaId::reconstruct($mediaId),
@@ -205,6 +209,8 @@ trait EntityFactory
             $type,
             $format,
             $isDisplay,
+            $platform,
+            $thumbnail,
         );
     }
 

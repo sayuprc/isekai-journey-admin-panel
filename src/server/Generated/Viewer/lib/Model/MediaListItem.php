@@ -63,6 +63,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => '\DateTime',
         'type' => '\OpenAPI\Viewer\Client\Model\MediaType',
         'format' => '\OpenAPI\Viewer\Client\Model\MediaFormat',
+        'platform' => '\OpenAPI\Viewer\Client\Model\MediaPlatform',
+        'thumbnail_url' => 'string',
         'counts' => '\OpenAPI\Viewer\Client\Model\MediaRelationCounts',
         'songs' => '\OpenAPI\Viewer\Client\Model\MediaSongSummary[]'
     ];
@@ -81,6 +83,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => 'date',
         'type' => null,
         'format' => null,
+        'platform' => null,
+        'thumbnail_url' => 'uri',
         'counts' => null,
         'songs' => null
     ];
@@ -97,6 +101,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => false,
         'type' => false,
         'format' => false,
+        'platform' => false,
+        'thumbnail_url' => false,
         'counts' => false,
         'songs' => false
     ];
@@ -193,6 +199,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => 'publishedAt',
         'type' => 'type',
         'format' => 'format',
+        'platform' => 'platform',
+        'thumbnail_url' => 'thumbnailUrl',
         'counts' => 'counts',
         'songs' => 'songs'
     ];
@@ -209,6 +217,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => 'setPublishedAt',
         'type' => 'setType',
         'format' => 'setFormat',
+        'platform' => 'setPlatform',
+        'thumbnail_url' => 'setThumbnailUrl',
         'counts' => 'setCounts',
         'songs' => 'setSongs'
     ];
@@ -225,6 +235,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'published_at' => 'getPublishedAt',
         'type' => 'getType',
         'format' => 'getFormat',
+        'platform' => 'getPlatform',
+        'thumbnail_url' => 'getThumbnailUrl',
         'counts' => 'getCounts',
         'songs' => 'getSongs'
     ];
@@ -292,6 +304,8 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('published_at', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('format', $data ?? [], null);
+        $this->setIfExists('platform', $data ?? [], null);
+        $this->setIfExists('thumbnail_url', $data ?? [], null);
         $this->setIfExists('counts', $data ?? [], null);
         $this->setIfExists('songs', $data ?? [], null);
     }
@@ -344,6 +358,9 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['format'] === null) {
             $invalidProperties[] = "'format' can't be null";
+        }
+        if ($this->container['platform'] === null) {
+            $invalidProperties[] = "'platform' can't be null";
         }
         if ($this->container['counts'] === null) {
             $invalidProperties[] = "'counts' can't be null";
@@ -529,6 +546,60 @@ class MediaListItem implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable format cannot be null');
         }
         $this->container['format'] = $format;
+
+        return $this;
+    }
+
+    /**
+     * Gets platform
+     *
+     * @return \OpenAPI\Viewer\Client\Model\MediaPlatform
+     */
+    public function getPlatform()
+    {
+        return $this->container['platform'];
+    }
+
+    /**
+     * Sets platform
+     *
+     * @param \OpenAPI\Viewer\Client\Model\MediaPlatform $platform platform
+     *
+     * @return self
+     */
+    public function setPlatform($platform)
+    {
+        if (is_null($platform)) {
+            throw new \InvalidArgumentException('non-nullable platform cannot be null');
+        }
+        $this->container['platform'] = $platform;
+
+        return $this;
+    }
+
+    /**
+     * Gets thumbnail_url
+     *
+     * @return string|null
+     */
+    public function getThumbnailUrl()
+    {
+        return $this->container['thumbnail_url'];
+    }
+
+    /**
+     * Sets thumbnail_url
+     *
+     * @param string|null $thumbnail_url サムネイルURL
+     *
+     * @return self
+     */
+    public function setThumbnailUrl($thumbnail_url)
+    {
+        if (is_null($thumbnail_url)) {
+            throw new \InvalidArgumentException('non-nullable thumbnail_url cannot be null');
+        }
+        $this->container['thumbnail_url'] = $thumbnail_url;
 
         return $this;
     }

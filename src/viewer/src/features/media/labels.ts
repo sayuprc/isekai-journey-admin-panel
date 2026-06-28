@@ -26,3 +26,15 @@ export function mediaTypeLabel(type: string): string {
     }[type] ?? type
   );
 }
+
+// 保存済みサムネイル URL(末尾 sddefault.jpg)のファイル名のみを差し替えて
+// 解像度バリエーションを srcset として生成する。maxres は欠落しがちなので使わない。
+export function youtubeThumbnailSrcset(thumbnailUrl: string): string {
+  const variants: Array<{ file: string; width: number }> = [
+    { file: 'mqdefault.jpg', width: 320 },
+    { file: 'hqdefault.jpg', width: 480 },
+    { file: 'sddefault.jpg', width: 640 },
+  ];
+
+  return variants.map(({ file, width }) => `${thumbnailUrl.replace(/[^/]+$/, file)} ${width}w`).join(', ');
+}

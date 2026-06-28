@@ -64,6 +64,7 @@ readonly class UpdateUseCase
                     $inputData->typeValue,
                     $inputData->formatValue,
                     $inputData->isDisplay,
+                    $inputData->platformValue,
                 );
 
                 if ($result->isErr()) {

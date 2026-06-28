@@ -14,6 +14,7 @@ readonly class UpdateInputData
         public int $typeValue,
         public int $formatValue,
         public bool $isDisplay,
+        public ?int $platformValue = null,
     ) {
     }
 }

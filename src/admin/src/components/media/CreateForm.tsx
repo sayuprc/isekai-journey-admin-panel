@@ -1,5 +1,5 @@
 import { Show } from 'solid-js';
-import type { MediaFormatValue, MediaTypeValue } from '../../generated';
+import type { MediaFormatValue, MediaPlatformValue, MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -20,6 +20,12 @@ const MEDIA_FORMAT_OPTIONS: Array<{ value: MediaFormatValue; label: string }> = 
   { value: 3, label: '配信アーカイブ' },
   { value: 4, label: 'ショート動画' },
   { value: 5, label: 'ライブ切り抜き' },
+  { value: 99, label: 'その他' },
+];
+
+const MEDIA_PLATFORM_OPTIONS: Array<{ value: MediaPlatformValue; label: string }> = [
+  { value: 1, label: 'YouTube' },
+  { value: 2, label: 'X' },
   { value: 99, label: 'その他' },
 ];
 
@@ -57,6 +63,9 @@ export const CreateForm = () => {
       typeValue: Number(formData.get('typeValue')) as MediaTypeValue,
       formatValue: Number(formData.get('formatValue')) as MediaFormatValue,
       isDisplay: formData.get('isDisplay') === 'true',
+      platformValue: formData.get('platformValue')
+        ? (Number(formData.get('platformValue')) as MediaPlatformValue)
+        : undefined,
     });
 
     if (data) {
@@ -141,6 +150,23 @@ export const CreateForm = () => {
                   ))}
                 </select>
                 <Show when={getFieldError('formatValue')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
+
+              <div>
+                <label class="label">プラットフォーム</label>
+                <select
+                  class="select w-full"
+                  name="platformValue"
+                  classList={{ 'select-error': !!getFieldError('platformValue') }}
+                >
+                  <option value="">自動判定</option>
+                  {MEDIA_PLATFORM_OPTIONS.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                <Show when={getFieldError('platformValue')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>

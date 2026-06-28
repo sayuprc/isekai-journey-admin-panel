@@ -23,7 +23,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
     private const string TABLE = 'media';
 
     /** @var list<string> */
-    private const array COLUMNS = ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display'];
+    private const array COLUMNS = ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'platform', 'thumbnail_url'];
 
     public function __construct(
         private QueryFactory $queryFactory,
@@ -126,7 +126,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
         $now = now()->toDateTimeString();
 
         $this->queryFactory->insert()
-            ->into(self::TABLE, ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'created_at', 'updated_at'])
+            ->into(self::TABLE, ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'platform', 'thumbnail_url', 'created_at', 'updated_at'])
             ->values([
                 $this->converter->toBin($media->mediaId->value),
                 $data['title'],
@@ -135,6 +135,8 @@ readonly class MediaRepository implements MediaRepositoryInterface
                 $data['type'],
                 $data['format'],
                 $data['is_display'],
+                $data['platform'],
+                $data['thumbnail_url'],
                 $now,
                 $now,
             ])
@@ -147,6 +149,8 @@ readonly class MediaRepository implements MediaRepositoryInterface
                 . '`type` = VALUES(`type`), '
                 . '`format` = VALUES(`format`), '
                 . '`is_display` = VALUES(`is_display`), '
+                . '`platform` = VALUES(`platform`), '
+                . '`thumbnail_url` = VALUES(`thumbnail_url`), '
                 . '`updated_at` = VALUES(`updated_at`)',
             )
             ->execute($this->queryFactory->pdo());
@@ -200,6 +204,8 @@ readonly class MediaRepository implements MediaRepositoryInterface
             Row::int($row, 'type'),
             Row::int($row, 'format'),
             Row::bool($row, 'is_display'),
+            Row::int($row, 'platform'),
+            Row::nullableString($row, 'thumbnail_url'),
         );
     }
 }

@@ -42,6 +42,7 @@ scalar lyricsLink extends string;
       type: #{ name: "動画", value: MediaTypeValue.Video },
       format: #{ name: "MV", value: MediaFormatValue.Mv },
       isDisplay: true,
+      platform: #{ name: "その他", value: MediaPlatformValue.Other },
       orderNo: 1,
     }
   ],
@@ -100,6 +101,7 @@ model SongAttachedTag {
   type: #{ name: "動画", value: MediaTypeValue.Video },
   format: #{ name: "MV", value: MediaFormatValue.Mv },
   isDisplay: true,
+  platform: #{ name: "その他", value: MediaPlatformValue.Other },
   orderNo: 1,
 })
 model SongLinkedMedia is Media {

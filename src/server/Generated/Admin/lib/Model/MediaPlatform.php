@@ -1,6 +1,6 @@
 <?php
 /**
- * Media
+ * MediaPlatform
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Admin\Client\ObjectSerializer;
 
 /**
- * Media Class Doc Comment
+ * MediaPlatform Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Admin\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class Media implements ModelInterface, ArrayAccess, \JsonSerializable
+class MediaPlatform implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'Media';
+    protected static $openAPIModelName = 'MediaPlatform';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,15 +57,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'media_id' => 'string',
-        'title' => 'string',
-        'url' => 'string',
-        'published_at' => '\DateTime',
-        'type' => '\OpenAPI\Admin\Client\Model\MediaType',
-        'format' => '\OpenAPI\Admin\Client\Model\MediaFormat',
-        'is_display' => 'bool',
-        'platform' => '\OpenAPI\Admin\Client\Model\MediaPlatform',
-        'thumbnail_url' => 'string'
+        'name' => 'string',
+        'value' => '\OpenAPI\Admin\Client\Model\MediaPlatformValue'
     ];
 
     /**
@@ -76,15 +69,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'media_id' => 'uuid',
-        'title' => null,
-        'url' => 'uri',
-        'published_at' => 'date',
-        'type' => null,
-        'format' => null,
-        'is_display' => null,
-        'platform' => null,
-        'thumbnail_url' => 'uri'
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -93,15 +79,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'media_id' => false,
-        'title' => false,
-        'url' => false,
-        'published_at' => false,
-        'type' => false,
-        'format' => false,
-        'is_display' => false,
-        'platform' => false,
-        'thumbnail_url' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -190,15 +169,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'media_id' => 'mediaId',
-        'title' => 'title',
-        'url' => 'url',
-        'published_at' => 'publishedAt',
-        'type' => 'type',
-        'format' => 'format',
-        'is_display' => 'isDisplay',
-        'platform' => 'platform',
-        'thumbnail_url' => 'thumbnailUrl'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -207,15 +179,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'media_id' => 'setMediaId',
-        'title' => 'setTitle',
-        'url' => 'setUrl',
-        'published_at' => 'setPublishedAt',
-        'type' => 'setType',
-        'format' => 'setFormat',
-        'is_display' => 'setIsDisplay',
-        'platform' => 'setPlatform',
-        'thumbnail_url' => 'setThumbnailUrl'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -224,15 +189,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'media_id' => 'getMediaId',
-        'title' => 'getTitle',
-        'url' => 'getUrl',
-        'published_at' => 'getPublishedAt',
-        'type' => 'getType',
-        'format' => 'getFormat',
-        'is_display' => 'getIsDisplay',
-        'platform' => 'getPlatform',
-        'thumbnail_url' => 'getThumbnailUrl'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -292,15 +250,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('media_id', $data ?? [], null);
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('url', $data ?? [], null);
-        $this->setIfExists('published_at', $data ?? [], null);
-        $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('format', $data ?? [], null);
-        $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('platform', $data ?? [], null);
-        $this->setIfExists('thumbnail_url', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -330,33 +281,15 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['media_id'] === null) {
-            $invalidProperties[] = "'media_id' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
-        }
-        if ((mb_strlen($this->container['title']) < 1)) {
-            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['url'] === null) {
-            $invalidProperties[] = "'url' can't be null";
-        }
-        if ($this->container['published_at'] === null) {
-            $invalidProperties[] = "'published_at' can't be null";
-        }
-        if ($this->container['type'] === null) {
-            $invalidProperties[] = "'type' can't be null";
-        }
-        if ($this->container['format'] === null) {
-            $invalidProperties[] = "'format' can't be null";
-        }
-        if ($this->container['is_display'] === null) {
-            $invalidProperties[] = "'is_display' can't be null";
-        }
-        if ($this->container['platform'] === null) {
-            $invalidProperties[] = "'platform' can't be null";
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
         }
         return $invalidProperties;
     }
@@ -374,249 +307,60 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets media_id
+     * Gets name
      *
      * @return string
      */
-    public function getMediaId()
+    public function getName()
     {
-        return $this->container['media_id'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets media_id
+     * Sets name
      *
-     * @param string $media_id メディアID
+     * @param string $name プラットフォーム種別名
      *
      * @return self
      */
-    public function setMediaId($media_id)
+    public function setName($name)
     {
-        if (is_null($media_id)) {
-            throw new \InvalidArgumentException('non-nullable media_id cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['media_id'] = $media_id;
+
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling MediaPlatform., must be bigger than or equal to 1.');
+        }
+
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets title
+     * Gets value
      *
-     * @return string
+     * @return \OpenAPI\Admin\Client\Model\MediaPlatformValue
      */
-    public function getTitle()
+    public function getValue()
     {
-        return $this->container['title'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets title
+     * Sets value
      *
-     * @param string $title メディアタイトル
+     * @param \OpenAPI\Admin\Client\Model\MediaPlatformValue $value value
      *
      * @return self
      */
-    public function setTitle($title)
+    public function setValue($value)
     {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-
-        if ((mb_strlen($title) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $title when calling Media., must be bigger than or equal to 1.');
-        }
-
-        $this->container['title'] = $title;
-
-        return $this;
-    }
-
-    /**
-     * Gets url
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->container['url'];
-    }
-
-    /**
-     * Sets url
-     *
-     * @param string $url メディアURL
-     *
-     * @return self
-     */
-    public function setUrl($url)
-    {
-        if (is_null($url)) {
-            throw new \InvalidArgumentException('non-nullable url cannot be null');
-        }
-        $this->container['url'] = $url;
-
-        return $this;
-    }
-
-    /**
-     * Gets published_at
-     *
-     * @return \DateTime
-     */
-    public function getPublishedAt()
-    {
-        return $this->container['published_at'];
-    }
-
-    /**
-     * Sets published_at
-     *
-     * @param \DateTime $published_at 公開日
-     *
-     * @return self
-     */
-    public function setPublishedAt($published_at)
-    {
-        if (is_null($published_at)) {
-            throw new \InvalidArgumentException('non-nullable published_at cannot be null');
-        }
-        $this->container['published_at'] = $published_at;
-
-        return $this;
-    }
-
-    /**
-     * Gets type
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaType
-     */
-    public function getType()
-    {
-        return $this->container['type'];
-    }
-
-    /**
-     * Sets type
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaType $type type
-     *
-     * @return self
-     */
-    public function setType($type)
-    {
-        if (is_null($type)) {
-            throw new \InvalidArgumentException('non-nullable type cannot be null');
-        }
-        $this->container['type'] = $type;
-
-        return $this;
-    }
-
-    /**
-     * Gets format
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaFormat
-     */
-    public function getFormat()
-    {
-        return $this->container['format'];
-    }
-
-    /**
-     * Sets format
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaFormat $format format
-     *
-     * @return self
-     */
-    public function setFormat($format)
-    {
-        if (is_null($format)) {
-            throw new \InvalidArgumentException('non-nullable format cannot be null');
-        }
-        $this->container['format'] = $format;
-
-        return $this;
-    }
-
-    /**
-     * Gets is_display
-     *
-     * @return bool
-     */
-    public function getIsDisplay()
-    {
-        return $this->container['is_display'];
-    }
-
-    /**
-     * Sets is_display
-     *
-     * @param bool $is_display is_display
-     *
-     * @return self
-     */
-    public function setIsDisplay($is_display)
-    {
-        if (is_null($is_display)) {
-            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
-        }
-        $this->container['is_display'] = $is_display;
-
-        return $this;
-    }
-
-    /**
-     * Gets platform
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaPlatform
-     */
-    public function getPlatform()
-    {
-        return $this->container['platform'];
-    }
-
-    /**
-     * Sets platform
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaPlatform $platform platform
-     *
-     * @return self
-     */
-    public function setPlatform($platform)
-    {
-        if (is_null($platform)) {
-            throw new \InvalidArgumentException('non-nullable platform cannot be null');
-        }
-        $this->container['platform'] = $platform;
-
-        return $this;
-    }
-
-    /**
-     * Gets thumbnail_url
-     *
-     * @return string|null
-     */
-    public function getThumbnailUrl()
-    {
-        return $this->container['thumbnail_url'];
-    }
-
-    /**
-     * Sets thumbnail_url
-     *
-     * @param string|null $thumbnail_url サムネイルURL
-     *
-     * @return self
-     */
-    public function setThumbnailUrl($thumbnail_url)
-    {
-        if (is_null($thumbnail_url)) {
-            throw new \InvalidArgumentException('non-nullable thumbnail_url cannot be null');
-        }
-        $this->container['thumbnail_url'] = $thumbnail_url;
+        $this->container['value'] = $value;
 
         return $this;
     }

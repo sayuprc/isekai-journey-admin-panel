@@ -29,6 +29,7 @@ class UpdateMediaController extends Controller
             $request->integer('typeValue'),
             $request->integer('formatValue'),
             $request->boolean('isDisplay'),
+            $request->has('platformValue') ? $request->integer('platformValue') : null,
         );
 
         return $this->presenter->present($this->useCase->handle($inputData));

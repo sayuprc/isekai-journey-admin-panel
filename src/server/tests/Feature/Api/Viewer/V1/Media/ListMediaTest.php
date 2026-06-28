@@ -127,6 +127,10 @@ class ListMediaTest extends DatabaseTestCase
                             'name' => 'MV',
                             'value' => 1,
                         ],
+                        'platform' => [
+                            'name' => 'その他',
+                            'value' => 99,
+                        ],
                         'counts' => [
                             'songCount' => 2,
                         ],
@@ -176,6 +180,10 @@ class ListMediaTest extends DatabaseTestCase
                         'format' => [
                             'name' => '音源動画',
                             'value' => 2,
+                        ],
+                        'platform' => [
+                            'name' => 'その他',
+                            'value' => 99,
                         ],
                         'counts' => [
                             'songCount' => 0,

@@ -55,6 +55,7 @@ readonly class CreateUseCase
                 $inputData->typeValue,
                 $inputData->formatValue,
                 $inputData->isDisplay,
+                $inputData->platformValue,
             );
 
             if ($result->isErr()) {

@@ -118,6 +118,7 @@ components:
         - publishedAt
         - type
         - format
+        - platform
         - counts
         - songs
       properties:
@@ -133,6 +134,10 @@ components:
           $ref: '#/components/schemas/MediaType'
         format:
           $ref: '#/components/schemas/MediaFormat'
+        platform:
+          $ref: '#/components/schemas/MediaPlatform'
+        thumbnailUrl:
+          $ref: '#/components/schemas/mediaThumbnailUrl'
         counts:
           $ref: '#/components/schemas/MediaRelationCounts'
         songs:
@@ -150,6 +155,10 @@ components:
           format:
             name: MV
             value: 1
+          platform:
+            name: YouTube
+            value: 1
+          thumbnailUrl: https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg
           counts:
             songCount: 1
           songs:
@@ -183,6 +192,10 @@ components:
               format:
                 name: MV
                 value: 1
+              platform:
+                name: YouTube
+                value: 1
+              thumbnailUrl: https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg
               counts:
                 songCount: 1
               songs:
@@ -192,6 +205,27 @@ components:
                     name: オリジナル曲
                     value: 1
           nextCursor: eyJwdWJsaXNoZWRBdCI6IjIwMjQtMDMtMDEiLCJtZWRpYUlkIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIn0=
+    MediaPlatform:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/mediaPlatformName'
+        value:
+          $ref: '#/components/schemas/MediaPlatformValue'
+      examples:
+        - name: YouTube
+          value: 1
+    MediaPlatformValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 99
+      description: プラットフォーム種別の値
     MediaRelationCounts:
       type: object
       required:
@@ -317,6 +351,9 @@ components:
               format:
                 name: MV
                 value: 1
+              platform:
+                name: YouTube
+                value: 1
               publishedAt: '2024-03-01'
     SongListResponse:
       type: object
@@ -356,6 +393,9 @@ components:
                   format:
                     name: MV
                     value: 1
+                  platform:
+                    name: YouTube
+                    value: 1
                   publishedAt: '2024-03-01'
           nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongMediaSummary:
@@ -365,6 +405,7 @@ components:
         - title
         - type
         - format
+        - platform
         - publishedAt
       properties:
         mediaId:
@@ -375,6 +416,8 @@ components:
           $ref: '#/components/schemas/MediaType'
         format:
           $ref: '#/components/schemas/MediaFormat'
+        platform:
+          $ref: '#/components/schemas/MediaPlatform'
         publishedAt:
           $ref: '#/components/schemas/mediaPublishedAt'
       examples:
@@ -385,6 +428,9 @@ components:
             value: 1
           format:
             name: MV
+            value: 1
+          platform:
+            name: YouTube
             value: 1
           publishedAt: '2024-03-01'
     SongRelationCounts:
@@ -440,10 +486,18 @@ components:
       type: string
       format: uuid
       description: メディアID
+    mediaPlatformName:
+      type: string
+      minLength: 1
+      description: プラットフォーム種別名
     mediaPublishedAt:
       type: string
       format: date
       description: 公開日
+    mediaThumbnailUrl:
+      type: string
+      format: uri
+      description: サムネイルURL
     mediaTitle:
       type: string
       minLength: 1

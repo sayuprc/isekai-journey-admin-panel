@@ -62,7 +62,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => '\DateTime',
         'type_value' => '\OpenAPI\Admin\Client\Model\MediaTypeValue',
         'format_value' => '\OpenAPI\Admin\Client\Model\MediaFormatValue',
-        'is_display' => 'bool'
+        'is_display' => 'bool',
+        'platform_value' => '\OpenAPI\Admin\Client\Model\MediaPlatformValue'
     ];
 
     /**
@@ -78,7 +79,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => 'date',
         'type_value' => null,
         'format_value' => null,
-        'is_display' => null
+        'is_display' => null,
+        'platform_value' => null
     ];
 
     /**
@@ -92,7 +94,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => false,
         'type_value' => false,
         'format_value' => false,
-        'is_display' => false
+        'is_display' => false,
+        'platform_value' => false
     ];
 
     /**
@@ -186,7 +189,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => 'publishedAt',
         'type_value' => 'typeValue',
         'format_value' => 'formatValue',
-        'is_display' => 'isDisplay'
+        'is_display' => 'isDisplay',
+        'platform_value' => 'platformValue'
     ];
 
     /**
@@ -200,7 +204,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => 'setPublishedAt',
         'type_value' => 'setTypeValue',
         'format_value' => 'setFormatValue',
-        'is_display' => 'setIsDisplay'
+        'is_display' => 'setIsDisplay',
+        'platform_value' => 'setPlatformValue'
     ];
 
     /**
@@ -214,7 +219,8 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'published_at' => 'getPublishedAt',
         'type_value' => 'getTypeValue',
         'format_value' => 'getFormatValue',
-        'is_display' => 'getIsDisplay'
+        'is_display' => 'getIsDisplay',
+        'platform_value' => 'getPlatformValue'
     ];
 
     /**
@@ -280,6 +286,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('format_value', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('platform_value', $data ?? [], null);
     }
 
     /**
@@ -509,6 +516,33 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets platform_value
+     *
+     * @return \OpenAPI\Admin\Client\Model\MediaPlatformValue|null
+     */
+    public function getPlatformValue()
+    {
+        return $this->container['platform_value'];
+    }
+
+    /**
+     * Sets platform_value
+     *
+     * @param \OpenAPI\Admin\Client\Model\MediaPlatformValue|null $platform_value platform_value
+     *
+     * @return self
+     */
+    public function setPlatformValue($platform_value)
+    {
+        if (is_null($platform_value)) {
+            throw new \InvalidArgumentException('non-nullable platform_value cannot be null');
+        }
+        $this->container['platform_value'] = $platform_value;
 
         return $this;
     }
