@@ -48,20 +48,20 @@ export const THEMES: Theme[] = [
   },
   {
     value: 'sunflower-1',
-    jp: 'サンフラワー Ⅰ',
-    en: 'Sunflower I',
+    jp: 'サンフラワー',
+    en: 'Sunflower',
     tone: 'light',
     costume: null,
     swatch: ['#FAF9F6', '#FAD423', '#317781', '#FEF9C3'],
   },
-  {
-    value: 'sunflower-2',
-    jp: 'サンフラワー Ⅱ',
-    en: 'Sunflower II',
-    tone: 'dark',
-    costume: null,
-    swatch: ['#0F0F11', '#C5A358', '#DC2626', '#222227'],
-  },
+  // {
+  //   value: 'sunflower-2',
+  //   jp: 'サンフラワー Ⅱ',
+  //   en: 'Sunflower II',
+  //   tone: 'dark',
+  //   costume: null,
+  //   swatch: ['#0F0F11', '#C5A358', '#DC2626', '#222227'],
+  // },
 ];
 
 export const LIGHT_PALETTES: Set<string> = new Set(
