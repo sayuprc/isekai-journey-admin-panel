@@ -955,7 +955,6 @@ class MediaApi
      *
      * @param  string|null $title title (optional)
      * @param  \OpenAPI\Admin\Client\Model\MediaTypeValue|null $type type (optional)
-     * @param  \OpenAPI\Admin\Client\Model\MediaFormatValue|null $format format (optional)
      * @param  bool|null $is_display is_display (optional)
      * @param  Int|null $page page (optional)
      * @param  \OpenAPIAdminClientModelPerPage|null $per_page per_page (optional)
@@ -965,9 +964,9 @@ class MediaApi
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Admin\Client\Model\MediaSearchResponse
      */
-    public function mediaServiceSearchMedia($title = null, $type = null, $format = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
+    public function mediaServiceSearchMedia($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
-        list($response) = $this->mediaServiceSearchMediaWithHttpInfo($title, $type, $format, $is_display, $page, $per_page, $contentType);
+        list($response) = $this->mediaServiceSearchMediaWithHttpInfo($title, $type, $is_display, $page, $per_page, $contentType);
         return $response;
     }
 
@@ -976,7 +975,6 @@ class MediaApi
      *
      * @param  string|null $title (optional)
      * @param  \OpenAPI\Admin\Client\Model\MediaTypeValue|null $type (optional)
-     * @param  \OpenAPI\Admin\Client\Model\MediaFormatValue|null $format (optional)
      * @param  bool|null $is_display (optional)
      * @param  Int|null $page (optional)
      * @param  \OpenAPIAdminClientModelPerPage|null $per_page (optional)
@@ -986,9 +984,9 @@ class MediaApi
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Admin\Client\Model\MediaSearchResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function mediaServiceSearchMediaWithHttpInfo($title = null, $type = null, $format = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
+    public function mediaServiceSearchMediaWithHttpInfo($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
-        $request = $this->mediaServiceSearchMediaRequest($title, $type, $format, $is_display, $page, $per_page, $contentType);
+        $request = $this->mediaServiceSearchMediaRequest($title, $type, $is_display, $page, $per_page, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1064,7 +1062,6 @@ class MediaApi
      *
      * @param  string|null $title (optional)
      * @param  \OpenAPI\Admin\Client\Model\MediaTypeValue|null $type (optional)
-     * @param  \OpenAPI\Admin\Client\Model\MediaFormatValue|null $format (optional)
      * @param  bool|null $is_display (optional)
      * @param  Int|null $page (optional)
      * @param  \OpenAPIAdminClientModelPerPage|null $per_page (optional)
@@ -1073,9 +1070,9 @@ class MediaApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function mediaServiceSearchMediaAsync($title = null, $type = null, $format = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
+    public function mediaServiceSearchMediaAsync($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
-        return $this->mediaServiceSearchMediaAsyncWithHttpInfo($title, $type, $format, $is_display, $page, $per_page, $contentType)
+        return $this->mediaServiceSearchMediaAsyncWithHttpInfo($title, $type, $is_display, $page, $per_page, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1088,7 +1085,6 @@ class MediaApi
      *
      * @param  string|null $title (optional)
      * @param  \OpenAPI\Admin\Client\Model\MediaTypeValue|null $type (optional)
-     * @param  \OpenAPI\Admin\Client\Model\MediaFormatValue|null $format (optional)
      * @param  bool|null $is_display (optional)
      * @param  Int|null $page (optional)
      * @param  \OpenAPIAdminClientModelPerPage|null $per_page (optional)
@@ -1097,10 +1093,10 @@ class MediaApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function mediaServiceSearchMediaAsyncWithHttpInfo($title = null, $type = null, $format = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
+    public function mediaServiceSearchMediaAsyncWithHttpInfo($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
         $returnType = '\OpenAPI\Admin\Client\Model\MediaSearchResponse';
-        $request = $this->mediaServiceSearchMediaRequest($title, $type, $format, $is_display, $page, $per_page, $contentType);
+        $request = $this->mediaServiceSearchMediaRequest($title, $type, $is_display, $page, $per_page, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1143,7 +1139,6 @@ class MediaApi
      *
      * @param  string|null $title (optional)
      * @param  \OpenAPI\Admin\Client\Model\MediaTypeValue|null $type (optional)
-     * @param  \OpenAPI\Admin\Client\Model\MediaFormatValue|null $format (optional)
      * @param  bool|null $is_display (optional)
      * @param  Int|null $page (optional)
      * @param  \OpenAPIAdminClientModelPerPage|null $per_page (optional)
@@ -1152,9 +1147,8 @@ class MediaApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function mediaServiceSearchMediaRequest($title = null, $type = null, $format = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
+    public function mediaServiceSearchMediaRequest($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
-
 
 
 
@@ -1183,15 +1177,6 @@ class MediaApi
             $type,
             'type', // param base name
             'MediaTypeValue', // openApiType
-            'form', // style
-            false, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $format,
-            'format', // param base name
-            'MediaFormatValue', // openApiType
             'form', // style
             false, // explode
             false // required

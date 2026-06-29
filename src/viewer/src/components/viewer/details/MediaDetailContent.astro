@@ -1,5 +1,5 @@
 ---
-import { youtubeThumbnailSrcset } from '../../../features/media/labels';
+import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { MediaDetail } from '../../../features/media/types';
 
 interface Props {
@@ -9,6 +9,10 @@ interface Props {
 const { media } = Astro.props;
 const songs = media.songs;
 
+// プラットフォームとサムネイルは状態として保持せず url から導出する。
+const platformName = mediaPlatformLabel(media.url);
+const thumbnailUrl = youtubeThumbnailFromUrl(media.url);
+
 const formatPublishedAt = (value: string): string =>
   new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
 ---
@@ -16,12 +20,12 @@ const formatPublishedAt = (value: string): string =>
 <div class="detail-page-content media-detail-content">
   <a class="media-detail-thumbnail-link" href={media.url} target="_blank" rel="noopener noreferrer">
     {
-      media.thumbnailUrl
+      thumbnailUrl
         ? (
             <img
               class="media-detail-thumbnail"
-              src={media.thumbnailUrl}
-              srcset={youtubeThumbnailSrcset(media.thumbnailUrl)}
+              src={thumbnailUrl}
+              srcset={youtubeThumbnailSrcset(thumbnailUrl)}
               sizes="(max-width: 720px) 100vw, 640px"
               loading="lazy"
               alt={media.title}
@@ -29,15 +33,15 @@ const formatPublishedAt = (value: string): string =>
           )
         : (
             <div class="media-detail-thumbnail media-detail-thumbnail-placeholder">
-              <span class="media-detail-thumbnail-placeholder-label">{media.platform.name}</span>
+              <span class="media-detail-thumbnail-placeholder-label">{platformName}</span>
             </div>
           )
     }
-    <span class="media-detail-thumbnail-overlay">{media.platform.name} で開く ↗</span>
+    <span class="media-detail-thumbnail-overlay">{platformName} で開く ↗</span>
   </a>
 
   <div class="label-mono">
-    {formatPublishedAt(media.publishedAt)} · {media.platform.name} · {media.format.name}
+    {formatPublishedAt(media.publishedAt)} · {platformName} · {media.type.name}
     {/* API に views が無いため未提供セクションとして雛形を残す */}
     {/* {entry.views ? ` · ${entry.views} views` : ''} */}
   </div>

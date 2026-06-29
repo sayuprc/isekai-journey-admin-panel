@@ -19,9 +19,7 @@ model MediaCreateRequest {
   url: mediaUrl;
   publishedAt: mediaPublishedAt;
   typeValue: MediaTypeValue;
-  formatValue: MediaFormatValue;
   isDisplay: boolean;
-  platformValue?: MediaPlatformValue;
 }
 
 model MediaCreateResponse {
@@ -33,9 +31,7 @@ model MediaUpdateRequest {
   url: mediaUrl;
   publishedAt: mediaPublishedAt;
   typeValue: MediaTypeValue;
-  formatValue: MediaFormatValue;
   isDisplay: boolean;
-  platformValue?: MediaPlatformValue;
 }
 
 model MediaUpdateResponse {

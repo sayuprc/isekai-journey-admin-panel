@@ -1,5 +1,5 @@
 import { createSignal, For, Show, type Accessor, type Setter } from 'solid-js';
-import type { Media, MediaFormatValue, MediaTypeValue, RequestSongMediaLink, SongLinkedMedia } from '../../generated';
+import type { Media, MediaTypeValue, RequestSongMediaLink, SongLinkedMedia } from '../../generated';
 import { client } from '../../utils/client';
 
 export type MediaEntry = {
@@ -7,7 +7,6 @@ export type MediaEntry = {
   title: string;
   url: string;
   typeName: string;
-  formatName: string;
   isDisplay: boolean;
 };
 
@@ -21,20 +20,12 @@ interface Props {
 type DisplayFilter = '' | 'true' | 'false';
 type PerPage = 25 | 50 | 100;
 
-const mediaFormatOptions: Array<{ value: MediaFormatValue; label: string }> = [
+const mediaTypeOptions: Array<{ value: MediaTypeValue; label: string }> = [
   { value: 1, label: 'MV' },
   { value: 2, label: '音源動画' },
-  { value: 3, label: '配信アーカイブ' },
-  { value: 4, label: 'ショート動画' },
-  { value: 5, label: 'ライブ切り抜き' },
-  { value: 99, label: 'その他' },
-];
-
-const mediaTypeOptions: Array<{ value: MediaTypeValue; label: string }> = [
-  { value: 1, label: '動画' },
-  { value: 2, label: '記事' },
-  { value: 3, label: 'SNS投稿' },
-  { value: 4, label: '公式ページ' },
+  { value: 3, label: '配信' },
+  { value: 4, label: 'ショート' },
+  { value: 5, label: '投稿' },
   { value: 99, label: 'その他' },
 ];
 
@@ -62,7 +53,6 @@ export const toMediaEntry = (item: SongLinkedMedia | Media): MediaEntry => ({
   title: item.title,
   url: item.url,
   typeName: item.type.name,
-  formatName: item.format.name,
   isDisplay: item.isDisplay,
 });
 
@@ -75,7 +65,6 @@ export const buildSongMediaRequest = (entries: MediaEntry[]): RequestSongMediaLi
 export const MediaSection = (props: Props) => {
   const [searchTitle, setSearchTitle] = createSignal('');
   const [searchTypeValue, setSearchTypeValue] = createSignal<'' | `${MediaTypeValue}`>('');
-  const [searchFormatValue, setSearchFormatValue] = createSignal<'' | `${MediaFormatValue}`>('');
   const [searchIsDisplay, setSearchIsDisplay] = createSignal<DisplayFilter>('');
   const [searchPage, setSearchPage] = createSignal(1);
   const [searchPerPage, setSearchPerPage] = createSignal<PerPage>(25);
@@ -89,7 +78,6 @@ export const MediaSection = (props: Props) => {
   const [createUrl, setCreateUrl] = createSignal('');
   const [createPublishedAt, setCreatePublishedAt] = createSignal('');
   const [createTypeValue, setCreateTypeValue] = createSignal<MediaTypeValue>(1);
-  const [createFormatValue, setCreateFormatValue] = createSignal<MediaFormatValue>(1);
   const [createIsDisplay, setCreateIsDisplay] = createSignal(true);
   const [creating, setCreating] = createSignal(false);
   const [createError, setCreateError] = createSignal<string | null>(null);
@@ -180,7 +168,6 @@ export const MediaSection = (props: Props) => {
       query: {
         title: searchTitle(),
         type: searchTypeValue() || undefined,
-        format: searchFormatValue() || undefined,
         is_display: searchIsDisplay() === '' ? undefined : searchIsDisplay() === 'true',
         page,
         per_page: searchPerPage(),
@@ -202,7 +189,6 @@ export const MediaSection = (props: Props) => {
   const handleResetSearch = () => {
     setSearchTitle('');
     setSearchTypeValue('');
-    setSearchFormatValue('');
     setSearchIsDisplay('');
     setSearchPage(1);
     setSearchPerPage(25);
@@ -246,7 +232,6 @@ export const MediaSection = (props: Props) => {
       url,
       publishedAt,
       typeValue: createTypeValue(),
-      formatValue: createFormatValue(),
       isDisplay: createIsDisplay(),
     });
 
@@ -263,7 +248,6 @@ export const MediaSection = (props: Props) => {
     setCreateUrl('');
     setCreatePublishedAt('');
     setCreateTypeValue(1);
-    setCreateFormatValue(1);
     setCreateIsDisplay(true);
   };
 
@@ -293,15 +277,6 @@ export const MediaSection = (props: Props) => {
               >
                 <option value="">すべての種別</option>
                 <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
-              </select>
-
-              <select
-                class="select select-bordered w-full"
-                value={searchFormatValue()}
-                onChange={e => setSearchFormatValue(e.currentTarget.value as '' | `${MediaFormatValue}`)}
-              >
-                <option value="">すべての形式</option>
-                <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
               </select>
 
               <select
@@ -379,9 +354,7 @@ export const MediaSection = (props: Props) => {
                             <span class="badge badge-sm badge-primary badge-soft">選択中</span>
                           </Show>
                         </div>
-                        <p class="text-xs text-base-content/60">
-                          {item.type.name} / {item.format.name}
-                        </p>
+                        <p class="text-xs text-base-content/60">{item.type.name}</p>
                         <a href={item.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
                           {item.url}
                         </a>
@@ -458,9 +431,7 @@ export const MediaSection = (props: Props) => {
                               {reason => <span class="badge badge-warning badge-sm badge-outline">{reason}</span>}
                             </For>
                           </div>
-                          <p class="text-xs text-base-content/60">
-                            {candidate.item.type.name} / {candidate.item.format.name}
-                          </p>
+                          <p class="text-xs text-base-content/60">{candidate.item.type.name}</p>
                           <a
                             href={candidate.item.url}
                             target="_blank"
@@ -496,21 +467,13 @@ export const MediaSection = (props: Props) => {
             </div>
           </Show>
 
-          <div class="grid gap-3 md:grid-cols-2">
+          <div>
             <select
               class="select select-bordered w-full"
               value={createTypeValue()}
               onChange={e => setCreateTypeValue(Number(e.currentTarget.value) as MediaTypeValue)}
             >
               <For each={mediaTypeOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
-            </select>
-
-            <select
-              class="select select-bordered w-full"
-              value={createFormatValue()}
-              onChange={e => setCreateFormatValue(Number(e.currentTarget.value) as MediaFormatValue)}
-            >
-              <For each={mediaFormatOptions}>{option => <option value={option.value}>{option.label}</option>}</For>
             </select>
           </div>
 
@@ -550,9 +513,7 @@ export const MediaSection = (props: Props) => {
                   <div class="flex flex-wrap items-start justify-between gap-3">
                     <div class="min-w-0">
                       <p class="font-medium">{entry.title}</p>
-                      <p class="text-xs text-base-content/60">
-                        {entry.typeName} / {entry.formatName}
-                      </p>
+                      <p class="text-xs text-base-content/60">{entry.typeName}</p>
                       <a href={entry.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
                         {entry.url}
                       </a>
@@ -593,16 +554,9 @@ export const MediaSection = (props: Props) => {
                     </div>
                   </div>
 
-                  <div class="mt-3 grid gap-3 md:grid-cols-[120px_1fr] md:items-center">
-                    <div>
-                      <label class="text-xs text-base-content/60">表示順</label>
-                      <p class="mt-1 text-sm">{index() + 1}</p>
-                    </div>
-
-                    <div>
-                      <label class="text-xs text-base-content/60">形式</label>
-                      <p class="mt-1 text-sm">{entry.formatName}</p>
-                    </div>
+                  <div class="mt-3">
+                    <label class="text-xs text-base-content/60">表示順</label>
+                    <p class="mt-1 text-sm">{index() + 1}</p>
                   </div>
                 </div>
               )}

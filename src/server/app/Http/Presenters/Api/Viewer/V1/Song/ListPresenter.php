@@ -7,10 +7,6 @@ namespace App\Http\Presenters\Api\Viewer\V1\Song;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use DateTime;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Viewer\Client\Model\MediaFormat;
-use OpenAPI\Viewer\Client\Model\MediaFormatValue;
-use OpenAPI\Viewer\Client\Model\MediaPlatform;
-use OpenAPI\Viewer\Client\Model\MediaPlatformValue;
 use OpenAPI\Viewer\Client\Model\MediaType;
 use OpenAPI\Viewer\Client\Model\MediaTypeValue;
 use OpenAPI\Viewer\Client\Model\SongListItem as OpenApiSongListItem;
@@ -68,8 +64,7 @@ class ListPresenter
             ->setMediaId($media->mediaId)
             ->setTitle($media->title)
             ->setType(new MediaType()->setName($media->type->getName())->setValue(MediaTypeValue::from($media->type->value)))
-            ->setFormat(new MediaFormat()->setName($media->format->getName())->setValue(MediaFormatValue::from($media->format->value)))
-            ->setPlatform(new MediaPlatform()->setName($media->platform->getName())->setValue(MediaPlatformValue::from($media->platform->value)))
+            ->setUrl($media->url)
             ->setPublishedAt(DateTime::createFromImmutable($media->publishedAt));
     }
 }

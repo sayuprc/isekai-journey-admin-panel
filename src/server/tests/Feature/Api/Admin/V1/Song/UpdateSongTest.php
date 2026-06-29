@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Song;
 
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -37,8 +36,8 @@ class UpdateSongTest extends DatabaseTestCase
         $tagRepo->save($oldTag = $this->createSongTag($this->generateUuid(), '旧タグ', 10));
         $tagRepo->save($newTag = $this->createSongTag($this->generateUuid(), '新タグ', 20));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($oldMedia = $this->createMedia($this->generateUuid(), '旧 Media', 'https://example.com/old-media', MediaType::Video, true, MediaFormat::Mv));
-        $mediaRepo->save($newMedia = $this->createMedia($this->generateUuid(), '新 Media', 'https://example.com/new-media', MediaType::OfficialPage, true, MediaFormat::ShortVideo));
+        $mediaRepo->save($oldMedia = $this->createMedia($this->generateUuid(), '旧 Media', 'https://example.com/old-media', MediaType::Mv, true));
+        $mediaRepo->save($newMedia = $this->createMedia($this->generateUuid(), '新 Media', 'https://example.com/new-media', MediaType::Short, true));
 
         $songId = $this->generateUuid();
 
@@ -121,15 +120,7 @@ class UpdateSongTest extends DatabaseTestCase
                                 'name' => $newMedia->type->getName(),
                                 'value' => $newMedia->type->value,
                             ],
-                            'format' => [
-                                'name' => $newMedia->format->getName(),
-                                'value' => $newMedia->format->value,
-                            ],
                             'isDisplay' => true,
-                            'platform' => [
-                                'name' => $newMedia->platform->getName(),
-                                'value' => $newMedia->platform->value,
-                            ],
                             'orderNo' => 1,
                         ],
                     ],

@@ -7,12 +7,9 @@ namespace Media\Domain\Services;
 use DateMalformedStringException;
 use DateType\ImmutableDate;
 use Media\Domain\Models\Media;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaId;
-use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaRepositoryInterface;
-use Media\Domain\Models\MediaThumbnail;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -40,9 +37,7 @@ class MediaIntegrityService
         string $url,
         string $publishedAt,
         int $typeValue,
-        int $formatValue,
         bool $isDisplay,
-        ?int $platformValue = null,
     ): Result {
         $result = $this->build(
             $this->generator->generate(),
@@ -50,9 +45,7 @@ class MediaIntegrityService
             $url,
             $publishedAt,
             $typeValue,
-            $formatValue,
             $isDisplay,
-            $platformValue,
         );
 
         if ($result->isErr()) {
@@ -77,9 +70,7 @@ class MediaIntegrityService
         string $url,
         string $publishedAt,
         int $typeValue,
-        int $formatValue,
         bool $isDisplay,
-        ?int $platformValue = null,
     ): Result {
         $result = $this->build(
             $mediaId,
@@ -87,9 +78,7 @@ class MediaIntegrityService
             $url,
             $publishedAt,
             $typeValue,
-            $formatValue,
             $isDisplay,
-            $platformValue,
         );
 
         if ($result->isErr()) {
@@ -115,17 +104,14 @@ class MediaIntegrityService
         string $url,
         string $publishedAt,
         int $typeValue,
-        int $formatValue,
         bool $isDisplay,
-        ?int $platformValue,
     ): Result {
-        return Result::collect7(
+        return Result::collect6(
             MediaId::create($mediaId),
             MediaTitle::create($title),
             MediaUrl::create($url),
             $this->toPublishedAt($publishedAt),
             $this->toMediaType($typeValue),
-            $this->toMediaFormat($formatValue),
             new Ok($isDisplay),
         )
             ->mapErr(function (array $errors): DomainError {
@@ -139,52 +125,7 @@ class MediaIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->andThen(fn (array $values): Result => $this->toMedia($values, $platformValue));
-    }
-
-    /**
-     * @param array{MediaId, MediaTitle, MediaUrl, MediaPublishedAt, MediaType, MediaFormat, bool} $values
-     *
-     * @return Result<Media, DomainError>
-     */
-    private function toMedia(array $values, ?int $platformValue): Result
-    {
-        [$mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay] = $values;
-
-        return $this->toPlatform($platformValue, $url)
-            ->andThen(fn (MediaPlatform $platform): Result => match ($platform) {
-                MediaPlatform::YouTube => MediaThumbnail::fromYouTubeUrl($url)
-                    ->map(fn (MediaThumbnail $thumbnail): Media => Media::youtube(
-                        $mediaId,
-                        $title,
-                        $url,
-                        $publishedAt,
-                        $type,
-                        $format,
-                        $isDisplay,
-                        $thumbnail,
-                    )),
-                MediaPlatform::X => new Ok(Media::x($mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay)),
-                MediaPlatform::Other => new Ok(Media::other($mediaId, $title, $url, $publishedAt, $type, $format, $isDisplay)),
-            });
-    }
-
-    /**
-     * @return Result<MediaPlatform, DomainError>
-     */
-    private function toPlatform(?int $platformValue, MediaUrl $url): Result
-    {
-        if (is_null($platformValue)) {
-            return new Ok(MediaPlatform::fromUrl($url));
-        }
-
-        $platform = MediaPlatform::tryFrom($platformValue);
-
-        if (is_null($platform)) {
-            return new Err(new EntityRuleViolationError('platformValue', "不正なプラットフォームです: {$platformValue}"));
-        }
-
-        return new Ok($platform);
+            ->map(fn (array $values): Media => new Media(...$values));
     }
 
     /**
@@ -206,30 +147,12 @@ class MediaIntegrityService
     }
 
     /**
+     * 未知・不正な種別値は投入を止めず MediaType::Other に倒す。
+     *
      * @return Result<MediaType, DomainError>
      */
     private function toMediaType(int $typeValue): Result
     {
-        $type = MediaType::tryFrom($typeValue);
-
-        if (is_null($type)) {
-            return new Err(new EntityRuleViolationError(MediaType::class, "不正なメディア種別です: {$typeValue}"));
-        }
-
-        return new Ok($type);
-    }
-
-    /**
-     * @return Result<MediaFormat, DomainError>
-     */
-    private function toMediaFormat(int $formatValue): Result
-    {
-        $format = MediaFormat::tryFrom($formatValue);
-
-        if (is_null($format)) {
-            return new Err(new EntityRuleViolationError(MediaFormat::class, "不正なメディア形式です: {$formatValue}"));
-        }
-
-        return new Ok($format);
+        return new Ok(MediaType::tryFrom($typeValue) ?? MediaType::Other);
     }
 }

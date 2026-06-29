@@ -6,23 +6,26 @@ namespace Media\Domain\Models;
 
 enum MediaType: int
 {
-    case Video = 1;
+    case Mv = 1;
 
-    case Article = 2;
+    case AudioVideo = 2;
 
-    case SocialPost = 3;
+    case LiveStream = 3;
 
-    case OfficialPage = 4;
+    case Short = 4;
+
+    case Post = 5;
 
     case Other = 99;
 
     public function getName(): string
     {
         return match ($this) {
-            self::Video => '動画',
-            self::Article => '記事',
-            self::SocialPost => 'SNS投稿',
-            self::OfficialPage => '公式ページ',
+            self::Mv => 'MV',
+            self::AudioVideo => '音源動画',
+            self::LiveStream => '配信',
+            self::Short => 'ショート',
+            self::Post => '投稿',
             self::Other => 'その他',
         };
     }

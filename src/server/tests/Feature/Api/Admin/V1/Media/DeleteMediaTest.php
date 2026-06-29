@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Media;
 
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -26,7 +25,7 @@ class DeleteMediaTest extends DatabaseTestCase
         $uuid = $this->generateUuid();
 
         $repository = $this->app->make(MediaRepository::class);
-        $media = $this->createMedia($uuid, 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
+        $media = $this->createMedia($uuid, 'テストメディアMV', 'https://example.com/media', MediaType::Mv, true);
         $repository->save($media);
 
         $this->withAuth()
@@ -42,7 +41,7 @@ class DeleteMediaTest extends DatabaseTestCase
         $mediaId = $this->generateUuid();
 
         $repository = $this->app->make(MediaRepository::class);
-        $media = $this->createMedia($mediaId, 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv);
+        $media = $this->createMedia($mediaId, 'テストメディアMV', 'https://example.com/media', MediaType::Mv, true);
         $repository->save($media);
 
         $this->app->make(SongRepository::class)->save(

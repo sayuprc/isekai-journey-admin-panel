@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\Viewer\Query;
 
 use DateTimeImmutable;
-use Media\Domain\Models\MediaFormat;
-use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 
 readonly class SongMediaSummary
@@ -15,8 +13,7 @@ readonly class SongMediaSummary
         public string $mediaId,
         public string $title,
         public MediaType $type,
-        public MediaFormat $format,
-        public MediaPlatform $platform,
+        public string $url,
         public DateTimeImmutable $publishedAt,
     ) {
     }

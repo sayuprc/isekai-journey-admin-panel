@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Song;
 
 use Illuminate\Testing\Fluent\AssertableJson;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -33,7 +32,7 @@ class CreateSongTest extends DatabaseTestCase
         $tagRepo->save($tag1 = $this->createSongTag($this->generateUuid(), 'タグA', 10));
         $tagRepo->save($tag2 = $this->createSongTag($this->generateUuid(), 'タグB', 20));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Mv, true));
 
         $this->withAuth()
             ->postJson(route(SongRouteMap::Create), [
@@ -102,15 +101,7 @@ class CreateSongTest extends DatabaseTestCase
                                     'name' => $media->type->getName(),
                                     'value' => $media->type->value,
                                 ],
-                                'format' => [
-                                    'name' => $media->format->getName(),
-                                    'value' => $media->format->value,
-                                ],
                                 'isDisplay' => true,
-                                'platform' => [
-                                    'name' => $media->platform->getName(),
-                                    'value' => $media->platform->value,
-                                ],
                                 'orderNo' => 1,
                             ]]),
                     ),

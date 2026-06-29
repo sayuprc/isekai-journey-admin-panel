@@ -60,8 +60,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'string',
         'title' => 'string',
         'type' => '\OpenAPI\Viewer\Client\Model\MediaType',
-        'format' => '\OpenAPI\Viewer\Client\Model\MediaFormat',
-        'platform' => '\OpenAPI\Viewer\Client\Model\MediaPlatform',
+        'url' => 'string',
         'published_at' => '\DateTime'
     ];
 
@@ -76,8 +75,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'uuid',
         'title' => null,
         'type' => null,
-        'format' => null,
-        'platform' => null,
+        'url' => 'uri',
         'published_at' => 'date'
     ];
 
@@ -90,8 +88,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => false,
         'title' => false,
         'type' => false,
-        'format' => false,
-        'platform' => false,
+        'url' => false,
         'published_at' => false
     ];
 
@@ -184,8 +181,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'mediaId',
         'title' => 'title',
         'type' => 'type',
-        'format' => 'format',
-        'platform' => 'platform',
+        'url' => 'url',
         'published_at' => 'publishedAt'
     ];
 
@@ -198,8 +194,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'setMediaId',
         'title' => 'setTitle',
         'type' => 'setType',
-        'format' => 'setFormat',
-        'platform' => 'setPlatform',
+        'url' => 'setUrl',
         'published_at' => 'setPublishedAt'
     ];
 
@@ -212,8 +207,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'getMediaId',
         'title' => 'getTitle',
         'type' => 'getType',
-        'format' => 'getFormat',
-        'platform' => 'getPlatform',
+        'url' => 'getUrl',
         'published_at' => 'getPublishedAt'
     ];
 
@@ -277,8 +271,7 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('media_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('format', $data ?? [], null);
-        $this->setIfExists('platform', $data ?? [], null);
+        $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('published_at', $data ?? [], null);
     }
 
@@ -322,11 +315,8 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
         }
-        if ($this->container['format'] === null) {
-            $invalidProperties[] = "'format' can't be null";
-        }
-        if ($this->container['platform'] === null) {
-            $invalidProperties[] = "'platform' can't be null";
+        if ($this->container['url'] === null) {
+            $invalidProperties[] = "'url' can't be null";
         }
         if ($this->container['published_at'] === null) {
             $invalidProperties[] = "'published_at' can't be null";
@@ -433,55 +423,28 @@ class SongMediaSummary implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets format
+     * Gets url
      *
-     * @return \OpenAPI\Viewer\Client\Model\MediaFormat
+     * @return string
      */
-    public function getFormat()
+    public function getUrl()
     {
-        return $this->container['format'];
+        return $this->container['url'];
     }
 
     /**
-     * Sets format
+     * Sets url
      *
-     * @param \OpenAPI\Viewer\Client\Model\MediaFormat $format format
+     * @param string $url メディアURL
      *
      * @return self
      */
-    public function setFormat($format)
+    public function setUrl($url)
     {
-        if (is_null($format)) {
-            throw new \InvalidArgumentException('non-nullable format cannot be null');
+        if (is_null($url)) {
+            throw new \InvalidArgumentException('non-nullable url cannot be null');
         }
-        $this->container['format'] = $format;
-
-        return $this;
-    }
-
-    /**
-     * Gets platform
-     *
-     * @return \OpenAPI\Viewer\Client\Model\MediaPlatform
-     */
-    public function getPlatform()
-    {
-        return $this->container['platform'];
-    }
-
-    /**
-     * Sets platform
-     *
-     * @param \OpenAPI\Viewer\Client\Model\MediaPlatform $platform platform
-     *
-     * @return self
-     */
-    public function setPlatform($platform)
-    {
-        if (is_null($platform)) {
-            throw new \InvalidArgumentException('non-nullable platform cannot be null');
-        }
-        $this->container['platform'] = $platform;
+        $this->container['url'] = $url;
 
         return $this;
     }

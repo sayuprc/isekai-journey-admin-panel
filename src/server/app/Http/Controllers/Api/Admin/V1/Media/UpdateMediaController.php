@@ -27,9 +27,7 @@ class UpdateMediaController extends Controller
             $request->string('url')->toString(),
             $request->string('publishedAt')->toString(),
             $request->integer('typeValue'),
-            $request->integer('formatValue'),
             $request->boolean('isDisplay'),
-            $request->has('platformValue') ? $request->integer('platformValue') : null,
         );
 
         return $this->presenter->present($this->useCase->handle($inputData));

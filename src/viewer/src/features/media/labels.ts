@@ -27,6 +27,82 @@ export function mediaTypeLabel(type: string): string {
   );
 }
 
+// プラットフォームは状態として保持せず url から導出する（viewer の表示責務）。
+// バッジ種別は PostCard.astro の platformMeta キーに対応する。
+export type MediaPlatformKey = 'x' | 'ig' | 'yt' | 'blog';
+
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+  } catch {
+    return null;
+  }
+}
+
+// url の host からプラットフォームを判定する。未知ホストは blog(その他)に倒す。
+function mediaPlatformFromUrl(url: string): MediaPlatformKey {
+  const host = hostOf(url);
+
+  if (host === null) {
+    return 'blog';
+  }
+  if (host === 'youtu.be' || host === 'youtube.com' || host === 'm.youtube.com' || host.endsWith('.youtube.com')) {
+    return 'yt';
+  }
+  if (host === 'x.com' || host === 'twitter.com' || host.endsWith('.twitter.com')) {
+    return 'x';
+  }
+  if (host === 'instagram.com' || host.endsWith('.instagram.com')) {
+    return 'ig';
+  }
+
+  return 'blog';
+}
+
+// 表示用のプラットフォーム名。
+export function mediaPlatformLabel(url: string): string {
+  return {
+    x: 'X',
+    ig: 'Instagram',
+    yt: 'YouTube',
+    blog: 'Web',
+  }[mediaPlatformFromUrl(url)];
+}
+
+// url から YouTube の動画 ID を抽出する。動画でなければ null。
+export function youtubeVideoId(url: string): string | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return null;
+  }
+
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+
+  if (host === 'youtu.be') {
+    return parsed.pathname.slice(1).split('/')[0] || null;
+  }
+  if (host === 'youtube.com' || host === 'm.youtube.com' || host.endsWith('.youtube.com')) {
+    if (parsed.pathname === '/watch') {
+      return parsed.searchParams.get('v');
+    }
+
+    const matched = parsed.pathname.match(/^\/(?:embed|shorts|live|v)\/([^/?#]+)/);
+
+    return matched ? matched[1] : null;
+  }
+
+  return null;
+}
+
+// YouTube 動画 url ならサムネイル URL(sddefault.jpg)を導出する。動画でなければ null。
+export function youtubeThumbnailFromUrl(url: string): string | null {
+  const id = youtubeVideoId(url);
+
+  return id === null ? null : `https://i.ytimg.com/vi/${id}/sddefault.jpg`;
+}
+
 // 保存済みサムネイル URL(末尾 sddefault.jpg)のファイル名のみを差し替えて
 // 解像度バリエーションを srcset として生成する。maxres は欠落しがちなので使わない。
 export function youtubeThumbnailSrcset(thumbnailUrl: string): string {

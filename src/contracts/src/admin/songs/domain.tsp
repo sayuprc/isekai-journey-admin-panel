@@ -39,10 +39,8 @@ scalar lyricsLink extends string;
       title: "テストメディアMV",
       url: "https://example.com/media",
       publishedAt: "2024-03-01",
-      type: #{ name: "動画", value: MediaTypeValue.Video },
-      format: #{ name: "MV", value: MediaFormatValue.Mv },
+      type: #{ name: "MV", value: MediaTypeValue.Mv },
       isDisplay: true,
-      platform: #{ name: "その他", value: MediaPlatformValue.Other },
       orderNo: 1,
     }
   ],
@@ -98,10 +96,8 @@ model SongAttachedTag {
   title: "テストメディアMV",
   url: "https://example.com/media",
   publishedAt: "2024-03-01",
-  type: #{ name: "動画", value: MediaTypeValue.Video },
-  format: #{ name: "MV", value: MediaFormatValue.Mv },
+  type: #{ name: "MV", value: MediaTypeValue.Mv },
   isDisplay: true,
-  platform: #{ name: "その他", value: MediaPlatformValue.Other },
   orderNo: 1,
 })
 model SongLinkedMedia is Media {

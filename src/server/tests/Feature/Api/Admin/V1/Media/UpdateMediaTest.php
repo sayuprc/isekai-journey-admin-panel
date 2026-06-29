@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Media;
 
 use Illuminate\Testing\Fluent\AssertableJson;
-use Media\Domain\Models\MediaFormat;
-use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -31,9 +29,8 @@ class UpdateMediaTest extends DatabaseTestCase
                 $uuid,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -42,8 +39,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
                 'publishedAt' => '2024-04-02',
-                'typeValue' => MediaType::SocialPost->value,
-                'formatValue' => MediaFormat::StreamArchive->value,
+                'typeValue' => MediaType::LiveStream->value,
                 'isDisplay' => false,
             ])->assertStatus(200)
             ->assertExactJson([
@@ -53,18 +49,10 @@ class UpdateMediaTest extends DatabaseTestCase
                     'url' => 'https://example.com/archive',
                     'publishedAt' => '2024-04-02',
                     'type' => [
-                        'name' => MediaType::SocialPost->getName(),
-                        'value' => MediaType::SocialPost->value,
-                    ],
-                    'format' => [
-                        'name' => MediaFormat::StreamArchive->getName(),
-                        'value' => MediaFormat::StreamArchive->value,
+                        'name' => MediaType::LiveStream->getName(),
+                        'value' => MediaType::LiveStream->value,
                     ],
                     'isDisplay' => false,
-                    'platform' => [
-                        'name' => MediaPlatform::Other->getName(),
-                        'value' => MediaPlatform::Other->value,
-                    ],
                 ],
             ]);
     }
@@ -81,9 +69,8 @@ class UpdateMediaTest extends DatabaseTestCase
                 $routeMediaId,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -93,8 +80,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
                 'publishedAt' => '2024-04-02',
-                'typeValue' => MediaType::Video->value,
-                'formatValue' => MediaFormat::StreamArchive->value,
+                'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(200)
             ->assertJsonPath('media.mediaId', $routeMediaId);
@@ -110,8 +96,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'title' => 'テストメディア',
                 'url' => 'https://example.com/media',
                 'publishedAt' => '2024-04-02',
-                'typeValue' => MediaType::Video->value,
-                'formatValue' => MediaFormat::Mv->value,
+                'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(404);
     }
@@ -127,9 +112,8 @@ class UpdateMediaTest extends DatabaseTestCase
                 $uuid,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -139,7 +123,6 @@ class UpdateMediaTest extends DatabaseTestCase
                 'url' => '',
                 'publishedAt' => '2024-04-02',
                 'typeValue' => 0,
-                'formatValue' => 0,
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(
@@ -166,9 +149,8 @@ class UpdateMediaTest extends DatabaseTestCase
                 $targetMediaId,
                 '更新対象メディア',
                 'https://example.com/target',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
         $repository->save(
@@ -176,9 +158,8 @@ class UpdateMediaTest extends DatabaseTestCase
                 $existingMediaId,
                 '既存メディア',
                 'https://example.com/existing',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::StreamArchive,
             ),
         );
 
@@ -187,8 +168,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'title' => '更新対象メディア',
                 'url' => 'https://example.com/existing',
                 'publishedAt' => '2024-04-02',
-                'typeValue' => MediaType::Video->value,
-                'formatValue' => MediaFormat::Mv->value,
+                'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(

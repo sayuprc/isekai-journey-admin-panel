@@ -11,9 +11,7 @@ readonly class CreateInputData
         public string $url,
         public string $publishedAt,
         public int $typeValue,
-        public int $formatValue,
         public bool $isDisplay,
-        public ?int $platformValue = null,
     ) {
     }
 }

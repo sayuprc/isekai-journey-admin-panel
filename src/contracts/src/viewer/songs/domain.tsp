@@ -32,9 +32,8 @@ model SongRelationCounts {
     #{
       mediaId: "11111111-1111-1111-1111-111111111111",
       title: "テストメディアMV",
-      type: #{ name: "動画", value: MediaTypeValue.Video },
-      format: #{ name: "MV", value: MediaFormatValue.Mv },
-      platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
+      type: #{ name: "MV", value: MediaTypeValue.Mv },
+      url: "https://www.youtube.com/watch?v=dummy",
       publishedAt: "2024-03-01",
     }
   ],
@@ -54,16 +53,14 @@ model SongListItem {
 @example(#{
   mediaId: "11111111-1111-1111-1111-111111111111",
   title: "テストメディアMV",
-  type: #{ name: "動画", value: MediaTypeValue.Video },
-  format: #{ name: "MV", value: MediaFormatValue.Mv },
-  platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
+  type: #{ name: "MV", value: MediaTypeValue.Mv },
+  url: "https://www.youtube.com/watch?v=dummy",
   publishedAt: "2024-03-01",
 })
 model SongMediaSummary {
   mediaId: mediaId;
   title: mediaTitle;
   type: MediaType;
-  format: MediaFormat;
-  platform: MediaPlatform;
+  url: mediaUrl;
   publishedAt: mediaPublishedAt;
 }

@@ -490,12 +490,6 @@ paths:
           schema:
             $ref: '#/components/schemas/MediaTypeValue'
           explode: false
-        - name: format
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/MediaFormatValue'
-          explode: false
         - name: is_display
           in: query
           required: false
@@ -1955,9 +1949,7 @@ components:
         - url
         - publishedAt
         - type
-        - format
         - isDisplay
-        - platform
       properties:
         mediaId:
           $ref: '#/components/schemas/mediaId'
@@ -1969,14 +1961,8 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
         type:
           $ref: '#/components/schemas/MediaType'
-        format:
-          $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
-        platform:
-          $ref: '#/components/schemas/MediaPlatform'
-        thumbnailUrl:
-          $ref: '#/components/schemas/mediaThumbnailUrl'
     MediaCreateRequest:
       type: object
       required:
@@ -1984,7 +1970,6 @@ components:
         - url
         - publishedAt
         - typeValue
-        - formatValue
         - isDisplay
       properties:
         title:
@@ -1995,12 +1980,8 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
         typeValue:
           $ref: '#/components/schemas/MediaTypeValue'
-        formatValue:
-          $ref: '#/components/schemas/MediaFormatValue'
         isDisplay:
           type: boolean
-        platformValue:
-          $ref: '#/components/schemas/MediaPlatformValue'
     MediaCreateResponse:
       type: object
       required:
@@ -2008,30 +1989,6 @@ components:
       properties:
         media:
           $ref: '#/components/schemas/Media'
-    MediaFormat:
-      type: object
-      required:
-        - name
-        - value
-      properties:
-        name:
-          $ref: '#/components/schemas/mediaFormatName'
-        value:
-          $ref: '#/components/schemas/MediaFormatValue'
-      examples:
-        - name: MV
-          value: 1
-    MediaFormatValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-        - 99
-      description: メディア形式の値
     MediaGetResponse:
       type: object
       required:
@@ -2044,27 +2001,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MediaReferencedSong'
-    MediaPlatform:
-      type: object
-      required:
-        - name
-        - value
-      properties:
-        name:
-          $ref: '#/components/schemas/mediaPlatformName'
-        value:
-          $ref: '#/components/schemas/MediaPlatformValue'
-      examples:
-        - name: YouTube
-          value: 1
-    MediaPlatformValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 99
-      description: プラットフォーム種別の値
     MediaReferencedSong:
       type: object
       required:
@@ -2105,7 +2041,7 @@ components:
         value:
           $ref: '#/components/schemas/MediaTypeValue'
       examples:
-        - name: 動画
+        - name: MV
           value: 1
     MediaTypeValue:
       type: integer
@@ -2115,6 +2051,7 @@ components:
         - 2
         - 3
         - 4
+        - 5
         - 99
       description: メディア種別の値
     MediaUpdateRequest:
@@ -2124,7 +2061,6 @@ components:
         - url
         - publishedAt
         - typeValue
-        - formatValue
         - isDisplay
       properties:
         title:
@@ -2135,12 +2071,8 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
         typeValue:
           $ref: '#/components/schemas/MediaTypeValue'
-        formatValue:
-          $ref: '#/components/schemas/MediaFormatValue'
         isDisplay:
           type: boolean
-        platformValue:
-          $ref: '#/components/schemas/MediaPlatformValue'
     MediaUpdateResponse:
       type: object
       required:
@@ -2662,15 +2594,9 @@ components:
               url: https://example.com/media
               publishedAt: '2024-03-01'
               type:
-                name: 動画
-                value: 1
-              format:
                 name: MV
                 value: 1
               isDisplay: true
-              platform:
-                name: その他
-                value: 99
               orderNo: 1
     SongAttachedTag:
       type: object
@@ -2740,9 +2666,7 @@ components:
         - url
         - publishedAt
         - type
-        - format
         - isDisplay
-        - platform
         - orderNo
       properties:
         mediaId:
@@ -2755,14 +2679,8 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
         type:
           $ref: '#/components/schemas/MediaType'
-        format:
-          $ref: '#/components/schemas/MediaFormat'
         isDisplay:
           type: boolean
-        platform:
-          $ref: '#/components/schemas/MediaPlatform'
-        thumbnailUrl:
-          $ref: '#/components/schemas/mediaThumbnailUrl'
         orderNo:
           $ref: '#/components/schemas/orderNo'
       examples:
@@ -2771,15 +2689,9 @@ components:
           url: https://example.com/media
           publishedAt: '2024-03-01'
           type:
-            name: 動画
-            value: 1
-          format:
             name: MV
             value: 1
           isDisplay: true
-          platform:
-            name: その他
-            value: 99
           orderNo: 1
     SongPerson:
       type: object
@@ -3087,18 +2999,10 @@ components:
       type: string
       format: uri
       description: 歌詞リンク
-    mediaFormatName:
-      type: string
-      minLength: 1
-      description: メディア形式名
     mediaId:
       type: string
       format: uuid
       description: メディアID
-    mediaPlatformName:
-      type: string
-      minLength: 1
-      description: プラットフォーム種別名
     mediaPublishedAt:
       type: string
       format: date
@@ -3111,10 +3015,6 @@ components:
       type: string
       minLength: 1
       description: メディアを参照している楽曲名
-    mediaThumbnailUrl:
-      type: string
-      format: uri
-      description: サムネイルURL
     mediaTitle:
       type: string
       minLength: 1

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Viewer\V1\Media;
 
 use DateType\ImmutableDate;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Route\ViewerMediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,27 +33,24 @@ class ListMediaTest extends DatabaseTestCase
                 $firstMediaId,
                 '公開 MV 1',
                 'https://example.com/public/1',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
                 new ImmutableDate('2024-03-01'),
             ),
             $this->createMedia(
                 $secondMediaId,
                 '公開 MV 2',
                 'https://example.com/public/2',
-                MediaType::Article,
+                MediaType::AudioVideo,
                 true,
-                MediaFormat::AudioVideo,
                 new ImmutableDate('2024-02-01'),
             ),
             $this->createMedia(
                 $hiddenMediaId,
                 '非公開 MV',
                 'https://example.com/private',
-                MediaType::Video,
+                MediaType::Mv,
                 false,
-                MediaFormat::Mv,
                 new ImmutableDate('2024-04-01'),
             ),
         );
@@ -120,16 +116,8 @@ class ListMediaTest extends DatabaseTestCase
                         'url' => 'https://example.com/public/1',
                         'publishedAt' => '2024-03-01',
                         'type' => [
-                            'name' => '動画',
-                            'value' => 1,
-                        ],
-                        'format' => [
                             'name' => 'MV',
                             'value' => 1,
-                        ],
-                        'platform' => [
-                            'name' => 'その他',
-                            'value' => 99,
                         ],
                         'counts' => [
                             'songCount' => 2,
@@ -174,16 +162,8 @@ class ListMediaTest extends DatabaseTestCase
                         'url' => 'https://example.com/public/2',
                         'publishedAt' => '2024-02-01',
                         'type' => [
-                            'name' => '記事',
-                            'value' => 2,
-                        ],
-                        'format' => [
                             'name' => '音源動画',
                             'value' => 2,
-                        ],
-                        'platform' => [
-                            'name' => 'その他',
-                            'value' => 99,
                         ],
                         'counts' => [
                             'songCount' => 0,

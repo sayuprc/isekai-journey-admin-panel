@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Media;
 
 use DateType\ImmutableDate;
-use Media\Domain\Models\MediaFormat;
-use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -34,9 +32,8 @@ class GetMediaTest extends DatabaseTestCase
                 $uuid,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
                 new ImmutableDate('2024-03-01'),
             ),
         );
@@ -67,18 +64,10 @@ class GetMediaTest extends DatabaseTestCase
                     'url' => 'https://example.com/media',
                     'publishedAt' => '2024-03-01',
                     'type' => [
-                        'name' => MediaType::Video->getName(),
-                        'value' => MediaType::Video->value,
-                    ],
-                    'format' => [
-                        'name' => MediaFormat::Mv->getName(),
-                        'value' => MediaFormat::Mv->value,
+                        'name' => MediaType::Mv->getName(),
+                        'value' => MediaType::Mv->value,
                     ],
                     'isDisplay' => true,
-                    'platform' => [
-                        'name' => MediaPlatform::Other->getName(),
-                        'value' => MediaPlatform::Other->value,
-                    ],
                 ],
                 'songs' => [[
                     'songId' => $songId,

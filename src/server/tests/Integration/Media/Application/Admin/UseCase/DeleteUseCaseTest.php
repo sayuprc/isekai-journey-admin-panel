@@ -7,7 +7,6 @@ namespace Tests\Integration\Media\Application\Admin\UseCase;
 use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Delete\DeleteInputData;
 use Media\Application\Admin\UseCase\Delete\DeleteUseCase;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,9 +36,8 @@ class DeleteUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -63,9 +61,8 @@ class DeleteUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
         $this->storeSongs($this->createSong(
@@ -102,9 +99,8 @@ class DeleteUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'ロールバック対象',
                 'https://example.com/rollback',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Media;
 
 use Illuminate\Testing\Fluent\AssertableJson;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -27,8 +26,7 @@ class CreateMediaTest extends DatabaseTestCase
                 'title' => 'テストメディアMV',
                 'url' => 'https://example.com/media',
                 'publishedAt' => '2024-03-01',
-                'typeValue' => MediaType::Video->value,
-                'formatValue' => MediaFormat::Mv->value,
+                'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) => $json
@@ -37,12 +35,8 @@ class CreateMediaTest extends DatabaseTestCase
                 ->where('media.url', 'https://example.com/media')
                 ->where('media.publishedAt', '2024-03-01')
                 ->where('media.type', [
-                    'name' => MediaType::Video->getName(),
-                    'value' => MediaType::Video->value,
-                ])
-                ->where('media.format', [
-                    'name' => MediaFormat::Mv->getName(),
-                    'value' => MediaFormat::Mv->value,
+                    'name' => MediaType::Mv->getName(),
+                    'value' => MediaType::Mv->value,
                 ])
                 ->where('media.isDisplay', true));
     }
@@ -56,9 +50,8 @@ class CreateMediaTest extends DatabaseTestCase
                 $this->generateUuid(),
                 '既存メディア',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -67,8 +60,7 @@ class CreateMediaTest extends DatabaseTestCase
                 'title' => '別タイトル',
                 'url' => 'https://example.com/media',
                 'publishedAt' => '2024-03-01',
-                'typeValue' => MediaType::Video->value,
-                'formatValue' => MediaFormat::StreamArchive->value,
+                'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(

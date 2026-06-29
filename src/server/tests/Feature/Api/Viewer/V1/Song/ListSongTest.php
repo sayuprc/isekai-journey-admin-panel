@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Viewer\V1\Song;
 
 use DateType\ImmutableDate;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\ReleaseDistributionType;
@@ -48,27 +47,24 @@ class ListSongTest extends DatabaseTestCase
                 $visibleMediaId,
                 '公開 MV',
                 'https://example.com/public',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
                 new ImmutableDate('2024-03-01'),
             ),
             $this->createMedia(
                 $secondVisibleMediaId,
                 '公開記事',
                 'https://example.com/article',
-                MediaType::Article,
+                MediaType::AudioVideo,
                 true,
-                MediaFormat::Other,
                 new ImmutableDate('2024-05-01'),
             ),
             $this->createMedia(
                 $hiddenMediaId,
                 '非公開 MV',
                 'https://example.com/private',
-                MediaType::Video,
+                MediaType::Mv,
                 false,
-                MediaFormat::Mv,
                 new ImmutableDate('2024-04-01'),
             ),
         );
@@ -176,34 +172,20 @@ class ListSongTest extends DatabaseTestCase
                                 'mediaId' => $visibleMediaId,
                                 'title' => '公開 MV',
                                 'type' => [
-                                    'name' => '動画',
-                                    'value' => 1,
-                                ],
-                                'format' => [
                                     'name' => 'MV',
                                     'value' => 1,
                                 ],
-                                'platform' => [
-                                    'name' => 'その他',
-                                    'value' => 99,
-                                ],
+                                'url' => 'https://example.com/public',
                                 'publishedAt' => '2024-03-01',
                             ],
                             [
                                 'mediaId' => $secondVisibleMediaId,
                                 'title' => '公開記事',
                                 'type' => [
-                                    'name' => '記事',
+                                    'name' => '音源動画',
                                     'value' => 2,
                                 ],
-                                'format' => [
-                                    'name' => 'その他',
-                                    'value' => 99,
-                                ],
-                                'platform' => [
-                                    'name' => 'その他',
-                                    'value' => 99,
-                                ],
+                                'url' => 'https://example.com/article',
                                 'publishedAt' => '2024-05-01',
                             ],
                         ],
@@ -243,17 +225,10 @@ class ListSongTest extends DatabaseTestCase
                                 'mediaId' => $visibleMediaId,
                                 'title' => '公開 MV',
                                 'type' => [
-                                    'name' => '動画',
-                                    'value' => 1,
-                                ],
-                                'format' => [
                                     'name' => 'MV',
                                     'value' => 1,
                                 ],
-                                'platform' => [
-                                    'name' => 'その他',
-                                    'value' => 99,
-                                ],
+                                'url' => 'https://example.com/public',
                                 'publishedAt' => '2024-03-01',
                             ],
                         ],
