@@ -2231,6 +2231,35 @@ image-slot:hover {
   letter-spacing: 0.1em;
 }
 
+/* チップ内のメディアサムネイル（楽曲ドロワーの関連メディア一覧） */
+
+.rel-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 96px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.rel-thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)),
+    color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2))
+  );
+}
+
+.rel-thumb-placeholder-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--fg-muted);
+  letter-spacing: 0.08em;
+}
+
 .color-block {
   flex-shrink: 0;
   width: 38px;
