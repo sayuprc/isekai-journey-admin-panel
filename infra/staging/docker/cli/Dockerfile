@@ -5,14 +5,15 @@ ENV TZ=Asia/Tokyo
 WORKDIR /var/www/html
 
 RUN apk add --no-cache \
+    icu-libs \
     unzip \
-  && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
+  && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} icu-dev \
   && pecl channel-update pecl.php.net \
   && pecl install \
     redis \
   && docker-php-ext-enable \
     redis \
-  && docker-php-ext-install pdo_mysql \
+  && docker-php-ext-install intl pdo_mysql \
   && apk del .build-deps \
   && rm -rf /tmp/pear
 

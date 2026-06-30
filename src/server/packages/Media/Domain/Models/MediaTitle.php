@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Media\Domain\Models;
 
-use Support\Domain\ValueObjects\String\StringValueObject;
+use Support\Domain\ValueObjects\String\TextValueObject;
 
-readonly class MediaTitle extends StringValueObject
+readonly class MediaTitle extends TextValueObject
 {
 }
