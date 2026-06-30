@@ -7,7 +7,6 @@ namespace Tests\Integration\Media\Application\Admin\UseCase;
 use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Update\UpdateInputData;
 use Media\Application\Admin\UseCase\Update\UpdateUseCase;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\AuditLog\AuditAction;
@@ -34,9 +33,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'テストメディアMV',
                 'https://example.com/media',
-                MediaType::Video,
+                MediaType::Mv,
                 true,
-                MediaFormat::Mv,
             ),
         );
 
@@ -46,8 +44,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 'テストメディア配信アーカイブ',
                 'https://example.com/archive',
                 '2024-04-02',
-                MediaType::SocialPost->value,
-                MediaFormat::StreamArchive->value,
+                MediaType::LiveStream->value,
                 false,
             ),
         );
@@ -59,15 +56,13 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame('テストメディア配信アーカイブ', $media->title);
         $this->assertSame('https://example.com/archive', $media->url);
         $this->assertSame('2024-04-02', $media->published_at);
-        $this->assertSame(MediaType::SocialPost->value, (int)$media->type);
-        $this->assertSame(MediaFormat::StreamArchive->value, (int)$media->format);
+        $this->assertSame(MediaType::LiveStream->value, (int)$media->type);
         $this->assertSame(0, (int)$media->is_display);
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Update, AuditTargetType::Media, $mediaId);
         $this->assertSame('テストメディア配信アーカイブ', $log['snapshot']['title']);
-        $this->assertSame(MediaType::SocialPost->value, $log['snapshot']['type']);
-        $this->assertSame(MediaFormat::StreamArchive->value, $log['snapshot']['format']);
+        $this->assertSame(MediaType::LiveStream->value, $log['snapshot']['type']);
         $this->assertFalse($log['snapshot']['is_display']);
     }
 
@@ -82,8 +77,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 'テストメディア',
                 'https://example.com/media',
                 '2024-04-02',
-                MediaType::Video->value,
-                MediaFormat::Mv->value,
+                MediaType::Mv->value,
                 true,
             ),
         );

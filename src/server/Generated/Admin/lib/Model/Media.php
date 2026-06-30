@@ -62,10 +62,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => 'string',
         'published_at' => '\DateTime',
         'type' => '\OpenAPI\Admin\Client\Model\MediaType',
-        'format' => '\OpenAPI\Admin\Client\Model\MediaFormat',
-        'is_display' => 'bool',
-        'platform' => '\OpenAPI\Admin\Client\Model\MediaPlatform',
-        'thumbnail_url' => 'string'
+        'is_display' => 'bool'
     ];
 
     /**
@@ -81,10 +78,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => 'uri',
         'published_at' => 'date',
         'type' => null,
-        'format' => null,
-        'is_display' => null,
-        'platform' => null,
-        'thumbnail_url' => 'uri'
+        'is_display' => null
     ];
 
     /**
@@ -98,10 +92,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => false,
         'published_at' => false,
         'type' => false,
-        'format' => false,
-        'is_display' => false,
-        'platform' => false,
-        'thumbnail_url' => false
+        'is_display' => false
     ];
 
     /**
@@ -195,10 +186,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => 'url',
         'published_at' => 'publishedAt',
         'type' => 'type',
-        'format' => 'format',
-        'is_display' => 'isDisplay',
-        'platform' => 'platform',
-        'thumbnail_url' => 'thumbnailUrl'
+        'is_display' => 'isDisplay'
     ];
 
     /**
@@ -212,10 +200,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => 'setUrl',
         'published_at' => 'setPublishedAt',
         'type' => 'setType',
-        'format' => 'setFormat',
-        'is_display' => 'setIsDisplay',
-        'platform' => 'setPlatform',
-        'thumbnail_url' => 'setThumbnailUrl'
+        'is_display' => 'setIsDisplay'
     ];
 
     /**
@@ -229,10 +214,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'url' => 'getUrl',
         'published_at' => 'getPublishedAt',
         'type' => 'getType',
-        'format' => 'getFormat',
-        'is_display' => 'getIsDisplay',
-        'platform' => 'getPlatform',
-        'thumbnail_url' => 'getThumbnailUrl'
+        'is_display' => 'getIsDisplay'
     ];
 
     /**
@@ -297,10 +279,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('published_at', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
-        $this->setIfExists('format', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('platform', $data ?? [], null);
-        $this->setIfExists('thumbnail_url', $data ?? [], null);
     }
 
     /**
@@ -349,14 +328,8 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['type'] === null) {
             $invalidProperties[] = "'type' can't be null";
         }
-        if ($this->container['format'] === null) {
-            $invalidProperties[] = "'format' can't be null";
-        }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
-        }
-        if ($this->container['platform'] === null) {
-            $invalidProperties[] = "'platform' can't be null";
         }
         return $invalidProperties;
     }
@@ -514,33 +487,6 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets format
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaFormat
-     */
-    public function getFormat()
-    {
-        return $this->container['format'];
-    }
-
-    /**
-     * Sets format
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaFormat $format format
-     *
-     * @return self
-     */
-    public function setFormat($format)
-    {
-        if (is_null($format)) {
-            throw new \InvalidArgumentException('non-nullable format cannot be null');
-        }
-        $this->container['format'] = $format;
-
-        return $this;
-    }
-
-    /**
      * Gets is_display
      *
      * @return bool
@@ -563,60 +509,6 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
-
-        return $this;
-    }
-
-    /**
-     * Gets platform
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaPlatform
-     */
-    public function getPlatform()
-    {
-        return $this->container['platform'];
-    }
-
-    /**
-     * Sets platform
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaPlatform $platform platform
-     *
-     * @return self
-     */
-    public function setPlatform($platform)
-    {
-        if (is_null($platform)) {
-            throw new \InvalidArgumentException('non-nullable platform cannot be null');
-        }
-        $this->container['platform'] = $platform;
-
-        return $this;
-    }
-
-    /**
-     * Gets thumbnail_url
-     *
-     * @return string|null
-     */
-    public function getThumbnailUrl()
-    {
-        return $this->container['thumbnail_url'];
-    }
-
-    /**
-     * Sets thumbnail_url
-     *
-     * @param string|null $thumbnail_url サムネイルURL
-     *
-     * @return self
-     */
-    public function setThumbnailUrl($thumbnail_url)
-    {
-        if (is_null($thumbnail_url)) {
-            throw new \InvalidArgumentException('non-nullable thumbnail_url cannot be null');
-        }
-        $this->container['thumbnail_url'] = $thumbnail_url;
 
         return $this;
     }

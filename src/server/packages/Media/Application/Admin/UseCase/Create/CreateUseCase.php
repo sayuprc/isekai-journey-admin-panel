@@ -53,9 +53,7 @@ readonly class CreateUseCase
                 $inputData->url,
                 $inputData->publishedAt,
                 $inputData->typeValue,
-                $inputData->formatValue,
                 $inputData->isDisplay,
-                $inputData->platformValue,
             );
 
             if ($result->isErr()) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Song;
 
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -37,7 +36,7 @@ class GetSongTest extends DatabaseTestCase
         $tagRepo->save($tagA = $this->createSongTag($this->generateUuid(), 'タグA', 20));
         $tagRepo->save($tagB = $this->createSongTag($this->generateUuid(), 'タグB', 10));
         $mediaRepo = $this->app->make(MediaRepository::class);
-        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Video, true, MediaFormat::Mv));
+        $mediaRepo->save($media = $this->createMedia($this->generateUuid(), 'テストメディアMV', 'https://example.com/media', MediaType::Mv, true));
 
         $songId = $this->generateUuid();
 
@@ -100,15 +99,7 @@ class GetSongTest extends DatabaseTestCase
                                 'name' => $media->type->getName(),
                                 'value' => $media->type->value,
                             ],
-                            'format' => [
-                                'name' => $media->format->getName(),
-                                'value' => $media->format->value,
-                            ],
                             'isDisplay' => true,
-                            'platform' => [
-                                'name' => $media->platform->getName(),
-                                'value' => $media->platform->value,
-                            ],
                             'orderNo' => 1,
                         ],
                     ],

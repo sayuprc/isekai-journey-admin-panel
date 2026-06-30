@@ -108,10 +108,7 @@ export type Media = {
     url: MediaUrl;
     publishedAt: MediaPublishedAt;
     type: MediaType;
-    format: MediaFormat;
     isDisplay: boolean;
-    platform: MediaPlatform;
-    thumbnailUrl?: MediaThumbnailUrl;
 };
 
 export type MediaCreateRequest = {
@@ -119,39 +116,17 @@ export type MediaCreateRequest = {
     url: MediaUrl;
     publishedAt: MediaPublishedAt;
     typeValue: MediaTypeValue;
-    formatValue: MediaFormatValue;
     isDisplay: boolean;
-    platformValue?: MediaPlatformValue;
 };
 
 export type MediaCreateResponse = {
     media: Media;
 };
 
-export type MediaFormat = {
-    name: MediaFormatName;
-    value: MediaFormatValue;
-};
-
-/**
- * メディア形式の値
- */
-export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
-
 export type MediaGetResponse = {
     media: Media;
     songs: Array<MediaReferencedSong>;
 };
-
-export type MediaPlatform = {
-    name: MediaPlatformName;
-    value: MediaPlatformValue;
-};
-
-/**
- * プラットフォーム種別の値
- */
-export type MediaPlatformValue = 1 | 2 | 99;
 
 export type MediaReferencedSong = {
     songId: MediaReferencedSongId;
@@ -173,16 +148,14 @@ export type MediaType = {
 /**
  * メディア種別の値
  */
-export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+export type MediaTypeValue = 1 | 2 | 3 | 4 | 5 | 99;
 
 export type MediaUpdateRequest = {
     title: MediaTitle;
     url: MediaUrl;
     publishedAt: MediaPublishedAt;
     typeValue: MediaTypeValue;
-    formatValue: MediaFormatValue;
     isDisplay: boolean;
-    platformValue?: MediaPlatformValue;
 };
 
 export type MediaUpdateResponse = {
@@ -442,10 +415,7 @@ export type SongLinkedMedia = {
     url: MediaUrl;
     publishedAt: MediaPublishedAt;
     type: MediaType;
-    format: MediaFormat;
     isDisplay: boolean;
-    platform: MediaPlatform;
-    thumbnailUrl?: MediaThumbnailUrl;
     orderNo: OrderNo;
 };
 
@@ -619,19 +589,9 @@ export type Email = string;
 export type LyricsLink = string;
 
 /**
- * メディア形式名
- */
-export type MediaFormatName = string;
-
-/**
  * メディアID
  */
 export type MediaId = string;
-
-/**
- * プラットフォーム種別名
- */
-export type MediaPlatformName = string;
 
 /**
  * 公開日
@@ -647,11 +607,6 @@ export type MediaReferencedSongId = string;
  * メディアを参照している楽曲名
  */
 export type MediaReferencedSongTitle = string;
-
-/**
- * サムネイルURL
- */
-export type MediaThumbnailUrl = string;
 
 /**
  * メディアタイトル
@@ -1263,7 +1218,6 @@ export type MediaServiceSearchMediaData = {
     query?: {
         title?: string;
         type?: MediaTypeValue;
-        format?: MediaFormatValue;
         is_display?: boolean;
         page?: Page;
         per_page?: PerPage;

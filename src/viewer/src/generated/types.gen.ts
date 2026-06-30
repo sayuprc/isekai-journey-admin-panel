@@ -6,25 +6,12 @@ export type ClientOptions = {
 
 export type IsekaiObservatoryViewerVersion = 'v1';
 
-export type MediaFormat = {
-    name: MediaFormatName;
-    value: MediaFormatValue;
-};
-
-/**
- * メディア形式の値
- */
-export type MediaFormatValue = 1 | 2 | 3 | 4 | 5 | 99;
-
 export type MediaListItem = {
     mediaId: MediaId;
     title: MediaTitle;
     url: MediaUrl;
     publishedAt: MediaPublishedAt;
     type: MediaType;
-    format: MediaFormat;
-    platform: MediaPlatform;
-    thumbnailUrl?: MediaThumbnailUrl;
     counts: MediaRelationCounts;
     songs: Array<MediaSongSummary>;
 };
@@ -36,16 +23,6 @@ export type MediaListResponse = {
      */
     nextCursor?: Cursor;
 };
-
-export type MediaPlatform = {
-    name: MediaPlatformName;
-    value: MediaPlatformValue;
-};
-
-/**
- * プラットフォーム種別の値
- */
-export type MediaPlatformValue = 1 | 2 | 99;
 
 export type MediaRelationCounts = {
     /**
@@ -68,7 +45,7 @@ export type MediaType = {
 /**
  * メディア種別の値
  */
-export type MediaTypeValue = 1 | 2 | 3 | 4 | 99;
+export type MediaTypeValue = 1 | 2 | 3 | 4 | 5 | 99;
 
 export type SiteStatsResponse = {
     /**
@@ -101,8 +78,7 @@ export type SongMediaSummary = {
     mediaId: MediaId;
     title: MediaTitle;
     type: MediaType;
-    format: MediaFormat;
-    platform: MediaPlatform;
+    url: MediaUrl;
     publishedAt: MediaPublishedAt;
 };
 
@@ -141,29 +117,14 @@ export type Description = string;
 export type Limit = number;
 
 /**
- * メディア形式名
- */
-export type MediaFormatName = string;
-
-/**
  * メディアID
  */
 export type MediaId = string;
 
 /**
- * プラットフォーム種別名
- */
-export type MediaPlatformName = string;
-
-/**
  * 公開日
  */
 export type MediaPublishedAt = string;
-
-/**
- * サムネイルURL
- */
-export type MediaThumbnailUrl = string;
 
 /**
  * メディアタイトル

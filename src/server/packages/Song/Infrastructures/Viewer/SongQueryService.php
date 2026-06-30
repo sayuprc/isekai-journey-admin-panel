@@ -6,8 +6,6 @@ namespace Song\Infrastructures\Viewer;
 
 use DateTimeImmutable;
 use Emonkak\Orm\Sql;
-use Media\Domain\Models\MediaFormat;
-use Media\Domain\Models\MediaPlatform;
 use Media\Domain\Models\MediaType;
 use Override;
 use Song\Application\Viewer\Query\SongListCursor;
@@ -138,8 +136,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     'media.media_id',
                     'media.title',
                     'media.type',
-                    'media.format',
-                    'media.platform',
+                    'media.url',
                     'media.published_at',
                 ])
                 ->from('song_media_links')
@@ -195,8 +192,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $this->converter->toUuid(Row::string($mediaRow, 'media_id')),
             Row::string($mediaRow, 'title'),
             MediaType::from(Row::int($mediaRow, 'type')),
-            MediaFormat::from(Row::int($mediaRow, 'format')),
-            MediaPlatform::from(Row::int($mediaRow, 'platform')),
+            Row::string($mediaRow, 'url'),
             new DateTimeImmutable(Row::string($mediaRow, 'published_at')),
         );
     }

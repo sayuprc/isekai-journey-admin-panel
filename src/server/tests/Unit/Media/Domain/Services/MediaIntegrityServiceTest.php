@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Media\Domain\Services;
 
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
@@ -52,9 +51,8 @@ class MediaIntegrityServiceTest extends TestCase
                     'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
                     '既存メディア',
                     $url,
-                    MediaType::Video,
+                    MediaType::Mv,
                     true,
-                    MediaFormat::Mv,
                 ),
             );
 
@@ -62,8 +60,7 @@ class MediaIntegrityServiceTest extends TestCase
             '新規メディア',
             $url,
             '2024-03-01',
-            MediaType::Video->value,
-            MediaFormat::Mv->value,
+            MediaType::Mv->value,
             true,
         );
 
@@ -81,9 +78,8 @@ class MediaIntegrityServiceTest extends TestCase
             $mediaId,
             '既存メディア',
             $url,
-            MediaType::Video,
+            MediaType::Mv,
             true,
-            MediaFormat::Mv,
         );
 
         $this->repository->shouldReceive('findByUrl')
@@ -96,14 +92,38 @@ class MediaIntegrityServiceTest extends TestCase
             '更新後タイトル',
             $url,
             '2024-04-02',
-            MediaType::Video->value,
-            MediaFormat::StreamArchive->value,
+            MediaType::Mv->value,
             false,
         );
 
         $this->assertTrue($result->isOk());
         $this->assertSame($mediaId, $result->unwrap()->mediaId->value);
         $this->assertSame('2024-04-02', $result->unwrap()->publishedAt?->value->format('Y-m-d'));
+    }
+
+    #[Test]
+    public function prepareForCreateFallsBackToOtherForUnknownType(): void
+    {
+        $uuid = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+
+        $this->generator->shouldReceive('generate')
+            ->once()
+            ->andReturn($uuid);
+
+        $this->repository->shouldReceive('findByUrl')
+            ->once()
+            ->andReturn(null);
+
+        $result = $this->getInstance()->prepareForCreate(
+            '新規メディア',
+            'https://example.com/media',
+            '2024-03-01',
+            12345,
+            true,
+        );
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame(MediaType::Other, $result->unwrap()->type);
     }
 
     private function getInstance(): MediaIntegrityService

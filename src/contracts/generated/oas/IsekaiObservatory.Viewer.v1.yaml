@@ -85,30 +85,6 @@ components:
       type: string
       enum:
         - v1
-    MediaFormat:
-      type: object
-      required:
-        - name
-        - value
-      properties:
-        name:
-          $ref: '#/components/schemas/mediaFormatName'
-        value:
-          $ref: '#/components/schemas/MediaFormatValue'
-      examples:
-        - name: MV
-          value: 1
-    MediaFormatValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-        - 99
-      description: メディア形式の値
     MediaListItem:
       type: object
       required:
@@ -117,8 +93,6 @@ components:
         - url
         - publishedAt
         - type
-        - format
-        - platform
         - counts
         - songs
       properties:
@@ -132,12 +106,6 @@ components:
           $ref: '#/components/schemas/mediaPublishedAt'
         type:
           $ref: '#/components/schemas/MediaType'
-        format:
-          $ref: '#/components/schemas/MediaFormat'
-        platform:
-          $ref: '#/components/schemas/MediaPlatform'
-        thumbnailUrl:
-          $ref: '#/components/schemas/mediaThumbnailUrl'
         counts:
           $ref: '#/components/schemas/MediaRelationCounts'
         songs:
@@ -150,15 +118,8 @@ components:
           url: https://example.com/media/1
           publishedAt: '2024-03-01'
           type:
-            name: 動画
-            value: 1
-          format:
             name: MV
             value: 1
-          platform:
-            name: YouTube
-            value: 1
-          thumbnailUrl: https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg
           counts:
             songCount: 1
           songs:
@@ -187,15 +148,8 @@ components:
               url: https://example.com/media/1
               publishedAt: '2024-03-01'
               type:
-                name: 動画
-                value: 1
-              format:
                 name: MV
                 value: 1
-              platform:
-                name: YouTube
-                value: 1
-              thumbnailUrl: https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg
               counts:
                 songCount: 1
               songs:
@@ -205,27 +159,6 @@ components:
                     name: オリジナル曲
                     value: 1
           nextCursor: eyJwdWJsaXNoZWRBdCI6IjIwMjQtMDMtMDEiLCJtZWRpYUlkIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIn0=
-    MediaPlatform:
-      type: object
-      required:
-        - name
-        - value
-      properties:
-        name:
-          $ref: '#/components/schemas/mediaPlatformName'
-        value:
-          $ref: '#/components/schemas/MediaPlatformValue'
-      examples:
-        - name: YouTube
-          value: 1
-    MediaPlatformValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 99
-      description: プラットフォーム種別の値
     MediaRelationCounts:
       type: object
       required:
@@ -265,7 +198,7 @@ components:
         value:
           $ref: '#/components/schemas/MediaTypeValue'
       examples:
-        - name: 動画
+        - name: MV
           value: 1
     MediaTypeValue:
       type: integer
@@ -275,6 +208,7 @@ components:
         - 2
         - 3
         - 4
+        - 5
         - 99
       description: メディア種別の値
     SiteStatsResponse:
@@ -346,14 +280,9 @@ components:
             - mediaId: 11111111-1111-1111-1111-111111111111
               title: テストメディアMV
               type:
-                name: 動画
-                value: 1
-              format:
                 name: MV
                 value: 1
-              platform:
-                name: YouTube
-                value: 1
+              url: https://www.youtube.com/watch?v=dummy
               publishedAt: '2024-03-01'
     SongListResponse:
       type: object
@@ -388,14 +317,9 @@ components:
                 - mediaId: 11111111-1111-1111-1111-111111111111
                   title: テストメディアMV
                   type:
-                    name: 動画
-                    value: 1
-                  format:
                     name: MV
                     value: 1
-                  platform:
-                    name: YouTube
-                    value: 1
+                  url: https://www.youtube.com/watch?v=dummy
                   publishedAt: '2024-03-01'
           nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongMediaSummary:
@@ -404,8 +328,7 @@ components:
         - mediaId
         - title
         - type
-        - format
-        - platform
+        - url
         - publishedAt
       properties:
         mediaId:
@@ -414,24 +337,17 @@ components:
           $ref: '#/components/schemas/mediaTitle'
         type:
           $ref: '#/components/schemas/MediaType'
-        format:
-          $ref: '#/components/schemas/MediaFormat'
-        platform:
-          $ref: '#/components/schemas/MediaPlatform'
+        url:
+          $ref: '#/components/schemas/mediaUrl'
         publishedAt:
           $ref: '#/components/schemas/mediaPublishedAt'
       examples:
         - mediaId: 11111111-1111-1111-1111-111111111111
           title: テストメディアMV
           type:
-            name: 動画
-            value: 1
-          format:
             name: MV
             value: 1
-          platform:
-            name: YouTube
-            value: 1
+          url: https://www.youtube.com/watch?v=dummy
           publishedAt: '2024-03-01'
     SongRelationCounts:
       type: object
@@ -478,26 +394,14 @@ components:
       minimum: 1
       maximum: 50
       description: 1 度に取得する件数
-    mediaFormatName:
-      type: string
-      minLength: 1
-      description: メディア形式名
     mediaId:
       type: string
       format: uuid
       description: メディアID
-    mediaPlatformName:
-      type: string
-      minLength: 1
-      description: プラットフォーム種別名
     mediaPublishedAt:
       type: string
       format: date
       description: 公開日
-    mediaThumbnailUrl:
-      type: string
-      format: uri
-      description: サムネイルURL
     mediaTitle:
       type: string
       minLength: 1

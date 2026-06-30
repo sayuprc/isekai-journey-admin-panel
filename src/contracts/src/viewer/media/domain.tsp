@@ -11,10 +11,7 @@ namespace IsekaiObservatory.Viewer;
   title: "テストメディアMV",
   url: "https://example.com/media/1",
   publishedAt: "2024-03-01",
-  type: #{ name: "動画", value: MediaTypeValue.Video },
-  format: #{ name: "MV", value: MediaFormatValue.Mv },
-  platform: #{ name: "YouTube", value: MediaPlatformValue.YouTube },
-  thumbnailUrl: "https://i.ytimg.com/vi/dQw4w9WgXcQ/sddefault.jpg",
+  type: #{ name: "MV", value: MediaTypeValue.Mv },
   counts: #{ songCount: 1 },
   songs: #[
     #{
@@ -30,9 +27,6 @@ model MediaListItem {
   url: mediaUrl;
   publishedAt: mediaPublishedAt;
   type: MediaType;
-  format: MediaFormat;
-  platform: MediaPlatform;
-  thumbnailUrl?: mediaThumbnailUrl;
   counts: MediaRelationCounts;
   songs: MediaSongSummary[];
 }

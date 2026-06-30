@@ -7,7 +7,6 @@ namespace Tests\Integration\Media\Application\Admin\UseCase;
 use Illuminate\Support\Facades\DB;
 use Media\Application\Admin\UseCase\Create\CreateInputData;
 use Media\Application\Admin\UseCase\Create\CreateUseCase;
-use Media\Domain\Models\MediaFormat;
 use Media\Domain\Models\MediaType;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,8 +29,7 @@ class CreateUseCaseTest extends DatabaseTestCase
                 'テストメディアMV',
                 'https://example.com/media',
                 '2024-03-01',
-                MediaType::Video->value,
-                MediaFormat::Mv->value,
+                MediaType::Mv->value,
                 true,
             ),
         );
@@ -48,8 +46,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Create, AuditTargetType::Media, $mediaId);
         $this->assertSame('テストメディアMV', $log['snapshot']['title']);
-        $this->assertSame(MediaType::Video->value, $log['snapshot']['type']);
-        $this->assertSame(MediaFormat::Mv->value, $log['snapshot']['format']);
+        $this->assertSame(MediaType::Mv->value, $log['snapshot']['type']);
     }
 
     #[Test]
@@ -67,8 +64,7 @@ class CreateUseCaseTest extends DatabaseTestCase
                     'ロールバック対象',
                     'https://example.com/rollback',
                     '2024-03-01',
-                    MediaType::Video->value,
-                    MediaFormat::Mv->value,
+                    MediaType::Mv->value,
                     true,
                 ),
             );

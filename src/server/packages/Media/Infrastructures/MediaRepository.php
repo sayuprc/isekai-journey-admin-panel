@@ -23,7 +23,14 @@ readonly class MediaRepository implements MediaRepositoryInterface
     private const string TABLE = 'media';
 
     /** @var list<string> */
-    private const array COLUMNS = ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'platform', 'thumbnail_url'];
+    private const array COLUMNS = [
+        'media_id',
+        'title',
+        'url',
+        'published_at',
+        'type',
+        'is_display',
+    ];
 
     public function __construct(
         private QueryFactory $queryFactory,
@@ -126,32 +133,35 @@ readonly class MediaRepository implements MediaRepositoryInterface
         $now = now()->toDateTimeString();
 
         $this->queryFactory->insert()
-            ->into(self::TABLE, ['media_id', 'title', 'url', 'published_at', 'type', 'format', 'is_display', 'platform', 'thumbnail_url', 'created_at', 'updated_at'])
+            ->into(self::TABLE, [
+                'media_id',
+                'title',
+                'url',
+                'published_at',
+                'type',
+                'is_display',
+                'created_at',
+                'updated_at',
+            ])
             ->values([
                 $this->converter->toBin($media->mediaId->value),
                 $data['title'],
                 $data['url'],
                 $data['published_at'],
                 $data['type'],
-                $data['format'],
                 $data['is_display'],
-                $data['platform'],
-                $data['thumbnail_url'],
                 $now,
                 $now,
             ])
             ->build()
             ->append(
                 'ON DUPLICATE KEY UPDATE '
-                . '`title` = VALUES(`title`), '
-                . '`url` = VALUES(`url`), '
-                . '`published_at` = VALUES(`published_at`), '
-                . '`type` = VALUES(`type`), '
-                . '`format` = VALUES(`format`), '
-                . '`is_display` = VALUES(`is_display`), '
-                . '`platform` = VALUES(`platform`), '
-                . '`thumbnail_url` = VALUES(`thumbnail_url`), '
-                . '`updated_at` = VALUES(`updated_at`)',
+                    . '`title` = VALUES(`title`), '
+                    . '`url` = VALUES(`url`), '
+                    . '`published_at` = VALUES(`published_at`), '
+                    . '`type` = VALUES(`type`), '
+                    . '`is_display` = VALUES(`is_display`), '
+                    . '`updated_at` = VALUES(`updated_at`)',
             )
             ->execute($this->queryFactory->pdo());
 
@@ -180,10 +190,6 @@ readonly class MediaRepository implements MediaRepositoryInterface
             $query = $query->where('type', '=', $criteria->type->get()->value);
         }
 
-        if ($criteria->format->isPresent()) {
-            $query = $query->where('format', '=', $criteria->format->get()->value);
-        }
-
         if ($criteria->isDisplay->isPresent()) {
             $query = $query->where('is_display', '=', $criteria->isDisplay->get());
         }
@@ -202,10 +208,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
             Row::string($row, 'url'),
             ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($row, 'published_at'))),
             Row::int($row, 'type'),
-            Row::int($row, 'format'),
             Row::bool($row, 'is_display'),
-            Row::int($row, 'platform'),
-            Row::nullableString($row, 'thumbnail_url'),
         );
     }
 }

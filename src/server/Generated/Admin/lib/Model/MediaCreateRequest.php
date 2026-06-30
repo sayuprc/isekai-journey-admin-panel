@@ -61,9 +61,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => 'string',
         'published_at' => '\DateTime',
         'type_value' => '\OpenAPI\Admin\Client\Model\MediaTypeValue',
-        'format_value' => '\OpenAPI\Admin\Client\Model\MediaFormatValue',
-        'is_display' => 'bool',
-        'platform_value' => '\OpenAPI\Admin\Client\Model\MediaPlatformValue'
+        'is_display' => 'bool'
     ];
 
     /**
@@ -78,9 +76,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => 'uri',
         'published_at' => 'date',
         'type_value' => null,
-        'format_value' => null,
-        'is_display' => null,
-        'platform_value' => null
+        'is_display' => null
     ];
 
     /**
@@ -93,9 +89,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => false,
         'published_at' => false,
         'type_value' => false,
-        'format_value' => false,
-        'is_display' => false,
-        'platform_value' => false
+        'is_display' => false
     ];
 
     /**
@@ -188,9 +182,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => 'url',
         'published_at' => 'publishedAt',
         'type_value' => 'typeValue',
-        'format_value' => 'formatValue',
-        'is_display' => 'isDisplay',
-        'platform_value' => 'platformValue'
+        'is_display' => 'isDisplay'
     ];
 
     /**
@@ -203,9 +195,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => 'setUrl',
         'published_at' => 'setPublishedAt',
         'type_value' => 'setTypeValue',
-        'format_value' => 'setFormatValue',
-        'is_display' => 'setIsDisplay',
-        'platform_value' => 'setPlatformValue'
+        'is_display' => 'setIsDisplay'
     ];
 
     /**
@@ -218,9 +208,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         'url' => 'getUrl',
         'published_at' => 'getPublishedAt',
         'type_value' => 'getTypeValue',
-        'format_value' => 'getFormatValue',
-        'is_display' => 'getIsDisplay',
-        'platform_value' => 'getPlatformValue'
+        'is_display' => 'getIsDisplay'
     ];
 
     /**
@@ -284,9 +272,7 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         $this->setIfExists('url', $data ?? [], null);
         $this->setIfExists('published_at', $data ?? [], null);
         $this->setIfExists('type_value', $data ?? [], null);
-        $this->setIfExists('format_value', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('platform_value', $data ?? [], null);
     }
 
     /**
@@ -331,9 +317,6 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
         }
         if ($this->container['type_value'] === null) {
             $invalidProperties[] = "'type_value' can't be null";
-        }
-        if ($this->container['format_value'] === null) {
-            $invalidProperties[] = "'format_value' can't be null";
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
@@ -467,33 +450,6 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     }
 
     /**
-     * Gets format_value
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaFormatValue
-     */
-    public function getFormatValue()
-    {
-        return $this->container['format_value'];
-    }
-
-    /**
-     * Sets format_value
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaFormatValue $format_value format_value
-     *
-     * @return self
-     */
-    public function setFormatValue($format_value)
-    {
-        if (is_null($format_value)) {
-            throw new \InvalidArgumentException('non-nullable format_value cannot be null');
-        }
-        $this->container['format_value'] = $format_value;
-
-        return $this;
-    }
-
-    /**
      * Gets is_display
      *
      * @return bool
@@ -516,33 +472,6 @@ class MediaCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
-
-        return $this;
-    }
-
-    /**
-     * Gets platform_value
-     *
-     * @return \OpenAPI\Admin\Client\Model\MediaPlatformValue|null
-     */
-    public function getPlatformValue()
-    {
-        return $this->container['platform_value'];
-    }
-
-    /**
-     * Sets platform_value
-     *
-     * @param \OpenAPI\Admin\Client\Model\MediaPlatformValue|null $platform_value platform_value
-     *
-     * @return self
-     */
-    public function setPlatformValue($platform_value)
-    {
-        if (is_null($platform_value)) {
-            throw new \InvalidArgumentException('non-nullable platform_value cannot be null');
-        }
-        $this->container['platform_value'] = $platform_value;
 
         return $this;
     }

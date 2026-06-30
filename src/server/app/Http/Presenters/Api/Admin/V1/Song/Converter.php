@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\Song;
 
 use DateTime;
-use OpenAPI\Admin\Client\Model\MediaFormat as OpenApiMediaFormat;
-use OpenAPI\Admin\Client\Model\MediaFormatValue;
-use OpenAPI\Admin\Client\Model\MediaPlatform as OpenApiMediaPlatform;
-use OpenAPI\Admin\Client\Model\MediaPlatformValue;
 use OpenAPI\Admin\Client\Model\MediaType as OpenApiMediaType;
 use OpenAPI\Admin\Client\Model\MediaTypeValue;
 use OpenAPI\Admin\Client\Model\Song as OpenApiSong;
@@ -64,29 +60,14 @@ readonly class Converter
 
     private function toOpenApiSongLinkedMedia(AssembledMedia $media): OpenApiSongLinkedMedia
     {
-        $linkedMedia = new OpenApiSongLinkedMedia()
+        return new OpenApiSongLinkedMedia()
             ->setMediaId($media->mediaId)
             ->setTitle($media->title)
             ->setUrl($media->url)
             ->setPublishedAt(new DateTime($media->publishedAt))
             ->setType($this->toOpenApiMediaType($media))
-            ->setFormat($this->toOpenApiMediaFormat($media))
             ->setIsDisplay($media->isDisplay)
-            ->setPlatform($this->toOpenApiMediaPlatform($media))
             ->setOrderNo($media->orderNo);
-
-        if (! is_null($media->thumbnailUrl)) {
-            $linkedMedia->setThumbnailUrl($media->thumbnailUrl);
-        }
-
-        return $linkedMedia;
-    }
-
-    private function toOpenApiMediaPlatform(AssembledMedia $media): OpenApiMediaPlatform
-    {
-        return new OpenApiMediaPlatform()
-            ->setName($media->platformName)
-            ->setValue(MediaPlatformValue::from($media->platformValue));
     }
 
     private function toOpenApiMediaType(AssembledMedia $media): OpenApiMediaType
@@ -94,12 +75,5 @@ readonly class Converter
         return new OpenApiMediaType()
             ->setName($media->typeName)
             ->setValue(MediaTypeValue::from($media->typeValue));
-    }
-
-    private function toOpenApiMediaFormat(AssembledMedia $media): OpenApiMediaFormat
-    {
-        return new OpenApiMediaFormat()
-            ->setName($media->formatName)
-            ->setValue(MediaFormatValue::from($media->formatValue));
     }
 }
