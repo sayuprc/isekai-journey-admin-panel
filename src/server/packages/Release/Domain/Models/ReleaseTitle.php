@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-use Support\Domain\ValueObjects\String\StringValueObject;
+use Support\Domain\ValueObjects\String\TextValueObject;
 
-readonly class ReleaseTitle extends StringValueObject
+readonly class ReleaseTitle extends TextValueObject
 {
 }

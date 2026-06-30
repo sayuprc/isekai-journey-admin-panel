@@ -10,6 +10,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && install-php-extensions \
+    intl \
     opcache \
     pdo \
     pdo_mysql \

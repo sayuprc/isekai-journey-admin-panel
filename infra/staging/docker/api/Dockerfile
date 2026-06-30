@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     libcap \
     unzip \
   && install-php-extensions \
+    intl \
     opcache \
     pdo \
     pdo_mysql \
