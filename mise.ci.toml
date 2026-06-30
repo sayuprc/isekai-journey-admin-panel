@@ -10,6 +10,10 @@ OPENAPI_GENERATOR_CLI_DOCKER_PATH = "/tmp/cache/docker/openapi-generator-cli"
 OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX = "docker-openapi-generator-cli-"
 MYSQL_DOCKER_PATH = "/tmp/cache/docker/mysql"
 MYSQL_DOCKER_KEY_PREFIX = "docker-mysql-"
+# bind マウントした src/server の所有者はランナー(id -u/-g)。イメージに焼き込まれた
+# UID がこれと食い違うとコンテナから vendor などへ書き込めないため、exec をランナーの
+# UID:GID で実行して所有者と一致させる。
+PHP_EXEC_USER = "--user {{ exec(command='id -u') | trim }}:{{ exec(command='id -g') | trim }}"
 
 [tasks."build:php"]
 description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
@@ -57,13 +61,13 @@ run = "docker compose up -d php mysql"
 
 [tasks."api:composer:install"]
 description = "CI 環境で composer install を実行する"
-run = "docker compose exec -T php composer install -n --prefer-dist"
+run = "docker compose exec ${PHP_EXEC_USER} -T php composer install -n --prefer-dist"
 
 [tasks."setup:env"]
 description = "CI 環境の環境変数をセットアップする"
 run = '''
 cp src/server/.env.example src/server/.env
-docker compose exec -T php php artisan key:generate
+docker compose exec ${PHP_EXEC_USER} -T php php artisan key:generate
 '''
 
 [tasks.migrate]
