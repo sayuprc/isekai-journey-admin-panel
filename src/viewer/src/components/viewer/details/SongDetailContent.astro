@@ -1,5 +1,5 @@
 ---
-import { mediaPlatformLabel } from '../../../features/media/labels';
+import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { SongDetail } from '../../../features/songs/types';
 
 interface Props {
@@ -82,16 +82,39 @@ const formatPublishedAt = (value: string): string =>
           <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{media.length}</span>
         </div>
         <div class="rel-list">
-          {media.map(entry => (
-            <a class="rel-chip" href={`/media/${entry.mediaId}`}>
-              {/* TODO メディアのサムネイルを表示する */}
-              <div class="rel-copy">
-                <div class="rel-main">{entry.title}</div>
-                <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)} · {mediaPlatformLabel(entry.url)} · {entry.type.name}</div>
-              </div>
-              <span style="font-size:14px;color:var(--fg-faint);">→</span>
-            </a>
-          ))}
+          {media.map((entry) => {
+            // プラットフォームとサムネイルは状態として保持せず url から導出する。
+            const thumbnailUrl = youtubeThumbnailFromUrl(entry.url);
+            const platformName = mediaPlatformLabel(entry.url);
+
+            return (
+              <a class="rel-chip" href={`/media/${entry.mediaId}`}>
+                {
+                  thumbnailUrl
+                    ? (
+                        <img
+                          class="rel-thumb"
+                          src={thumbnailUrl}
+                          srcset={youtubeThumbnailSrcset(thumbnailUrl)}
+                          sizes="96px"
+                          loading="lazy"
+                          alt={entry.title}
+                        />
+                      )
+                    : (
+                        <div class="rel-thumb rel-thumb-placeholder">
+                          <span class="rel-thumb-placeholder-label">{platformName}</span>
+                        </div>
+                      )
+                }
+                <div class="rel-copy">
+                  <div class="rel-main">{entry.title}</div>
+                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)} · {mediaPlatformLabel(entry.url)} · {entry.type.name}</div>
+                </div>
+                <span style="font-size:14px;color:var(--fg-faint);">→</span>
+              </a>
+            );
+          })}
         </div>
       </>
     )
