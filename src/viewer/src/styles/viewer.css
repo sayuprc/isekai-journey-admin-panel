@@ -704,6 +704,20 @@ a {
   border-color: transparent;
 }
 
+/* 楽曲種別バッジ: オリジナルはアクセント、カバーは中間色で一目で区別する。 */
+
+.pill[data-song-type="1"] {
+  color: var(--accent-strong);
+  background: color-mix(in oklab, var(--accent) 20%, transparent);
+  border-color: transparent;
+}
+
+.pill[data-song-type="2"] {
+  color: var(--fg-muted);
+  background: color-mix(in oklab, var(--fg) 10%, transparent);
+  border-color: color-mix(in oklab, var(--fg) 24%, transparent);
+}
+
 /* セグメンテッドコントロール */
 
 .seg {
@@ -805,7 +819,7 @@ image-slot:hover {
 
 .song-card {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: minmax(0, 5fr) 7fr;
   cursor: pointer;
   background: var(--bg-elev);
   border: 1px solid var(--line);
@@ -879,6 +893,12 @@ image-slot:hover {
   font-size: 13px;
   line-height: 1.5;
   color: var(--fg-muted);
+}
+
+/* テーブルでもオリジナルはアクセント色で強調して区別する。 */
+
+.song-row-type[data-song-type="1"] {
+  color: var(--accent-strong);
 }
 
 .song-row-media {
@@ -1865,6 +1885,22 @@ image-slot:hover {
   padding: 24px;
 }
 
+/* flex カラム内で種別バッジを内容幅に収め、左寄せする。 */
+
+.song-card-body .pill {
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+/* 説明の行数を抑えてカード高さを揃え、左サムネの縦横比を保つ。 */
+
+.song-card .song-grid-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .song-card-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1877,6 +1913,12 @@ image-slot:hover {
 .song-card-stats div {
   display: flex;
   flex-direction: column;
+}
+
+/* stats を下端に固定して本文の縦バランスを整える。 */
+
+.song-card .song-card-stats {
+  margin-top: auto;
 }
 
 .media-featured-grid {
@@ -2308,6 +2350,9 @@ image-slot:hover {
   transform: translate(-50%, -50%);
 }
 
+/* サムネイルが無い楽曲のプレースホルダー。実写サムネと並んでも浮かないよう、
+   テーマ連動の中間色にアイコンを主役として据える。 */
+
 .song-tile {
   position: relative;
   display: flex;
@@ -2317,32 +2362,16 @@ image-slot:hover {
   aspect-ratio: var(--song-tile-aspect, 1 / 1);
   padding: 16px;
   overflow: hidden;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 22px),
-    linear-gradient(135deg, var(--song-tile-color-a), var(--song-tile-color-b));
-  border: 1px solid color-mix(in oklab, var(--line) 55%, transparent);
-  isolation: isolate;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--line);
 }
 
-.song-tile::before {
+.song-tile-image {
   position: absolute;
-  inset: 10px;
-  z-index: -1;
-  content: "";
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.song-tile::after {
-  position: absolute;
-  right: 18px;
-  bottom: -20%;
-  z-index: -1;
-  width: 24%;
-  height: 140%;
-  content: "";
-  background: rgba(255, 255, 255, 0.1);
-  transform: rotate(18deg);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .song-tile-top,
@@ -2350,11 +2379,11 @@ image-slot:hover {
   display: flex;
   gap: 12px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--fg-faint);
 }
 
 .song-tile-meta-text {
@@ -2364,16 +2393,17 @@ image-slot:hover {
   white-space: nowrap;
 }
 
-.song-tile-signature {
+.song-tile-icon {
+  display: flex;
   align-self: center;
-  max-width: 100%;
-  font-family: "Shippori Mincho", "Noto Serif JP", serif;
-  font-size: 56px;
-  font-weight: 500;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  color: color-mix(in oklab, var(--fg) 30%, transparent);
+}
+
+/* 横並びカードでは左タイルを本文の高さいっぱいに伸ばして揃える。 */
+
+.song-card > .song-tile {
+  height: 100%;
+  aspect-ratio: auto;
 }
 
 .mv-thumb {
