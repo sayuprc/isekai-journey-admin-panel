@@ -39,8 +39,8 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
       client:load
       filters={[
         { value: 'all', label: `すべて` },
-        { value: '1', label: 'オリジナル' },
-        { value: '2', label: 'カバー' },
+        { value: '1', label: 'オリジナル曲' },
+        { value: '2', label: 'カバー曲' },
       ]}
       entrySelector="[data-song-entry]"
       categoryAttrs={['songCategory']}
@@ -64,7 +64,6 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
                   <SongTile
                     songId={song.songId}
                     title={song.title}
-                    typeName={song.type.name}
                     mediaCount={song.counts.mediaCount}
                     index={index}
                     media={song.media}
@@ -141,7 +140,6 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
                   <SongTile
                     songId={song.songId}
                     title={song.title}
-                    typeName={song.type.name}
                     mediaCount={song.counts.mediaCount}
                     index={index}
                     media={song.media}
