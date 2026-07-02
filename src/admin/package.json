@@ -27,7 +27,7 @@
     "redis": "redis-commander"
   },
   "dependencies": {
-    "@astrojs/node": "10.1.2",
+    "@astrojs/node": "11.0.0",
     "@astrojs/solid-js": "catalog:astro",
     "@elysiajs/eden": "1.4.9",
     "@tailwindcss/vite": "catalog:ui",
