@@ -1,0 +1,142 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Console\Commands\Media;
+
+use Illuminate\Support\Facades\DB;
+use Media\Application\Cli\Query\YouTubeUploadedVideo;
+use Media\Application\Cli\Query\YouTubeVideoQueryServiceInterface;
+use Media\Domain\Models\MediaType;
+use Media\Domain\Models\YouTubeChannel\YouTubeChannelId;
+use Override;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Support\DatabaseTestCase;
+use Tests\Support\Domain\EntityFactory;
+use Tests\Support\Domain\EntityStore;
+
+class ImportYouTubeCommandTest extends DatabaseTestCase
+{
+    use EntityFactory;
+    use EntityStore;
+
+    private const string CHANNEL_ID = 'UCabcdefghijklmnopqrstuv';
+
+    #[Test]
+    public function canImportVideosAsMedia(): void
+    {
+        $this->storeYouTubeChannels($this->createYouTubeChannel(self::CHANNEL_ID, 'テストチャンネル'));
+
+        $this->fakeVideoQueryService([
+            self::CHANNEL_ID => [
+                new YouTubeUploadedVideo('video-mv', '【Official Music Video】テスト曲', '2024-06-04T10:00:00Z'),
+                new YouTubeUploadedVideo('video-short', 'テスト曲 #shorts', '2024-06-03T10:00:00Z'),
+                new YouTubeUploadedVideo('video-cover', '【歌ってみた】テストカバー', '2024-06-02T10:00:00Z'),
+                new YouTubeUploadedVideo('video-other', '雑談配信アーカイブ', '2024-06-01T10:00:00Z'),
+            ],
+        ]);
+
+        $this->artisan('media:youtube:import')
+            ->expectsOutput('テストチャンネル: 4 件取り込みました')
+            ->assertSuccessful();
+
+        $rows = DB::table('media')->orderByDesc('published_at')->get()->all();
+        $this->assertCount(4, $rows);
+
+        $expected = [
+            ['https://www.youtube.com/watch?v=video-mv', '【Official Music Video】テスト曲', MediaType::Mv, '2024-06-04'],
+            ['https://www.youtube.com/watch?v=video-short', 'テスト曲 #shorts', MediaType::Short, '2024-06-03'],
+            ['https://www.youtube.com/watch?v=video-cover', '【歌ってみた】テストカバー', MediaType::AudioVideo, '2024-06-02'],
+            ['https://www.youtube.com/watch?v=video-other', '雑談配信アーカイブ', MediaType::Other, '2024-06-01'],
+        ];
+
+        foreach ($expected as $i => [$url, $title, $type, $publishedAt]) {
+            $this->assertSame($url, $rows[$i]->url);
+            $this->assertSame($title, $rows[$i]->title);
+            $this->assertSame($type->value, (int)$rows[$i]->type);
+            $this->assertSame($publishedAt, $rows[$i]->published_at);
+            $this->assertSame(1, (int)$rows[$i]->is_display);
+        }
+    }
+
+    #[Test]
+    public function stopsImportingWhenReachingSavedVideo(): void
+    {
+        $this->storeYouTubeChannels($this->createYouTubeChannel(self::CHANNEL_ID, 'テストチャンネル'));
+        $this->storeMedia($this->createMedia(
+            '00000000-0000-7000-8000-000000000001',
+            '保存済み動画',
+            'https://www.youtube.com/watch?v=video-saved',
+            MediaType::Other,
+            true,
+        ));
+
+        $this->fakeVideoQueryService([
+            self::CHANNEL_ID => [
+                new YouTubeUploadedVideo('video-new', '新しい動画', '2024-06-03T10:00:00Z'),
+                new YouTubeUploadedVideo('video-saved', '保存済み動画', '2024-06-02T10:00:00Z'),
+                new YouTubeUploadedVideo('video-old', '古い動画', '2024-06-01T10:00:00Z'),
+            ],
+        ]);
+
+        $this->artisan('media:youtube:import')
+            ->expectsOutput('テストチャンネル: 1 件取り込みました')
+            ->assertSuccessful();
+
+        $urls = DB::table('media')->pluck('url')->all();
+        $this->assertEqualsCanonicalizing([
+            'https://www.youtube.com/watch?v=video-saved',
+            'https://www.youtube.com/watch?v=video-new',
+        ], $urls);
+    }
+
+    #[Test]
+    public function warnsWhenChannelNotFound(): void
+    {
+        $this->storeYouTubeChannels($this->createYouTubeChannel(self::CHANNEL_ID, 'テストチャンネル'));
+
+        $this->fakeVideoQueryService([]);
+
+        $this->artisan('media:youtube:import')
+            ->expectsOutput(sprintf('テストチャンネル: チャンネルが見つかりませんでした (%s)', self::CHANNEL_ID))
+            ->assertSuccessful();
+
+        $this->assertSame(0, DB::table('media')->count());
+    }
+
+    #[Test]
+    public function warnsWhenNoChannelsRegistered(): void
+    {
+        $this->fakeVideoQueryService([]);
+
+        $this->artisan('media:youtube:import')
+            ->expectsOutput('チャンネルが登録されていません')
+            ->assertSuccessful();
+
+        $this->assertSame(0, DB::table('media')->count());
+    }
+
+    /**
+     * @param array<string, list<YouTubeUploadedVideo>> $videosByChannelId
+     */
+    private function fakeVideoQueryService(array $videosByChannelId): void
+    {
+        $this->app->instance(
+            YouTubeVideoQueryServiceInterface::class,
+            new readonly class ($videosByChannelId) implements YouTubeVideoQueryServiceInterface {
+                /**
+                 * @param array<string, list<YouTubeUploadedVideo>> $videosByChannelId
+                 */
+                public function __construct(private array $videosByChannelId)
+                {
+                }
+
+                #[Override]
+                public function fetchUploadedVideos(YouTubeChannelId $channelId): ?iterable
+                {
+                    return $this->videosByChannelId[$channelId->value] ?? null;
+                }
+            },
+        );
+    }
+}
