@@ -22,6 +22,7 @@ use Media\Domain\Models\MediaPublishedAt;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
+use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
@@ -203,6 +204,11 @@ trait EntityFactory
             $type,
             $isDisplay,
         );
+    }
+
+    protected function createYouTubeChannel(string $channelId, string $name): YouTubeChannel
+    {
+        return YouTubeChannel::reconstruct($channelId, $name);
     }
 
     /**

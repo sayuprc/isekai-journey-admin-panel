@@ -91,7 +91,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
         $rows = $this->queryFactory->fetchAll(
             $this->buildSearchQuery($criteria)
                 ->withSelect(self::COLUMNS)
-                ->orderBy('title')
+                ->orderBy('published_at')
                 ->limit($criteria->perPage->value)
                 ->offset($offset),
         );

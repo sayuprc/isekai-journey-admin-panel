@@ -10,6 +10,8 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshToken;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaRepositoryInterface;
+use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
+use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Release\Domain\Models\Release;
@@ -37,6 +39,12 @@ trait EntityStore
     {
         $repository = $this->makeRepository(MediaRepositoryInterface::class);
         array_map(fn (Media $item) => $repository->save($item), $items);
+    }
+
+    protected function storeYouTubeChannels(YouTubeChannel ...$items): void
+    {
+        $repository = $this->makeRepository(YouTubeChannelRepositoryInterface::class);
+        array_map(fn (YouTubeChannel $item) => $repository->save($item), $items);
     }
 
     protected function storeSongTags(SongTag ...$items): void

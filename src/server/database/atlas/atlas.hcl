@@ -19,6 +19,7 @@ variable "table_schemas" {
     "file://schemas/admin-user-registration-tokens.my.hcl",
     "file://schemas/admin-user-registration-token-permissions.my.hcl",
     "file://schemas/audit-logs.my.hcl",
+    "file://schemas/youtube-channels.my.hcl",
   ]
 }
 
