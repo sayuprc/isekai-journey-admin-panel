@@ -66,6 +66,7 @@ readonly class UpdateUseCase
                         $inputData->name,
                         $inputData->releasedOn,
                         $inputData->description,
+                        $inputData->jacketArtUrl,
                         $inputData->isDisplay,
                         $inputData->media,
                     );

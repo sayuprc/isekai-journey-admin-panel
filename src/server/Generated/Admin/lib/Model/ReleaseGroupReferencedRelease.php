@@ -61,6 +61,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => 'string',
         'name' => 'string',
         'released_on' => '\DateTime',
+        'jacket_art_url' => 'string',
         'is_display' => 'bool',
         'format_values' => '\OpenAPI\Admin\Client\Model\MediumFormatValue[]'
     ];
@@ -76,6 +77,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => 'uuid',
         'name' => null,
         'released_on' => 'date',
+        'jacket_art_url' => null,
         'is_display' => null,
         'format_values' => null
     ];
@@ -89,6 +91,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => false,
         'name' => false,
         'released_on' => false,
+        'jacket_art_url' => true,
         'is_display' => false,
         'format_values' => false
     ];
@@ -182,6 +185,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => 'releaseId',
         'name' => 'name',
         'released_on' => 'releasedOn',
+        'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
         'format_values' => 'formatValues'
     ];
@@ -195,6 +199,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => 'setReleaseId',
         'name' => 'setName',
         'released_on' => 'setReleasedOn',
+        'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
         'format_values' => 'setFormatValues'
     ];
@@ -208,6 +213,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'release_id' => 'getReleaseId',
         'name' => 'getName',
         'released_on' => 'getReleasedOn',
+        'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
         'format_values' => 'getFormatValues'
     ];
@@ -272,6 +278,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         $this->setIfExists('release_id', $data ?? [], null);
         $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('released_on', $data ?? [], null);
+        $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('format_values', $data ?? [], null);
     }
@@ -315,6 +322,9 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
 
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
+        }
+        if ($this->container['jacket_art_url'] === null) {
+            $invalidProperties[] = "'jacket_art_url' can't be null";
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
@@ -419,6 +429,40 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
             throw new \InvalidArgumentException('non-nullable released_on cannot be null');
         }
         $this->container['released_on'] = $released_on;
+
+        return $this;
+    }
+
+    /**
+     * Gets jacket_art_url
+     *
+     * @return string
+     */
+    public function getJacketArtUrl()
+    {
+        return $this->container['jacket_art_url'];
+    }
+
+    /**
+     * Sets jacket_art_url
+     *
+     * @param string $jacket_art_url ジャケットアートURL
+     *
+     * @return self
+     */
+    public function setJacketArtUrl($jacket_art_url)
+    {
+        if (is_null($jacket_art_url)) {
+            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('jacket_art_url', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['jacket_art_url'] = $jacket_art_url;
 
         return $this;
     }

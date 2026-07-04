@@ -57,6 +57,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             name: '新版名',
             releasedOn: '2026-05-09',
             description: '更新後の説明',
+            jacketArtUrl: 'https://example.com/jacket-new.png',
             isDisplay: false,
             media: [
                 [
@@ -78,6 +79,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertDatabaseHas('releases', [
             'name' => '新版名',
             'description' => '更新後の説明',
+            'jacket_art_url' => 'https://example.com/jacket-new.png',
             'is_display' => false,
         ]);
         $this->assertDatabaseCount('release_media', 1);
@@ -92,6 +94,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             name: '新版名',
             releasedOn: '2026-05-09',
             description: '説明',
+            jacketArtUrl: null,
             isDisplay: true,
             media: [],
         ));
@@ -124,6 +127,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             name: '新版名',
             releasedOn: '2026-05-09',
             description: '説明',
+            jacketArtUrl: null,
             isDisplay: true,
             media: [
                 [

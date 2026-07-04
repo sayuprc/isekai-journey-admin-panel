@@ -105,6 +105,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
   const [name, setName] = createSignal(props.data.release.name);
   const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data.release.releasedOn));
   const [description, setDescription] = createSignal(props.data.release.description);
+  const [jacketArtUrl, setJacketArtUrl] = createSignal(props.data.release.jacketArtUrl ?? '');
   const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
   const [media, setMedia] = createSignal<MediumForm[]>(toMediumForms(props.data));
 
@@ -127,6 +128,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
       name: name(),
       releasedOn: releasedOn(),
       description: description(),
+      jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
       media: toMediaPayload(media()),
     });
@@ -223,6 +225,28 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                 />
                 <Show when={getFieldError('description')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="label">ジャケットアートURL</label>
+                <input
+                  type="url"
+                  class="input w-full"
+                  value={jacketArtUrl()}
+                  onInput={e => setJacketArtUrl(e.currentTarget.value)}
+                  placeholder="https://..."
+                  classList={{ 'input-error': !!getFieldError('jacketArtUrl') }}
+                />
+                <Show when={getFieldError('jacketArtUrl')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+                <Show when={jacketArtUrl().trim() !== ''}>
+                  <img
+                    src={jacketArtUrl().trim()}
+                    alt="ジャケットアートのプレビュー"
+                    class="mt-3 size-32 rounded-box border border-base-300 object-cover"
+                  />
                 </Show>
               </div>
 

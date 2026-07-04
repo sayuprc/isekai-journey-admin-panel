@@ -37,6 +37,7 @@ model ReleaseCreateRequest {
   name: releaseName;
   releasedOn: releasedOn;
   description: string;
+  jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   media: Medium[];
 }
@@ -49,6 +50,7 @@ model ReleaseUpdateRequest {
   name: releaseName;
   releasedOn: releasedOn;
   description: string;
+  jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   media: Medium[];
 }

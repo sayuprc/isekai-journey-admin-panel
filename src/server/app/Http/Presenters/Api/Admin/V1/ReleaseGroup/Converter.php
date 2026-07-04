@@ -40,7 +40,9 @@ class Converter
 
     public function toOpenApiReferencedRelease(ReleaseGroupReferencedRelease $release): OpenApiReleaseGroupReferencedRelease
     {
-        return new OpenApiReleaseGroupReferencedRelease()
+        return new OpenApiReleaseGroupReferencedRelease([
+            'jacket_art_url' => $release->jacketArtUrl,
+        ])
             ->setReleaseId($release->releaseId)
             ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))

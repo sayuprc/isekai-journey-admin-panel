@@ -9,6 +9,8 @@ import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
+const NullableStringSchema = t.Union([t.String(), t.Null()]);
+
 const mediaSchema = t.Array(
   t.Object({
     position: t.Number(),
@@ -37,6 +39,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
+        jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
         media: mediaSchema,
       }),
@@ -76,6 +79,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
+        jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
         media: mediaSchema,
       }),

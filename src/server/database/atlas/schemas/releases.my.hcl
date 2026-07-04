@@ -27,6 +27,11 @@ table "releases" {
     type    = text
     comment = "説明"
   }
+  column "jacket_art_url" {
+    null    = true
+    type    = text
+    comment = "ジャケットアートURL"
+  }
   column "is_display" {
     null    = false
     type    = bool

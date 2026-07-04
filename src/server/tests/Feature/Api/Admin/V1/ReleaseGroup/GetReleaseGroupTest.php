@@ -56,6 +56,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 '初回限定盤',
                 true,
                 new ImmutableDate('2026-06-01'),
+                jacketArtUrl: 'https://example.com/limited.png',
                 media: [
                     [
                         'position' => 1,
@@ -87,6 +88,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                         'releaseId' => $releaseId1,
                         'name' => '配信',
                         'releasedOn' => '2026-05-01',
+                        'jacketArtUrl' => null,
                         'isDisplay' => true,
                         'formatValues' => [MediumFormat::Digital->value],
                     ],
@@ -94,6 +96,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                         'releaseId' => $releaseId2,
                         'name' => '初回限定盤',
                         'releasedOn' => '2026-06-01',
+                        'jacketArtUrl' => 'https://example.com/limited.png',
                         'isDisplay' => true,
                         'formatValues' => [MediumFormat::Cd->value, MediumFormat::Dvd->value],
                     ],

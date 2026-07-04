@@ -14,6 +14,7 @@ readonly class Release
         public ReleaseName $name,
         public ReleasedOn $releasedOn,
         public Description $description,
+        public ?JacketArtUrl $jacketArtUrl,
         public bool $isDisplay,
         public Media $media,
     ) {
@@ -28,6 +29,7 @@ readonly class Release
         string $name,
         ImmutableDate $releasedOn,
         string $description,
+        ?string $jacketArtUrl,
         bool $isDisplay,
         array $media,
     ): self {
@@ -37,13 +39,14 @@ readonly class Release
             ReleaseName::reconstruct($name),
             ReleasedOn::reconstruct($releasedOn),
             Description::reconstruct($description),
+            is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
             $isDisplay,
             Media::reconstruct($media),
         );
     }
 
     /**
-     * @return array{release_id: string, release_group_id: string, name: string, released_on: string, description: string, is_display: bool, media: list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>}
+     * @return array{release_id: string, release_group_id: string, name: string, released_on: string, description: string, jacket_art_url: string|null, is_display: bool, media: list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>}
      */
     public function toArray(): array
     {
@@ -53,6 +56,7 @@ readonly class Release
             'name' => $this->name->value,
             'released_on' => $this->releasedOn->value->format('Y-m-d'),
             'description' => $this->description->value,
+            'jacket_art_url' => $this->jacketArtUrl?->value,
             'is_display' => $this->isDisplay,
             'media' => $this->media->toArray(),
         ];

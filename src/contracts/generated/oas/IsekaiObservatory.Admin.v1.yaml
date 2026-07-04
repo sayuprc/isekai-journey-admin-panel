@@ -2535,6 +2535,7 @@ components:
         - name
         - releasedOn
         - description
+        - jacketArtUrl
         - isDisplay
         - media
       properties:
@@ -2548,6 +2549,10 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
         media:
@@ -2562,6 +2567,7 @@ components:
         - name
         - releasedOn
         - description
+        - jacketArtUrl
         - isDisplay
         - media
       properties:
@@ -2573,6 +2579,10 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
         media:
@@ -2659,6 +2669,7 @@ components:
         - releaseId
         - name
         - releasedOn
+        - jacketArtUrl
         - isDisplay
         - formatValues
       properties:
@@ -2668,6 +2679,10 @@ components:
           $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
         formatValues:
@@ -2768,6 +2783,7 @@ components:
         - name
         - releasedOn
         - description
+        - jacketArtUrl
         - isDisplay
         - media
       properties:
@@ -2777,6 +2793,10 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
         media:
@@ -3315,6 +3335,9 @@ components:
       type: string
       format: email
       description: メールアドレス
+    jacketArtUrl:
+      type: string
+      description: ジャケットアートURL
     lyricsLink:
       type: string
       format: uri

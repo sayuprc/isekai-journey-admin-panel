@@ -39,6 +39,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             name: '初回限定盤',
             releasedOn: '2026-05-09',
             description: '',
+            jacketArtUrl: 'https://example.com/jacket.png',
             isDisplay: true,
             media: [
                 [
@@ -62,6 +63,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertDatabaseHas('releases', [
             'name' => '初回限定盤',
             'description' => '',
+            'jacket_art_url' => 'https://example.com/jacket.png',
             'is_display' => true,
         ]);
         $this->assertDatabaseCount('release_media', 2);
@@ -76,6 +78,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             name: '通常盤',
             releasedOn: '2026-05-09',
             description: '',
+            jacketArtUrl: null,
             isDisplay: true,
             media: [],
         ));
@@ -100,6 +103,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             name: '通常盤',
             releasedOn: 'invalid-date',
             description: '説明',
+            jacketArtUrl: null,
             isDisplay: true,
             media: [],
         ));

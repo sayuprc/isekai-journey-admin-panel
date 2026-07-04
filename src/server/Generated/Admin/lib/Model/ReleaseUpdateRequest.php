@@ -60,6 +60,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => 'string',
         'released_on' => '\DateTime',
         'description' => 'string',
+        'jacket_art_url' => 'string',
         'is_display' => 'bool',
         'media' => '\OpenAPI\Admin\Client\Model\Medium[]'
     ];
@@ -75,6 +76,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => null,
         'released_on' => 'date',
         'description' => null,
+        'jacket_art_url' => null,
         'is_display' => null,
         'media' => null
     ];
@@ -88,6 +90,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => false,
         'released_on' => false,
         'description' => false,
+        'jacket_art_url' => true,
         'is_display' => false,
         'media' => false
     ];
@@ -181,6 +184,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => 'name',
         'released_on' => 'releasedOn',
         'description' => 'description',
+        'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
         'media' => 'media'
     ];
@@ -194,6 +198,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => 'setName',
         'released_on' => 'setReleasedOn',
         'description' => 'setDescription',
+        'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
         'media' => 'setMedia'
     ];
@@ -207,6 +212,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'name' => 'getName',
         'released_on' => 'getReleasedOn',
         'description' => 'getDescription',
+        'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
         'media' => 'getMedia'
     ];
@@ -271,6 +277,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
     }
@@ -314,6 +321,9 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
         if ($this->container['description'] === null) {
             $invalidProperties[] = "'description' can't be null";
+        }
+        if ($this->container['jacket_art_url'] === null) {
+            $invalidProperties[] = "'jacket_art_url' can't be null";
         }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
@@ -418,6 +428,40 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
             throw new \InvalidArgumentException('non-nullable description cannot be null');
         }
         $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets jacket_art_url
+     *
+     * @return string
+     */
+    public function getJacketArtUrl()
+    {
+        return $this->container['jacket_art_url'];
+    }
+
+    /**
+     * Sets jacket_art_url
+     *
+     * @param string $jacket_art_url ジャケットアートURL
+     *
+     * @return self
+     */
+    public function setJacketArtUrl($jacket_art_url)
+    {
+        if (is_null($jacket_art_url)) {
+            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('jacket_art_url', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['jacket_art_url'] = $jacket_art_url;
 
         return $this;
     }

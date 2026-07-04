@@ -7,6 +7,7 @@ namespace Release\Domain\Services;
 use DateMalformedStringException;
 use DateType\ImmutableDate;
 use Release\Domain\Models\Description;
+use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
@@ -43,10 +44,11 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
+        ?string $jacketArtUrl,
         bool $isDisplay,
         array $media,
     ): Result {
-        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
+        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
     }
 
     /**
@@ -60,10 +62,11 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
+        ?string $jacketArtUrl,
         bool $isDisplay,
         array $media,
     ): Result {
-        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
+        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
     }
 
     /**
@@ -77,10 +80,11 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
+        ?string $jacketArtUrl,
         bool $isDisplay,
         array $media,
     ): Result {
-        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
+        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -110,6 +114,7 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
+        ?string $jacketArtUrl,
         bool $isDisplay,
         array $media,
     ): Result {
@@ -119,12 +124,18 @@ class ReleaseIntegrityService
             return new Err($mediaResult->unwrapErr());
         }
 
-        return Result::collect5(
+        $normalizedJacketArtUrl = $this->normalizeOptionalString($jacketArtUrl);
+        $jacketArtUrlResult = is_null($normalizedJacketArtUrl)
+            ? new Ok(null)
+            : JacketArtUrl::create($normalizedJacketArtUrl);
+
+        return Result::collect6(
             ReleaseId::create($releaseId),
             ReleaseGroupId::create($releaseGroupId),
             ReleaseName::create($name),
             $this->toReleasedOn($releasedOn),
             Description::create($description),
+            $jacketArtUrlResult,
         )
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
@@ -151,6 +162,17 @@ class ReleaseIntegrityService
         }
 
         return true;
+    }
+
+    private function normalizeOptionalString(?string $value): ?string
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed === '' ? null : $trimmed;
     }
 
     /**

@@ -25,6 +25,9 @@ scalar releaseName extends string;
 @format("date")
 scalar releasedOn extends string;
 
+@doc("ジャケットアートURL")
+scalar jacketArtUrl extends string;
+
 @doc("リリースグループ種別")
 enum ReleaseGroupTypeValue {
   Single: 1,
@@ -66,6 +69,7 @@ model ReleaseGroupReferencedRelease {
   releaseId: releaseId;
   name: releaseName;
   releasedOn: releasedOn;
+  jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   formatValues: MediumFormatValue[];
 }
@@ -90,6 +94,7 @@ model Release {
   name: releaseName;
   releasedOn: releasedOn;
   description: string;
+  jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   media: Medium[];
 }

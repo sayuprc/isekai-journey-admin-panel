@@ -21,12 +21,12 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
     #[Override]
     public function findReferencedReleases(ReleaseGroupId $releaseGroupId): array
     {
-        /** @var Collection<int, object{release_id: string, name: string, released_on: string, is_display: int}> $releaseRows */
+        /** @var Collection<int, object{release_id: string, name: string, released_on: string, jacket_art_url: string|null, is_display: int}> $releaseRows */
         $releaseRows = DB::table('releases')
             ->where('release_group_id', $this->converter->toBin($releaseGroupId->value))
             ->orderBy('released_on')
             ->orderBy('name')
-            ->get(['release_id', 'name', 'released_on', 'is_display']);
+            ->get(['release_id', 'name', 'released_on', 'jacket_art_url', 'is_display']);
 
         if ($releaseRows->isEmpty()) {
             return [];
@@ -50,6 +50,7 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
                     $this->converter->toUuid($row->release_id),
                     $row->name,
                     $row->released_on,
+                    $row->jacket_art_url,
                     (bool)$row->is_display,
                     $formatsByRelease[$row->release_id] ?? [],
                 ))

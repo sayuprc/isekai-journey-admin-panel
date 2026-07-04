@@ -27,6 +27,7 @@ use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Release\Domain\Models\Description as ReleaseDescription;
+use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media as ReleaseMedia;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
@@ -239,6 +240,7 @@ trait EntityFactory
         bool $isDisplay,
         ?ImmutableDate $releasedOn = null,
         string $description = 'テスト用リリース',
+        ?string $jacketArtUrl = null,
         array $media = [],
     ): Release {
         return new Release(
@@ -247,6 +249,7 @@ trait EntityFactory
             ReleaseName::reconstruct($name),
             ReleasedOn::reconstruct($releasedOn ?? new ImmutableDate('2024-01-01')),
             ReleaseDescription::reconstruct($description),
+            is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
             $isDisplay,
             ReleaseMedia::reconstruct($media),
         );

@@ -39,6 +39,7 @@ class GetReleaseTest extends DatabaseTestCase
                 $releaseGroupId,
                 '初回限定盤',
                 true,
+                jacketArtUrl: 'https://example.com/jacket.png',
                 media: [
                     [
                         'position' => 1,
@@ -59,6 +60,7 @@ class GetReleaseTest extends DatabaseTestCase
                     'name' => '初回限定盤',
                     'releasedOn' => '2024-01-01',
                     'description' => 'テスト用リリース',
+                    'jacketArtUrl' => 'https://example.com/jacket.png',
                     'isDisplay' => true,
                     'media' => [
                         [

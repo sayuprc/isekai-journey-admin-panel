@@ -305,6 +305,7 @@ export type Release = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
+    jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     media: Array<Medium>;
 };
@@ -314,6 +315,7 @@ export type ReleaseCreateRequest = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
+    jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     media: Array<Medium>;
 };
@@ -361,6 +363,7 @@ export type ReleaseGroupReferencedRelease = {
     releaseId: ReleaseId;
     name: ReleaseName;
     releasedOn: ReleasedOn;
+    jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     formatValues: Array<MediumFormatValue>;
 };
@@ -412,6 +415,7 @@ export type ReleaseUpdateRequest = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
+    jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     media: Array<Medium>;
 };
@@ -664,6 +668,11 @@ export type Description = string;
  * メールアドレス
  */
 export type Email = string;
+
+/**
+ * ジャケットアートURL
+ */
+export type JacketArtUrl = string;
 
 /**
  * 歌詞リンク

@@ -17,6 +17,7 @@ interface InitialValues {
   name: string;
   releasedOn: string;
   description: string;
+  jacketArtUrl: string;
   isDisplay: boolean;
   media: MediumForm[];
 }
@@ -25,6 +26,7 @@ const EMPTY_INITIAL_VALUES: InitialValues = {
   name: '',
   releasedOn: '',
   description: '',
+  jacketArtUrl: '',
   isDisplay: true,
   media: [{ formatValue: 1, tracks: [] }],
 };
@@ -96,6 +98,7 @@ export const CreateForm = () => {
         name: data.release.name,
         releasedOn: normalizeDateValue(data.release.releasedOn),
         description: data.release.description,
+        jacketArtUrl: data.release.jacketArtUrl ?? '',
         isDisplay: data.release.isDisplay,
         media: toMediumForms(data),
       },
@@ -155,6 +158,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
   const [name, setName] = createSignal(props.initialValues.name);
   const [releasedOn, setReleasedOn] = createSignal(props.initialValues.releasedOn);
   const [description, setDescription] = createSignal(props.initialValues.description);
+  const [jacketArtUrl, setJacketArtUrl] = createSignal(props.initialValues.jacketArtUrl);
   const [isDisplay, setIsDisplay] = createSignal(props.initialValues.isDisplay);
   const [media, setMedia] = createSignal<MediumForm[]>(props.initialValues.media);
 
@@ -172,6 +176,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
       name: name(),
       releasedOn: releasedOn(),
       description: description(),
+      jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
       media: toMediaPayload(media()),
     });
@@ -236,6 +241,28 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
               />
               <Show when={getFieldError('description')}>
                 {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+              </Show>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="label">ジャケットアートURL</label>
+              <input
+                type="url"
+                class="input w-full"
+                value={jacketArtUrl()}
+                onInput={e => setJacketArtUrl(e.currentTarget.value)}
+                placeholder="https://..."
+                classList={{ 'input-error': !!getFieldError('jacketArtUrl') }}
+              />
+              <Show when={getFieldError('jacketArtUrl')}>
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+              </Show>
+              <Show when={jacketArtUrl().trim() !== ''}>
+                <img
+                  src={jacketArtUrl().trim()}
+                  alt="ジャケットアートのプレビュー"
+                  class="mt-3 size-32 rounded-box border border-base-300 object-cover"
+                />
               </Show>
             </div>
 

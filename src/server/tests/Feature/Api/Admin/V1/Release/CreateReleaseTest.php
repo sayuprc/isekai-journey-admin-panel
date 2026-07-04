@@ -40,6 +40,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '初回限定盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
+                'jacketArtUrl' => 'https://example.com/jacket.png',
                 'isDisplay' => true,
                 'media' => [
                     [
@@ -66,6 +67,7 @@ class CreateReleaseTest extends DatabaseTestCase
                             ->where('name', '初回限定盤')
                             ->where('releasedOn', '2026-05-09')
                             ->where('description', '')
+                            ->where('jacketArtUrl', 'https://example.com/jacket.png')
                             ->where('isDisplay', true)
                             ->where('media.0.position', 1)
                             ->where('media.0.formatValue', MediumFormat::Cd->value)
@@ -90,6 +92,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '通常盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [],
             ])->assertStatus(400)
@@ -105,6 +108,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '通常盤',
                 'releasedOn' => 'invalid-date',
                 'description' => '説明',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [],
             ])->assertStatus(422)

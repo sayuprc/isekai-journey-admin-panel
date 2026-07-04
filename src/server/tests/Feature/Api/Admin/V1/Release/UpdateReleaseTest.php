@@ -66,6 +66,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '更新後の説明',
+                'jacketArtUrl' => 'https://example.com/jacket-new.png',
                 'isDisplay' => false,
                 'media' => [
                     [
@@ -88,6 +89,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                             ->where('name', '新版名')
                             ->where('releasedOn', '2026-05-09')
                             ->where('description', '更新後の説明')
+                            ->where('jacketArtUrl', 'https://example.com/jacket-new.png')
                             ->where('isDisplay', false)
                             ->where('media.0.position', 1)
                             ->where('media.0.formatValue', MediumFormat::Cd->value)
@@ -117,6 +119,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [],
             ])->assertStatus(404);
@@ -130,6 +133,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [],
             ])->assertStatus(404);
@@ -153,6 +157,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [],
             ])->assertStatus(403);
@@ -178,6 +183,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
+                'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'media' => [
                     [

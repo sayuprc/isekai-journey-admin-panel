@@ -286,6 +286,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
               <table class="table table-sm">
                 <thead>
                   <tr>
+                    <th>ジャケット</th>
                     <th>版名</th>
                     <th>発売日</th>
                     <th>媒体</th>
@@ -297,6 +298,24 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                   <For each={props.data.releases}>
                     {release => (
                       <tr>
+                        <td>
+                          <Show
+                            when={release.jacketArtUrl}
+                            fallback={(
+                              <div class="flex size-12 items-center justify-center rounded-box border border-base-300 bg-base-200 text-xs text-base-content/40">
+                                なし
+                              </div>
+                            )}
+                          >
+                            {url => (
+                              <img
+                                src={url()}
+                                alt={`${release.name} のジャケットアート`}
+                                class="size-12 rounded-box border border-base-300 object-cover"
+                              />
+                            )}
+                          </Show>
+                        </td>
                         <td class="min-w-40 font-medium">{release.name}</td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateValue(release.releasedOn)}</td>
                         <td>
