@@ -1,5 +1,5 @@
 import { For, Index, Show, createMemo, createSignal } from 'solid-js';
-import type { MediumFormatValue, SongSummary } from '../../generated';
+import type { MediumFormatValue, ReleaseGetResponse, SongSummary } from '../../generated';
 import { client } from '../../utils/client';
 
 export const MEDIUM_FORMAT_OPTIONS: Array<{ value: MediumFormatValue; label: string }> = [
@@ -18,6 +18,19 @@ export type TrackForm = {
 export type MediumForm = {
   formatValue: MediumFormatValue;
   tracks: TrackForm[];
+};
+
+/** API レスポンスからフォーム状態を組み立てる（楽曲名は収録曲 read model から引く）。 */
+export const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
+  const titleBySongId = new Map(data.songs.map(song => [song.songId, song.title]));
+
+  return data.release.media.map(medium => ({
+    formatValue: medium.formatValue,
+    tracks: medium.tracks.map(track => ({
+      songId: track.songId,
+      title: titleBySongId.get(track.songId) ?? track.songId,
+    })),
+  }));
 };
 
 /** フォーム状態を API の media リクエスト形へ変換する（position / trackNo は並び順から採番）。 */

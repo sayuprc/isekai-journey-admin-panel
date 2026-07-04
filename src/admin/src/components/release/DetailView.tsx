@@ -5,7 +5,7 @@ import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
-import { MediaEditor, toMediaPayload } from './MediaEditor';
+import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
 import type { MediumForm } from './MediaEditor';
 
 interface DetailViewProps {
@@ -43,19 +43,6 @@ const normalizeDateValue = (value: unknown): string => {
   const parsed = new Date(value);
 
   return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
-};
-
-/** API レスポンスからフォーム状態を組み立てる（楽曲名は収録曲 read model から引く）。 */
-const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
-  const titleBySongId = new Map(data.songs.map(song => [song.songId, song.title]));
-
-  return data.release.media.map(medium => ({
-    formatValue: medium.formatValue,
-    tracks: medium.tracks.map(track => ({
-      songId: track.songId,
-      title: titleBySongId.get(track.songId) ?? track.songId,
-    })),
-  }));
 };
 
 export const DetailView = (props: DetailViewProps) => {

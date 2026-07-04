@@ -323,9 +323,17 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                           </span>
                         </td>
                         <td class="text-right">
-                          <a href={`/releases/${release.releaseId}`} class="btn btn-ghost btn-xs">
-                            編集
-                          </a>
+                          <div class="flex justify-end gap-2">
+                            <a href={`/releases/${release.releaseId}`} class="btn btn-ghost btn-xs">
+                              編集
+                            </a>
+                            <a
+                              href={`/releases/create?releaseGroupId=${releaseGroupId}&sourceReleaseId=${release.releaseId}`}
+                              class="btn btn-ghost btn-xs"
+                            >
+                              コピーして追加
+                            </a>
+                          </div>
                         </td>
                       </tr>
                     )}
