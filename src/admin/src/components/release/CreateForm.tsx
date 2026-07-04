@@ -1,5 +1,5 @@
 import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
-import { client } from '../../utils/client';
+import { client, uploadReleaseJacketArt } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
@@ -168,8 +168,28 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
+  const { isSubmitting: isUploadingJacketArt, withSubmitting: withUploadingJacketArt } = createSubmitting();
 
   const groupUrl = `/release-groups/${props.releaseGroupId}`;
+
+  const handleJacketArtUpload = withUploadingJacketArt(async (e: Event) => {
+    const file = (e.currentTarget as HTMLInputElement).files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    clearErrors();
+
+    const { data, error, status } = await uploadReleaseJacketArt(file);
+
+    if (data) {
+      setJacketArtUrl(data.jacketArtUrl);
+      return;
+    }
+
+    handleError(status, error);
+  });
 
   const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
@@ -250,17 +270,20 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
             </div>
 
             <div class="md:col-span-2">
-              <label class="label">ジャケットアートURL</label>
+              <label class="label">ジャケットアート</label>
               <input
-                type="url"
-                class="input w-full"
-                value={jacketArtUrl()}
-                onInput={e => setJacketArtUrl(e.currentTarget.value)}
-                placeholder="https://..."
-                classList={{ 'input-error': !!getFieldError('jacketArtUrl') }}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="file-input w-full"
+                onChange={handleJacketArtUpload}
+                disabled={isUploadingJacketArt()}
+                classList={{ 'file-input-error': !!(getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')) }}
               />
-              <Show when={getFieldError('jacketArtUrl')}>
+              <Show when={getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')}>
                 {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+              </Show>
+              <Show when={isUploadingJacketArt()}>
+                <p class="mt-1 text-xs text-base-content/60">アップロード中...</p>
               </Show>
               <Show when={jacketArtUrl().trim() !== ''}>
                 <img
@@ -309,7 +332,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
         <MediaEditor media={media()} onChange={setMedia} fieldError={getFieldError('media')} />
 
         <div class="flex justify-end">
-          <button class="btn btn-primary" disabled={isSubmitting()}>
+          <button class="btn btn-primary" disabled={isSubmitting() || isUploadingJacketArt()}>
             {isSubmitting() ? '作成中...' : '作成'}
           </button>
         </div>

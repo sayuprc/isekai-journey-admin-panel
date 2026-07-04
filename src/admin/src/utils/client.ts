@@ -1,5 +1,6 @@
 import { treaty } from '@elysiajs/eden';
 import { PUBLIC_APP_URL } from 'astro:env/client';
+import type { ReleaseJacketArtUploadResponse } from '../generated';
 import type { App } from '../server';
 
 const getCookie = (name: string): string | undefined => {
@@ -16,9 +17,40 @@ const getCookie = (name: string): string | undefined => {
   return value ? decodeURIComponent(value) : undefined;
 };
 
+const getCsrfHeaders = (): Record<string, string> => {
+  const csrfToken = getCookie('csrf');
+
+  return csrfToken ? { 'x-csrf-token': csrfToken } : {};
+};
+
 export const client = treaty<App>(PUBLIC_APP_URL, {
-  headers: () => {
-    const csrfToken = getCookie('csrf');
-    return csrfToken ? { 'x-csrf-token': csrfToken } : {};
-  },
+  headers: getCsrfHeaders,
 });
+
+interface UploadReleaseJacketArtResult {
+  data?: ReleaseJacketArtUploadResponse;
+  error?: unknown;
+  status: number;
+}
+
+const isReleaseJacketArtUploadResponse = (data: unknown): data is ReleaseJacketArtUploadResponse =>
+  typeof data === 'object'
+  && data !== null
+  && 'jacketArtUrl' in data
+  && typeof (data as ReleaseJacketArtUploadResponse).jacketArtUrl === 'string';
+
+export const uploadReleaseJacketArt = async (file: File): Promise<UploadReleaseJacketArtResult> => {
+  const result = await client.api.releases['jacket-art'].post({ jacketArt: file });
+
+  if (result.data && isReleaseJacketArtUploadResponse(result.data)) {
+    return {
+      data: result.data,
+      status: result.status,
+    };
+  }
+
+  return {
+    error: result.error ?? result.data,
+    status: result.status,
+  };
+};

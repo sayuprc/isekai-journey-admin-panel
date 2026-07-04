@@ -74,6 +74,16 @@ interface ReleaseService {
     | Unprocessable
     | ServerError;
 
+  @doc("リリースジャケットアートアップロードAPI")
+  @route("/jacket-art")
+  uploadJacketArt(@body image: bytes, @header("content-type") contentType: JacketArtContentType):
+    | Ok<ReleaseJacketArtUploadResponse>
+    | BadRequest
+    | Unauthorized
+    | Forbidden
+    | Unprocessable
+    | ServerError;
+
   @doc("リリース取得API")
   getRelease(@path releaseId: uuid):
     | Ok<ReleaseGetResponse>

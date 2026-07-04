@@ -3,6 +3,7 @@ import {
   releaseServiceCreateRelease,
   releaseServiceDeleteRelease,
   releaseServiceGetRelease,
+  releaseServiceUploadJacketArt,
   releaseServiceUpdateRelease,
 } from '../../generated';
 import { withAuthRetry } from '../client';
@@ -26,6 +27,34 @@ const mediaSchema = t.Array(
 
 export const releases = new Elysia({ prefix: '/releases' })
   .use(authGuard)
+  .post('/jacket-art', async ({ request, set, authSession }) => {
+    const formData = await request.formData();
+    const file = formData.get('jacketArt');
+
+    if (!(file instanceof File)) {
+      set.status = 422;
+      return { errors: [{ field: 'jacketArt', message: '画像ファイルは必須です' }] };
+    }
+
+    const content = await file.arrayBuffer();
+
+    return withAuthRetry(authSession, async (client) => {
+      const result = await releaseServiceUploadJacketArt({
+        client,
+        body: content,
+        bodySerializer: null,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      if (!result.response) {
+        throw new Error('リリースジャケットアートアップロードAPIのレスポンスを取得できませんでした');
+      }
+
+      return resolveApiResponse({ ...result, response: result.response });
+    });
+  })
   .post(
     '/',
     async ({ body, authSession }) => {

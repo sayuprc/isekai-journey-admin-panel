@@ -28,6 +28,8 @@ scalar releasedOn extends string;
 @doc("ジャケットアートURL")
 scalar jacketArtUrl extends string;
 
+alias JacketArtContentType = "image/jpeg" | "image/png" | "image/webp";
+
 @doc("リリースグループ種別")
 enum ReleaseGroupTypeValue {
   Single: 1,

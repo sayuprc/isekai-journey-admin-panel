@@ -51,6 +51,10 @@ model ReleaseCreateResponse {
   release: Release;
 }
 
+model ReleaseJacketArtUploadResponse {
+  jacketArtUrl: jacketArtUrl;
+}
+
 model ReleaseUpdateRequest {
   name: releaseName;
   releasedOn: releasedOn;

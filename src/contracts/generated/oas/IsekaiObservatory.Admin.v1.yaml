@@ -1236,6 +1236,56 @@ paths:
               $ref: '#/components/schemas/ReleaseCreateRequest'
       security:
         - BearerAuth: []
+  /releases/jacket-art:
+    post:
+      operationId: ReleaseService_uploadJacketArt
+      description: リリースジャケットアートアップロードAPI
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseJacketArtUploadResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Release
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              contentMediaType: image/jpeg
+          image/png:
+            schema:
+              contentMediaType: image/png
+          image/webp:
+            schema:
+              contentMediaType: image/webp
+      security:
+        - BearerAuth: []
   /releases/{releaseId}:
     get:
       operationId: ReleaseService_getRelease
@@ -2769,6 +2819,13 @@ components:
       properties:
         releaseGroup:
           $ref: '#/components/schemas/ReleaseGroup'
+    ReleaseJacketArtUploadResponse:
+      type: object
+      required:
+        - jacketArtUrl
+      properties:
+        jacketArtUrl:
+          $ref: '#/components/schemas/jacketArtUrl'
     ReleaseReferencedSong:
       type: object
       required:

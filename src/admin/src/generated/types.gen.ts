@@ -404,6 +404,10 @@ export type ReleaseGroupUpdateResponse = {
     releaseGroup: ReleaseGroup;
 };
 
+export type ReleaseJacketArtUploadResponse = {
+    jacketArtUrl: JacketArtUrl;
+};
+
 /**
  * リリース収録曲の表示用情報
  */
@@ -2143,6 +2147,55 @@ export type ReleaseServiceCreateReleaseResponses = {
 };
 
 export type ReleaseServiceCreateReleaseResponse = ReleaseServiceCreateReleaseResponses[keyof ReleaseServiceCreateReleaseResponses];
+
+export type ReleaseServiceUploadJacketArtData = {
+    body: unknown;
+    path?: never;
+    query?: never;
+    url: '/releases/jacket-art';
+};
+
+export type ReleaseServiceUploadJacketArtErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Client error
+     */
+    422: ValidationError;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseServiceUploadJacketArtError = ReleaseServiceUploadJacketArtErrors[keyof ReleaseServiceUploadJacketArtErrors];
+
+export type ReleaseServiceUploadJacketArtResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseJacketArtUploadResponse;
+};
+
+export type ReleaseServiceUploadJacketArtResponse = ReleaseServiceUploadJacketArtResponses[keyof ReleaseServiceUploadJacketArtResponses];
 
 export type ReleaseServiceDeleteReleaseData = {
     body?: never;
