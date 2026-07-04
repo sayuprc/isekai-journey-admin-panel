@@ -1239,6 +1239,25 @@ image-slot:hover {
   overflow: hidden;
 }
 
+.release-version-content {
+  display: grid;
+  gap: 18px;
+}
+
+.release-version-content.has-jacket {
+  grid-template-columns: minmax(96px, 140px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.release-version-art {
+  width: 100%;
+  max-width: 140px;
+}
+
+.release-version-track-list {
+  min-width: 0;
+}
+
 .release-version-heading {
   display: flex;
   gap: 12px;
@@ -2799,6 +2818,14 @@ image-slot:hover {
   .media-list-row > :last-child,
   .media-list-row .label-mono {
     display: none;
+  }
+
+  .release-version-content.has-jacket {
+    grid-template-columns: 1fr;
+  }
+
+  .release-version-art {
+    width: min(160px, 100%);
   }
 
   .detail-panel {
