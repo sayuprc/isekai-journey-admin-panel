@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace Release\Infrastructures\Admin;
 
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Emonkak\Orm\SelectBuilder;
+use Emonkak\Orm\Sql;
 use Override;
 use Release\Application\Admin\Query\ReleaseGroupSearchQueryServiceInterface;
 use Release\Application\Admin\Query\ReleaseGroupSummary;
 use Release\Domain\Criteria\ReleaseGroupSearchCriteria;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 use Support\Infrastructures\Database\SqlHelper;
 
 readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQueryServiceInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     #[Override]
@@ -25,55 +28,53 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
     {
         $offset = ($criteria->page - 1) * $criteria->perPage->value;
 
-        /** @var Collection<int, object{release_group_id: string, title: string, type: int, description: string, is_display: int, first_released_on: string|null}> $rows */
-        $rows = $this->buildSearchQuery($criteria)
-            ->leftJoin('releases', 'releases.release_group_id', '=', 'release_groups.release_group_id')
-            ->groupBy(
-                'release_groups.release_group_id',
-                'release_groups.title',
-                'release_groups.type',
-                'release_groups.description',
-                'release_groups.is_display',
-            )
-            // 最古発売日の降順（リリース未登録のグループは末尾）、同日はタイトル昇順。
-            ->orderByDesc('first_released_on')
-            ->orderBy('release_groups.title')
-            ->limit($criteria->perPage->value)
-            ->offset($offset)
-            ->get([
-                'release_groups.release_group_id',
-                'release_groups.title',
-                'release_groups.type',
-                'release_groups.description',
-                'release_groups.is_display',
-                DB::raw('MIN(releases.released_on) as first_released_on'),
-            ]);
+        $rows = $this->queryFactory->fetchAll(
+            $this->buildSearchQuery($criteria)
+                ->withSelect([
+                    'release_groups.release_group_id',
+                    'release_groups.title',
+                    'release_groups.type',
+                    'release_groups.description',
+                    'release_groups.is_display',
+                ])
+                ->select(new Sql('MIN(releases.released_on)'), 'first_released_on')
+                ->outerJoin('releases', 'releases.release_group_id = release_groups.release_group_id')
+                ->groupBy('release_groups.release_group_id')
+                ->groupBy('release_groups.title')
+                ->groupBy('release_groups.type')
+                ->groupBy('release_groups.description')
+                ->groupBy('release_groups.is_display')
+                // 最古発売日の降順（リリース未登録のグループは末尾）、同日はタイトル昇順。
+                ->orderBy('first_released_on', 'desc')
+                ->orderBy('release_groups.title')
+                ->limit($criteria->perPage->value)
+                ->offset($offset),
+        );
 
-        return array_values(
-            $rows
-                ->map(fn (object $row): ReleaseGroupSummary => new ReleaseGroupSummary(
-                    $this->converter->toUuid($row->release_group_id),
-                    $row->title,
-                    $row->type,
-                    $row->description,
-                    (bool)$row->is_display,
-                    $row->first_released_on,
-                ))
-                ->all(),
+        return array_map(
+            fn (array $row): ReleaseGroupSummary => new ReleaseGroupSummary(
+                $this->converter->toUuid(Row::string($row, 'release_group_id')),
+                Row::string($row, 'title'),
+                Row::int($row, 'type'),
+                Row::string($row, 'description'),
+                Row::bool($row, 'is_display'),
+                Row::nullableString($row, 'first_released_on'),
+            ),
+            $rows,
         );
     }
 
     #[Override]
     public function maxPage(ReleaseGroupSearchCriteria $criteria): int
     {
-        $count = $this->buildSearchQuery($criteria)->count();
+        $count = Row::intValue($this->buildSearchQuery($criteria)->aggregate($this->queryFactory->pdo(), 'COUNT(*)'));
 
         return (int)ceil($count / $criteria->perPage->value);
     }
 
-    private function buildSearchQuery(ReleaseGroupSearchCriteria $criteria): Builder
+    private function buildSearchQuery(ReleaseGroupSearchCriteria $criteria): SelectBuilder
     {
-        $query = DB::table('release_groups');
+        $query = $this->queryFactory->select()->from('release_groups');
 
         if ($criteria->title->isPresent()) {
             $keyword = SqlHelper::escapeLike($criteria->title->get());
