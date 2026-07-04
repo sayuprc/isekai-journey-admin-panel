@@ -155,13 +155,9 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
             ->orderBy('position')
             ->get(['release_id', 'position', 'format']);
 
-        // 収録曲は公開楽曲のみを載せる。
-        /** @var Collection<int, object{release_id: string, position: int, track_no: int, song_id: string, title: string}> $trackRows */
+        /** @var Collection<int, object{release_id: string, position: int, track_no: int, song_id: string, title: string, is_display: int}> $trackRows */
         $trackRows = DB::table('release_tracks')
-            ->join('songs', function (JoinClause $join): void {
-                $join->on('songs.song_id', '=', 'release_tracks.song_id')
-                    ->where('songs.is_display', '=', true);
-            })
+            ->join('songs', 'songs.song_id', '=', 'release_tracks.song_id')
             ->whereIn('release_tracks.release_id', $binReleaseIds)
             ->orderBy('release_tracks.position')
             ->orderBy('release_tracks.track_no')
@@ -171,6 +167,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 'release_tracks.track_no',
                 'release_tracks.song_id',
                 'songs.title',
+                'songs.is_display',
             ]);
 
         $tracksByMedium = [];
@@ -180,6 +177,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 $row->track_no,
                 $this->converter->toUuid($row->song_id),
                 $row->title,
+                (bool)$row->is_display,
             );
         }
 

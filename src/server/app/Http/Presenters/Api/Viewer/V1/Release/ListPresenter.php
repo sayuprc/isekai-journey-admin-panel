@@ -89,6 +89,7 @@ class ListPresenter
         return new OpenApiReleaseTrackItem()
             ->setTrackNo($track->trackNo)
             ->setSongId($track->songId)
-            ->setTitle($track->title);
+            ->setTitle($track->title)
+            ->setIsDisplay($track->isDisplay);
     }
 }

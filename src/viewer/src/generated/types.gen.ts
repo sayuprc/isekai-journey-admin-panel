@@ -112,12 +112,13 @@ export type ReleaseMediumItem = {
 };
 
 /**
- * 収録曲（公開楽曲のみ）
+ * 収録曲
  */
 export type ReleaseTrackItem = {
     trackNo: OrderNo;
     songId: Uuid;
     title: string;
+    isDisplay: boolean;
 };
 
 export type SiteStatsResponse = {

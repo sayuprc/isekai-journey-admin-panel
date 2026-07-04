@@ -114,12 +114,18 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                             'name' => '配信',
                                             'value' => 1,
                                         ],
-                                        // 非公開楽曲はトラックから除外される。
                                         'tracks' => [
                                             [
                                                 'trackNo' => 1,
                                                 'songId' => $visibleSongId,
                                                 'title' => '公開楽曲',
+                                                'isDisplay' => true,
+                                            ],
+                                            [
+                                                'trackNo' => 2,
+                                                'songId' => $hiddenSongId,
+                                                'title' => '非公開楽曲',
+                                                'isDisplay' => false,
                                             ],
                                         ],
                                     ],
@@ -143,6 +149,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                                 'trackNo' => 1,
                                                 'songId' => $visibleSongId,
                                                 'title' => '公開楽曲',
+                                                'isDisplay' => true,
                                             ],
                                         ],
                                     ],

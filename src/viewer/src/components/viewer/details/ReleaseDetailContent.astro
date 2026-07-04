@@ -45,13 +45,24 @@ const jacketArtUrl = representativeJacketArtUrl(releaseGroup);
                   ? (
                       <div class="rel-list">
                         {medium.tracks.map(track => (
-                          <a class="rel-chip" href={`/songs/${track.songId}`}>
-                            <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
-                            <div class="rel-copy">
-                              <div class="rel-main">{track.title}</div>
-                            </div>
-                            <span style="font-size:14px;color:var(--fg-faint);">→</span>
-                          </a>
+                          track.isDisplay
+                            ? (
+                                <a class="rel-chip" href={`/songs/${track.songId}`}>
+                                  <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
+                                  <div class="rel-copy">
+                                    <div class="rel-main">{track.title}</div>
+                                  </div>
+                                  <span style="font-size:14px;color:var(--fg-faint);">→</span>
+                                </a>
+                              )
+                            : (
+                                <div class="rel-chip" aria-disabled="true">
+                                  <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
+                                  <div class="rel-copy">
+                                    <div class="rel-main">{track.title}</div>
+                                  </div>
+                                </div>
+                              )
                         ))}
                       </div>
                     )

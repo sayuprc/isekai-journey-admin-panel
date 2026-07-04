@@ -10,6 +10,7 @@ readonly class ReleaseTrackItem
         public int $trackNo,
         public string $songId,
         public string $title,
+        public bool $isDisplay,
     ) {
     }
 }

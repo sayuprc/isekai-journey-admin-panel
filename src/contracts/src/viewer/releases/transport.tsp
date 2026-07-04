@@ -25,7 +25,9 @@ namespace IsekaiObservatory.Viewer;
             #{
               position: 1,
               format: #{ name: "CD", value: MediumFormatValue.Cd },
-              tracks: #[#{ trackNo: 1, songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", title: "テスト楽曲" }],
+              tracks: #[
+                #{ trackNo: 1, songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", title: "テスト楽曲", isDisplay: true }
+              ],
             }
           ],
         }

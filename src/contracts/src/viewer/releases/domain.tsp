@@ -54,11 +54,12 @@ model MediumFormat {
   value: MediumFormatValue;
 }
 
-@doc("収録曲（公開楽曲のみ）")
+@doc("収録曲")
 model ReleaseTrackItem {
   trackNo: orderNo;
   songId: uuid;
   title: string;
+  isDisplay: boolean;
 }
 
 @doc("リリース内の媒体")

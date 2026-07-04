@@ -35,7 +35,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * ReleaseTrackItem Class Doc Comment
  *
  * @category Class
- * @description 収録曲（公開楽曲のみ）
+ * @description 収録曲
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -60,7 +60,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $openAPITypes = [
         'track_no' => 'int',
         'song_id' => 'string',
-        'title' => 'string'
+        'title' => 'string',
+        'is_display' => 'bool'
     ];
 
     /**
@@ -73,7 +74,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $openAPIFormats = [
         'track_no' => 'int32',
         'song_id' => 'uuid',
-        'title' => null
+        'title' => null,
+        'is_display' => null
     ];
 
     /**
@@ -84,7 +86,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static array $openAPINullables = [
         'track_no' => false,
         'song_id' => false,
-        'title' => false
+        'title' => false,
+        'is_display' => false
     ];
 
     /**
@@ -175,7 +178,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $attributeMap = [
         'track_no' => 'trackNo',
         'song_id' => 'songId',
-        'title' => 'title'
+        'title' => 'title',
+        'is_display' => 'isDisplay'
     ];
 
     /**
@@ -186,7 +190,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $setters = [
         'track_no' => 'setTrackNo',
         'song_id' => 'setSongId',
-        'title' => 'setTitle'
+        'title' => 'setTitle',
+        'is_display' => 'setIsDisplay'
     ];
 
     /**
@@ -197,7 +202,8 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static $getters = [
         'track_no' => 'getTrackNo',
         'song_id' => 'getSongId',
-        'title' => 'getTitle'
+        'title' => 'getTitle',
+        'is_display' => 'getIsDisplay'
     ];
 
     /**
@@ -260,6 +266,7 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('track_no', $data ?? [], null);
         $this->setIfExists('song_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
+        $this->setIfExists('is_display', $data ?? [], null);
     }
 
     /**
@@ -301,6 +308,9 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['title'] === null) {
             $invalidProperties[] = "'title' can't be null";
+        }
+        if ($this->container['is_display'] === null) {
+            $invalidProperties[] = "'is_display' can't be null";
         }
         return $invalidProperties;
     }
@@ -399,6 +409,33 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable title cannot be null');
         }
         $this->container['title'] = $title;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_display
+     *
+     * @return bool
+     */
+    public function getIsDisplay()
+    {
+        return $this->container['is_display'];
+    }
+
+    /**
+     * Sets is_display
+     *
+     * @param bool $is_display is_display
+     *
+     * @return self
+     */
+    public function setIsDisplay($is_display)
+    {
+        if (is_null($is_display)) {
+            throw new \InvalidArgumentException('non-nullable is_display cannot be null');
+        }
+        $this->container['is_display'] = $is_display;
 
         return $this;
     }
