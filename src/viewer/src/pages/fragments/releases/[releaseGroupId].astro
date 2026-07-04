@@ -5,9 +5,9 @@ import { releaseGroupContentRepository } from '../../../features/releases/conten
 export const partial = true;
 
 export async function getStaticPaths() {
-  return (await releaseGroupContentRepository.all()).map(releaseGroup => ({
-    params: { releaseGroupId: releaseGroup.releaseGroupId },
-    props: { releaseGroup },
+  return (await releaseGroupContentRepository.entries()).map(entry => ({
+    params: { releaseGroupId: entry.id },
+    props: { releaseGroup: releaseGroupContentRepository.fromEntry(entry) },
   }));
 }
 

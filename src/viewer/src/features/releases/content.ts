@@ -5,17 +5,27 @@ type ReleaseGroupCollectionItem = ReleaseGroup & {
   index: number;
 };
 
-async function all(): Promise<ReleaseGroup[]> {
+async function entries() {
   return (await getCollection('releaseGroups'))
-    .sort((a, b) => (a.data as ReleaseGroupCollectionItem).index - (b.data as ReleaseGroupCollectionItem).index)
-    .map((entry) => {
-      const { index, ...releaseGroup } = entry.data as ReleaseGroupCollectionItem;
-      void index;
+    .map(entry => ({ ...entry, data: entry.data as ReleaseGroupCollectionItem }))
+    .sort((a, b) => a.data.index - b.data.index);
+}
 
-      return releaseGroup;
-    });
+type ReleaseGroupCollectionEntry = Awaited<ReturnType<typeof entries>>[number];
+
+function fromEntry(entry: ReleaseGroupCollectionEntry): ReleaseGroup {
+  const { index, ...releaseGroup } = entry.data;
+  void index;
+
+  return releaseGroup;
+}
+
+async function all(): Promise<ReleaseGroup[]> {
+  return (await entries()).map(fromEntry);
 }
 
 export const releaseGroupContentRepository = {
   all,
+  entries,
+  fromEntry,
 };
