@@ -25,10 +25,10 @@ class CreateSongTagTest extends DatabaseTestCase
                 'name' => 'テストタグA',
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'tag',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->whereType('songTagId', 'string')
                             ->where('name', 'テストタグA')
                             ->where('orderNo', 10),
@@ -60,11 +60,11 @@ class CreateSongTagTest extends DatabaseTestCase
                 'name' => '',
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'name')
                             ->whereType('message', 'string'),
                     ),

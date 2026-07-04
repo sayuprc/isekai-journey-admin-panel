@@ -151,17 +151,17 @@ trait EntityFactory
             return $personsOrLyricists;
         }
 
-        $toPerson = fn (array $item, SongPersonRole $role): array => [
+        $toPerson = static fn (array $item, SongPersonRole $role): array => [
             'personId' => (string)$item['personId'],
             'role' => $role->value,
             'orderNo' => (int)$item['orderNo'],
         ];
 
         return [
-            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Lyricist), $personsOrLyricists),
-            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Composer), $composersOrLegacyLyricists),
-            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $arrangersOrLegacyComposers),
-            ...array_map(fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $legacyArrangers),
+            ...array_map(static fn (array $item): array => $toPerson($item, SongPersonRole::Lyricist), $personsOrLyricists),
+            ...array_map(static fn (array $item): array => $toPerson($item, SongPersonRole::Composer), $composersOrLegacyLyricists),
+            ...array_map(static fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $arrangersOrLegacyComposers),
+            ...array_map(static fn (array $item): array => $toPerson($item, SongPersonRole::Arranger), $legacyArrangers),
         ];
     }
 

@@ -78,7 +78,7 @@ class RefreshUseCaseTest extends TestCase
         };
 
         $this->transaction->shouldReceive('scope')
-            ->andReturnUsing(fn (callable $callback) => $callback());
+            ->andReturnUsing(static fn (callable $callback) => $callback());
     }
 
     #[Test]

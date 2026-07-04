@@ -21,7 +21,7 @@ class GenerateRecoveryCodesPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (GenerateRecoveryCodesOutputData $output) => [
+            static fn (GenerateRecoveryCodesOutputData $output) => [
                 new GenerateRecoveryCodesResponse()
                     ->setRecoveryCodes($output->plainCodes),
                 200,

@@ -15,7 +15,7 @@ class GenericImmutableCollectionTest extends TestCase
     {
         $collection = new GenericImmutableCollection([1, 2, 3]);
 
-        $result = $collection->map(fn (int $i): int => $i + 2);
+        $result = $collection->map(static fn (int $i): int => $i + 2);
 
         $this->assertEquals(new GenericImmutableCollection([3, 4, 5]), $result);
     }

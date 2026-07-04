@@ -30,10 +30,10 @@ class CreateReleaseGroupTest extends DatabaseTestCase
                 'isDisplay' => true,
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'releaseGroup',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->whereType('releaseGroupId', 'string')
                             ->where('title', '観測された春')
                             ->where('typeValue', ReleaseGroupType::Album->value)

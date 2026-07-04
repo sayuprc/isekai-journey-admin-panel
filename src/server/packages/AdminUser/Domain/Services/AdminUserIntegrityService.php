@@ -102,7 +102,7 @@ class AdminUserIntegrityService
             $this->toRole($role),
             Permissions::fromArray($permissions),
         )
-            ->mapErr(function (array $errors): DomainValidationError {
+            ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -113,7 +113,7 @@ class AdminUserIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): AdminUser => new AdminUser(...$values));
+            ->map(static fn (array $values): AdminUser => new AdminUser(...$values));
     }
 
     /**

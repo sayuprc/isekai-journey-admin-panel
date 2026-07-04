@@ -55,10 +55,10 @@ class CreateSongTest extends DatabaseTestCase
                 ],
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'song',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->whereType('songId', 'string')
                             ->where('title', 'テスト楽曲')
                             ->where('description', 'テスト楽曲説明')

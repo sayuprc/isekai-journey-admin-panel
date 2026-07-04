@@ -59,10 +59,10 @@ class CreateReleaseTest extends DatabaseTestCase
                 ],
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'release',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->whereType('releaseId', 'string')
                             ->where('releaseGroupId', $releaseGroupId)
                             ->where('name', '初回限定盤')
@@ -117,11 +117,11 @@ class CreateReleaseTest extends DatabaseTestCase
                 'media' => [],
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'releasedOn')
                             ->where('message', 'The value does not match the expected format: date.'),
                     ),

@@ -32,7 +32,7 @@ readonly class Tracks extends ImmutableCollection
             $result = Result::collect(
                 SongId::create($item['songId']),
                 OrderNo::create($item['trackNo']),
-            )->map(fn (array $values): Track => new Track(...$values));
+            )->map(static fn (array $values): Track => new Track(...$values));
 
             if ($result->isErr()) {
                 $messages = [];

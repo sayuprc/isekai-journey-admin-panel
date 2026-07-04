@@ -22,7 +22,7 @@ class ListSongTypeTest extends DatabaseTestCase
             ->assertStatus(200)
             ->assertExactJson([
                 'types' => collect(SongType::cases())
-                    ->map(fn (SongType $type): array => [
+                    ->map(static fn (SongType $type): array => [
                         'name' => $type->getName(),
                         'value' => $type->value,
                     ])

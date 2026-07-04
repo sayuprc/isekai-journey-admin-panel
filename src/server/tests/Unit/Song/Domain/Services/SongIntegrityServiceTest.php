@@ -74,7 +74,7 @@ class SongIntegrityServiceTest extends TestCase
 
         $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
-                fn (
+                static fn (
                     PersonId $arg1,
                     PersonId $arg2,
                     PersonId $arg3,
@@ -129,7 +129,7 @@ class SongIntegrityServiceTest extends TestCase
 
         $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
-                fn (
+                static fn (
                     PersonId $arg1,
                     PersonId $arg2,
                     PersonId $arg3,
@@ -185,7 +185,7 @@ class SongIntegrityServiceTest extends TestCase
 
         $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
-                fn (
+                static fn (
                     PersonId $arg1,
                     PersonId $arg2,
                     PersonId $arg3,
@@ -234,7 +234,7 @@ class SongIntegrityServiceTest extends TestCase
 
         $this->personRepository->shouldReceive('findByIds')
             ->withArgs(
-                fn (
+                static fn (
                     PersonId $arg1,
                     PersonId $arg2,
                     PersonId $arg3,

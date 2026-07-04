@@ -298,13 +298,13 @@ readonly class SongRepository implements SongRepositoryInterface
 
         $foundTags = $this->songTagRepository->findByIds(
             ...array_map(
-                fn (array $tag): SongTagId => SongTagId::reconstruct($tag['songTagId']),
+                static fn (array $tag): SongTagId => SongTagId::reconstruct($tag['songTagId']),
                 $tags,
             ),
         );
 
         return array_map(
-            fn (SongTag $tag): array => ['songTagId' => $tag->songTagId->value],
+            static fn (SongTag $tag): array => ['songTagId' => $tag->songTagId->value],
             $foundTags,
         ) |> array_values(...);
     }

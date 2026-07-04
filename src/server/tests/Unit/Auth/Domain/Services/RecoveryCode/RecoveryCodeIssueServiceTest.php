@@ -41,7 +41,7 @@ class RecoveryCodeIssueServiceTest extends TestCase
     public function issueGeneratesTenCodes(): void
     {
         $this->uuidGenerator->shouldReceive('generate')
-            ->andReturnUsing(fn (): string => sprintf('%08d-0000-0000-0000-000000000000', mt_rand(0, 99999999)))
+            ->andReturnUsing(static fn (): string => sprintf('%08d-0000-0000-0000-000000000000', mt_rand(0, 99999999)))
             ->times(10);
 
         $this->randomGenerator->shouldReceive('generate')
@@ -67,7 +67,7 @@ class RecoveryCodeIssueServiceTest extends TestCase
     public function issueReturnsHashedCodesAndMatchingPlainCodes(): void
     {
         $this->uuidGenerator->shouldReceive('generate')
-            ->andReturnUsing(fn (): string => sprintf('%08d-0000-0000-0000-000000000000', mt_rand(0, 99999999)))
+            ->andReturnUsing(static fn (): string => sprintf('%08d-0000-0000-0000-000000000000', mt_rand(0, 99999999)))
             ->times(10);
 
         $this->randomGenerator->shouldReceive('generate')

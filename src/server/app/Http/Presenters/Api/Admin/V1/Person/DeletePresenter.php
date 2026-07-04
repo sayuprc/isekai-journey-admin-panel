@@ -19,7 +19,7 @@ class DeletePresenter
     public function present(Result $result): JsonResponse
     {
         return $result->match(
-            fn () => response()->json(status: 204),
+            static fn () => response()->json(status: 204),
             fn (UseCaseError $error) => response()->json(...$this->resolveError($error)),
         );
     }

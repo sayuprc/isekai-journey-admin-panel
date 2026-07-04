@@ -23,7 +23,7 @@ class RegisterStartPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (RegisterStartOutputData $output) => [
+            static fn (RegisterStartOutputData $output) => [
                 new RegisterStartResponse()
                     ->setAuthCeremonyId($output->authCeremonyId)
                     ->setPublicKey((object)$output->publicKey),

@@ -28,50 +28,50 @@ trait EntityStore
     protected function storePersons(Person ...$items): void
     {
         $repository = $this->makeRepository(PersonRepositoryInterface::class);
-        array_map(fn (Person $item) => $repository->save($item), $items);
+        array_map(static fn (Person $item) => $repository->save($item), $items);
     }
 
     protected function storeSongs(Song ...$items): void
     {
         $repository = $this->makeRepository(SongRepositoryInterface::class);
-        array_map(fn (Song $item) => $repository->save($item), $items);
+        array_map(static fn (Song $item) => $repository->save($item), $items);
     }
 
     protected function storeMedia(Media ...$items): void
     {
         $repository = $this->makeRepository(MediaRepositoryInterface::class);
-        array_map(fn (Media $item) => $repository->save($item), $items);
+        array_map(static fn (Media $item) => $repository->save($item), $items);
     }
 
     protected function storeYouTubeChannels(YouTubeChannel ...$items): void
     {
         $repository = $this->makeRepository(YouTubeChannelRepositoryInterface::class);
-        array_map(fn (YouTubeChannel $item) => $repository->save($item), $items);
+        array_map(static fn (YouTubeChannel $item) => $repository->save($item), $items);
     }
 
     protected function storeSongTags(SongTag ...$items): void
     {
         $repository = $this->makeRepository(SongTagRepositoryInterface::class);
-        array_map(fn (SongTag $item) => $repository->save($item), $items);
+        array_map(static fn (SongTag $item) => $repository->save($item), $items);
     }
 
     protected function storeReleaseGroups(ReleaseGroup ...$items): void
     {
         $repository = $this->makeRepository(ReleaseGroupRepositoryInterface::class);
-        array_map(fn (ReleaseGroup $item) => $repository->save($item), $items);
+        array_map(static fn (ReleaseGroup $item) => $repository->save($item), $items);
     }
 
     protected function storeReleases(Release ...$items): void
     {
         $repository = $this->makeRepository(ReleaseRepositoryInterface::class);
-        array_map(fn (Release $item) => $repository->save($item), $items);
+        array_map(static fn (Release $item) => $repository->save($item), $items);
     }
 
     protected function storeAdminUsers(AdminUser ...$items): void
     {
         $repository = $this->makeRepository(AdminUserRepositoryInterface::class);
         array_map(
-            fn (AdminUser $item) => $repository->register($item),
+            static fn (AdminUser $item) => $repository->register($item),
             $items,
         );
     }
@@ -79,7 +79,7 @@ trait EntityStore
     protected function storeRefreshTokens(RefreshToken ...$items): void
     {
         $repository = $this->makeRepository(RefreshTokenRepositoryInterface::class);
-        array_map(fn (RefreshToken $refreshToken) => $repository->save($refreshToken), $items);
+        array_map(static fn (RefreshToken $refreshToken) => $repository->save($refreshToken), $items);
     }
 
     /**

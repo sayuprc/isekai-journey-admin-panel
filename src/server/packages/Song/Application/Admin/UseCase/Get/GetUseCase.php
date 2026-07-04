@@ -41,7 +41,7 @@ readonly class GetUseCase
     private function getSong(GetInputData $inputData): Result
     {
         return SongId::create($inputData->songId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (SongId $songId): Result {
                 if (is_null($found = $this->repository->find($songId))) {
                     return new Err(new NotFoundError('楽曲', $songId->value));

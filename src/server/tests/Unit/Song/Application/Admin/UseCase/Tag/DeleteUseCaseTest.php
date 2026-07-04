@@ -43,8 +43,8 @@ class DeleteUseCaseTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->byDefault();
         $this->repository = Mockery::mock(SongTagRepositoryInterface::class);
         $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
@@ -55,17 +55,17 @@ class DeleteUseCaseTest extends TestCase
     public function deleteSongTag(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn($this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'タグ', 1))
             ->once();
 
         $this->repository->shouldReceive('isUsed')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(false)
             ->once();
 
         $this->repository->shouldReceive('delete')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
@@ -77,12 +77,12 @@ class DeleteUseCaseTest extends TestCase
     public function cannotDeleteWhenUsed(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn($this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'タグ', 1))
             ->once();
 
         $this->repository->shouldReceive('isUsed')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(true)
             ->once();
 

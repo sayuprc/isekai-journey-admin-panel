@@ -21,7 +21,7 @@ class UploadJacketArtPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (UploadJacketArtOutputData $outputData) => [
+            static fn (UploadJacketArtOutputData $outputData) => [
                 new ReleaseJacketArtUploadResponse()->setJacketArtUrl($outputData->jacketArtUrl),
                 200,
             ],

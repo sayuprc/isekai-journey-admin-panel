@@ -62,7 +62,7 @@ class AuthenticateUseCaseTest extends TestCase
         $adminUserId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
+            ->withArgs(static fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
@@ -75,7 +75,7 @@ class AuthenticateUseCaseTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (AdminUserId $arg) => $arg->value === $adminUserId)
+            ->withArgs(static fn (AdminUserId $arg) => $arg->value === $adminUserId)
             ->andReturn($this->createAdminUser($adminUserId, 'example@example.com', Role::General, []))
             ->once();
 
@@ -108,7 +108,7 @@ class AuthenticateUseCaseTest extends TestCase
             ->once();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
+            ->withArgs(static fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturnNull()
             ->once();
 
@@ -130,7 +130,7 @@ class AuthenticateUseCaseTest extends TestCase
         $adminUserId = $this->generateUuid();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
-            ->withArgs(fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
+            ->withArgs(static fn (RefreshTokenId $arg) => $arg->value === $refreshTokenId)
             ->andReturn(
                 $this->createRefreshToken(
                     $refreshTokenId,
@@ -143,7 +143,7 @@ class AuthenticateUseCaseTest extends TestCase
             ->once();
 
         $this->userRepository->shouldReceive('find')
-            ->withArgs(fn (AdminUserId $arg) => $arg->value === $adminUserId)
+            ->withArgs(static fn (AdminUserId $arg) => $arg->value === $adminUserId)
             ->andReturnNull()
             ->once();
 

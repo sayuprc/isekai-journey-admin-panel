@@ -52,7 +52,7 @@ readonly class UpdateUseCase
     private function updatePerson(UpdateInputData $inputData): Result
     {
         return PersonId::create($inputData->personId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($inputData, $personId): Result {
                 if (is_null($this->repository->find($personId))) {
                     return new Err(new NotFoundError('Person', $personId->value));

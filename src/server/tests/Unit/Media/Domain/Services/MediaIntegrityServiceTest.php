@@ -45,7 +45,7 @@ class MediaIntegrityServiceTest extends TestCase
 
         $this->repository->shouldReceive('findByUrl')
             ->once()
-            ->withArgs(fn (MediaUrl $mediaUrl): bool => $mediaUrl->value === $url)
+            ->withArgs(static fn (MediaUrl $mediaUrl): bool => $mediaUrl->value === $url)
             ->andReturn(
                 $this->createMedia(
                     'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB',
@@ -84,7 +84,7 @@ class MediaIntegrityServiceTest extends TestCase
 
         $this->repository->shouldReceive('findByUrl')
             ->once()
-            ->withArgs(fn (MediaUrl $mediaUrl): bool => $mediaUrl->value === $url)
+            ->withArgs(static fn (MediaUrl $mediaUrl): bool => $mediaUrl->value === $url)
             ->andReturn($media);
 
         $result = $this->getInstance()->prepareForUpdate(

@@ -42,7 +42,7 @@ class AccessTokenFactoryTest extends TestCase
         );
 
         $this->jwt->shouldReceive('generate')
-            ->withArgs(function (AccessTokenPayload $arg) use ($now): bool {
+            ->withArgs(static function (AccessTokenPayload $arg) use ($now): bool {
                 $payload = $arg->toArray();
 
                 return $payload['iss'] === 'issuer'

@@ -41,7 +41,7 @@ readonly class GetUseCase
     private function getRelease(GetInputData $inputData): Result
     {
         return ReleaseId::create($inputData->releaseId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (ReleaseId $releaseId): Result {
                 if (is_null($found = $this->repository->find($releaseId))) {
                     return new Err(new NotFoundError('Release', $releaseId->value));

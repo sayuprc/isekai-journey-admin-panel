@@ -21,7 +21,7 @@ class RecoveryFinishPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (RecoveryFinishOutputData $output) => [
+            static fn (RecoveryFinishOutputData $output) => [
                 new RecoveryFinishResponse()
                     ->setAccessToken($output->accessToken->jwt->value)
                     ->setRefreshTokenId($output->refreshTokenId)

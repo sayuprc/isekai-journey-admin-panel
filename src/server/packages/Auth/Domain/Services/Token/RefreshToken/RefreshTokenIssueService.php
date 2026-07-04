@@ -44,7 +44,7 @@ class RefreshTokenIssueService
             AdminUserId::create($adminUserId),
             HashedTokenValue::create($hashedToken),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
-        )->map(fn (array $values): RefreshToken => new RefreshToken(...[...$values, ConsumptionStatus::Unused]));
+        )->map(static fn (array $values): RefreshToken => new RefreshToken(...[...$values, ConsumptionStatus::Unused]));
 
         if ($result->isErr()) {
             $messages = [];

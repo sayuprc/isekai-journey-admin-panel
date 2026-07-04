@@ -72,7 +72,7 @@ class LoginFinishUseCaseTest extends TestCase
         $this->clock = Mockery::mock(ClockInterface::class);
 
         $this->transaction->shouldReceive('scope')
-            ->andReturnUsing(fn (callable $callback) => $callback())
+            ->andReturnUsing(static fn (callable $callback) => $callback())
             ->byDefault();
     }
 
@@ -109,7 +109,7 @@ class LoginFinishUseCaseTest extends TestCase
             ->andReturn($now)
             ->once();
         $this->passkeyRepository->shouldReceive('updateCounter')
-            ->withArgs(fn (AdminUserPasskey $updated, int $expectedSignCount): bool => $updated->adminUserPasskeyId === $passkey->adminUserPasskeyId
+            ->withArgs(static fn (AdminUserPasskey $updated, int $expectedSignCount): bool => $updated->adminUserPasskeyId === $passkey->adminUserPasskeyId
                 && $updated->signCount === 456
                 && $updated->lastUsedAt === $now
                 && $expectedSignCount === 123)
@@ -124,7 +124,7 @@ class LoginFinishUseCaseTest extends TestCase
             ->andReturn($refreshToken)
             ->once();
         $this->recorder->shouldReceive('record')
-            ->withArgs(fn (AuditAction $action, AuditTargetType $targetType): bool => $action === AuditAction::Login
+            ->withArgs(static fn (AuditAction $action, AuditTargetType $targetType): bool => $action === AuditAction::Login
                 && $targetType === AuditTargetType::AdminUser)
             ->once();
 

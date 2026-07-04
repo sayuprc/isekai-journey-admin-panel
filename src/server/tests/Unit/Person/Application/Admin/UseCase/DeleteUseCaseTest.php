@@ -40,8 +40,8 @@ class DeleteUseCaseTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->byDefault();
         $this->repository = Mockery::mock(PersonRepositoryInterface::class);
         $this->usageChecker = Mockery::mock(PersonUsageCheckerInterface::class);
@@ -53,17 +53,17 @@ class DeleteUseCaseTest extends TestCase
     public function deletePerson(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn($this->createPerson('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '人物', 1))
             ->once();
 
         $this->usageChecker->shouldReceive('isUsed')
-            ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(false)
             ->once();
 
         $this->repository->shouldReceive('delete')
-            ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
@@ -75,12 +75,12 @@ class DeleteUseCaseTest extends TestCase
     public function cannotDeleteWhenUsedInSong(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn($this->createPerson('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', '人物', 1))
             ->once();
 
         $this->usageChecker->shouldReceive('isUsed')
-            ->withArgs(fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
+            ->withArgs(static fn (PersonId $arg): bool => $arg->value === 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA')
             ->andReturn(true)
             ->once();
 

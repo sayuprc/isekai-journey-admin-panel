@@ -52,7 +52,7 @@ readonly class UpdateUseCase
     private function updateSongTag(UpdateInputData $inputData): Result
     {
         return SongTagId::create($inputData->songTagId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($inputData, $songTagId): Result {
                 if (is_null($this->repository->find($songTagId))) {
                     return new Err(new NotFoundError('SongTag', $songTagId->value));

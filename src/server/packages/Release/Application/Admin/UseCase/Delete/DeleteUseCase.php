@@ -43,7 +43,7 @@ readonly class DeleteUseCase
     private function deleteRelease(DeleteInputData $inputData): Result
     {
         return ReleaseId::create($inputData->releaseId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (ReleaseId $releaseId): Result => $this->transaction->scope(function () use ($releaseId): Result {
                 $release = $this->repository->find($releaseId);
 

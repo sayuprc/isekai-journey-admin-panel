@@ -37,6 +37,6 @@ class Define
      */
     public function dependencies(): array
     {
-        return array_map(fn (ComponentMap $component): string => $component->getName(), $this->dependencies);
+        return array_map(static fn (ComponentMap $component): string => $component->getName(), $this->dependencies);
     }
 }

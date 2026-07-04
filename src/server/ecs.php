@@ -53,6 +53,7 @@ return ECSConfig::configure()
         \PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer::class,
         \PhpCsFixer\Fixer\FunctionNotation\LambdaNotUsedImportFixer::class,
         \PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer::class,
+        \PhpCsFixer\Fixer\FunctionNotation\StaticLambdaFixer::class,
 
         \PhpCsFixer\Fixer\Import\GlobalNamespaceImportFixer::class,
         \PhpCsFixer\Fixer\Import\NoUnusedImportsFixer::class,

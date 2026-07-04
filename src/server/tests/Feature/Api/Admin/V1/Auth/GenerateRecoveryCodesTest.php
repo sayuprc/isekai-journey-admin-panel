@@ -46,7 +46,7 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
         $response = $this->postJson(route(AuthRouteMap::GenerateRecoveryCodes))
             ->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->has('recoveryCodes', 10)->etc(),
+                static fn (AssertableJson $json) => $json->has('recoveryCodes', 10)->etc(),
             );
 
         /** @var list<string> $plainCodes */
@@ -62,7 +62,7 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
         }
 
         foreach ($plainCodes as $plainCode) {
-            $matched = array_filter($storedCodes, fn (string $stored): bool => $hasher->verify($plainCode, $stored));
+            $matched = array_filter($storedCodes, static fn (string $stored): bool => $hasher->verify($plainCode, $stored));
             $this->assertCount(1, $matched);
         }
 
@@ -89,7 +89,7 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
         $storedCodes = DB::table('admin_user_recovery_codes')->pluck('code')->all();
 
         foreach ($firstCodes as $oldCode) {
-            $matched = array_filter($storedCodes, fn (string $stored): bool => $hasher->verify($oldCode, $stored));
+            $matched = array_filter($storedCodes, static fn (string $stored): bool => $hasher->verify($oldCode, $stored));
             $this->assertCount(0, $matched);
         }
     }

@@ -66,8 +66,8 @@ class SongAssemblerTest extends TestCase
         );
 
         $this->personRepository->shouldReceive('findByIds')
-            ->withArgs(function (PersonId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
-                $idValues = array_map(fn (PersonId $id): string => $id->value, $ids);
+            ->withArgs(static function (PersonId ...$ids) use ($lyricistId, $composerId, $arrangerId): bool {
+                $idValues = array_map(static fn (PersonId $id): string => $id->value, $ids);
                 sort($idValues);
                 $expectedIds = [$lyricistId, $composerId, $arrangerId];
                 sort($expectedIds);

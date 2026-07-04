@@ -30,7 +30,7 @@ class ReleaseServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             R2JacketArtStorageConfig::class,
-            fn (): R2JacketArtStorageConfig => new R2JacketArtStorageConfig(
+            static fn (): R2JacketArtStorageConfig => new R2JacketArtStorageConfig(
                 config()->string('services.r2.access_key_id'),
                 config()->string('services.r2.secret_access_key'),
                 config()->string('services.r2.endpoint'),

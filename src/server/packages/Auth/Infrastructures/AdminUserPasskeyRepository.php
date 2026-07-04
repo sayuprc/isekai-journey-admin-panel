@@ -220,7 +220,7 @@ readonly class AdminUserPasskeyRepository implements AdminUserPasskeyRepositoryI
             return [];
         }
 
-        return array_filter($transports, fn (mixed $transport): bool => is_string($transport))
+        return array_filter($transports, static fn (mixed $transport): bool => is_string($transport))
             |> array_values(...);
     }
 }

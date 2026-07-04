@@ -126,11 +126,11 @@ class UpdateMediaTest extends DatabaseTestCase
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'title')
                             ->whereType('message', 'string'),
                     ),
@@ -172,11 +172,11 @@ class UpdateMediaTest extends DatabaseTestCase
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'url')
                             ->where('message', '同じURLのメディアが既に存在します'),
                     ),

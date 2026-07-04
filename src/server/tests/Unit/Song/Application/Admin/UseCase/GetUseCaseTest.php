@@ -62,7 +62,7 @@ class GetUseCaseTest extends TestCase
         );
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturn($song)
             ->once();
 
@@ -117,7 +117,7 @@ class GetUseCaseTest extends TestCase
         $songId = 'DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD';
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturnNull()
             ->once();
 

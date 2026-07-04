@@ -53,7 +53,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $expectedTag = $this->createSongTag($uuid, $name, $maxOrderNo + 10);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->withArgs(static fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturnNull()
             ->once();
 
@@ -83,7 +83,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $expectedTag = $this->createSongTag($uuid, $name, $maxOrderNo + 10);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->withArgs(static fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, 10))
             ->once();
 
@@ -105,7 +105,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->withArgs(static fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturn($expectedTag)
             ->once();
 
@@ -125,7 +125,7 @@ class SongTagIntegrityServiceTest extends TestCase
         $expectedTag = $this->createSongTag($songTagId, $name, $orderNo);
 
         $this->repository->shouldReceive('findByName')
-            ->withArgs(fn (SongTagName $arg): bool => $arg->value === $name)
+            ->withArgs(static fn (SongTagName $arg): bool => $arg->value === $name)
             ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, 10))
             ->once();
 

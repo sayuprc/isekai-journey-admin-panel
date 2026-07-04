@@ -16,7 +16,7 @@ return static function (Config $config): void {
 
     $components = array_reduce(
         require_once __DIR__ . '/tools/Arkitect/config.php',
-        function (Component $component, Define $define): Component {
+        static function (Component $component, Define $define): Component {
             $name = $define->componentName();
 
             $component = $component->component($name)

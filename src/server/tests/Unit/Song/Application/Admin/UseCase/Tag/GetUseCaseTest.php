@@ -34,7 +34,7 @@ class GetUseCaseTest extends TestCase
     public function getSongTag(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
             ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'テストタグA', 1))
             ->once();
 
@@ -53,7 +53,7 @@ class GetUseCaseTest extends TestCase
     public function failureGetSongTag(): void
     {
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB')
             ->andReturnNull()
             ->once();
 

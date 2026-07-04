@@ -72,17 +72,17 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
         );
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->adminUserRepository->shouldReceive('findByEmail')
-            ->withArgs(fn (Email $arg): bool => $arg->value === $email)
+            ->withArgs(static fn (Email $arg): bool => $arg->value === $email)
             ->andReturn(null)
             ->once();
 
         $this->issueService->shouldReceive('issue')
-            ->withArgs(fn (Email $arg, int $role, array $permissions): bool => $arg->value === $email
+            ->withArgs(static fn (Email $arg, int $role, array $permissions): bool => $arg->value === $email
                 && $role === Role::General->value
                 && $permissions === [])
             ->andReturn(new Ok(['token' => $token, 'plainToken' => $plainToken]))
@@ -109,12 +109,12 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
         $email = 'existing@example.com';
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->adminUserRepository->shouldReceive('findByEmail')
-            ->withArgs(fn (Email $arg): bool => $arg->value === $email)
+            ->withArgs(static fn (Email $arg): bool => $arg->value === $email)
             ->andReturn($this->createAdminUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $email))
             ->once();
 
@@ -132,12 +132,12 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
         $email = 'invitee@example.com';
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->adminUserRepository->shouldReceive('findByEmail')
-            ->withArgs(fn (Email $arg): bool => $arg->value === $email)
+            ->withArgs(static fn (Email $arg): bool => $arg->value === $email)
             ->andReturn(null)
             ->once();
 

@@ -21,7 +21,7 @@ class GetPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (GetOutputData $outputData) => [
+            static fn (GetOutputData $outputData) => [
                 new SiteStatsResponse()
                     ->setSongCount($outputData->songCount)
                     ->setReleaseCount($outputData->releaseCount),

@@ -25,10 +25,10 @@ class CreatePersonTest extends DatabaseTestCase
                 'name' => 'テスト人物',
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'person',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->whereType('personId', 'string')
                             ->where('name', 'テスト人物')
                             ->whereType('orderNo', 'integer'),
@@ -60,11 +60,11 @@ class CreatePersonTest extends DatabaseTestCase
                 'name' => '',
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'name')
                             ->whereType('message', 'string'),
                     ),

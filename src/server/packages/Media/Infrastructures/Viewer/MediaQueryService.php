@@ -56,7 +56,7 @@ readonly class MediaQueryService implements MediaQueryServiceInterface
         $hasNextPage = count($mediaRows) > $limit;
         $pageRows = $hasNextPage ? array_slice($mediaRows, 0, $limit) : $mediaRows;
 
-        $binMediaIds = array_map(fn (array $row): string => Row::string($row, 'media_id'), $pageRows);
+        $binMediaIds = array_map(static fn (array $row): string => Row::string($row, 'media_id'), $pageRows);
 
         $songsByMedia = $this->loadSongs($binMediaIds);
 

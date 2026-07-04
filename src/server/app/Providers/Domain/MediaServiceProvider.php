@@ -30,7 +30,7 @@ class MediaServiceProvider extends ServiceProvider
         $this->app->bind(YouTubeChannelRepositoryInterface::class, YouTubeChannelRepository::class);
         $this->app->bind(YouTubeVideoQueryServiceInterface::class, YouTubeVideoQueryService::class);
 
-        $this->app->bind(YouTube::class, function (): YouTube {
+        $this->app->bind(YouTube::class, static function (): YouTube {
             $client = new Client();
             $client->setApplicationName(config()->string('app.name'));
             $client->setDeveloperKey(config()->string('services.youtube.api_key'));

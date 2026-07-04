@@ -45,7 +45,7 @@ class RegisterStartTest extends DatabaseTestCase
             'name' => '新規ユーザー',
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                static fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
                     ->where('publicKey.challenge', 'challenge')
                     ->etc(),
             );
@@ -114,7 +114,7 @@ class RegisterStartTest extends DatabaseTestCase
 
     private function bindPasskeyAuthenticator(): void
     {
-        $this->app->bind(PasskeyAuthenticatorInterface::class, fn (): PasskeyAuthenticatorInterface => new class () implements PasskeyAuthenticatorInterface {
+        $this->app->bind(PasskeyAuthenticatorInterface::class, static fn (): PasskeyAuthenticatorInterface => new class () implements PasskeyAuthenticatorInterface {
             public function startRegistration(string $userHandle, string $userName, string $displayName, array $excludePasskeys = []): PasskeyStartResult
             {
                 return new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']);

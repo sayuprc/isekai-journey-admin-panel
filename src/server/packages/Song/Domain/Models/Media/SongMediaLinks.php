@@ -32,7 +32,7 @@ readonly class SongMediaLinks extends ImmutableCollection
             $result = Result::collect(
                 MediaId::create($item['mediaId']),
                 OrderNo::create($item['orderNo']),
-            )->map(fn (array $items): SongMediaLink => new SongMediaLink(...$items));
+            )->map(static fn (array $items): SongMediaLink => new SongMediaLink(...$items));
 
             if ($result->isErr()) {
                 $messages = [];
@@ -67,7 +67,7 @@ readonly class SongMediaLinks extends ImmutableCollection
     public static function reconstruct(array $items): self
     {
         return new self(array_map(
-            fn (array $item): SongMediaLink => SongMediaLink::reconstruct(
+            static fn (array $item): SongMediaLink => SongMediaLink::reconstruct(
                 $item['mediaId'],
                 $item['orderNo'],
             ),

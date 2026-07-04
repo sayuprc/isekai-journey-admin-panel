@@ -61,7 +61,7 @@ class RegisterFinishTest extends DatabaseTestCase
             'credential' => ['id' => 'credential-id'],
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->whereAllType([
+                static fn (AssertableJson $json) => $json->whereAllType([
                     'accessToken' => 'string',
                     'refreshTokenId' => 'string',
                     'refreshToken' => 'string',
@@ -144,7 +144,7 @@ class RegisterFinishTest extends DatabaseTestCase
 
     private function bindPasskeyAuthenticator(bool $failFinish): void
     {
-        $this->app->bind(PasskeyAuthenticatorInterface::class, fn (): PasskeyAuthenticatorInterface => new class ($failFinish) implements PasskeyAuthenticatorInterface {
+        $this->app->bind(PasskeyAuthenticatorInterface::class, static fn (): PasskeyAuthenticatorInterface => new class ($failFinish) implements PasskeyAuthenticatorInterface {
             public function __construct(private readonly bool $failFinish)
             {
             }

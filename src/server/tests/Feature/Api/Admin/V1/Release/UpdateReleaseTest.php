@@ -81,10 +81,10 @@ class UpdateReleaseTest extends DatabaseTestCase
                 ],
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'release',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('releaseId', $releaseId)
                             ->where('releaseGroupId', $releaseGroupId)
                             ->where('name', '新版名')
@@ -205,11 +205,11 @@ class UpdateReleaseTest extends DatabaseTestCase
                 ],
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'media')
                             ->where('message', '同じ楽曲を複数指定することはできません。'),
                     ),

@@ -108,11 +108,11 @@ class UpdatePersonTest extends DatabaseTestCase
                 'orderNo' => 0,
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'name')
                             ->whereType('message', 'string'),
                     ),
