@@ -19,61 +19,65 @@ const jacketArtUrl = representativeJacketArtUrl(releaseGroup);
 
   {
     releaseGroup.releases.map(release => (
-      <section>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-          <div>
+      <details class="release-version">
+        <summary class="release-version-summary">
+          <div class="release-version-heading">
             <span class="label-mono">{release.releasedOn}</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">{release.name}</span>
+            <span class="release-version-name">{release.name}</span>
           </div>
           <span class="label-mono">
             {release.media.map(medium => medium.format.name).join(' + ')}
           </span>
-        </div>
-        {release.description && <p class="detail-description" style="margin-bottom: 16px;">{release.description}</p>}
-        {
-          release.media.map(medium => (
-            <div style="margin-bottom: 16px;">
-              {
-                release.media.length > 1 && (
-                  <div class="label-mono" style="margin-bottom: 8px;">
-                    DISC {medium.position} · {medium.format.name}
-                  </div>
-                )
-              }
-              {
-                medium.tracks.length > 0
-                  ? (
-                      <div class="rel-list">
-                        {medium.tracks.map(track => (
-                          track.isDisplay
-                            ? (
-                                <a class="rel-chip" href={`/songs/${track.songId}`}>
-                                  <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
-                                  <div class="rel-copy">
-                                    <div class="rel-main">{track.title}</div>
-                                  </div>
-                                  <span style="font-size:14px;color:var(--fg-faint);">→</span>
-                                </a>
-                              )
-                            : (
-                                <div class="rel-chip" aria-disabled="true">
-                                  <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
-                                  <div class="rel-copy">
-                                    <div class="rel-main">{track.title}</div>
-                                  </div>
-                                </div>
-                              )
-                        ))}
+        </summary>
+        <div class="release-version-body-shell">
+          <div class="release-version-body">
+            {release.description && <p class="detail-description release-version-description">{release.description}</p>}
+            {
+              release.media.map(medium => (
+                <div class="release-medium">
+                  {
+                    release.media.length > 1 && (
+                      <div class="label-mono release-medium-heading">
+                        DISC {medium.position} · {medium.format.name}
                       </div>
                     )
-                  : (
-                      <p class="detail-description">収録曲情報はありません。</p>
-                    )
-              }
-            </div>
-          ))
-        }
-      </section>
+                  }
+                  {
+                    medium.tracks.length > 0
+                      ? (
+                          <div class="rel-list">
+                            {medium.tracks.map(track => (
+                              track.isDisplay
+                                ? (
+                                    <a class="rel-chip" href={`/songs/${track.songId}`}>
+                                      <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
+                                      <div class="rel-copy">
+                                        <div class="rel-main">{track.title}</div>
+                                      </div>
+                                      <span style="font-size:14px;color:var(--fg-faint);">→</span>
+                                    </a>
+                                  )
+                                : (
+                                    <div class="rel-chip" aria-disabled="true">
+                                      <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
+                                      <div class="rel-copy">
+                                        <div class="rel-main">{track.title}</div>
+                                      </div>
+                                    </div>
+                                  )
+                            ))}
+                          </div>
+                        )
+                      : (
+                          <p class="detail-description">収録曲情報はありません。</p>
+                        )
+                  }
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </details>
     ))
   }
 </div>
