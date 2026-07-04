@@ -69,6 +69,7 @@ class ListPresenter
             ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setDescription($release->description)
+            ->setOrderNo($release->orderNo)
             ->setMedia(array_map($this->toOpenApiReleaseMediumItem(...), $release->media));
     }
 

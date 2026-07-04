@@ -107,6 +107,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
   const [description, setDescription] = createSignal(props.data.release.description);
   const [jacketArtUrl, setJacketArtUrl] = createSignal(props.data.release.jacketArtUrl ?? '');
   const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
+  const [orderNo, setOrderNo] = createSignal(props.data.release.orderNo);
   const [media, setMedia] = createSignal<MediumForm[]>(toMediumForms(props.data));
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -130,6 +131,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
       description: description(),
       jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
+      orderNo: orderNo(),
       media: toMediaPayload(media()),
     });
 
@@ -247,6 +249,22 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                     alt="ジャケットアートのプレビュー"
                     class="mt-3 size-32 rounded-box border border-base-300 object-cover"
                   />
+                </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="label">表示順</label>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  class="input w-full"
+                  value={orderNo()}
+                  onInput={e => setOrderNo(Number(e.currentTarget.value))}
+                  classList={{ 'input-error': !!getFieldError('orderNo') }}
+                />
+                <Show when={getFieldError('orderNo')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 

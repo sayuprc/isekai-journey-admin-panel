@@ -15,6 +15,7 @@ readonly class ReleaseGroupReferencedRelease
         public string $releasedOn,
         public ?string $jacketArtUrl,
         public bool $isDisplay,
+        public int $orderNo,
         public array $formatValues,
     ) {
     }

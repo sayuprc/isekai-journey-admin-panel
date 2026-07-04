@@ -76,6 +76,7 @@ model ReleaseListItem {
   releasedOn: releasedOn;
   description: string;
   jacketArtUrl: jacketArtUrl | null;
+  orderNo: orderNo;
   media: ReleaseMediumItem[];
 }
 

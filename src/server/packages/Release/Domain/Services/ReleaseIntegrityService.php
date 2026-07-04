@@ -24,6 +24,7 @@ use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseIntegrityService
 {
@@ -46,9 +47,10 @@ class ReleaseIntegrityService
         string $description,
         ?string $jacketArtUrl,
         bool $isDisplay,
+        int $orderNo,
         array $media,
     ): Result {
-        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
+        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
     }
 
     /**
@@ -64,9 +66,10 @@ class ReleaseIntegrityService
         string $description,
         ?string $jacketArtUrl,
         bool $isDisplay,
+        int $orderNo,
         array $media,
     ): Result {
-        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
+        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
     }
 
     /**
@@ -82,9 +85,10 @@ class ReleaseIntegrityService
         string $description,
         ?string $jacketArtUrl,
         bool $isDisplay,
+        int $orderNo,
         array $media,
     ): Result {
-        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $media);
+        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -116,6 +120,7 @@ class ReleaseIntegrityService
         string $description,
         ?string $jacketArtUrl,
         bool $isDisplay,
+        int $orderNo,
         array $media,
     ): Result {
         $mediaResult = Media::fromArray($media);
@@ -129,13 +134,14 @@ class ReleaseIntegrityService
             ? new Ok(null)
             : JacketArtUrl::create($normalizedJacketArtUrl);
 
-        return Result::collect6(
+        return Result::collect7(
             ReleaseId::create($releaseId),
             ReleaseGroupId::create($releaseGroupId),
             ReleaseName::create($name),
             $this->toReleasedOn($releasedOn),
             Description::create($description),
             $jacketArtUrlResult,
+            OrderNo::create($orderNo),
         )
             ->mapErr(function (array $errors): DomainValidationError {
                 $messages = [];
@@ -148,7 +154,17 @@ class ReleaseIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Release => new Release(...[...$values, $isDisplay, $mediaResult->unwrap()]));
+            ->map(fn (array $values): Release => new Release(
+                $values[0],
+                $values[1],
+                $values[2],
+                $values[3],
+                $values[4],
+                $values[5],
+                $isDisplay,
+                $values[6],
+                $mediaResult->unwrap(),
+            ));
     }
 
     private function existsSongs(Media $media): bool

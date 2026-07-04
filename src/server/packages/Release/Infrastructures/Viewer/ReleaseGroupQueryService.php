@@ -110,13 +110,14 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
             return [];
         }
 
-        /** @var Collection<int, object{release_id: string, release_group_id: string, name: string, released_on: string, description: string, jacket_art_url: string|null}> $releaseRows */
+        /** @var Collection<int, object{release_id: string, release_group_id: string, name: string, released_on: string, description: string, jacket_art_url: string|null, order_no: int}> $releaseRows */
         $releaseRows = DB::table('releases')
             ->whereIn('release_group_id', $binGroupIds)
             ->where('is_display', true)
+            ->orderBy('order_no')
             ->orderBy('released_on')
             ->orderBy('name')
-            ->get(['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url']);
+            ->get(['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url', 'order_no']);
 
         /** @var list<string> $binReleaseIds */
         $binReleaseIds = $releaseRows->pluck('release_id')->all();
@@ -131,6 +132,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 $row->released_on,
                 $row->description,
                 $row->jacket_art_url,
+                $row->order_no,
                 $mediaByRelease[$row->release_id] ?? [],
             );
         }

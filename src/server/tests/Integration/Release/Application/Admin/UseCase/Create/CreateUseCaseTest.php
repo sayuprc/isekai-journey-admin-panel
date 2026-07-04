@@ -41,6 +41,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             description: '',
             jacketArtUrl: 'https://example.com/jacket.png',
             isDisplay: true,
+            orderNo: 10,
             media: [
                 [
                     'position' => 1,
@@ -58,6 +59,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isOk());
         $this->assertSame('初回限定盤', $result->unwrap()->release->name->value);
         $this->assertSame($releaseGroupId, $result->unwrap()->release->releaseGroupId->value);
+        $this->assertSame(10, $result->unwrap()->release->orderNo->value);
         $this->assertCount(2, $result->unwrap()->release->media->toGeneric());
 
         $this->assertDatabaseHas('releases', [
@@ -65,6 +67,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             'description' => '',
             'jacket_art_url' => 'https://example.com/jacket.png',
             'is_display' => true,
+            'order_no' => 10,
         ]);
         $this->assertDatabaseCount('release_media', 2);
         $this->assertDatabaseCount('release_tracks', 1);
@@ -80,6 +83,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             description: '',
             jacketArtUrl: null,
             isDisplay: true,
+            orderNo: 1,
             media: [],
         ));
 
@@ -105,6 +109,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             description: '説明',
             jacketArtUrl: null,
             isDisplay: true,
+            orderNo: 1,
             media: [],
         ));
 

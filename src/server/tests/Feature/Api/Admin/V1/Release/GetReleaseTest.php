@@ -40,6 +40,7 @@ class GetReleaseTest extends DatabaseTestCase
                 '初回限定盤',
                 true,
                 jacketArtUrl: 'https://example.com/jacket.png',
+                orderNo: 10,
                 media: [
                     [
                         'position' => 1,
@@ -62,6 +63,7 @@ class GetReleaseTest extends DatabaseTestCase
                     'description' => 'テスト用リリース',
                     'jacketArtUrl' => 'https://example.com/jacket.png',
                     'isDisplay' => true,
+                    'orderNo' => 10,
                     'media' => [
                         [
                             'position' => 1,

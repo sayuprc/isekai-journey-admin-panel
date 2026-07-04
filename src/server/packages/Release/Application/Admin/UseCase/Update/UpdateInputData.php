@@ -19,6 +19,7 @@ readonly class UpdateInputData
         public string $description,
         public ?string $jacketArtUrl,
         public bool $isDisplay,
+        public int $orderNo,
         public array $media,
     ) {
     }

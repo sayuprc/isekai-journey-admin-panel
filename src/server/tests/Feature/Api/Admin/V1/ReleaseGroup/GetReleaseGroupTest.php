@@ -42,6 +42,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 '配信',
                 true,
                 new ImmutableDate('2026-05-01'),
+                orderNo: 20,
                 media: [
                     [
                         'position' => 1,
@@ -57,6 +58,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 true,
                 new ImmutableDate('2026-06-01'),
                 jacketArtUrl: 'https://example.com/limited.png',
+                orderNo: 10,
                 media: [
                     [
                         'position' => 1,
@@ -85,20 +87,22 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 ],
                 'releases' => [
                     [
-                        'releaseId' => $releaseId1,
-                        'name' => '配信',
-                        'releasedOn' => '2026-05-01',
-                        'jacketArtUrl' => null,
-                        'isDisplay' => true,
-                        'formatValues' => [MediumFormat::Digital->value],
-                    ],
-                    [
                         'releaseId' => $releaseId2,
                         'name' => '初回限定盤',
                         'releasedOn' => '2026-06-01',
                         'jacketArtUrl' => 'https://example.com/limited.png',
                         'isDisplay' => true,
+                        'orderNo' => 10,
                         'formatValues' => [MediumFormat::Cd->value, MediumFormat::Dvd->value],
+                    ],
+                    [
+                        'releaseId' => $releaseId1,
+                        'name' => '配信',
+                        'releasedOn' => '2026-05-01',
+                        'jacketArtUrl' => null,
+                        'isDisplay' => true,
+                        'orderNo' => 20,
+                        'formatValues' => [MediumFormat::Digital->value],
                     ],
                 ],
             ]);

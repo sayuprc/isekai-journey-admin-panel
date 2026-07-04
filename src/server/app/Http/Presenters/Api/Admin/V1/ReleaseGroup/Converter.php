@@ -47,6 +47,7 @@ class Converter
             ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setIsDisplay($release->isDisplay)
+            ->setOrderNo($release->orderNo)
             ->setFormatValues(array_map(
                 static fn (int $formatValue): MediumFormatValue => MediumFormatValue::from($formatValue),
                 $release->formatValues,

@@ -68,6 +68,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'description' => '更新後の説明',
                 'jacketArtUrl' => 'https://example.com/jacket-new.png',
                 'isDisplay' => false,
+                'orderNo' => 20,
                 'media' => [
                     [
                         'position' => 1,
@@ -91,6 +92,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                             ->where('description', '更新後の説明')
                             ->where('jacketArtUrl', 'https://example.com/jacket-new.png')
                             ->where('isDisplay', false)
+                            ->where('orderNo', 20)
                             ->where('media.0.position', 1)
                             ->where('media.0.formatValue', MediumFormat::Cd->value)
                             ->where('media.0.tracks.0.songId', $songId3)
@@ -121,6 +123,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'description' => '説明',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [],
             ])->assertStatus(404);
     }
@@ -135,6 +138,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'description' => '説明',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [],
             ])->assertStatus(404);
     }
@@ -159,6 +163,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'description' => '説明',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [],
             ])->assertStatus(403);
     }
@@ -185,6 +190,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'description' => '説明',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [
                     [
                         'position' => 1,

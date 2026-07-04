@@ -42,6 +42,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'description' => '',
                 'jacketArtUrl' => 'https://example.com/jacket.png',
                 'isDisplay' => true,
+                'orderNo' => 10,
                 'media' => [
                     [
                         'position' => 1,
@@ -69,6 +70,7 @@ class CreateReleaseTest extends DatabaseTestCase
                             ->where('description', '')
                             ->where('jacketArtUrl', 'https://example.com/jacket.png')
                             ->where('isDisplay', true)
+                            ->where('orderNo', 10)
                             ->where('media.0.position', 1)
                             ->where('media.0.formatValue', MediumFormat::Cd->value)
                             ->where('media.0.tracks.0.songId', $songId)
@@ -94,6 +96,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'description' => '',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [],
             ])->assertStatus(400)
             ->assertJson(['message' => '指定されたリリースグループが存在しません。']);
@@ -110,6 +113,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'description' => '説明',
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
+                'orderNo' => 1,
                 'media' => [],
             ])->assertStatus(422)
             ->assertJson(

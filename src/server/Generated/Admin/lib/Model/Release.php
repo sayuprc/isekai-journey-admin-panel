@@ -65,6 +65,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'string',
         'jacket_art_url' => 'string',
         'is_display' => 'bool',
+        'order_no' => 'int',
         'media' => '\OpenAPI\Admin\Client\Model\Medium[]'
     ];
 
@@ -83,6 +84,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => null,
         'jacket_art_url' => null,
         'is_display' => null,
+        'order_no' => 'int32',
         'media' => null
     ];
 
@@ -99,6 +101,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => false,
         'jacket_art_url' => true,
         'is_display' => false,
+        'order_no' => false,
         'media' => false
     ];
 
@@ -195,6 +198,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'description',
         'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
+        'order_no' => 'orderNo',
         'media' => 'media'
     ];
 
@@ -211,6 +215,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'setDescription',
         'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
+        'order_no' => 'setOrderNo',
         'media' => 'setMedia'
     ];
 
@@ -227,6 +232,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'getDescription',
         'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
+        'order_no' => 'getOrderNo',
         'media' => 'getMedia'
     ];
 
@@ -294,6 +300,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
     }
 
@@ -349,6 +356,13 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         if ($this->container['media'] === null) {
             $invalidProperties[] = "'media' can't be null";
         }
@@ -564,6 +578,38 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling Release., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

@@ -48,6 +48,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                 true,
                 new ImmutableDate('2026-05-01'),
                 description: '先行配信',
+                orderNo: 20,
                 media: [
                     [
                         'position' => 1,
@@ -67,6 +68,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                 new ImmutableDate('2026-06-01'),
                 description: 'CD+DVD',
                 jacketArtUrl: 'https://example.com/limited.png',
+                orderNo: 10,
                 media: [
                     [
                         'position' => 1,
@@ -102,41 +104,12 @@ class ListReleaseGroupTest extends DatabaseTestCase
                         'firstReleasedOn' => '2026-05-01',
                         'releases' => [
                             [
-                                'releaseId' => $releaseId1,
-                                'name' => '配信',
-                                'releasedOn' => '2026-05-01',
-                                'description' => '先行配信',
-                                'jacketArtUrl' => null,
-                                'media' => [
-                                    [
-                                        'position' => 1,
-                                        'format' => [
-                                            'name' => '配信',
-                                            'value' => 1,
-                                        ],
-                                        'tracks' => [
-                                            [
-                                                'trackNo' => 1,
-                                                'songId' => $visibleSongId,
-                                                'title' => '公開楽曲',
-                                                'isDisplay' => true,
-                                            ],
-                                            [
-                                                'trackNo' => 2,
-                                                'songId' => $hiddenSongId,
-                                                'title' => '非公開楽曲',
-                                                'isDisplay' => false,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            [
                                 'releaseId' => $releaseId2,
                                 'name' => '初回限定盤',
                                 'releasedOn' => '2026-06-01',
                                 'description' => 'CD+DVD',
                                 'jacketArtUrl' => 'https://example.com/limited.png',
+                                'orderNo' => 10,
                                 'media' => [
                                     [
                                         'position' => 1,
@@ -160,6 +133,37 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                             'value' => 3,
                                         ],
                                         'tracks' => [],
+                                    ],
+                                ],
+                            ],
+                            [
+                                'releaseId' => $releaseId1,
+                                'name' => '配信',
+                                'releasedOn' => '2026-05-01',
+                                'description' => '先行配信',
+                                'jacketArtUrl' => null,
+                                'orderNo' => 20,
+                                'media' => [
+                                    [
+                                        'position' => 1,
+                                        'format' => [
+                                            'name' => '配信',
+                                            'value' => 1,
+                                        ],
+                                        'tracks' => [
+                                            [
+                                                'trackNo' => 1,
+                                                'songId' => $visibleSongId,
+                                                'title' => '公開楽曲',
+                                                'isDisplay' => true,
+                                            ],
+                                            [
+                                                'trackNo' => 2,
+                                                'songId' => $hiddenSongId,
+                                                'title' => '非公開楽曲',
+                                                'isDisplay' => false,
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],

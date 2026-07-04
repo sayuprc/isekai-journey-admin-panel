@@ -19,6 +19,7 @@ interface InitialValues {
   description: string;
   jacketArtUrl: string;
   isDisplay: boolean;
+  orderNo: number;
   media: MediumForm[];
 }
 
@@ -28,6 +29,7 @@ const EMPTY_INITIAL_VALUES: InitialValues = {
   description: '',
   jacketArtUrl: '',
   isDisplay: true,
+  orderNo: 1,
   media: [{ formatValue: 1, tracks: [] }],
 };
 
@@ -100,6 +102,7 @@ export const CreateForm = () => {
         description: data.release.description,
         jacketArtUrl: data.release.jacketArtUrl ?? '',
         isDisplay: data.release.isDisplay,
+        orderNo: data.release.orderNo,
         media: toMediumForms(data),
       },
     };
@@ -160,6 +163,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
   const [description, setDescription] = createSignal(props.initialValues.description);
   const [jacketArtUrl, setJacketArtUrl] = createSignal(props.initialValues.jacketArtUrl);
   const [isDisplay, setIsDisplay] = createSignal(props.initialValues.isDisplay);
+  const [orderNo, setOrderNo] = createSignal(props.initialValues.orderNo);
   const [media, setMedia] = createSignal<MediumForm[]>(props.initialValues.media);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -178,6 +182,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
       description: description(),
       jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
+      orderNo: orderNo(),
       media: toMediaPayload(media()),
     });
 
@@ -263,6 +268,23 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
                   alt="ジャケットアートのプレビュー"
                   class="mt-3 size-32 rounded-box border border-base-300 object-cover"
                 />
+              </Show>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="label">表示順</label>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                class="input w-full"
+                value={orderNo()}
+                onInput={e => setOrderNo(Number(e.currentTarget.value))}
+                required
+                classList={{ 'input-error': !!getFieldError('orderNo') }}
+              />
+              <Show when={getFieldError('orderNo')}>
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>
 

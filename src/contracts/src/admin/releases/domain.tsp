@@ -71,6 +71,7 @@ model ReleaseGroupReferencedRelease {
   releasedOn: releasedOn;
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
+  orderNo: orderNo;
   formatValues: MediumFormatValue[];
 }
 
@@ -96,6 +97,7 @@ model Release {
   description: string;
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
+  orderNo: orderNo;
   media: Medium[];
 }
 

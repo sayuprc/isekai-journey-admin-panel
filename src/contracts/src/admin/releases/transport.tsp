@@ -1,3 +1,7 @@
+import "../../shared";
+
+using IsekaiObservatory.Shared;
+
 namespace IsekaiObservatory.Admin;
 
 model ReleaseGroupCreateRequest {
@@ -39,6 +43,7 @@ model ReleaseCreateRequest {
   description: string;
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
+  orderNo: orderNo;
   media: Medium[];
 }
 
@@ -52,6 +57,7 @@ model ReleaseUpdateRequest {
   description: string;
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
+  orderNo: orderNo;
   media: Medium[];
 }
 

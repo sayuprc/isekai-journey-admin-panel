@@ -99,6 +99,7 @@ export type ReleaseListItem = {
     releasedOn: ReleasedOn;
     description: string;
     jacketArtUrl: JacketArtUrl | null;
+    orderNo: OrderNo;
     media: Array<ReleaseMediumItem>;
 };
 

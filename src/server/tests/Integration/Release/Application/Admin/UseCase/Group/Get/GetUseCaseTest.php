@@ -35,10 +35,10 @@ class GetUseCaseTest extends DatabaseTestCase
             $this->createRelease($releaseId2, $releaseGroupId, 'CD+DVD', true, new ImmutableDate('2026-06-01'), media: [
                 ['position' => 1, 'format' => MediumFormat::Cd->value, 'tracks' => []],
                 ['position' => 2, 'format' => MediumFormat::Dvd->value, 'tracks' => []],
-            ]),
+            ], orderNo: 10),
             $this->createRelease($releaseId1, $releaseGroupId, '配信', true, new ImmutableDate('2026-05-01'), media: [
                 ['position' => 1, 'format' => MediumFormat::Digital->value, 'tracks' => []],
-            ]),
+            ], orderNo: 20),
         );
 
         $result = $this->getInstance()->handle(new GetInputData($releaseGroupId));
@@ -46,14 +46,15 @@ class GetUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isOk());
         $this->assertSame($releaseGroupId, $result->unwrap()->releaseGroup->releaseGroupId->value);
 
-        // 傘下リリースは発売日昇順、formatValues は媒体順。
+        // 傘下リリースは表示順、formatValues は媒体順。
         $releases = $result->unwrap()->releases;
         $this->assertCount(2, $releases);
-        $this->assertSame($releaseId1, $releases[0]->releaseId);
-        $this->assertSame('2026-05-01', $releases[0]->releasedOn);
-        $this->assertSame([MediumFormat::Digital->value], $releases[0]->formatValues);
-        $this->assertSame($releaseId2, $releases[1]->releaseId);
-        $this->assertSame([MediumFormat::Cd->value, MediumFormat::Dvd->value], $releases[1]->formatValues);
+        $this->assertSame($releaseId2, $releases[0]->releaseId);
+        $this->assertSame(10, $releases[0]->orderNo);
+        $this->assertSame([MediumFormat::Cd->value, MediumFormat::Dvd->value], $releases[0]->formatValues);
+        $this->assertSame($releaseId1, $releases[1]->releaseId);
+        $this->assertSame(20, $releases[1]->orderNo);
+        $this->assertSame([MediumFormat::Digital->value], $releases[1]->formatValues);
     }
 
     #[Test]

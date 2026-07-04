@@ -318,6 +318,7 @@ components:
                   releasedOn: '2026-05-01'
                   description: ''
                   jacketArtUrl: https://example.com/jacket.png
+                  orderNo: 1
                   media:
                     - position: 1
                       format:
@@ -359,6 +360,7 @@ components:
         - releasedOn
         - description
         - jacketArtUrl
+        - orderNo
         - media
       properties:
         releaseId:
@@ -373,6 +375,8 @@ components:
           anyOf:
             - $ref: '#/components/schemas/jacketArtUrl'
             - type: 'null'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         media:
           type: array
           items:

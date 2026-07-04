@@ -307,6 +307,7 @@ export type Release = {
     description: string;
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
+    orderNo: OrderNo;
     media: Array<Medium>;
 };
 
@@ -317,6 +318,7 @@ export type ReleaseCreateRequest = {
     description: string;
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
+    orderNo: OrderNo;
     media: Array<Medium>;
 };
 
@@ -365,6 +367,7 @@ export type ReleaseGroupReferencedRelease = {
     releasedOn: ReleasedOn;
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
+    orderNo: OrderNo;
     formatValues: Array<MediumFormatValue>;
 };
 
@@ -417,6 +420,7 @@ export type ReleaseUpdateRequest = {
     description: string;
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
+    orderNo: OrderNo;
     media: Array<Medium>;
 };
 

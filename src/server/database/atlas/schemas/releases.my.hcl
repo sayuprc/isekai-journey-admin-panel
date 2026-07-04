@@ -37,6 +37,13 @@ table "releases" {
     type    = bool
     comment = "表示するか"
   }
+  column "order_no" {
+    null     = false
+    type     = int
+    unsigned = true
+    default  = 1
+    comment  = "表示順"
+  }
   column "created_at" {
     null    = false
     type    = datetime

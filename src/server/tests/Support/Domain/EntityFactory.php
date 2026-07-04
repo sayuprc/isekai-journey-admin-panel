@@ -242,6 +242,7 @@ trait EntityFactory
         string $description = 'テスト用リリース',
         ?string $jacketArtUrl = null,
         array $media = [],
+        int $orderNo = 1,
     ): Release {
         return new Release(
             ReleaseId::reconstruct($releaseId),
@@ -251,6 +252,7 @@ trait EntityFactory
             ReleaseDescription::reconstruct($description),
             is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
             $isDisplay,
+            OrderNo::reconstruct($orderNo),
             ReleaseMedia::reconstruct($media),
         );
     }

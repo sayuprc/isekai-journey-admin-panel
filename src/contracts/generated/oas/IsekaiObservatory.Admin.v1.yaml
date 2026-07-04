@@ -2537,6 +2537,7 @@ components:
         - description
         - jacketArtUrl
         - isDisplay
+        - orderNo
         - media
       properties:
         releaseId:
@@ -2555,6 +2556,8 @@ components:
             - type: 'null'
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         media:
           type: array
           items:
@@ -2569,6 +2572,7 @@ components:
         - description
         - jacketArtUrl
         - isDisplay
+        - orderNo
         - media
       properties:
         releaseGroupId:
@@ -2585,6 +2589,8 @@ components:
             - type: 'null'
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         media:
           type: array
           items:
@@ -2671,6 +2677,7 @@ components:
         - releasedOn
         - jacketArtUrl
         - isDisplay
+        - orderNo
         - formatValues
       properties:
         releaseId:
@@ -2685,6 +2692,8 @@ components:
             - type: 'null'
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         formatValues:
           type: array
           items:
@@ -2785,6 +2794,7 @@ components:
         - description
         - jacketArtUrl
         - isDisplay
+        - orderNo
         - media
       properties:
         name:
@@ -2799,6 +2809,8 @@ components:
             - type: 'null'
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         media:
           type: array
           items:

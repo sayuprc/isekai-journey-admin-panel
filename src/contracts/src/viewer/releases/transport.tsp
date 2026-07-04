@@ -21,6 +21,7 @@ namespace IsekaiObservatory.Viewer;
           releasedOn: "2026-05-01",
           description: "",
           jacketArtUrl: "https://example.com/jacket.png",
+          orderNo: 1,
           media: #[
             #{
               position: 1,

@@ -289,6 +289,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                     <th>ジャケット</th>
                     <th>版名</th>
                     <th>発売日</th>
+                    <th>表示順</th>
                     <th>媒体</th>
                     <th>表示設定</th>
                     <th class="text-right">操作</th>
@@ -318,6 +319,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                         </td>
                         <td class="min-w-40 font-medium">{release.name}</td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateValue(release.releasedOn)}</td>
+                        <td class="text-sm">{release.orderNo}</td>
                         <td>
                           <div class="flex flex-wrap gap-1">
                             <Show

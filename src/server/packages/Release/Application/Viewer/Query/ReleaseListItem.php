@@ -15,6 +15,7 @@ readonly class ReleaseListItem
         public string $releasedOn,
         public string $description,
         public ?string $jacketArtUrl,
+        public int $orderNo,
         public array $media,
     ) {
     }

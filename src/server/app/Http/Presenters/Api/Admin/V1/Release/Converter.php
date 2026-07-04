@@ -27,6 +27,7 @@ class Converter
             ->setReleasedOn($release->releasedOn->value->toMutable())
             ->setDescription($release->description->value)
             ->setIsDisplay($release->isDisplay)
+            ->setOrderNo($release->orderNo->value)
             ->setMedia($release->media->toGeneric()->map($this->toOpenApiMedium(...))->toArray());
     }
 

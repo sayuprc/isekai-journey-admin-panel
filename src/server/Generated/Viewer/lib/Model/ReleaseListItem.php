@@ -63,6 +63,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => '\DateTime',
         'description' => 'string',
         'jacket_art_url' => 'string',
+        'order_no' => 'int',
         'media' => '\OpenAPI\Viewer\Client\Model\ReleaseMediumItem[]'
     ];
 
@@ -79,6 +80,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => 'date',
         'description' => null,
         'jacket_art_url' => null,
+        'order_no' => 'int32',
         'media' => null
     ];
 
@@ -93,6 +95,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => false,
         'description' => false,
         'jacket_art_url' => true,
+        'order_no' => false,
         'media' => false
     ];
 
@@ -187,6 +190,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => 'releasedOn',
         'description' => 'description',
         'jacket_art_url' => 'jacketArtUrl',
+        'order_no' => 'orderNo',
         'media' => 'media'
     ];
 
@@ -201,6 +205,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => 'setReleasedOn',
         'description' => 'setDescription',
         'jacket_art_url' => 'setJacketArtUrl',
+        'order_no' => 'setOrderNo',
         'media' => 'setMedia'
     ];
 
@@ -215,6 +220,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'released_on' => 'getReleasedOn',
         'description' => 'getDescription',
         'jacket_art_url' => 'getJacketArtUrl',
+        'order_no' => 'getOrderNo',
         'media' => 'getMedia'
     ];
 
@@ -280,6 +286,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('jacket_art_url', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
     }
 
@@ -329,6 +336,13 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['jacket_art_url'] === null) {
             $invalidProperties[] = "'jacket_art_url' can't be null";
         }
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         if ($this->container['media'] === null) {
             $invalidProperties[] = "'media' can't be null";
         }
@@ -490,6 +504,38 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
             }
         }
         $this->container['jacket_art_url'] = $jacket_art_url;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling ReleaseListItem., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

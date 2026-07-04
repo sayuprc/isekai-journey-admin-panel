@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Release\Domain\Models;
 
 use DateType\ImmutableDate;
+use Support\Domain\ValueObjects\OrderNo;
 
 readonly class Release
 {
@@ -16,6 +17,7 @@ readonly class Release
         public Description $description,
         public ?JacketArtUrl $jacketArtUrl,
         public bool $isDisplay,
+        public OrderNo $orderNo,
         public Media $media,
     ) {
     }
@@ -31,6 +33,7 @@ readonly class Release
         string $description,
         ?string $jacketArtUrl,
         bool $isDisplay,
+        int $orderNo,
         array $media,
     ): self {
         return new self(
@@ -41,12 +44,13 @@ readonly class Release
             Description::reconstruct($description),
             is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
             $isDisplay,
+            OrderNo::reconstruct($orderNo),
             Media::reconstruct($media),
         );
     }
 
     /**
-     * @return array{release_id: string, release_group_id: string, name: string, released_on: string, description: string, jacket_art_url: string|null, is_display: bool, media: list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>}
+     * @return array{release_id: string, release_group_id: string, name: string, released_on: string, description: string, jacket_art_url: string|null, is_display: bool, order_no: int, media: list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>}
      */
     public function toArray(): array
     {
@@ -58,6 +62,7 @@ readonly class Release
             'description' => $this->description->value,
             'jacket_art_url' => $this->jacketArtUrl?->value,
             'is_display' => $this->isDisplay,
+            'order_no' => $this->orderNo->value,
             'media' => $this->media->toArray(),
         ];
     }

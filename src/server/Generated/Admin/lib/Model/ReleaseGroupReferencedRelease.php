@@ -63,6 +63,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => '\DateTime',
         'jacket_art_url' => 'string',
         'is_display' => 'bool',
+        'order_no' => 'int',
         'format_values' => '\OpenAPI\Admin\Client\Model\MediumFormatValue[]'
     ];
 
@@ -79,6 +80,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => 'date',
         'jacket_art_url' => null,
         'is_display' => null,
+        'order_no' => 'int32',
         'format_values' => null
     ];
 
@@ -93,6 +95,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => false,
         'jacket_art_url' => true,
         'is_display' => false,
+        'order_no' => false,
         'format_values' => false
     ];
 
@@ -187,6 +190,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => 'releasedOn',
         'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
+        'order_no' => 'orderNo',
         'format_values' => 'formatValues'
     ];
 
@@ -201,6 +205,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => 'setReleasedOn',
         'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
+        'order_no' => 'setOrderNo',
         'format_values' => 'setFormatValues'
     ];
 
@@ -215,6 +220,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'released_on' => 'getReleasedOn',
         'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
+        'order_no' => 'getOrderNo',
         'format_values' => 'getFormatValues'
     ];
 
@@ -280,6 +286,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('format_values', $data ?? [], null);
     }
 
@@ -329,6 +336,13 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         if ($this->container['format_values'] === null) {
             $invalidProperties[] = "'format_values' can't be null";
         }
@@ -490,6 +504,38 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling ReleaseGroupReferencedRelease., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

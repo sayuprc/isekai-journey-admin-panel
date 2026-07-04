@@ -59,6 +59,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             description: '更新後の説明',
             jacketArtUrl: 'https://example.com/jacket-new.png',
             isDisplay: false,
+            orderNo: 20,
             media: [
                 [
                     'position' => 1,
@@ -75,12 +76,14 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertSame('新版名', $result->unwrap()->release->name->value);
         // 所属先グループは更新で変わらない。
         $this->assertSame($releaseGroupId, $result->unwrap()->release->releaseGroupId->value);
+        $this->assertSame(20, $result->unwrap()->release->orderNo->value);
 
         $this->assertDatabaseHas('releases', [
             'name' => '新版名',
             'description' => '更新後の説明',
             'jacket_art_url' => 'https://example.com/jacket-new.png',
             'is_display' => false,
+            'order_no' => 20,
         ]);
         $this->assertDatabaseCount('release_media', 1);
         $this->assertDatabaseCount('release_tracks', 2);
@@ -96,6 +99,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             description: '説明',
             jacketArtUrl: null,
             isDisplay: true,
+            orderNo: 1,
             media: [],
         ));
 
@@ -129,6 +133,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             description: '説明',
             jacketArtUrl: null,
             isDisplay: true,
+            orderNo: 1,
             media: [
                 [
                     'position' => 1,
