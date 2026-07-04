@@ -9,15 +9,20 @@ use DateTime;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Viewer\Client\Model\MediaType;
 use OpenAPI\Viewer\Client\Model\MediaTypeValue;
+use OpenAPI\Viewer\Client\Model\ReleaseGroupType as OpenApiReleaseGroupType;
+use OpenAPI\Viewer\Client\Model\ReleaseGroupTypeValue;
 use OpenAPI\Viewer\Client\Model\SongListItem as OpenApiSongListItem;
 use OpenAPI\Viewer\Client\Model\SongListResponse;
 use OpenAPI\Viewer\Client\Model\SongMediaSummary as OpenApiSongMediaSummary;
 use OpenAPI\Viewer\Client\Model\SongRelationCounts;
+use OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary as OpenApiSongReleaseGroupSummary;
 use OpenAPI\Viewer\Client\Model\SongType;
 use OpenAPI\Viewer\Client\Model\SongTypeValue;
+use Release\Domain\Models\ReleaseGroupType;
 use ResultType\Result;
 use Song\Application\Viewer\Query\SongListItem;
 use Song\Application\Viewer\Query\SongMediaSummary;
+use Song\Application\Viewer\Query\SongReleaseGroupSummary;
 use Song\Application\Viewer\UseCase\List\ListOutputData;
 use Support\UseCase\Error\UseCaseError;
 
@@ -45,6 +50,7 @@ class ListPresenter
     private function toOpenApiSongListItem(SongListItem $song): OpenApiSongListItem
     {
         $media = array_map($this->toOpenApiSongMediaSummary(...), $song->media);
+        $releaseGroups = array_map($this->toOpenApiSongReleaseGroupSummary(...), $song->releaseGroups);
 
         return new OpenApiSongListItem()
             ->setSongId($song->songId)
@@ -54,8 +60,26 @@ class ListPresenter
             ->setLyricists($song->lyricists)
             ->setComposers($song->composers)
             ->setArrangers($song->arrangers)
-            ->setCounts(new SongRelationCounts()->setMediaCount(count($media)))
-            ->setMedia($media);
+            ->setCounts(
+                new SongRelationCounts()
+                    ->setReleaseCount(count($releaseGroups))
+                    ->setMediaCount(count($media)),
+            )
+            ->setMedia($media)
+            ->setReleaseGroups($releaseGroups);
+    }
+
+    private function toOpenApiSongReleaseGroupSummary(SongReleaseGroupSummary $releaseGroup): OpenApiSongReleaseGroupSummary
+    {
+        $type = ReleaseGroupType::from($releaseGroup->typeValue);
+
+        return new OpenApiSongReleaseGroupSummary([
+            'jacket_art_url' => $releaseGroup->jacketArtUrl,
+        ])
+            ->setReleaseGroupId($releaseGroup->releaseGroupId)
+            ->setTitle($releaseGroup->title)
+            ->setType(new OpenApiReleaseGroupType()->setName($type->getName())->setValue(ReleaseGroupTypeValue::from($type->value)))
+            ->setFirstReleasedOn(new DateTime($releaseGroup->firstReleasedOn));
     }
 
     private function toOpenApiSongMediaSummary(SongMediaSummary $media): OpenApiSongMediaSummary

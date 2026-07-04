@@ -22,7 +22,9 @@ class GetPresenter
     {
         [$data, $status] = $result->match(
             fn (GetOutputData $outputData) => [
-                new SiteStatsResponse()->setSongCount($outputData->songCount),
+                new SiteStatsResponse()
+                    ->setSongCount($outputData->songCount)
+                    ->setReleaseCount($outputData->releaseCount),
                 200,
             ],
             fn (UseCaseError $error) => $this->resolveError($error),

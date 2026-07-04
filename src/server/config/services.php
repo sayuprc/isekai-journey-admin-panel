@@ -39,4 +39,15 @@ return [
     'youtube' => [
         'api_key' => env('YOUTUBE_API_KEY'),
     ],
+
+    'r2' => [
+        'access_key_id' => env('R2_ACCESS_KEY_ID'),
+        'secret_access_key' => env('R2_SECRET_ACCESS_KEY'),
+        'endpoint' => env('R2_ENDPOINT'),
+        'bucket' => env('R2_BUCKET'),
+        'region' => env('R2_REGION', 'auto'),
+        'public_url' => env('R2_PUBLIC_URL'),
+        // MinIO で path-style が必要な場合だけ有効化する。
+        // 'use_path_style_endpoint' => env('R2_USE_PATH_STYLE_ENDPOINT', false),
+    ],
 ];

@@ -55,19 +55,21 @@ readonly class UpdateUseCase
             ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (ReleaseId $releaseId) use ($inputData): Result {
                 return $this->transaction->scope(function () use ($inputData, $releaseId): Result {
-                    if (is_null($this->repository->find($releaseId))) {
+                    if (is_null($found = $this->repository->find($releaseId))) {
                         return new Err(new NotFoundError('Release', $releaseId->value));
                     }
 
+                    // リリースの所属先グループは更新では変更しない。
                     $result = $this->service->prepareForUpdate(
                         $inputData->releaseId,
-                        $inputData->title,
-                        $inputData->typeValue,
-                        $inputData->distributionTypeValue,
+                        $found->releaseGroupId->value,
+                        $inputData->name,
                         $inputData->releasedOn,
                         $inputData->description,
+                        $inputData->jacketArtUrl,
                         $inputData->isDisplay,
-                        $inputData->trackEntries,
+                        $inputData->orderNo,
+                        $inputData->media,
                     );
 
                     if ($result->isErr()) {

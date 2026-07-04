@@ -35,6 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * Release Class Doc Comment
  *
  * @category Class
+ * @description リリース（実際に世に出た版・盤）
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -58,13 +59,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'release_id' => 'string',
-        'title' => 'string',
-        'type_value' => '\OpenAPI\Admin\Client\Model\ReleaseTypeValue',
-        'distribution_type_value' => '\OpenAPI\Admin\Client\Model\ReleaseDistributionTypeValue',
+        'release_group_id' => 'string',
+        'name' => 'string',
         'released_on' => '\DateTime',
         'description' => 'string',
+        'jacket_art_url' => 'string',
         'is_display' => 'bool',
-        'track_entries' => '\OpenAPI\Admin\Client\Model\TrackEntry[]'
+        'order_no' => 'int',
+        'media' => '\OpenAPI\Admin\Client\Model\Medium[]'
     ];
 
     /**
@@ -76,13 +78,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'release_id' => 'uuid',
-        'title' => null,
-        'type_value' => null,
-        'distribution_type_value' => null,
+        'release_group_id' => 'uuid',
+        'name' => null,
         'released_on' => 'date',
         'description' => null,
+        'jacket_art_url' => null,
         'is_display' => null,
-        'track_entries' => null
+        'order_no' => 'int32',
+        'media' => null
     ];
 
     /**
@@ -92,13 +95,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'release_id' => false,
-        'title' => false,
-        'type_value' => false,
-        'distribution_type_value' => false,
+        'release_group_id' => false,
+        'name' => false,
         'released_on' => false,
         'description' => false,
+        'jacket_art_url' => true,
         'is_display' => false,
-        'track_entries' => false
+        'order_no' => false,
+        'media' => false
     ];
 
     /**
@@ -188,13 +192,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'release_id' => 'releaseId',
-        'title' => 'title',
-        'type_value' => 'typeValue',
-        'distribution_type_value' => 'distributionTypeValue',
+        'release_group_id' => 'releaseGroupId',
+        'name' => 'name',
         'released_on' => 'releasedOn',
         'description' => 'description',
+        'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
-        'track_entries' => 'trackEntries'
+        'order_no' => 'orderNo',
+        'media' => 'media'
     ];
 
     /**
@@ -204,13 +209,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'release_id' => 'setReleaseId',
-        'title' => 'setTitle',
-        'type_value' => 'setTypeValue',
-        'distribution_type_value' => 'setDistributionTypeValue',
+        'release_group_id' => 'setReleaseGroupId',
+        'name' => 'setName',
         'released_on' => 'setReleasedOn',
         'description' => 'setDescription',
+        'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
-        'track_entries' => 'setTrackEntries'
+        'order_no' => 'setOrderNo',
+        'media' => 'setMedia'
     ];
 
     /**
@@ -220,13 +226,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'release_id' => 'getReleaseId',
-        'title' => 'getTitle',
-        'type_value' => 'getTypeValue',
-        'distribution_type_value' => 'getDistributionTypeValue',
+        'release_group_id' => 'getReleaseGroupId',
+        'name' => 'getName',
         'released_on' => 'getReleasedOn',
         'description' => 'getDescription',
+        'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
-        'track_entries' => 'getTrackEntries'
+        'order_no' => 'getOrderNo',
+        'media' => 'getMedia'
     ];
 
     /**
@@ -287,13 +294,14 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('release_id', $data ?? [], null);
-        $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('type_value', $data ?? [], null);
-        $this->setIfExists('distribution_type_value', $data ?? [], null);
+        $this->setIfExists('release_group_id', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('track_entries', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('media', $data ?? [], null);
     }
 
     /**
@@ -326,30 +334,37 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['release_id'] === null) {
             $invalidProperties[] = "'release_id' can't be null";
         }
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
+        if ($this->container['release_group_id'] === null) {
+            $invalidProperties[] = "'release_group_id' can't be null";
         }
-        if ((mb_strlen($this->container['title']) < 1)) {
-            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
+        }
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
 
-        if ($this->container['type_value'] === null) {
-            $invalidProperties[] = "'type_value' can't be null";
-        }
-        if ($this->container['distribution_type_value'] === null) {
-            $invalidProperties[] = "'distribution_type_value' can't be null";
-        }
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
         }
         if ($this->container['description'] === null) {
             $invalidProperties[] = "'description' can't be null";
         }
+        if ($this->container['jacket_art_url'] === null) {
+            $invalidProperties[] = "'jacket_art_url' can't be null";
+        }
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
-        if ($this->container['track_entries'] === null) {
-            $invalidProperties[] = "'track_entries' can't be null";
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['media'] === null) {
+            $invalidProperties[] = "'media' can't be null";
         }
         return $invalidProperties;
     }
@@ -394,87 +409,60 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets title
+     * Gets release_group_id
      *
      * @return string
      */
-    public function getTitle()
+    public function getReleaseGroupId()
     {
-        return $this->container['title'];
+        return $this->container['release_group_id'];
     }
 
     /**
-     * Sets title
+     * Sets release_group_id
      *
-     * @param string $title リリースタイトル
+     * @param string $release_group_id リリースグループID
      *
      * @return self
      */
-    public function setTitle($title)
+    public function setReleaseGroupId($release_group_id)
     {
-        if (is_null($title)) {
-            throw new \InvalidArgumentException('non-nullable title cannot be null');
+        if (is_null($release_group_id)) {
+            throw new \InvalidArgumentException('non-nullable release_group_id cannot be null');
         }
-
-        if ((mb_strlen($title) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $title when calling Release., must be bigger than or equal to 1.');
-        }
-
-        $this->container['title'] = $title;
+        $this->container['release_group_id'] = $release_group_id;
 
         return $this;
     }
 
     /**
-     * Gets type_value
+     * Gets name
      *
-     * @return \OpenAPI\Admin\Client\Model\ReleaseTypeValue
+     * @return string
      */
-    public function getTypeValue()
+    public function getName()
     {
-        return $this->container['type_value'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets type_value
+     * Sets name
      *
-     * @param \OpenAPI\Admin\Client\Model\ReleaseTypeValue $type_value type_value
+     * @param string $name リリース版名
      *
      * @return self
      */
-    public function setTypeValue($type_value)
+    public function setName($name)
     {
-        if (is_null($type_value)) {
-            throw new \InvalidArgumentException('non-nullable type_value cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['type_value'] = $type_value;
 
-        return $this;
-    }
-
-    /**
-     * Gets distribution_type_value
-     *
-     * @return \OpenAPI\Admin\Client\Model\ReleaseDistributionTypeValue
-     */
-    public function getDistributionTypeValue()
-    {
-        return $this->container['distribution_type_value'];
-    }
-
-    /**
-     * Sets distribution_type_value
-     *
-     * @param \OpenAPI\Admin\Client\Model\ReleaseDistributionTypeValue $distribution_type_value distribution_type_value
-     *
-     * @return self
-     */
-    public function setDistributionTypeValue($distribution_type_value)
-    {
-        if (is_null($distribution_type_value)) {
-            throw new \InvalidArgumentException('non-nullable distribution_type_value cannot be null');
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling Release., must be bigger than or equal to 1.');
         }
-        $this->container['distribution_type_value'] = $distribution_type_value;
+
+        $this->container['name'] = $name;
 
         return $this;
     }
@@ -534,6 +522,40 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
+     * Gets jacket_art_url
+     *
+     * @return string
+     */
+    public function getJacketArtUrl()
+    {
+        return $this->container['jacket_art_url'];
+    }
+
+    /**
+     * Sets jacket_art_url
+     *
+     * @param string $jacket_art_url ジャケットアートURL
+     *
+     * @return self
+     */
+    public function setJacketArtUrl($jacket_art_url)
+    {
+        if (is_null($jacket_art_url)) {
+            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('jacket_art_url', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['jacket_art_url'] = $jacket_art_url;
+
+        return $this;
+    }
+
+    /**
      * Gets is_display
      *
      * @return bool
@@ -561,28 +583,60 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets track_entries
+     * Gets order_no
      *
-     * @return \OpenAPI\Admin\Client\Model\TrackEntry[]
+     * @return int
      */
-    public function getTrackEntries()
+    public function getOrderNo()
     {
-        return $this->container['track_entries'];
+        return $this->container['order_no'];
     }
 
     /**
-     * Sets track_entries
+     * Sets order_no
      *
-     * @param \OpenAPI\Admin\Client\Model\TrackEntry[] $track_entries track_entries
+     * @param int $order_no 表示順
      *
      * @return self
      */
-    public function setTrackEntries($track_entries)
+    public function setOrderNo($order_no)
     {
-        if (is_null($track_entries)) {
-            throw new \InvalidArgumentException('non-nullable track_entries cannot be null');
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
         }
-        $this->container['track_entries'] = $track_entries;
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling Release., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets media
+     *
+     * @return \OpenAPI\Admin\Client\Model\Medium[]
+     */
+    public function getMedia()
+    {
+        return $this->container['media'];
+    }
+
+    /**
+     * Sets media
+     *
+     * @param \OpenAPI\Admin\Client\Model\Medium[] $media media
+     *
+     * @return self
+     */
+    public function setMedia($media)
+    {
+        if (is_null($media)) {
+            throw new \InvalidArgumentException('non-nullable media cannot be null');
+        }
+        $this->container['media'] = $media;
 
         return $this;
     }

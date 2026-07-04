@@ -7,6 +7,7 @@ import { auth } from './routes/auth';
 import { media } from './routes/media';
 import { persons } from './routes/persons';
 import { recoveryCodes } from './routes/recovery-codes';
+import { releaseGroups } from './routes/release-groups';
 import { releases } from './routes/releases';
 import { songTags } from './routes/song-tags';
 import { songTypes } from './routes/song-types';
@@ -32,6 +33,7 @@ export const app = new Elysia({ prefix: '/api', normalize: 'typebox' })
   .use(media)
   .use(persons)
   .use(recoveryCodes)
+  .use(releaseGroups)
   .use(releases)
   .use(songTypes)
   .use(songTags)

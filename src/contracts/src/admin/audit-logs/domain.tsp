@@ -25,6 +25,7 @@ enum AuditTargetType {
   media: "Media",
   person: "Person",
   release: "Release",
+  releaseGroup: "ReleaseGroup",
   song: "Song",
   songTag: "SongTag",
 }

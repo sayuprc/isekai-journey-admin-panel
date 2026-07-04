@@ -1,57 +1,56 @@
 ---
-import { Q } from '../../../data/mock/site-data';
+import type { ReleaseGroup } from '../../../features/releases/types';
+import { representativeJacketArtUrl } from '../../../features/releases/types';
 import JacketArt from '../JacketArt.astro';
+import ReleaseVersionBody from './ReleaseVersionBody.astro';
 
 interface Props {
-  release: {
-    id: string;
-    title: string;
-    date: string;
-    type: string;
-    format: string;
-    label?: string;
-    description?: string;
-    color: string;
-  };
+  releaseGroup: ReleaseGroup;
 }
 
-const { release } = Astro.props;
-const songs = Q.songsOfRelease(release.id);
+const { releaseGroup } = Astro.props;
+const jacketArtUrl = representativeJacketArtUrl(releaseGroup);
+const isSingleReleaseGroup = releaseGroup.releases.length === 1;
 ---
 
 <div class="detail-page-content release-detail-content">
-  <JacketArt color={release.color} label={release.title} />
-  <div class="label-mono" style="margin-top: 28px;">{release.date} · {release.type} · {release.format}</div>
-  <h1 class="detail-title">{release.title}</h1>
-  {release.description && <p class="detail-description" style="margin-top: 16px;">{release.description}</p>}
+  <JacketArt imageUrl={jacketArtUrl} label={releaseGroup.title} />
+  <div class="label-mono" style="margin-top: 28px;">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
+  <h1 class="detail-title">{releaseGroup.title}</h1>
+  {releaseGroup.description && <p class="detail-description" style="margin-top: 16px;">{releaseGroup.description}</p>}
 
-  <hr class="hairline" style="margin: 32px 0;" />
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;font-size:13px;">
-    <div><div class="label-mono">RELEASE DATE</div><div style="margin-top:4px;">{release.date}</div></div>
-    <div><div class="label-mono">TYPE</div><div style="margin-top:4px;">{release.type}</div></div>
-    <div><div class="label-mono">FORMAT</div><div style="margin-top:4px;">{release.format}</div></div>
-    <div><div class="label-mono">LABEL</div><div style="margin-top:4px;">{release.label ?? '—'}</div></div>
-  </div>
-
-  <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-    <div>
-      <span class="label-mono">TRACKLIST</span>
-      <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">収録曲</span>
-    </div>
-    <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
-  </div>
-  <div class="rel-list">
-    {
-      songs.map((song, index) => (
-        <a class="rel-chip" href={`/songs/${song.id}`}>
-          <span class="detail-index" style="min-width:28px;">{String(index + 1).padStart(2, '0')}</span>
-          <div class="color-block" style={`--tile-color:${song.color};width:32px;height:32px;flex-shrink:0;`}></div>
-          <div class="rel-copy">
-            <div class="rel-main">{song.title}</div>
-          </div>
-          <span style="font-size:14px;color:var(--fg-faint);">→</span>
-        </a>
-      ))
-    }
-  </div>
+  {
+    releaseGroup.releases.map(release => (
+      isSingleReleaseGroup
+        ? (
+            <section class="release-version release-version-single">
+              <div class="release-version-meta">
+                <span class="label-mono">{release.releasedOn}</span>
+                <span class="label-mono">{[...new Set(release.media.map(medium => medium.format.name))].join(' + ')}</span>
+              </div>
+              <div class="release-version-body">
+                <ReleaseVersionBody release={release} releaseGroupTitle={releaseGroup.title} />
+              </div>
+            </section>
+          )
+        : (
+            <details class="release-version">
+              <summary class="release-version-summary">
+                <div class="release-version-heading">
+                  <span class="label-mono">{release.releasedOn}</span>
+                  <span class="release-version-name">{release.name}</span>
+                </div>
+                <span class="label-mono">
+                  {[...new Set(release.media.map(medium => medium.format.name))].join(' + ')}
+                </span>
+              </summary>
+              <div class="release-version-body-shell">
+                <div class="release-version-body">
+                  <ReleaseVersionBody release={release} releaseGroupTitle={releaseGroup.title} />
+                </div>
+              </div>
+            </details>
+          )
+    ))
+  }
 </div>

@@ -1,0 +1,59 @@
+---
+import FilterBar from '../../components/viewer/FilterBar';
+import JacketArt from '../../components/viewer/JacketArt.astro';
+import SectionHead from '../../components/viewer/SectionHead.astro';
+import { releaseGroupContentRepository } from '../../features/releases/content';
+import { distinctTrackCount, representativeJacketArtUrl } from '../../features/releases/types';
+import Layout from '../../layouts/Layout.astro';
+
+// API は最古発売日の降順で返すのでそのまま並べる。
+const releaseGroups = await releaseGroupContentRepository.all();
+---
+
+<Layout pageTitle="リリース">
+  <section class="shell page-section">
+    <SectionHead title="リリース" />
+
+    <FilterBar
+      client:load
+      filters={[
+        { value: 'all', label: `すべて (${releaseGroups.length})` },
+        { value: '2', label: 'アルバム' },
+        { value: '1', label: 'シングル' },
+        { value: '3', label: 'EP' },
+      ]}
+      entrySelector="[data-release-entry]"
+      categoryAttrs={['releaseType']}
+      searchAttr="releaseSearch"
+      searchPlaceholder="タイトル・種別・収録曲を検索..."
+    />
+
+    <div class="release-grid">
+      {
+        releaseGroups.map((releaseGroup) => {
+          const trackTitles = releaseGroup.releases
+            .flatMap(release => release.media.flatMap(medium => medium.tracks.map(track => track.title)));
+
+          return (
+            <a
+              href={`/releases/${releaseGroup.releaseGroupId}`}
+              class="release-card"
+              data-release-entry
+              data-release-type={String(releaseGroup.type.value)}
+              data-release-search={`${releaseGroup.title} ${releaseGroup.type.name} ${trackTitles.join(' ')}`.toLowerCase()}
+            >
+              <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
+              <div class="release-card-body">
+                <div class="release-card-meta">
+                  <span class="label-mono">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</span>
+                  <span class="detail-index">{distinctTrackCount(releaseGroup)} tracks</span>
+                </div>
+                <div class="song-grid-title">{releaseGroup.title}</div>
+              </div>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+</Layout>

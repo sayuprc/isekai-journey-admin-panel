@@ -22,6 +22,6 @@ readonly class GetUseCase
     {
         $siteStats = $this->query->get();
 
-        return new Ok(new GetOutputData($siteStats->songCount));
+        return new Ok(new GetOutputData($siteStats->songCount, $siteStats->releaseCount));
     }
 }

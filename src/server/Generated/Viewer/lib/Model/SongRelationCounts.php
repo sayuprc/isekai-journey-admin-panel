@@ -57,6 +57,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
       * @var string[]
       */
     protected static $openAPITypes = [
+        'release_count' => 'int',
         'media_count' => 'int'
     ];
 
@@ -68,6 +69,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
+        'release_count' => 'int32',
         'media_count' => 'int32'
     ];
 
@@ -77,6 +79,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
       * @var boolean[]
       */
     protected static array $openAPINullables = [
+        'release_count' => false,
         'media_count' => false
     ];
 
@@ -166,6 +169,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
      * @var string[]
      */
     protected static $attributeMap = [
+        'release_count' => 'releaseCount',
         'media_count' => 'mediaCount'
     ];
 
@@ -175,6 +179,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
      * @var string[]
      */
     protected static $setters = [
+        'release_count' => 'setReleaseCount',
         'media_count' => 'setMediaCount'
     ];
 
@@ -184,6 +189,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
      * @var string[]
      */
     protected static $getters = [
+        'release_count' => 'getReleaseCount',
         'media_count' => 'getMediaCount'
     ];
 
@@ -244,6 +250,7 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
      */
     public function __construct(?array $data = null)
     {
+        $this->setIfExists('release_count', $data ?? [], null);
         $this->setIfExists('media_count', $data ?? [], null);
     }
 
@@ -274,6 +281,9 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
     {
         $invalidProperties = [];
 
+        if ($this->container['release_count'] === null) {
+            $invalidProperties[] = "'release_count' can't be null";
+        }
         if ($this->container['media_count'] === null) {
             $invalidProperties[] = "'media_count' can't be null";
         }
@@ -291,6 +301,33 @@ class SongRelationCounts implements ModelInterface, ArrayAccess, \JsonSerializab
         return count($this->listInvalidProperties()) === 0;
     }
 
+
+    /**
+     * Gets release_count
+     *
+     * @return int
+     */
+    public function getReleaseCount()
+    {
+        return $this->container['release_count'];
+    }
+
+    /**
+     * Sets release_count
+     *
+     * @param int $release_count 関連リリースグループ数
+     *
+     * @return self
+     */
+    public function setReleaseCount($release_count)
+    {
+        if (is_null($release_count)) {
+            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        }
+        $this->container['release_count'] = $release_count;
+
+        return $this;
+    }
 
     /**
      * Gets media_count

@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Release\Application\Admin\UseCase\Update;
 
-use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Update\UpdateInputData;
 use Release\Application\Admin\UseCase\Update\UpdateUseCase;
-use Release\Domain\Models\ReleaseDistributionType;
-use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\Contracts\Uuid\UuidConverterInterface;
-use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
 use Tests\Support\DatabaseTestCase;
@@ -29,86 +26,67 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $songId1 = $this->generateUuid();
         $songId2 = $this->generateUuid();
-        $songId3 = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
-
-        $converter = $this->app->make(UuidConverterInterface::class);
 
         $this->storeSongs(
             $this->createSong($songId1, 'テスト楽曲1', '説明', SongType::Original, true, 10),
             $this->createSong($songId2, 'テスト楽曲2', '説明', SongType::Original, true, 20),
-            $this->createSong($songId3, 'テスト楽曲3', '説明', SongType::Cover, true, 30),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
         $this->storeReleases(
             $this->createRelease(
                 $releaseId,
-                '旧タイトル',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
+                $releaseGroupId,
+                '旧版名',
                 true,
-                trackEntries: [
-                    ['songId' => $songId1, 'trackNo' => 1],
-                    ['songId' => $songId2, 'trackNo' => 2],
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $songId1, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $releaseId,
-            title: '新タイトル',
-            typeValue: ReleaseType::Single->value,
-            distributionTypeValue: ReleaseDistributionType::Physical->value,
+            name: '新版名',
             releasedOn: '2026-05-09',
             description: '更新後の説明',
+            jacketArtUrl: 'https://example.com/jacket-new.png',
             isDisplay: false,
-            trackEntries: [
-                ['songId' => $songId3, 'trackNo' => 1],
-                ['songId' => $songId1, 'trackNo' => 2],
+            orderNo: 20,
+            media: [
+                [
+                    'position' => 1,
+                    'formatValue' => MediumFormat::Cd->value,
+                    'tracks' => [
+                        ['songId' => $songId2, 'trackNo' => 1],
+                        ['songId' => $songId1, 'trackNo' => 2],
+                    ],
+                ],
             ],
         ));
 
         $this->assertTrue($result->isOk());
-        $this->assertSame('新タイトル', $result->unwrap()->release->title->value);
-        $this->assertSame(2, $result->unwrap()->release->trackEntries->count());
+        $this->assertSame('新版名', $result->unwrap()->release->name->value);
+        // 所属先グループは更新で変わらない。
+        $this->assertSame($releaseGroupId, $result->unwrap()->release->releaseGroupId->value);
+        $this->assertSame(20, $result->unwrap()->release->orderNo->value);
 
         $this->assertDatabaseHas('releases', [
-            'release_id' => $converter->toBin($releaseId),
-            'title' => '新タイトル',
-            'type' => ReleaseType::Single->value,
-            'distribution_type' => ReleaseDistributionType::Physical->value,
+            'name' => '新版名',
             'description' => '更新後の説明',
+            'jacket_art_url' => 'https://example.com/jacket-new.png',
             'is_display' => false,
+            'order_no' => 20,
         ]);
-
-        $entries = DB::table('release_track_entries')
-            ->where('release_id', $converter->toBin($releaseId))
-            ->orderBy('track_no')
-            ->get()
-            ->all();
-
-        $this->assertCount(2, $entries);
-        $this->assertSame($songId3, $this->toUuid($entries[0]->song_id));
-        $this->assertSame(1, (int)$entries[0]->track_no);
-        $this->assertSame($songId1, $this->toUuid($entries[1]->song_id));
-        $this->assertSame(2, (int)$entries[1]->track_no);
-    }
-
-    #[Test]
-    public function invalidId(): void
-    {
-        $result = $this->getInstance()->handle(new UpdateInputData(
-            releaseId: 'invalid-id',
-            title: '新タイトル',
-            typeValue: ReleaseType::Album->value,
-            distributionTypeValue: ReleaseDistributionType::Digital->value,
-            releasedOn: '2026-05-09',
-            description: '説明',
-            isDisplay: true,
-            trackEntries: [],
-        ));
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
+        $this->assertDatabaseCount('release_media', 1);
+        $this->assertDatabaseCount('release_tracks', 2);
     }
 
     #[Test]
@@ -116,13 +94,13 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $this->generateUuid(),
-            title: '新タイトル',
-            typeValue: ReleaseType::Album->value,
-            distributionTypeValue: ReleaseDistributionType::Digital->value,
+            name: '新版名',
             releasedOn: '2026-05-09',
             description: '説明',
+            jacketArtUrl: null,
             isDisplay: true,
-            trackEntries: [],
+            orderNo: 1,
+            media: [],
         ));
 
         $this->assertTrue($result->isErr());
@@ -130,74 +108,48 @@ class UpdateUseCaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function updateFailsWhenTrackEntriesAreDuplicated(): void
+    public function updateFailsWhenTrackNosAreDuplicatedInMedium(): void
     {
-        $songId = $this->generateUuid();
+        $songId1 = $this->generateUuid();
+        $songId2 = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
-        $this->storeSongs($this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10));
+        $this->storeSongs(
+            $this->createSong($songId1, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+            $this->createSong($songId2, 'テスト楽曲2', '説明', SongType::Original, true, 20),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
-            $this->createRelease(
-                $releaseId,
-                '旧タイトル',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
-                true,
-            ),
+            $this->createRelease($releaseId, $releaseGroupId, '旧版名', true),
         );
 
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $releaseId,
-            title: '新タイトル',
-            typeValue: ReleaseType::Album->value,
-            distributionTypeValue: ReleaseDistributionType::Digital->value,
+            name: '新版名',
             releasedOn: '2026-05-09',
             description: '説明',
+            jacketArtUrl: null,
             isDisplay: true,
-            trackEntries: [
-                ['songId' => $songId, 'trackNo' => 1],
-                ['songId' => $songId, 'trackNo' => 2],
+            orderNo: 1,
+            media: [
+                [
+                    'position' => 1,
+                    'formatValue' => MediumFormat::Cd->value,
+                    'tracks' => [
+                        ['songId' => $songId1, 'trackNo' => 1],
+                        ['songId' => $songId2, 'trackNo' => 1],
+                    ],
+                ],
             ],
         ));
 
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
         $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['trackEntries' => ['同じ楽曲を複数指定することはできません。']], $error->errors);
-    }
-
-    #[Test]
-    public function updateFailsWhenTrackEntriesContainUnknownSong(): void
-    {
-        $releaseId = $this->generateUuid();
-
-        $this->storeReleases(
-            $this->createRelease(
-                $releaseId,
-                '旧タイトル',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
-                true,
-            ),
-        );
-
-        $result = $this->getInstance()->handle(new UpdateInputData(
-            releaseId: $releaseId,
-            title: '新タイトル',
-            typeValue: ReleaseType::Album->value,
-            distributionTypeValue: ReleaseDistributionType::Digital->value,
-            releasedOn: '2026-05-09',
-            description: '説明',
-            isDisplay: true,
-            trackEntries: [
-                ['songId' => $this->generateUuid(), 'trackNo' => 1],
-            ],
-        ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessLogicError::class, $error);
-        $this->assertSame('指定された楽曲の一部が存在しません。', $error->message);
+        $this->assertSame(['media' => ['同じ曲順を複数指定することはできません。']], $error->errors);
     }
 
     private function getInstance(): UpdateUseCase

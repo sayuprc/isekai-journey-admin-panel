@@ -7,8 +7,8 @@ namespace Tests\Feature\Api\Viewer\V1\Song;
 use DateType\ImmutableDate;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\ReleaseDistributionType;
-use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Song\Route\ViewerSongRouteMap;
@@ -123,27 +123,40 @@ class ListSongTest extends DatabaseTestCase
             ),
         );
 
+        $visibleReleaseGroupId = $this->generateUuid();
+        $hiddenReleaseGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($visibleReleaseGroupId, '公開リリース', ReleaseGroupType::Single, true),
+            $this->createReleaseGroup($hiddenReleaseGroupId, '非公開リリース', ReleaseGroupType::Album, false),
+        );
         $this->storeReleases(
             $this->createRelease(
                 $visibleReleaseId,
-                '公開リリース',
-                ReleaseType::Single,
-                ReleaseDistributionType::Digital,
+                $visibleReleaseGroupId,
+                '配信',
                 true,
                 description: '公開リリース',
-                trackEntries: [
-                    ['songId' => $visibleSongId, 'trackNo' => 1],
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $visibleSongId, 'trackNo' => 1]],
+                    ],
                 ],
             ),
             $this->createRelease(
                 $hiddenReleaseId,
-                '非公開リリース',
-                ReleaseType::Album,
-                ReleaseDistributionType::Physical,
+                $hiddenReleaseGroupId,
+                'CD',
                 false,
                 description: '非公開リリース',
-                trackEntries: [
-                    ['songId' => $visibleSongId, 'trackNo' => 1],
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [['songId' => $visibleSongId, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
@@ -164,7 +177,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => ['テスト作曲者A'],
                         'arrangers' => ['テスト編曲者A'],
                         'counts' => [
-                            // 'releaseCount' => 1,
+                            'releaseCount' => 1,
                             'mediaCount' => 2,
                         ],
                         'media' => [
@@ -187,6 +200,18 @@ class ListSongTest extends DatabaseTestCase
                                 ],
                                 'url' => 'https://example.com/article',
                                 'publishedAt' => '2024-05-01',
+                            ],
+                        ],
+                        'releaseGroups' => [
+                            [
+                                'releaseGroupId' => $visibleReleaseGroupId,
+                                'title' => '公開リリース',
+                                'type' => [
+                                    'name' => 'シングル',
+                                    'value' => 1,
+                                ],
+                                'firstReleasedOn' => '2024-01-01',
+                                'jacketArtUrl' => null,
                             ],
                         ],
                     ],
@@ -217,7 +242,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => [],
                         'arrangers' => [],
                         'counts' => [
-                            // 'releaseCount' => 0,
+                            'releaseCount' => 0,
                             'mediaCount' => 1,
                         ],
                         'media' => [
@@ -232,6 +257,7 @@ class ListSongTest extends DatabaseTestCase
                                 'publishedAt' => '2024-03-01',
                             ],
                         ],
+                        'releaseGroups' => [],
                     ],
                 ],
             ]);

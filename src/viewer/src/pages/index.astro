@@ -1,16 +1,18 @@
 ---
-// import JacketArt from '../components/viewer/JacketArt.astro';
+import JacketArt from '../components/viewer/JacketArt.astro';
 // import MVThumb from '../components/viewer/MVThumb.astro';
 // import PostCard from '../components/viewer/PostCard.astro';
-// import SectionHead from '../components/viewer/SectionHead.astro';
+import SectionHead from '../components/viewer/SectionHead.astro';
 // import { Q } from '../data/mock/site-data';
 // import { mediaTypeLabel } from '../features/media/labels';
 // import { latestMedia, latestPosts } from '../features/media/sort';
-// import { latestRelease } from '../features/releases/sort';
+import { releaseGroupContentRepository } from '../features/releases/content';
+import { distinctTrackCount, representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
 import Layout from '../layouts/Layout.astro';
 
-// const release = latestRelease();
+// 一覧は最古発売日の降順なので先頭が最新リリース。
+const latestReleaseGroup = (await releaseGroupContentRepository.all())[0] ?? null;
 // const media = latestMedia(3);
 // const posts = latestPosts(3);
 const siteStats = await siteStatsRepository.get();
@@ -53,14 +55,14 @@ const observationYears = (() => {
             <em>songs</em>
           </div>
         </div>
-        {/*
         <div class="hero-data-stat hero-data-stat-row">
-          <strong>{SITE_DATA.releases.length}</strong>
+          <strong>{siteStats.releaseCount}</strong>
           <div class="hero-data-stat-copy">
             <span>リリース</span>
             <em>releases</em>
           </div>
         </div>
+        {/*
         <div class="hero-data-stat hero-data-stat-row">
           <strong>{SITE_DATA.media.length}</strong>
           <div class="hero-data-stat-copy">
@@ -80,38 +82,37 @@ const observationYears = (() => {
     </div>
   </section>
 
-  {/*
-  <section class="shell">
-    <SectionHead title="最新リリース" />
-    {
-      release && (
+  {
+    latestReleaseGroup && (
+      <section class="shell">
+        <SectionHead title="最新リリース" />
         <div class="feature-grid-link">
-          <a href={`/releases/${release.id}`} class="feature-art-link">
-            <JacketArt color={release.color} label={release.title} />
+          <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
+            <JacketArt imageUrl={representativeJacketArtUrl(latestReleaseGroup)} label={latestReleaseGroup.title} />
           </a>
           <div>
-            <div class="eyebrow">{release.type} — {release.date}</div>
+            <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
             <h3 class="feature-title">
-              <a href={`/releases/${release.id}`}>{release.title}</a>
+              <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
             </h3>
-            <div class="label-mono">{release.format}</div>
-            <p class="feature-summary">収録曲 · {Q.songsOfRelease(release.id).length} 曲</p>
+            <p class="feature-summary">収録曲 · {distinctTrackCount(latestReleaseGroup)} 曲</p>
             <div class="rel-list">
               {
-                Q.songsOfRelease(release.id).slice(0, 5).map((song, index) => (
-                  <a class="rel-chip" href={`/songs/${song.id}`}>
-                    <span class="detail-index">{String(index + 1).padStart(2, '0')}</span>
-                    <div class="rel-main">{song.title}</div>
+                (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 5).map(track => (
+                  <a class="rel-chip" href={`/songs/${track.songId}`}>
+                    <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
+                    <div class="rel-main">{track.title}</div>
                   </a>
                 ))
               }
             </div>
           </div>
         </div>
-      )
-    }
-  </section>
+      </section>
+    )
+  }
 
+  {/*
   <section class="shell">
     <SectionHead title="最新の映像">
       <a slot="right" class="btn" href="/media">すべての映像 →</a>

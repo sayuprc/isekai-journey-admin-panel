@@ -3,16 +3,58 @@ import {
   releaseServiceCreateRelease,
   releaseServiceDeleteRelease,
   releaseServiceGetRelease,
-  releaseServiceSearchReleases,
+  releaseServiceUploadJacketArt,
   releaseServiceUpdateRelease,
 } from '../../generated';
-import type { PerPage, ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
+const NullableStringSchema = t.Union([t.String(), t.Null()]);
+
+const mediaSchema = t.Array(
+  t.Object({
+    position: t.Number(),
+    formatValue: t.Numeric(),
+    tracks: t.Array(
+      t.Object({
+        songId: t.String(),
+        trackNo: t.Number(),
+      }),
+    ),
+  }),
+);
+
 export const releases = new Elysia({ prefix: '/releases' })
   .use(authGuard)
+  .post('/jacket-art', async ({ request, set, authSession }) => {
+    const formData = await request.formData();
+    const file = formData.get('jacketArt');
+
+    if (!(file instanceof File)) {
+      set.status = 422;
+      return { errors: [{ field: 'jacketArt', message: '画像ファイルは必須です' }] };
+    }
+
+    const content = await file.arrayBuffer();
+
+    return withAuthRetry(authSession, async (client) => {
+      const result = await releaseServiceUploadJacketArt({
+        client,
+        body: content,
+        bodySerializer: null,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      if (!result.response) {
+        throw new Error('リリースジャケットアートアップロードAPIのレスポンスを取得できませんでした');
+      }
+
+      return resolveApiResponse({ ...result, response: result.response });
+    });
+  })
   .post(
     '/',
     async ({ body, authSession }) => {
@@ -22,48 +64,14 @@ export const releases = new Elysia({ prefix: '/releases' })
     },
     {
       body: t.Object({
-        title: t.String(),
-        typeValue: t.Numeric(),
-        distributionTypeValue: t.Numeric(),
+        releaseGroupId: t.String(),
+        name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
+        jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
-        trackEntries: t.Array(
-          t.Object({
-            songId: t.String(),
-            trackNo: t.Number(),
-          }),
-        ),
-      }),
-    },
-  )
-  .get(
-    '/search',
-    async ({ query, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(
-          await releaseServiceSearchReleases({
-            client,
-            query: {
-              title: query.title || undefined,
-              type: query.type as ReleaseTypeValue | undefined,
-              distribution_type: query.distribution_type as ReleaseDistributionTypeValue | undefined,
-              is_display: query.is_display,
-              page: query.page ?? 1,
-              per_page: (query.per_page ?? 25) as PerPage,
-            },
-          }),
-        );
-      });
-    },
-    {
-      query: t.Object({
-        title: t.Optional(t.String()),
-        type: t.Optional(t.Union([t.Literal('1'), t.Literal('2'), t.Literal('3'), t.Literal('99')])),
-        distribution_type: t.Optional(t.Union([t.Literal('1'), t.Literal('2'), t.Literal('99')])),
-        is_display: t.Optional(t.Boolean()),
-        page: t.Optional(t.Number()),
-        per_page: t.Optional(t.Number()),
+        orderNo: t.Number(),
+        media: mediaSchema,
       }),
     },
   )
@@ -98,18 +106,13 @@ export const releases = new Elysia({ prefix: '/releases' })
         releaseId: t.String(),
       }),
       body: t.Object({
-        title: t.String(),
-        typeValue: t.Numeric(),
-        distributionTypeValue: t.Numeric(),
+        name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
+        jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
-        trackEntries: t.Array(
-          t.Object({
-            songId: t.String(),
-            trackNo: t.Number(),
-          }),
-        ),
+        orderNo: t.Number(),
+        media: mediaSchema,
       }),
     },
   )

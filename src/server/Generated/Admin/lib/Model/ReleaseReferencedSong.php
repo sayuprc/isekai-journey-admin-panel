@@ -35,6 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * ReleaseReferencedSong Class Doc Comment
  *
  * @category Class
+ * @description リリース収録曲の表示用情報
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -57,9 +58,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
       * @var string[]
       */
     protected static $openAPITypes = [
+        'medium_position' => 'int',
+        'track_no' => 'int',
         'song_id' => 'string',
-        'title' => 'string',
-        'track_no' => 'int'
+        'title' => 'string'
     ];
 
     /**
@@ -70,9 +72,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
+        'medium_position' => 'int32',
+        'track_no' => 'int32',
         'song_id' => 'uuid',
-        'title' => null,
-        'track_no' => 'int32'
+        'title' => null
     ];
 
     /**
@@ -81,9 +84,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
       * @var boolean[]
       */
     protected static array $openAPINullables = [
+        'medium_position' => false,
+        'track_no' => false,
         'song_id' => false,
-        'title' => false,
-        'track_no' => false
+        'title' => false
     ];
 
     /**
@@ -172,9 +176,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $attributeMap = [
+        'medium_position' => 'mediumPosition',
+        'track_no' => 'trackNo',
         'song_id' => 'songId',
-        'title' => 'title',
-        'track_no' => 'trackNo'
+        'title' => 'title'
     ];
 
     /**
@@ -183,9 +188,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $setters = [
+        'medium_position' => 'setMediumPosition',
+        'track_no' => 'setTrackNo',
         'song_id' => 'setSongId',
-        'title' => 'setTitle',
-        'track_no' => 'setTrackNo'
+        'title' => 'setTitle'
     ];
 
     /**
@@ -194,9 +200,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $getters = [
+        'medium_position' => 'getMediumPosition',
+        'track_no' => 'getTrackNo',
         'song_id' => 'getSongId',
-        'title' => 'getTitle',
-        'track_no' => 'getTrackNo'
+        'title' => 'getTitle'
     ];
 
     /**
@@ -256,9 +263,10 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
      */
     public function __construct(?array $data = null)
     {
+        $this->setIfExists('medium_position', $data ?? [], null);
+        $this->setIfExists('track_no', $data ?? [], null);
         $this->setIfExists('song_id', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
-        $this->setIfExists('track_no', $data ?? [], null);
     }
 
     /**
@@ -288,6 +296,20 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
     {
         $invalidProperties = [];
 
+        if ($this->container['medium_position'] === null) {
+            $invalidProperties[] = "'medium_position' can't be null";
+        }
+        if (($this->container['medium_position'] < 1)) {
+            $invalidProperties[] = "invalid value for 'medium_position', must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['track_no'] === null) {
+            $invalidProperties[] = "'track_no' can't be null";
+        }
+        if (($this->container['track_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'track_no', must be bigger than or equal to 1.";
+        }
+
         if ($this->container['song_id'] === null) {
             $invalidProperties[] = "'song_id' can't be null";
         }
@@ -296,13 +318,6 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
         }
         if ((mb_strlen($this->container['title']) < 1)) {
             $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
-        }
-
-        if ($this->container['track_no'] === null) {
-            $invalidProperties[] = "'track_no' can't be null";
-        }
-        if (($this->container['track_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'track_no', must be bigger than or equal to 1.";
         }
 
         return $invalidProperties;
@@ -319,6 +334,70 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
         return count($this->listInvalidProperties()) === 0;
     }
 
+
+    /**
+     * Gets medium_position
+     *
+     * @return int
+     */
+    public function getMediumPosition()
+    {
+        return $this->container['medium_position'];
+    }
+
+    /**
+     * Sets medium_position
+     *
+     * @param int $medium_position 表示順
+     *
+     * @return self
+     */
+    public function setMediumPosition($medium_position)
+    {
+        if (is_null($medium_position)) {
+            throw new \InvalidArgumentException('non-nullable medium_position cannot be null');
+        }
+
+        if (($medium_position < 1)) {
+            throw new \InvalidArgumentException('invalid value for $medium_position when calling ReleaseReferencedSong., must be bigger than or equal to 1.');
+        }
+
+        $this->container['medium_position'] = $medium_position;
+
+        return $this;
+    }
+
+    /**
+     * Gets track_no
+     *
+     * @return int
+     */
+    public function getTrackNo()
+    {
+        return $this->container['track_no'];
+    }
+
+    /**
+     * Sets track_no
+     *
+     * @param int $track_no 表示順
+     *
+     * @return self
+     */
+    public function setTrackNo($track_no)
+    {
+        if (is_null($track_no)) {
+            throw new \InvalidArgumentException('non-nullable track_no cannot be null');
+        }
+
+        if (($track_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $track_no when calling ReleaseReferencedSong., must be bigger than or equal to 1.');
+        }
+
+        $this->container['track_no'] = $track_no;
+
+        return $this;
+    }
 
     /**
      * Gets song_id
@@ -375,38 +454,6 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
         }
 
         $this->container['title'] = $title;
-
-        return $this;
-    }
-
-    /**
-     * Gets track_no
-     *
-     * @return int
-     */
-    public function getTrackNo()
-    {
-        return $this->container['track_no'];
-    }
-
-    /**
-     * Sets track_no
-     *
-     * @param int $track_no 表示順
-     *
-     * @return self
-     */
-    public function setTrackNo($track_no)
-    {
-        if (is_null($track_no)) {
-            throw new \InvalidArgumentException('non-nullable track_no cannot be null');
-        }
-
-        if (($track_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $track_no when calling ReleaseReferencedSong., must be bigger than or equal to 1.');
-        }
-
-        $this->container['track_no'] = $track_no;
 
         return $this;
     }

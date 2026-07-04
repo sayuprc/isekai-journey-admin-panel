@@ -11,6 +11,7 @@ tags:
   - name: Person
   - name: SongTag
   - name: Song
+  - name: ReleaseGroup
   - name: Release
   - name: SongType
 paths:
@@ -954,6 +955,243 @@ paths:
         - RecoveryCode
       security:
         - BearerAuth: []
+  /release-groups:
+    post:
+      operationId: ReleaseGroupService_createReleaseGroup
+      description: リリースグループ作成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGroupCreateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseGroupCreateRequest'
+      security:
+        - BearerAuth: []
+  /release-groups/search:
+    get:
+      operationId: ReleaseGroupService_searchReleaseGroups
+      description: リリースグループ検索API
+      parameters:
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ReleaseGroupTypeValue'
+          explode: false
+        - name: is_display
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/page'
+            default: 1
+          explode: false
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PerPage'
+            default: 25
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGroupSearchResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
+      security:
+        - BearerAuth: []
+  /release-groups/{releaseGroupId}:
+    get:
+      operationId: ReleaseGroupService_getReleaseGroup
+      description: リリースグループ取得API
+      parameters:
+        - name: releaseGroupId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGroupGetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
+      security:
+        - BearerAuth: []
+    put:
+      operationId: ReleaseGroupService_updateReleaseGroup
+      description: リリースグループ更新API
+      parameters:
+        - name: releaseGroupId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGroupUpdateResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseGroupUpdateRequest'
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: ReleaseGroupService_deleteReleaseGroup
+      description: リリースグループ削除API
+      parameters:
+        - name: releaseGroupId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
+      security:
+        - BearerAuth: []
   /releases:
     post:
       operationId: ReleaseService_createRelease
@@ -998,60 +1236,34 @@ paths:
               $ref: '#/components/schemas/ReleaseCreateRequest'
       security:
         - BearerAuth: []
-  /releases/search:
-    get:
-      operationId: ReleaseService_searchReleases
-      description: リリース検索API
-      parameters:
-        - name: title
-          in: query
-          required: false
-          schema:
-            type: string
-          explode: false
-        - name: type
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/ReleaseTypeValue'
-          explode: false
-        - name: distribution_type
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/ReleaseDistributionTypeValue'
-          explode: false
-        - name: is_display
-          in: query
-          required: false
-          schema:
-            type: boolean
-          explode: false
-        - name: page
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/page'
-            default: 1
-          explode: false
-        - name: per_page
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/PerPage'
-            default: 25
-          explode: false
+  /releases/jacket-art:
+    post:
+      operationId: ReleaseService_uploadJacketArt
+      description: リリースジャケットアートアップロードAPI
+      parameters: []
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReleaseSearchResponse'
+                $ref: '#/components/schemas/ReleaseJacketArtUploadResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Access is unauthorized.
         '403':
           description: Access is forbidden.
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
         '500':
           description: Server error
         '503':
@@ -1060,6 +1272,18 @@ paths:
           description: Server error
       tags:
         - Release
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              contentMediaType: image/jpeg
+          image/png:
+            schema:
+              contentMediaType: image/png
+          image/webp:
+            schema:
+              contentMediaType: image/webp
       security:
         - BearerAuth: []
   /releases/{releaseId}:
@@ -1121,6 +1345,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReleaseUpdateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Access is unauthorized.
         '403':
@@ -1876,6 +2106,7 @@ components:
         - Media
         - Person
         - Release
+        - ReleaseGroup
         - Song
         - SongTag
       description: 監査ログの対象種別
@@ -2080,6 +2311,32 @@ components:
       properties:
         media:
           $ref: '#/components/schemas/Media'
+    Medium:
+      type: object
+      required:
+        - position
+        - formatValue
+        - tracks
+      properties:
+        position:
+          $ref: '#/components/schemas/orderNo'
+        formatValue:
+          $ref: '#/components/schemas/MediumFormatValue'
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Track'
+      description: リリース内の媒体（CD / DVD / 配信 など）
+    MediumFormatValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: 媒体種別
     PerPage:
       type: integer
       format: int32
@@ -2324,59 +2581,70 @@ components:
       type: object
       required:
         - releaseId
-        - title
-        - typeValue
-        - distributionTypeValue
+        - releaseGroupId
+        - name
         - releasedOn
         - description
+        - jacketArtUrl
         - isDisplay
-        - trackEntries
+        - orderNo
+        - media
       properties:
         releaseId:
           $ref: '#/components/schemas/releaseId'
-        title:
-          $ref: '#/components/schemas/releaseTitle'
-        typeValue:
-          $ref: '#/components/schemas/ReleaseTypeValue'
-        distributionTypeValue:
-          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
+        name:
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
-        trackEntries:
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+        media:
           type: array
           items:
-            $ref: '#/components/schemas/TrackEntry'
+            $ref: '#/components/schemas/Medium'
+      description: リリース（実際に世に出た版・盤）
     ReleaseCreateRequest:
       type: object
       required:
-        - title
-        - typeValue
-        - distributionTypeValue
+        - releaseGroupId
+        - name
         - releasedOn
         - description
+        - jacketArtUrl
         - isDisplay
-        - trackEntries
+        - orderNo
+        - media
       properties:
-        title:
-          $ref: '#/components/schemas/releaseTitle'
-        typeValue:
-          $ref: '#/components/schemas/ReleaseTypeValue'
-        distributionTypeValue:
-          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
+        name:
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
         isDisplay:
           type: boolean
-        trackEntries:
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+        media:
           type: array
           items:
-            $ref: '#/components/schemas/TrackEntry'
+            $ref: '#/components/schemas/Medium'
     ReleaseCreateResponse:
       type: object
       required:
@@ -2384,13 +2652,6 @@ components:
       properties:
         release:
           $ref: '#/components/schemas/Release'
-    ReleaseDistributionTypeValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 99
     ReleaseGetResponse:
       type: object
       required:
@@ -2403,33 +2664,130 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReleaseReferencedSong'
-    ReleaseReferencedSong:
+    ReleaseGroup:
       type: object
       required:
-        - songId
+        - releaseGroupId
         - title
-        - trackNo
+        - typeValue
+        - description
+        - isDisplay
       properties:
-        songId:
-          $ref: '#/components/schemas/uuid'
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
         title:
-          $ref: '#/components/schemas/title'
-        trackNo:
-          $ref: '#/components/schemas/orderNo'
-    ReleaseSearchResponse:
+          $ref: '#/components/schemas/releaseGroupTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseGroupTypeValue'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+      description: リリースグループ（作品）
+    ReleaseGroupCreateRequest:
       type: object
       required:
-        - releases
-        - maxPage
+        - title
+        - typeValue
+        - description
+        - isDisplay
       properties:
+        title:
+          $ref: '#/components/schemas/releaseGroupTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseGroupTypeValue'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+    ReleaseGroupCreateResponse:
+      type: object
+      required:
+        - releaseGroup
+      properties:
+        releaseGroup:
+          $ref: '#/components/schemas/ReleaseGroup'
+    ReleaseGroupGetResponse:
+      type: object
+      required:
+        - releaseGroup
+        - releases
+      properties:
+        releaseGroup:
+          $ref: '#/components/schemas/ReleaseGroup'
         releases:
           type: array
           items:
-            $ref: '#/components/schemas/Release'
+            $ref: '#/components/schemas/ReleaseGroupReferencedRelease'
+    ReleaseGroupReferencedRelease:
+      type: object
+      required:
+        - releaseId
+        - name
+        - releasedOn
+        - jacketArtUrl
+        - isDisplay
+        - orderNo
+        - formatValues
+      properties:
+        releaseId:
+          $ref: '#/components/schemas/releaseId'
+        name:
+          $ref: '#/components/schemas/releaseName'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
+        isDisplay:
+          type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+        formatValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediumFormatValue'
+      description: リリースグループ傘下のリリース 1 件分の概要
+    ReleaseGroupSearchResponse:
+      type: object
+      required:
+        - releaseGroups
+        - maxPage
+      properties:
+        releaseGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseGroupSummary'
         maxPage:
           type: integer
           format: int32
-    ReleaseTypeValue:
+    ReleaseGroupSummary:
+      type: object
+      required:
+        - releaseGroupId
+        - title
+        - typeValue
+        - description
+        - isDisplay
+        - firstReleasedOn
+      properties:
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
+        title:
+          $ref: '#/components/schemas/releaseGroupTitle'
+        typeValue:
+          $ref: '#/components/schemas/ReleaseGroupTypeValue'
+        description:
+          type: string
+        isDisplay:
+          type: boolean
+        firstReleasedOn:
+          anyOf:
+            - $ref: '#/components/schemas/releasedOn'
+            - type: 'null'
+      description: リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）
+    ReleaseGroupTypeValue:
       type: integer
       format: int32
       enum:
@@ -2437,33 +2795,83 @@ components:
         - 2
         - 3
         - 99
-    ReleaseUpdateRequest:
+      description: リリースグループ種別
+    ReleaseGroupUpdateRequest:
       type: object
       required:
         - title
         - typeValue
-        - distributionTypeValue
-        - releasedOn
         - description
         - isDisplay
-        - trackEntries
       properties:
         title:
-          $ref: '#/components/schemas/releaseTitle'
+          $ref: '#/components/schemas/releaseGroupTitle'
         typeValue:
-          $ref: '#/components/schemas/ReleaseTypeValue'
-        distributionTypeValue:
-          $ref: '#/components/schemas/ReleaseDistributionTypeValue'
-        releasedOn:
-          $ref: '#/components/schemas/releasedOn'
+          $ref: '#/components/schemas/ReleaseGroupTypeValue'
         description:
           type: string
         isDisplay:
           type: boolean
-        trackEntries:
+    ReleaseGroupUpdateResponse:
+      type: object
+      required:
+        - releaseGroup
+      properties:
+        releaseGroup:
+          $ref: '#/components/schemas/ReleaseGroup'
+    ReleaseJacketArtUploadResponse:
+      type: object
+      required:
+        - jacketArtUrl
+      properties:
+        jacketArtUrl:
+          $ref: '#/components/schemas/jacketArtUrl'
+    ReleaseReferencedSong:
+      type: object
+      required:
+        - mediumPosition
+        - trackNo
+        - songId
+        - title
+      properties:
+        mediumPosition:
+          $ref: '#/components/schemas/orderNo'
+        trackNo:
+          $ref: '#/components/schemas/orderNo'
+        songId:
+          $ref: '#/components/schemas/uuid'
+        title:
+          $ref: '#/components/schemas/title'
+      description: リリース収録曲の表示用情報
+    ReleaseUpdateRequest:
+      type: object
+      required:
+        - name
+        - releasedOn
+        - description
+        - jacketArtUrl
+        - isDisplay
+        - orderNo
+        - media
+      properties:
+        name:
+          $ref: '#/components/schemas/releaseName'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
+        isDisplay:
+          type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+        media:
           type: array
           items:
-            $ref: '#/components/schemas/TrackEntry'
+            $ref: '#/components/schemas/Medium'
     ReleaseUpdateResponse:
       type: object
       required:
@@ -2932,7 +3340,7 @@ components:
         - asc
         - desc
       description: ソート順
-    TrackEntry:
+    Track:
       type: object
       required:
         - songId
@@ -2942,6 +3350,7 @@ components:
           $ref: '#/components/schemas/uuid'
         trackNo:
           $ref: '#/components/schemas/orderNo'
+      description: 収録曲
     ValidationError:
       type: object
       required:
@@ -2995,6 +3404,9 @@ components:
       type: string
       format: email
       description: メールアドレス
+    jacketArtUrl:
+      type: string
+      description: ジャケットアートURL
     lyricsLink:
       type: string
       format: uri
@@ -3065,14 +3477,22 @@ components:
       type: string
       format: password
       description: 管理ユーザー登録トークン(平文)
+    releaseGroupId:
+      type: string
+      format: uuid
+      description: リリースグループID
+    releaseGroupTitle:
+      type: string
+      minLength: 1
+      description: リリースグループタイトル
     releaseId:
       type: string
       format: uuid
       description: リリースID
-    releaseTitle:
+    releaseName:
       type: string
       minLength: 1
-      description: リリースタイトル
+      description: リリース版名
     releasedOn:
       type: string
       format: date

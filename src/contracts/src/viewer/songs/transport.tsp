@@ -16,10 +16,7 @@ namespace IsekaiObservatory.Viewer;
       title: "テスト楽曲",
       description: "テスト楽曲説明",
       type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
-      counts: #{
-        // releaseCount: 1,
-        mediaCount: 1,
-      },
+      counts: #{ releaseCount: 1, mediaCount: 1 },
       lyricists: #["テスト作詞者"],
       composers: #["テスト作曲者"],
       arrangers: #["テスト編曲者"],
@@ -30,6 +27,15 @@ namespace IsekaiObservatory.Viewer;
           type: #{ name: "MV", value: MediaTypeValue.Mv },
           url: "https://www.youtube.com/watch?v=dummy",
           publishedAt: "2024-03-01",
+        }
+      ],
+      releaseGroups: #[
+        #{
+          releaseGroupId: "0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2",
+          title: "テストアルバム",
+          type: #{ name: "アルバム", value: ReleaseGroupTypeValue.Album },
+          firstReleasedOn: "2026-05-01",
+          jacketArtUrl: "https://example.com/jacket.png",
         }
       ],
     }

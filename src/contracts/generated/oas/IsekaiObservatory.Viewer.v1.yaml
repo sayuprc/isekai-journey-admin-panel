@@ -4,6 +4,7 @@ info:
   version: v1
 tags:
   - name: Media
+  - name: ReleaseGroup
   - name: SiteStats
   - name: Song
 paths:
@@ -35,6 +36,34 @@ paths:
           description: Server error
       tags:
         - Media
+  /release-groups:
+    get:
+      operationId: ReleaseGroupService_listReleaseGroups
+      description: リリースグループ一覧取得API
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/cursor'
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/limit'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseGroupListResponse'
+        '500':
+          description: Server error
+      tags:
+        - ReleaseGroup
   /site-stats:
     get:
       operationId: SiteStatsService_getSiteStats
@@ -211,17 +240,198 @@ components:
         - 5
         - 99
       description: メディア種別の値
+    MediumFormat:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/MediumFormatValue'
+      examples:
+        - name: CD
+          value: 2
+    MediumFormatValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: 媒体種別の値
+    ReleaseGroupListItem:
+      type: object
+      required:
+        - releaseGroupId
+        - title
+        - type
+        - description
+        - firstReleasedOn
+        - releases
+      properties:
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
+        title:
+          $ref: '#/components/schemas/releaseGroupTitle'
+        type:
+          $ref: '#/components/schemas/ReleaseGroupType'
+        description:
+          type: string
+        firstReleasedOn:
+          allOf:
+            - $ref: '#/components/schemas/releasedOn'
+          description: 傘下の公開リリースの最古発売日
+        releases:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseListItem'
+      description: リリースグループ。公開リリースを 1 件以上持つものだけが一覧に載る
+    ReleaseGroupListResponse:
+      type: object
+      required:
+        - releaseGroups
+      properties:
+        releaseGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseGroupListItem'
+        nextCursor:
+          allOf:
+            - $ref: '#/components/schemas/cursor'
+          description: 続きがある場合のみ返す
+      examples:
+        - releaseGroups:
+            - releaseGroupId: 0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2
+              title: テストアルバム
+              type:
+                name: アルバム
+                value: 2
+              description: 1st アルバム
+              firstReleasedOn: '2026-05-01'
+              releases:
+                - releaseId: 8b53bfbc-c4be-4276-9d92-e2ee181e2b4f
+                  name: 初回限定盤
+                  releasedOn: '2026-05-01'
+                  description: ''
+                  jacketArtUrl: https://example.com/jacket.png
+                  orderNo: 1
+                  media:
+                    - position: 1
+                      format:
+                        name: CD
+                        value: 2
+                      tracks:
+                        - trackNo: 1
+                          songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
+                          title: テスト楽曲
+                          isDisplay: true
+          nextCursor: eyJmaXJzdFJlbGVhc2VkT24iOiIyMDI2LTA1LTAxIiwicmVsZWFzZUdyb3VwSWQiOiIwZjIxODVjZC1iNGFiLTRmMjItYjBhMy1mZDkzY2JiZDJkZjIifQ==
+    ReleaseGroupType:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/ReleaseGroupTypeValue'
+      examples:
+        - name: アルバム
+          value: 2
+    ReleaseGroupTypeValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 99
+      description: リリースグループ種別の値
+    ReleaseListItem:
+      type: object
+      required:
+        - releaseId
+        - name
+        - releasedOn
+        - description
+        - jacketArtUrl
+        - orderNo
+        - media
+      properties:
+        releaseId:
+          $ref: '#/components/schemas/releaseId'
+        name:
+          $ref: '#/components/schemas/releaseName'
+        releasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        description:
+          type: string
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseMediumItem'
+      description: リリース（版）
+    ReleaseMediumItem:
+      type: object
+      required:
+        - position
+        - format
+        - tracks
+      properties:
+        position:
+          $ref: '#/components/schemas/orderNo'
+        format:
+          $ref: '#/components/schemas/MediumFormat'
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseTrackItem'
+      description: リリース内の媒体
+    ReleaseTrackItem:
+      type: object
+      required:
+        - trackNo
+        - songId
+        - title
+        - isDisplay
+      properties:
+        trackNo:
+          $ref: '#/components/schemas/orderNo'
+        songId:
+          $ref: '#/components/schemas/uuid'
+        title:
+          type: string
+        isDisplay:
+          type: boolean
+      description: 収録曲
     SiteStatsResponse:
       type: object
       required:
         - songCount
+        - releaseCount
       properties:
         songCount:
           type: integer
           format: int32
           description: 公開対象楽曲数
+        releaseCount:
+          type: integer
+          format: int32
+          description: 公開対象リリースグループ数
       examples:
         - songCount: 42
+          releaseCount: 12
     SongListItem:
       type: object
       required:
@@ -234,6 +444,7 @@ components:
         - composers
         - arrangers
         - media
+        - releaseGroups
       properties:
         songId:
           $ref: '#/components/schemas/songId'
@@ -261,6 +472,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SongMediaSummary'
+        releaseGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongReleaseGroupSummary'
+          description: 収録先の公開リリースグループ（最古発売日の降順）
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: テスト楽曲
@@ -269,6 +485,7 @@ components:
             name: オリジナル曲
             value: 1
           counts:
+            releaseCount: 1
             mediaCount: 1
           lyricists:
             - テスト作詞者
@@ -284,6 +501,14 @@ components:
                 value: 1
               url: https://www.youtube.com/watch?v=dummy
               publishedAt: '2024-03-01'
+          releaseGroups:
+            - releaseGroupId: 0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2
+              title: テストアルバム
+              type:
+                name: アルバム
+                value: 2
+              firstReleasedOn: '2026-05-01'
+              jacketArtUrl: https://example.com/jacket.png
     SongListResponse:
       type: object
       required:
@@ -306,6 +531,7 @@ components:
                 name: オリジナル曲
                 value: 1
               counts:
+                releaseCount: 1
                 mediaCount: 1
               lyricists:
                 - テスト作詞者
@@ -321,6 +547,14 @@ components:
                     value: 1
                   url: https://www.youtube.com/watch?v=dummy
                   publishedAt: '2024-03-01'
+              releaseGroups:
+                - releaseGroupId: 0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2
+                  title: テストアルバム
+                  type:
+                    name: アルバム
+                    value: 2
+                  firstReleasedOn: '2026-05-01'
+                  jacketArtUrl: https://example.com/jacket.png
           nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongMediaSummary:
       type: object
@@ -352,12 +586,40 @@ components:
     SongRelationCounts:
       type: object
       required:
+        - releaseCount
         - mediaCount
       properties:
+        releaseCount:
+          type: integer
+          format: int32
+          description: 関連リリースグループ数
         mediaCount:
           type: integer
           format: int32
           description: 関連メディア数
+    SongReleaseGroupSummary:
+      type: object
+      required:
+        - releaseGroupId
+        - title
+        - type
+        - firstReleasedOn
+        - jacketArtUrl
+      properties:
+        releaseGroupId:
+          $ref: '#/components/schemas/releaseGroupId'
+        title:
+          $ref: '#/components/schemas/releaseGroupTitle'
+        type:
+          $ref: '#/components/schemas/ReleaseGroupType'
+        firstReleasedOn:
+          $ref: '#/components/schemas/releasedOn'
+        jacketArtUrl:
+          anyOf:
+            - $ref: '#/components/schemas/jacketArtUrl'
+            - type: 'null'
+          description: 代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）
+      description: 楽曲が収録されている公開リリースグループの概要
     SongType:
       type: object
       required:
@@ -388,6 +650,9 @@ components:
     description:
       type: string
       description: 楽曲の説明
+    jacketArtUrl:
+      type: string
+      description: ジャケットアートURL
     limit:
       type: integer
       format: int32
@@ -414,6 +679,31 @@ components:
       type: string
       format: uri
       description: メディアURL
+    orderNo:
+      type: integer
+      format: int32
+      minimum: 1
+      description: 表示順
+    releaseGroupId:
+      type: string
+      format: uuid
+      description: リリースグループID
+    releaseGroupTitle:
+      type: string
+      minLength: 1
+      description: リリースグループタイトル
+    releaseId:
+      type: string
+      format: uuid
+      description: リリースID
+    releaseName:
+      type: string
+      minLength: 1
+      description: リリース版名
+    releasedOn:
+      type: string
+      format: date
+      description: 発売日
     songId:
       type: string
       format: uuid
@@ -426,6 +716,10 @@ components:
       type: string
       minLength: 1
       description: 楽曲名
+    uuid:
+      type: string
+      format: uuid
+      description: UUID v4
 servers:
   - url: https://local.api.isekaijoucho.fan/{version}
     description: ローカル環境

@@ -9,10 +9,11 @@ use Song\Domain\Models\SongType;
 readonly class SongListItem
 {
     /**
-     * @param array<string>           $lyricists
-     * @param array<string>           $composers
-     * @param array<string>           $arrangers
-     * @param array<SongMediaSummary> $media
+     * @param array<string>                  $lyricists
+     * @param array<string>                  $composers
+     * @param array<string>                  $arrangers
+     * @param array<SongMediaSummary>        $media
+     * @param array<SongReleaseGroupSummary> $releaseGroups
      */
     public function __construct(
         public string $songId,
@@ -22,8 +23,8 @@ readonly class SongListItem
         public array $lyricists,
         public array $composers,
         public array $arrangers,
-        // public int $releaseCount,
         public array $media,
+        public array $releaseGroups,
         public int $orderNo,
     ) {
     }

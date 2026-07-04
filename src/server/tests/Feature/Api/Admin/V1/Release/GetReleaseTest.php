@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Release;
 
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\ReleaseDistributionType;
-use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseRouteMap;
 use Song\Domain\Models\SongType;
 use Tests\Feature\Api\Admin\WithAuth;
@@ -24,20 +24,29 @@ class GetReleaseTest extends DatabaseTestCase
     public function found(): void
     {
         $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
             $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
             $this->createRelease(
                 $releaseId,
-                '観測された春',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
+                $releaseGroupId,
+                '初回限定盤',
                 true,
-                trackEntries: [
-                    ['songId' => $songId, 'trackNo' => 1],
+                jacketArtUrl: 'https://example.com/jacket.png',
+                orderNo: 10,
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
@@ -48,24 +57,32 @@ class GetReleaseTest extends DatabaseTestCase
             ->assertExactJson([
                 'release' => [
                     'releaseId' => $releaseId,
-                    'title' => '観測された春',
-                    'typeValue' => 2,
-                    'distributionTypeValue' => 1,
+                    'releaseGroupId' => $releaseGroupId,
+                    'name' => '初回限定盤',
                     'releasedOn' => '2024-01-01',
                     'description' => 'テスト用リリース',
+                    'jacketArtUrl' => 'https://example.com/jacket.png',
                     'isDisplay' => true,
-                    'trackEntries' => [
+                    'orderNo' => 10,
+                    'media' => [
                         [
-                            'songId' => $songId,
-                            'trackNo' => 1,
+                            'position' => 1,
+                            'formatValue' => MediumFormat::Cd->value,
+                            'tracks' => [
+                                [
+                                    'songId' => $songId,
+                                    'trackNo' => 1,
+                                ],
+                            ],
                         ],
                     ],
                 ],
                 'songs' => [
                     [
+                        'mediumPosition' => 1,
+                        'trackNo' => 1,
                         'songId' => $songId,
                         'title' => 'テスト楽曲1',
-                        'trackNo' => 1,
                     ],
                 ],
             ]);

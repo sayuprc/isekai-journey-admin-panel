@@ -7,8 +7,8 @@ namespace Tests\Integration\Release\Application\Admin\UseCase\Get;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Get\GetInputData;
 use Release\Application\Admin\UseCase\Get\GetUseCase;
-use Release\Domain\Models\ReleaseDistributionType;
-use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\NotFoundError;
@@ -26,22 +26,33 @@ class GetUseCaseTest extends DatabaseTestCase
     {
         $songId1 = $this->generateUuid();
         $songId2 = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
             $this->createSong($songId1, 'テスト楽曲1', '説明', SongType::Original, true, 10),
             $this->createSong($songId2, 'テスト楽曲2', '説明', SongType::Original, true, 20),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
             $this->createRelease(
                 $releaseId,
-                '観測された春',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
+                $releaseGroupId,
+                '初回限定盤',
                 true,
-                trackEntries: [
-                    ['songId' => $songId2, 'trackNo' => 2],
-                    ['songId' => $songId1, 'trackNo' => 1],
+                media: [
+                    [
+                        'position' => 2,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $songId2, 'trackNo' => 1]],
+                    ],
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [['songId' => $songId1, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
@@ -50,11 +61,14 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
         $this->assertSame($releaseId, $result->unwrap()->release->releaseId->value);
+        $this->assertCount(2, $result->unwrap()->release->media->toGeneric());
+
+        // 収録曲は媒体順 → 曲順で並ぶ。
         $this->assertCount(2, $result->unwrap()->songs);
+        $this->assertSame(1, $result->unwrap()->songs[0]->mediumPosition);
         $this->assertSame('テスト楽曲1', $result->unwrap()->songs[0]->title);
-        $this->assertSame(1, $result->unwrap()->songs[0]->trackNo);
+        $this->assertSame(2, $result->unwrap()->songs[1]->mediumPosition);
         $this->assertSame('テスト楽曲2', $result->unwrap()->songs[1]->title);
-        $this->assertSame(2, $result->unwrap()->songs[1]->trackNo);
     }
 
     #[Test]

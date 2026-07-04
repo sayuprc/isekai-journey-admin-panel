@@ -57,7 +57,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_count' => 'int'
+        'song_count' => 'int',
+        'release_count' => 'int'
     ];
 
     /**
@@ -68,7 +69,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_count' => 'int32'
+        'song_count' => 'int32',
+        'release_count' => 'int32'
     ];
 
     /**
@@ -77,7 +79,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_count' => false
+        'song_count' => false,
+        'release_count' => false
     ];
 
     /**
@@ -166,7 +169,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_count' => 'songCount'
+        'song_count' => 'songCount',
+        'release_count' => 'releaseCount'
     ];
 
     /**
@@ -175,7 +179,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'song_count' => 'setSongCount'
+        'song_count' => 'setSongCount',
+        'release_count' => 'setReleaseCount'
     ];
 
     /**
@@ -184,7 +189,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'song_count' => 'getSongCount'
+        'song_count' => 'getSongCount',
+        'release_count' => 'getReleaseCount'
     ];
 
     /**
@@ -245,6 +251,7 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
     public function __construct(?array $data = null)
     {
         $this->setIfExists('song_count', $data ?? [], null);
+        $this->setIfExists('release_count', $data ?? [], null);
     }
 
     /**
@@ -276,6 +283,9 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
 
         if ($this->container['song_count'] === null) {
             $invalidProperties[] = "'song_count' can't be null";
+        }
+        if ($this->container['release_count'] === null) {
+            $invalidProperties[] = "'release_count' can't be null";
         }
         return $invalidProperties;
     }
@@ -315,6 +325,33 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable song_count cannot be null');
         }
         $this->container['song_count'] = $song_count;
+
+        return $this;
+    }
+
+    /**
+     * Gets release_count
+     *
+     * @return int
+     */
+    public function getReleaseCount()
+    {
+        return $this->container['release_count'];
+    }
+
+    /**
+     * Sets release_count
+     *
+     * @param int $release_count 公開対象リリースグループ数
+     *
+     * @return self
+     */
+    public function setReleaseCount($release_count)
+    {
+        if (is_null($release_count)) {
+            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        }
+        $this->container['release_count'] = $release_count;
 
         return $this;
     }

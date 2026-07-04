@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Release;
 
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\ReleaseDistributionType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Release\Domain\Models\ReleaseId;
-use Release\Domain\Models\ReleaseType;
 use Release\Infrastructures\ReleaseRepository;
 use Release\Route\ReleaseRouteMap;
 use Song\Domain\Models\SongType;
@@ -25,11 +25,16 @@ class DeleteReleaseTest extends DatabaseTestCase
     #[Test]
     public function canDelete(): void
     {
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
         $repository = $this->app->make(ReleaseRepository::class);
 
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
         $repository->save(
-            $this->createRelease($releaseId, '削除対象', ReleaseType::Album, ReleaseDistributionType::Digital, true),
+            $this->createRelease($releaseId, $releaseGroupId, '削除対象', true),
         );
 
         $this->withAuth()
@@ -40,25 +45,32 @@ class DeleteReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function canDeleteReleaseWithTrackEntries(): void
+    public function canDeleteReleaseWithMediaAndTracks(): void
     {
         $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
         $repository = $this->app->make(ReleaseRepository::class);
 
         $this->storeSongs(
             $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
 
         $repository->save(
             $this->createRelease(
                 $releaseId,
+                $releaseGroupId,
                 '削除対象',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
                 true,
-                trackEntries: [
-                    ['songId' => $songId, 'trackNo' => 1],
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
@@ -68,6 +80,8 @@ class DeleteReleaseTest extends DatabaseTestCase
             ->assertStatus(204);
 
         $this->assertNull($repository->find(ReleaseId::create($releaseId)->unwrap()));
+        $this->assertDatabaseCount('release_media', 0);
+        $this->assertDatabaseCount('release_tracks', 0);
     }
 
     #[Test]
@@ -81,10 +95,14 @@ class DeleteReleaseTest extends DatabaseTestCase
     #[Test]
     public function forbidden(): void
     {
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
-            $this->createRelease($releaseId, '削除対象', ReleaseType::Album, ReleaseDistributionType::Digital, true),
+            $this->createRelease($releaseId, $releaseGroupId, '削除対象', true),
         );
 
         $this->withGeneralAuth()

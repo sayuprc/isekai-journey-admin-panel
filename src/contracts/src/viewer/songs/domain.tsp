@@ -1,6 +1,7 @@
 import "../../shared";
 import "../../packages/media";
 import "../../packages/song";
+import "../releases/domain.tsp";
 
 using IsekaiObservatory.Shared;
 using IsekaiObservatory.Packages.Media;
@@ -9,8 +10,8 @@ using IsekaiObservatory.Packages.Song;
 namespace IsekaiObservatory.Viewer;
 
 model SongRelationCounts {
-  // @doc("関連リリース数")
-  // releaseCount: int32;
+  @doc("関連リリースグループ数")
+  releaseCount: int32;
 
   @doc("関連メディア数")
   mediaCount: int32;
@@ -21,10 +22,7 @@ model SongRelationCounts {
   title: "テスト楽曲",
   description: "テスト楽曲説明",
   type: #{ name: "オリジナル曲", value: SongTypeValue.Original },
-  counts: #{
-    // releaseCount: 1,
-    mediaCount: 1,
-  },
+  counts: #{ releaseCount: 1, mediaCount: 1 },
   lyricists: #["テスト作詞者"],
   composers: #["テスト作曲者"],
   arrangers: #["テスト編曲者"],
@@ -35,6 +33,15 @@ model SongRelationCounts {
       type: #{ name: "MV", value: MediaTypeValue.Mv },
       url: "https://www.youtube.com/watch?v=dummy",
       publishedAt: "2024-03-01",
+    }
+  ],
+  releaseGroups: #[
+    #{
+      releaseGroupId: "0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2",
+      title: "テストアルバム",
+      type: #{ name: "アルバム", value: ReleaseGroupTypeValue.Album },
+      firstReleasedOn: "2026-05-01",
+      jacketArtUrl: "https://example.com/jacket.png",
     }
   ],
 })
@@ -48,6 +55,20 @@ model SongListItem {
   composers: string[];
   arrangers: string[];
   media: SongMediaSummary[];
+
+  @doc("収録先の公開リリースグループ（最古発売日の降順）")
+  releaseGroups: SongReleaseGroupSummary[];
+}
+
+@doc("楽曲が収録されている公開リリースグループの概要")
+model SongReleaseGroupSummary {
+  releaseGroupId: releaseGroupId;
+  title: releaseGroupTitle;
+  type: ReleaseGroupType;
+  firstReleasedOn: releasedOn;
+
+  @doc("代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）")
+  jacketArtUrl: jacketArtUrl | null;
 }
 
 @example(#{

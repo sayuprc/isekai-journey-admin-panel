@@ -6,57 +6,30 @@ namespace Release\Infrastructures;
 
 use DateTimeImmutable;
 use DateType\ImmutableDate;
-use Emonkak\Orm\SelectBuilder;
 use Override;
-use Release\Domain\Criteria\ReleaseSearchCriteria;
 use Release\Domain\Models\Release;
+use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\QueryFactory;
 use Support\Infrastructures\Database\Row;
-use Support\Infrastructures\Database\SqlHelper;
 
 readonly class ReleaseRepository implements ReleaseRepositoryInterface
 {
     private const string TABLE = 'releases';
 
-    private const string TRACK_TABLE = 'release_track_entries';
+    private const string MEDIA_TABLE = 'release_media';
+
+    private const string TRACK_TABLE = 'release_tracks';
 
     /** @var list<string> */
-    private const array COLUMNS = ['release_id', 'title', 'type', 'distribution_type', 'released_on', 'description', 'is_display'];
+    private const array COLUMNS = ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url', 'is_display', 'order_no'];
 
     public function __construct(
         private QueryFactory $queryFactory,
         private UuidConverterInterface $converter,
     ) {
-    }
-
-    #[Override]
-    public function search(ReleaseSearchCriteria $criteria): array
-    {
-        $offset = ($criteria->page - 1) * $criteria->perPage->value;
-
-        $releaseRows = $this->queryFactory->fetchAll(
-            $this->buildSearchQuery($criteria)
-                ->withSelect(self::COLUMNS)
-                ->orderBy('released_on', 'desc')
-                ->orderBy('title')
-                ->limit($criteria->perPage->value)
-                ->offset($offset),
-        );
-
-        $tracksByRelease = $this->loadTrackEntries(
-            array_map(fn (array $row): string => Row::string($row, 'release_id'), $releaseRows),
-        );
-
-        return array_map(
-            fn (array $releaseRow): Release => $this->hydrate(
-                $releaseRow,
-                $tracksByRelease[Row::string($releaseRow, 'release_id')] ?? [],
-            ),
-            $releaseRows,
-        );
     }
 
     #[Override]
@@ -78,17 +51,21 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             return null;
         }
 
-        $tracksByRelease = $this->loadTrackEntries([$binReleaseId]);
-
-        return $this->hydrate($releaseRow, $tracksByRelease[$binReleaseId] ?? []);
+        return $this->hydrate($releaseRow, $this->loadMedia($binReleaseId));
     }
 
     #[Override]
-    public function maxPage(ReleaseSearchCriteria $criteria): int
+    public function existsByReleaseGroupId(ReleaseGroupId $releaseGroupId): bool
     {
-        $count = Row::intValue($this->buildSearchQuery($criteria)->aggregate($this->queryFactory->pdo(), 'COUNT(*)'));
+        $rows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['release_id'])
+                ->from(self::TABLE)
+                ->where('release_group_id', '=', $this->converter->toBin($releaseGroupId->value))
+                ->limit(1),
+        );
 
-        return (int)ceil($count / $criteria->perPage->value);
+        return $rows !== [];
     }
 
     #[Override]
@@ -98,51 +75,67 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         $data = $release->toArray();
         $now = now()->toDateTimeString();
 
-        // トラックは洗い替えする。
+        // 媒体と収録曲は洗い替えする（収録曲は FK CASCADE で媒体と一緒に消える）。
         $this->queryFactory->delete()
-            ->from(self::TRACK_TABLE)
+            ->from(self::MEDIA_TABLE)
             ->where('release_id', '=', $binReleaseId)
             ->execute($this->queryFactory->pdo());
 
         $this->queryFactory->insert()
-            ->into(self::TABLE, ['release_id', 'title', 'type', 'distribution_type', 'released_on', 'description', 'is_display', 'created_at', 'updated_at'])
+            ->into(self::TABLE, ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url', 'is_display', 'order_no', 'created_at', 'updated_at'])
             ->values([
                 $binReleaseId,
-                $data['title'],
-                $data['type'],
-                $data['distribution_type'],
+                $this->converter->toBin($data['release_group_id']),
+                $data['name'],
                 $data['released_on'],
                 $data['description'],
+                $data['jacket_art_url'],
                 $data['is_display'],
+                $data['order_no'],
                 $now,
                 $now,
             ])
             ->build()
             ->append(
                 'ON DUPLICATE KEY UPDATE '
-                . '`title` = VALUES(`title`), '
-                . '`type` = VALUES(`type`), '
-                . '`distribution_type` = VALUES(`distribution_type`), '
+                . '`release_group_id` = VALUES(`release_group_id`), '
+                . '`name` = VALUES(`name`), '
                 . '`released_on` = VALUES(`released_on`), '
                 . '`description` = VALUES(`description`), '
+                . '`jacket_art_url` = VALUES(`jacket_art_url`), '
                 . '`is_display` = VALUES(`is_display`), '
+                . '`order_no` = VALUES(`order_no`), '
                 . '`updated_at` = VALUES(`updated_at`)',
             )
             ->execute($this->queryFactory->pdo());
 
-        $trackEntries = array_map(
-            fn (array $row): array => [
-                $binReleaseId,
-                $this->converter->toBin($row['song_id']),
-                $row['track_no'],
-            ],
-            $data['track_entries'],
-        );
+        $mediumRows = [];
+        $trackRows = [];
 
-        if ($trackEntries !== []) {
+        foreach ($data['media'] as $medium) {
+            $mediumRows[] = [$binReleaseId, $medium['position'], $medium['format']];
+
+            foreach ($medium['tracks'] as $track) {
+                $trackRows[] = [
+                    $binReleaseId,
+                    $medium['position'],
+                    $track['track_no'],
+                    $this->converter->toBin($track['song_id']),
+                ];
+            }
+        }
+
+        if ($mediumRows !== []) {
             $this->queryFactory->insert()
-                ->into(self::TRACK_TABLE, ['release_id', 'song_id', 'track_no'])
-                ->values(...$trackEntries)
+                ->into(self::MEDIA_TABLE, ['release_id', 'position', 'format'])
+                ->values(...$mediumRows)
+                ->execute($this->queryFactory->pdo());
+        }
+
+        if ($trackRows !== []) {
+            $this->queryFactory->insert()
+                ->into(self::TRACK_TABLE, ['release_id', 'position', 'track_no', 'song_id'])
+                ->values(...$trackRows)
                 ->execute($this->queryFactory->pdo());
         }
 
@@ -158,81 +151,63 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             ->execute($this->queryFactory->pdo());
     }
 
-    private function buildSearchQuery(ReleaseSearchCriteria $criteria): SelectBuilder
-    {
-        $query = $this->queryFactory->select()->from(self::TABLE);
-
-        if ($criteria->title->isPresent()) {
-            $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->where('title', 'LIKE', '%' . $keyword . '%');
-        }
-
-        if ($criteria->type->isPresent()) {
-            $query = $query->where('type', '=', $criteria->type->get()->value);
-        }
-
-        if ($criteria->distributionType->isPresent()) {
-            $query = $query->where('distribution_type', '=', $criteria->distributionType->get()->value);
-        }
-
-        if ($criteria->isDisplay->isPresent()) {
-            $query = $query->where('is_display', '=', $criteria->isDisplay->get());
-        }
-
-        return $query;
-    }
-
     /**
-     * @param list<string> $binReleaseIds
-     *
-     * @return array<string, list<array<string, mixed>>>
+     * @return list<array{position: int, format: int, tracks: list<array{songId: string, trackNo: int}>}>
      */
-    private function loadTrackEntries(array $binReleaseIds): array
+    private function loadMedia(string $binReleaseId): array
     {
-        if ($binReleaseIds === []) {
-            return [];
-        }
-
-        $rows = $this->queryFactory->fetchAll(
+        $mediumRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
-                ->withSelect(['release_id', 'song_id', 'track_no'])
+                ->withSelect(['position', 'format'])
+                ->from(self::MEDIA_TABLE)
+                ->where('release_id', '=', $binReleaseId)
+                ->orderBy('position'),
+        );
+
+        $trackRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['position', 'track_no', 'song_id'])
                 ->from(self::TRACK_TABLE)
-                ->where('release_id', 'IN', $binReleaseIds)
+                ->where('release_id', '=', $binReleaseId)
+                ->orderBy('position')
                 ->orderBy('track_no'),
         );
 
-        $grouped = [];
+        $tracksByPosition = [];
 
-        foreach ($rows as $row) {
-            $grouped[Row::string($row, 'release_id')][] = $row;
+        foreach ($trackRows as $trackRow) {
+            $tracksByPosition[Row::int($trackRow, 'position')][] = [
+                'songId' => $this->converter->toUuid(Row::string($trackRow, 'song_id')),
+                'trackNo' => Row::int($trackRow, 'track_no'),
+            ];
         }
 
-        return $grouped;
+        return array_map(
+            fn (array $mediumRow): array => [
+                'position' => Row::int($mediumRow, 'position'),
+                'format' => Row::int($mediumRow, 'format'),
+                'tracks' => $tracksByPosition[Row::int($mediumRow, 'position')] ?? [],
+            ],
+            $mediumRows,
+        );
     }
 
     /**
-     * @param array<string, mixed>       $releaseRow
-     * @param list<array<string, mixed>> $trackRows
+     * @param array<string, mixed>                                                                       $releaseRow
+     * @param list<array{position: int, format: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      */
-    private function hydrate(array $releaseRow, array $trackRows): Release
+    private function hydrate(array $releaseRow, array $media): Release
     {
-        $trackEntries = array_map(
-            fn (array $trackRow): array => [
-                'songId' => $this->converter->toUuid(Row::string($trackRow, 'song_id')),
-                'trackNo' => Row::int($trackRow, 'track_no'),
-            ],
-            $trackRows,
-        );
-
         return Release::reconstruct(
             $this->converter->toUuid(Row::string($releaseRow, 'release_id')),
-            Row::string($releaseRow, 'title'),
-            Row::int($releaseRow, 'type'),
-            Row::int($releaseRow, 'distribution_type'),
+            $this->converter->toUuid(Row::string($releaseRow, 'release_group_id')),
+            Row::string($releaseRow, 'name'),
             ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($releaseRow, 'released_on'))),
             Row::string($releaseRow, 'description'),
+            Row::nullableString($releaseRow, 'jacket_art_url'),
             Row::bool($releaseRow, 'is_display'),
-            $trackEntries,
+            Row::int($releaseRow, 'order_no'),
+            $media,
         );
     }
 }

@@ -42,6 +42,10 @@ trait WithAuth
 
         $accessToken = $this->app->make(AccessTokenIssueService::class)->issue($refreshToken->refreshTokenId->value);
 
-        return $this->withHeader('Authorization', 'Bearer ' . $accessToken->jwt->value);
+        $authorization = 'Bearer ' . $accessToken->jwt->value;
+
+        return $this
+            ->withHeader('Authorization', $authorization)
+            ->withServerVariables(['HTTP_AUTHORIZATION' => $authorization]);
     }
 }

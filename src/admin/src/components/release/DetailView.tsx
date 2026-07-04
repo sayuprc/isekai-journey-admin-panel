@@ -1,34 +1,12 @@
-import { For, Match, Show, Switch, createMemo, createResource, createSignal } from 'solid-js';
-import type {
-  ReleaseDistributionTypeValue,
-  ReleaseGetResponse,
-  ReleaseReferencedSong,
-  ReleaseTypeValue,
-  SongSummary,
-} from '../../generated';
-import { client } from '../../utils/client';
+import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
+import type { ReleaseGetResponse } from '../../generated';
+import { client, uploadReleaseJacketArt } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
-
-const RELEASE_TYPE_OPTIONS: Array<{ value: ReleaseTypeValue; label: string }> = [
-  { value: 1, label: 'シングル' },
-  { value: 2, label: 'アルバム' },
-  { value: 3, label: 'EP' },
-  { value: 99, label: 'その他' },
-];
-
-const DISTRIBUTION_TYPE_OPTIONS: Array<{ value: ReleaseDistributionTypeValue; label: string }> = [
-  { value: 1, label: '配信' },
-  { value: 2, label: '物理' },
-  { value: 99, label: 'その他' },
-];
-
-type TrackEntryForm = {
-  songId: string;
-  title: string;
-};
+import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
+import type { MediumForm } from './MediaEditor';
 
 interface DetailViewProps {
   releaseId: string;
@@ -67,33 +45,7 @@ const normalizeDateValue = (value: unknown): string => {
   return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
 };
 
-const toTrackEntryForm = (song: ReleaseReferencedSong): TrackEntryForm => ({
-  songId: song.songId,
-  title: song.title,
-});
-
-const getListUrl = () => {
-  if (typeof window === 'undefined') {
-    return '/releases';
-  }
-
-  const back = new URLSearchParams(window.location.search).get('back') ?? '';
-
-  if (!back.startsWith('?')) {
-    return '/releases';
-  }
-
-  try {
-    const query = new URLSearchParams(back.slice(1)).toString();
-    return query ? `/releases?${query}` : '/releases';
-  } catch {
-    return '/releases';
-  }
-};
-
 export const DetailView = (props: DetailViewProps) => {
-  const listUrl = getListUrl();
-
   const [resource, { refetch }] = createResource(async (): Promise<FetchState> => {
     const { data, status } = await client.api.releases({ releaseId: props.releaseId }).get();
 
@@ -104,13 +56,13 @@ export const DetailView = (props: DetailViewProps) => {
 
     if (status === 404) {
       setFlash('データがありません', 'error');
-      window.location.href = listUrl;
+      window.location.href = '/release-groups';
       return { status: 'error' };
     }
 
     if (status === 422) {
       setFlash('不正なリクエストです', 'error');
-      window.location.href = listUrl;
+      window.location.href = '/release-groups';
       return { status: 'error' };
     }
 
@@ -148,104 +100,39 @@ export const DetailView = (props: DetailViewProps) => {
 };
 
 const ReleaseForm = (props: ReleaseFormProps) => {
-  const listUrl = getListUrl();
+  const groupUrl = `/release-groups/${props.data.release.releaseGroupId}`;
 
-  const [title, setTitle] = createSignal(props.data.release.title);
-  const [typeValue, setTypeValue] = createSignal<ReleaseTypeValue>(props.data.release.typeValue);
-  const [distributionTypeValue, setDistributionTypeValue] = createSignal<ReleaseDistributionTypeValue>(
-    props.data.release.distributionTypeValue,
-  );
+  const [name, setName] = createSignal(props.data.release.name);
   const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data.release.releasedOn));
   const [description, setDescription] = createSignal(props.data.release.description);
+  const [jacketArtUrl, setJacketArtUrl] = createSignal(props.data.release.jacketArtUrl ?? '');
   const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
-  const [trackEntries, setTrackEntries] = createSignal<TrackEntryForm[]>(props.data.songs.map(toTrackEntryForm));
-
-  const [searchTitle, setSearchTitle] = createSignal('');
-  const [searchResults, setSearchResults] = createSignal<SongSummary[]>([]);
-  const [searchError, setSearchError] = createSignal<string | null>(null);
-  const [isSearching, setIsSearching] = createSignal(false);
-  const [hasSearched, setHasSearched] = createSignal(false);
+  const [orderNo, setOrderNo] = createSignal(props.data.release.orderNo);
+  const [media, setMedia] = createSignal<MediumForm[]>(toMediumForms(props.data));
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting: isUpdating, withSubmitting: withUpdating } = createSubmitting();
   const { isSubmitting: isDeleting, withSubmitting: withDeleting } = createSubmitting();
+  const { isSubmitting: isUploadingJacketArt, withSubmitting: withUploadingJacketArt } = createSubmitting();
 
-  const selectedSongIds = createMemo(() => new Set(trackEntries().map(entry => entry.songId)));
+  const handleJacketArtUpload = withUploadingJacketArt(async (e: Event) => {
+    const file = (e.currentTarget as HTMLInputElement).files?.[0];
 
-  const moveTrackEntry = (index: number, direction: -1 | 1) => {
-    setTrackEntries((prev) => {
-      const nextIndex = index + direction;
-      if (nextIndex < 0 || nextIndex >= prev.length) {
-        return prev;
-      }
-
-      const cloned = [...prev];
-      const [entry] = cloned.splice(index, 1);
-
-      if (!entry) {
-        return prev;
-      }
-
-      cloned.splice(nextIndex, 0, entry);
-      return cloned;
-    });
-  };
-
-  const removeTrackEntry = (songId: string) => {
-    setTrackEntries(prev => prev.filter(entry => entry.songId !== songId));
-  };
-
-  const addTrackEntry = (song: SongSummary) => {
-    if (selectedSongIds().has(song.songId)) {
+    if (!file) {
       return;
     }
 
-    setTrackEntries(prev => [...prev, { songId: song.songId, title: song.title }]);
-  };
+    clearErrors();
 
-  const handleSongSearch = async (e: Event) => {
-    e.preventDefault();
-    setSearchError(null);
-    setHasSearched(true);
+    const { data, error, status } = await uploadReleaseJacketArt(file);
 
-    if (searchTitle().trim() === '') {
-      setSearchResults([]);
-      setSearchError('楽曲名を入力してください');
+    if (data) {
+      setJacketArtUrl(data.jacketArtUrl);
       return;
     }
 
-    setIsSearching(true);
-
-    const { data, error, status } = await client.api.songs.search.get({
-      query: {
-        title: searchTitle().trim(),
-        sort: 'title',
-        order: 'asc',
-        page: 1,
-        per_page: 25,
-      },
-    });
-
-    setIsSearching(false);
-
-    if (status === 401) {
-      window.location.href = '/auth/login';
-      return;
-    }
-
-    if (!data) {
-      if (typeof error === 'object' && error !== null && 'value' in error) {
-        const body = (error as { value?: { message?: string } }).value;
-        setSearchError(body?.message ?? `検索に失敗しました (${status})`);
-      } else {
-        setSearchError(`検索に失敗しました (${status})`);
-      }
-      setSearchResults([]);
-      return;
-    }
-
-    setSearchResults(data.songs);
-  };
+    handleError(status, error);
+  });
 
   const handleSubmit = withUpdating(async (e: Event) => {
     e.preventDefault();
@@ -259,27 +146,24 @@ const ReleaseForm = (props: ReleaseFormProps) => {
     }
 
     const { data, error, status } = await client.api.releases({ releaseId }).put({
-      title: title(),
-      typeValue: typeValue(),
-      distributionTypeValue: distributionTypeValue(),
+      name: name(),
       releasedOn: releasedOn(),
       description: description(),
+      jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
-      trackEntries: trackEntries().map((entry, index) => ({
-        songId: entry.songId,
-        trackNo: index + 1,
-      })),
+      orderNo: orderNo(),
+      media: toMediaPayload(media()),
     });
 
     if (data) {
       setFlash('更新しました');
-      window.location.href = listUrl;
+      window.location.href = groupUrl;
       return;
     }
 
     if (status === 404) {
       setFlash('データがありません', 'error');
-      window.location.href = listUrl;
+      window.location.href = groupUrl;
       return;
     }
 
@@ -310,13 +194,13 @@ const ReleaseForm = (props: ReleaseFormProps) => {
     }
 
     setFlash('削除しました');
-    window.location.href = listUrl;
+    window.location.href = groupUrl;
   });
 
   return (
     <>
-      <a href={listUrl} class="btn btn-ghost btn-sm mb-4">
-        ← 一覧に戻る
+      <a href={groupUrl} class="btn btn-ghost btn-sm mb-4">
+        ← グループ詳細に戻る
       </a>
       <FormError message={formError()} onClose={clearErrors} />
       <div class="max-w-5xl space-y-6">
@@ -325,15 +209,16 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
             <div class="grid gap-5 md:grid-cols-2">
               <div>
-                <label class="label">タイトル</label>
+                <label class="label">版名</label>
                 <input
                   type="text"
                   class="input w-full"
-                  value={title()}
-                  onInput={e => setTitle(e.currentTarget.value)}
-                  classList={{ 'input-error': !!getFieldError('title') }}
+                  value={name()}
+                  onInput={e => setName(e.currentTarget.value)}
+                  placeholder="通常盤 / 初回限定盤 / 配信 など"
+                  classList={{ 'input-error': !!getFieldError('name') }}
                 />
-                <Show when={getFieldError('title')}>
+                <Show when={getFieldError('name')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
@@ -352,39 +237,6 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                 </Show>
               </div>
 
-              <div>
-                <label class="label">種別</label>
-                <select
-                  class="select select-bordered w-full"
-                  value={String(typeValue())}
-                  onChange={e => setTypeValue(Number(e.currentTarget.value) as ReleaseTypeValue)}
-                >
-                  <For each={RELEASE_TYPE_OPTIONS}>
-                    {option => <option value={option.value}>{option.label}</option>}
-                  </For>
-                </select>
-                <Show when={getFieldError('typeValue')}>
-                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-                </Show>
-              </div>
-
-              <div>
-                <label class="label">流通形態</label>
-                <select
-                  class="select select-bordered w-full"
-                  value={String(distributionTypeValue())}
-                  onChange={e =>
-                    setDistributionTypeValue(Number(e.currentTarget.value) as ReleaseDistributionTypeValue)}
-                >
-                  <For each={DISTRIBUTION_TYPE_OPTIONS}>
-                    {option => <option value={option.value}>{option.label}</option>}
-                  </For>
-                </select>
-                <Show when={getFieldError('distributionTypeValue')}>
-                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-                </Show>
-              </div>
-
               <div class="md:col-span-2">
                 <label class="label">説明</label>
                 <textarea
@@ -394,6 +246,47 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                   classList={{ 'textarea-error': !!getFieldError('description') }}
                 />
                 <Show when={getFieldError('description')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="label">ジャケットアート</label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  class="file-input w-full"
+                  onChange={handleJacketArtUpload}
+                  disabled={isUploadingJacketArt()}
+                  classList={{ 'file-input-error': !!(getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')) }}
+                />
+                <Show when={getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+                <Show when={isUploadingJacketArt()}>
+                  <p class="mt-1 text-xs text-base-content/60">アップロード中...</p>
+                </Show>
+                <Show when={jacketArtUrl().trim() !== ''}>
+                  <img
+                    src={jacketArtUrl().trim()}
+                    alt="ジャケットアートのプレビュー"
+                    class="mt-3 size-32 rounded-box border border-base-300 object-cover"
+                  />
+                </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="label">表示順</label>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  class="input w-full"
+                  value={orderNo()}
+                  onInput={e => setOrderNo(Number(e.currentTarget.value))}
+                  classList={{ 'input-error': !!getFieldError('orderNo') }}
+                />
+                <Show when={getFieldError('orderNo')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
@@ -416,148 +309,14 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             </div>
 
             <div class="mt-6 flex justify-end">
-              <button class="btn btn-primary" disabled={isUpdating() || isDeleting()}>
+              <button class="btn btn-primary" disabled={isUpdating() || isDeleting() || isUploadingJacketArt()}>
                 {isUpdating() ? '更新中...' : '更新'}
               </button>
             </div>
           </fieldset>
         </form>
 
-        <fieldset class="rounded-box border border-base-300 bg-base-200 p-6">
-          <legend class="px-2 text-sm font-semibold text-base-content/70">収録楽曲</legend>
-          <Show when={getFieldError('trackEntries')}>
-            {message => <p class="mb-4 text-sm text-error">{message()}</p>}
-          </Show>
-          <div class="space-y-6">
-            <div>
-              <label class="label">現在の収録楽曲</label>
-              <Show
-                when={trackEntries().length > 0}
-                fallback={<p class="text-sm text-base-content/60">収録楽曲はまだ登録されていません。</p>}
-              >
-                <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
-                  <table class="table table-sm">
-                    <thead>
-                      <tr>
-                        <th>曲順</th>
-                        <th>楽曲名</th>
-                        <th class="text-right">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <For each={trackEntries()}>
-                        {(entry, index) => (
-                          <tr>
-                            <td>{index() + 1}</td>
-                            <td>{entry.title}</td>
-                            <td>
-                              <div class="flex justify-end gap-2">
-                                <button
-                                  type="button"
-                                  class="btn btn-ghost btn-xs"
-                                  disabled={index() === 0}
-                                  onClick={() => moveTrackEntry(index(), -1)}
-                                >
-                                  ↑
-                                </button>
-                                <button
-                                  type="button"
-                                  class="btn btn-ghost btn-xs"
-                                  disabled={index() === trackEntries().length - 1}
-                                  onClick={() => moveTrackEntry(index(), 1)}
-                                >
-                                  ↓
-                                </button>
-                                <a href={`/songs/${entry.songId}`} class="btn btn-ghost btn-xs">
-                                  楽曲を見る
-                                </a>
-                                <button
-                                  type="button"
-                                  class="btn btn-outline btn-error btn-xs"
-                                  onClick={() => removeTrackEntry(entry.songId)}
-                                >
-                                  削除
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </For>
-                    </tbody>
-                  </table>
-                </div>
-              </Show>
-            </div>
-
-            <div>
-              <label class="label">楽曲を追加</label>
-              <form onSubmit={handleSongSearch} class="flex flex-col gap-4 md:flex-row md:items-end">
-                <div class="flex-1">
-                  <label class="label">楽曲名</label>
-                  <input
-                    type="text"
-                    class="input input-bordered w-full"
-                    value={searchTitle()}
-                    onInput={e => setSearchTitle(e.currentTarget.value)}
-                    placeholder="楽曲名で検索"
-                  />
-                </div>
-                <button type="submit" class="btn btn-primary" disabled={isSearching()}>
-                  {isSearching() ? '検索中...' : '検索'}
-                </button>
-              </form>
-
-              <Show when={searchError()}>{message => <p class="mt-3 text-sm text-error">{message()}</p>}</Show>
-
-              <Show when={hasSearched()}>
-                <div class="mt-4 overflow-x-auto rounded-box border border-base-300 bg-base-100">
-                  <table class="table table-sm">
-                    <thead>
-                      <tr>
-                        <th>楽曲名</th>
-                        <th>種別</th>
-                        <th>表示設定</th>
-                        <th class="text-right">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <Show
-                        when={searchResults().length > 0}
-                        fallback={(
-                          <tr>
-                            <td colSpan={4} class="text-center text-sm text-base-content/60">
-                              条件に一致する楽曲はありません。
-                            </td>
-                          </tr>
-                        )}
-                      >
-                        <For each={searchResults()}>
-                          {song => (
-                            <tr>
-                              <td>{song.title}</td>
-                              <td>{song.type.name}</td>
-                              <td>{song.isDisplay ? '表示する' : '表示しない'}</td>
-                              <td class="text-right">
-                                <button
-                                  type="button"
-                                  class="btn btn-primary btn-xs"
-                                  disabled={selectedSongIds().has(song.songId)}
-                                  onClick={() => addTrackEntry(song)}
-                                >
-                                  {selectedSongIds().has(song.songId) ? '追加済み' : '追加'}
-                                </button>
-                              </td>
-                            </tr>
-                          )}
-                        </For>
-                      </Show>
-                    </tbody>
-                  </table>
-                </div>
-              </Show>
-            </div>
-          </div>
-        </fieldset>
+        <MediaEditor media={media()} onChange={setMedia} fieldError={getFieldError('media')} />
 
         <fieldset class="rounded-box border border-error/20 bg-error/5 p-6">
           <legend class="px-2 text-sm font-semibold text-error">危険な操作</legend>
@@ -566,7 +325,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             <button
               onClick={handleDelete}
               class="btn btn-outline btn-error btn-sm"
-              disabled={isDeleting() || isUpdating()}
+              disabled={isDeleting() || isUpdating() || isUploadingJacketArt()}
             >
               {isDeleting() ? '削除中...' : 'このリリースを削除する'}
             </button>

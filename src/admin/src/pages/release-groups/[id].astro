@@ -1,0 +1,16 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import { DetailView } from '../../components/release-group/DetailView';
+import Layout from '../../layouts/Layout.astro';
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  throw new Error('URL が不正');
+}
+---
+
+<Layout pageTitle="リリースグループ詳細">
+  <FlashMessage client:only="solid-js" />
+  <DetailView releaseGroupId={id} client:only="solid-js" />
+</Layout>

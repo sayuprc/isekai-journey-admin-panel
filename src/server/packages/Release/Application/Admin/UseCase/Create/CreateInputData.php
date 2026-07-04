@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Release\Application\Admin\UseCase\Create;
 
+/**
+ * @phpstan-type MediumInput array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}
+ */
 readonly class CreateInputData
 {
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<MediumInput> $media
      */
     public function __construct(
-        public string $title,
-        public int $typeValue,
-        public int $distributionTypeValue,
+        public string $releaseGroupId,
+        public string $name,
         public string $releasedOn,
         public string $description,
+        public ?string $jacketArtUrl,
         public bool $isDisplay,
-        public array $trackEntries,
+        public int $orderNo,
+        public array $media,
     ) {
     }
 }
