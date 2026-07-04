@@ -41,7 +41,7 @@ readonly class GetUseCase
     private function getMedia(GetInputData $inputData): Result
     {
         return MediaId::create($inputData->mediaId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (MediaId $mediaId): Result {
                 if (is_null($found = $this->repository->find($mediaId))) {
                     return new Err(new NotFoundError('Media', $mediaId->value));

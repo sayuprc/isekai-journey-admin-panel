@@ -21,7 +21,7 @@ class LoginStartPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (LoginStartOutputData $output) => [
+            static fn (LoginStartOutputData $output) => [
                 new LoginStartResponse()
                     ->setAuthCeremonyId($output->authCeremonyId)
                     ->setPublicKey((object)$output->publicKey),

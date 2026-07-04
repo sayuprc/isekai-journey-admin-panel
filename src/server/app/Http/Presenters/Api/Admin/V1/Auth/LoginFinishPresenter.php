@@ -21,7 +21,7 @@ class LoginFinishPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (LoginFinishOutputData $output) => [
+            static fn (LoginFinishOutputData $output) => [
                 new LoginFinishResponse()
                     ->setAccessToken($output->accessToken->jwt->value)
                     ->setRefreshTokenId($output->refreshTokenId)

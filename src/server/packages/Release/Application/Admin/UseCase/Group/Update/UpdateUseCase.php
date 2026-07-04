@@ -50,7 +50,7 @@ readonly class UpdateUseCase
     private function updateReleaseGroup(UpdateInputData $inputData): Result
     {
         return ReleaseGroupId::create($inputData->releaseGroupId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (ReleaseGroupId $releaseGroupId) use ($inputData): Result {
                 return $this->transaction->scope(function () use ($inputData, $releaseGroupId): Result {
                     if (is_null($this->repository->find($releaseGroupId))) {

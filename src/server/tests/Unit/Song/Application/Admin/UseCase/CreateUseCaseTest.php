@@ -71,8 +71,8 @@ class CreateUseCaseTest extends TestCase
         ];
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')
@@ -148,8 +148,8 @@ class CreateUseCaseTest extends TestCase
         ];
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->service->shouldReceive('prepareForCreate')

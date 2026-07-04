@@ -44,7 +44,7 @@ class RecoveryCodeIssueService
             $result = Result::collect(
                 RecoveryCodeId::create($this->uuidGenerator->generate()),
                 HashedCodeValue::create($hashedCode),
-            )->map(fn (array $values): RecoveryCode => new RecoveryCode(
+            )->map(static fn (array $values): RecoveryCode => new RecoveryCode(
                 $values[0],
                 $adminUserId,
                 $values[1],

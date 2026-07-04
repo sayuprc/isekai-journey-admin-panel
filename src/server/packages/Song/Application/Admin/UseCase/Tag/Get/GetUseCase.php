@@ -39,7 +39,7 @@ readonly class GetUseCase
     private function getSongTag(GetInputData $inputData): Result
     {
         return SongTagId::create($inputData->songTagId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (SongTagId $songTagId): Result {
                 if (is_null($found = $this->repository->find($songTagId))) {
                     return new Err(new NotFoundError('SongTag', $songTagId->value));

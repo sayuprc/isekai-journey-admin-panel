@@ -44,7 +44,7 @@ readonly class DeleteUseCase
     private function deleteMedia(DeleteInputData $inputData): Result
     {
         return MediaId::create($inputData->mediaId)
-            ->mapErr(fn (): UseCaseError => new InvalidInputError(['mediaId' => ['IDが不正です']]))
+            ->mapErr(static fn (): UseCaseError => new InvalidInputError(['mediaId' => ['IDが不正です']]))
             ->andThen(fn (MediaId $mediaId): Result => $this->transaction->scope(function () use ($mediaId): Result {
                 $media = $this->repository->find($mediaId);
 

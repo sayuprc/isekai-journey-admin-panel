@@ -48,7 +48,7 @@ readonly class DeleteUseCase
     private function deletePerson(DeleteInputData $inputData): Result
     {
         return PersonId::create($inputData->personId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($personId): Result {
                 $person = $this->repository->find($personId);
 

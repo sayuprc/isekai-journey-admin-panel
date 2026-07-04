@@ -18,14 +18,14 @@ class RefreshPresenter
     public function present(Result $result): JsonResponse
     {
         return $result->match(
-            fn (RefreshOutputData $output) => response()->json(
+            static fn (RefreshOutputData $output) => response()->json(
                 new RefreshTokenResponse()
                     ->setAccessToken($output->accessToken->jwt->value)
                     ->setRefreshTokenId($output->refreshTokenId)
                     ->setRefreshToken($output->plainRefreshToken),
                 200,
             ),
-            fn (UseCaseError $_) => response()->json(status: 401),
+            static fn (UseCaseError $_) => response()->json(status: 401),
         );
     }
 }

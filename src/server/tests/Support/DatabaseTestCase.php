@@ -71,7 +71,7 @@ abstract class DatabaseTestCase extends TestCase
             throw new RuntimeException('DB dump からの復元に失敗した: ' . $testDb);
         }
 
-        register_shutdown_function(function () use ($rootMysql, $testDb): void {
+        register_shutdown_function(static function () use ($rootMysql, $testDb): void {
             exec("{$rootMysql} -e " . escapeshellarg("DROP DATABASE IF EXISTS `{$testDb}`"));
         });
 

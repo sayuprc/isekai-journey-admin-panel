@@ -76,7 +76,7 @@ class JwtHandlerTest extends TestCase
             ->once();
 
         $this->mapper->shouldReceive('map')
-            ->withArgs(fn (string $class, mixed $_) => $class === AccessTokenPayload::class)
+            ->withArgs(static fn (string $class, mixed $_) => $class === AccessTokenPayload::class)
             ->andReturn(new AccessTokenPayload(
                 'iss',
                 $now->getTimestamp(),

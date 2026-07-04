@@ -14,10 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         apiPrefix: '',
     )
-    ->withMiddleware(function (Middleware $middleware) {
+    ->withMiddleware(static function (Middleware $middleware) {
         $middleware->remove(ConvertEmptyStringsToNull::class);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(static function (Exceptions $exceptions) {
         // API のみのアプリのため、Accept ヘッダに依存せず常に JSON で例外を返す
-        $exceptions->shouldRenderJsonWhen(fn (): bool => true);
+        $exceptions->shouldRenderJsonWhen(static fn (): bool => true);
     })->create();

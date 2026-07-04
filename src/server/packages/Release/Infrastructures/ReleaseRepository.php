@@ -183,7 +183,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         }
 
         return array_map(
-            fn (array $mediumRow): array => [
+            static fn (array $mediumRow): array => [
                 'position' => Row::int($mediumRow, 'position'),
                 'format' => Row::int($mediumRow, 'format'),
                 'tracks' => $tracksByPosition[Row::int($mediumRow, 'position')] ?? [],

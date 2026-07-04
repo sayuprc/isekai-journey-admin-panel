@@ -36,8 +36,8 @@ class DeleteUseCaseTest extends TestCase
 
         $this->transaction = Mockery::mock(TransactionInterface::class);
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->byDefault();
         $this->repository = Mockery::mock(SongRepositoryInterface::class);
         $this->recorder = Mockery::mock(AuditLogRecorderInterface::class);
@@ -51,12 +51,12 @@ class DeleteUseCaseTest extends TestCase
         $song = $this->createSong($songId, '曲', '説明', null, SongType::Original, true, 1, [], []);
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturn($song)
             ->once();
 
         $this->repository->shouldReceive('delete')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData($songId));

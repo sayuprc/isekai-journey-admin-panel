@@ -50,7 +50,7 @@ readonly class UpdateUseCase
     private function updateMedia(UpdateInputData $inputData): Result
     {
         return MediaId::create($inputData->mediaId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(fn (MediaId $mediaId): Result => $this->transaction->scope(function () use ($inputData, $mediaId): Result {
                 if (is_null($this->repository->find($mediaId))) {
                     return new Err(new NotFoundError('Media', $mediaId->value));

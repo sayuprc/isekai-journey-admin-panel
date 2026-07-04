@@ -39,7 +39,7 @@ readonly class GetUseCase
     private function getPerson(GetInputData $inputData): Result
     {
         return PersonId::create($inputData->personId)
-            ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
             ->andThen(function (PersonId $personId): Result {
                 if (is_null($found = $this->repository->find($personId))) {
                     return new Err(new NotFoundError('Person', $personId->value));

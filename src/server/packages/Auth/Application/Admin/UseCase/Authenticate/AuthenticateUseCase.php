@@ -37,7 +37,7 @@ readonly class AuthenticateUseCase
     public function handle(AuthenticateInputData $inputData): Result
     {
         return $this->jwtHandler->verify($inputData->accessToken)
-            ->mapErr(function (DomainError $error): UseCaseError {
+            ->mapErr(static function (DomainError $error): UseCaseError {
                 return match (true) {
                     $error instanceof DomainValidationError => new InvalidInputError($error->errors),
                     $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
@@ -46,7 +46,7 @@ readonly class AuthenticateUseCase
             })
             ->andThen(function (AccessTokenPayload $payload): Result {
                 return RefreshTokenId::create($payload->jti)
-                    ->mapErr(fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
+                    ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
                     ->andThen(function (RefreshTokenId $refreshTokenId): Result {
                         $foundRefreshToken = $this->refreshTokenRepository->findActive($refreshTokenId);
 

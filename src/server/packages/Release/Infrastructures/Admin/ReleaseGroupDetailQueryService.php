@@ -37,7 +37,7 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
             return [];
         }
 
-        $binReleaseIds = array_map(fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
+        $binReleaseIds = array_map(static fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
 
         $mediumRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()

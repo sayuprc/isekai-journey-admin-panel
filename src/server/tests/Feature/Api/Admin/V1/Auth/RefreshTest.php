@@ -39,7 +39,7 @@ class RefreshTest extends DatabaseTestCase
             'refreshToken' => $plainToken,
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->has('accessToken')
+                static fn (AssertableJson $json) => $json->has('accessToken')
                     ->has('refreshTokenId')
                     ->has('refreshToken')
                     ->whereType('accessToken', 'string')

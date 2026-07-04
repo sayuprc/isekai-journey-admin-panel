@@ -49,7 +49,7 @@ class RegistrationTokenIssueService
             $this->toRole($role),
             Permissions::fromArray($permissions),
             ExpiredAt::create($this->clock->now()->modify('+' . self::TTL_DAY . ' days')),
-        )->map(fn (array $values): RegistrationToken => new RegistrationToken(
+        )->map(static fn (array $values): RegistrationToken => new RegistrationToken(
             $values[0],
             $values[1],
             $email,

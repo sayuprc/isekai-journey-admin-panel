@@ -61,7 +61,7 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
             ->execute($this->queryFactory->pdo());
 
         if ($data['permissions'] !== [] && ! $this->hasPermissions($id)) {
-            $rows = array_map(fn (string $permission): array => [$id, $permission], $data['permissions']);
+            $rows = array_map(static fn (string $permission): array => [$id, $permission], $data['permissions']);
 
             $this->queryFactory->insert()
                 ->into(self::PERMISSION_TABLE, ['admin_user_registration_token_id', 'permission'])
@@ -113,7 +113,7 @@ readonly class RegistrationTokenRepository implements RegistrationTokenRepositor
         );
 
         $permissionsByToken = $this->loadPermissions(
-            array_map(fn (array $row): string => Row::string($row, 'admin_user_registration_token_id'), $rows),
+            array_map(static fn (array $row): string => Row::string($row, 'admin_user_registration_token_id'), $rows),
         );
 
         return array_map(

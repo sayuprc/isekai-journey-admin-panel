@@ -28,7 +28,7 @@ readonly class SongTagReferences extends ImmutableCollection
 
         foreach ($items as $item) {
             $result = SongTagId::create($item['songTagId'])
-                ->map(fn (SongTagId $songTagId) => new SongTagReference($songTagId));
+                ->map(static fn (SongTagId $songTagId) => new SongTagReference($songTagId));
 
             if ($result->isErr()) {
                 $messages = [];
@@ -59,7 +59,7 @@ readonly class SongTagReferences extends ImmutableCollection
      */
     public static function reconstruct(array $items): self
     {
-        return new self(array_map(fn (array $item): SongTagReference => SongTagReference::reconstruct(...$item), $items));
+        return new self(array_map(static fn (array $item): SongTagReference => SongTagReference::reconstruct(...$item), $items));
     }
 
     /**
@@ -68,7 +68,7 @@ readonly class SongTagReferences extends ImmutableCollection
     public function toArray(): array
     {
         return $this->toGeneric()
-            ->map(fn (SongTagReference $item): array => $item->toArray())
+            ->map(static fn (SongTagReference $item): array => $item->toArray())
             ->toList();
     }
 }

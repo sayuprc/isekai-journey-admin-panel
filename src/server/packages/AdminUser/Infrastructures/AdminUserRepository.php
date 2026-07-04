@@ -43,7 +43,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
         );
 
         $permissionsByUser = $this->loadPermissions(
-            array_map(fn (array $row): string => Row::string($row, 'admin_user_id'), $rows),
+            array_map(static fn (array $row): string => Row::string($row, 'admin_user_id'), $rows),
         );
 
         return array_map(
@@ -119,7 +119,7 @@ readonly class AdminUserRepository implements AdminUserRepositoryInterface
         }
 
         if ($data['permissions'] !== []) {
-            $rows = array_map(fn (string $permission): array => [$id, $permission], $data['permissions']);
+            $rows = array_map(static fn (string $permission): array => [$id, $permission], $data['permissions']);
 
             $this->queryFactory->insert()
                 ->into(self::PERMISSION_TABLE, ['admin_user_id', 'permission'])

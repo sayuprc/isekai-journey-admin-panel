@@ -73,7 +73,7 @@ class RegisterStartUseCaseTest extends TestCase
         $adminUser = $this->createAdminUser($adminUserId, 'invitee@example.com', name: '名前');
 
         $this->consumeService->shouldReceive('verify')
-            ->withArgs(fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
+            ->withArgs(static fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
                 && $email->value === 'invitee@example.com')
             ->andReturn(new Ok($token))
             ->once();
@@ -92,14 +92,14 @@ class RegisterStartUseCaseTest extends TestCase
             ->once();
 
         $this->passkeyAuthenticator->shouldReceive('startRegistration')
-            ->withArgs(fn (string $userHandle, string $userName, string $displayName): bool => $userHandle === 'fixed-user-handle'
+            ->withArgs(static fn (string $userHandle, string $userName, string $displayName): bool => $userHandle === 'fixed-user-handle'
                 && $userName === 'invitee@example.com'
                 && $displayName === '名前')
             ->andReturn(new PasskeyStartResult('{"challenge":"challenge"}', ['challenge' => 'challenge']))
             ->once();
 
         $this->ceremonyStore->shouldReceive('put')
-            ->withArgs(fn (PasskeyCeremonyState $state): bool => $state->authCeremonyId === $authCeremonyId
+            ->withArgs(static fn (PasskeyCeremonyState $state): bool => $state->authCeremonyId === $authCeremonyId
                 && $state->type === PasskeyCeremonyType::Register
                 && $state->email === 'invitee@example.com'
                 && $state->name === '名前'

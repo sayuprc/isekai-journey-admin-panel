@@ -63,7 +63,7 @@ class SongAssembler
             }
         }
 
-        $toAssembled = function (SongPerson $person) use ($personMap): AssembledPerson {
+        $toAssembled = static function (SongPerson $person) use ($personMap): AssembledPerson {
             $found = $personMap[$person->personId->value] ?? null;
             // Song Entity が成立している時点で $found が null になることはない
             assert(! is_null($found));
@@ -75,7 +75,7 @@ class SongAssembler
                 $person->orderNo->value,
             );
         };
-        $toAssembledTag = function (SongTagReference $tag) use ($songTagMap): AssembledTag {
+        $toAssembledTag = static function (SongTagReference $tag) use ($songTagMap): AssembledTag {
             $found = $songTagMap[$tag->songTagId->value] ?? null;
             // Song Entity が成立している時点で $found が null になることはない
             assert(! is_null($found));
@@ -85,7 +85,7 @@ class SongAssembler
                 $found->name->value,
             );
         };
-        $toAssembledMedia = function (SongMediaLink $link) use ($mediaMap): AssembledMedia {
+        $toAssembledMedia = static function (SongMediaLink $link) use ($mediaMap): AssembledMedia {
             $found = $mediaMap[$link->mediaId->value] ?? null;
             assert($found instanceof Media);
 

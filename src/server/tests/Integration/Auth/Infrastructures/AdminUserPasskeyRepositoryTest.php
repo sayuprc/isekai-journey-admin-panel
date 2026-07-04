@@ -125,7 +125,7 @@ class AdminUserPasskeyRepositoryTest extends DatabaseTestCase
 
         $selectQueries = array_values(array_filter(
             $this->capturedQueries(),
-            fn (string $query): bool => str_starts_with(strtolower($query), 'select')
+            static fn (string $query): bool => str_starts_with(strtolower($query), 'select')
                 && str_contains($query, 'admin_user_passkeys'),
         ));
 

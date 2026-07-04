@@ -62,7 +62,7 @@ class RecoveryTest extends DatabaseTestCase
             'credential' => ['id' => 'new-credential-id'],
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->whereAllType([
+                static fn (AssertableJson $json) => $json->whereAllType([
                     'accessToken' => 'string',
                     'refreshTokenId' => 'string',
                     'refreshToken' => 'string',
@@ -148,7 +148,7 @@ class RecoveryTest extends DatabaseTestCase
             'name' => '新しいパスキー',
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                static fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
                     ->where('publicKey.challenge', 'register-challenge')
                     ->etc(),
             );
@@ -170,7 +170,7 @@ class RecoveryTest extends DatabaseTestCase
             'name' => '新しいパスキー',
         ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
+                static fn (AssertableJson $json) => $json->whereType('authCeremonyId', 'string')
                     ->where('publicKey.challenge', 'register-challenge')
                     ->etc(),
             );
@@ -302,7 +302,7 @@ class RecoveryTest extends DatabaseTestCase
 
     private function bindPasskeyAuthenticator(bool $failFinish = false): void
     {
-        $this->app->bind(PasskeyAuthenticatorInterface::class, fn (): PasskeyAuthenticatorInterface => new class ($failFinish) implements PasskeyAuthenticatorInterface {
+        $this->app->bind(PasskeyAuthenticatorInterface::class, static fn (): PasskeyAuthenticatorInterface => new class ($failFinish) implements PasskeyAuthenticatorInterface {
             public function __construct(private readonly bool $failFinish)
             {
             }

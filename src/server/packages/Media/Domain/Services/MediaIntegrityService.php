@@ -114,7 +114,7 @@ class MediaIntegrityService
             $this->toMediaType($typeValue),
             new Ok($isDisplay),
         )
-            ->mapErr(function (array $errors): DomainError {
+            ->mapErr(static function (array $errors): DomainError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -125,7 +125,7 @@ class MediaIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Media => new Media(...$values));
+            ->map(static fn (array $values): Media => new Media(...$values));
     }
 
     /**

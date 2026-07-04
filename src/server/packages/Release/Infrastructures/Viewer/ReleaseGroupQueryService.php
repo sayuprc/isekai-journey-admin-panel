@@ -70,7 +70,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         $hasNextPage = count($groupRows) > $limit;
         $pageRows = $hasNextPage ? array_slice($groupRows, 0, $limit) : $groupRows;
 
-        $binGroupIds = array_map(fn (array $row): string => Row::string($row, 'release_group_id'), $pageRows);
+        $binGroupIds = array_map(static fn (array $row): string => Row::string($row, 'release_group_id'), $pageRows);
         $releasesByGroup = $this->loadReleases($binGroupIds);
 
         $releaseGroups = array_map(
@@ -119,7 +119,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 ->orderBy('name'),
         );
 
-        $binReleaseIds = array_map(fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
+        $binReleaseIds = array_map(static fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
         $mediaByRelease = $this->loadMedia($binReleaseIds);
 
         $grouped = [];

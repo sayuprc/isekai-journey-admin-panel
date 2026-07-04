@@ -55,14 +55,14 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(RandomRecoveryCodeGeneratorInterface::class, RandomRecoveryCodeGenerator::class);
         $this->app->bind(
             RecoveryCodeHasherInterface::class,
-            fn (): RecoveryCodeHasher => new RecoveryCodeHasher(config()->string('auth.recovery_code.pepper')),
+            static fn (): RecoveryCodeHasher => new RecoveryCodeHasher(config()->string('auth.recovery_code.pepper')),
         );
 
         $this->app->scoped(AuthContext::class);
 
         $this->app->bind(
             JwtConfig::class,
-            fn (): JwtConfig => new JwtConfig(
+            static fn (): JwtConfig => new JwtConfig(
                 config()->string('auth.jwt.alg'),
                 config()->string('auth.jwt.key'),
                 config()->string('app.url'),
@@ -71,7 +71,7 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app->bind(
             PasskeyConfig::class,
-            fn (): PasskeyConfig => new PasskeyConfig(
+            static fn (): PasskeyConfig => new PasskeyConfig(
                 config()->string('auth.passkey.rp_name'),
                 config()->string('auth.passkey.rp_id'),
                 config()->string('auth.passkey.origin'),

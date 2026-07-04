@@ -33,7 +33,7 @@ readonly class SongPersons extends ImmutableCollection
                 PersonId::create($item['personId']),
                 self::toRole($item['role']),
                 OrderNo::create($item['orderNo']),
-            )->map(fn (array $values) => new SongPerson(...$values));
+            )->map(static fn (array $values) => new SongPerson(...$values));
 
             if ($result->isErr()) {
                 $messages = [];
@@ -68,7 +68,7 @@ readonly class SongPersons extends ImmutableCollection
      */
     public static function reconstruct(array $items): self
     {
-        return new self(array_map(fn (array $item): SongPerson => SongPerson::reconstruct(...$item), $items));
+        return new self(array_map(static fn (array $item): SongPerson => SongPerson::reconstruct(...$item), $items));
     }
 
     /**

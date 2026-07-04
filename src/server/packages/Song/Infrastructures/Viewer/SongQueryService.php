@@ -57,7 +57,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
         $hasNextPage = count($songRows) > $limit;
         $pageRows = $hasNextPage ? array_slice($songRows, 0, $limit) : $songRows;
 
-        $binSongIds = array_map(fn (array $row): string => Row::string($row, 'song_id'), $pageRows);
+        $binSongIds = array_map(static fn (array $row): string => Row::string($row, 'song_id'), $pageRows);
 
         $personsBySong = $this->loadPersons($binSongIds);
         $mediaBySong = $this->loadMedia($binSongIds);
@@ -186,7 +186,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
         }
 
         $binGroupIds = array_values(array_unique(array_map(
-            fn (array $row): string => Row::string($row, 'release_group_id'),
+            static fn (array $row): string => Row::string($row, 'release_group_id'),
             $linkRows,
         )));
 
@@ -246,7 +246,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
         foreach ($grouped as &$summaries) {
             usort(
                 $summaries,
-                fn (SongReleaseGroupSummary $a, SongReleaseGroupSummary $b): int => [$b->firstReleasedOn, $a->title] <=> [$a->firstReleasedOn, $b->title],
+                static fn (SongReleaseGroupSummary $a, SongReleaseGroupSummary $b): int => [$b->firstReleasedOn, $a->title] <=> [$a->firstReleasedOn, $b->title],
             );
         }
 

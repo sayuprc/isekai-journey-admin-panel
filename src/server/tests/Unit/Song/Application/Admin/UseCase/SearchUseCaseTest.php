@@ -49,12 +49,12 @@ class SearchUseCaseTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->title->isEmpty() && $criteria->type->isEmpty() && $criteria->isDisplay->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -80,12 +80,12 @@ class SearchUseCaseTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->title->isPresent() && $criteria->title->get() === 'テスト楽曲')
             ->andReturn(1)
             ->once();
 
@@ -110,12 +110,12 @@ class SearchUseCaseTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->type->isPresent() && $criteria->type->get() === SongType::Original)
             ->andReturn(1)
             ->once();
 
@@ -140,12 +140,12 @@ class SearchUseCaseTest extends TestCase
         );
 
         $this->query->shouldReceive('search')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
             ->andReturn([$summary])
             ->once();
 
         $this->query->shouldReceive('maxPage')
-            ->withArgs(fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
+            ->withArgs(static fn (SongSearchCriteria $criteria): bool => $criteria->isDisplay->isPresent() && $criteria->isDisplay->get() === false)
             ->andReturn(1)
             ->once();
 

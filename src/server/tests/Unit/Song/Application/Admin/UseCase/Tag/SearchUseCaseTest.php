@@ -41,12 +41,12 @@ class SearchUseCaseTest extends TestCase
         $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'テストタグA', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(static fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn([$songTag])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isEmpty())
+            ->withArgs(static fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isEmpty())
             ->andReturn(1)
             ->once();
 
@@ -66,12 +66,12 @@ class SearchUseCaseTest extends TestCase
         $songTag = $this->createSongTag('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'テストタグA', 1);
 
         $this->repository->shouldReceive('search')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
+            ->withArgs(static fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
             ->andReturn([$songTag])
             ->once();
 
         $this->repository->shouldReceive('maxPage')
-            ->withArgs(fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
+            ->withArgs(static fn (SongTagSearchCriteria $criteria): bool => $criteria->name->isPresent() && $criteria->name->get() === 'テスト')
             ->andReturn(1)
             ->once();
 

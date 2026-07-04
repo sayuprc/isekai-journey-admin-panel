@@ -56,12 +56,12 @@ class UpdateUseCaseTest extends TestCase
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === $songTagId)
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === $songTagId)
             ->andReturn($this->createSongTag($songTagId, '旧タグ', 10))
             ->once();
 
@@ -72,7 +72,7 @@ class UpdateUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('save')
             ->withArgs(
-                fn (SongTag $arg): bool => $arg->songTagId->value === $songTagId
+                static fn (SongTag $arg): bool => $arg->songTagId->value === $songTagId
                     && $arg->name->value === $name
                     && $arg->orderNo->value === $orderNo,
             )
@@ -92,12 +92,12 @@ class UpdateUseCaseTest extends TestCase
         $orderNo = 1;
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === $songTagId)
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === $songTagId)
             ->andReturn($this->createSongTag($songTagId, '旧タグ', 10))
             ->once();
 
@@ -117,12 +117,12 @@ class UpdateUseCaseTest extends TestCase
         $songTagId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongTagId $arg): bool => $arg->value === $songTagId)
+            ->withArgs(static fn (SongTagId $arg): bool => $arg->value === $songTagId)
             ->andReturnNull()
             ->once();
 

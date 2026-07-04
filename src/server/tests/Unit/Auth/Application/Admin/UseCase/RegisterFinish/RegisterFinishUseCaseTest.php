@@ -124,11 +124,11 @@ class RegisterFinishUseCaseTest extends TestCase
             ->andReturn($verification)
             ->once();
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_): bool => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_): bool => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
         $this->consumeService->shouldReceive('verify')
-            ->withArgs(fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
+            ->withArgs(static fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
                 && $email->value === 'invitee@example.com')
             ->andReturn(new Ok($token))
             ->once();
@@ -137,13 +137,13 @@ class RegisterFinishUseCaseTest extends TestCase
             ->andReturn(new Ok($adminUser))
             ->once();
         $this->adminUserRepository->shouldReceive('register')
-            ->withArgs(fn (AdminUser $user): bool => $user->equals($adminUser))
+            ->withArgs(static fn (AdminUser $user): bool => $user->equals($adminUser))
             ->andReturn($adminUser)
             ->once();
         $this->uuidGenerator->shouldReceive('generate')->andReturn($passkeyId)->once();
         $this->clock->shouldReceive('now')->andReturn($now)->once();
         $this->passkeyRepository->shouldReceive('save')
-            ->withArgs(fn (AdminUserPasskey $passkey): bool => $passkey->adminUserPasskeyId === $passkeyId
+            ->withArgs(static fn (AdminUserPasskey $passkey): bool => $passkey->adminUserPasskeyId === $passkeyId
                 && $passkey->adminUserId === $adminUserId
                 && $passkey->userHandle === 'user-handle'
                 && $passkey->credentialId === 'credential-id'
@@ -151,7 +151,7 @@ class RegisterFinishUseCaseTest extends TestCase
                 && $passkey->transports === ['internal']
                 && $passkey->backupEligible === true
                 && $passkey->backupState === false)
-            ->andReturnUsing(fn (AdminUserPasskey $passkey): AdminUserPasskey => $passkey)
+            ->andReturnUsing(static fn (AdminUserPasskey $passkey): AdminUserPasskey => $passkey)
             ->once();
         $this->registrationTokenRepository->shouldReceive('save')->andReturn($token->consume())->once();
         $this->refreshTokenIssueService->shouldReceive('issue')
@@ -161,7 +161,7 @@ class RegisterFinishUseCaseTest extends TestCase
         $this->accessTokenIssueService->shouldReceive('issue')->with($refreshTokenId)->andReturn($accessToken)->once();
         $this->refreshTokenRepository->shouldReceive('save')->with($refreshToken)->andReturn($refreshToken)->once();
         $this->recorder->shouldReceive('record')
-            ->withArgs(fn (
+            ->withArgs(static fn (
                 AuditAction $action,
                 AuditTargetType $targetType,
                 mixed $targetId,
@@ -216,11 +216,11 @@ class RegisterFinishUseCaseTest extends TestCase
             ->andReturn($verification)
             ->once();
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_): bool => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_): bool => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
         $this->consumeService->shouldReceive('verify')
-            ->withArgs(fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
+            ->withArgs(static fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
                 && $email->value === 'invitee@example.com')
             ->andReturn(new Ok($token))
             ->once();
@@ -257,11 +257,11 @@ class RegisterFinishUseCaseTest extends TestCase
             ->andReturn($verification)
             ->once();
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_): bool => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_): bool => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
         $this->consumeService->shouldReceive('verify')
-            ->withArgs(fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
+            ->withArgs(static fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
                 && $email->value === 'invitee@example.com')
             ->andReturn(new Ok($token))
             ->once();

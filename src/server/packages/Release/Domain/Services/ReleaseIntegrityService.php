@@ -143,7 +143,7 @@ class ReleaseIntegrityService
             $jacketArtUrlResult,
             OrderNo::create($orderNo),
         )
-            ->mapErr(function (array $errors): DomainValidationError {
+            ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -154,7 +154,7 @@ class ReleaseIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Release => new Release(
+            ->map(static fn (array $values): Release => new Release(
                 $values[0],
                 $values[1],
                 $values[2],

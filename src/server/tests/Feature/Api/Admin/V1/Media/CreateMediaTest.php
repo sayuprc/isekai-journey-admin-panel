@@ -29,7 +29,7 @@ class CreateMediaTest extends DatabaseTestCase
                 'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json
+            ->assertJson(static fn (AssertableJson $json) => $json
                 ->whereType('media.mediaId', 'string')
                 ->where('media.title', 'テストメディアMV')
                 ->where('media.url', 'https://example.com/media')
@@ -64,11 +64,11 @@ class CreateMediaTest extends DatabaseTestCase
                 'isDisplay' => true,
             ])->assertStatus(422)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'errors',
                         1,
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('field', 'url')
                             ->where('message', '同じURLのメディアが既に存在します'),
                     ),

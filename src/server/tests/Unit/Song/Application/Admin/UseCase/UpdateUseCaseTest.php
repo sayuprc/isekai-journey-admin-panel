@@ -73,12 +73,12 @@ class UpdateUseCaseTest extends TestCase
         ];
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturn($this->createSong($songId, $title, $description, $lyricsLink, SongType::from($typeValue), true, 1))
             ->once();
 
@@ -159,12 +159,12 @@ class UpdateUseCaseTest extends TestCase
         ];
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturn($this->createSong($songId, $title, $description, $lyricsLink, SongType::Original, true, 1))
             ->once();
 
@@ -196,12 +196,12 @@ class UpdateUseCaseTest extends TestCase
         $songId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 
         $this->transaction->shouldReceive('scope')
-            ->withArgs(fn (Closure $_) => true)
-            ->andReturnUsing(fn (Closure $arg) => $arg())
+            ->withArgs(static fn (Closure $_) => true)
+            ->andReturnUsing(static fn (Closure $arg) => $arg())
             ->once();
 
         $this->repository->shouldReceive('find')
-            ->withArgs(fn (SongId $arg): bool => $arg->value === $songId)
+            ->withArgs(static fn (SongId $arg): bool => $arg->value === $songId)
             ->andReturnNull()
             ->once();
 

@@ -36,10 +36,10 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
                 'isDisplay' => false,
             ])->assertStatus(200)
             ->assertJson(
-                fn (AssertableJson $json) => $json
+                static fn (AssertableJson $json) => $json
                     ->has(
                         'releaseGroup',
-                        fn (AssertableJson $json) => $json
+                        static fn (AssertableJson $json) => $json
                             ->where('releaseGroupId', $releaseGroupId)
                             ->where('title', '新タイトル')
                             ->where('typeValue', ReleaseGroupType::Single->value)

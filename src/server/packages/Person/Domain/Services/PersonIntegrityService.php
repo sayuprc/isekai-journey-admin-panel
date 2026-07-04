@@ -80,7 +80,7 @@ class PersonIntegrityService
             PersonName::create($name),
             OrderNo::create($orderNo),
         )
-            ->mapErr(function (array $errors): DomainValidationError {
+            ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -91,6 +91,6 @@ class PersonIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Person => new Person(...$values));
+            ->map(static fn (array $values): Person => new Person(...$values));
     }
 }

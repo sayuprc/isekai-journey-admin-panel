@@ -62,7 +62,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmail')
-            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->with(Mockery::on(static fn (Email $arg): bool => $arg->value === $email))
             ->andReturnNull()
             ->once();
 
@@ -97,7 +97,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmail')
-            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->with(Mockery::on(static fn (Email $arg): bool => $arg->value === $email))
             ->andReturn($existingUser)
             ->once();
 
@@ -127,7 +127,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmailForUpdate')
-            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->with(Mockery::on(static fn (Email $arg): bool => $arg->value === $email))
             ->andReturnNull()
             ->once();
 
@@ -155,7 +155,7 @@ class AdminUserIntegrityServiceTest extends TestCase
         $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmailForUpdate')
-            ->with(Mockery::on(fn (Email $arg): bool => $arg->value === $email))
+            ->with(Mockery::on(static fn (Email $arg): bool => $arg->value === $email))
             ->andReturn($existingUser)
             ->once();
 

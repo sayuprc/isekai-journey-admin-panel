@@ -23,7 +23,7 @@ class RecoveryStartPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (RecoveryStartOutputData $output) => [
+            static fn (RecoveryStartOutputData $output) => [
                 new RecoveryStartResponse()
                     ->setAuthCeremonyId($output->authCeremonyId)
                     ->setPublicKey((object)$output->publicKey),

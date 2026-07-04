@@ -163,7 +163,7 @@ class PersonRepositoryTest extends DatabaseTestCase
         $this->assertCount(2, $found);
         $this->assertEqualsCanonicalizing(
             [$person1->personId->value, $person3->personId->value],
-            array_map(fn (Person $person): string => $person->personId->value, $found),
+            array_map(static fn (Person $person): string => $person->personId->value, $found),
         );
     }
 

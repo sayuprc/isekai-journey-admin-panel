@@ -23,7 +23,7 @@ class RegisterFinishPresenter
     public function present(Result $result): JsonResponse
     {
         [$data, $status] = $result->match(
-            fn (RegisterFinishOutputData $output) => [
+            static fn (RegisterFinishOutputData $output) => [
                 new RegisterFinishResponse()
                     ->setAccessToken($output->accessToken->jwt->value)
                     ->setRefreshTokenId($output->refreshTokenId)

@@ -31,7 +31,7 @@ class ListYouTubeChannelCommand extends Command
         $this->table(
             ['チャンネルID', 'チャンネル名'],
             array_map(
-                fn (YouTubeChannel $channel): array => [$channel->channelId->value, $channel->name->value],
+                static fn (YouTubeChannel $channel): array => [$channel->channelId->value, $channel->name->value],
                 $channels,
             ),
         );

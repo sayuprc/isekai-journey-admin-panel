@@ -60,10 +60,10 @@ use Song\Route\SongTypeRouteMap;
 use Song\Route\Tag\SongTagRouteMap;
 use Support\Route\AuditLogRouteMap;
 
-Route::middleware(AdminOpenApiValidator::class)->group(function () {
-    Route::prefix('admin')->group(function () {
-        Route::prefix('v1')->group(function () {
-            Route::prefix('auth')->group(function () {
+Route::middleware(AdminOpenApiValidator::class)->group(static function () {
+    Route::prefix('admin')->group(static function () {
+        Route::prefix('v1')->group(static function () {
+            Route::prefix('auth')->group(static function () {
                 Route::post('/login/start', [LoginStartController::class, 'handle'])
                     ->middleware('throttle:passkey-login-start')
                     ->name(AuthRouteMap::LoginStart);
@@ -81,16 +81,16 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                 Route::post('/recovery/finish', [RecoveryFinishController::class, 'handle'])->name(AuthRouteMap::RecoveryFinish);
             });
 
-            Route::middleware(Authenticate::class)->group(function () {
-                Route::prefix('admin-users')->group(function () {
+            Route::middleware(Authenticate::class)->group(static function () {
+                Route::prefix('admin-users')->group(static function () {
                     Route::get('/', [ListAdminUserController::class, 'handle'])->name(AdminUserRouteMap::List);
                 });
 
-                Route::prefix('recovery-codes')->group(function () {
+                Route::prefix('recovery-codes')->group(static function () {
                     Route::post('/', [GenerateRecoveryCodesController::class, 'handle'])->name(AuthRouteMap::GenerateRecoveryCodes);
                 });
 
-                Route::prefix('persons')->group(function () {
+                Route::prefix('persons')->group(static function () {
                     Route::post('/', [CreatePersonController::class, 'handle'])->name(PersonRouteMap::Create);
                     Route::get('/', [ListPersonController::class, 'handle'])->name(PersonRouteMap::List);
                     Route::put('/{personId}', [UpdatePersonController::class, 'handle'])->name(PersonRouteMap::Update);
@@ -99,7 +99,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{personId}', [GetPersonController::class, 'handle'])->name(PersonRouteMap::Get);
                 });
 
-                Route::prefix('media')->group(function () {
+                Route::prefix('media')->group(static function () {
                     Route::post('/', [CreateMediaController::class, 'handle'])->name(MediaRouteMap::Create);
                     Route::delete('/{mediaId}', [DeleteMediaController::class, 'handle'])->name(MediaRouteMap::Delete);
                     Route::put('/{mediaId}', [UpdateMediaController::class, 'handle'])->name(MediaRouteMap::Update);
@@ -107,7 +107,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{mediaId}', [GetMediaController::class, 'handle'])->name(MediaRouteMap::Get);
                 });
 
-                Route::prefix('songs')->group(function () {
+                Route::prefix('songs')->group(static function () {
                     Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
                     Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
                     Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
@@ -115,7 +115,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
                 });
 
-                Route::prefix('release-groups')->group(function () {
+                Route::prefix('release-groups')->group(static function () {
                     Route::post('/', [CreateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Create);
                     Route::put('/{releaseGroupId}', [UpdateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Update);
                     Route::delete('/{releaseGroupId}', [DeleteReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Delete);
@@ -123,7 +123,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{releaseGroupId}', [GetReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Get);
                 });
 
-                Route::prefix('releases')->group(function () {
+                Route::prefix('releases')->group(static function () {
                     Route::post('/', [CreateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Create);
                     Route::post('/jacket-art', [UploadJacketArtController::class, 'handle'])->name(ReleaseRouteMap::UploadJacketArt);
                     Route::put('/{releaseId}', [UpdateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Update);
@@ -131,16 +131,16 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{releaseId}', [GetReleaseController::class, 'handle'])->name(ReleaseRouteMap::Get);
                 });
 
-                Route::prefix('song-types')->group(function () {
+                Route::prefix('song-types')->group(static function () {
                     Route::get('/', [ListSongTypeController::class, 'handle'])->name(SongTypeRouteMap::List);
                 });
 
-                Route::prefix('audit-logs')->group(function () {
+                Route::prefix('audit-logs')->group(static function () {
                     Route::get('/search', [SearchAuditLogController::class, 'handle'])->name(AuditLogRouteMap::Search);
                     Route::get('/{auditLogId}', [GetAuditLogController::class, 'handle'])->name(AuditLogRouteMap::Get);
                 });
 
-                Route::prefix('song-tags')->group(function () {
+                Route::prefix('song-tags')->group(static function () {
                     Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
                     Route::get('/', [ListSongTagController::class, 'handle'])->name(SongTagRouteMap::List);
                     Route::put('/{songTagId}', [UpdateSongTagController::class, 'handle'])->name(SongTagRouteMap::Update);

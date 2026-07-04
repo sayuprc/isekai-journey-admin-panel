@@ -44,7 +44,7 @@ readonly class DeleteUseCase
     private function deleteSongTag(DeleteInputData $inputData): Result
     {
         return SongTagId::create($inputData->songTagId)
-            ->mapErr(fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
+            ->mapErr(static fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
             ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($songTagId): Result {
                 $tag = $this->repository->find($songTagId);
 

@@ -81,7 +81,7 @@ class SongTagIntegrityService
             SongTagName::create($name),
             OrderNo::create($orderNo),
         )
-            ->mapErr(function (array $errors): DomainValidationError {
+            ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
                 foreach ($errors as $error) {
                     if ($error instanceof EntityRuleViolationError) {
@@ -92,6 +92,6 @@ class SongTagIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): SongTag => new SongTag(...$values));
+            ->map(static fn (array $values): SongTag => new SongTag(...$values));
     }
 }
