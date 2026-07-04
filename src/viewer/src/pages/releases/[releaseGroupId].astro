@@ -1,0 +1,20 @@
+---
+import ReleaseDetailContent from '../../components/viewer/details/ReleaseDetailContent.astro';
+import { releaseGroupContentRepository } from '../../features/releases/content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  return (await releaseGroupContentRepository.all()).map(releaseGroup => ({
+    params: { releaseGroupId: releaseGroup.releaseGroupId },
+    props: { releaseGroup },
+  }));
+}
+
+const { releaseGroup } = Astro.props;
+---
+
+<Layout pageTitle={releaseGroup.title}>
+  <section class="shell page-section detail-page">
+    <ReleaseDetailContent releaseGroup={releaseGroup} />
+  </section>
+</Layout>

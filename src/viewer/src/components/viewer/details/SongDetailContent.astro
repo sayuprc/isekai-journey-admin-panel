@@ -8,6 +8,7 @@ interface Props {
 
 const { song } = Astro.props;
 const media = song.media;
+const releaseGroups = song.releaseGroups;
 const creditItems = [
   { en: 'LYRICS', label: '作詞', names: song.lyricists },
   { en: 'MUSIC', label: '作曲', names: song.composers },
@@ -43,24 +44,39 @@ const formatPublishedAt = (value: string): string =>
     }
   </dl>
 
-  {/* {
-    releases.length > 0 && (
+  {
+    releaseGroups.length > 0 && (
       <>
         <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
           <div>
             <span class="label-mono">RELEASES</span>
             <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">収録リリース</span>
           </div>
-          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{releases.length}</span>
+          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{releaseGroups.length}</span>
         </div>
         <div class="rel-list">
           {
-            releases.map(release => (
-              <a class="rel-chip" href={`/releases/${release.id}`}>
-                <div class="color-block" style={`--tile-color:${release.color};width:38px;height:38px;flex-shrink:0;`}></div>
+            releaseGroups.map(releaseGroup => (
+              <a class="rel-chip" href={`/releases/${releaseGroup.releaseGroupId}`}>
+                {
+                  releaseGroup.jacketArtUrl
+                    ? (
+                        <img
+                          class="rel-thumb"
+                          src={releaseGroup.jacketArtUrl}
+                          loading="lazy"
+                          alt={releaseGroup.title}
+                        />
+                      )
+                    : (
+                        <div class="rel-thumb rel-thumb-placeholder">
+                          <span class="rel-thumb-placeholder-label">{releaseGroup.type.name}</span>
+                        </div>
+                      )
+                }
                 <div class="rel-copy">
-                  <div class="rel-main">{release.title}</div>
-                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{release.date} · {release.type}</div>
+                  <div class="rel-main">{releaseGroup.title}</div>
+                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
                 </div>
                 <span style="font-size:14px;color:var(--fg-faint);">→</span>
               </a>
@@ -69,7 +85,7 @@ const formatPublishedAt = (value: string): string =>
         </div>
       </>
     )
-  } */}
+  }
 
   {
     media.length > 0 && (

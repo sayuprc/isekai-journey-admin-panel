@@ -1,0 +1,17 @@
+---
+import ReleaseDetailContent from '../../../components/viewer/details/ReleaseDetailContent.astro';
+import { releaseGroupContentRepository } from '../../../features/releases/content';
+
+export const partial = true;
+
+export async function getStaticPaths() {
+  return (await releaseGroupContentRepository.all()).map(releaseGroup => ({
+    params: { releaseGroupId: releaseGroup.releaseGroupId },
+    props: { releaseGroup },
+  }));
+}
+
+const { releaseGroup } = Astro.props;
+---
+
+<ReleaseDetailContent releaseGroup={releaseGroup} />
