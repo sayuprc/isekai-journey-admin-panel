@@ -177,7 +177,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => ['テスト作曲者A'],
                         'arrangers' => ['テスト編曲者A'],
                         'counts' => [
-                            // 'releaseCount' => 1,
+                            'releaseCount' => 1,
                             'mediaCount' => 2,
                         ],
                         'media' => [
@@ -200,6 +200,18 @@ class ListSongTest extends DatabaseTestCase
                                 ],
                                 'url' => 'https://example.com/article',
                                 'publishedAt' => '2024-05-01',
+                            ],
+                        ],
+                        'releaseGroups' => [
+                            [
+                                'releaseGroupId' => $visibleReleaseGroupId,
+                                'title' => '公開リリース',
+                                'type' => [
+                                    'name' => 'シングル',
+                                    'value' => 1,
+                                ],
+                                'firstReleasedOn' => '2024-01-01',
+                                'jacketArtUrl' => null,
                             ],
                         ],
                     ],
@@ -230,7 +242,7 @@ class ListSongTest extends DatabaseTestCase
                         'composers' => [],
                         'arrangers' => [],
                         'counts' => [
-                            // 'releaseCount' => 0,
+                            'releaseCount' => 0,
                             'mediaCount' => 1,
                         ],
                         'media' => [
@@ -245,6 +257,7 @@ class ListSongTest extends DatabaseTestCase
                                 'publishedAt' => '2024-03-01',
                             ],
                         ],
+                        'releaseGroups' => [],
                     ],
                 ],
             ]);

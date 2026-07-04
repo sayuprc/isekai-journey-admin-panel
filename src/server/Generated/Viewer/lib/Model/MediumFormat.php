@@ -1,6 +1,6 @@
 <?php
 /**
- * SiteStatsResponse
+ * MediumFormat
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * SiteStatsResponse Class Doc Comment
+ * MediumFormat Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Viewer\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SiteStatsResponse';
+    protected static $openAPIModelName = 'MediumFormat';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_count' => 'int',
-        'release_count' => 'int'
+        'name' => 'string',
+        'value' => '\OpenAPI\Viewer\Client\Model\MediumFormatValue'
     ];
 
     /**
@@ -69,8 +69,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_count' => 'int32',
-        'release_count' => 'int32'
+        'name' => null,
+        'value' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_count' => false,
-        'release_count' => false
+        'name' => false,
+        'value' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_count' => 'songCount',
-        'release_count' => 'releaseCount'
+        'name' => 'name',
+        'value' => 'value'
     ];
 
     /**
@@ -179,8 +179,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'song_count' => 'setSongCount',
-        'release_count' => 'setReleaseCount'
+        'name' => 'setName',
+        'value' => 'setValue'
     ];
 
     /**
@@ -189,8 +189,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'song_count' => 'getSongCount',
-        'release_count' => 'getReleaseCount'
+        'name' => 'getName',
+        'value' => 'getValue'
     ];
 
     /**
@@ -250,8 +250,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_count', $data ?? [], null);
-        $this->setIfExists('release_count', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('value', $data ?? [], null);
     }
 
     /**
@@ -281,11 +281,11 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $invalidProperties = [];
 
-        if ($this->container['song_count'] === null) {
-            $invalidProperties[] = "'song_count' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
-        if ($this->container['release_count'] === null) {
-            $invalidProperties[] = "'release_count' can't be null";
+        if ($this->container['value'] === null) {
+            $invalidProperties[] = "'value' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +303,55 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets song_count
+     * Gets name
      *
-     * @return int
+     * @return string
      */
-    public function getSongCount()
+    public function getName()
     {
-        return $this->container['song_count'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets song_count
+     * Sets name
      *
-     * @param int $song_count 公開対象楽曲数
+     * @param string $name name
      *
      * @return self
      */
-    public function setSongCount($song_count)
+    public function setName($name)
     {
-        if (is_null($song_count)) {
-            throw new \InvalidArgumentException('non-nullable song_count cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['song_count'] = $song_count;
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets release_count
+     * Gets value
      *
-     * @return int
+     * @return \OpenAPI\Viewer\Client\Model\MediumFormatValue
      */
-    public function getReleaseCount()
+    public function getValue()
     {
-        return $this->container['release_count'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets release_count
+     * Sets value
      *
-     * @param int $release_count 公開対象リリースグループ数
+     * @param \OpenAPI\Viewer\Client\Model\MediumFormatValue $value value
      *
      * @return self
      */
-    public function setReleaseCount($release_count)
+    public function setValue($value)
     {
-        if (is_null($release_count)) {
-            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        if (is_null($value)) {
+            throw new \InvalidArgumentException('non-nullable value cannot be null');
         }
-        $this->container['release_count'] = $release_count;
+        $this->container['value'] = $value;
 
         return $this;
     }

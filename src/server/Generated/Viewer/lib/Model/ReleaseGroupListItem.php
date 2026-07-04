@@ -1,6 +1,6 @@
 <?php
 /**
- * SiteStatsResponse
+ * ReleaseGroupListItem
  *
  * PHP version 8.1
  *
@@ -32,15 +32,16 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * SiteStatsResponse Class Doc Comment
+ * ReleaseGroupListItem Class Doc Comment
  *
  * @category Class
+ * @description リリースグループ。公開リリースを 1 件以上持つものだけが一覧に載る
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class ReleaseGroupListItem implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +50,7 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SiteStatsResponse';
+    protected static $openAPIModelName = 'ReleaseGroupListItem';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +58,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_count' => 'int',
-        'release_count' => 'int'
+        'release_group_id' => 'string',
+        'title' => 'string',
+        'type' => '\OpenAPI\Viewer\Client\Model\ReleaseGroupType',
+        'description' => 'string',
+        'first_released_on' => '\DateTime',
+        'releases' => '\OpenAPI\Viewer\Client\Model\ReleaseListItem[]'
     ];
 
     /**
@@ -69,8 +74,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_count' => 'int32',
-        'release_count' => 'int32'
+        'release_group_id' => 'uuid',
+        'title' => null,
+        'type' => null,
+        'description' => null,
+        'first_released_on' => 'date',
+        'releases' => null
     ];
 
     /**
@@ -79,8 +88,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_count' => false,
-        'release_count' => false
+        'release_group_id' => false,
+        'title' => false,
+        'type' => false,
+        'description' => false,
+        'first_released_on' => false,
+        'releases' => false
     ];
 
     /**
@@ -169,8 +182,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_count' => 'songCount',
-        'release_count' => 'releaseCount'
+        'release_group_id' => 'releaseGroupId',
+        'title' => 'title',
+        'type' => 'type',
+        'description' => 'description',
+        'first_released_on' => 'firstReleasedOn',
+        'releases' => 'releases'
     ];
 
     /**
@@ -179,8 +196,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'song_count' => 'setSongCount',
-        'release_count' => 'setReleaseCount'
+        'release_group_id' => 'setReleaseGroupId',
+        'title' => 'setTitle',
+        'type' => 'setType',
+        'description' => 'setDescription',
+        'first_released_on' => 'setFirstReleasedOn',
+        'releases' => 'setReleases'
     ];
 
     /**
@@ -189,8 +210,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'song_count' => 'getSongCount',
-        'release_count' => 'getReleaseCount'
+        'release_group_id' => 'getReleaseGroupId',
+        'title' => 'getTitle',
+        'type' => 'getType',
+        'description' => 'getDescription',
+        'first_released_on' => 'getFirstReleasedOn',
+        'releases' => 'getReleases'
     ];
 
     /**
@@ -250,8 +275,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_count', $data ?? [], null);
-        $this->setIfExists('release_count', $data ?? [], null);
+        $this->setIfExists('release_group_id', $data ?? [], null);
+        $this->setIfExists('title', $data ?? [], null);
+        $this->setIfExists('type', $data ?? [], null);
+        $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('first_released_on', $data ?? [], null);
+        $this->setIfExists('releases', $data ?? [], null);
     }
 
     /**
@@ -281,11 +310,27 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $invalidProperties = [];
 
-        if ($this->container['song_count'] === null) {
-            $invalidProperties[] = "'song_count' can't be null";
+        if ($this->container['release_group_id'] === null) {
+            $invalidProperties[] = "'release_group_id' can't be null";
         }
-        if ($this->container['release_count'] === null) {
-            $invalidProperties[] = "'release_count' can't be null";
+        if ($this->container['title'] === null) {
+            $invalidProperties[] = "'title' can't be null";
+        }
+        if ((mb_strlen($this->container['title']) < 1)) {
+            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['type'] === null) {
+            $invalidProperties[] = "'type' can't be null";
+        }
+        if ($this->container['description'] === null) {
+            $invalidProperties[] = "'description' can't be null";
+        }
+        if ($this->container['first_released_on'] === null) {
+            $invalidProperties[] = "'first_released_on' can't be null";
+        }
+        if ($this->container['releases'] === null) {
+            $invalidProperties[] = "'releases' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +348,168 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets song_count
+     * Gets release_group_id
      *
-     * @return int
+     * @return string
      */
-    public function getSongCount()
+    public function getReleaseGroupId()
     {
-        return $this->container['song_count'];
+        return $this->container['release_group_id'];
     }
 
     /**
-     * Sets song_count
+     * Sets release_group_id
      *
-     * @param int $song_count 公開対象楽曲数
+     * @param string $release_group_id リリースグループID
      *
      * @return self
      */
-    public function setSongCount($song_count)
+    public function setReleaseGroupId($release_group_id)
     {
-        if (is_null($song_count)) {
-            throw new \InvalidArgumentException('non-nullable song_count cannot be null');
+        if (is_null($release_group_id)) {
+            throw new \InvalidArgumentException('non-nullable release_group_id cannot be null');
         }
-        $this->container['song_count'] = $song_count;
+        $this->container['release_group_id'] = $release_group_id;
 
         return $this;
     }
 
     /**
-     * Gets release_count
+     * Gets title
      *
-     * @return int
+     * @return string
      */
-    public function getReleaseCount()
+    public function getTitle()
     {
-        return $this->container['release_count'];
+        return $this->container['title'];
     }
 
     /**
-     * Sets release_count
+     * Sets title
      *
-     * @param int $release_count 公開対象リリースグループ数
+     * @param string $title リリースグループタイトル
      *
      * @return self
      */
-    public function setReleaseCount($release_count)
+    public function setTitle($title)
     {
-        if (is_null($release_count)) {
-            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        if (is_null($title)) {
+            throw new \InvalidArgumentException('non-nullable title cannot be null');
         }
-        $this->container['release_count'] = $release_count;
+
+        if ((mb_strlen($title) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $title when calling ReleaseGroupListItem., must be bigger than or equal to 1.');
+        }
+
+        $this->container['title'] = $title;
+
+        return $this;
+    }
+
+    /**
+     * Gets type
+     *
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseGroupType
+     */
+    public function getType()
+    {
+        return $this->container['type'];
+    }
+
+    /**
+     * Sets type
+     *
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseGroupType $type type
+     *
+     * @return self
+     */
+    public function setType($type)
+    {
+        if (is_null($type)) {
+            throw new \InvalidArgumentException('non-nullable type cannot be null');
+        }
+        $this->container['type'] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Gets description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->container['description'];
+    }
+
+    /**
+     * Sets description
+     *
+     * @param string $description description
+     *
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        if (is_null($description)) {
+            throw new \InvalidArgumentException('non-nullable description cannot be null');
+        }
+        $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets first_released_on
+     *
+     * @return \DateTime
+     */
+    public function getFirstReleasedOn()
+    {
+        return $this->container['first_released_on'];
+    }
+
+    /**
+     * Sets first_released_on
+     *
+     * @param \DateTime $first_released_on 傘下の公開リリースの最古発売日
+     *
+     * @return self
+     */
+    public function setFirstReleasedOn($first_released_on)
+    {
+        if (is_null($first_released_on)) {
+            throw new \InvalidArgumentException('non-nullable first_released_on cannot be null');
+        }
+        $this->container['first_released_on'] = $first_released_on;
+
+        return $this;
+    }
+
+    /**
+     * Gets releases
+     *
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseListItem[]
+     */
+    public function getReleases()
+    {
+        return $this->container['releases'];
+    }
+
+    /**
+     * Sets releases
+     *
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseListItem[] $releases releases
+     *
+     * @return self
+     */
+    public function setReleases($releases)
+    {
+        if (is_null($releases)) {
+            throw new \InvalidArgumentException('non-nullable releases cannot be null');
+        }
+        $this->container['releases'] = $releases;
 
         return $this;
     }

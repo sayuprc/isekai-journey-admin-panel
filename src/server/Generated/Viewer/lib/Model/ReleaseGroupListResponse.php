@@ -1,6 +1,6 @@
 <?php
 /**
- * SiteStatsResponse
+ * ReleaseGroupListResponse
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * SiteStatsResponse Class Doc Comment
+ * ReleaseGroupListResponse Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Viewer\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class ReleaseGroupListResponse implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SiteStatsResponse';
+    protected static $openAPIModelName = 'ReleaseGroupListResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_count' => 'int',
-        'release_count' => 'int'
+        'release_groups' => '\OpenAPI\Viewer\Client\Model\ReleaseGroupListItem[]',
+        'next_cursor' => 'string'
     ];
 
     /**
@@ -69,8 +69,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_count' => 'int32',
-        'release_count' => 'int32'
+        'release_groups' => null,
+        'next_cursor' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_count' => false,
-        'release_count' => false
+        'release_groups' => false,
+        'next_cursor' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_count' => 'songCount',
-        'release_count' => 'releaseCount'
+        'release_groups' => 'releaseGroups',
+        'next_cursor' => 'nextCursor'
     ];
 
     /**
@@ -179,8 +179,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'song_count' => 'setSongCount',
-        'release_count' => 'setReleaseCount'
+        'release_groups' => 'setReleaseGroups',
+        'next_cursor' => 'setNextCursor'
     ];
 
     /**
@@ -189,8 +189,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'song_count' => 'getSongCount',
-        'release_count' => 'getReleaseCount'
+        'release_groups' => 'getReleaseGroups',
+        'next_cursor' => 'getNextCursor'
     ];
 
     /**
@@ -250,8 +250,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_count', $data ?? [], null);
-        $this->setIfExists('release_count', $data ?? [], null);
+        $this->setIfExists('release_groups', $data ?? [], null);
+        $this->setIfExists('next_cursor', $data ?? [], null);
     }
 
     /**
@@ -281,11 +281,8 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $invalidProperties = [];
 
-        if ($this->container['song_count'] === null) {
-            $invalidProperties[] = "'song_count' can't be null";
-        }
-        if ($this->container['release_count'] === null) {
-            $invalidProperties[] = "'release_count' can't be null";
+        if ($this->container['release_groups'] === null) {
+            $invalidProperties[] = "'release_groups' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +300,55 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets song_count
+     * Gets release_groups
      *
-     * @return int
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseGroupListItem[]
      */
-    public function getSongCount()
+    public function getReleaseGroups()
     {
-        return $this->container['song_count'];
+        return $this->container['release_groups'];
     }
 
     /**
-     * Sets song_count
+     * Sets release_groups
      *
-     * @param int $song_count 公開対象楽曲数
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseGroupListItem[] $release_groups release_groups
      *
      * @return self
      */
-    public function setSongCount($song_count)
+    public function setReleaseGroups($release_groups)
     {
-        if (is_null($song_count)) {
-            throw new \InvalidArgumentException('non-nullable song_count cannot be null');
+        if (is_null($release_groups)) {
+            throw new \InvalidArgumentException('non-nullable release_groups cannot be null');
         }
-        $this->container['song_count'] = $song_count;
+        $this->container['release_groups'] = $release_groups;
 
         return $this;
     }
 
     /**
-     * Gets release_count
+     * Gets next_cursor
      *
-     * @return int
+     * @return string|null
      */
-    public function getReleaseCount()
+    public function getNextCursor()
     {
-        return $this->container['release_count'];
+        return $this->container['next_cursor'];
     }
 
     /**
-     * Sets release_count
+     * Sets next_cursor
      *
-     * @param int $release_count 公開対象リリースグループ数
+     * @param string|null $next_cursor 続きがある場合のみ返す
      *
      * @return self
      */
-    public function setReleaseCount($release_count)
+    public function setNextCursor($next_cursor)
     {
-        if (is_null($release_count)) {
-            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        if (is_null($next_cursor)) {
+            throw new \InvalidArgumentException('non-nullable next_cursor cannot be null');
         }
-        $this->container['release_count'] = $release_count;
+        $this->container['next_cursor'] = $next_cursor;
 
         return $this;
     }

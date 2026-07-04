@@ -65,7 +65,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => 'string[]',
         'composers' => 'string[]',
         'arrangers' => 'string[]',
-        'media' => '\OpenAPI\Viewer\Client\Model\SongMediaSummary[]'
+        'media' => '\OpenAPI\Viewer\Client\Model\SongMediaSummary[]',
+        'release_groups' => '\OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary[]'
     ];
 
     /**
@@ -84,7 +85,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => null,
         'composers' => null,
         'arrangers' => null,
-        'media' => null
+        'media' => null,
+        'release_groups' => null
     ];
 
     /**
@@ -101,7 +103,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => false,
         'composers' => false,
         'arrangers' => false,
-        'media' => false
+        'media' => false,
+        'release_groups' => false
     ];
 
     /**
@@ -198,7 +201,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => 'lyricists',
         'composers' => 'composers',
         'arrangers' => 'arrangers',
-        'media' => 'media'
+        'media' => 'media',
+        'release_groups' => 'releaseGroups'
     ];
 
     /**
@@ -215,7 +219,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => 'setLyricists',
         'composers' => 'setComposers',
         'arrangers' => 'setArrangers',
-        'media' => 'setMedia'
+        'media' => 'setMedia',
+        'release_groups' => 'setReleaseGroups'
     ];
 
     /**
@@ -232,7 +237,8 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'lyricists' => 'getLyricists',
         'composers' => 'getComposers',
         'arrangers' => 'getArrangers',
-        'media' => 'getMedia'
+        'media' => 'getMedia',
+        'release_groups' => 'getReleaseGroups'
     ];
 
     /**
@@ -301,6 +307,7 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('composers', $data ?? [], null);
         $this->setIfExists('arrangers', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
+        $this->setIfExists('release_groups', $data ?? [], null);
     }
 
     /**
@@ -360,6 +367,9 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         }
         if ($this->container['media'] === null) {
             $invalidProperties[] = "'media' can't be null";
+        }
+        if ($this->container['release_groups'] === null) {
+            $invalidProperties[] = "'release_groups' can't be null";
         }
         return $invalidProperties;
     }
@@ -620,6 +630,33 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable media cannot be null');
         }
         $this->container['media'] = $media;
+
+        return $this;
+    }
+
+    /**
+     * Gets release_groups
+     *
+     * @return \OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary[]
+     */
+    public function getReleaseGroups()
+    {
+        return $this->container['release_groups'];
+    }
+
+    /**
+     * Sets release_groups
+     *
+     * @param \OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary[] $release_groups 収録先の公開リリースグループ（最古発売日の降順）
+     *
+     * @return self
+     */
+    public function setReleaseGroups($release_groups)
+    {
+        if (is_null($release_groups)) {
+            throw new \InvalidArgumentException('non-nullable release_groups cannot be null');
+        }
+        $this->container['release_groups'] = $release_groups;
 
         return $this;
     }

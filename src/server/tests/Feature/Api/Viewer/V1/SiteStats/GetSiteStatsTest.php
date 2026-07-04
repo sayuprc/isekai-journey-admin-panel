@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Viewer\V1\SiteStats;
 
 use PHPUnit\Framework\Attributes\Test;
+use Release\Domain\Models\ReleaseGroupType;
 use SiteStats\Route\ViewerSiteStatsRouteMap;
 use Song\Domain\Models\SongType;
 use Tests\Support\DatabaseTestCase;
@@ -17,7 +18,7 @@ class GetSiteStatsTest extends DatabaseTestCase
     use EntityStore;
 
     #[Test]
-    public function showPublicSongCount(): void
+    public function showPublicCounts(): void
     {
         $this->storeSongs(
             $this->createSong(
@@ -46,10 +47,26 @@ class GetSiteStatsTest extends DatabaseTestCase
             ),
         );
 
+        $visibleGroupId = $this->generateUuid();
+        $hiddenGroupId = $this->generateUuid();
+        $emptyGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($visibleGroupId, '公開グループ', ReleaseGroupType::Album, true),
+            $this->createReleaseGroup($hiddenGroupId, '非公開グループ', ReleaseGroupType::Single, false),
+            $this->createReleaseGroup($emptyGroupId, '公開リリース無しグループ', ReleaseGroupType::Ep, true),
+        );
+        $this->storeReleases(
+            $this->createRelease($this->generateUuid(), $visibleGroupId, '通常盤', true),
+            $this->createRelease($this->generateUuid(), $hiddenGroupId, '通常盤', true),
+            $this->createRelease($this->generateUuid(), $emptyGroupId, '非公開盤', false),
+        );
+
         $this->get(route(ViewerSiteStatsRouteMap::Get))
             ->assertStatus(200)
             ->assertExactJson([
                 'songCount' => 2,
+                'releaseCount' => 1,
             ]);
     }
 }

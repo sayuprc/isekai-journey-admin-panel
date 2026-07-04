@@ -47,11 +47,88 @@ export type MediaType = {
  */
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 5 | 99;
 
+export type MediumFormat = {
+    name: string;
+    value: MediumFormatValue;
+};
+
+/**
+ * 媒体種別の値
+ */
+export type MediumFormatValue = 1 | 2 | 3 | 4 | 99;
+
+/**
+ * リリースグループ。公開リリースを 1 件以上持つものだけが一覧に載る
+ */
+export type ReleaseGroupListItem = {
+    releaseGroupId: ReleaseGroupId;
+    title: ReleaseGroupTitle;
+    type: ReleaseGroupType;
+    description: string;
+    /**
+     * 傘下の公開リリースの最古発売日
+     */
+    firstReleasedOn: ReleasedOn;
+    releases: Array<ReleaseListItem>;
+};
+
+export type ReleaseGroupListResponse = {
+    releaseGroups: Array<ReleaseGroupListItem>;
+    /**
+     * 続きがある場合のみ返す
+     */
+    nextCursor?: Cursor;
+};
+
+export type ReleaseGroupType = {
+    name: string;
+    value: ReleaseGroupTypeValue;
+};
+
+/**
+ * リリースグループ種別の値
+ */
+export type ReleaseGroupTypeValue = 1 | 2 | 3 | 99;
+
+/**
+ * リリース（版）
+ */
+export type ReleaseListItem = {
+    releaseId: ReleaseId;
+    name: ReleaseName;
+    releasedOn: ReleasedOn;
+    description: string;
+    jacketArtUrl: JacketArtUrl | null;
+    media: Array<ReleaseMediumItem>;
+};
+
+/**
+ * リリース内の媒体
+ */
+export type ReleaseMediumItem = {
+    position: OrderNo;
+    format: MediumFormat;
+    tracks: Array<ReleaseTrackItem>;
+};
+
+/**
+ * 収録曲（公開楽曲のみ）
+ */
+export type ReleaseTrackItem = {
+    trackNo: OrderNo;
+    songId: Uuid;
+    title: string;
+};
+
 export type SiteStatsResponse = {
     /**
      * 公開対象楽曲数
      */
     songCount: number;
+    /**
+     * 公開対象リリースグループ数
+     */
+    releaseCount: number;
 };
 
 export type SongListItem = {
@@ -64,6 +141,10 @@ export type SongListItem = {
     composers: Array<string>;
     arrangers: Array<string>;
     media: Array<SongMediaSummary>;
+    /**
+     * 収録先の公開リリースグループ（最古発売日の降順）
+     */
+    releaseGroups: Array<SongReleaseGroupSummary>;
 };
 
 export type SongListResponse = {
@@ -84,9 +165,27 @@ export type SongMediaSummary = {
 
 export type SongRelationCounts = {
     /**
+     * 関連リリースグループ数
+     */
+    releaseCount: number;
+    /**
      * 関連メディア数
      */
     mediaCount: number;
+};
+
+/**
+ * 楽曲が収録されている公開リリースグループの概要
+ */
+export type SongReleaseGroupSummary = {
+    releaseGroupId: ReleaseGroupId;
+    title: ReleaseGroupTitle;
+    type: ReleaseGroupType;
+    firstReleasedOn: ReleasedOn;
+    /**
+     * 代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）
+     */
+    jacketArtUrl: JacketArtUrl | null;
 };
 
 export type SongType = {
@@ -110,6 +209,11 @@ export type Cursor = string;
  * 楽曲の説明
  */
 export type Description = string;
+
+/**
+ * ジャケットアートURL
+ */
+export type JacketArtUrl = string;
 
 /**
  * 1 度に取得する件数
@@ -142,6 +246,36 @@ export type MediaTypeName = string;
 export type MediaUrl = string;
 
 /**
+ * 表示順
+ */
+export type OrderNo = number;
+
+/**
+ * リリースグループID
+ */
+export type ReleaseGroupId = string;
+
+/**
+ * リリースグループタイトル
+ */
+export type ReleaseGroupTitle = string;
+
+/**
+ * リリースID
+ */
+export type ReleaseId = string;
+
+/**
+ * リリース版名
+ */
+export type ReleaseName = string;
+
+/**
+ * 発売日
+ */
+export type ReleasedOn = string;
+
+/**
  * 楽曲ID
  */
 export type SongId = string;
@@ -155,6 +289,11 @@ export type SongTypeName = string;
  * 楽曲名
  */
 export type Title = string;
+
+/**
+ * UUID v4
+ */
+export type Uuid = string;
 
 export type MediaServiceListMediaData = {
     body?: never;
@@ -181,6 +320,32 @@ export type MediaServiceListMediaResponses = {
 };
 
 export type MediaServiceListMediaResponse = MediaServiceListMediaResponses[keyof MediaServiceListMediaResponses];
+
+export type ReleaseGroupServiceListReleaseGroupsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        cursor?: Cursor;
+        limit?: Limit;
+    };
+    url: '/release-groups';
+};
+
+export type ReleaseGroupServiceListReleaseGroupsErrors = {
+    /**
+     * Server error
+     */
+    500: unknown;
+};
+
+export type ReleaseGroupServiceListReleaseGroupsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ReleaseGroupListResponse;
+};
+
+export type ReleaseGroupServiceListReleaseGroupsResponse = ReleaseGroupServiceListReleaseGroupsResponses[keyof ReleaseGroupServiceListReleaseGroupsResponses];
 
 export type SiteStatsServiceGetSiteStatsData = {
     body?: never;

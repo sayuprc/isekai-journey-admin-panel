@@ -26,6 +26,15 @@ readonly class SiteStatsQueryService implements SiteStatsQueryServiceInterface
                 ->aggregate($this->queryFactory->pdo(), 'COUNT(*)'),
         );
 
-        return new SiteStats($songCount);
+        // 公開リリースを 1 件以上持つ公開リリースグループのみを数える。
+        $releaseCount = Row::intValue(
+            $this->queryFactory->select()
+                ->from('release_groups')
+                ->join('releases', 'releases.release_group_id = release_groups.release_group_id AND releases.is_display = TRUE')
+                ->where('release_groups.is_display', '=', true)
+                ->aggregate($this->queryFactory->pdo(), 'COUNT(DISTINCT release_groups.release_group_id)'),
+        );
+
+        return new SiteStats($songCount, $releaseCount);
     }
 }

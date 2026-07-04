@@ -4,6 +4,7 @@ import "../packages/media";
 import "../packages/song";
 import "../shared";
 import "./media";
+import "./releases";
 import "./site-stats";
 import "./songs";
 

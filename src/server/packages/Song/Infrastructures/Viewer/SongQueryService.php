@@ -13,6 +13,7 @@ use Song\Application\Viewer\Query\SongListItem;
 use Song\Application\Viewer\Query\SongListPage;
 use Song\Application\Viewer\Query\SongMediaSummary;
 use Song\Application\Viewer\Query\SongQueryServiceInterface;
+use Song\Application\Viewer\Query\SongReleaseGroupSummary;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidConverterInterface;
@@ -60,9 +61,10 @@ readonly class SongQueryService implements SongQueryServiceInterface
 
         $personsBySong = $this->loadPersons($binSongIds);
         $mediaBySong = $this->loadMedia($binSongIds);
+        $releaseGroupsBySong = $this->loadReleaseGroups($binSongIds);
 
         $songs = array_map(
-            function (array $songRow) use ($personsBySong, $mediaBySong): SongListItem {
+            function (array $songRow) use ($personsBySong, $mediaBySong, $releaseGroupsBySong): SongListItem {
                 $binSongId = Row::string($songRow, 'song_id');
                 $personRows = $personsBySong[$binSongId] ?? [];
                 $mediaRows = $mediaBySong[$binSongId] ?? [];
@@ -76,6 +78,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                     $this->personNamesByRole($personRows, SongPersonRole::Composer),
                     $this->personNamesByRole($personRows, SongPersonRole::Arranger),
                     array_map($this->toMediaSummary(...), $mediaRows),
+                    $releaseGroupsBySong[$binSongId] ?? [],
                     Row::int($songRow, 'order_no'),
                 );
             },
@@ -147,6 +150,107 @@ readonly class SongQueryService implements SongQueryServiceInterface
         );
 
         return $this->groupBySongId($rows);
+    }
+
+    /**
+     * 楽曲 → 公開リリースグループの逆引き。公開リリース経由のもののみ。
+     *
+     * @param list<string> $binSongIds
+     *
+     * @return array<string, list<SongReleaseGroupSummary>>
+     */
+    private function loadReleaseGroups(array $binSongIds): array
+    {
+        if ($binSongIds === []) {
+            return [];
+        }
+
+        $linkRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect([
+                    'release_tracks.song_id',
+                    'release_groups.release_group_id',
+                    'release_groups.title',
+                    'release_groups.type',
+                ])
+                ->from('release_tracks')
+                ->join('releases', 'releases.release_id = release_tracks.release_id')
+                ->join('release_groups', 'release_groups.release_group_id = releases.release_group_id')
+                ->where('release_tracks.song_id', 'IN', $binSongIds)
+                ->where('releases.is_display', '=', true)
+                ->where('release_groups.is_display', '=', true),
+        );
+
+        if ($linkRows === []) {
+            return [];
+        }
+
+        $binGroupIds = array_values(array_unique(array_map(
+            fn (array $row): string => Row::string($row, 'release_group_id'),
+            $linkRows,
+        )));
+
+        // グループごとの最古公開リリースから代表発売日とジャケットを引く。
+        $releaseRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['release_group_id', 'released_on', 'jacket_art_url'])
+                ->from('releases')
+                ->where('release_group_id', 'IN', $binGroupIds)
+                ->where('is_display', '=', true)
+                ->orderBy('released_on')
+                ->orderBy('name'),
+        );
+
+        $firstReleaseByGroup = [];
+        $jacketByGroup = [];
+
+        foreach ($releaseRows as $row) {
+            $binGroupId = Row::string($row, 'release_group_id');
+            $firstReleaseByGroup[$binGroupId] ??= $row;
+
+            // 代表ジャケットは発売日順で最初に設定されているものを使う。
+            if (! isset($jacketByGroup[$binGroupId]) && ! is_null(Row::nullableString($row, 'jacket_art_url'))) {
+                $jacketByGroup[$binGroupId] = Row::string($row, 'jacket_art_url');
+            }
+        }
+
+        $grouped = [];
+        $seen = [];
+
+        foreach ($linkRows as $row) {
+            $binSongId = Row::string($row, 'song_id');
+            $binGroupId = Row::string($row, 'release_group_id');
+
+            // 同一グループ内の複数リリースに収録されていても 1 件にまとめる。
+            if (isset($seen[$binSongId][$binGroupId])) {
+                continue;
+            }
+
+            $firstRelease = $firstReleaseByGroup[$binGroupId] ?? null;
+
+            if (is_null($firstRelease)) {
+                continue;
+            }
+
+            $seen[$binSongId][$binGroupId] = true;
+            $grouped[$binSongId][] = new SongReleaseGroupSummary(
+                $this->converter->toUuid($binGroupId),
+                Row::string($row, 'title'),
+                Row::int($row, 'type'),
+                Row::string($firstRelease, 'released_on'),
+                $jacketByGroup[$binGroupId] ?? null,
+            );
+        }
+
+        // 最古発売日の降順で並べる。
+        foreach ($grouped as &$summaries) {
+            usort(
+                $summaries,
+                fn (SongReleaseGroupSummary $a, SongReleaseGroupSummary $b): int => [$b->firstReleasedOn, $a->title] <=> [$a->firstReleasedOn, $b->title],
+            );
+        }
+
+        return $grouped;
     }
 
     /**

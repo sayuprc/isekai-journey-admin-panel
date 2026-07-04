@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { MediaServiceListMediaData, MediaServiceListMediaErrors, MediaServiceListMediaResponses, SiteStatsServiceGetSiteStatsData, SiteStatsServiceGetSiteStatsErrors, SiteStatsServiceGetSiteStatsResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
+import type { MediaServiceListMediaData, MediaServiceListMediaErrors, MediaServiceListMediaResponses, ReleaseGroupServiceListReleaseGroupsData, ReleaseGroupServiceListReleaseGroupsErrors, ReleaseGroupServiceListReleaseGroupsResponses, SiteStatsServiceGetSiteStatsData, SiteStatsServiceGetSiteStatsErrors, SiteStatsServiceGetSiteStatsResponses, SongServiceListSongsData, SongServiceListSongsErrors, SongServiceListSongsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -22,6 +22,11 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * メディア一覧取得API
  */
 export const mediaServiceListMedia = <ThrowOnError extends boolean = false>(options?: Options<MediaServiceListMediaData, ThrowOnError>) => (options?.client ?? client).get<MediaServiceListMediaResponses, MediaServiceListMediaErrors, ThrowOnError>({ url: '/media', ...options });
+
+/**
+ * リリースグループ一覧取得API
+ */
+export const releaseGroupServiceListReleaseGroups = <ThrowOnError extends boolean = false>(options?: Options<ReleaseGroupServiceListReleaseGroupsData, ThrowOnError>) => (options?.client ?? client).get<ReleaseGroupServiceListReleaseGroupsResponses, ReleaseGroupServiceListReleaseGroupsErrors, ThrowOnError>({ url: '/release-groups', ...options });
 
 /**
  * サイト集計取得API

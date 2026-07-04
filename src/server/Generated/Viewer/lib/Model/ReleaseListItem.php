@@ -1,6 +1,6 @@
 <?php
 /**
- * SiteStatsResponse
+ * ReleaseListItem
  *
  * PHP version 8.1
  *
@@ -32,15 +32,16 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * SiteStatsResponse Class Doc Comment
+ * ReleaseListItem Class Doc Comment
  *
  * @category Class
+ * @description リリース（版）
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializable
+class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +50,7 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'SiteStatsResponse';
+    protected static $openAPIModelName = 'ReleaseListItem';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +58,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'song_count' => 'int',
-        'release_count' => 'int'
+        'release_id' => 'string',
+        'name' => 'string',
+        'released_on' => '\DateTime',
+        'description' => 'string',
+        'jacket_art_url' => 'string',
+        'media' => '\OpenAPI\Viewer\Client\Model\ReleaseMediumItem[]'
     ];
 
     /**
@@ -69,8 +74,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'song_count' => 'int32',
-        'release_count' => 'int32'
+        'release_id' => 'uuid',
+        'name' => null,
+        'released_on' => 'date',
+        'description' => null,
+        'jacket_art_url' => null,
+        'media' => null
     ];
 
     /**
@@ -79,8 +88,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_count' => false,
-        'release_count' => false
+        'release_id' => false,
+        'name' => false,
+        'released_on' => false,
+        'description' => false,
+        'jacket_art_url' => true,
+        'media' => false
     ];
 
     /**
@@ -169,8 +182,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'song_count' => 'songCount',
-        'release_count' => 'releaseCount'
+        'release_id' => 'releaseId',
+        'name' => 'name',
+        'released_on' => 'releasedOn',
+        'description' => 'description',
+        'jacket_art_url' => 'jacketArtUrl',
+        'media' => 'media'
     ];
 
     /**
@@ -179,8 +196,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'song_count' => 'setSongCount',
-        'release_count' => 'setReleaseCount'
+        'release_id' => 'setReleaseId',
+        'name' => 'setName',
+        'released_on' => 'setReleasedOn',
+        'description' => 'setDescription',
+        'jacket_art_url' => 'setJacketArtUrl',
+        'media' => 'setMedia'
     ];
 
     /**
@@ -189,8 +210,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'song_count' => 'getSongCount',
-        'release_count' => 'getReleaseCount'
+        'release_id' => 'getReleaseId',
+        'name' => 'getName',
+        'released_on' => 'getReleasedOn',
+        'description' => 'getDescription',
+        'jacket_art_url' => 'getJacketArtUrl',
+        'media' => 'getMedia'
     ];
 
     /**
@@ -250,8 +275,12 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('song_count', $data ?? [], null);
-        $this->setIfExists('release_count', $data ?? [], null);
+        $this->setIfExists('release_id', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('released_on', $data ?? [], null);
+        $this->setIfExists('description', $data ?? [], null);
+        $this->setIfExists('jacket_art_url', $data ?? [], null);
+        $this->setIfExists('media', $data ?? [], null);
     }
 
     /**
@@ -281,11 +310,27 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
     {
         $invalidProperties = [];
 
-        if ($this->container['song_count'] === null) {
-            $invalidProperties[] = "'song_count' can't be null";
+        if ($this->container['release_id'] === null) {
+            $invalidProperties[] = "'release_id' can't be null";
         }
-        if ($this->container['release_count'] === null) {
-            $invalidProperties[] = "'release_count' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
+        }
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['released_on'] === null) {
+            $invalidProperties[] = "'released_on' can't be null";
+        }
+        if ($this->container['description'] === null) {
+            $invalidProperties[] = "'description' can't be null";
+        }
+        if ($this->container['jacket_art_url'] === null) {
+            $invalidProperties[] = "'jacket_art_url' can't be null";
+        }
+        if ($this->container['media'] === null) {
+            $invalidProperties[] = "'media' can't be null";
         }
         return $invalidProperties;
     }
@@ -303,55 +348,175 @@ class SiteStatsResponse implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets song_count
+     * Gets release_id
      *
-     * @return int
+     * @return string
      */
-    public function getSongCount()
+    public function getReleaseId()
     {
-        return $this->container['song_count'];
+        return $this->container['release_id'];
     }
 
     /**
-     * Sets song_count
+     * Sets release_id
      *
-     * @param int $song_count 公開対象楽曲数
+     * @param string $release_id リリースID
      *
      * @return self
      */
-    public function setSongCount($song_count)
+    public function setReleaseId($release_id)
     {
-        if (is_null($song_count)) {
-            throw new \InvalidArgumentException('non-nullable song_count cannot be null');
+        if (is_null($release_id)) {
+            throw new \InvalidArgumentException('non-nullable release_id cannot be null');
         }
-        $this->container['song_count'] = $song_count;
+        $this->container['release_id'] = $release_id;
 
         return $this;
     }
 
     /**
-     * Gets release_count
+     * Gets name
      *
-     * @return int
+     * @return string
      */
-    public function getReleaseCount()
+    public function getName()
     {
-        return $this->container['release_count'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets release_count
+     * Sets name
      *
-     * @param int $release_count 公開対象リリースグループ数
+     * @param string $name リリース版名
      *
      * @return self
      */
-    public function setReleaseCount($release_count)
+    public function setName($name)
     {
-        if (is_null($release_count)) {
-            throw new \InvalidArgumentException('non-nullable release_count cannot be null');
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-        $this->container['release_count'] = $release_count;
+
+        if ((mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling ReleaseListItem., must be bigger than or equal to 1.');
+        }
+
+        $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets released_on
+     *
+     * @return \DateTime
+     */
+    public function getReleasedOn()
+    {
+        return $this->container['released_on'];
+    }
+
+    /**
+     * Sets released_on
+     *
+     * @param \DateTime $released_on 発売日
+     *
+     * @return self
+     */
+    public function setReleasedOn($released_on)
+    {
+        if (is_null($released_on)) {
+            throw new \InvalidArgumentException('non-nullable released_on cannot be null');
+        }
+        $this->container['released_on'] = $released_on;
+
+        return $this;
+    }
+
+    /**
+     * Gets description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->container['description'];
+    }
+
+    /**
+     * Sets description
+     *
+     * @param string $description description
+     *
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        if (is_null($description)) {
+            throw new \InvalidArgumentException('non-nullable description cannot be null');
+        }
+        $this->container['description'] = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets jacket_art_url
+     *
+     * @return string
+     */
+    public function getJacketArtUrl()
+    {
+        return $this->container['jacket_art_url'];
+    }
+
+    /**
+     * Sets jacket_art_url
+     *
+     * @param string $jacket_art_url ジャケットアートURL
+     *
+     * @return self
+     */
+    public function setJacketArtUrl($jacket_art_url)
+    {
+        if (is_null($jacket_art_url)) {
+            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('jacket_art_url', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['jacket_art_url'] = $jacket_art_url;
+
+        return $this;
+    }
+
+    /**
+     * Gets media
+     *
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseMediumItem[]
+     */
+    public function getMedia()
+    {
+        return $this->container['media'];
+    }
+
+    /**
+     * Sets media
+     *
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseMediumItem[] $media media
+     *
+     * @return self
+     */
+    public function setMedia($media)
+    {
+        if (is_null($media)) {
+            throw new \InvalidArgumentException('non-nullable media cannot be null');
+        }
+        $this->container['media'] = $media;
 
         return $this;
     }
