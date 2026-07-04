@@ -1197,6 +1197,15 @@ image-slot:hover {
   border-bottom: 1px solid var(--line);
 }
 
+.release-version-meta {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
 .release-version-summary::-webkit-details-marker {
   display: none;
 }
