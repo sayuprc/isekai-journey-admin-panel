@@ -51,6 +51,10 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
     <div data-layout-group="songs">
       <div data-layout-panel="grid">
         <div class="song-grid">
+          <div class="entry-empty entry-empty-panel" data-song-empty hidden>
+            <div class="entry-empty-title">該当する楽曲がありません</div>
+            <div class="entry-empty-description">検索語句や種別フィルタを変えて確認してください。</div>
+          </div>
           {
             songs.map((song, index) => {
               return (
@@ -127,6 +131,10 @@ const formatSongCredits = (lyricists: string[], composers: string[], arrangers: 
 
       <div data-layout-panel="card" hidden>
         <div class="songs-card-grid">
+          <div class="entry-empty entry-empty-panel" data-song-empty hidden>
+            <div class="entry-empty-title">該当する楽曲がありません</div>
+            <div class="entry-empty-description">検索語句や種別フィルタを変えて確認してください。</div>
+          </div>
           {
             songs.map((song, index) => {
               return (
