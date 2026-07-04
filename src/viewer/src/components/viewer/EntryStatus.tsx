@@ -21,9 +21,11 @@ export default function EntryStatus(props: Props) {
 
     if (!props.emptySelector) return;
 
-    const emptyElement = document.querySelector(props.emptySelector);
-    if (emptyElement instanceof HTMLElement) {
-      emptyElement.hidden = nextCount !== 0;
+    const emptyElements = document.querySelectorAll(props.emptySelector);
+    for (const emptyElement of emptyElements) {
+      if (emptyElement instanceof HTMLElement) {
+        emptyElement.hidden = nextCount !== 0;
+      }
     }
   };
 

@@ -1972,6 +1972,13 @@ image-slot:hover {
   border-bottom: 1px solid var(--line);
 }
 
+.entry-empty-panel {
+  grid-column: 1 / -1;
+  justify-content: center;
+  min-height: 180px;
+  border: 1px solid var(--line);
+}
+
 .entry-empty[hidden] {
   display: none;
 }
