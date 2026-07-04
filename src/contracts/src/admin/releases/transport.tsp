@@ -1,13 +1,44 @@
 namespace IsekaiObservatory.Admin;
 
+model ReleaseGroupCreateRequest {
+  title: releaseGroupTitle;
+  typeValue: ReleaseGroupTypeValue;
+  description: string;
+  isDisplay: boolean;
+}
+
+model ReleaseGroupCreateResponse {
+  releaseGroup: ReleaseGroup;
+}
+
+model ReleaseGroupUpdateRequest {
+  title: releaseGroupTitle;
+  typeValue: ReleaseGroupTypeValue;
+  description: string;
+  isDisplay: boolean;
+}
+
+model ReleaseGroupUpdateResponse {
+  releaseGroup: ReleaseGroup;
+}
+
+model ReleaseGroupGetResponse {
+  releaseGroup: ReleaseGroup;
+  releases: ReleaseGroupReferencedRelease[];
+}
+
+model ReleaseGroupSearchResponse {
+  releaseGroups: ReleaseGroupSummary[];
+  maxPage: int32;
+}
+
 model ReleaseCreateRequest {
-  title: releaseTitle;
-  typeValue: ReleaseTypeValue;
-  distributionTypeValue: ReleaseDistributionTypeValue;
+  releaseGroupId: releaseGroupId;
+  name: releaseName;
   releasedOn: releasedOn;
   description: string;
   isDisplay: boolean;
-  trackEntries: TrackEntry[];
+  media: Medium[];
 }
 
 model ReleaseCreateResponse {
@@ -15,13 +46,11 @@ model ReleaseCreateResponse {
 }
 
 model ReleaseUpdateRequest {
-  title: releaseTitle;
-  typeValue: ReleaseTypeValue;
-  distributionTypeValue: ReleaseDistributionTypeValue;
+  name: releaseName;
   releasedOn: releasedOn;
   description: string;
   isDisplay: boolean;
-  trackEntries: TrackEntry[];
+  media: Medium[];
 }
 
 model ReleaseUpdateResponse {
@@ -31,9 +60,4 @@ model ReleaseUpdateResponse {
 model ReleaseGetResponse {
   release: Release;
   songs: ReleaseReferencedSong[];
-}
-
-model ReleaseSearchResponse {
-  releases: Release[];
-  maxPage: int32;
 }

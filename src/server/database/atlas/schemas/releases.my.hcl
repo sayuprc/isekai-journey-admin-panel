@@ -7,22 +7,15 @@ table "releases" {
     type    = binary(16)
     comment = "リリースID"
   }
-  column "title" {
+  column "release_group_id" {
+    null    = false
+    type    = binary(16)
+    comment = "リリースグループID"
+  }
+  column "name" {
     null    = false
     type    = varchar(255)
-    comment = "タイトル"
-  }
-  column "type" {
-    null     = false
-    type     = tinyint
-    unsigned = true
-    comment  = "種別"
-  }
-  column "distribution_type" {
-    null     = false
-    type     = tinyint
-    unsigned = true
-    comment  = "流通形態"
+    comment = "版名"
   }
   column "released_on" {
     null    = false
@@ -52,5 +45,15 @@ table "releases" {
 
   primary_key {
     columns = [column.release_id]
+  }
+
+  index "fk_releases_release_group_id" {
+    columns = [column.release_group_id]
+  }
+
+  foreign_key "fk_releases_release_group_id" {
+    columns     = [column.release_group_id]
+    ref_columns = [table.release_groups.column.release_group_id]
+    on_delete   = RESTRICT
   }
 }

@@ -7,8 +7,14 @@ namespace App\Providers\Domain;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Release\Application\Admin\Query\ReleaseDetailQueryServiceInterface;
+use Release\Application\Admin\Query\ReleaseGroupDetailQueryServiceInterface;
+use Release\Application\Admin\Query\ReleaseGroupSearchQueryServiceInterface;
+use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Release\Infrastructures\Admin\ReleaseDetailQueryService;
+use Release\Infrastructures\Admin\ReleaseGroupDetailQueryService;
+use Release\Infrastructures\Admin\ReleaseGroupSearchQueryService;
+use Release\Infrastructures\ReleaseGroupRepository;
 use Release\Infrastructures\ReleaseRepository;
 
 class ReleaseServiceProvider extends ServiceProvider
@@ -17,6 +23,9 @@ class ReleaseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ReleaseRepositoryInterface::class, ReleaseRepository::class);
+        $this->app->bind(ReleaseGroupRepositoryInterface::class, ReleaseGroupRepository::class);
         $this->app->bind(ReleaseDetailQueryServiceInterface::class, ReleaseDetailQueryService::class);
+        $this->app->bind(ReleaseGroupDetailQueryServiceInterface::class, ReleaseGroupDetailQueryService::class);
+        $this->app->bind(ReleaseGroupSearchQueryServiceInterface::class, ReleaseGroupSearchQueryService::class);
     }
 }

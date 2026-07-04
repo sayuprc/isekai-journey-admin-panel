@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Delete\DeleteInputData;
 use Release\Application\Admin\UseCase\Delete\DeleteUseCase;
-use Release\Domain\Models\ReleaseDistributionType;
-use Release\Domain\Models\ReleaseType;
+use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -27,10 +27,14 @@ class DeleteUseCaseTest extends DatabaseTestCase
     #[Test]
     public function canDelete(): void
     {
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
-            $this->createRelease($releaseId, '削除対象', ReleaseType::Album, ReleaseDistributionType::Digital, true),
+            $this->createRelease($releaseId, $releaseGroupId, '削除対象', true),
         );
 
         $result = $this->getInstance()->handle(new DeleteInputData($releaseId));
@@ -42,27 +46,34 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $log = $this->findAuditLog(AuditAction::Delete, AuditTargetType::Release, $releaseId);
         $snapshot = $log['snapshot'];
         $this->assertIsArray($snapshot);
-        $this->assertSame('削除対象', $snapshot['title'] ?? null);
+        $this->assertSame('削除対象', $snapshot['name'] ?? null);
     }
 
     #[Test]
-    public function canDeleteReleaseWithTrackEntries(): void
+    public function canDeleteReleaseWithMediaAndTracks(): void
     {
         $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
 
         $this->storeSongs(
             $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
         $this->storeReleases(
             $this->createRelease(
                 $releaseId,
+                $releaseGroupId,
                 '削除対象',
-                ReleaseType::Album,
-                ReleaseDistributionType::Digital,
                 true,
-                trackEntries: [
-                    ['songId' => $songId, 'trackNo' => 1],
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                    ],
                 ],
             ),
         );
@@ -71,6 +82,10 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('releases')->get()->all());
+        $this->assertCount(0, DB::table('release_media')->get()->all());
+        $this->assertCount(0, DB::table('release_tracks')->get()->all());
+        // グループ自体は残る。
+        $this->assertCount(1, DB::table('release_groups')->get()->all());
     }
 
     #[Test]

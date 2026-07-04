@@ -28,8 +28,12 @@ use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
 use App\Http\Controllers\Api\Admin\V1\Release\CreateReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\DeleteReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\GetReleaseController;
-use App\Http\Controllers\Api\Admin\V1\Release\SearchReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\UpdateReleaseController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\CreateReleaseGroupController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\DeleteReleaseGroupController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\GetReleaseGroupController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\SearchReleaseGroupController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\UpdateReleaseGroupController;
 use App\Http\Controllers\Api\Admin\V1\Song\CreateSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\DeleteSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\GetSongController;
@@ -48,6 +52,7 @@ use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Route;
 use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
+use Release\Route\ReleaseGroupRouteMap;
 use Release\Route\ReleaseRouteMap;
 use Song\Route\SongRouteMap;
 use Song\Route\SongTypeRouteMap;
@@ -109,11 +114,18 @@ Route::middleware(AdminOpenApiValidator::class)->group(function () {
                     Route::get('/{songId}', [GetSongController::class, 'handle'])->name(SongRouteMap::Get);
                 });
 
+                Route::prefix('release-groups')->group(function () {
+                    Route::post('/', [CreateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Create);
+                    Route::put('/{releaseGroupId}', [UpdateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Update);
+                    Route::delete('/{releaseGroupId}', [DeleteReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Delete);
+                    Route::get('/search', [SearchReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Search);
+                    Route::get('/{releaseGroupId}', [GetReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Get);
+                });
+
                 Route::prefix('releases')->group(function () {
                     Route::post('/', [CreateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Create);
                     Route::put('/{releaseId}', [UpdateReleaseController::class, 'handle'])->name(ReleaseRouteMap::Update);
                     Route::delete('/{releaseId}', [DeleteReleaseController::class, 'handle'])->name(ReleaseRouteMap::Delete);
-                    Route::get('/search', [SearchReleaseController::class, 'handle'])->name(ReleaseRouteMap::Search);
                     Route::get('/{releaseId}', [GetReleaseController::class, 'handle'])->name(ReleaseRouteMap::Get);
                 });
 

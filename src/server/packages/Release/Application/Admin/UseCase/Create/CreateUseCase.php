@@ -12,6 +12,7 @@ use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Error\BusinessRuleViolationError;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
@@ -19,6 +20,7 @@ use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
+use Support\UseCase\Error\BusinessLogicError;
 use Support\UseCase\Error\InvalidInputError;
 use Support\UseCase\Error\UseCaseError;
 
@@ -49,13 +51,12 @@ readonly class CreateUseCase
     {
         return $this->transaction->scope(function () use ($inputData): Result {
             $result = $this->service->prepareForCreate(
-                $inputData->title,
-                $inputData->typeValue,
-                $inputData->distributionTypeValue,
+                $inputData->releaseGroupId,
+                $inputData->name,
                 $inputData->releasedOn,
                 $inputData->description,
                 $inputData->isDisplay,
-                $inputData->trackEntries,
+                $inputData->media,
             );
 
             if ($result->isErr()) {
@@ -80,6 +81,7 @@ readonly class CreateUseCase
         return match (true) {
             $error instanceof DomainValidationError => new InvalidInputError($error->errors),
             $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
+            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
             default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
         };
     }

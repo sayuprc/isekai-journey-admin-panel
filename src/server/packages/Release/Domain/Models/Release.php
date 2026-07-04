@@ -10,55 +10,51 @@ readonly class Release
 {
     public function __construct(
         public ReleaseId $releaseId,
-        public ReleaseTitle $title,
-        public ReleaseType $type,
-        public ReleaseDistributionType $distributionType,
+        public ReleaseGroupId $releaseGroupId,
+        public ReleaseName $name,
         public ReleasedOn $releasedOn,
         public Description $description,
         public bool $isDisplay,
-        public TrackEntries $trackEntries,
+        public Media $media,
     ) {
     }
 
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<array{position: int, format: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      */
     public static function reconstruct(
         string $releaseId,
-        string $title,
-        int $type,
-        int $distributionType,
+        string $releaseGroupId,
+        string $name,
         ImmutableDate $releasedOn,
         string $description,
         bool $isDisplay,
-        array $trackEntries,
+        array $media,
     ): self {
         return new self(
             ReleaseId::reconstruct($releaseId),
-            ReleaseTitle::reconstruct($title),
-            ReleaseType::from($type),
-            ReleaseDistributionType::from($distributionType),
+            ReleaseGroupId::reconstruct($releaseGroupId),
+            ReleaseName::reconstruct($name),
             ReleasedOn::reconstruct($releasedOn),
             Description::reconstruct($description),
             $isDisplay,
-            TrackEntries::reconstruct($trackEntries),
+            Media::reconstruct($media),
         );
     }
 
     /**
-     * @return array{release_id: string, title: string, type: value-of<ReleaseType>, distribution_type: value-of<ReleaseDistributionType>, released_on: string, description: string, is_display: bool, track_entries: list<array{song_id: string, track_no: int}>}
+     * @return array{release_id: string, release_group_id: string, name: string, released_on: string, description: string, is_display: bool, media: list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>}
      */
     public function toArray(): array
     {
         return [
             'release_id' => $this->releaseId->value,
-            'title' => $this->title->value,
-            'type' => $this->type->value,
-            'distribution_type' => $this->distributionType->value,
+            'release_group_id' => $this->releaseGroupId->value,
+            'name' => $this->name->value,
             'released_on' => $this->releasedOn->value->format('Y-m-d'),
             'description' => $this->description->value,
             'is_display' => $this->isDisplay,
-            'track_entries' => $this->trackEntries->toArray(),
+            'media' => $this->media->toArray(),
         ];
     }
 

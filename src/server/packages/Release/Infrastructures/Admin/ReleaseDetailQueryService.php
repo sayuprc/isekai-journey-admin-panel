@@ -21,23 +21,26 @@ readonly class ReleaseDetailQueryService implements ReleaseDetailQueryServiceInt
     #[Override]
     public function findReferencedSongs(ReleaseId $releaseId): array
     {
-        /** @var Collection<int, object{song_id: string, title: string, track_no: int}> $rows */
-        $rows = DB::table('release_track_entries')
-            ->join('songs', 'release_track_entries.song_id', '=', 'songs.song_id')
-            ->where('release_track_entries.release_id', $this->converter->toBin($releaseId->value))
-            ->orderBy('release_track_entries.track_no')
+        /** @var Collection<int, object{position: int, track_no: int, song_id: string, title: string}> $rows */
+        $rows = DB::table('release_tracks')
+            ->join('songs', 'release_tracks.song_id', '=', 'songs.song_id')
+            ->where('release_tracks.release_id', $this->converter->toBin($releaseId->value))
+            ->orderBy('release_tracks.position')
+            ->orderBy('release_tracks.track_no')
             ->get([
-                'release_track_entries.song_id',
+                'release_tracks.position',
+                'release_tracks.track_no',
+                'release_tracks.song_id',
                 'songs.title',
-                'release_track_entries.track_no',
             ]);
 
         return array_values(
             $rows
                 ->map(fn (object $row): ReleaseReferencedSong => new ReleaseReferencedSong(
+                    $row->position,
+                    $row->track_no,
                     $this->converter->toUuid($row->song_id),
                     $row->title,
-                    $row->track_no,
                 ))
                 ->all(),
         );

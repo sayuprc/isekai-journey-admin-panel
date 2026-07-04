@@ -27,13 +27,15 @@ use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Release\Domain\Models\Description as ReleaseDescription;
+use Release\Domain\Models\Media as ReleaseMedia;
 use Release\Domain\Models\Release;
-use Release\Domain\Models\ReleaseDistributionType;
 use Release\Domain\Models\ReleasedOn;
+use Release\Domain\Models\ReleaseGroup;
+use Release\Domain\Models\ReleaseGroupId;
+use Release\Domain\Models\ReleaseGroupTitle;
+use Release\Domain\Models\ReleaseGroupType;
 use Release\Domain\Models\ReleaseId;
-use Release\Domain\Models\ReleaseTitle;
-use Release\Domain\Models\ReleaseType;
-use Release\Domain\Models\TrackEntries;
+use Release\Domain\Models\ReleaseName;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
 use Song\Domain\Models\Media\SongMediaLinks;
@@ -211,28 +213,42 @@ trait EntityFactory
         return YouTubeChannel::reconstruct($channelId, $name);
     }
 
+    protected function createReleaseGroup(
+        string $releaseGroupId,
+        string $title,
+        ReleaseGroupType $type,
+        bool $isDisplay = true,
+        string $description = 'テスト用リリースグループ',
+    ): ReleaseGroup {
+        return new ReleaseGroup(
+            ReleaseGroupId::reconstruct($releaseGroupId),
+            ReleaseGroupTitle::reconstruct($title),
+            $type,
+            ReleaseDescription::reconstruct($description),
+            $isDisplay,
+        );
+    }
+
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<array{position: int, format: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      */
     protected function createRelease(
         string $releaseId,
-        string $title,
-        ReleaseType $type,
-        ReleaseDistributionType $distributionType,
+        string $releaseGroupId,
+        string $name,
         bool $isDisplay,
         ?ImmutableDate $releasedOn = null,
         string $description = 'テスト用リリース',
-        array $trackEntries = [],
+        array $media = [],
     ): Release {
         return new Release(
             ReleaseId::reconstruct($releaseId),
-            ReleaseTitle::reconstruct($title),
-            $type,
-            $distributionType,
+            ReleaseGroupId::reconstruct($releaseGroupId),
+            ReleaseName::reconstruct($name),
             ReleasedOn::reconstruct($releasedOn ?? new ImmutableDate('2024-01-01')),
             ReleaseDescription::reconstruct($description),
             $isDisplay,
-            TrackEntries::reconstruct($trackEntries),
+            ReleaseMedia::reconstruct($media),
         );
     }
 

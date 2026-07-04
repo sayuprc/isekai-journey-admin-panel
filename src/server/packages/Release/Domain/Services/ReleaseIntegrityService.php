@@ -7,13 +7,13 @@ namespace Release\Domain\Services;
 use DateMalformedStringException;
 use DateType\ImmutableDate;
 use Release\Domain\Models\Description;
+use Release\Domain\Models\Media;
 use Release\Domain\Models\Release;
-use Release\Domain\Models\ReleaseDistributionType;
 use Release\Domain\Models\ReleasedOn;
+use Release\Domain\Models\ReleaseGroupId;
+use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseId;
-use Release\Domain\Models\ReleaseTitle;
-use Release\Domain\Models\ReleaseType;
-use Release\Domain\Models\TrackEntries;
+use Release\Domain\Models\ReleaseName;
 use ResultType\Err;
 use ResultType\Ok;
 use ResultType\Result;
@@ -28,73 +28,59 @@ class ReleaseIntegrityService
 {
     public function __construct(
         private readonly UuidGeneratorInterface $generator,
+        private readonly ReleaseGroupRepositoryInterface $releaseGroupRepository,
         private readonly SongRepositoryInterface $songRepository,
     ) {
     }
 
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
     public function prepareForCreate(
-        string $title,
-        int $typeValue,
-        int $distributionTypeValue,
+        string $releaseGroupId,
+        string $name,
         string $releasedOn,
         string $description,
         bool $isDisplay,
-        array $trackEntries,
+        array $media,
     ): Result {
-        $result = $this->build(
-            $this->generator->generate(),
-            $title,
-            $typeValue,
-            $distributionTypeValue,
-            $releasedOn,
-            $description,
-            $isDisplay,
-            $trackEntries,
-        );
-
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $release = $result->unwrap();
-
-        if (! $this->existsSongs($release->trackEntries)) {
-            return new Err(new BusinessRuleViolationError('指定された楽曲の一部が存在しません。'));
-        }
-
-        return new Ok($release);
+        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
     }
 
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
     public function prepareForUpdate(
         string $releaseId,
-        string $title,
-        int $typeValue,
-        int $distributionTypeValue,
+        string $releaseGroupId,
+        string $name,
         string $releasedOn,
         string $description,
         bool $isDisplay,
-        array $trackEntries,
+        array $media,
     ): Result {
-        $result = $this->build(
-            $releaseId,
-            $title,
-            $typeValue,
-            $distributionTypeValue,
-            $releasedOn,
-            $description,
-            $isDisplay,
-            $trackEntries,
-        );
+        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
+    }
+
+    /**
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
+     *
+     * @return Result<Release, DomainError>
+     */
+    private function prepare(
+        string $releaseId,
+        string $releaseGroupId,
+        string $name,
+        string $releasedOn,
+        string $description,
+        bool $isDisplay,
+        array $media,
+    ): Result {
+        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $isDisplay, $media);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -102,7 +88,11 @@ class ReleaseIntegrityService
 
         $release = $result->unwrap();
 
-        if (! $this->existsSongs($release->trackEntries)) {
+        if (is_null($this->releaseGroupRepository->find($release->releaseGroupId))) {
+            return new Err(new BusinessRuleViolationError('指定されたリリースグループが存在しません。'));
+        }
+
+        if (! $this->existsSongs($release->media)) {
             return new Err(new BusinessRuleViolationError('指定された楽曲の一部が存在しません。'));
         }
 
@@ -110,31 +100,29 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{songId: string, trackNo: int}> $trackEntries
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
     private function build(
         string $releaseId,
-        string $title,
-        int $typeValue,
-        int $distributionTypeValue,
+        string $releaseGroupId,
+        string $name,
         string $releasedOn,
         string $description,
         bool $isDisplay,
-        array $trackEntries,
+        array $media,
     ): Result {
-        $trackEntriesResult = TrackEntries::fromArray($trackEntries);
+        $mediaResult = Media::fromArray($media);
 
-        if ($trackEntriesResult->isErr()) {
-            return new Err($trackEntriesResult->unwrapErr());
+        if ($mediaResult->isErr()) {
+            return new Err($mediaResult->unwrapErr());
         }
 
-        return Result::collect6(
+        return Result::collect5(
             ReleaseId::create($releaseId),
-            ReleaseTitle::create($title),
-            $this->toReleaseType($typeValue),
-            $this->toReleaseDistributionType($distributionTypeValue),
+            ReleaseGroupId::create($releaseGroupId),
+            ReleaseName::create($name),
             $this->toReleasedOn($releasedOn),
             Description::create($description),
         )
@@ -149,14 +137,16 @@ class ReleaseIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(fn (array $values): Release => new Release(...[...$values, $isDisplay, $trackEntriesResult->unwrap()]));
+            ->map(fn (array $values): Release => new Release(...[...$values, $isDisplay, $mediaResult->unwrap()]));
     }
 
-    private function existsSongs(TrackEntries $trackEntries): bool
+    private function existsSongs(Media $media): bool
     {
-        foreach ($trackEntries as $trackEntry) {
-            if (is_null($this->songRepository->find($trackEntry->songId))) {
-                return false;
+        foreach ($media as $medium) {
+            foreach ($medium->tracks as $track) {
+                if (is_null($this->songRepository->find($track->songId))) {
+                    return false;
+                }
             }
         }
 
@@ -179,33 +169,5 @@ class ReleaseIntegrityService
         } catch (DateMalformedStringException) {
             return new Err(new EntityRuleViolationError('releasedOn', '発売日が不正です'));
         }
-    }
-
-    /**
-     * @return Result<ReleaseType, DomainError>
-     */
-    private function toReleaseType(int $typeValue): Result
-    {
-        $type = ReleaseType::tryFrom($typeValue);
-
-        if (is_null($type)) {
-            return new Err(new EntityRuleViolationError('typeValue', "不正なリリース種別です: {$typeValue}"));
-        }
-
-        return new Ok($type);
-    }
-
-    /**
-     * @return Result<ReleaseDistributionType, DomainError>
-     */
-    private function toReleaseDistributionType(int $distributionTypeValue): Result
-    {
-        $distributionType = ReleaseDistributionType::tryFrom($distributionTypeValue);
-
-        if (is_null($distributionType)) {
-            return new Err(new EntityRuleViolationError('distributionTypeValue', "不正な流通形態です: {$distributionTypeValue}"));
-        }
-
-        return new Ok($distributionType);
     }
 }
