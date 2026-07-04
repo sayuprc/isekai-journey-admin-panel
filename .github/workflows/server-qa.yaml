@@ -48,7 +48,7 @@ jobs:
 
       - name: Cache server docker image
         id: cache-server-docker-image
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.SERVER_DOCKER_PATH }}
           key: ${{ env.SERVER_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/php/Dockerfile') }}
@@ -59,7 +59,7 @@ jobs:
 
       - name: Cache openapi-generator-cli docker image
         id: cache-openapi-generator-cli-docker-image
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
           key: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/openapi-generator/Dockerfile') }}
@@ -70,7 +70,7 @@ jobs:
 
       - name: Cache mysql docker image
         id: cache-mysql-docker-image
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.MYSQL_DOCKER_PATH }}
           key: ${{ env.MYSQL_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/mysql/Dockerfile', './infra/local/docker/mysql/my.cnf', './infra/local/docker/mysql/init/*') }}
@@ -87,7 +87,7 @@ jobs:
 
       - name: Cache composer
         id: cache-composer
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.VENDOR_PATH }}
           key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
@@ -136,7 +136,7 @@ jobs:
 
       - name: Cache composer
         id: cache-composer
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.VENDOR_PATH }}
           key: ${{ needs.setup.outputs.vendor-key }}
@@ -171,7 +171,7 @@ jobs:
 
       - name: Cache composer
         id: cache-composer
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.VENDOR_PATH }}
           key: ${{ needs.setup.outputs.vendor-key }}
@@ -206,7 +206,7 @@ jobs:
 
       - name: Cache composer
         id: cache-composer
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.VENDOR_PATH }}
           key: ${{ needs.setup.outputs.vendor-key }}
@@ -255,7 +255,7 @@ jobs:
 
       - name: Cache composer
         id: cache-composer
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.VENDOR_PATH }}
           key: ${{ needs.setup.outputs.vendor-key }}
