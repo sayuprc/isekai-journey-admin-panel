@@ -4,59 +4,66 @@ declare(strict_types=1);
 
 namespace Release\Infrastructures\Admin;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Override;
 use Release\Application\Admin\Query\ReleaseGroupDetailQueryServiceInterface;
 use Release\Application\Admin\Query\ReleaseGroupReferencedRelease;
 use Release\Domain\Models\ReleaseGroupId;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\QueryFactory;
+use Support\Infrastructures\Database\Row;
 
 readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQueryServiceInterface
 {
-    public function __construct(private UuidConverterInterface $converter)
-    {
+    public function __construct(
+        private QueryFactory $queryFactory,
+        private UuidConverterInterface $converter,
+    ) {
     }
 
     #[Override]
     public function findReferencedReleases(ReleaseGroupId $releaseGroupId): array
     {
-        /** @var Collection<int, object{release_id: string, name: string, released_on: string, jacket_art_url: string|null, is_display: int, order_no: int}> $releaseRows */
-        $releaseRows = DB::table('releases')
-            ->where('release_group_id', $this->converter->toBin($releaseGroupId->value))
-            ->orderBy('order_no')
-            ->orderBy('released_on')
-            ->orderBy('name')
-            ->get(['release_id', 'name', 'released_on', 'jacket_art_url', 'is_display', 'order_no']);
+        $releaseRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['release_id', 'name', 'released_on', 'jacket_art_url', 'is_display', 'order_no'])
+                ->from('releases')
+                ->where('release_group_id', '=', $this->converter->toBin($releaseGroupId->value))
+                ->orderBy('order_no')
+                ->orderBy('released_on')
+                ->orderBy('name'),
+        );
 
-        if ($releaseRows->isEmpty()) {
+        if ($releaseRows === []) {
             return [];
         }
 
-        /** @var Collection<int, object{release_id: string, format: int}> $mediumRows */
-        $mediumRows = DB::table('release_media')
-            ->whereIn('release_id', $releaseRows->pluck('release_id')->all())
-            ->orderBy('position')
-            ->get(['release_id', 'format']);
+        $binReleaseIds = array_map(fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
+
+        $mediumRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['release_id', 'format'])
+                ->from('release_media')
+                ->where('release_id', 'IN', $binReleaseIds)
+                ->orderBy('position'),
+        );
 
         $formatsByRelease = [];
 
         foreach ($mediumRows as $mediumRow) {
-            $formatsByRelease[$mediumRow->release_id][] = $mediumRow->format;
+            $formatsByRelease[Row::string($mediumRow, 'release_id')][] = Row::int($mediumRow, 'format');
         }
 
-        return array_values(
-            $releaseRows
-                ->map(fn (object $row): ReleaseGroupReferencedRelease => new ReleaseGroupReferencedRelease(
-                    $this->converter->toUuid($row->release_id),
-                    $row->name,
-                    $row->released_on,
-                    $row->jacket_art_url,
-                    (bool)$row->is_display,
-                    $row->order_no,
-                    $formatsByRelease[$row->release_id] ?? [],
-                ))
-                ->all(),
+        return array_map(
+            fn (array $row): ReleaseGroupReferencedRelease => new ReleaseGroupReferencedRelease(
+                $this->converter->toUuid(Row::string($row, 'release_id')),
+                Row::string($row, 'name'),
+                Row::string($row, 'released_on'),
+                Row::nullableString($row, 'jacket_art_url'),
+                Row::bool($row, 'is_display'),
+                Row::int($row, 'order_no'),
+                $formatsByRelease[Row::string($row, 'release_id')] ?? [],
+            ),
+            $releaseRows,
         );
     }
 }
