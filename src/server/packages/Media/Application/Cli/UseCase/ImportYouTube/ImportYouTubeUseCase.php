@@ -6,6 +6,8 @@ namespace Media\Application\Cli\UseCase\ImportYouTube;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Media\Application\Cli\Query\YouTubeShortVideoQueryServiceInterface;
+use Media\Application\Cli\Query\YouTubeUploadedVideo;
 use Media\Application\Cli\Query\YouTubeVideoQueryServiceInterface;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaRepositoryInterface;
@@ -26,6 +28,7 @@ readonly class ImportYouTubeUseCase
         private UuidGeneratorInterface $generator,
         private YouTubeChannelRepositoryInterface $channelRepository,
         private YouTubeVideoQueryServiceInterface $videoQueryService,
+        private YouTubeShortVideoQueryServiceInterface $shortVideoQueryService,
         private MediaRepositoryInterface $mediaRepository,
     ) {
     }
@@ -52,22 +55,35 @@ readonly class ImportYouTubeUseCase
             return ChannelImportResult::channelNotFound($channel);
         }
 
-        $mediaList = [];
+        $videosToImport = [];
 
         foreach ($videos as $video) {
-            $url = MediaUrl::reconstruct('https://www.youtube.com/watch?v=' . $video->videoId);
+            $url = MediaUrl::reconstruct($video->url);
 
             // 動画は新しい順に取得されるため、保存済みの動画に到達した時点で以降は取り込み済みとみなす
             if (! is_null($this->mediaRepository->findByUrl($url))) {
                 break;
             }
 
+            $videosToImport[] = $video;
+        }
+
+        $shortsByVideoId = $this->shortVideoQueryService->detectShorts(
+            array_values(array_filter($videosToImport, fn (YouTubeUploadedVideo $video): bool => ! $this->isKnownShort($video))),
+        );
+
+        $mediaList = [];
+
+        foreach ($videosToImport as $video) {
+            $url = MediaUrl::reconstruct($video->url);
+            $isShort = $this->isKnownShort($video) || ($shortsByVideoId[$video->videoId] ?? false);
+
             $mediaList[] = Media::reconstruct(
                 $this->generator->generate(),
                 $video->title,
                 $url->value,
                 new DateTimeImmutable($video->publishedAt)->setTimezone(new DateTimeZone(date_default_timezone_get())),
-                $this->resolveType($video->title)->value,
+                $this->resolveType($video->title, $isShort)->value,
                 true,
             );
         }
@@ -81,13 +97,18 @@ readonly class ImportYouTubeUseCase
         return ChannelImportResult::imported($channel, count($mediaList));
     }
 
-    private function resolveType(string $title): MediaType
+    private function resolveType(string $title, bool $isShort): MediaType
     {
         return match (true) {
-            str_contains($title, '#shorts') => MediaType::Short,
+            $isShort => MediaType::Short,
             str_contains($title, '【Official Music Video】') => MediaType::Mv,
             str_contains($title, '【歌ってみた】') => MediaType::AudioVideo,
             default => MediaType::Other,
         };
+    }
+
+    private function isKnownShort(YouTubeUploadedVideo $video): bool
+    {
+        return str_contains(mb_strtolower($video->title), '#short');
     }
 }
