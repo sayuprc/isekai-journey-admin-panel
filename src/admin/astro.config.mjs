@@ -27,6 +27,8 @@ export default defineConfig({
       API_URL: envField.string({ context: 'server', access: 'secret' }),
       CACHE_URL: envField.string({ context: 'server', access: 'secret' }),
       CACHE_TOKEN: envField.string({ context: 'server', access: 'secret' }),
+      // proxy Worker 経由を検証する共有シークレット。未設定の環境では検証しない
+      PROXY_SHARED_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
       PUBLIC_APP_URL: envField.string({ context: 'client', access: 'public' }),
     },
   },

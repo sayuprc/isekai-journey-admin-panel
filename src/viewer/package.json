@@ -32,7 +32,7 @@
     "daisyui": "catalog:ui",
     "solid-js": "catalog:astro",
     "tailwindcss": "catalog:ui",
-    "wrangler": "4.105.0"
+    "wrangler": "catalog:"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:lint",

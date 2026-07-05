@@ -1,6 +1,8 @@
 import type { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
+import { PROXY_SHARED_SECRET } from 'astro:env/server';
 import { defineMiddleware, sequence } from 'astro:middleware';
 import { createRequestLogger } from './server/logger';
+import { isTrustedProxyRequest } from './server/proxy-secret';
 import { getSessionCredential } from './server/session';
 import { createLoginRedirectPath, isAuthRequiredPath } from './utils/auth-redirect';
 
@@ -46,6 +48,17 @@ const requestLogger: MiddlewareHandler = async (
   }
 };
 
+const requireProxySecret: MiddlewareHandler = async (
+  context: AdminMiddlewareContext,
+  next: MiddlewareNext,
+): Promise<Response> => {
+  if (!isTrustedProxyRequest(PROXY_SHARED_SECRET, context.request.headers)) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  return next();
+};
+
 const requireAuth: MiddlewareHandler = async (
   context: AdminMiddlewareContext,
   next: MiddlewareNext,
@@ -68,4 +81,8 @@ const requireAuth: MiddlewareHandler = async (
   return context.redirect(createLoginRedirectPath(`${pathname}${search}`));
 };
 
-export const onRequest: MiddlewareHandler = sequence(defineMiddleware(requestLogger), defineMiddleware(requireAuth));
+export const onRequest: MiddlewareHandler = sequence(
+  defineMiddleware(requestLogger),
+  defineMiddleware(requireProxySecret),
+  defineMiddleware(requireAuth),
+);
