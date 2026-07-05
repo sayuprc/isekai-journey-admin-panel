@@ -93,7 +93,7 @@ class SongAssembler
                 $found->mediaId->value,
                 $found->title->value,
                 $found->url->value,
-                $found->publishedAt->value->format('Y-m-d'),
+                $found->publishedAt->value->format('Y-m-d H:i:s'),
                 $found->type->getName(),
                 $found->type->value,
                 $found->isDisplay,

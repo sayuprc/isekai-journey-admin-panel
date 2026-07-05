@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Media\Domain\Services;
 
 use DateMalformedStringException;
-use DateType\ImmutableDate;
+use DateTimeImmutable;
+use DateTimeZone;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaPublishedAt;
@@ -140,7 +141,9 @@ class MediaIntegrityService
         }
 
         try {
-            return MediaPublishedAt::create(new ImmutableDate($normalized));
+            return MediaPublishedAt::create(
+                new DateTimeImmutable($normalized)->setTimezone(new DateTimeZone(date_default_timezone_get())),
+            );
         } catch (DateMalformedStringException) {
             return new Err(new EntityRuleViolationError('publishedAt', '公開日が不正です'));
         }

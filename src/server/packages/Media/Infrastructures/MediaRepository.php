@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Media\Infrastructures;
 
 use DateTimeImmutable;
-use DateType\ImmutableDate;
 use Emonkak\Orm\SelectBuilder;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\Media;
@@ -206,7 +205,7 @@ readonly class MediaRepository implements MediaRepositoryInterface
             $this->converter->toUuid(Row::string($row, 'media_id')),
             Row::string($row, 'title'),
             Row::string($row, 'url'),
-            ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($row, 'published_at'))),
+            new DateTimeImmutable(Row::string($row, 'published_at')),
             Row::int($row, 'type'),
             Row::bool($row, 'is_display'),
         );

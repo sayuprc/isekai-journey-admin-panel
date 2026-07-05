@@ -91,9 +91,10 @@ export const CreateForm = () => {
 
             <label class="label">公開日</label>
             <input
-              type="date"
+              type="datetime-local"
               class="input w-full"
               name="publishedAt"
+              step="1"
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />

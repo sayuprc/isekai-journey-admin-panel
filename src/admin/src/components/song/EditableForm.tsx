@@ -137,7 +137,6 @@ export const EditableForm = (props: EditableFormProps) => {
           url: item.url,
           publishedAt: item.publishedAt,
           type: item.type,
-          format: item.format,
           isDisplay: item.isDisplay,
         });
       }

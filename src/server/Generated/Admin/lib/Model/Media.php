@@ -76,7 +76,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
         'media_id' => 'uuid',
         'title' => null,
         'url' => 'uri',
-        'published_at' => 'date',
+        'published_at' => 'date-time',
         'type' => null,
         'is_display' => null
     ];
@@ -445,7 +445,7 @@ class Media implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets published_at
      *
-     * @param \DateTime $published_at 公開日
+     * @param \DateTime $published_at 公開日時
      *
      * @return self
      */

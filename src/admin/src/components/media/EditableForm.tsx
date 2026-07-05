@@ -1,6 +1,7 @@
 import { createResource, Match, Show, Switch } from 'solid-js';
 import type { Media, MediaReferencedSong, MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
+import { normalizeDateTimeInputValue } from '../../utils/date';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
@@ -33,24 +34,6 @@ interface FetchErrorState {
 }
 
 type FetchState = FetchOkState | FetchErrorState;
-
-const normalizeDateInputValue = (value: unknown): string => {
-  if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
-  }
-
-  if (typeof value !== 'string') {
-    return '';
-  }
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return value;
-  }
-
-  const parsed = new Date(value);
-
-  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
-};
 
 const getListUrl = () => {
   const back = new URLSearchParams(window.location.search).get('back') ?? '';
@@ -229,10 +212,11 @@ const EditableForm = (props: EditableFormProps) => {
 
             <label class="label">公開日</label>
             <input
-              type="date"
+              type="datetime-local"
               class="input w-full"
               name="publishedAt"
-              value={normalizeDateInputValue(props.data.media.publishedAt)}
+              value={normalizeDateTimeInputValue(props.data.media.publishedAt)}
+              step="1"
               required
               classList={{ 'input-error': !!getFieldError('publishedAt') }}
             />

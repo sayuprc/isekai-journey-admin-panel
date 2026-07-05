@@ -693,7 +693,7 @@ export type LyricsLink = string;
 export type MediaId = string;
 
 /**
- * 公開日
+ * 公開日時
  */
 export type MediaPublishedAt = string;
 

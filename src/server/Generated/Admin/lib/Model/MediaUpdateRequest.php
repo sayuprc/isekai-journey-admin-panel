@@ -74,7 +74,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     protected static $openAPIFormats = [
         'title' => null,
         'url' => 'uri',
-        'published_at' => 'date',
+        'published_at' => 'date-time',
         'type_value' => null,
         'is_display' => null
     ];
@@ -408,7 +408,7 @@ class MediaUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializab
     /**
      * Sets published_at
      *
-     * @param \DateTime $published_at 公開日
+     * @param \DateTime $published_at 公開日時
      *
      * @return self
      */

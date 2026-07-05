@@ -14,7 +14,7 @@ namespace IsekaiObservatory.Viewer;
       mediaId: "11111111-1111-1111-1111-111111111111",
       title: "テストメディアMV",
       url: "https://example.com/media/1",
-      publishedAt: "2024-03-01",
+      publishedAt: mediaPublishedAt.fromISO("2024-03-01T12:00:00+09:00"),
       type: #{ name: "MV", value: MediaTypeValue.Mv },
       counts: #{ songCount: 1 },
       songs: #[

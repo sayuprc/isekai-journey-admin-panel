@@ -145,7 +145,7 @@ components:
         - mediaId: 11111111-1111-1111-1111-111111111111
           title: テストメディアMV
           url: https://example.com/media/1
-          publishedAt: '2024-03-01'
+          publishedAt: '2024-03-01T12:00:00+09:00'
           type:
             name: MV
             value: 1
@@ -175,7 +175,7 @@ components:
             - mediaId: 11111111-1111-1111-1111-111111111111
               title: テストメディアMV
               url: https://example.com/media/1
-              publishedAt: '2024-03-01'
+              publishedAt: '2024-03-01T12:00:00+09:00'
               type:
                 name: MV
                 value: 1
@@ -500,7 +500,7 @@ components:
                 name: MV
                 value: 1
               url: https://www.youtube.com/watch?v=dummy
-              publishedAt: '2024-03-01'
+              publishedAt: '2024-03-01T12:00:00+09:00'
           releaseGroups:
             - releaseGroupId: 0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2
               title: テストアルバム
@@ -546,7 +546,7 @@ components:
                     name: MV
                     value: 1
                   url: https://www.youtube.com/watch?v=dummy
-                  publishedAt: '2024-03-01'
+                  publishedAt: '2024-03-01T12:00:00+09:00'
               releaseGroups:
                 - releaseGroupId: 0f2185cd-b4ab-4f22-b0a3-fd93cbbd2df2
                   title: テストアルバム
@@ -582,7 +582,7 @@ components:
             name: MV
             value: 1
           url: https://www.youtube.com/watch?v=dummy
-          publishedAt: '2024-03-01'
+          publishedAt: '2024-03-01T12:00:00+09:00'
     SongRelationCounts:
       type: object
       required:
@@ -665,8 +665,8 @@ components:
       description: メディアID
     mediaPublishedAt:
       type: string
-      format: date
-      description: 公開日
+      format: date-time
+      description: 公開日時
     mediaTitle:
       type: string
       minLength: 1

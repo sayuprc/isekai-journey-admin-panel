@@ -409,9 +409,10 @@ export const MediaSection = (props: Props) => {
 
           <div>
             <input
-              type="date"
+              type="datetime-local"
               class="input input-bordered w-full"
               value={createPublishedAt()}
+              step="1"
               onInput={e => setCreatePublishedAt(e.currentTarget.value)}
             />
           </div>

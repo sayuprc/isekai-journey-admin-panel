@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Viewer\V1\Media;
 
-use DateType\ImmutableDate;
+use DateTimeImmutable;
 use Media\Domain\Models\MediaType;
 use Media\Route\ViewerMediaRouteMap;
 use PHPUnit\Framework\Attributes\Test;
@@ -35,7 +35,7 @@ class ListMediaTest extends DatabaseTestCase
                 'https://example.com/public/1',
                 MediaType::Mv,
                 true,
-                new ImmutableDate('2024-03-01'),
+                new DateTimeImmutable('2024-03-01 12:00:00'),
             ),
             $this->createMedia(
                 $secondMediaId,
@@ -43,7 +43,7 @@ class ListMediaTest extends DatabaseTestCase
                 'https://example.com/public/2',
                 MediaType::AudioVideo,
                 true,
-                new ImmutableDate('2024-02-01'),
+                new DateTimeImmutable('2024-02-01 10:00:00'),
             ),
             $this->createMedia(
                 $hiddenMediaId,
@@ -51,7 +51,7 @@ class ListMediaTest extends DatabaseTestCase
                 'https://example.com/private',
                 MediaType::Mv,
                 false,
-                new ImmutableDate('2024-04-01'),
+                new DateTimeImmutable('2024-04-01 09:00:00'),
             ),
         );
 
@@ -114,7 +114,7 @@ class ListMediaTest extends DatabaseTestCase
                         'mediaId' => $firstMediaId,
                         'title' => '公開 MV 1',
                         'url' => 'https://example.com/public/1',
-                        'publishedAt' => '2024-03-01',
+                        'publishedAt' => '2024-03-01T12:00:00+09:00',
                         'type' => [
                             'name' => 'MV',
                             'value' => 1,
@@ -143,7 +143,7 @@ class ListMediaTest extends DatabaseTestCase
                     ],
                 ],
                 'nextCursor' => base64_encode((string)json_encode([
-                    'publishedAt' => '2024-03-01',
+                    'publishedAt' => '2024-03-01 12:00:00',
                     'mediaId' => $firstMediaId,
                 ], JSON_THROW_ON_ERROR)),
             ]);
@@ -160,7 +160,7 @@ class ListMediaTest extends DatabaseTestCase
                         'mediaId' => $secondMediaId,
                         'title' => '公開 MV 2',
                         'url' => 'https://example.com/public/2',
-                        'publishedAt' => '2024-02-01',
+                        'publishedAt' => '2024-02-01T10:00:00+09:00',
                         'type' => [
                             'name' => '音源動画',
                             'value' => 2,

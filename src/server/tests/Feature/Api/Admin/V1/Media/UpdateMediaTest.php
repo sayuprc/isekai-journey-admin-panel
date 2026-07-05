@@ -38,7 +38,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
-                'publishedAt' => '2024-04-02',
+                'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => MediaType::LiveStream->value,
                 'isDisplay' => false,
             ])->assertStatus(200)
@@ -47,7 +47,7 @@ class UpdateMediaTest extends DatabaseTestCase
                     'mediaId' => $uuid,
                     'title' => 'テストメディア配信アーカイブ',
                     'url' => 'https://example.com/archive',
-                    'publishedAt' => '2024-04-02',
+                    'publishedAt' => '2024-04-02T10:20:30+09:00',
                     'type' => [
                         'name' => MediaType::LiveStream->getName(),
                         'value' => MediaType::LiveStream->value,
@@ -79,7 +79,7 @@ class UpdateMediaTest extends DatabaseTestCase
                 'mediaId' => $bodyMediaId,
                 'title' => 'テストメディア配信アーカイブ',
                 'url' => 'https://example.com/archive',
-                'publishedAt' => '2024-04-02',
+                'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(200)
@@ -95,7 +95,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $mediaId), [
                 'title' => 'テストメディア',
                 'url' => 'https://example.com/media',
-                'publishedAt' => '2024-04-02',
+                'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(404);
@@ -121,7 +121,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $uuid), [
                 'title' => '',
                 'url' => '',
-                'publishedAt' => '2024-04-02',
+                'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => 0,
                 'isDisplay' => true,
             ])->assertStatus(422)
@@ -167,7 +167,7 @@ class UpdateMediaTest extends DatabaseTestCase
             ->putJson(route(MediaRouteMap::Update, $targetMediaId), [
                 'title' => '更新対象メディア',
                 'url' => 'https://example.com/existing',
-                'publishedAt' => '2024-04-02',
+                'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
             ])->assertStatus(422)

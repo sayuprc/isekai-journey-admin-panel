@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Media\Domain\Models;
 
-use DateType\ImmutableDate;
+use DateTimeImmutable;
+use DateTimeZone;
 
 readonly class Media
 {
@@ -22,7 +23,7 @@ readonly class Media
         string $mediaId,
         string $title,
         string $url,
-        ImmutableDate $publishedAt,
+        DateTimeImmutable $publishedAt,
         int $type,
         bool $isDisplay,
     ): self {
@@ -45,7 +46,9 @@ readonly class Media
             'media_id' => $this->mediaId->value,
             'title' => $this->title->value,
             'url' => $this->url->value,
-            'published_at' => $this->publishedAt->value->format('Y-m-d'),
+            'published_at' => $this->publishedAt->value
+                ->setTimezone(new DateTimeZone(date_default_timezone_get()))
+                ->format('Y-m-d H:i:s'),
             'type' => $this->type->value,
             'is_display' => $this->isDisplay,
         ];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Media;
 
-use DateType\ImmutableDate;
+use DateTimeImmutable;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Media\Route\MediaRouteMap;
@@ -34,7 +34,7 @@ class GetMediaTest extends DatabaseTestCase
                 'https://example.com/media',
                 MediaType::Mv,
                 true,
-                new ImmutableDate('2024-03-01'),
+                new DateTimeImmutable('2024-03-01 12:00:00'),
             ),
         );
         $this->app->make(SongRepository::class)->save(
@@ -62,7 +62,7 @@ class GetMediaTest extends DatabaseTestCase
                     'mediaId' => $uuid,
                     'title' => 'テストメディアMV',
                     'url' => 'https://example.com/media',
-                    'publishedAt' => '2024-03-01',
+                    'publishedAt' => '2024-03-01T12:00:00+09:00',
                     'type' => [
                         'name' => MediaType::Mv->getName(),
                         'value' => MediaType::Mv->value,

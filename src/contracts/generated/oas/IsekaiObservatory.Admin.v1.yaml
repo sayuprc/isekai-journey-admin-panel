@@ -3000,7 +3000,7 @@ components:
             - mediaId: 11111111-1111-1111-1111-111111111111
               title: テストメディアMV
               url: https://example.com/media
-              publishedAt: '2024-03-01'
+              publishedAt: '2024-03-01T12:00:00+09:00'
               type:
                 name: MV
                 value: 1
@@ -3095,7 +3095,7 @@ components:
         - mediaId: 11111111-1111-1111-1111-111111111111
           title: テストメディアMV
           url: https://example.com/media
-          publishedAt: '2024-03-01'
+          publishedAt: '2024-03-01T12:00:00+09:00'
           type:
             name: MV
             value: 1
@@ -3417,8 +3417,8 @@ components:
       description: メディアID
     mediaPublishedAt:
       type: string
-      format: date
-      description: 公開日
+      format: date-time
+      description: 公開日時
     mediaReferencedSongId:
       type: string
       format: uuid

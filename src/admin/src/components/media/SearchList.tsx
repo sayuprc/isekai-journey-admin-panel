@@ -1,6 +1,7 @@
 import { For, Match, Show, Switch, createResource, createSignal } from 'solid-js';
 import type { MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
+import { normalizeDateTimeDisplayValue } from '../../utils/date';
 import { ListState } from '../ListState';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
@@ -39,24 +40,6 @@ const getInitialParams = () => {
 };
 
 export const SearchList = () => {
-  const normalizeDateDisplayValue = (value: unknown): string => {
-    if (value instanceof Date) {
-      return Number.isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 10);
-    }
-
-    if (typeof value !== 'string') {
-      return '';
-    }
-
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return value;
-    }
-
-    const parsed = new Date(value);
-
-    return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
-  };
-
   const initial = getInitialParams();
 
   const [title, setTitle] = createSignal(initial.title);
@@ -286,7 +269,7 @@ export const SearchList = () => {
                         <td class="min-w-44 max-w-56">
                           <p class="truncate">{media.title}</p>
                         </td>
-                        <td class="whitespace-nowrap text-sm">{normalizeDateDisplayValue(media.publishedAt)}</td>
+                        <td class="whitespace-nowrap text-sm">{normalizeDateTimeDisplayValue(media.publishedAt)}</td>
                         <td>{media.type.name}</td>
                         <td>
                           <span

@@ -59,7 +59,7 @@ class MediaIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             '新規メディア',
             $url,
-            '2024-03-01',
+            '2024-03-01T12:34:56+09:00',
             MediaType::Mv->value,
             true,
         );
@@ -91,14 +91,14 @@ class MediaIntegrityServiceTest extends TestCase
             $mediaId,
             '更新後タイトル',
             $url,
-            '2024-04-02',
+            '2024-04-02T10:20:30+09:00',
             MediaType::Mv->value,
             false,
         );
 
         $this->assertTrue($result->isOk());
         $this->assertSame($mediaId, $result->unwrap()->mediaId->value);
-        $this->assertSame('2024-04-02', $result->unwrap()->publishedAt?->value->format('Y-m-d'));
+        $this->assertSame('2024-04-02 10:20:30', $result->unwrap()->publishedAt?->value->format('Y-m-d H:i:s'));
     }
 
     #[Test]
@@ -117,7 +117,7 @@ class MediaIntegrityServiceTest extends TestCase
         $result = $this->getInstance()->prepareForCreate(
             '新規メディア',
             'https://example.com/media',
-            '2024-03-01',
+            '2024-03-01T12:34:56+09:00',
             12345,
             true,
         );
