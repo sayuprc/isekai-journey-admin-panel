@@ -8,6 +8,7 @@ import {
 } from '../../generated';
 import type { MediaTypeValue, PerPage } from '../../generated';
 import { withAuthRetry } from '../client';
+import { normalizeDateTimeApiValue } from '../date';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
 
@@ -75,7 +76,7 @@ export const media = new Elysia({ prefix: '/media' })
             body: {
               title,
               url,
-              publishedAt,
+              publishedAt: normalizeDateTimeApiValue(publishedAt),
               typeValue: typeValue as MediaTypeValue,
               isDisplay,
             },
@@ -108,7 +109,7 @@ export const media = new Elysia({ prefix: '/media' })
             body: {
               title,
               url,
-              publishedAt,
+              publishedAt: normalizeDateTimeApiValue(publishedAt),
               typeValue: typeValue as MediaTypeValue,
               isDisplay,
             },
