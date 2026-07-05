@@ -3,14 +3,34 @@ import { createClient, createConfig } from '../generated/client';
 import type { Client } from '../generated/client';
 import { authenticateServiceRefresh } from '../generated/index';
 import { ApiError, resolveApiResponse } from './errors';
+import { getGoogleIdToken } from './google-id-token';
 import type { AuthSession, Credential } from './types';
 
 const apiUrl = API_URL + '/admin/v1';
+
+/**
+ * 非公開 API (allow_unauthenticated = false) の IAM 認証を通すための fetch。
+ * Authorization はアプリの JWT が使うため、Google ID token は
+ * Cloud Run が予約している X-Serverless-Authorization ヘッダで送る。
+ */
+const fetchWithServerlessAuth: typeof fetch = async (input, init) => {
+  const idToken = await getGoogleIdToken(API_URL);
+
+  if (idToken === null) {
+    return fetch(input, init);
+  }
+
+  const request = new Request(input, init);
+  request.headers.set('X-Serverless-Authorization', `Bearer ${idToken}`);
+
+  return fetch(request);
+};
 
 export const createAuthClient = (credential: Credential) => {
   return createClient(
     createConfig({
       baseUrl: apiUrl,
+      fetch: fetchWithServerlessAuth,
       headers: {
         Authorization: `Bearer ${credential.accessToken}`,
       },
@@ -21,6 +41,7 @@ export const createAuthClient = (credential: Credential) => {
 export const client = createClient(
   createConfig({
     baseUrl: apiUrl,
+    fetch: fetchWithServerlessAuth,
   }),
 );
 

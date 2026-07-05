@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${CLOUDFLARE_ACCOUNT_ID:?}"
+: "${CLOUDFLARE_API_TOKEN:?}"
+: "${ADMIN_PROXY_WORKER_NAME:?}"
+: "${ADMIN_PROXY_ORIGIN_URL:?}"
+
+DEPLOY_DATE="${1:?usage: admin-proxy-deploy <deploy-date>}"
+
+corepack enable
+corepack prepare "pnpm@$(sed -n 's/^pnpm = "\(.*\)"$/\1/p' mise.toml)" --activate
+
+cd src
+
+pnpm install --frozen-lockfile --filter admin-proxy --prod
+
+DEPLOY_MESSAGE="staging admin-proxy deploy ${DEPLOY_DATE}"
+
+pnpm --filter admin-proxy run deploy \
+  --name "${ADMIN_PROXY_WORKER_NAME}" \
+  --var "ORIGIN_URL:${ADMIN_PROXY_ORIGIN_URL}" \
+  --compatibility-date "${DEPLOY_DATE%%T*}" \
+  --message "${DEPLOY_MESSAGE}"

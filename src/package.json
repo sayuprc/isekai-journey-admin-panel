@@ -5,6 +5,7 @@
   "workspaces": {
     "packages": [
       "admin",
+      "admin-proxy",
       "contracts",
       "viewer"
     ]
