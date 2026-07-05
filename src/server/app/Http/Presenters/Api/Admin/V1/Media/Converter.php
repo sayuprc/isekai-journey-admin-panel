@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\Media;
 
+use DateTime;
 use Media\Application\Admin\Query\MediaReferencedSong;
 use Media\Domain\Models\Media;
 use OpenAPI\Admin\Client\Model\Media as OpenApiMedia;
@@ -19,7 +20,7 @@ class Converter
             ->setMediaId($media->mediaId->value)
             ->setTitle($media->title->value)
             ->setUrl($media->url->value)
-            ->setPublishedAt($media->publishedAt->value->toMutable())
+            ->setPublishedAt(DateTime::createFromImmutable($media->publishedAt->value))
             ->setType($this->toOpenApiMediaType($media))
             ->setIsDisplay($media->isDisplay);
     }

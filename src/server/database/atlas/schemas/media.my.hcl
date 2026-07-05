@@ -21,8 +21,8 @@ table "media" {
   }
   column "published_at" {
     null    = false
-    type    = date
-    comment = "公開日"
+    type    = datetime
+    comment = "公開日時"
   }
   column "type" {
     null     = false

@@ -43,7 +43,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'テストメディア配信アーカイブ',
                 'https://example.com/archive',
-                '2024-04-02',
+                '2024-04-02T10:20:30+09:00',
                 MediaType::LiveStream->value,
                 false,
             ),
@@ -55,7 +55,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
         $this->assertNotNull($media);
         $this->assertSame('テストメディア配信アーカイブ', $media->title);
         $this->assertSame('https://example.com/archive', $media->url);
-        $this->assertSame('2024-04-02', $media->published_at);
+        $this->assertSame('2024-04-02 10:20:30', $media->published_at);
         $this->assertSame(MediaType::LiveStream->value, (int)$media->type);
         $this->assertSame(0, (int)$media->is_display);
 
@@ -76,7 +76,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $mediaId,
                 'テストメディア',
                 'https://example.com/media',
-                '2024-04-02',
+                '2024-04-02T10:20:30+09:00',
                 MediaType::Mv->value,
                 true,
             ),

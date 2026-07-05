@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Viewer\V1\Song;
 
-use DateType\ImmutableDate;
+use DateTimeImmutable;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\MediumFormat;
@@ -49,7 +49,7 @@ class ListSongTest extends DatabaseTestCase
                 'https://example.com/public',
                 MediaType::Mv,
                 true,
-                new ImmutableDate('2024-03-01'),
+                new DateTimeImmutable('2024-03-01 12:00:00'),
             ),
             $this->createMedia(
                 $secondVisibleMediaId,
@@ -57,7 +57,7 @@ class ListSongTest extends DatabaseTestCase
                 'https://example.com/article',
                 MediaType::AudioVideo,
                 true,
-                new ImmutableDate('2024-05-01'),
+                new DateTimeImmutable('2024-05-01 18:30:00'),
             ),
             $this->createMedia(
                 $hiddenMediaId,
@@ -65,7 +65,7 @@ class ListSongTest extends DatabaseTestCase
                 'https://example.com/private',
                 MediaType::Mv,
                 false,
-                new ImmutableDate('2024-04-01'),
+                new DateTimeImmutable('2024-04-01 09:00:00'),
             ),
         );
 
@@ -189,7 +189,7 @@ class ListSongTest extends DatabaseTestCase
                                     'value' => 1,
                                 ],
                                 'url' => 'https://example.com/public',
-                                'publishedAt' => '2024-03-01',
+                                'publishedAt' => '2024-03-01T12:00:00+09:00',
                             ],
                             [
                                 'mediaId' => $secondVisibleMediaId,
@@ -199,7 +199,7 @@ class ListSongTest extends DatabaseTestCase
                                     'value' => 2,
                                 ],
                                 'url' => 'https://example.com/article',
-                                'publishedAt' => '2024-05-01',
+                                'publishedAt' => '2024-05-01T18:30:00+09:00',
                             ],
                         ],
                         'releaseGroups' => [
@@ -254,7 +254,7 @@ class ListSongTest extends DatabaseTestCase
                                     'value' => 1,
                                 ],
                                 'url' => 'https://example.com/public',
-                                'publishedAt' => '2024-03-01',
+                                'publishedAt' => '2024-03-01T12:00:00+09:00',
                             ],
                         ],
                         'releaseGroups' => [],

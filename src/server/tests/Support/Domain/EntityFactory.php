@@ -197,13 +197,13 @@ trait EntityFactory
         string $url,
         MediaType $type,
         bool $isDisplay,
-        ?ImmutableDate $publishedAt = null,
+        ?DateTimeImmutable $publishedAt = null,
     ): Media {
         return new Media(
             MediaId::reconstruct($mediaId),
             MediaTitle::reconstruct($title),
             MediaUrl::reconstruct($url),
-            MediaPublishedAt::reconstruct($publishedAt ?? new ImmutableDate('2024-01-01')),
+            MediaPublishedAt::reconstruct($publishedAt ?? new DateTimeImmutable('2024-01-01 00:00:00')),
             $type,
             $isDisplay,
         );

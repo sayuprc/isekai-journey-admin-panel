@@ -32,7 +32,7 @@ model SongRelationCounts {
       title: "テストメディアMV",
       type: #{ name: "MV", value: MediaTypeValue.Mv },
       url: "https://www.youtube.com/watch?v=dummy",
-      publishedAt: "2024-03-01",
+      publishedAt: mediaPublishedAt.fromISO("2024-03-01T12:00:00+09:00"),
     }
   ],
   releaseGroups: #[
@@ -76,7 +76,7 @@ model SongReleaseGroupSummary {
   title: "テストメディアMV",
   type: #{ name: "MV", value: MediaTypeValue.Mv },
   url: "https://www.youtube.com/watch?v=dummy",
-  publishedAt: "2024-03-01",
+  publishedAt: mediaPublishedAt.fromISO("2024-03-01T12:00:00+09:00"),
 })
 model SongMediaSummary {
   mediaId: mediaId;

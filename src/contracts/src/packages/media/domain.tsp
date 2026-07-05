@@ -18,10 +18,9 @@ scalar mediaTitle extends string;
 @friendlyName("mediaUrl")
 scalar mediaUrl extends string;
 
-@doc("公開日")
-@format("date")
+@doc("公開日時")
 @friendlyName("mediaPublishedAt")
-scalar mediaPublishedAt extends string;
+scalar mediaPublishedAt extends utcDateTime;
 
 @doc("メディア種別名")
 @minLength(1)

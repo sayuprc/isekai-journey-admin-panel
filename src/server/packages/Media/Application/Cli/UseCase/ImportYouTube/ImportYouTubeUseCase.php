@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Media\Application\Cli\UseCase\ImportYouTube;
 
-use DateType\ImmutableDate;
+use DateTimeImmutable;
+use DateTimeZone;
 use Media\Application\Cli\Query\YouTubeVideoQueryServiceInterface;
 use Media\Domain\Models\Media;
 use Media\Domain\Models\MediaRepositoryInterface;
@@ -65,7 +66,7 @@ readonly class ImportYouTubeUseCase
                 $this->generator->generate(),
                 $video->title,
                 $url->value,
-                new ImmutableDate($video->publishedAt),
+                new DateTimeImmutable($video->publishedAt)->setTimezone(new DateTimeZone(date_default_timezone_get())),
                 $this->resolveType($video->title)->value,
                 true,
             );

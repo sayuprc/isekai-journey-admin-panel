@@ -28,7 +28,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             new CreateInputData(
                 'テストメディアMV',
                 'https://example.com/media',
-                '2024-03-01',
+                '2024-03-01T12:34:56+09:00',
                 MediaType::Mv->value,
                 true,
             ),
@@ -40,7 +40,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertNotNull($media);
         $this->assertSame('テストメディアMV', $media->title);
         $this->assertSame('https://example.com/media', $media->url);
-        $this->assertSame('2024-03-01', $media->published_at);
+        $this->assertSame('2024-03-01 12:34:56', $media->published_at);
 
         $mediaId = $this->toUuid($media->media_id);
         $this->assertAuditLogCount(1);
@@ -63,7 +63,7 @@ class CreateUseCaseTest extends DatabaseTestCase
                 new CreateInputData(
                     'ロールバック対象',
                     'https://example.com/rollback',
-                    '2024-03-01',
+                    '2024-03-01T12:34:56+09:00',
                     MediaType::Mv->value,
                     true,
                 ),
