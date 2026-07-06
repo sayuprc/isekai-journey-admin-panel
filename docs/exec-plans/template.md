@@ -1,10 +1,14 @@
-# Execution Plan — Issue Template
+# Execution Plan Template
 
-問題定義（何を・なぜ）を書く。実装計画は `plan.md` 側に置く。
+1 タスク 1 ファイル。`active/YYYYMMDD-<slug>.md` に置き、完了後に `completed/` へ移す。
 
 ## Title
 
 作業名
+
+## Status
+
+planned | in-progress | blocked | completed
 
 ## Background
 
@@ -25,3 +29,19 @@
 ## Acceptance Criteria
 
 - 完了とみなす条件。検証可能な形で書く
+
+## Steps
+
+完了したら `[x]` に変える。
+
+- [ ]
+- [ ]
+- [ ]
+
+## Decision Log
+
+- YYYY-MM-DD: decision
+
+## Validation
+
+-
