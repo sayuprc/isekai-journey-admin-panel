@@ -190,7 +190,7 @@ class CreateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function createFailsWhenTrackHasBothSongIdAndTitle(): void
+    public function canCreateWithOverriddenTrackTitle(): void
     {
         $songId = $this->generateUuid();
         $releaseGroupId = $this->generateUuid();
@@ -198,6 +198,53 @@ class CreateReleaseTest extends DatabaseTestCase
         $this->storeSongs(
             $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        // 楽曲への紐づきを維持したまま、トラックとしての表示名だけを上書きするケース。
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => '初回限定盤',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 10,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->where('media.0.tracks.0.songId', $songId)
+                            ->where('media.0.tracks.0.title', 'テスト楽曲1 -instrumental-')
+                            ->where('media.0.tracks.0.trackNo', 1)
+                            ->etc(),
+                    ),
+            );
+
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 1,
+            'title' => 'テスト楽曲1 -instrumental-',
+        ]);
+    }
+
+    #[Test]
+    public function createFailsWhenTrackHasNeitherSongIdNorTitle(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
         $this->storeReleaseGroups(
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
@@ -216,7 +263,7 @@ class CreateReleaseTest extends DatabaseTestCase
                         'position' => 1,
                         'formatValue' => MediumFormat::Cd->value,
                         'tracks' => [
-                            ['songId' => $songId, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
+                            ['songId' => null, 'title' => null, 'trackNo' => 1],
                         ],
                     ],
                 ],
@@ -228,7 +275,7 @@ class CreateReleaseTest extends DatabaseTestCase
                         1,
                         static fn (AssertableJson $json) => $json
                             ->where('field', 'media')
-                            ->where('message', '収録曲には楽曲かタイトルのどちらか一方のみを指定してください。'),
+                            ->where('message', '収録曲には楽曲かタイトルの少なくとも一方を指定してください。'),
                     ),
             );
     }

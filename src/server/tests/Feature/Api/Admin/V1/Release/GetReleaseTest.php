@@ -48,6 +48,7 @@ class GetReleaseTest extends DatabaseTestCase
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+                            ['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 3],
                         ],
                     ],
                 ],
@@ -82,6 +83,12 @@ class GetReleaseTest extends DatabaseTestCase
                                     'title' => '管理対象外の楽曲',
                                     'trackNo' => 2,
                                 ],
+                                // 上書き名を持つ参照トラックは title に上書き名の生値が載る。
+                                [
+                                    'songId' => $songId,
+                                    'title' => 'テスト楽曲1 -instrumental-',
+                                    'trackNo' => 3,
+                                ],
                             ],
                         ],
                     ],
@@ -99,6 +106,13 @@ class GetReleaseTest extends DatabaseTestCase
                         'trackNo' => 2,
                         'songId' => null,
                         'title' => '管理対象外の楽曲',
+                    ],
+                    // 上書き名を持つ参照トラックでも read model は楽曲の正式名を返す。
+                    [
+                        'mediumPosition' => 1,
+                        'trackNo' => 3,
+                        'songId' => $songId,
+                        'title' => 'テスト楽曲1',
                     ],
                 ],
             ]);

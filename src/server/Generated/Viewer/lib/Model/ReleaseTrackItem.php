@@ -35,7 +35,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * ReleaseTrackItem Class Doc Comment
  *
  * @category Class
- * @description 収録曲。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId !&#x3D; null &amp;&amp; isDisplay で判定する
+ * @description 収録曲。title は上書き名があればそれ、なければ楽曲名。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId !&#x3D; null &amp;&amp; isDisplay で判定する
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

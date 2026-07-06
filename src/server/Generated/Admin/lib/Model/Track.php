@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * Track Class Doc Comment
  *
  * @category Class
- * @description 収録曲。songId / title はどちらか一方のみを指定する(XOR。検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラック、title ありは表示専用のタイトルのみトラック
+ * @description 収録曲。songId / title の少なくとも一方を指定する(検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラックで、title を併記すると表示名を上書きする。songId なしは表示専用のタイトルのみトラック
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -368,7 +368,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets title
      *
-     * @param string $title 管理対象外楽曲のトラックタイトル
+     * @param string $title トラックの表示名。参照トラックでは楽曲名の上書き、タイトルのみトラックでは必須のタイトル
      *
      * @return self
      */

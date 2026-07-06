@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * ReleaseReferencedSong Class Doc Comment
  *
  * @category Class
- * @description リリース収録曲の表示用情報。タイトルのみトラックは songId: null で載る
+ * @description リリース収録曲の read model。参照トラックの title は楽曲の正式名(上書き名は反映しない)、タイトルのみトラックは songId: null でトラックタイトルが載る
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

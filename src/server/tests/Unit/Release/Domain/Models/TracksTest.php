@@ -18,24 +18,15 @@ class TracksTest extends TestCase
         $result = Tracks::fromArray([
             ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+            ['songId' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'trackNo' => 3],
         ]);
 
         $this->assertTrue($result->isOk());
         $this->assertSame([
             ['song_id' => self::SONG_ID, 'title' => null, 'track_no' => 1],
             ['song_id' => null, 'title' => '管理対象外の楽曲', 'track_no' => 2],
+            ['song_id' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'track_no' => 3],
         ], $result->unwrap()->toArray());
-    }
-
-    #[Test]
-    public function cannotCreateWithBothSongIdAndTitle(): void
-    {
-        $result = Tracks::fromArray([
-            ['songId' => self::SONG_ID, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
-        ]);
-
-        $this->assertTrue($result->isErr());
-        $this->assertArrayHasKey('media', $result->unwrapErr()->errors);
     }
 
     #[Test]
