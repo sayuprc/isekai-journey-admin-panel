@@ -42,11 +42,6 @@ table "release_tracks" {
     columns = [column.song_id]
   }
 
-  index "release_tracks_release_id_song_id_unique" {
-    unique  = true
-    columns = [column.release_id, column.song_id]
-  }
-
   foreign_key "fk_release_tracks_release_medium" {
     columns     = [column.release_id, column.position]
     ref_columns = [table.release_media.column.release_id, table.release_media.column.position]

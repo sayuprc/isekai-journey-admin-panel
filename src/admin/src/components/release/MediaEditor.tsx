@@ -1,4 +1,4 @@
-import { For, Index, Show, createMemo, createSignal } from 'solid-js';
+import { For, Index, Show, createSignal } from 'solid-js';
 import type { MediumFormatValue, ReleaseGetResponse, SongSummary } from '../../generated';
 import { client } from '../../utils/client';
 
@@ -63,14 +63,6 @@ export const MediaEditor = (props: MediaEditorProps) => {
   const [hasSearched, setHasSearched] = createSignal(false);
   const [targetMediumIndex, setTargetMediumIndex] = createSignal(0);
 
-  // 楽曲は媒体をまたいでもリリース全体で 1 回まで（タイトルのみトラックには課さない）。
-  const selectedSongIds = createMemo(
-    () =>
-      new Set(
-        props.media.flatMap(medium => medium.tracks.flatMap(track => (track.songId !== null ? [track.songId] : []))),
-      ),
-  );
-
   const addMedium = () => {
     props.onChange(prev => [...prev, { formatValue: 1, tracks: [] }]);
   };
@@ -114,10 +106,6 @@ export const MediaEditor = (props: MediaEditorProps) => {
   };
 
   const addTrack = (song: SongSummary) => {
-    if (selectedSongIds().has(song.songId)) {
-      return;
-    }
-
     appendTrack({ songId: song.songId, title: song.title });
   };
 
@@ -415,10 +403,9 @@ export const MediaEditor = (props: MediaEditorProps) => {
                               <button
                                 type="button"
                                 class="btn btn-primary btn-xs"
-                                disabled={selectedSongIds().has(song.songId)}
                                 onClick={() => addTrack(song)}
                               >
-                                {selectedSongIds().has(song.songId) ? '追加済み' : '追加'}
+                                追加
                               </button>
                             </td>
                           </tr>

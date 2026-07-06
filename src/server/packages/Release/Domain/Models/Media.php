@@ -25,7 +25,6 @@ readonly class Media extends ImmutableCollection
     {
         $media = [];
         $seenPositions = [];
-        $seenSongIds = [];
 
         foreach ($items as $item) {
             $positionResult = OrderNo::create($item['position']);
@@ -56,21 +55,6 @@ readonly class Media extends ImmutableCollection
                 return new Err(new DomainValidationError([
                     'media' => ['同じ媒体順を複数指定することはできません。'],
                 ]));
-            }
-
-            // 楽曲の重複は媒体をまたいでリリース全体で禁止する（タイトルのみトラックは対象外）。
-            foreach ($medium->tracks as $track) {
-                if (is_null($track->songId)) {
-                    continue;
-                }
-
-                if (isset($seenSongIds[$track->songId->value])) {
-                    return new Err(new DomainValidationError([
-                        'media' => ['同じ楽曲を複数指定することはできません。'],
-                    ]));
-                }
-
-                $seenSongIds[$track->songId->value] = true;
             }
 
             $seenPositions[$medium->position->value] = true;

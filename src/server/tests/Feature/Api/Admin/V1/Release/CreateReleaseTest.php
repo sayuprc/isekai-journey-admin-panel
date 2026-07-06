@@ -140,6 +140,56 @@ class CreateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canCreateWithSameSongInSameMedium(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        // ライブ盤のアンコールなど、同じ楽曲が同一媒体に複数回収録されるケース。
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => 'ライブ盤',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 10,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 2],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->where('media.0.tracks.0.songId', $songId)
+                            ->where('media.0.tracks.0.trackNo', 1)
+                            ->where('media.0.tracks.1.songId', $songId)
+                            ->where('media.0.tracks.1.trackNo', 2)
+                            ->etc(),
+                    ),
+            );
+
+        $this->assertDatabaseCount('release_tracks', 2);
+    }
+
+    #[Test]
     public function createFailsWhenTrackHasBothSongIdAndTitle(): void
     {
         $songId = $this->generateUuid();
