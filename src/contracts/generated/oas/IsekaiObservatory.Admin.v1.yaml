@@ -2839,10 +2839,12 @@ components:
         trackNo:
           $ref: '#/components/schemas/orderNo'
         songId:
-          $ref: '#/components/schemas/uuid'
+          anyOf:
+            - $ref: '#/components/schemas/uuid'
+            - type: 'null'
         title:
           $ref: '#/components/schemas/title'
-      description: リリース収録曲の表示用情報
+      description: 'リリース収録曲の表示用情報。タイトルのみトラックは songId: null で載る'
     ReleaseUpdateRequest:
       type: object
       required:
@@ -3344,13 +3346,20 @@ components:
       type: object
       required:
         - songId
+        - title
         - trackNo
       properties:
         songId:
-          $ref: '#/components/schemas/uuid'
+          anyOf:
+            - $ref: '#/components/schemas/uuid'
+            - type: 'null'
+        title:
+          anyOf:
+            - $ref: '#/components/schemas/trackTitle'
+            - type: 'null'
         trackNo:
           $ref: '#/components/schemas/orderNo'
-      description: 収録曲
+      description: 収録曲。songId / title はどちらか一方のみを指定する(XOR。検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラック、title ありは表示専用のタイトルのみトラック
     ValidationError:
       type: object
       required:
@@ -3521,6 +3530,10 @@ components:
       type: string
       minLength: 1
       description: 楽曲名
+    trackTitle:
+      type: string
+      minLength: 1
+      description: 管理対象外楽曲のトラックタイトル
     uuid:
       type: string
       format: uuid

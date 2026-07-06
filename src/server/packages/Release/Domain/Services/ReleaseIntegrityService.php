@@ -36,7 +36,7 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -54,7 +54,7 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -73,7 +73,7 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -108,7 +108,7 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $media
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -171,6 +171,11 @@ class ReleaseIntegrityService
     {
         foreach ($media as $medium) {
             foreach ($medium->tracks as $track) {
+                // タイトルのみトラックは Song 集約を参照しない。
+                if (is_null($track->songId)) {
+                    continue;
+                }
+
                 if (is_null($this->songRepository->find($track->songId))) {
                     return false;
                 }

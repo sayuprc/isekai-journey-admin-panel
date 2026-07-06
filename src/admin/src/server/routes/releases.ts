@@ -18,7 +18,8 @@ const mediaSchema = t.Array(
     formatValue: t.Numeric(),
     tracks: t.Array(
       t.Object({
-        songId: t.String(),
+        songId: t.Union([t.String(), t.Null()]),
+        title: t.Union([t.String(), t.Null()]),
         trackNo: t.Number(),
       }),
     ),

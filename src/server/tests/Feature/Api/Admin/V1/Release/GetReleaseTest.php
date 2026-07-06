@@ -45,7 +45,10 @@ class GetReleaseTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+                        ],
                     ],
                 ],
             ),
@@ -71,7 +74,13 @@ class GetReleaseTest extends DatabaseTestCase
                             'tracks' => [
                                 [
                                     'songId' => $songId,
+                                    'title' => null,
                                     'trackNo' => 1,
+                                ],
+                                [
+                                    'songId' => null,
+                                    'title' => '管理対象外の楽曲',
+                                    'trackNo' => 2,
                                 ],
                             ],
                         ],
@@ -83,6 +92,13 @@ class GetReleaseTest extends DatabaseTestCase
                         'trackNo' => 1,
                         'songId' => $songId,
                         'title' => 'テスト楽曲1',
+                    ],
+                    // タイトルのみトラックも収録曲 read model に songId: null で載る。
+                    [
+                        'mediumPosition' => 1,
+                        'trackNo' => 2,
+                        'songId' => null,
+                        'title' => '管理対象外の楽曲',
                     ],
                 ],
             ]);

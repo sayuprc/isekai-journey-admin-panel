@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * Track Class Doc Comment
  *
  * @category Class
- * @description 収録曲
+ * @description 収録曲。songId / title はどちらか一方のみを指定する(XOR。検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラック、title ありは表示専用のタイトルのみトラック
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -59,6 +59,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'song_id' => 'string',
+        'title' => 'string',
         'track_no' => 'int'
     ];
 
@@ -71,6 +72,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'song_id' => 'uuid',
+        'title' => null,
         'track_no' => 'int32'
     ];
 
@@ -80,7 +82,8 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'song_id' => false,
+        'song_id' => true,
+        'title' => true,
         'track_no' => false
     ];
 
@@ -171,6 +174,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'song_id' => 'songId',
+        'title' => 'title',
         'track_no' => 'trackNo'
     ];
 
@@ -181,6 +185,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'song_id' => 'setSongId',
+        'title' => 'setTitle',
         'track_no' => 'setTrackNo'
     ];
 
@@ -191,6 +196,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'song_id' => 'getSongId',
+        'title' => 'getTitle',
         'track_no' => 'getTrackNo'
     ];
 
@@ -252,6 +258,7 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('song_id', $data ?? [], null);
+        $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('track_no', $data ?? [], null);
     }
 
@@ -285,6 +292,13 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['song_id'] === null) {
             $invalidProperties[] = "'song_id' can't be null";
         }
+        if ($this->container['title'] === null) {
+            $invalidProperties[] = "'title' can't be null";
+        }
+        if ((mb_strlen($this->container['title']) < 1)) {
+            $invalidProperties[] = "invalid value for 'title', the character length must be bigger than or equal to 1.";
+        }
+
         if ($this->container['track_no'] === null) {
             $invalidProperties[] = "'track_no' can't be null";
         }
@@ -327,9 +341,55 @@ class Track implements ModelInterface, ArrayAccess, \JsonSerializable
     public function setSongId($song_id)
     {
         if (is_null($song_id)) {
-            throw new \InvalidArgumentException('non-nullable song_id cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'song_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('song_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
         $this->container['song_id'] = $song_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->container['title'];
+    }
+
+    /**
+     * Sets title
+     *
+     * @param string $title 管理対象外楽曲のトラックタイトル
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        if (is_null($title)) {
+            array_push($this->openAPINullablesSetToNull, 'title');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('title', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+
+        if (!is_null($title) && (mb_strlen($title) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $title when calling Track., must be bigger than or equal to 1.');
+        }
+
+        $this->container['title'] = $title;
 
         return $this;
     }

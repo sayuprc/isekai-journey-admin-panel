@@ -46,7 +46,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Digital->value,
-                        'tracks' => [['songId' => $songId1, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId1, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),
@@ -65,8 +65,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
                     'position' => 1,
                     'formatValue' => MediumFormat::Cd->value,
                     'tracks' => [
-                        ['songId' => $songId2, 'trackNo' => 1],
-                        ['songId' => $songId1, 'trackNo' => 2],
+                        ['songId' => $songId2, 'title' => null, 'trackNo' => 1],
+                        ['songId' => $songId1, 'title' => null, 'trackNo' => 2],
                     ],
                 ],
             ],
@@ -87,6 +87,65 @@ class UpdateUseCaseTest extends DatabaseTestCase
         ]);
         $this->assertDatabaseCount('release_media', 1);
         $this->assertDatabaseCount('release_tracks', 2);
+    }
+
+    #[Test]
+    public function canUpdateWithTitleOnlyTrack(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease(
+                $releaseId,
+                $releaseGroupId,
+                '旧版名',
+                true,
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
+                    ],
+                ],
+            ),
+        );
+
+        $result = $this->getInstance()->handle(new UpdateInputData(
+            releaseId: $releaseId,
+            name: '新版名',
+            releasedOn: '2026-05-09',
+            description: '説明',
+            jacketArtUrl: null,
+            isDisplay: true,
+            orderNo: 1,
+            media: [
+                [
+                    'position' => 1,
+                    'formatValue' => MediumFormat::Cd->value,
+                    'tracks' => [
+                        ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                        ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+                    ],
+                ],
+            ],
+        ));
+
+        $this->assertTrue($result->isOk());
+
+        $this->assertDatabaseCount('release_tracks', 2);
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 2,
+            'song_id' => null,
+            'title' => '管理対象外の楽曲',
+        ]);
     }
 
     #[Test]
@@ -139,8 +198,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
                     'position' => 1,
                     'formatValue' => MediumFormat::Cd->value,
                     'tracks' => [
-                        ['songId' => $songId1, 'trackNo' => 1],
-                        ['songId' => $songId2, 'trackNo' => 1],
+                        ['songId' => $songId1, 'title' => null, 'trackNo' => 1],
+                        ['songId' => $songId2, 'title' => null, 'trackNo' => 1],
                     ],
                 ],
             ],

@@ -46,12 +46,12 @@ class GetUseCaseTest extends DatabaseTestCase
                     [
                         'position' => 2,
                         'format' => MediumFormat::Digital->value,
-                        'tracks' => [['songId' => $songId2, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId2, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $songId1, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId1, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),

@@ -54,10 +54,10 @@ model MediumFormat {
   value: MediumFormatValue;
 }
 
-@doc("収録曲")
+@doc("収録曲。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId != null && isDisplay で判定する")
 model ReleaseTrackItem {
   trackNo: orderNo;
-  songId: uuid;
+  songId: uuid | null;
   title: string;
   isDisplay: boolean;
 }

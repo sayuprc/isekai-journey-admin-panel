@@ -19,7 +19,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class Tracks extends ImmutableCollection
 {
     /**
-     * @param list<array{songId: string, trackNo: int}> $items
+     * @param list<array{songId: ?string, title: ?string, trackNo: int}> $items
      *
      * @return Result<self, DomainValidationError>
      */
@@ -29,10 +29,11 @@ readonly class Tracks extends ImmutableCollection
         $seenTrackNos = [];
 
         foreach ($items as $item) {
-            $result = Result::collect(
-                SongId::create($item['songId']),
+            $result = Result::collect3(
+                is_null($item['songId']) ? new Ok(null) : SongId::create($item['songId']),
+                is_null($item['title']) ? new Ok(null) : TrackTitle::create($item['title']),
                 OrderNo::create($item['trackNo']),
-            )->map(static fn (array $values): Track => new Track(...$values));
+            )->andThen(static fn (array $values): Result => Track::create(...$values)->mapErr(static fn (EntityRuleViolationError $error): array => [$error]));
 
             if ($result->isErr()) {
                 $messages = [];
@@ -62,13 +63,14 @@ readonly class Tracks extends ImmutableCollection
     }
 
     /**
-     * @param list<array{songId: string, trackNo: int}> $items
+     * @param list<array{songId: ?string, title: ?string, trackNo: int}> $items
      */
     public static function reconstruct(array $items): self
     {
         return new self(array_map(
             static fn (array $item): Track => Track::reconstruct(
                 $item['songId'],
+                $item['title'],
                 $item['trackNo'],
             ),
             $items,
@@ -76,7 +78,7 @@ readonly class Tracks extends ImmutableCollection
     }
 
     /**
-     * @return list<array{song_id: string, track_no: int}>
+     * @return list<array{song_id: ?string, title: ?string, track_no: int}>
      */
     public function toArray(): array
     {

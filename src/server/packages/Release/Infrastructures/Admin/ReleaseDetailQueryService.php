@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Release\Infrastructures\Admin;
 
+use Emonkak\Orm\Sql;
 use Override;
 use Release\Application\Admin\Query\ReleaseDetailQueryServiceInterface;
 use Release\Application\Admin\Query\ReleaseReferencedSong;
@@ -29,22 +30,26 @@ readonly class ReleaseDetailQueryService implements ReleaseDetailQueryServiceInt
                     'release_tracks.position',
                     'release_tracks.track_no',
                     'release_tracks.song_id',
-                    'songs.title',
                 ])
+                ->select(new Sql('COALESCE(songs.title, release_tracks.title)'), 'title')
                 ->from('release_tracks')
-                ->join('songs', 'release_tracks.song_id = songs.song_id')
+                ->outerJoin('songs', 'release_tracks.song_id = songs.song_id')
                 ->where('release_tracks.release_id', '=', $this->converter->toBin($releaseId->value))
                 ->orderBy('release_tracks.position')
                 ->orderBy('release_tracks.track_no'),
         );
 
         return array_map(
-            fn (array $row): ReleaseReferencedSong => new ReleaseReferencedSong(
-                Row::int($row, 'position'),
-                Row::int($row, 'track_no'),
-                $this->converter->toUuid(Row::string($row, 'song_id')),
-                Row::string($row, 'title'),
-            ),
+            function (array $row): ReleaseReferencedSong {
+                $binSongId = Row::nullableString($row, 'song_id');
+
+                return new ReleaseReferencedSong(
+                    Row::int($row, 'position'),
+                    Row::int($row, 'track_no'),
+                    is_null($binSongId) ? null : $this->converter->toUuid($binSongId),
+                    Row::string($row, 'title'),
+                );
+            },
             $rows,
         );
     }

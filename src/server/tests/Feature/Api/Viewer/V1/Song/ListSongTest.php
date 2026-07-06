@@ -141,7 +141,7 @@ class ListSongTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Digital->value,
-                        'tracks' => [['songId' => $visibleSongId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),
@@ -155,7 +155,7 @@ class ListSongTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $visibleSongId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),

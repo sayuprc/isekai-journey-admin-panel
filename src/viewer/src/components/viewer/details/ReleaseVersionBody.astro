@@ -35,7 +35,7 @@ const { release, releaseGroupTitle } = Astro.props;
               ? (
                   <div class="rel-list">
                     {medium.tracks.map(track => (
-                      track.isDisplay
+                      track.songId !== null && track.isDisplay
                         ? (
                             <a class="rel-chip" href={`/songs/${track.songId}`}>
                               <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>

@@ -17,7 +17,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class Media extends ImmutableCollection
 {
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: string, trackNo: int}>}> $items
+     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      *
      * @return Result<self, DomainValidationError>
      */
@@ -58,8 +58,12 @@ readonly class Media extends ImmutableCollection
                 ]));
             }
 
-            // 楽曲の重複は媒体をまたいでリリース全体で禁止する。
+            // 楽曲の重複は媒体をまたいでリリース全体で禁止する（タイトルのみトラックは対象外）。
             foreach ($medium->tracks as $track) {
+                if (is_null($track->songId)) {
+                    continue;
+                }
+
                 if (isset($seenSongIds[$track->songId->value])) {
                     return new Err(new DomainValidationError([
                         'media' => ['同じ楽曲を複数指定することはできません。'],
@@ -77,7 +81,7 @@ readonly class Media extends ImmutableCollection
     }
 
     /**
-     * @param list<array{position: int, format: int, tracks: list<array{songId: string, trackNo: int}>}> $items
+     * @param list<array{position: int, format: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      */
     public static function reconstruct(array $items): self
     {
@@ -92,7 +96,7 @@ readonly class Media extends ImmutableCollection
     }
 
     /**
-     * @return list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: string, track_no: int}>}>
+     * @return list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: ?string, title: ?string, track_no: int}>}>
      */
     public function toArray(): array
     {

@@ -48,7 +48,7 @@ class CreateReleaseTest extends DatabaseTestCase
                         'position' => 1,
                         'formatValue' => MediumFormat::Cd->value,
                         'tracks' => [
-                            ['songId' => $songId, 'trackNo' => 1],
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                         ],
                     ],
                     [
@@ -83,6 +83,104 @@ class CreateReleaseTest extends DatabaseTestCase
 
         $this->assertDatabaseCount('release_media', 2);
         $this->assertDatabaseCount('release_tracks', 1);
+    }
+
+    #[Test]
+    public function canCreateWithTitleOnlyTrack(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => '初回限定盤',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 10,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->where('media.0.tracks.0.songId', $songId)
+                            ->where('media.0.tracks.0.title', null)
+                            ->where('media.0.tracks.1.songId', null)
+                            ->where('media.0.tracks.1.title', '管理対象外の楽曲')
+                            ->where('media.0.tracks.1.trackNo', 2)
+                            ->etc(),
+                    ),
+            );
+
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 2,
+            'song_id' => null,
+            'title' => '管理対象外の楽曲',
+        ]);
+    }
+
+    #[Test]
+    public function createFailsWhenTrackHasBothSongIdAndTitle(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => '初回限定盤',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 10,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(422)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'errors',
+                        1,
+                        static fn (AssertableJson $json) => $json
+                            ->where('field', 'media')
+                            ->where('message', '収録曲には楽曲かタイトルのどちらか一方のみを指定してください。'),
+                    ),
+            );
     }
 
     #[Test]

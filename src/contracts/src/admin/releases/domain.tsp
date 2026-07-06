@@ -28,6 +28,10 @@ scalar releasedOn extends string;
 @doc("ジャケットアートURL")
 scalar jacketArtUrl extends string;
 
+@doc("管理対象外楽曲のトラックタイトル")
+@minLength(1)
+scalar trackTitle extends string;
+
 alias JacketArtContentType = "image/jpeg" | "image/png" | "image/webp";
 
 @doc("リリースグループ種別")
@@ -77,9 +81,10 @@ model ReleaseGroupReferencedRelease {
   formatValues: MediumFormatValue[];
 }
 
-@doc("収録曲")
+@doc("収録曲。songId / title はどちらか一方のみを指定する(XOR。検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラック、title ありは表示専用のタイトルのみトラック")
 model Track {
-  songId: uuid;
+  songId: uuid | null;
+  title: trackTitle | null;
   trackNo: orderNo;
 }
 
@@ -103,10 +108,10 @@ model Release {
   media: Medium[];
 }
 
-@doc("リリース収録曲の表示用情報")
+@doc("リリース収録曲の表示用情報。タイトルのみトラックは songId: null で載る")
 model ReleaseReferencedSong {
   mediumPosition: orderNo;
   trackNo: orderNo;
-  songId: uuid;
+  songId: uuid | null;
   title: title;
 }

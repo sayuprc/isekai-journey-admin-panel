@@ -87,9 +87,10 @@ class ListPresenter
 
     private function toOpenApiReleaseTrackItem(ReleaseTrackItem $track): OpenApiReleaseTrackItem
     {
-        return new OpenApiReleaseTrackItem()
+        return new OpenApiReleaseTrackItem([
+            'song_id' => $track->songId,
+        ])
             ->setTrackNo($track->trackNo)
-            ->setSongId($track->songId)
             ->setTitle($track->title)
             ->setIsDisplay($track->isDisplay);
     }

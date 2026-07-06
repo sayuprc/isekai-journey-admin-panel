@@ -13,11 +13,15 @@ export function representativeJacketArtUrl(releaseGroup: ReleaseGroup): string |
   return releaseGroup.releases.find(release => release.jacketArtUrl !== null)?.jacketArtUrl ?? null;
 }
 
-/** グループ全体の収録曲数（版をまたいだ重複は除く）。 */
+/** グループ全体の収録曲数（版をまたいだ重複は除く）。タイトルのみトラック（songId: null）はタイトルで重複排除する。 */
 export function distinctTrackCount(releaseGroup: ReleaseGroup): number {
-  const songIds = new Set(
-    releaseGroup.releases.flatMap(release => release.media.flatMap(medium => medium.tracks.map(track => track.songId))),
+  const trackKeys = new Set(
+    releaseGroup.releases.flatMap(release =>
+      release.media.flatMap(medium =>
+        medium.tracks.map(track => (track.songId !== null ? `song:${track.songId}` : `title:${track.title}`)),
+      ),
+    ),
   );
 
-  return songIds.size;
+  return trackKeys.size;
 }

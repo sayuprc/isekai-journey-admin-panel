@@ -41,17 +41,20 @@ class Converter
 
     public function toOpenApiTrack(Track $track): OpenApiTrack
     {
-        return new OpenApiTrack()
-            ->setSongId($track->songId->value)
+        return new OpenApiTrack([
+            'song_id' => $track->songId?->value,
+            'title' => $track->title?->value,
+        ])
             ->setTrackNo($track->trackNo->value);
     }
 
     public function toOpenApiReferencedSong(ReleaseReferencedSong $song): OpenApiReleaseReferencedSong
     {
-        return new OpenApiReleaseReferencedSong()
+        return new OpenApiReleaseReferencedSong([
+            'song_id' => $song->songId,
+        ])
             ->setMediumPosition($song->mediumPosition)
             ->setTrackNo($song->trackNo)
-            ->setSongId($song->songId)
             ->setTitle($song->title);
     }
 }
