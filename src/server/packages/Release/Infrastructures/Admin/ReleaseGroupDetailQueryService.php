@@ -39,18 +39,18 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
 
         $binReleaseIds = array_map(static fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
 
-        $mediumRows = $this->queryFactory->fetchAll(
+        $formatRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
                 ->withSelect(['release_id', 'format'])
-                ->from('release_media')
+                ->from('release_formats')
                 ->where('release_id', 'IN', $binReleaseIds)
-                ->orderBy('position'),
+                ->orderBy('format'),
         );
 
         $formatsByRelease = [];
 
-        foreach ($mediumRows as $mediumRow) {
-            $formatsByRelease[Row::string($mediumRow, 'release_id')][] = Row::int($mediumRow, 'format');
+        foreach ($formatRows as $formatRow) {
+            $formatsByRelease[Row::string($formatRow, 'release_id')][] = Row::int($formatRow, 'format');
         }
 
         return array_map(

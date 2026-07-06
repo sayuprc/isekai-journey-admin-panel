@@ -35,7 +35,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * ReleaseMediumItem Class Doc Comment
  *
  * @category Class
- * @description リリース内の媒体
+ * @description リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -59,7 +59,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
       */
     protected static $openAPITypes = [
         'position' => 'int',
-        'format' => '\OpenAPI\Viewer\Client\Model\MediumFormat',
+        'name' => 'string',
         'tracks' => '\OpenAPI\Viewer\Client\Model\ReleaseTrackItem[]'
     ];
 
@@ -72,7 +72,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
       */
     protected static $openAPIFormats = [
         'position' => 'int32',
-        'format' => null,
+        'name' => null,
         'tracks' => null
     ];
 
@@ -83,7 +83,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
       */
     protected static array $openAPINullables = [
         'position' => false,
-        'format' => false,
+        'name' => true,
         'tracks' => false
     ];
 
@@ -174,7 +174,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     protected static $attributeMap = [
         'position' => 'position',
-        'format' => 'format',
+        'name' => 'name',
         'tracks' => 'tracks'
     ];
 
@@ -185,7 +185,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     protected static $setters = [
         'position' => 'setPosition',
-        'format' => 'setFormat',
+        'name' => 'setName',
         'tracks' => 'setTracks'
     ];
 
@@ -196,7 +196,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     protected static $getters = [
         'position' => 'getPosition',
-        'format' => 'getFormat',
+        'name' => 'getName',
         'tracks' => 'getTracks'
     ];
 
@@ -258,7 +258,7 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
     public function __construct(?array $data = null)
     {
         $this->setIfExists('position', $data ?? [], null);
-        $this->setIfExists('format', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('tracks', $data ?? [], null);
     }
 
@@ -296,8 +296,8 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
             $invalidProperties[] = "invalid value for 'position', must be bigger than or equal to 1.";
         }
 
-        if ($this->container['format'] === null) {
-            $invalidProperties[] = "'format' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
         if ($this->container['tracks'] === null) {
             $invalidProperties[] = "'tracks' can't be null";
@@ -350,28 +350,35 @@ class ReleaseMediumItem implements ModelInterface, ArrayAccess, \JsonSerializabl
     }
 
     /**
-     * Gets format
+     * Gets name
      *
-     * @return \OpenAPI\Viewer\Client\Model\MediumFormat
+     * @return string
      */
-    public function getFormat()
+    public function getName()
     {
-        return $this->container['format'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets format
+     * Sets name
      *
-     * @param \OpenAPI\Viewer\Client\Model\MediumFormat $format format
+     * @param string $name name
      *
      * @return self
      */
-    public function setFormat($format)
+    public function setName($name)
     {
-        if (is_null($format)) {
-            throw new \InvalidArgumentException('non-nullable format cannot be null');
+        if (is_null($name)) {
+            array_push($this->openAPINullablesSetToNull, 'name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
-        $this->container['format'] = $format;
+        $this->container['name'] = $name;
 
         return $this;
     }

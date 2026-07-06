@@ -1,9 +1,11 @@
 import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
+import type { ReleaseFormatValue } from '../../generated';
 import { client, uploadReleaseJacketArt } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
+import { FormatCheckboxes } from './FormatCheckboxes';
 import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
 import type { MediumForm } from './MediaEditor';
 
@@ -20,6 +22,7 @@ interface InitialValues {
   jacketArtUrl: string;
   isDisplay: boolean;
   orderNo: number;
+  formatValues: ReleaseFormatValue[];
   media: MediumForm[];
 }
 
@@ -30,7 +33,8 @@ const EMPTY_INITIAL_VALUES: InitialValues = {
   jacketArtUrl: '',
   isDisplay: true,
   orderNo: 1,
-  media: [{ formatValue: 1, tracks: [] }],
+  formatValues: [1],
+  media: [{ name: '', tracks: [] }],
 };
 
 const getCreateParams = (): CreateParams => {
@@ -103,6 +107,7 @@ export const CreateForm = () => {
         jacketArtUrl: data.release.jacketArtUrl ?? '',
         isDisplay: data.release.isDisplay,
         orderNo: data.release.orderNo,
+        formatValues: [...data.release.formatValues],
         media: toMediumForms(data),
       },
     };
@@ -164,6 +169,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
   const [jacketArtUrl, setJacketArtUrl] = createSignal(props.initialValues.jacketArtUrl);
   const [isDisplay, setIsDisplay] = createSignal(props.initialValues.isDisplay);
   const [orderNo, setOrderNo] = createSignal(props.initialValues.orderNo);
+  const [formatValues, setFormatValues] = createSignal<ReleaseFormatValue[]>(props.initialValues.formatValues);
   const [media, setMedia] = createSignal<MediumForm[]>(props.initialValues.media);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -203,6 +209,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
       jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
       orderNo: orderNo(),
+      formatValues: formatValues(),
       media: toMediaPayload(media()),
     });
 
@@ -292,6 +299,14 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
                   class="mt-3 size-32 rounded-box border border-base-300 object-cover"
                 />
               </Show>
+            </div>
+
+            <div class="md:col-span-2">
+              <FormatCheckboxes
+                formatValues={formatValues()}
+                onChange={setFormatValues}
+                fieldError={getFieldError('formatValues')}
+              />
             </div>
 
             <div class="md:col-span-2">

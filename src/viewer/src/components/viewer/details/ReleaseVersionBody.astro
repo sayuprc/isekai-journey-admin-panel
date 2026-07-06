@@ -26,7 +26,7 @@ const { release, releaseGroupTitle } = Astro.props;
           {
             release.media.length > 1 && (
               <div class="label-mono release-medium-heading">
-                DISC {medium.position} · {medium.format.name}
+                DISC {medium.position}{medium.name !== null ? ` · ${medium.name}` : ''}
               </div>
             )
           }

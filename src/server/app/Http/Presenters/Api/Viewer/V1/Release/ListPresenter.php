@@ -7,8 +7,8 @@ namespace App\Http\Presenters\Api\Viewer\V1\Release;
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use DateTime;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Viewer\Client\Model\MediumFormat as OpenApiMediumFormat;
-use OpenAPI\Viewer\Client\Model\MediumFormatValue;
+use OpenAPI\Viewer\Client\Model\ReleaseFormat as OpenApiReleaseFormat;
+use OpenAPI\Viewer\Client\Model\ReleaseFormatValue;
 use OpenAPI\Viewer\Client\Model\ReleaseGroupListItem as OpenApiReleaseGroupListItem;
 use OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse;
 use OpenAPI\Viewer\Client\Model\ReleaseGroupType as OpenApiReleaseGroupType;
@@ -21,6 +21,7 @@ use Release\Application\Viewer\Query\ReleaseListItem;
 use Release\Application\Viewer\Query\ReleaseMediumItem;
 use Release\Application\Viewer\Query\ReleaseTrackItem;
 use Release\Application\Viewer\UseCase\List\ListOutputData;
+use Release\Domain\Models\ReleaseFormat;
 use ResultType\Result;
 use Support\UseCase\Error\UseCaseError;
 
@@ -70,18 +71,23 @@ class ListPresenter
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setDescription($release->description)
             ->setOrderNo($release->orderNo)
+            ->setFormats(array_map($this->toOpenApiReleaseFormat(...), $release->formats))
             ->setMedia(array_map($this->toOpenApiReleaseMediumItem(...), $release->media));
+    }
+
+    private function toOpenApiReleaseFormat(ReleaseFormat $format): OpenApiReleaseFormat
+    {
+        return new OpenApiReleaseFormat()
+            ->setName($format->getName())
+            ->setValue(ReleaseFormatValue::from($format->value));
     }
 
     private function toOpenApiReleaseMediumItem(ReleaseMediumItem $medium): OpenApiReleaseMediumItem
     {
-        return new OpenApiReleaseMediumItem()
+        return new OpenApiReleaseMediumItem([
+            'name' => $medium->name,
+        ])
             ->setPosition($medium->position)
-            ->setFormat(
-                new OpenApiMediumFormat()
-                    ->setName($medium->format->getName())
-                    ->setValue(MediumFormatValue::from($medium->format->value)),
-            )
             ->setTracks(array_map($this->toOpenApiReleaseTrackItem(...), $medium->tracks));
     }
 

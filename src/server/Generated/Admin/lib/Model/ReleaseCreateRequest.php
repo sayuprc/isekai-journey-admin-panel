@@ -64,6 +64,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => 'string',
         'is_display' => 'bool',
         'order_no' => 'int',
+        'format_values' => '\OpenAPI\Admin\Client\Model\ReleaseFormatValue[]',
         'media' => '\OpenAPI\Admin\Client\Model\Medium[]'
     ];
 
@@ -82,6 +83,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => null,
         'is_display' => null,
         'order_no' => 'int32',
+        'format_values' => null,
         'media' => null
     ];
 
@@ -98,6 +100,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => true,
         'is_display' => false,
         'order_no' => false,
+        'format_values' => false,
         'media' => false
     ];
 
@@ -194,6 +197,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => 'jacketArtUrl',
         'is_display' => 'isDisplay',
         'order_no' => 'orderNo',
+        'format_values' => 'formatValues',
         'media' => 'media'
     ];
 
@@ -210,6 +214,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => 'setJacketArtUrl',
         'is_display' => 'setIsDisplay',
         'order_no' => 'setOrderNo',
+        'format_values' => 'setFormatValues',
         'media' => 'setMedia'
     ];
 
@@ -226,6 +231,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'jacket_art_url' => 'getJacketArtUrl',
         'is_display' => 'getIsDisplay',
         'order_no' => 'getOrderNo',
+        'format_values' => 'getFormatValues',
         'media' => 'getMedia'
     ];
 
@@ -293,6 +299,7 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('format_values', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
     }
 
@@ -350,6 +357,13 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
         if (($this->container['order_no'] < 1)) {
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
+        if ($this->container['format_values'] === null) {
+            $invalidProperties[] = "'format_values' can't be null";
+        }
+        if ((count($this->container['format_values']) < 1)) {
+            $invalidProperties[] = "invalid value for 'format_values', number of items must be greater than or equal to 1.";
         }
 
         if ($this->container['media'] === null) {
@@ -572,6 +586,38 @@ class ReleaseCreateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         }
 
         $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets format_values
+     *
+     * @return \OpenAPI\Admin\Client\Model\ReleaseFormatValue[]
+     */
+    public function getFormatValues()
+    {
+        return $this->container['format_values'];
+    }
+
+    /**
+     * Sets format_values
+     *
+     * @param \OpenAPI\Admin\Client\Model\ReleaseFormatValue[] $format_values format_values
+     *
+     * @return self
+     */
+    public function setFormatValues($format_values)
+    {
+        if (is_null($format_values)) {
+            throw new \InvalidArgumentException('non-nullable format_values cannot be null');
+        }
+
+
+        if ((count($format_values) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $format_values when calling ReleaseCreateRequest., number of items must be greater than or equal to 1.');
+        }
+        $this->container['format_values'] = $format_values;
 
         return $this;
     }

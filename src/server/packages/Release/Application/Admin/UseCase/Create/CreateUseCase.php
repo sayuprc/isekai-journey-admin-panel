@@ -58,6 +58,7 @@ readonly class CreateUseCase
                 $inputData->jacketArtUrl,
                 $inputData->isDisplay,
                 $inputData->orderNo,
+                $inputData->formatValues,
                 $inputData->media,
             );
 

@@ -8,7 +8,6 @@ use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Group\Search\SearchInputData;
 use Release\Application\Admin\UseCase\Group\Search\SearchUseCase;
-use Release\Domain\Models\MediumFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Support\Domain\SearchCriteria\PerPage;
 use Tests\Support\DatabaseTestCase;
@@ -34,13 +33,13 @@ class SearchUseCaseTest extends DatabaseTestCase
         );
         $this->storeReleases(
             $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Digital->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
             $this->createRelease($this->generateUuid(), $releaseGroupId1, 'CD', true, new ImmutableDate('2026-03-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Cd->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
             $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Digital->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
         );
 

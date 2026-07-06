@@ -39,8 +39,8 @@ model ReleaseGroupType {
   value: ReleaseGroupTypeValue;
 }
 
-@doc("媒体種別の値")
-enum MediumFormatValue {
+@doc("提供形態の値")
+enum ReleaseFormatValue {
   Digital: 1,
   Cd: 2,
   Dvd: 3,
@@ -48,10 +48,10 @@ enum MediumFormatValue {
   Other: 99,
 }
 
-@example(#{ name: "CD", value: MediumFormatValue.Cd })
-model MediumFormat {
+@example(#{ name: "CD", value: ReleaseFormatValue.Cd })
+model ReleaseFormat {
   name: string;
-  value: MediumFormatValue;
+  value: ReleaseFormatValue;
 }
 
 @doc("収録曲。title は上書き名があればそれ、なければ楽曲名。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId != null && isDisplay で判定する")
@@ -62,10 +62,10 @@ model ReleaseTrackItem {
   isDisplay: boolean;
 }
 
-@doc("リリース内の媒体")
+@doc("リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル")
 model ReleaseMediumItem {
   position: orderNo;
-  format: MediumFormat;
+  name: string | null;
   tracks: ReleaseTrackItem[];
 }
 
@@ -77,6 +77,7 @@ model ReleaseListItem {
   description: string;
   jacketArtUrl: jacketArtUrl | null;
   orderNo: orderNo;
+  formats: ReleaseFormat[];
   media: ReleaseMediumItem[];
 }
 

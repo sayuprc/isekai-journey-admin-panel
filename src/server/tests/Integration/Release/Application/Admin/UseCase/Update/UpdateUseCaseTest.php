@@ -7,7 +7,7 @@ namespace Tests\Integration\Release\Application\Admin\UseCase\Update;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Update\UpdateInputData;
 use Release\Application\Admin\UseCase\Update\UpdateUseCase;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\InvalidInputError;
@@ -42,10 +42,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $releaseGroupId,
                 '旧版名',
                 true,
+                formats: [ReleaseFormat::Cd->value],
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId1, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -60,10 +61,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: 'https://example.com/jacket-new.png',
             isDisplay: false,
             orderNo: 20,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [
                         ['songId' => $songId2, 'title' => null, 'trackNo' => 1],
                         ['songId' => $songId1, 'title' => null, 'trackNo' => 2],
@@ -108,10 +110,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 $releaseGroupId,
                 '旧版名',
                 true,
+                formats: [ReleaseFormat::Cd->value],
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -126,10 +129,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 1,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [
                         ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                         ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -159,6 +163,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 1,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
 
@@ -193,10 +198,11 @@ class UpdateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 1,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [
                         ['songId' => $songId1, 'title' => null, 'trackNo' => 1],
                         ['songId' => $songId2, 'title' => null, 'trackNo' => 1],

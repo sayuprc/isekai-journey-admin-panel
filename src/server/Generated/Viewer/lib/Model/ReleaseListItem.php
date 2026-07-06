@@ -64,6 +64,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'string',
         'jacket_art_url' => 'string',
         'order_no' => 'int',
+        'formats' => '\OpenAPI\Viewer\Client\Model\ReleaseFormat[]',
         'media' => '\OpenAPI\Viewer\Client\Model\ReleaseMediumItem[]'
     ];
 
@@ -81,6 +82,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => null,
         'jacket_art_url' => null,
         'order_no' => 'int32',
+        'formats' => null,
         'media' => null
     ];
 
@@ -96,6 +98,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => false,
         'jacket_art_url' => true,
         'order_no' => false,
+        'formats' => false,
         'media' => false
     ];
 
@@ -191,6 +194,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'description',
         'jacket_art_url' => 'jacketArtUrl',
         'order_no' => 'orderNo',
+        'formats' => 'formats',
         'media' => 'media'
     ];
 
@@ -206,6 +210,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'setDescription',
         'jacket_art_url' => 'setJacketArtUrl',
         'order_no' => 'setOrderNo',
+        'formats' => 'setFormats',
         'media' => 'setMedia'
     ];
 
@@ -221,6 +226,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'description' => 'getDescription',
         'jacket_art_url' => 'getJacketArtUrl',
         'order_no' => 'getOrderNo',
+        'formats' => 'getFormats',
         'media' => 'getMedia'
     ];
 
@@ -287,6 +293,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('jacket_art_url', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
+        $this->setIfExists('formats', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
     }
 
@@ -343,6 +350,9 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
         }
 
+        if ($this->container['formats'] === null) {
+            $invalidProperties[] = "'formats' can't be null";
+        }
         if ($this->container['media'] === null) {
             $invalidProperties[] = "'media' can't be null";
         }
@@ -536,6 +546,33 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         }
 
         $this->container['order_no'] = $order_no;
+
+        return $this;
+    }
+
+    /**
+     * Gets formats
+     *
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseFormat[]
+     */
+    public function getFormats()
+    {
+        return $this->container['formats'];
+    }
+
+    /**
+     * Sets formats
+     *
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseFormat[] $formats formats
+     *
+     * @return self
+     */
+    public function setFormats($formats)
+    {
+        if (is_null($formats)) {
+            throw new \InvalidArgumentException('non-nullable formats cannot be null');
+        }
+        $this->container['formats'] = $formats;
 
         return $this;
     }

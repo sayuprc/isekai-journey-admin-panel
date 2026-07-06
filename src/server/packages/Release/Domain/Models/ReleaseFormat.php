@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-enum MediumFormat: int
+enum ReleaseFormat: int
 {
     case Digital = 1;
 

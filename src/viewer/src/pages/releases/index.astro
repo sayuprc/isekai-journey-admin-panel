@@ -3,7 +3,7 @@ import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import { releaseGroupContentRepository } from '../../features/releases/content';
-import { distinctTrackCount, representativeJacketArtUrl } from '../../features/releases/types';
+import { distinctTrackCount, groupFormats, representativeJacketArtUrl } from '../../features/releases/types';
 import Layout from '../../layouts/Layout.astro';
 
 // API は最古発売日の降順で返すのでそのまま並べる。
@@ -33,6 +33,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
         releaseGroups.map((releaseGroup) => {
           const trackTitles = releaseGroup.releases
             .flatMap(release => release.media.flatMap(medium => medium.tracks.map(track => track.title)));
+          const formatNames = groupFormats(releaseGroup).map(format => format.name);
 
           return (
             <a
@@ -45,7 +46,9 @@ const releaseGroups = await releaseGroupContentRepository.all();
               <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
               <div class="release-card-body">
                 <div class="release-card-meta">
-                  <span class="label-mono">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</span>
+                  <span class="label-mono">
+                    {releaseGroup.firstReleasedOn} · {releaseGroup.type.name}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
+                  </span>
                   <span class="detail-index">{distinctTrackCount(releaseGroup)} tracks</span>
                 </div>
                 <div class="song-grid-title">{releaseGroup.title}</div>

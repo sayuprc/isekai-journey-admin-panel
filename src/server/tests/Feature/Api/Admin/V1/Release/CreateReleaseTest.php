@@ -6,7 +6,7 @@ namespace Tests\Feature\Api\Admin\V1\Release;
 
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseRouteMap;
 use Song\Domain\Models\SongType;
@@ -43,17 +43,18 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => 'https://example.com/jacket.png',
                 'isDisplay' => true,
                 'orderNo' => 10,
+                'formatValues' => [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                         ],
                     ],
                     [
                         'position' => 2,
-                        'formatValue' => MediumFormat::Dvd->value,
+                        'name' => 'DVD',
                         'tracks' => [],
                     ],
                 ],
@@ -71,16 +72,18 @@ class CreateReleaseTest extends DatabaseTestCase
                             ->where('jacketArtUrl', 'https://example.com/jacket.png')
                             ->where('isDisplay', true)
                             ->where('orderNo', 10)
+                            ->where('formatValues', [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value])
                             ->where('media.0.position', 1)
-                            ->where('media.0.formatValue', MediumFormat::Cd->value)
+                            ->where('media.0.name', null)
                             ->where('media.0.tracks.0.songId', $songId)
                             ->where('media.0.tracks.0.trackNo', 1)
                             ->where('media.1.position', 2)
-                            ->where('media.1.formatValue', MediumFormat::Dvd->value)
+                            ->where('media.1.name', 'DVD')
                             ->where('media.1.tracks', []),
                     ),
             );
 
+        $this->assertDatabaseCount('release_formats', 2);
         $this->assertDatabaseCount('release_media', 2);
         $this->assertDatabaseCount('release_tracks', 1);
     }
@@ -107,10 +110,11 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 10,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -162,10 +166,11 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 10,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => $songId, 'title' => null, 'trackNo' => 2],
@@ -212,10 +217,11 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 10,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1],
                         ],
@@ -258,10 +264,11 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 10,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => null, 'title' => null, 'trackNo' => 1],
                         ],
@@ -281,6 +288,29 @@ class CreateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function createFailsWhenFormatValuesIsEmpty(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => '通常盤',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'formatValues' => [],
+                'media' => [],
+            ])->assertStatus(422);
+    }
+
+    #[Test]
     public function createFailsWhenReleaseGroupDoesNotExist(): void
     {
         $this->withAuth()
@@ -292,6 +322,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Digital->value],
                 'media' => [],
             ])->assertStatus(400)
             ->assertJson(['message' => '指定されたリリースグループが存在しません。']);
@@ -309,6 +340,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Digital->value],
                 'media' => [],
             ])->assertStatus(422)
             ->assertJson(

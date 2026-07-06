@@ -13,11 +13,10 @@ table "release_media" {
     unsigned = true
     comment  = "媒体順"
   }
-  column "format" {
-    null     = false
-    type     = tinyint
-    unsigned = true
-    comment  = "媒体種別"
+  column "name" {
+    null    = true
+    type    = varchar(255)
+    comment = "媒体の表示ラベル"
   }
 
   primary_key {

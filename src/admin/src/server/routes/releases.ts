@@ -12,10 +12,12 @@ import { authGuard } from '../middleware';
 
 const NullableStringSchema = t.Union([t.String(), t.Null()]);
 
+const formatValuesSchema = t.Array(t.Numeric(), { minItems: 1 });
+
 const mediaSchema = t.Array(
   t.Object({
     position: t.Number(),
-    formatValue: t.Numeric(),
+    name: t.Union([t.String(), t.Null()]),
     tracks: t.Array(
       t.Object({
         songId: t.Union([t.String(), t.Null()]),
@@ -72,6 +74,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
         orderNo: t.Number(),
+        formatValues: formatValuesSchema,
         media: mediaSchema,
       }),
     },
@@ -113,6 +116,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         jacketArtUrl: NullableStringSchema,
         isDisplay: t.Boolean(),
         orderNo: t.Number(),
+        formatValues: formatValuesSchema,
         media: mediaSchema,
       }),
     },

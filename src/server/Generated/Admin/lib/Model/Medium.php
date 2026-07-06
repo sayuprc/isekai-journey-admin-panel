@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * Medium Class Doc Comment
  *
  * @category Class
- * @description リリース内の媒体（CD / DVD / 配信 など）
+ * @description リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -59,7 +59,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'position' => 'int',
-        'format_value' => '\OpenAPI\Admin\Client\Model\MediumFormatValue',
+        'name' => 'string',
         'tracks' => '\OpenAPI\Admin\Client\Model\Track[]'
     ];
 
@@ -72,7 +72,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'position' => 'int32',
-        'format_value' => null,
+        'name' => null,
         'tracks' => null
     ];
 
@@ -83,7 +83,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'position' => false,
-        'format_value' => false,
+        'name' => true,
         'tracks' => false
     ];
 
@@ -174,7 +174,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'position' => 'position',
-        'format_value' => 'formatValue',
+        'name' => 'name',
         'tracks' => 'tracks'
     ];
 
@@ -185,7 +185,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'position' => 'setPosition',
-        'format_value' => 'setFormatValue',
+        'name' => 'setName',
         'tracks' => 'setTracks'
     ];
 
@@ -196,7 +196,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'position' => 'getPosition',
-        'format_value' => 'getFormatValue',
+        'name' => 'getName',
         'tracks' => 'getTracks'
     ];
 
@@ -258,7 +258,7 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
     public function __construct(?array $data = null)
     {
         $this->setIfExists('position', $data ?? [], null);
-        $this->setIfExists('format_value', $data ?? [], null);
+        $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('tracks', $data ?? [], null);
     }
 
@@ -296,9 +296,13 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = "invalid value for 'position', must be bigger than or equal to 1.";
         }
 
-        if ($this->container['format_value'] === null) {
-            $invalidProperties[] = "'format_value' can't be null";
+        if ($this->container['name'] === null) {
+            $invalidProperties[] = "'name' can't be null";
         }
+        if ((mb_strlen($this->container['name']) < 1)) {
+            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
+        }
+
         if ($this->container['tracks'] === null) {
             $invalidProperties[] = "'tracks' can't be null";
         }
@@ -350,28 +354,40 @@ class Medium implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets format_value
+     * Gets name
      *
-     * @return \OpenAPI\Admin\Client\Model\MediumFormatValue
+     * @return string
      */
-    public function getFormatValue()
+    public function getName()
     {
-        return $this->container['format_value'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets format_value
+     * Sets name
      *
-     * @param \OpenAPI\Admin\Client\Model\MediumFormatValue $format_value format_value
+     * @param string $name 媒体の表示ラベル(CD1 / Blu-ray など)
      *
      * @return self
      */
-    public function setFormatValue($format_value)
+    public function setName($name)
     {
-        if (is_null($format_value)) {
-            throw new \InvalidArgumentException('non-nullable format_value cannot be null');
+        if (is_null($name)) {
+            array_push($this->openAPINullablesSetToNull, 'name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
-        $this->container['format_value'] = $format_value;
+
+        if (!is_null($name) && (mb_strlen($name) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $name when calling Medium., must be bigger than or equal to 1.');
+        }
+
+        $this->container['name'] = $name;
 
         return $this;
     }

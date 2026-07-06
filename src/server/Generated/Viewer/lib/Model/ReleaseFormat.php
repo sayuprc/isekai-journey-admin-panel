@@ -1,6 +1,6 @@
 <?php
 /**
- * MediumFormat
+ * ReleaseFormat
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \OpenAPI\Viewer\Client\ObjectSerializer;
 
 /**
- * MediumFormat Class Doc Comment
+ * ReleaseFormat Class Doc Comment
  *
  * @category Class
  * @package  OpenAPI\Viewer\Client
@@ -40,7 +40,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
+class ReleaseFormat implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'MediumFormat';
+    protected static $openAPIModelName = 'ReleaseFormat';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -58,7 +58,7 @@ class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'name' => 'string',
-        'value' => '\OpenAPI\Viewer\Client\Model\MediumFormatValue'
+        'value' => '\OpenAPI\Viewer\Client\Model\ReleaseFormatValue'
     ];
 
     /**
@@ -332,7 +332,7 @@ class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets value
      *
-     * @return \OpenAPI\Viewer\Client\Model\MediumFormatValue
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseFormatValue
      */
     public function getValue()
     {
@@ -342,7 +342,7 @@ class MediumFormat implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets value
      *
-     * @param \OpenAPI\Viewer\Client\Model\MediumFormatValue $value value
+     * @param \OpenAPI\Viewer\Client\Model\ReleaseFormatValue $value value
      *
      * @return self
      */

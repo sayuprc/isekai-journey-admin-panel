@@ -2315,28 +2315,20 @@ components:
       type: object
       required:
         - position
-        - formatValue
+        - name
         - tracks
       properties:
         position:
           $ref: '#/components/schemas/orderNo'
-        formatValue:
-          $ref: '#/components/schemas/MediumFormatValue'
+        name:
+          anyOf:
+            - $ref: '#/components/schemas/mediumName'
+            - type: 'null'
         tracks:
           type: array
           items:
             $ref: '#/components/schemas/Track'
-      description: リリース内の媒体（CD / DVD / 配信 など）
-    MediumFormatValue:
-      type: integer
-      format: int32
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 99
-      description: 媒体種別
+      description: リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
     PerPage:
       type: integer
       format: int32
@@ -2588,6 +2580,7 @@ components:
         - jacketArtUrl
         - isDisplay
         - orderNo
+        - formatValues
         - media
       properties:
         releaseId:
@@ -2608,6 +2601,11 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        formatValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseFormatValue'
+          minItems: 1
         media:
           type: array
           items:
@@ -2623,6 +2621,7 @@ components:
         - jacketArtUrl
         - isDisplay
         - orderNo
+        - formatValues
         - media
       properties:
         releaseGroupId:
@@ -2641,6 +2640,11 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        formatValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseFormatValue'
+          minItems: 1
         media:
           type: array
           items:
@@ -2652,6 +2656,16 @@ components:
       properties:
         release:
           $ref: '#/components/schemas/Release'
+    ReleaseFormatValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 99
+      description: 提供形態
     ReleaseGetResponse:
       type: object
       required:
@@ -2747,7 +2761,7 @@ components:
         formatValues:
           type: array
           items:
-            $ref: '#/components/schemas/MediumFormatValue'
+            $ref: '#/components/schemas/ReleaseFormatValue'
       description: リリースグループ傘下のリリース 1 件分の概要
     ReleaseGroupSearchResponse:
       type: object
@@ -2854,6 +2868,7 @@ components:
         - jacketArtUrl
         - isDisplay
         - orderNo
+        - formatValues
         - media
       properties:
         name:
@@ -2870,6 +2885,11 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
+        formatValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseFormatValue'
+          minItems: 1
         media:
           type: array
           items:
@@ -3448,6 +3468,10 @@ components:
       type: string
       format: uri
       description: メディアURL
+    mediumName:
+      type: string
+      minLength: 1
+      description: 媒体の表示ラベル(CD1 / Blu-ray など)
     orderNo:
       type: integer
       format: int32

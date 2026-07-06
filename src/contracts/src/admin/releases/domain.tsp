@@ -42,14 +42,18 @@ enum ReleaseGroupTypeValue {
   Other: 99,
 }
 
-@doc("媒体種別")
-enum MediumFormatValue {
+@doc("提供形態")
+enum ReleaseFormatValue {
   Digital: 1,
   Cd: 2,
   Dvd: 3,
   BluRay: 4,
   Other: 99,
 }
+
+@doc("媒体の表示ラベル(CD1 / Blu-ray など)")
+@minLength(1)
+scalar mediumName extends string;
 
 @doc("リリースグループ（作品）")
 model ReleaseGroup {
@@ -78,7 +82,7 @@ model ReleaseGroupReferencedRelease {
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   orderNo: orderNo;
-  formatValues: MediumFormatValue[];
+  formatValues: ReleaseFormatValue[];
 }
 
 @doc("収録曲。songId / title の少なくとも一方を指定する(検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラックで、title を併記すると表示名を上書きする。songId なしは表示専用のタイトルのみトラック")
@@ -88,10 +92,10 @@ model Track {
   trackNo: orderNo;
 }
 
-@doc("リリース内の媒体（CD / DVD / 配信 など）")
+@doc("リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル")
 model Medium {
   position: orderNo;
-  formatValue: MediumFormatValue;
+  name: mediumName | null;
   tracks: Track[];
 }
 
@@ -105,6 +109,10 @@ model Release {
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   orderNo: orderNo;
+
+  @minItems(1)
+  formatValues: ReleaseFormatValue[];
+
   media: Medium[];
 }
 

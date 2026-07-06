@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\Release;
 
 use OpenAPI\Admin\Client\Model\Medium as OpenApiMedium;
-use OpenAPI\Admin\Client\Model\MediumFormatValue;
 use OpenAPI\Admin\Client\Model\Release as OpenApiRelease;
+use OpenAPI\Admin\Client\Model\ReleaseFormatValue;
 use OpenAPI\Admin\Client\Model\ReleaseReferencedSong as OpenApiReleaseReferencedSong;
 use OpenAPI\Admin\Client\Model\Track as OpenApiTrack;
 use Release\Application\Admin\Query\ReleaseReferencedSong;
 use Release\Domain\Models\Medium;
 use Release\Domain\Models\Release;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\Track;
 
 class Converter
@@ -28,14 +29,18 @@ class Converter
             ->setDescription($release->description->value)
             ->setIsDisplay($release->isDisplay)
             ->setOrderNo($release->orderNo->value)
+            ->setFormatValues($release->formats->toGeneric()->map(
+                static fn (ReleaseFormat $format): ReleaseFormatValue => ReleaseFormatValue::from($format->value),
+            )->toArray())
             ->setMedia($release->media->toGeneric()->map($this->toOpenApiMedium(...))->toArray());
     }
 
     public function toOpenApiMedium(Medium $medium): OpenApiMedium
     {
-        return new OpenApiMedium()
+        return new OpenApiMedium([
+            'name' => $medium->name?->value,
+        ])
             ->setPosition($medium->position->value)
-            ->setFormatValue(MediumFormatValue::from($medium->format->value))
             ->setTracks($medium->tracks->toGeneric()->map($this->toOpenApiTrack(...))->toArray());
     }
 

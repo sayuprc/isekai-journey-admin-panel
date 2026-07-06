@@ -7,7 +7,7 @@ namespace Tests\Integration\Release\Application\Admin\UseCase\Get;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Get\GetInputData;
 use Release\Application\Admin\UseCase\Get\GetUseCase;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\InvalidInputError;
@@ -42,15 +42,16 @@ class GetUseCaseTest extends DatabaseTestCase
                 $releaseGroupId,
                 '初回限定盤',
                 true,
+                formats: [ReleaseFormat::Cd->value],
                 media: [
                     [
                         'position' => 2,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId2, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId1, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],

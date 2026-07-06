@@ -22,10 +22,11 @@ namespace IsekaiObservatory.Viewer;
           description: "",
           jacketArtUrl: "https://example.com/jacket.png",
           orderNo: 1,
+          formats: #[#{ name: "CD", value: ReleaseFormatValue.Cd }],
           media: #[
             #{
               position: 1,
-              format: #{ name: "CD", value: MediumFormatValue.Cd },
+              name: null,
               tracks: #[
                 #{ trackNo: 1, songId: "3cd42c09-ff3c-4cd2-913f-a279c4ea89b4", title: "テスト楽曲", isDisplay: true }
               ],

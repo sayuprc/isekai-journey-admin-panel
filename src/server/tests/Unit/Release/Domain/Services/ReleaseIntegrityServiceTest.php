@@ -8,7 +8,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseGroupType;
@@ -18,6 +18,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\BusinessRuleViolationError;
+use Support\Domain\Error\DomainValidationError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -74,10 +75,11 @@ class ReleaseIntegrityServiceTest extends TestCase
             null,
             true,
             1,
+            [ReleaseFormat::Cd->value],
             [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [
                         ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
                         ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -119,10 +121,11 @@ class ReleaseIntegrityServiceTest extends TestCase
             null,
             true,
             1,
+            [ReleaseFormat::Cd->value],
             [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1]],
                 ],
             ],
@@ -130,6 +133,54 @@ class ReleaseIntegrityServiceTest extends TestCase
 
         $this->assertTrue($result->isErr());
         $this->assertInstanceOf(BusinessRuleViolationError::class, $result->unwrapErr());
+    }
+
+    #[Test]
+    public function prepareForCreateFailsWhenFormatsAreEmpty(): void
+    {
+        $this->generator->shouldReceive('generate')
+            ->with()
+            ->andReturn(self::RELEASE_ID)
+            ->once();
+
+        $result = $this->getInstance()->prepareForCreate(
+            self::RELEASE_GROUP_ID,
+            '初回限定盤',
+            '2024-01-01',
+            '説明',
+            null,
+            true,
+            1,
+            [],
+            [],
+        );
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(DomainValidationError::class, $result->unwrapErr());
+    }
+
+    #[Test]
+    public function prepareForCreateFailsWhenFormatsAreDuplicated(): void
+    {
+        $this->generator->shouldReceive('generate')
+            ->with()
+            ->andReturn(self::RELEASE_ID)
+            ->once();
+
+        $result = $this->getInstance()->prepareForCreate(
+            self::RELEASE_GROUP_ID,
+            '初回限定盤',
+            '2024-01-01',
+            '説明',
+            null,
+            true,
+            1,
+            [ReleaseFormat::Cd->value, ReleaseFormat::Cd->value],
+            [],
+        );
+
+        $this->assertTrue($result->isErr());
+        $this->assertInstanceOf(DomainValidationError::class, $result->unwrapErr());
     }
 
     private function getInstance(): ReleaseIntegrityService
