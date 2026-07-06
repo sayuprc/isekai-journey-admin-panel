@@ -47,7 +47,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Digital->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),
@@ -63,7 +63,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,

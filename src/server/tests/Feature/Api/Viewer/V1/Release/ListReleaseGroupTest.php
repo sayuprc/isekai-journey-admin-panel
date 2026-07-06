@@ -54,8 +54,9 @@ class ListReleaseGroupTest extends DatabaseTestCase
                         'position' => 1,
                         'format' => MediumFormat::Digital->value,
                         'tracks' => [
-                            ['songId' => $visibleSongId, 'trackNo' => 1],
-                            ['songId' => $hiddenSongId, 'trackNo' => 2],
+                            ['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => $hiddenSongId, 'title' => null, 'trackNo' => 2],
+                            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 3],
                         ],
                     ],
                 ],
@@ -73,7 +74,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $visibleSongId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,
@@ -161,6 +162,13 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                                 'trackNo' => 2,
                                                 'songId' => $hiddenSongId,
                                                 'title' => '非公開楽曲',
+                                                'isDisplay' => false,
+                                            ],
+                                            // タイトルのみトラックは songId: null / isDisplay: false で返る。
+                                            [
+                                                'trackNo' => 3,
+                                                'songId' => null,
+                                                'title' => '管理対象外の楽曲',
                                                 'isDisplay' => false,
                                             ],
                                         ],

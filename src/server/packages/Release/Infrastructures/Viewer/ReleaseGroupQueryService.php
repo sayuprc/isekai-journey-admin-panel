@@ -167,11 +167,11 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                     'release_tracks.position',
                     'release_tracks.track_no',
                     'release_tracks.song_id',
-                    'songs.title',
                     'songs.is_display',
                 ])
+                ->select(new Sql('COALESCE(songs.title, release_tracks.title)'), 'title')
                 ->from('release_tracks')
-                ->join('songs', 'songs.song_id = release_tracks.song_id')
+                ->outerJoin('songs', 'songs.song_id = release_tracks.song_id')
                 ->where('release_tracks.release_id', 'IN', $binReleaseIds)
                 ->orderBy('release_tracks.position')
                 ->orderBy('release_tracks.track_no'),
@@ -180,11 +180,14 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         $tracksByMedium = [];
 
         foreach ($trackRows as $row) {
+            $binSongId = Row::nullableString($row, 'song_id');
+
+            // タイトルのみトラックは songs が結合されないため isDisplay: false（リンクなし表示）とする。
             $tracksByMedium[Row::string($row, 'release_id')][Row::int($row, 'position')][] = new ReleaseTrackItem(
                 Row::int($row, 'track_no'),
-                $this->converter->toUuid(Row::string($row, 'song_id')),
+                is_null($binSongId) ? null : $this->converter->toUuid($binSongId),
                 Row::string($row, 'title'),
-                Row::bool($row, 'is_display'),
+                is_null($binSongId) ? false : Row::bool($row, 'is_display'),
             );
         }
 

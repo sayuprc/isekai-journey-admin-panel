@@ -20,13 +20,22 @@ table "release_tracks" {
     comment  = "曲順"
   }
   column "song_id" {
-    null    = false
+    null    = true
     type    = binary(16)
     comment = "楽曲ID"
+  }
+  column "title" {
+    null    = true
+    type    = varchar(255)
+    comment = "管理対象外楽曲のタイトル"
   }
 
   primary_key {
     columns = [column.release_id, column.position, column.track_no]
+  }
+
+  check "release_tracks_song_id_title_xor" {
+    expr = "(`song_id` IS NULL) != (`title` IS NULL)"
   }
 
   index "fk_release_tracks_song_id" {

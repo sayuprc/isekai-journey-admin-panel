@@ -35,7 +35,7 @@ use \OpenAPI\Viewer\Client\ObjectSerializer;
  * ReleaseTrackItem Class Doc Comment
  *
  * @category Class
- * @description 収録曲
+ * @description 収録曲。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId !&#x3D; null &amp;&amp; isDisplay で判定する
  * @package  OpenAPI\Viewer\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -85,7 +85,7 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'track_no' => false,
-        'song_id' => false,
+        'song_id' => true,
         'title' => false,
         'is_display' => false
     ];
@@ -379,7 +379,14 @@ class ReleaseTrackItem implements ModelInterface, ArrayAccess, \JsonSerializable
     public function setSongId($song_id)
     {
         if (is_null($song_id)) {
-            throw new \InvalidArgumentException('non-nullable song_id cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'song_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('song_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
         $this->container['song_id'] = $song_id;
 

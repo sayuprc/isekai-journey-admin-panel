@@ -409,12 +409,12 @@ export type ReleaseJacketArtUploadResponse = {
 };
 
 /**
- * リリース収録曲の表示用情報
+ * リリース収録曲の表示用情報。タイトルのみトラックは songId: null で載る
  */
 export type ReleaseReferencedSong = {
     mediumPosition: OrderNo;
     trackNo: OrderNo;
-    songId: Uuid;
+    songId: Uuid | null;
     title: Title;
 };
 
@@ -619,10 +619,11 @@ export type SongUpdateResponse = {
 export type SortOrder = 'asc' | 'desc';
 
 /**
- * 収録曲
+ * 収録曲。songId / title はどちらか一方のみを指定する(XOR。検証はサーバー側の責務)。songId ありは Song 集約を参照する参照トラック、title ありは表示専用のタイトルのみトラック
  */
 export type Track = {
-    songId: Uuid;
+    songId: Uuid | null;
+    title: TrackTitle | null;
     trackNo: OrderNo;
 };
 
@@ -821,6 +822,11 @@ export type SongTypeName = string;
  * 楽曲名
  */
 export type Title = string;
+
+/**
+ * 管理対象外楽曲のトラックタイトル
+ */
+export type TrackTitle = string;
 
 /**
  * UUID v4

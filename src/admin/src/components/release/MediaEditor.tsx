@@ -10,8 +10,9 @@ export const MEDIUM_FORMAT_OPTIONS: Array<{ value: MediumFormatValue; label: str
   { value: 99, label: 'その他' },
 ];
 
+/** songId が null のトラックは管理対象外楽曲(タイトルのみトラック) */
 export type TrackForm = {
-  songId: string;
+  songId: string | null;
   title: string;
 };
 
@@ -20,26 +21,29 @@ export type MediumForm = {
   tracks: TrackForm[];
 };
 
-/** API レスポンスからフォーム状態を組み立てる（楽曲名は収録曲 read model から引く）。 */
+/** API レスポンスからフォーム状態を組み立てる(参照トラックの楽曲名は収録曲 read model から引く) */
 export const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
-  const titleBySongId = new Map(data.songs.map(song => [song.songId, song.title]));
+  const titleBySongId = new Map(
+    data.songs.flatMap(song => (song.songId !== null ? [[song.songId, song.title] as const] : [])),
+  );
 
   return data.release.media.map(medium => ({
     formatValue: medium.formatValue,
     tracks: medium.tracks.map(track => ({
       songId: track.songId,
-      title: titleBySongId.get(track.songId) ?? track.songId,
+      title: track.songId !== null ? titleBySongId.get(track.songId) ?? track.songId : track.title ?? '',
     })),
   }));
 };
 
-/** フォーム状態を API の media リクエスト形へ変換する（position / trackNo は並び順から採番）。 */
+/** フォーム状態を API の media リクエスト形へ変換する(position / trackNo は並び順から採番、songId / title は XOR) */
 export const toMediaPayload = (media: MediumForm[]) =>
   media.map((medium, mediumIndex) => ({
     position: mediumIndex + 1,
     formatValue: medium.formatValue,
     tracks: medium.tracks.map((track, trackIndex) => ({
       songId: track.songId,
+      title: track.songId !== null ? null : track.title,
       trackNo: trackIndex + 1,
     })),
   }));
@@ -52,15 +56,19 @@ interface MediaEditorProps {
 
 export const MediaEditor = (props: MediaEditorProps) => {
   const [searchTitle, setSearchTitle] = createSignal('');
+  const [manualTitle, setManualTitle] = createSignal('');
   const [searchResults, setSearchResults] = createSignal<SongSummary[]>([]);
   const [searchError, setSearchError] = createSignal<string | null>(null);
   const [isSearching, setIsSearching] = createSignal(false);
   const [hasSearched, setHasSearched] = createSignal(false);
   const [targetMediumIndex, setTargetMediumIndex] = createSignal(0);
 
-  // 楽曲は媒体をまたいでもリリース全体で 1 回まで。
+  // 楽曲は媒体をまたいでもリリース全体で 1 回まで（タイトルのみトラックには課さない）。
   const selectedSongIds = createMemo(
-    () => new Set(props.media.flatMap(medium => medium.tracks.map(track => track.songId))),
+    () =>
+      new Set(
+        props.media.flatMap(medium => medium.tracks.flatMap(track => (track.songId !== null ? [track.songId] : []))),
+      ),
   );
 
   const addMedium = () => {
@@ -94,11 +102,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
     props.onChange(prev => prev.map((medium, i) => (i === index ? { ...medium, formatValue } : medium)));
   };
 
-  const addTrack = (song: SongSummary) => {
-    if (selectedSongIds().has(song.songId)) {
-      return;
-    }
-
+  const appendTrack = (track: TrackForm) => {
     const index = Math.min(targetMediumIndex(), props.media.length - 1);
 
     if (index < 0) {
@@ -106,18 +110,33 @@ export const MediaEditor = (props: MediaEditorProps) => {
     }
 
     props.onChange(prev =>
-      prev.map((medium, i) =>
-        i === index
-          ? { ...medium, tracks: [...medium.tracks, { songId: song.songId, title: song.title }] }
-          : medium,
-      ));
+      prev.map((medium, i) => (i === index ? { ...medium, tracks: [...medium.tracks, track] } : medium)));
   };
 
-  const removeTrack = (mediumIndex: number, songId: string) => {
+  const addTrack = (song: SongSummary) => {
+    if (selectedSongIds().has(song.songId)) {
+      return;
+    }
+
+    appendTrack({ songId: song.songId, title: song.title });
+  };
+
+  const addTitleOnlyTrack = () => {
+    const title = manualTitle().trim();
+
+    if (title === '') {
+      return;
+    }
+
+    appendTrack({ songId: null, title });
+    setManualTitle('');
+  };
+
+  const removeTrack = (mediumIndex: number, trackIndex: number) => {
     props.onChange(prev =>
       prev.map((medium, i) =>
         i === mediumIndex
-          ? { ...medium, tracks: medium.tracks.filter(track => track.songId !== songId) }
+          ? { ...medium, tracks: medium.tracks.filter((_, j) => j !== trackIndex) }
           : medium,
       ));
   };
@@ -263,7 +282,12 @@ export const MediaEditor = (props: MediaEditorProps) => {
                             {(track, trackIndex) => (
                               <tr>
                                 <td>{trackIndex() + 1}</td>
-                                <td>{track.title}</td>
+                                <td>
+                                  {track.title}
+                                  <Show when={track.songId === null}>
+                                    <span class="badge badge-ghost badge-sm ml-2">対象外</span>
+                                  </Show>
+                                </td>
                                 <td>
                                   <div class="flex justify-end gap-2">
                                     <button
@@ -282,13 +306,17 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                     >
                                       ↓
                                     </button>
-                                    <a href={`/songs/${track.songId}`} class="btn btn-ghost btn-xs">
-                                      楽曲を見る
-                                    </a>
+                                    <Show when={track.songId}>
+                                      {songId => (
+                                        <a href={`/songs/${songId()}`} class="btn btn-ghost btn-xs">
+                                          楽曲を見る
+                                        </a>
+                                      )}
+                                    </Show>
                                     <button
                                       type="button"
                                       class="btn btn-outline btn-error btn-xs"
-                                      onClick={() => removeTrack(mediumIndex, track.songId)}
+                                      onClick={() => removeTrack(mediumIndex, trackIndex())}
                                     >
                                       削除
                                     </button>
@@ -401,6 +429,33 @@ export const MediaEditor = (props: MediaEditorProps) => {
                 </table>
               </div>
             </Show>
+          </div>
+
+          <div>
+            <label class="label">管理対象外楽曲を追加</label>
+            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+              <div class="flex-1">
+                <label class="label">タイトル</label>
+                <input
+                  type="text"
+                  class="input input-bordered w-full"
+                  value={manualTitle()}
+                  onInput={e => setManualTitle(e.currentTarget.value)}
+                  placeholder="タイトルを直接入力"
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline"
+                disabled={manualTitle().trim() === ''}
+                onClick={addTitleOnlyTrack}
+              >
+                追加
+              </button>
+            </div>
+            <p class="mt-1 text-xs text-base-content/60">
+              管理していない楽曲をタイトルだけで収録曲に追加します（楽曲詳細へのリンクは付きません）。
+            </p>
           </div>
         </Show>
       </div>

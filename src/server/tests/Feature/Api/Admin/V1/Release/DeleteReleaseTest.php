@@ -69,7 +69,7 @@ class DeleteReleaseTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'format' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ),

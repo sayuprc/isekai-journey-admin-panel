@@ -53,8 +53,8 @@ class UpdateReleaseTest extends DatabaseTestCase
                         'position' => 1,
                         'format' => MediumFormat::Digital->value,
                         'tracks' => [
-                            ['songId' => $songId1, 'trackNo' => 1],
-                            ['songId' => $songId2, 'trackNo' => 2],
+                            ['songId' => $songId1, 'title' => null, 'trackNo' => 1],
+                            ['songId' => $songId2, 'title' => null, 'trackNo' => 2],
                         ],
                     ],
                 ],
@@ -74,8 +74,8 @@ class UpdateReleaseTest extends DatabaseTestCase
                         'position' => 1,
                         'formatValue' => MediumFormat::Cd->value,
                         'tracks' => [
-                            ['songId' => $songId3, 'trackNo' => 1],
-                            ['songId' => $songId1, 'trackNo' => 2],
+                            ['songId' => $songId3, 'title' => null, 'trackNo' => 1],
+                            ['songId' => $songId1, 'title' => null, 'trackNo' => 2],
                         ],
                     ],
                 ],
@@ -111,6 +111,73 @@ class UpdateReleaseTest extends DatabaseTestCase
         $this->assertCount(2, $tracks);
         $this->assertSame($songId3, $this->toUuid($tracks[0]->song_id));
         $this->assertSame($songId1, $this->toUuid($tracks[1]->song_id));
+    }
+
+    #[Test]
+    public function canUpdateWithTitleOnlyTrack(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease(
+                $releaseId,
+                $releaseGroupId,
+                '旧版名',
+                true,
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
+                    ],
+                ],
+            ),
+        );
+
+        $this->withAuth()
+            ->putJson(route(ReleaseRouteMap::Update, $releaseId), [
+                'name' => '新版名',
+                'releasedOn' => '2026-05-09',
+                'description' => '説明',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->where('media.0.tracks.1.songId', null)
+                            ->where('media.0.tracks.1.title', '管理対象外の楽曲')
+                            ->where('media.0.tracks.1.trackNo', 2)
+                            ->etc(),
+                    ),
+            );
+
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 2,
+            'song_id' => null,
+            'title' => '管理対象外の楽曲',
+        ]);
     }
 
     #[Test]
@@ -195,12 +262,12 @@ class UpdateReleaseTest extends DatabaseTestCase
                     [
                         'position' => 1,
                         'formatValue' => MediumFormat::Cd->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,
                         'formatValue' => MediumFormat::Digital->value,
-                        'tracks' => [['songId' => $songId, 'trackNo' => 1]],
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
             ])->assertStatus(422)

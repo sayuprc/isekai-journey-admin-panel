@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * ReleaseReferencedSong Class Doc Comment
  *
  * @category Class
- * @description リリース収録曲の表示用情報
+ * @description リリース収録曲の表示用情報。タイトルのみトラックは songId: null で載る
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -86,7 +86,7 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
     protected static array $openAPINullables = [
         'medium_position' => false,
         'track_no' => false,
-        'song_id' => false,
+        'song_id' => true,
         'title' => false
     ];
 
@@ -419,7 +419,14 @@ class ReleaseReferencedSong implements ModelInterface, ArrayAccess, \JsonSeriali
     public function setSongId($song_id)
     {
         if (is_null($song_id)) {
-            throw new \InvalidArgumentException('non-nullable song_id cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'song_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('song_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
         $this->container['song_id'] = $song_id;
 
