@@ -236,11 +236,13 @@ class UpdateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function updateFailsWhenSameSongAppearsAcrossMedia(): void
+    public function canUpdateWithSameSongAcrossMedia(): void
     {
         $songId = $this->generateUuid();
         $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
+
+        $converter = $this->app->make(UuidConverterInterface::class);
 
         $this->storeSongs($this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10));
         $this->storeReleaseGroups(
@@ -270,16 +272,26 @@ class UpdateReleaseTest extends DatabaseTestCase
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
-            ])->assertStatus(422)
+            ])->assertStatus(200)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
                     ->has(
-                        'errors',
-                        1,
+                        'release',
                         static fn (AssertableJson $json) => $json
-                            ->where('field', 'media')
-                            ->where('message', '同じ楽曲を複数指定することはできません。'),
+                            ->where('media.0.tracks.0.songId', $songId)
+                            ->where('media.1.tracks.0.songId', $songId)
+                            ->etc(),
                     ),
             );
+
+        $tracks = DB::table('release_tracks')
+            ->where('release_id', $converter->toBin($releaseId))
+            ->orderBy('position')
+            ->get()
+            ->all();
+
+        $this->assertCount(2, $tracks);
+        $this->assertSame($songId, $this->toUuid($tracks[0]->song_id));
+        $this->assertSame($songId, $this->toUuid($tracks[1]->song_id));
     }
 }

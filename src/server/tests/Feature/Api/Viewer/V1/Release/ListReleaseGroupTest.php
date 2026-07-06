@@ -182,6 +182,49 @@ class ListReleaseGroupTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function showsSameSongAsMultipleTracks(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, '公開楽曲', '説明', SongType::Original, true, 10),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, 'ライブ盤グループ', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease(
+                $releaseId,
+                $releaseGroupId,
+                'ライブ盤',
+                true,
+                new ImmutableDate('2026-05-01'),
+                media: [
+                    // アンコールなど、同じ楽曲が同一媒体に複数回収録されるケース。
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 1],
+                            ['songId' => $songId, 'title' => null, 'trackNo' => 2],
+                        ],
+                    ],
+                ],
+            ),
+        );
+
+        $this->get(route(ViewerReleaseGroupRouteMap::List))
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'releaseGroups.0.releases.0.media.0.tracks')
+            ->assertJsonPath('releaseGroups.0.releases.0.media.0.tracks.0.songId', $songId)
+            ->assertJsonPath('releaseGroups.0.releases.0.media.0.tracks.0.trackNo', 1)
+            ->assertJsonPath('releaseGroups.0.releases.0.media.0.tracks.1.songId', $songId)
+            ->assertJsonPath('releaseGroups.0.releases.0.media.0.tracks.1.trackNo', 2);
+    }
+
+    #[Test]
     public function paginatesWithCursor(): void
     {
         $releaseGroupId1 = $this->generateUuid();
