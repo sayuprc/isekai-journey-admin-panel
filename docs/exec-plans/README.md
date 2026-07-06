@@ -6,21 +6,18 @@
 
 - `active/`: 進行中の計画
 - `completed/`: 完了した計画
-- `template-issue.md`: 問題定義の雛形
-- `template-plan.md`: 実装計画の雛形
+- `template.md`: 計画の雛形
 
 ## ファイル構成
 
-1 タスクごとにディレクトリを作り、問題定義と実装計画を別ファイルに分けます。
+1 タスクごとに 1 ファイルを作ります。
 
 ```
 active/
-  YYYYMMDD-<slug>/
-    issue.md   # 問題定義（Background, Goal, Scope, Non-Scope, Acceptance Criteria）
-    plan.md    # 実装計画（Status, Steps, Decision Log, Validation）
+  YYYYMMDD-<slug>.md   # 問題定義と実装計画（template.md 参照）
 ```
 
-完了したら `YYYYMMDD-<slug>/` ディレクトリごと `completed/` に移します。
+完了したら `completed/` に移します。
 
 ## どんな時に作るか
 
@@ -30,19 +27,13 @@ active/
 
 ## 計画に必ず入れるもの
 
-`issue.md`:
-
 - `Title`
+- `Status`
 - `Background`
 - `Goal`
 - `Scope`
 - `Non-Scope`
 - `Acceptance Criteria`
-
-`plan.md`:
-
-- `Title`
-- `Status`
 - `Steps`
 - `Decision Log`
 - `Validation`
@@ -51,7 +42,7 @@ active/
 
 - 長文にしない。実行に必要な情報だけを書く
 - 作業中に前提が変わったら更新する
-- 完了したらディレクトリごと `completed/` へ移す
+- 完了したら `completed/` へ移す
 - 実装結果と食い違う計画は放置しない
 
 小さな変更は軽量な TODO で十分ですが、数回のセッションにまたがる作業はここに残します。
