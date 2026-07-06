@@ -10,9 +10,13 @@ export const MEDIUM_FORMAT_OPTIONS: Array<{ value: MediumFormatValue; label: str
   { value: 99, label: 'その他' },
 ];
 
-/** songId が null のトラックは管理対象外楽曲(タイトルのみトラック) */
+/**
+ * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須。
+ * songId ありのトラックは title が空なら楽曲名で表示、入力があれば上書き名になる。
+ */
 export type TrackForm = {
   songId: string | null;
+  songTitle: string | null;
   title: string;
 };
 
@@ -31,19 +35,20 @@ export const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
     formatValue: medium.formatValue,
     tracks: medium.tracks.map(track => ({
       songId: track.songId,
-      title: track.songId !== null ? titleBySongId.get(track.songId) ?? track.songId : track.title ?? '',
+      songTitle: track.songId !== null ? titleBySongId.get(track.songId) ?? track.songId : null,
+      title: track.title ?? '',
     })),
   }));
 };
 
-/** フォーム状態を API の media リクエスト形へ変換する(position / trackNo は並び順から採番、songId / title は XOR) */
+/** フォーム状態を API の media リクエスト形へ変換する(position / trackNo は並び順から採番、空の title は null) */
 export const toMediaPayload = (media: MediumForm[]) =>
   media.map((medium, mediumIndex) => ({
     position: mediumIndex + 1,
     formatValue: medium.formatValue,
     tracks: medium.tracks.map((track, trackIndex) => ({
       songId: track.songId,
-      title: track.songId !== null ? null : track.title,
+      title: track.title.trim() === '' ? null : track.title.trim(),
       trackNo: trackIndex + 1,
     })),
   }));
@@ -106,7 +111,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
   };
 
   const addTrack = (song: SongSummary) => {
-    appendTrack({ songId: song.songId, title: song.title });
+    appendTrack({ songId: song.songId, songTitle: song.title, title: '' });
   };
 
   const addTitleOnlyTrack = () => {
@@ -116,8 +121,17 @@ export const MediaEditor = (props: MediaEditorProps) => {
       return;
     }
 
-    appendTrack({ songId: null, title });
+    appendTrack({ songId: null, songTitle: null, title });
     setManualTitle('');
+  };
+
+  const setTrackTitle = (mediumIndex: number, trackIndex: number, title: string) => {
+    props.onChange(prev =>
+      prev.map((medium, i) =>
+        i === mediumIndex
+          ? { ...medium, tracks: medium.tracks.map((track, j) => (j === trackIndex ? { ...track, title } : track)) }
+          : medium,
+      ));
   };
 
   const removeTrack = (mediumIndex: number, trackIndex: number) => {
@@ -261,7 +275,8 @@ export const MediaEditor = (props: MediaEditorProps) => {
                         <thead>
                           <tr>
                             <th>曲順</th>
-                            <th>楽曲名</th>
+                            <th>楽曲</th>
+                            <th>トラック名</th>
                             <th class="text-right">操作</th>
                           </tr>
                         </thead>
@@ -271,10 +286,21 @@ export const MediaEditor = (props: MediaEditorProps) => {
                               <tr>
                                 <td>{trackIndex() + 1}</td>
                                 <td>
-                                  {track.title}
-                                  <Show when={track.songId === null}>
-                                    <span class="badge badge-ghost badge-sm ml-2">対象外</span>
+                                  <Show
+                                    when={track.songId !== null}
+                                    fallback={<span class="badge badge-ghost badge-sm">対象外</span>}
+                                  >
+                                    {track.songTitle}
                                   </Show>
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    class="input input-bordered input-sm w-full min-w-48"
+                                    value={track.title}
+                                    onInput={e => setTrackTitle(mediumIndex, trackIndex(), e.currentTarget.value)}
+                                    placeholder={track.songId !== null ? track.songTitle ?? '' : 'トラック名を入力'}
+                                  />
                                 </td>
                                 <td>
                                   <div class="flex justify-end gap-2">
@@ -316,6 +342,9 @@ export const MediaEditor = (props: MediaEditorProps) => {
                         </tbody>
                       </table>
                     </div>
+                    <p class="mt-2 text-xs text-base-content/60">
+                      トラック名が空の場合は楽曲名で表示されます（管理対象外楽曲では必須です）。
+                    </p>
                   </Show>
                 </div>
               </div>

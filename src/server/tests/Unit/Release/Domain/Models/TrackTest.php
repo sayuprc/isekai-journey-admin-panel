@@ -53,16 +53,21 @@ class TrackTest extends TestCase
     }
 
     #[Test]
-    public function cannotCreateWithBothSongIdAndTitle(): void
+    public function canCreateReferenceTrackWithOverriddenTitle(): void
     {
         $result = Track::create(
             SongId::reconstruct(self::SONG_ID),
-            TrackTitle::reconstruct('管理対象外の楽曲'),
+            TrackTitle::reconstruct('楽曲A -instrumental-'),
             OrderNo::reconstruct(1),
         );
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(EntityRuleViolationError::class, $result->unwrapErr());
+        $this->assertTrue($result->isOk());
+
+        $track = $result->unwrap();
+
+        $this->assertSame(self::SONG_ID, $track->songId?->value);
+        $this->assertSame('楽曲A -instrumental-', $track->title?->value);
+        $this->assertSame(['song_id' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'track_no' => 1], $track->toArray());
     }
 
     #[Test]
@@ -91,6 +96,16 @@ class TrackTest extends TestCase
 
         $this->assertNull($track->songId);
         $this->assertSame('管理対象外の楽曲', $track->title?->value);
+        $this->assertSame(1, $track->trackNo->value);
+    }
+
+    #[Test]
+    public function canReconstructReferenceTrackWithOverriddenTitle(): void
+    {
+        $track = Track::reconstruct(self::SONG_ID, '楽曲A -instrumental-', 1);
+
+        $this->assertSame(self::SONG_ID, $track->songId?->value);
+        $this->assertSame('楽曲A -instrumental-', $track->title?->value);
         $this->assertSame(1, $track->trackNo->value);
     }
 }

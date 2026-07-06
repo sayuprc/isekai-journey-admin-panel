@@ -12,9 +12,9 @@ use Support\Domain\Error\EntityRuleViolationError;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
- * 収録曲。次の 2 形態のどちらか一方のみを取る（XOR）。
+ * 収録曲。songId と title の少なくとも一方を持つ。
  *
- * - 参照トラック: songId あり / title なし（Song 集約を参照する）
+ * - 参照トラック: songId あり（Song 集約を参照する）。title があれば表示名を上書きする
  * - タイトルのみトラック: songId なし / title あり（管理対象外楽曲。表示専用）
  */
 readonly class Track
@@ -31,8 +31,8 @@ readonly class Track
      */
     public static function create(?SongId $songId, ?TrackTitle $title, OrderNo $trackNo): Result
     {
-        if (is_null($songId) === is_null($title)) {
-            return new Err(new EntityRuleViolationError('media', '収録曲には楽曲かタイトルのどちらか一方のみを指定してください。'));
+        if (is_null($songId) && is_null($title)) {
+            return new Err(new EntityRuleViolationError('media', '収録曲には楽曲かタイトルの少なくとも一方を指定してください。'));
         }
 
         return new Ok(new self($songId, $title, $trackNo));

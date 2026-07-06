@@ -113,7 +113,7 @@ export type ReleaseMediumItem = {
 };
 
 /**
- * 収録曲。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId != null && isDisplay で判定する
+ * 収録曲。title は上書き名があればそれ、なければ楽曲名。タイトルのみトラックは songId: null / isDisplay: false で返る。リンク可否は songId != null && isDisplay で判定する
  */
 export type ReleaseTrackItem = {
     trackNo: OrderNo;

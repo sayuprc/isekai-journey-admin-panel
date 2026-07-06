@@ -181,6 +181,72 @@ class UpdateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canUpdateWithOverriddenTrackTitle(): void
+    {
+        $songId = $this->generateUuid();
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeSongs(
+            $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 10),
+        );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease(
+                $releaseId,
+                $releaseGroupId,
+                '旧版名',
+                true,
+                media: [
+                    [
+                        'position' => 1,
+                        'format' => MediumFormat::Digital->value,
+                        'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
+                    ],
+                ],
+            ),
+        );
+
+        // 既存の参照トラックに表示名の上書きを設定するケース。
+        $this->withAuth()
+            ->putJson(route(ReleaseRouteMap::Update, $releaseId), [
+                'name' => '新版名',
+                'releasedOn' => '2026-05-09',
+                'description' => '説明',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'media' => [
+                    [
+                        'position' => 1,
+                        'formatValue' => MediumFormat::Cd->value,
+                        'tracks' => [
+                            ['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1],
+                        ],
+                    ],
+                ],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->where('media.0.tracks.0.songId', $songId)
+                            ->where('media.0.tracks.0.title', 'テスト楽曲1 -instrumental-')
+                            ->where('media.0.tracks.0.trackNo', 1)
+                            ->etc(),
+                    ),
+            );
+
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 1,
+            'title' => 'テスト楽曲1 -instrumental-',
+        ]);
+    }
+
+    #[Test]
     public function notFound(): void
     {
         $this->withAuth()

@@ -31,6 +31,7 @@ readonly class ReleaseDetailQueryService implements ReleaseDetailQueryServiceInt
                     'release_tracks.track_no',
                     'release_tracks.song_id',
                 ])
+                // 参照トラックは楽曲の正式名を返す (上書き名は Release 集約の tracks 側で扱う)。
                 ->select(new Sql('COALESCE(songs.title, release_tracks.title)'), 'title')
                 ->from('release_tracks')
                 ->outerJoin('songs', 'release_tracks.song_id = songs.song_id')

@@ -169,7 +169,8 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                     'release_tracks.song_id',
                     'songs.is_display',
                 ])
-                ->select(new Sql('COALESCE(songs.title, release_tracks.title)'), 'title')
+                // 上書き名 (release_tracks.title) を優先し、なければ楽曲名で表示する。
+                ->select(new Sql('COALESCE(release_tracks.title, songs.title)'), 'title')
                 ->from('release_tracks')
                 ->outerJoin('songs', 'songs.song_id = release_tracks.song_id')
                 ->where('release_tracks.release_id', 'IN', $binReleaseIds)

@@ -27,15 +27,15 @@ table "release_tracks" {
   column "title" {
     null    = true
     type    = varchar(255)
-    comment = "管理対象外楽曲のタイトル"
+    comment = "トラック表示名(参照トラックでは楽曲名の上書き)"
   }
 
   primary_key {
     columns = [column.release_id, column.position, column.track_no]
   }
 
-  check "release_tracks_song_id_title_xor" {
-    expr = "(`song_id` IS NULL) != (`title` IS NULL)"
+  check "release_tracks_song_id_title_at_least_one" {
+    expr = "(`song_id` IS NOT NULL) OR (`title` IS NOT NULL)"
   }
 
   index "fk_release_tracks_song_id" {

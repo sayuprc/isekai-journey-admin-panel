@@ -117,7 +117,7 @@ class CreateUseCaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function createFailsWhenTrackHasBothSongIdAndTitle(): void
+    public function canCreateWithOverriddenTrackTitle(): void
     {
         $songId = $this->generateUuid();
         $releaseGroupId = $this->generateUuid();
@@ -125,6 +125,41 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->storeSongs(
             $this->createSong($songId, 'テスト楽曲1', '説明', SongType::Original, true, 1),
         );
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        // 楽曲への紐づきを維持したまま表示名だけを上書きするケース。
+        $result = $this->getInstance()->handle(new CreateInputData(
+            releaseGroupId: $releaseGroupId,
+            name: '初回限定盤',
+            releasedOn: '2026-05-09',
+            description: '',
+            jacketArtUrl: null,
+            isDisplay: true,
+            orderNo: 10,
+            media: [
+                [
+                    'position' => 1,
+                    'formatValue' => MediumFormat::Cd->value,
+                    'tracks' => [['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1]],
+                ],
+            ],
+        ));
+
+        $this->assertTrue($result->isOk());
+
+        $this->assertDatabaseHas('release_tracks', [
+            'track_no' => 1,
+            'title' => 'テスト楽曲1 -instrumental-',
+        ]);
+    }
+
+    #[Test]
+    public function createFailsWhenTrackHasNeitherSongIdNorTitle(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
         $this->storeReleaseGroups(
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
@@ -141,7 +176,7 @@ class CreateUseCaseTest extends DatabaseTestCase
                 [
                     'position' => 1,
                     'formatValue' => MediumFormat::Cd->value,
-                    'tracks' => [['songId' => $songId, 'title' => '管理対象外の楽曲', 'trackNo' => 1]],
+                    'tracks' => [['songId' => null, 'title' => null, 'trackNo' => 1]],
                 ],
             ],
         ));
@@ -149,7 +184,7 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isErr());
         $error = $result->unwrapErr();
         $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['media' => ['収録曲には楽曲かタイトルのどちらか一方のみを指定してください。']], $error->errors);
+        $this->assertSame(['media' => ['収録曲には楽曲かタイトルの少なくとも一方を指定してください。']], $error->errors);
     }
 
     #[Test]

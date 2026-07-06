@@ -8,7 +8,8 @@ use Override;
 use Support\Domain\ValueObjects\String\TextValueObject;
 
 /**
- * 管理対象外楽曲のトラックタイトル。Song 集約の title とは別物として Release 側に置く。
+ * トラックの表示名。参照トラックでは楽曲名の上書き、管理対象外楽曲ではそのタイトル。
+ * Song 集約の title とは別物として Release 側に置く。
  */
 readonly class TrackTitle extends TextValueObject
 {

@@ -57,6 +57,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                             ['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1],
                             ['songId' => $hiddenSongId, 'title' => null, 'trackNo' => 2],
                             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 3],
+                            ['songId' => $visibleSongId, 'title' => '公開楽曲 -acoustic-', 'trackNo' => 4],
                         ],
                     ],
                 ],
@@ -170,6 +171,13 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                                 'songId' => null,
                                                 'title' => '管理対象外の楽曲',
                                                 'isDisplay' => false,
+                                            ],
+                                            // 上書き名を持つ参照トラックは楽曲名ではなく上書き名で返る。
+                                            [
+                                                'trackNo' => 4,
+                                                'songId' => $visibleSongId,
+                                                'title' => '公開楽曲 -acoustic-',
+                                                'isDisplay' => true,
                                             ],
                                         ],
                                     ],
