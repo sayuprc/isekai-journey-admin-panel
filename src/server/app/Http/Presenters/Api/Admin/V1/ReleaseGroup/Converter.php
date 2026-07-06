@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\ReleaseGroup;
 
 use DateTime;
-use OpenAPI\Admin\Client\Model\MediumFormatValue;
+use OpenAPI\Admin\Client\Model\ReleaseFormatValue;
 use OpenAPI\Admin\Client\Model\ReleaseGroup as OpenApiReleaseGroup;
 use OpenAPI\Admin\Client\Model\ReleaseGroupReferencedRelease as OpenApiReleaseGroupReferencedRelease;
 use OpenAPI\Admin\Client\Model\ReleaseGroupSummary as OpenApiReleaseGroupSummary;
@@ -49,7 +49,7 @@ class Converter
             ->setIsDisplay($release->isDisplay)
             ->setOrderNo($release->orderNo)
             ->setFormatValues(array_map(
-                static fn (int $formatValue): MediumFormatValue => MediumFormatValue::from($formatValue),
+                static fn (int $formatValue): ReleaseFormatValue => ReleaseFormatValue::from($formatValue),
                 $release->formatValues,
             ));
     }

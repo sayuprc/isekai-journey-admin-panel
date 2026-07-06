@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Release;
 
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Domain\Models\ReleaseId;
 use Release\Infrastructures\ReleaseRepository;
@@ -68,7 +67,7 @@ class DeleteReleaseTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],

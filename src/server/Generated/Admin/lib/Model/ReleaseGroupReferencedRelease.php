@@ -64,7 +64,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         'jacket_art_url' => 'string',
         'is_display' => 'bool',
         'order_no' => 'int',
-        'format_values' => '\OpenAPI\Admin\Client\Model\MediumFormatValue[]'
+        'format_values' => '\OpenAPI\Admin\Client\Model\ReleaseFormatValue[]'
     ];
 
     /**
@@ -543,7 +543,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
     /**
      * Gets format_values
      *
-     * @return \OpenAPI\Admin\Client\Model\MediumFormatValue[]
+     * @return \OpenAPI\Admin\Client\Model\ReleaseFormatValue[]
      */
     public function getFormatValues()
     {
@@ -553,7 +553,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
     /**
      * Sets format_values
      *
-     * @param \OpenAPI\Admin\Client\Model\MediumFormatValue[] $format_values format_values
+     * @param \OpenAPI\Admin\Client\Model\ReleaseFormatValue[] $format_values format_values
      *
      * @return self
      */

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Release\Application\Viewer\Query;
 
-use Release\Domain\Models\MediumFormat;
-
 readonly class ReleaseMediumItem
 {
     /**
@@ -13,7 +11,7 @@ readonly class ReleaseMediumItem
      */
     public function __construct(
         public int $position,
-        public MediumFormat $format,
+        public ?string $name,
         public array $tracks,
     ) {
     }

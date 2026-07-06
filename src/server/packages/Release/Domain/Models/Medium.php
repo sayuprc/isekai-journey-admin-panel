@@ -10,7 +10,7 @@ readonly class Medium
 {
     public function __construct(
         public OrderNo $position,
-        public MediumFormat $format,
+        public ?MediumName $name,
         public Tracks $tracks,
     ) {
     }
@@ -18,23 +18,23 @@ readonly class Medium
     /**
      * @param list<array{songId: ?string, title: ?string, trackNo: int}> $tracks
      */
-    public static function reconstruct(int $position, int $format, array $tracks): self
+    public static function reconstruct(int $position, ?string $name, array $tracks): self
     {
         return new self(
             OrderNo::reconstruct($position),
-            MediumFormat::from($format),
+            is_null($name) ? null : MediumName::reconstruct($name),
             Tracks::reconstruct($tracks),
         );
     }
 
     /**
-     * @return array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: ?string, title: ?string, track_no: int}>}
+     * @return array{position: int, name: ?string, tracks: list<array{song_id: ?string, title: ?string, track_no: int}>}
      */
     public function toArray(): array
     {
         return [
             'position' => $this->position->value,
-            'format' => $this->format->value,
+            'name' => $this->name?->value,
             'tracks' => $this->tracks->toArray(),
         ];
     }

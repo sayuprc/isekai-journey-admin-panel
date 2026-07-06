@@ -7,7 +7,7 @@ namespace Tests\Integration\Release\Application\Admin\UseCase\Create;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Create\CreateInputData;
 use Release\Application\Admin\UseCase\Create\CreateUseCase;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\Error\BusinessLogicError;
@@ -42,15 +42,16 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: 'https://example.com/jacket.png',
             isDisplay: true,
             orderNo: 10,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                 ],
                 [
                     'position' => 2,
-                    'formatValue' => MediumFormat::Dvd->value,
+                    'name' => null,
                     'tracks' => [],
                 ],
             ],
@@ -94,10 +95,11 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 10,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [
                         ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                         ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -138,10 +140,11 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 10,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1]],
                 ],
             ],
@@ -172,10 +175,11 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 10,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [
                 [
                     'position' => 1,
-                    'formatValue' => MediumFormat::Cd->value,
+                    'name' => null,
                     'tracks' => [['songId' => null, 'title' => null, 'trackNo' => 1]],
                 ],
             ],
@@ -198,6 +202,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 1,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
 
@@ -224,6 +229,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             jacketArtUrl: null,
             isDisplay: true,
             orderNo: 1,
+            formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
 

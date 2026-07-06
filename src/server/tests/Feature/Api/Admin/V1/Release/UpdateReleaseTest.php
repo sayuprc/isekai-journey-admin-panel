@@ -7,7 +7,7 @@ namespace Tests\Feature\Api\Admin\V1\Release;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseRouteMap;
 use Song\Domain\Models\SongType;
@@ -51,7 +51,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId1, 'title' => null, 'trackNo' => 1],
                             ['songId' => $songId2, 'title' => null, 'trackNo' => 2],
@@ -69,10 +69,11 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => 'https://example.com/jacket-new.png',
                 'isDisplay' => false,
                 'orderNo' => 20,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId3, 'title' => null, 'trackNo' => 1],
                             ['songId' => $songId1, 'title' => null, 'trackNo' => 2],
@@ -93,8 +94,9 @@ class UpdateReleaseTest extends DatabaseTestCase
                             ->where('jacketArtUrl', 'https://example.com/jacket-new.png')
                             ->where('isDisplay', false)
                             ->where('orderNo', 20)
+                            ->where('formatValues', [ReleaseFormat::Cd->value])
                             ->where('media.0.position', 1)
-                            ->where('media.0.formatValue', MediumFormat::Cd->value)
+                            ->where('media.0.name', null)
                             ->where('media.0.tracks.0.songId', $songId3)
                             ->where('media.0.tracks.0.trackNo', 1)
                             ->where('media.0.tracks.1.songId', $songId1)
@@ -135,7 +137,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -150,10 +152,11 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -202,7 +205,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -218,10 +221,11 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => 'テスト楽曲1 -instrumental-', 'trackNo' => 1],
                         ],
@@ -247,6 +251,32 @@ class UpdateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function updateFailsWhenFormatValuesIsEmpty(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease($releaseId, $releaseGroupId, '旧版名', true),
+        );
+
+        $this->withAuth()
+            ->putJson(route(ReleaseRouteMap::Update, $releaseId), [
+                'name' => '新版名',
+                'releasedOn' => '2026-05-09',
+                'description' => '説明',
+                'jacketArtUrl' => null,
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'formatValues' => [],
+                'media' => [],
+            ])->assertStatus(422);
+    }
+
+    #[Test]
     public function notFound(): void
     {
         $this->withAuth()
@@ -257,6 +287,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [],
             ])->assertStatus(404);
     }
@@ -272,6 +303,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [],
             ])->assertStatus(404);
     }
@@ -297,6 +329,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [],
             ])->assertStatus(403);
     }
@@ -326,15 +359,16 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'jacketArtUrl' => null,
                 'isDisplay' => true,
                 'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Cd->value],
                 'media' => [
                     [
                         'position' => 1,
-                        'formatValue' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,
-                        'formatValue' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],

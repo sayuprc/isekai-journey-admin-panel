@@ -17,7 +17,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class Media extends ImmutableCollection
 {
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      *
      * @return Result<self, DomainValidationError>
      */
@@ -35,12 +35,15 @@ readonly class Media extends ImmutableCollection
                 return new Err(new DomainValidationError([$error->field => [$error->message]]));
             }
 
-            $format = MediumFormat::tryFrom($item['formatValue']);
+            $normalizedName = self::normalizeName($item['name']);
+            $nameResult = is_null($normalizedName)
+                ? new Ok(null)
+                : MediumName::create($normalizedName);
 
-            if (is_null($format)) {
-                return new Err(new DomainValidationError([
-                    'media' => ["不正な媒体種別です: {$item['formatValue']}"],
-                ]));
+            if ($nameResult->isErr()) {
+                $error = $nameResult->unwrapErr();
+
+                return new Err(new DomainValidationError([$error->field => [$error->message]]));
             }
 
             $tracksResult = Tracks::fromArray($item['tracks']);
@@ -49,7 +52,7 @@ readonly class Media extends ImmutableCollection
                 return new Err($tracksResult->unwrapErr());
             }
 
-            $medium = new Medium($positionResult->unwrap(), $format, $tracksResult->unwrap());
+            $medium = new Medium($positionResult->unwrap(), $nameResult->unwrap(), $tracksResult->unwrap());
 
             if (isset($seenPositions[$medium->position->value])) {
                 return new Err(new DomainValidationError([
@@ -65,14 +68,14 @@ readonly class Media extends ImmutableCollection
     }
 
     /**
-     * @param list<array{position: int, format: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      */
     public static function reconstruct(array $items): self
     {
         return new self(array_map(
             static fn (array $item): Medium => Medium::reconstruct(
                 $item['position'],
-                $item['format'],
+                $item['name'],
                 $item['tracks'],
             ),
             $items,
@@ -80,7 +83,7 @@ readonly class Media extends ImmutableCollection
     }
 
     /**
-     * @return list<array{position: int, format: value-of<MediumFormat>, tracks: list<array{song_id: ?string, title: ?string, track_no: int}>}>
+     * @return list<array{position: int, name: ?string, tracks: list<array{song_id: ?string, title: ?string, track_no: int}>}>
      */
     public function toArray(): array
     {
@@ -91,5 +94,16 @@ readonly class Media extends ImmutableCollection
         }
 
         return $items;
+    }
+
+    private static function normalizeName(?string $name): ?string
+    {
+        if (is_null($name)) {
+            return null;
+        }
+
+        $trimmed = trim($name);
+
+        return $trimmed === '' ? null : $trimmed;
     }
 }

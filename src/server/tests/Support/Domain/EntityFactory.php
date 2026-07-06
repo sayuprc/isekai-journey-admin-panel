@@ -31,6 +31,8 @@ use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media as ReleaseMedia;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
+use Release\Domain\Models\ReleaseFormat;
+use Release\Domain\Models\ReleaseFormats;
 use Release\Domain\Models\ReleaseGroup;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupTitle;
@@ -241,6 +243,7 @@ trait EntityFactory
         ?ImmutableDate $releasedOn = null,
         string $description = 'テスト用リリース',
         ?string $jacketArtUrl = null,
+        ?array $formats = null,
         array $media = [],
         int $orderNo = 1,
     ): Release {
@@ -253,6 +256,7 @@ trait EntityFactory
             is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
             $isDisplay,
             OrderNo::reconstruct($orderNo),
+            ReleaseFormats::reconstruct($formats ?? [ReleaseFormat::Cd->value]),
             ReleaseMedia::reconstruct($media),
         );
     }

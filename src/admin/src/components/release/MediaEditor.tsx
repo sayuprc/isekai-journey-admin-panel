@@ -1,14 +1,6 @@
 import { For, Index, Show, createSignal } from 'solid-js';
-import type { MediumFormatValue, ReleaseGetResponse, SongSummary } from '../../generated';
+import type { ReleaseGetResponse, SongSummary } from '../../generated';
 import { client } from '../../utils/client';
-
-export const MEDIUM_FORMAT_OPTIONS: Array<{ value: MediumFormatValue; label: string }> = [
-  { value: 1, label: '配信' },
-  { value: 2, label: 'CD' },
-  { value: 3, label: 'DVD' },
-  { value: 4, label: 'Blu-ray' },
-  { value: 99, label: 'その他' },
-];
 
 /**
  * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須。
@@ -21,7 +13,7 @@ export type TrackForm = {
 };
 
 export type MediumForm = {
-  formatValue: MediumFormatValue;
+  name: string;
   tracks: TrackForm[];
 };
 
@@ -32,7 +24,7 @@ export const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
   );
 
   return data.release.media.map(medium => ({
-    formatValue: medium.formatValue,
+    name: medium.name ?? '',
     tracks: medium.tracks.map(track => ({
       songId: track.songId,
       songTitle: track.songId !== null ? titleBySongId.get(track.songId) ?? track.songId : null,
@@ -41,11 +33,11 @@ export const toMediumForms = (data: ReleaseGetResponse): MediumForm[] => {
   }));
 };
 
-/** フォーム状態を API の media リクエスト形へ変換する(position / trackNo は並び順から採番、空の title は null) */
+/** フォーム状態を API の media リクエスト形へ変換する(position / trackNo は並び順から採番、空の title / name は null) */
 export const toMediaPayload = (media: MediumForm[]) =>
   media.map((medium, mediumIndex) => ({
     position: mediumIndex + 1,
-    formatValue: medium.formatValue,
+    name: medium.name.trim() === '' ? null : medium.name.trim(),
     tracks: medium.tracks.map((track, trackIndex) => ({
       songId: track.songId,
       title: track.title.trim() === '' ? null : track.title.trim(),
@@ -69,7 +61,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
   const [targetMediumIndex, setTargetMediumIndex] = createSignal(0);
 
   const addMedium = () => {
-    props.onChange(prev => [...prev, { formatValue: 1, tracks: [] }]);
+    props.onChange(prev => [...prev, { name: '', tracks: [] }]);
   };
 
   const removeMedium = (index: number) => {
@@ -95,8 +87,8 @@ export const MediaEditor = (props: MediaEditorProps) => {
     });
   };
 
-  const setFormat = (index: number, formatValue: MediumFormatValue) => {
-    props.onChange(prev => prev.map((medium, i) => (i === index ? { ...medium, formatValue } : medium)));
+  const setMediumName = (index: number, name: string) => {
+    props.onChange(prev => prev.map((medium, i) => (i === index ? { ...medium, name } : medium)));
   };
 
   const appendTrack = (track: TrackForm) => {
@@ -226,16 +218,14 @@ export const MediaEditor = (props: MediaEditorProps) => {
                   <div class="flex items-end gap-4">
                     <span class="badge badge-neutral badge-sm mb-2">媒体 {mediumIndex + 1}</span>
                     <div>
-                      <label class="label">媒体種別</label>
-                      <select
-                        class="select select-bordered select-sm"
-                        value={String(medium().formatValue)}
-                        onChange={e => setFormat(mediumIndex, Number(e.currentTarget.value) as MediumFormatValue)}
-                      >
-                        <For each={MEDIUM_FORMAT_OPTIONS}>
-                          {option => <option value={option.value}>{option.label}</option>}
-                        </For>
-                      </select>
+                      <label class="label">表示ラベル(任意)</label>
+                      <input
+                        type="text"
+                        class="input input-bordered input-sm"
+                        value={medium().name}
+                        onInput={e => setMediumName(mediumIndex, e.currentTarget.value)}
+                        placeholder="CD1 / Blu-ray など"
+                      />
                     </div>
                   </div>
                   <div class="flex gap-2">
@@ -375,9 +365,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                         媒体
                         {' '}
                         {index + 1}
-                        （
-                        {MEDIUM_FORMAT_OPTIONS.find(option => option.value === medium().formatValue)?.label ?? '不明'}
-                        ）
+                        {medium().name.trim() !== '' ? `（${medium().name.trim()}）` : ''}
                       </option>
                     )}
                   </Index>

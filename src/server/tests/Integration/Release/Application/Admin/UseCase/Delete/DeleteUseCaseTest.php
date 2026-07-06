@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Delete\DeleteInputData;
 use Release\Application\Admin\UseCase\Delete\DeleteUseCase;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\UseCase\AuditLog\AuditAction;
@@ -68,10 +68,11 @@ class DeleteUseCaseTest extends DatabaseTestCase
                 $releaseGroupId,
                 '削除対象',
                 true,
+                formats: [ReleaseFormat::Cd->value],
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],

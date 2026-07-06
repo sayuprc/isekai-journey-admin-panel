@@ -7,7 +7,6 @@ namespace Tests\Feature\Api\Viewer\V1\Song;
 use DateTimeImmutable;
 use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongType;
@@ -140,7 +139,7 @@ class ListSongTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -154,7 +153,7 @@ class ListSongTest extends DatabaseTestCase
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],

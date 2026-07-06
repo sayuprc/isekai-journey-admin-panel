@@ -6,7 +6,7 @@ namespace Tests\Feature\Api\Viewer\V1\Release;
 
 use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ViewerReleaseGroupRouteMap;
 use Song\Domain\Models\SongType;
@@ -48,11 +48,12 @@ class ListReleaseGroupTest extends DatabaseTestCase
                 true,
                 new ImmutableDate('2026-05-01'),
                 description: '先行配信',
+                formats: [ReleaseFormat::Digital->value],
                 orderNo: 20,
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1],
                             ['songId' => $hiddenSongId, 'title' => null, 'trackNo' => 2],
@@ -70,16 +71,17 @@ class ListReleaseGroupTest extends DatabaseTestCase
                 new ImmutableDate('2026-06-01'),
                 description: 'CD+DVD',
                 jacketArtUrl: 'https://example.com/limited.png',
+                formats: [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value],
                 orderNo: 10,
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => 'CD',
                         'tracks' => [['songId' => $visibleSongId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,
-                        'format' => MediumFormat::Dvd->value,
+                        'name' => 'DVD',
                         'tracks' => [],
                     ],
                 ],
@@ -112,13 +114,20 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                 'description' => 'CD+DVD',
                                 'jacketArtUrl' => 'https://example.com/limited.png',
                                 'orderNo' => 10,
+                                'formats' => [
+                                    [
+                                        'name' => 'CD',
+                                        'value' => 2,
+                                    ],
+                                    [
+                                        'name' => 'DVD',
+                                        'value' => 3,
+                                    ],
+                                ],
                                 'media' => [
                                     [
                                         'position' => 1,
-                                        'format' => [
-                                            'name' => 'CD',
-                                            'value' => 2,
-                                        ],
+                                        'name' => 'CD',
                                         'tracks' => [
                                             [
                                                 'trackNo' => 1,
@@ -130,10 +139,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                     ],
                                     [
                                         'position' => 2,
-                                        'format' => [
-                                            'name' => 'DVD',
-                                            'value' => 3,
-                                        ],
+                                        'name' => 'DVD',
                                         'tracks' => [],
                                     ],
                                 ],
@@ -145,13 +151,16 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                 'description' => '先行配信',
                                 'jacketArtUrl' => null,
                                 'orderNo' => 20,
+                                'formats' => [
+                                    [
+                                        'name' => '配信',
+                                        'value' => 1,
+                                    ],
+                                ],
                                 'media' => [
                                     [
                                         'position' => 1,
-                                        'format' => [
-                                            'name' => '配信',
-                                            'value' => 1,
-                                        ],
+                                        'name' => null,
                                         'tracks' => [
                                             [
                                                 'trackNo' => 1,
@@ -213,7 +222,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                     // アンコールなど、同じ楽曲が同一媒体に複数回収録されるケース。
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => null,
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => $songId, 'title' => null, 'trackNo' => 2],

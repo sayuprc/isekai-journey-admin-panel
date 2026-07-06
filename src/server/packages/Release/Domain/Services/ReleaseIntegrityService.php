@@ -11,6 +11,7 @@ use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
+use Release\Domain\Models\ReleaseFormats;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseId;
@@ -36,7 +37,8 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
+     * @param list<int>                                                                                                     $formatValues
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -48,13 +50,15 @@ class ReleaseIntegrityService
         ?string $jacketArtUrl,
         bool $isDisplay,
         int $orderNo,
+        array $formatValues,
         array $media,
     ): Result {
-        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
+        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
+     * @param list<int>                                                                                                     $formatValues
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -67,13 +71,15 @@ class ReleaseIntegrityService
         ?string $jacketArtUrl,
         bool $isDisplay,
         int $orderNo,
+        array $formatValues,
         array $media,
     ): Result {
-        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
+        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
+     * @param list<int>                                                                                                     $formatValues
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -86,9 +92,10 @@ class ReleaseIntegrityService
         ?string $jacketArtUrl,
         bool $isDisplay,
         int $orderNo,
+        array $formatValues,
         array $media,
     ): Result {
-        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $media);
+        $result = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
 
         if ($result->isErr()) {
             return new Err($result->unwrapErr());
@@ -108,7 +115,8 @@ class ReleaseIntegrityService
     }
 
     /**
-     * @param list<array{position: int, formatValue: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
+     * @param list<int>                                                                                                     $formatValues
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
      * @return Result<Release, DomainError>
      */
@@ -121,8 +129,15 @@ class ReleaseIntegrityService
         ?string $jacketArtUrl,
         bool $isDisplay,
         int $orderNo,
+        array $formatValues,
         array $media,
     ): Result {
+        $formatsResult = ReleaseFormats::fromArray($formatValues);
+
+        if ($formatsResult->isErr()) {
+            return new Err($formatsResult->unwrapErr());
+        }
+
         $mediaResult = Media::fromArray($media);
 
         if ($mediaResult->isErr()) {
@@ -163,6 +178,7 @@ class ReleaseIntegrityService
                 $values[5],
                 $isDisplay,
                 $values[6],
+                $formatsResult->unwrap(),
                 $mediaResult->unwrap(),
             ));
     }

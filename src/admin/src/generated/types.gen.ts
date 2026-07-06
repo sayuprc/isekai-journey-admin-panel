@@ -163,18 +163,13 @@ export type MediaUpdateResponse = {
 };
 
 /**
- * リリース内の媒体（CD / DVD / 配信 など）
+ * リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
  */
 export type Medium = {
     position: OrderNo;
-    formatValue: MediumFormatValue;
+    name: MediumName | null;
     tracks: Array<Track>;
 };
-
-/**
- * 媒体種別
- */
-export type MediumFormatValue = 1 | 2 | 3 | 4 | 99;
 
 /**
  * 1ページあたりの件数
@@ -308,6 +303,7 @@ export type Release = {
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     orderNo: OrderNo;
+    formatValues: Array<ReleaseFormatValue>;
     media: Array<Medium>;
 };
 
@@ -319,12 +315,18 @@ export type ReleaseCreateRequest = {
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     orderNo: OrderNo;
+    formatValues: Array<ReleaseFormatValue>;
     media: Array<Medium>;
 };
 
 export type ReleaseCreateResponse = {
     release: Release;
 };
+
+/**
+ * 提供形態
+ */
+export type ReleaseFormatValue = 1 | 2 | 3 | 4 | 99;
 
 export type ReleaseGetResponse = {
     release: Release;
@@ -368,7 +370,7 @@ export type ReleaseGroupReferencedRelease = {
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     orderNo: OrderNo;
-    formatValues: Array<MediumFormatValue>;
+    formatValues: Array<ReleaseFormatValue>;
 };
 
 export type ReleaseGroupSearchResponse = {
@@ -425,6 +427,7 @@ export type ReleaseUpdateRequest = {
     jacketArtUrl: JacketArtUrl | null;
     isDisplay: boolean;
     orderNo: OrderNo;
+    formatValues: Array<ReleaseFormatValue>;
     media: Array<Medium>;
 };
 
@@ -722,6 +725,11 @@ export type MediaTypeName = string;
  * メディアURL
  */
 export type MediaUrl = string;
+
+/**
+ * 媒体の表示ラベル(CD1 / Blu-ray など)
+ */
+export type MediumName = string;
 
 /**
  * 表示順

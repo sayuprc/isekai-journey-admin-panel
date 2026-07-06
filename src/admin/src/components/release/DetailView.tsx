@@ -1,10 +1,11 @@
 import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
-import type { ReleaseGetResponse } from '../../generated';
+import type { ReleaseFormatValue, ReleaseGetResponse } from '../../generated';
 import { client, uploadReleaseJacketArt } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
+import { FormatCheckboxes } from './FormatCheckboxes';
 import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
 import type { MediumForm } from './MediaEditor';
 
@@ -108,6 +109,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
   const [jacketArtUrl, setJacketArtUrl] = createSignal(props.data.release.jacketArtUrl ?? '');
   const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
   const [orderNo, setOrderNo] = createSignal(props.data.release.orderNo);
+  const [formatValues, setFormatValues] = createSignal<ReleaseFormatValue[]>([...props.data.release.formatValues]);
   const [media, setMedia] = createSignal<MediumForm[]>(toMediumForms(props.data));
 
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
@@ -152,6 +154,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
       jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
       isDisplay: isDisplay(),
       orderNo: orderNo(),
+      formatValues: formatValues(),
       media: toMediaPayload(media()),
     });
 
@@ -273,6 +276,14 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                     class="mt-3 size-32 rounded-box border border-base-300 object-cover"
                   />
                 </Show>
+              </div>
+
+              <div class="md:col-span-2">
+                <FormatCheckboxes
+                  formatValues={formatValues()}
+                  onChange={setFormatValues}
+                  fieldError={getFieldError('formatValues')}
+                />
               </div>
 
               <div class="md:col-span-2">

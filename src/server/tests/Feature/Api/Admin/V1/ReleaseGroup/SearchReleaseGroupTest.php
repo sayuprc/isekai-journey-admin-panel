@@ -6,7 +6,6 @@ namespace Tests\Feature\Api\Admin\V1\ReleaseGroup;
 
 use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseGroupRouteMap;
 use Tests\Feature\Api\Admin\WithAuth;
@@ -35,13 +34,13 @@ class SearchReleaseGroupTest extends DatabaseTestCase
         $this->storeReleases(
             // 古い作品: 配信が先行、CD が後発。最古 2026-01-01 がグループの代表日になる。
             $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Digital->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
             $this->createRelease($this->generateUuid(), $releaseGroupId1, 'CD', true, new ImmutableDate('2026-03-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Cd->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
             $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01'), media: [
-                ['position' => 1, 'format' => MediumFormat::Digital->value, 'tracks' => []],
+                ['position' => 1, 'name' => null, 'tracks' => []],
             ]),
         );
 

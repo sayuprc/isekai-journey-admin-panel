@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api\Admin\V1\Release;
 
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseRouteMap;
 use Song\Domain\Models\SongType;
@@ -41,10 +41,11 @@ class GetReleaseTest extends DatabaseTestCase
                 true,
                 jacketArtUrl: 'https://example.com/jacket.png',
                 orderNo: 10,
+                formats: [ReleaseFormat::Cd->value, ReleaseFormat::Digital->value],
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => 'CD1',
                         'tracks' => [
                             ['songId' => $songId, 'title' => null, 'trackNo' => 1],
                             ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 2],
@@ -68,10 +69,12 @@ class GetReleaseTest extends DatabaseTestCase
                     'jacketArtUrl' => 'https://example.com/jacket.png',
                     'isDisplay' => true,
                     'orderNo' => 10,
+                    // 提供形態は値順で返る (配信=1, CD=2)。
+                    'formatValues' => [ReleaseFormat::Digital->value, ReleaseFormat::Cd->value],
                     'media' => [
                         [
                             'position' => 1,
-                            'formatValue' => MediumFormat::Cd->value,
+                            'name' => 'CD1',
                             'tracks' => [
                                 [
                                     'songId' => $songId,

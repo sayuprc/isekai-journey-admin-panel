@@ -13,7 +13,7 @@ use Release\Application\Viewer\Query\ReleaseGroupQueryServiceInterface;
 use Release\Application\Viewer\Query\ReleaseListItem;
 use Release\Application\Viewer\Query\ReleaseMediumItem;
 use Release\Application\Viewer\Query\ReleaseTrackItem;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Support\Contracts\Uuid\UuidConverterInterface;
 use Support\Infrastructures\Database\QueryFactory;
@@ -120,6 +120,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         );
 
         $binReleaseIds = array_map(static fn (array $row): string => Row::string($row, 'release_id'), $releaseRows);
+        $formatsByRelease = $this->loadFormats($binReleaseIds);
         $mediaByRelease = $this->loadMedia($binReleaseIds);
 
         $grouped = [];
@@ -134,8 +135,37 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 Row::string($row, 'description'),
                 Row::nullableString($row, 'jacket_art_url'),
                 Row::int($row, 'order_no'),
+                $formatsByRelease[$binReleaseId] ?? [],
                 $mediaByRelease[$binReleaseId] ?? [],
             );
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param list<string> $binReleaseIds
+     *
+     * @return array<string, list<ReleaseFormat>>
+     */
+    private function loadFormats(array $binReleaseIds): array
+    {
+        if ($binReleaseIds === []) {
+            return [];
+        }
+
+        $formatRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['release_id', 'format'])
+                ->from('release_formats')
+                ->where('release_id', 'IN', $binReleaseIds)
+                ->orderBy('format'),
+        );
+
+        $grouped = [];
+
+        foreach ($formatRows as $row) {
+            $grouped[Row::string($row, 'release_id')][] = ReleaseFormat::from(Row::int($row, 'format'));
         }
 
         return $grouped;
@@ -154,7 +184,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
 
         $mediumRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
-                ->withSelect(['release_id', 'position', 'format'])
+                ->withSelect(['release_id', 'position', 'name'])
                 ->from('release_media')
                 ->where('release_id', 'IN', $binReleaseIds)
                 ->orderBy('position'),
@@ -200,7 +230,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
 
             $grouped[$binReleaseId][] = new ReleaseMediumItem(
                 $position,
-                MediumFormat::from(Row::int($row, 'format')),
+                Row::nullableString($row, 'name'),
                 $tracksByMedium[$binReleaseId][$position] ?? [],
             );
         }

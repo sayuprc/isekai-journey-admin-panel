@@ -44,6 +44,10 @@ model ReleaseCreateRequest {
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   orderNo: orderNo;
+
+  @minItems(1)
+  formatValues: ReleaseFormatValue[];
+
   media: Medium[];
 }
 
@@ -62,6 +66,10 @@ model ReleaseUpdateRequest {
   jacketArtUrl: jacketArtUrl | null;
   isDisplay: boolean;
   orderNo: orderNo;
+
+  @minItems(1)
+  formatValues: ReleaseFormatValue[];
+
   media: Medium[];
 }
 

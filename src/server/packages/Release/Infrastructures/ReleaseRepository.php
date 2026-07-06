@@ -19,6 +19,8 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
 {
     private const string TABLE = 'releases';
 
+    private const string FORMAT_TABLE = 'release_formats';
+
     private const string MEDIA_TABLE = 'release_media';
 
     private const string TRACK_TABLE = 'release_tracks';
@@ -51,7 +53,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             return null;
         }
 
-        return $this->hydrate($releaseRow, $this->loadMedia($binReleaseId));
+        return $this->hydrate($releaseRow, $this->loadFormats($binReleaseId), $this->loadMedia($binReleaseId));
     }
 
     #[Override]
@@ -75,7 +77,12 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         $data = $release->toArray();
         $now = now()->toDateTimeString();
 
-        // 媒体と収録曲は洗い替えする（収録曲は FK CASCADE で媒体と一緒に消える）。
+        // 提供形態・媒体・収録曲は洗い替えする（収録曲は FK CASCADE で媒体と一緒に消える）。
+        $this->queryFactory->delete()
+            ->from(self::FORMAT_TABLE)
+            ->where('release_id', '=', $binReleaseId)
+            ->execute($this->queryFactory->pdo());
+
         $this->queryFactory->delete()
             ->from(self::MEDIA_TABLE)
             ->where('release_id', '=', $binReleaseId)
@@ -109,11 +116,23 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             )
             ->execute($this->queryFactory->pdo());
 
+        $formatRows = array_map(
+            static fn (int $format): array => [$binReleaseId, $format],
+            $data['formats'],
+        );
+
+        if ($formatRows !== []) {
+            $this->queryFactory->insert()
+                ->into(self::FORMAT_TABLE, ['release_id', 'format'])
+                ->values(...$formatRows)
+                ->execute($this->queryFactory->pdo());
+        }
+
         $mediumRows = [];
         $trackRows = [];
 
         foreach ($data['media'] as $medium) {
-            $mediumRows[] = [$binReleaseId, $medium['position'], $medium['format']];
+            $mediumRows[] = [$binReleaseId, $medium['position'], $medium['name']];
 
             foreach ($medium['tracks'] as $track) {
                 $trackRows[] = [
@@ -128,7 +147,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
 
         if ($mediumRows !== []) {
             $this->queryFactory->insert()
-                ->into(self::MEDIA_TABLE, ['release_id', 'position', 'format'])
+                ->into(self::MEDIA_TABLE, ['release_id', 'position', 'name'])
                 ->values(...$mediumRows)
                 ->execute($this->queryFactory->pdo());
         }
@@ -153,13 +172,32 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
     }
 
     /**
-     * @return list<array{position: int, format: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}>
+     * @return list<int>
+     */
+    private function loadFormats(string $binReleaseId): array
+    {
+        $formatRows = $this->queryFactory->fetchAll(
+            $this->queryFactory->select()
+                ->withSelect(['format'])
+                ->from(self::FORMAT_TABLE)
+                ->where('release_id', '=', $binReleaseId)
+                ->orderBy('format'),
+        );
+
+        return array_map(
+            static fn (array $row): int => Row::int($row, 'format'),
+            $formatRows,
+        );
+    }
+
+    /**
+     * @return list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}>
      */
     private function loadMedia(string $binReleaseId): array
     {
         $mediumRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
-                ->withSelect(['position', 'format'])
+                ->withSelect(['position', 'name'])
                 ->from(self::MEDIA_TABLE)
                 ->where('release_id', '=', $binReleaseId)
                 ->orderBy('position'),
@@ -189,7 +227,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         return array_map(
             static fn (array $mediumRow): array => [
                 'position' => Row::int($mediumRow, 'position'),
-                'format' => Row::int($mediumRow, 'format'),
+                'name' => Row::nullableString($mediumRow, 'name'),
                 'tracks' => $tracksByPosition[Row::int($mediumRow, 'position')] ?? [],
             ],
             $mediumRows,
@@ -197,10 +235,11 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed>                                                                                        $releaseRow
-     * @param list<array{position: int, format: int, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
+     * @param array<string, mixed>                                                                                          $releaseRow
+     * @param list<int>                                                                                                     $formats
+     * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      */
-    private function hydrate(array $releaseRow, array $media): Release
+    private function hydrate(array $releaseRow, array $formats, array $media): Release
     {
         return Release::reconstruct(
             $this->converter->toUuid(Row::string($releaseRow, 'release_id')),
@@ -211,6 +250,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             Row::nullableString($releaseRow, 'jacket_art_url'),
             Row::bool($releaseRow, 'is_display'),
             Row::int($releaseRow, 'order_no'),
+            $formats,
             $media,
         );
     }

@@ -47,15 +47,15 @@ export type MediaType = {
  */
 export type MediaTypeValue = 1 | 2 | 3 | 4 | 5 | 99;
 
-export type MediumFormat = {
+export type ReleaseFormat = {
     name: string;
-    value: MediumFormatValue;
+    value: ReleaseFormatValue;
 };
 
 /**
- * 媒体種別の値
+ * 提供形態の値
  */
-export type MediumFormatValue = 1 | 2 | 3 | 4 | 99;
+export type ReleaseFormatValue = 1 | 2 | 3 | 4 | 99;
 
 /**
  * リリースグループ。公開リリースを 1 件以上持つものだけが一覧に載る
@@ -100,15 +100,16 @@ export type ReleaseListItem = {
     description: string;
     jacketArtUrl: JacketArtUrl | null;
     orderNo: OrderNo;
+    formats: Array<ReleaseFormat>;
     media: Array<ReleaseMediumItem>;
 };
 
 /**
- * リリース内の媒体
+ * リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
  */
 export type ReleaseMediumItem = {
     position: OrderNo;
-    format: MediumFormat;
+    name: string | null;
     tracks: Array<ReleaseTrackItem>;
 };
 

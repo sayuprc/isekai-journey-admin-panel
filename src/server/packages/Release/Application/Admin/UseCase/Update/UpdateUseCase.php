@@ -69,6 +69,7 @@ readonly class UpdateUseCase
                         $inputData->jacketArtUrl,
                         $inputData->isDisplay,
                         $inputData->orderNo,
+                        $inputData->formatValues,
                         $inputData->media,
                     );
 

@@ -6,7 +6,7 @@ namespace Tests\Feature\Api\Admin\V1\ReleaseGroup;
 
 use DateType\ImmutableDate;
 use PHPUnit\Framework\Attributes\Test;
-use Release\Domain\Models\MediumFormat;
+use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Release\Route\ReleaseGroupRouteMap;
 use Song\Domain\Models\SongType;
@@ -42,11 +42,12 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 '配信',
                 true,
                 new ImmutableDate('2026-05-01'),
+                formats: [ReleaseFormat::Digital->value],
                 orderNo: 20,
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Digital->value,
+                        'name' => null,
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                 ],
@@ -58,16 +59,17 @@ class GetReleaseGroupTest extends DatabaseTestCase
                 true,
                 new ImmutableDate('2026-06-01'),
                 jacketArtUrl: 'https://example.com/limited.png',
+                formats: [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value],
                 orderNo: 10,
                 media: [
                     [
                         'position' => 1,
-                        'format' => MediumFormat::Cd->value,
+                        'name' => 'CD',
                         'tracks' => [['songId' => $songId, 'title' => null, 'trackNo' => 1]],
                     ],
                     [
                         'position' => 2,
-                        'format' => MediumFormat::Dvd->value,
+                        'name' => 'DVD',
                         'tracks' => [],
                     ],
                 ],
@@ -93,7 +95,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                         'jacketArtUrl' => 'https://example.com/limited.png',
                         'isDisplay' => true,
                         'orderNo' => 10,
-                        'formatValues' => [MediumFormat::Cd->value, MediumFormat::Dvd->value],
+                        'formatValues' => [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value],
                     ],
                     [
                         'releaseId' => $releaseId1,
@@ -102,7 +104,7 @@ class GetReleaseGroupTest extends DatabaseTestCase
                         'jacketArtUrl' => null,
                         'isDisplay' => true,
                         'orderNo' => 20,
-                        'formatValues' => [MediumFormat::Digital->value],
+                        'formatValues' => [ReleaseFormat::Digital->value],
                     ],
                 ],
             ]);

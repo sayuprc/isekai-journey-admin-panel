@@ -1,5 +1,5 @@
 import { For, Match, Show, Switch, createResource, createSignal } from 'solid-js';
-import type { MediumFormatValue, ReleaseGroupGetResponse, ReleaseGroupTypeValue } from '../../generated';
+import type { ReleaseFormatValue, ReleaseGroupGetResponse, ReleaseGroupTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -13,7 +13,7 @@ const RELEASE_GROUP_TYPE_OPTIONS: Array<{ value: ReleaseGroupTypeValue; label: s
   { value: 99, label: 'その他' },
 ];
 
-const MEDIUM_FORMAT_LABELS: Record<MediumFormatValue, string> = {
+const RELEASE_FORMAT_LABELS: Record<ReleaseFormatValue, string> = {
   1: '配信',
   2: 'CD',
   3: 'DVD',
@@ -329,7 +329,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                               <For each={release.formatValues}>
                                 {formatValue => (
                                   <span class="badge badge-outline badge-sm">
-                                    {MEDIUM_FORMAT_LABELS[formatValue] ?? '不明'}
+                                    {RELEASE_FORMAT_LABELS[formatValue] ?? '不明'}
                                   </span>
                                 )}
                               </For>
