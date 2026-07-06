@@ -271,25 +271,26 @@ export const MediaEditor = (props: MediaEditorProps) => {
                           </tr>
                         </thead>
                         <tbody>
-                          <For each={medium().tracks}>
+                          {/* For はオブジェクト同一性でキーするため、入力のたびに行が再生成されて IME が中断される。Index で DOM を保つ */}
+                          <Index each={medium().tracks}>
                             {(track, trackIndex) => (
                               <tr>
-                                <td>{trackIndex() + 1}</td>
+                                <td>{trackIndex + 1}</td>
                                 <td>
                                   <Show
-                                    when={track.songId !== null}
+                                    when={track().songId !== null}
                                     fallback={<span class="badge badge-ghost badge-sm">対象外</span>}
                                   >
-                                    {track.songTitle}
+                                    {track().songTitle}
                                   </Show>
                                 </td>
                                 <td>
                                   <input
                                     type="text"
                                     class="input input-bordered input-sm w-full min-w-48"
-                                    value={track.title}
-                                    onInput={e => setTrackTitle(mediumIndex, trackIndex(), e.currentTarget.value)}
-                                    placeholder={track.songId !== null ? track.songTitle ?? '' : 'トラック名を入力'}
+                                    value={track().title}
+                                    onInput={e => setTrackTitle(mediumIndex, trackIndex, e.currentTarget.value)}
+                                    placeholder={track().songId !== null ? track().songTitle ?? '' : 'トラック名を入力'}
                                   />
                                 </td>
                                 <td>
@@ -297,20 +298,20 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                     <button
                                       type="button"
                                       class="btn btn-ghost btn-xs"
-                                      disabled={trackIndex() === 0}
-                                      onClick={() => moveTrack(mediumIndex, trackIndex(), -1)}
+                                      disabled={trackIndex === 0}
+                                      onClick={() => moveTrack(mediumIndex, trackIndex, -1)}
                                     >
                                       ↑
                                     </button>
                                     <button
                                       type="button"
                                       class="btn btn-ghost btn-xs"
-                                      disabled={trackIndex() === medium().tracks.length - 1}
-                                      onClick={() => moveTrack(mediumIndex, trackIndex(), 1)}
+                                      disabled={trackIndex === medium().tracks.length - 1}
+                                      onClick={() => moveTrack(mediumIndex, trackIndex, 1)}
                                     >
                                       ↓
                                     </button>
-                                    <Show when={track.songId}>
+                                    <Show when={track().songId}>
                                       {songId => (
                                         <a href={`/songs/${songId()}`} class="btn btn-ghost btn-xs">
                                           楽曲を見る
@@ -320,7 +321,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                     <button
                                       type="button"
                                       class="btn btn-outline btn-error btn-xs"
-                                      onClick={() => removeTrack(mediumIndex, trackIndex())}
+                                      onClick={() => removeTrack(mediumIndex, trackIndex)}
                                     >
                                       削除
                                     </button>
@@ -328,7 +329,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                 </td>
                               </tr>
                             )}
-                          </For>
+                          </Index>
                         </tbody>
                       </table>
                     </div>
