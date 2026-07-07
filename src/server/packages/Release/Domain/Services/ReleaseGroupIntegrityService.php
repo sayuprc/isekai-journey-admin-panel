@@ -16,6 +16,7 @@ use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
 {
@@ -31,8 +32,9 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): Result {
-        return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay);
+        return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
     /**
@@ -44,8 +46,9 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): Result {
-        return $this->build($releaseGroupId, $title, $typeValue, $description, $isDisplay);
+        return $this->build($releaseGroupId, $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
     /**
@@ -57,12 +60,14 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): Result {
-        return Result::collect4(
+        return Result::collect5(
             ReleaseGroupId::create($releaseGroupId),
             ReleaseGroupTitle::create($title),
             $this->toReleaseGroupType($typeValue),
             Description::create($description),
+            OrderNo::create($orderNo),
         )
             ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
@@ -75,7 +80,14 @@ class ReleaseGroupIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(static fn (array $values): ReleaseGroup => new ReleaseGroup(...[...$values, $isDisplay]));
+            ->map(static fn (array $values): ReleaseGroup => new ReleaseGroup(
+                $values[0],
+                $values[1],
+                $values[2],
+                $values[3],
+                $isDisplay,
+                $values[4],
+            ));
     }
 
     /**

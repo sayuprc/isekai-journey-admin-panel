@@ -9,6 +9,7 @@ model ReleaseGroupCreateRequest {
   typeValue: ReleaseGroupTypeValue;
   description: string;
   isDisplay: boolean;
+  orderNo: orderNo;
 }
 
 model ReleaseGroupCreateResponse {
@@ -20,6 +21,7 @@ model ReleaseGroupUpdateRequest {
   typeValue: ReleaseGroupTypeValue;
   description: string;
   isDisplay: boolean;
+  orderNo: orderNo;
 }
 
 model ReleaseGroupUpdateResponse {

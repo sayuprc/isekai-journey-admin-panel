@@ -63,6 +63,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => '\OpenAPI\Admin\Client\Model\ReleaseGroupTypeValue',
         'description' => 'string',
         'is_display' => 'bool',
+        'order_no' => 'int',
         'first_released_on' => '\DateTime'
     ];
 
@@ -79,6 +80,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => null,
         'description' => null,
         'is_display' => null,
+        'order_no' => 'int32',
         'first_released_on' => 'date'
     ];
 
@@ -93,6 +95,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => false,
         'description' => false,
         'is_display' => false,
+        'order_no' => false,
         'first_released_on' => true
     ];
 
@@ -187,6 +190,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => 'typeValue',
         'description' => 'description',
         'is_display' => 'isDisplay',
+        'order_no' => 'orderNo',
         'first_released_on' => 'firstReleasedOn'
     ];
 
@@ -201,6 +205,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => 'setTypeValue',
         'description' => 'setDescription',
         'is_display' => 'setIsDisplay',
+        'order_no' => 'setOrderNo',
         'first_released_on' => 'setFirstReleasedOn'
     ];
 
@@ -215,6 +220,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         'type_value' => 'getTypeValue',
         'description' => 'getDescription',
         'is_display' => 'getIsDisplay',
+        'order_no' => 'getOrderNo',
         'first_released_on' => 'getFirstReleasedOn'
     ];
 
@@ -280,6 +286,7 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('first_released_on', $data ?? [], null);
     }
 
@@ -329,6 +336,13 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         if ($this->container['first_released_on'] === null) {
             $invalidProperties[] = "'first_released_on' can't be null";
         }
@@ -483,6 +497,38 @@ class ReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSerializa
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling ReleaseGroupSummary., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }

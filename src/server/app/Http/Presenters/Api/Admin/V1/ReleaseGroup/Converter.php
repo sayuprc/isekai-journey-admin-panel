@@ -23,7 +23,8 @@ class Converter
             ->setTitle($releaseGroup->title->value)
             ->setTypeValue(ReleaseGroupTypeValue::from($releaseGroup->type->value))
             ->setDescription($releaseGroup->description->value)
-            ->setIsDisplay($releaseGroup->isDisplay);
+            ->setIsDisplay($releaseGroup->isDisplay)
+            ->setOrderNo($releaseGroup->orderNo->value);
     }
 
     public function toOpenApiSummary(ReleaseGroupSummary $summary): OpenApiReleaseGroupSummary
@@ -35,7 +36,8 @@ class Converter
             ->setTitle($summary->title)
             ->setTypeValue(ReleaseGroupTypeValue::from($summary->typeValue))
             ->setDescription($summary->description)
-            ->setIsDisplay($summary->isDisplay);
+            ->setIsDisplay($summary->isDisplay)
+            ->setOrderNo($summary->orderNo);
     }
 
     public function toOpenApiReferencedRelease(ReleaseGroupReferencedRelease $release): OpenApiReleaseGroupReferencedRelease

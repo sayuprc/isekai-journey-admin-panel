@@ -26,6 +26,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             typeValue: ReleaseGroupType::Album->value,
             description: '1st アルバム',
             isDisplay: true,
+            orderNo: 2,
         ));
 
         $this->assertTrue($result->isOk());
@@ -36,6 +37,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             'type' => ReleaseGroupType::Album->value,
             'description' => '1st アルバム',
             'is_display' => true,
+            'order_no' => 2,
         ]);
     }
 
@@ -47,6 +49,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             typeValue: 0,
             description: '',
             isDisplay: true,
+            orderNo: 1,
         ));
 
         $this->assertTrue($result->isErr());

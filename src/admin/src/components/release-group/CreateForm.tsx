@@ -16,6 +16,7 @@ const RELEASE_GROUP_TYPE_OPTIONS: Array<{ value: ReleaseGroupTypeValue; label: s
 export const CreateForm = () => {
   const [typeValue, setTypeValue] = createSignal<ReleaseGroupTypeValue>(1);
   const [isDisplay, setIsDisplay] = createSignal(true);
+  const [orderNo, setOrderNo] = createSignal(1);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
@@ -32,6 +33,7 @@ export const CreateForm = () => {
       typeValue: typeValue(),
       description: formData.get('description')?.toString() ?? '',
       isDisplay: isDisplay(),
+      orderNo: orderNo(),
     });
 
     if (data) {
@@ -90,6 +92,23 @@ export const CreateForm = () => {
                 classList={{ 'textarea-error': !!getFieldError('description') }}
               />
               <Show when={getFieldError('description')}>
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+              </Show>
+            </div>
+
+            <div>
+              <label class="label">表示順</label>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                class="input w-full"
+                value={orderNo()}
+                onInput={e => setOrderNo(Number(e.currentTarget.value))}
+                required
+                classList={{ 'input-error': !!getFieldError('orderNo') }}
+              />
+              <Show when={getFieldError('orderNo')}>
                 {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>

@@ -53,6 +53,7 @@ readonly class CreateUseCase
                 $inputData->typeValue,
                 $inputData->description,
                 $inputData->isDisplay,
+                $inputData->orderNo,
             );
 
             if ($result->isErr()) {

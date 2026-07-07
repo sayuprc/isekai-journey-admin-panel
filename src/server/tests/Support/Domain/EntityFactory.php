@@ -222,6 +222,7 @@ trait EntityFactory
         ReleaseGroupType $type,
         bool $isDisplay = true,
         string $description = 'テスト用リリースグループ',
+        int $orderNo = 1,
     ): ReleaseGroup {
         return new ReleaseGroup(
             ReleaseGroupId::reconstruct($releaseGroupId),
@@ -229,6 +230,7 @@ trait EntityFactory
             $type,
             ReleaseDescription::reconstruct($description),
             $isDisplay,
+            OrderNo::reconstruct($orderNo),
         );
     }
 

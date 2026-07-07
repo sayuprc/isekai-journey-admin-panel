@@ -34,6 +34,7 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
                 'typeValue' => ReleaseGroupType::Single->value,
                 'description' => '更新後の説明',
                 'isDisplay' => false,
+                'orderNo' => 3,
             ])->assertStatus(200)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
@@ -44,7 +45,8 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
                             ->where('title', '新タイトル')
                             ->where('typeValue', ReleaseGroupType::Single->value)
                             ->where('description', '更新後の説明')
-                            ->where('isDisplay', false),
+                            ->where('isDisplay', false)
+                            ->where('orderNo', 3),
                     ),
             );
 
@@ -52,6 +54,7 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
             'title' => '新タイトル',
             'type' => ReleaseGroupType::Single->value,
             'is_display' => false,
+            'order_no' => 3,
         ]);
     }
 
@@ -64,6 +67,7 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
                 'typeValue' => ReleaseGroupType::Album->value,
                 'description' => '説明',
                 'isDisplay' => true,
+                'orderNo' => 1,
             ])->assertStatus(404);
     }
 
@@ -82,6 +86,7 @@ class UpdateReleaseGroupTest extends DatabaseTestCase
                 'typeValue' => ReleaseGroupType::Album->value,
                 'description' => '説明',
                 'isDisplay' => true,
+                'orderNo' => 1,
             ])->assertStatus(403);
     }
 }

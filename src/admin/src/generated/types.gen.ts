@@ -342,6 +342,7 @@ export type ReleaseGroup = {
     typeValue: ReleaseGroupTypeValue;
     description: string;
     isDisplay: boolean;
+    orderNo: OrderNo;
 };
 
 export type ReleaseGroupCreateRequest = {
@@ -349,6 +350,7 @@ export type ReleaseGroupCreateRequest = {
     typeValue: ReleaseGroupTypeValue;
     description: string;
     isDisplay: boolean;
+    orderNo: OrderNo;
 };
 
 export type ReleaseGroupCreateResponse = {
@@ -387,6 +389,7 @@ export type ReleaseGroupSummary = {
     typeValue: ReleaseGroupTypeValue;
     description: string;
     isDisplay: boolean;
+    orderNo: OrderNo;
     firstReleasedOn: ReleasedOn | null;
 };
 
@@ -400,6 +403,7 @@ export type ReleaseGroupUpdateRequest = {
     typeValue: ReleaseGroupTypeValue;
     description: string;
     isDisplay: boolean;
+    orderNo: OrderNo;
 };
 
 export type ReleaseGroupUpdateResponse = {

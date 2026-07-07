@@ -37,6 +37,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 'release_groups.title',
                 'release_groups.type',
                 'release_groups.description',
+                'release_groups.order_no',
             ])
             ->select(new Sql('MIN(releases.released_on)'), 'first_released_on')
             ->from('release_groups')
@@ -46,14 +47,17 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
             ->groupBy('release_groups.release_group_id')
             ->groupBy('release_groups.title')
             ->groupBy('release_groups.type')
-            ->groupBy('release_groups.description');
+            ->groupBy('release_groups.description')
+            ->groupBy('release_groups.order_no');
 
         if (is_string($cursor)) {
             $decoded = ReleaseGroupListCursor::decode($cursor);
 
-            // キーセットページング: (first_released_on DESC, release_group_id ASC) で cursor より後ろを取る
+            // キーセットページング: (order_no ASC, first_released_on DESC, release_group_id ASC) で cursor より後ろを取る
             $query = $query->having(Sql::format(
-                '(MIN(releases.released_on) < %s OR (MIN(releases.released_on) = %s AND release_groups.release_group_id > %s))',
+                '(release_groups.order_no > %s OR (release_groups.order_no = %s AND (MIN(releases.released_on) < %s OR (MIN(releases.released_on) = %s AND release_groups.release_group_id > %s))))',
+                Sql::value($decoded->orderNo),
+                Sql::value($decoded->orderNo),
                 Sql::value($decoded->firstReleasedOn),
                 Sql::value($decoded->firstReleasedOn),
                 Sql::value($this->converter->toBin($decoded->releaseGroupId)),
@@ -62,6 +66,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
 
         $groupRows = $this->queryFactory->fetchAll(
             $query
+                ->orderBy('release_groups.order_no')
                 ->orderBy('first_released_on', 'desc')
                 ->orderBy('release_groups.release_group_id')
                 ->limit($limit + 1),
@@ -90,6 +95,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         $nextCursor = is_null($lastRow)
             ? null
             : ReleaseGroupListCursor::encode(
+                Row::int($lastRow, 'order_no'),
                 Row::string($lastRow, 'first_released_on'),
                 $this->converter->toUuid(Row::string($lastRow, 'release_group_id')),
             );
