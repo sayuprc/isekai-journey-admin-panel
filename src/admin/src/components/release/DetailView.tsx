@@ -205,6 +205,12 @@ const ReleaseForm = (props: ReleaseFormProps) => {
       <a href={groupUrl} class="btn btn-ghost btn-sm mb-4">
         ← グループ詳細に戻る
       </a>
+      <p class="mb-4 text-sm text-base-content/70">
+        リリースグループ:&nbsp;
+        <a href={groupUrl} class="link link-hover font-medium text-base-content">
+          {props.data.releaseGroupTitle}
+        </a>
+      </p>
       <FormError message={formError()} onClose={clearErrors} />
       <div class="max-w-5xl space-y-6">
         <form onSubmit={handleSubmit}>

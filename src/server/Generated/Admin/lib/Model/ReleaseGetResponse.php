@@ -58,6 +58,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
       */
     protected static $openAPITypes = [
         'release' => '\OpenAPI\Admin\Client\Model\Release',
+        'release_group_title' => 'string',
         'songs' => '\OpenAPI\Admin\Client\Model\ReleaseReferencedSong[]'
     ];
 
@@ -70,6 +71,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
       */
     protected static $openAPIFormats = [
         'release' => null,
+        'release_group_title' => null,
         'songs' => null
     ];
 
@@ -80,6 +82,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
       */
     protected static array $openAPINullables = [
         'release' => false,
+        'release_group_title' => false,
         'songs' => false
     ];
 
@@ -170,6 +173,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
      */
     protected static $attributeMap = [
         'release' => 'release',
+        'release_group_title' => 'releaseGroupTitle',
         'songs' => 'songs'
     ];
 
@@ -180,6 +184,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
      */
     protected static $setters = [
         'release' => 'setRelease',
+        'release_group_title' => 'setReleaseGroupTitle',
         'songs' => 'setSongs'
     ];
 
@@ -190,6 +195,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
      */
     protected static $getters = [
         'release' => 'getRelease',
+        'release_group_title' => 'getReleaseGroupTitle',
         'songs' => 'getSongs'
     ];
 
@@ -251,6 +257,7 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
     public function __construct(?array $data = null)
     {
         $this->setIfExists('release', $data ?? [], null);
+        $this->setIfExists('release_group_title', $data ?? [], null);
         $this->setIfExists('songs', $data ?? [], null);
     }
 
@@ -284,6 +291,13 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
         if ($this->container['release'] === null) {
             $invalidProperties[] = "'release' can't be null";
         }
+        if ($this->container['release_group_title'] === null) {
+            $invalidProperties[] = "'release_group_title' can't be null";
+        }
+        if ((mb_strlen($this->container['release_group_title']) < 1)) {
+            $invalidProperties[] = "invalid value for 'release_group_title', the character length must be bigger than or equal to 1.";
+        }
+
         if ($this->container['songs'] === null) {
             $invalidProperties[] = "'songs' can't be null";
         }
@@ -325,6 +339,38 @@ class ReleaseGetResponse implements ModelInterface, ArrayAccess, \JsonSerializab
             throw new \InvalidArgumentException('non-nullable release cannot be null');
         }
         $this->container['release'] = $release;
+
+        return $this;
+    }
+
+    /**
+     * Gets release_group_title
+     *
+     * @return string
+     */
+    public function getReleaseGroupTitle()
+    {
+        return $this->container['release_group_title'];
+    }
+
+    /**
+     * Sets release_group_title
+     *
+     * @param string $release_group_title 所属リリースグループのタイトル。編集対象の文脈表示用
+     *
+     * @return self
+     */
+    public function setReleaseGroupTitle($release_group_title)
+    {
+        if (is_null($release_group_title)) {
+            throw new \InvalidArgumentException('non-nullable release_group_title cannot be null');
+        }
+
+        if ((mb_strlen($release_group_title) < 1)) {
+            throw new \InvalidArgumentException('invalid length for $release_group_title when calling ReleaseGetResponse., must be bigger than or equal to 1.');
+        }
+
+        $this->container['release_group_title'] = $release_group_title;
 
         return $this;
     }

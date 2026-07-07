@@ -330,6 +330,10 @@ export type ReleaseFormatValue = 1 | 2 | 3 | 4 | 99;
 
 export type ReleaseGetResponse = {
     release: Release;
+    /**
+     * 所属リリースグループのタイトル。編集対象の文脈表示用
+     */
+    releaseGroupTitle: ReleaseGroupTitle;
     songs: Array<ReleaseReferencedSong>;
 };
 

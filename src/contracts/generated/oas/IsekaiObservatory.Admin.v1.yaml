@@ -2670,10 +2670,15 @@ components:
       type: object
       required:
         - release
+        - releaseGroupTitle
         - songs
       properties:
         release:
           $ref: '#/components/schemas/Release'
+        releaseGroupTitle:
+          allOf:
+            - $ref: '#/components/schemas/releaseGroupTitle'
+          description: 所属リリースグループのタイトル。編集対象の文脈表示用
         songs:
           type: array
           items:

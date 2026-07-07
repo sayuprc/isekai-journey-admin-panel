@@ -28,6 +28,7 @@ class GetPresenter
             fn (GetOutputData $outputData) => [
                 new ReleaseGetResponse()
                     ->setRelease($this->converter->toOpenApiRelease($outputData->release))
+                    ->setReleaseGroupTitle($outputData->releaseGroup->title->value)
                     ->setSongs(array_map($this->converter->toOpenApiReferencedSong(...), $outputData->songs)),
                 200,
             ],
