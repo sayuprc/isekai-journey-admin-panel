@@ -46,15 +46,13 @@ readonly class ReleaseGroupRepository implements ReleaseGroupRepositoryInterface
     }
 
     #[Override]
-    public function nextOrderNo(): int
+    public function maxOrderNo(): int
     {
-        $max = Row::intValue(
+        return Row::intValue(
             $this->queryFactory->select()
                 ->from(self::TABLE)
                 ->aggregate($this->queryFactory->pdo(), 'COALESCE(MAX(`order_no`), 0)'),
         );
-
-        return $max + 10;
     }
 
     #[Override]

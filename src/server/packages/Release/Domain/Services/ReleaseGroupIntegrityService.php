@@ -7,6 +7,7 @@ namespace Release\Domain\Services;
 use Release\Domain\Models\Description;
 use Release\Domain\Models\ReleaseGroup;
 use Release\Domain\Models\ReleaseGroupId;
+use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseGroupTitle;
 use Release\Domain\Models\ReleaseGroupType;
 use ResultType\Err;
@@ -20,11 +21,20 @@ use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
 {
-    public function __construct(private readonly UuidGeneratorInterface $generator)
-    {
+    /**
+     * 新規作成時の表示順の刻み幅。間への挿入余地を残すため隙間を空けて採番する
+     */
+    private const int ORDER_NO_STEP = 10;
+
+    public function __construct(
+        private readonly UuidGeneratorInterface $generator,
+        private readonly ReleaseGroupRepositoryInterface $repository,
+    ) {
     }
 
     /**
+     * 表示順は入力させず、既存の最大 order_no + 刻み幅で自動採番する
+     *
      * @return Result<ReleaseGroup, DomainError>
      */
     public function prepareForCreate(
@@ -32,8 +42,9 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
-        int $orderNo,
     ): Result {
+        $orderNo = $this->repository->maxOrderNo() + self::ORDER_NO_STEP;
+
         return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 

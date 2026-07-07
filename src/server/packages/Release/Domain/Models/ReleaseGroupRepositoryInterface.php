@@ -9,9 +9,9 @@ interface ReleaseGroupRepositoryInterface
     public function find(ReleaseGroupId $releaseGroupId): ?ReleaseGroup;
 
     /**
-     * 新規作成用の表示順を採番する (既存の最大 order_no + 10)
+     * 登録済みの最大 order_no を返す (未登録なら 0)
      */
-    public function nextOrderNo(): int;
+    public function maxOrderNo(): int;
 
     public function save(ReleaseGroup $releaseGroup): ReleaseGroup;
 
