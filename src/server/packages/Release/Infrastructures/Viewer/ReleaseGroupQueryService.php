@@ -30,7 +30,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
     #[Override]
     public function list(?string $cursor, int $limit): ReleaseGroupListPage
     {
-        // 公開リリースを 1 件以上持つ公開グループのみを対象にする。
+        // 公開リリースを 1 件以上持つ公開グループのみを対象にする
         $query = $this->queryFactory->select()
             ->withSelect([
                 'release_groups.release_group_id',
@@ -53,21 +53,21 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         if (is_string($cursor)) {
             $decoded = ReleaseGroupListCursor::decode($cursor);
 
-            // キーセットページング: (order_no ASC, first_released_on DESC, release_group_id ASC) で cursor より後ろを取る
+            // キーセットページング: (first_released_on DESC, order_no DESC, release_group_id ASC) で cursor より後ろを取る
             $query = $query->having(Sql::format(
-                '(release_groups.order_no > %s OR (release_groups.order_no = %s AND (MIN(releases.released_on) < %s OR (MIN(releases.released_on) = %s AND release_groups.release_group_id > %s))))',
-                Sql::value($decoded->orderNo),
-                Sql::value($decoded->orderNo),
+                '(MIN(releases.released_on) < %s OR (MIN(releases.released_on) = %s AND (release_groups.order_no < %s OR (release_groups.order_no = %s AND release_groups.release_group_id > %s))))',
                 Sql::value($decoded->firstReleasedOn),
                 Sql::value($decoded->firstReleasedOn),
+                Sql::value($decoded->orderNo),
+                Sql::value($decoded->orderNo),
                 Sql::value($this->converter->toBin($decoded->releaseGroupId)),
             ));
         }
 
         $groupRows = $this->queryFactory->fetchAll(
             $query
-                ->orderBy('release_groups.order_no')
                 ->orderBy('first_released_on', 'desc')
+                ->orderBy('release_groups.order_no', 'desc')
                 ->orderBy('release_groups.release_group_id')
                 ->limit($limit + 1),
         );
@@ -120,8 +120,8 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                 ->from('releases')
                 ->where('release_group_id', 'IN', $binGroupIds)
                 ->where('is_display', '=', true)
-                ->orderBy('order_no')
                 ->orderBy('released_on')
+                ->orderBy('order_no')
                 ->orderBy('name'),
         );
 

@@ -17,7 +17,15 @@ export const releaseGroups = new Elysia({ prefix: '/release-groups' })
     '/',
     async ({ body, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await releaseGroupServiceCreateReleaseGroup({ client, body }));
+        return resolveApiResponse(
+          await releaseGroupServiceCreateReleaseGroup({
+            client,
+            body: {
+              ...body,
+              typeValue: body.typeValue as ReleaseGroupTypeValue,
+            },
+          }),
+        );
       });
     },
     {
@@ -26,6 +34,7 @@ export const releaseGroups = new Elysia({ prefix: '/release-groups' })
         typeValue: t.Numeric(),
         description: t.String(),
         isDisplay: t.Boolean(),
+        orderNo: t.Number(),
       }),
     },
   )

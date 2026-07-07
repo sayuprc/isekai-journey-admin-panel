@@ -82,7 +82,7 @@ class SearchReleaseGroupTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function sortsByOrderNoBeforeFirstReleasedOn(): void
+    public function sortsByFirstReleasedOnBeforeOrderNo(): void
     {
         $releaseGroupId1 = $this->generateUuid();
         $releaseGroupId2 = $this->generateUuid();
@@ -103,8 +103,34 @@ class SearchReleaseGroupTest extends DatabaseTestCase
         $this->withAuth()
             ->getJson(route(ReleaseGroupRouteMap::Search))
             ->assertStatus(200)
-            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1)
-            ->assertJsonPath('releaseGroups.1.releaseGroupId', $releaseGroupId2);
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId2)
+            ->assertJsonPath('releaseGroups.1.releaseGroupId', $releaseGroupId1);
+    }
+
+    #[Test]
+    public function sortsByOrderNoDescendingWhenFirstReleasedOnIsSame(): void
+    {
+        $releaseGroupId1 = $this->generateUuid();
+        $releaseGroupId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId1, '同日で order_no が小さい作品', ReleaseGroupType::Single, true, orderNo: 1),
+            $this->createReleaseGroup($releaseGroupId2, '同日で order_no が大きい作品', ReleaseGroupType::Album, true, orderNo: 2),
+        );
+        $this->storeReleases(
+            $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-01-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+        );
+
+        $this->withAuth()
+            ->getJson(route(ReleaseGroupRouteMap::Search))
+            ->assertStatus(200)
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId2)
+            ->assertJsonPath('releaseGroups.1.releaseGroupId', $releaseGroupId1);
     }
 
     #[Test]
