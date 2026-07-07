@@ -79,5 +79,9 @@ model ReleaseUpdateResponse {
 
 model ReleaseGetResponse {
   release: Release;
+
+  @doc("所属リリースグループのタイトル。編集対象の文脈表示用")
+  releaseGroupTitle: releaseGroupTitle;
+
   songs: ReleaseReferencedSong[];
 }

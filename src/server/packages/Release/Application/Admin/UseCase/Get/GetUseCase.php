@@ -6,6 +6,7 @@ namespace Release\Application\Admin\UseCase\Get;
 
 use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Query\ReleaseDetailQueryServiceInterface;
+use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use ResultType\Err;
@@ -22,6 +23,7 @@ readonly class GetUseCase
     public function __construct(
         private UseCaseAuthorizer $authorizer,
         private ReleaseRepositoryInterface $repository,
+        private ReleaseGroupRepositoryInterface $groupRepository,
         private ReleaseDetailQueryServiceInterface $query,
     ) {
     }
@@ -47,8 +49,13 @@ readonly class GetUseCase
                     return new Err(new NotFoundError('Release', $releaseId->value));
                 }
 
+                if (is_null($group = $this->groupRepository->find($found->releaseGroupId))) {
+                    return new Err(new NotFoundError('ReleaseGroup', $found->releaseGroupId->value));
+                }
+
                 return new Ok(new GetOutputData(
                     $found,
+                    $group,
                     $this->query->findReferencedSongs($releaseId),
                 ));
             });

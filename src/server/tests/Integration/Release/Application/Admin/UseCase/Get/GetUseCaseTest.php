@@ -62,6 +62,7 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $this->assertTrue($result->isOk());
         $this->assertSame($releaseId, $result->unwrap()->release->releaseId->value);
+        $this->assertSame('観測された春', $result->unwrap()->releaseGroup->title->value);
         $this->assertCount(2, $result->unwrap()->release->media->toGeneric());
 
         // 収録曲は媒体順 → 曲順で並ぶ。

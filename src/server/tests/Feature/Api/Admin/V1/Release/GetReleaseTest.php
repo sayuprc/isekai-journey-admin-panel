@@ -96,6 +96,7 @@ class GetReleaseTest extends DatabaseTestCase
                         ],
                     ],
                 ],
+                'releaseGroupTitle' => '観測された春',
                 'songs' => [
                     [
                         'mediumPosition' => 1,
