@@ -46,15 +46,37 @@ class GetUseCaseTest extends DatabaseTestCase
         $this->assertTrue($result->isOk());
         $this->assertSame($releaseGroupId, $result->unwrap()->releaseGroup->releaseGroupId->value);
 
-        // 傘下リリースは表示順、formatValues は提供形態の値順。
+        // 傘下リリースは発売日順、formatValues は提供形態の値順
         $releases = $result->unwrap()->releases;
         $this->assertCount(2, $releases);
-        $this->assertSame($releaseId2, $releases[0]->releaseId);
-        $this->assertSame(10, $releases[0]->orderNo);
-        $this->assertSame([ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value], $releases[0]->formatValues);
-        $this->assertSame($releaseId1, $releases[1]->releaseId);
-        $this->assertSame(20, $releases[1]->orderNo);
-        $this->assertSame([ReleaseFormat::Digital->value], $releases[1]->formatValues);
+        $this->assertSame($releaseId1, $releases[0]->releaseId);
+        $this->assertSame(20, $releases[0]->orderNo);
+        $this->assertSame([ReleaseFormat::Digital->value], $releases[0]->formatValues);
+        $this->assertSame($releaseId2, $releases[1]->releaseId);
+        $this->assertSame(10, $releases[1]->orderNo);
+        $this->assertSame([ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value], $releases[1]->formatValues);
+    }
+
+    #[Test]
+    public function sortsReleasesByOrderNoWhenReleasedOnIsSame(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+        $releaseId1 = $this->generateUuid();
+        $releaseId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '同日リリースの作品', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease($releaseId2, $releaseGroupId, '同日で order_no が大きい版', true, new ImmutableDate('2026-01-01'), orderNo: 2),
+            $this->createRelease($releaseId1, $releaseGroupId, '同日で order_no が小さい版', true, new ImmutableDate('2026-01-01'), orderNo: 1),
+        );
+
+        $result = $this->getInstance()->handle(new GetInputData($releaseGroupId));
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($releaseId1, $result->unwrap()->releases[0]->releaseId);
+        $this->assertSame($releaseId2, $result->unwrap()->releases[1]->releaseId);
     }
 
     #[Test]

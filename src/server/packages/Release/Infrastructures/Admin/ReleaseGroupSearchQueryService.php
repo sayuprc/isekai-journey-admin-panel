@@ -46,9 +46,9 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
                 ->groupBy('release_groups.description')
                 ->groupBy('release_groups.is_display')
                 ->groupBy('release_groups.order_no')
-                // 表示順の昇順、同順は最古発売日の降順（リリース未登録のグループは末尾）、同日はタイトル昇順。
-                ->orderBy('release_groups.order_no')
+                // 最古発売日の降順、同日は order_no の降順、リリース未登録のグループは末尾にする
                 ->orderBy('first_released_on', 'desc')
+                ->orderBy('release_groups.order_no', 'desc')
                 ->orderBy('release_groups.title')
                 ->limit($criteria->perPage->value)
                 ->offset($offset),

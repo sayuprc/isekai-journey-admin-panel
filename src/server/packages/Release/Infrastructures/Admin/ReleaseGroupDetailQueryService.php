@@ -28,8 +28,8 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
                 ->withSelect(['release_id', 'name', 'released_on', 'jacket_art_url', 'is_display', 'order_no'])
                 ->from('releases')
                 ->where('release_group_id', '=', $this->converter->toBin($releaseGroupId->value))
-                ->orderBy('order_no')
                 ->orderBy('released_on')
+                ->orderBy('order_no')
                 ->orderBy('name'),
         );
 

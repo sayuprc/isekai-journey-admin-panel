@@ -108,43 +108,6 @@ class ListReleaseGroupTest extends DatabaseTestCase
                         'firstReleasedOn' => '2026-05-01',
                         'releases' => [
                             [
-                                'releaseId' => $releaseId2,
-                                'name' => '初回限定盤',
-                                'releasedOn' => '2026-06-01',
-                                'description' => 'CD+DVD',
-                                'jacketArtUrl' => 'https://example.com/limited.png',
-                                'orderNo' => 10,
-                                'formats' => [
-                                    [
-                                        'name' => 'CD',
-                                        'value' => 2,
-                                    ],
-                                    [
-                                        'name' => 'DVD',
-                                        'value' => 3,
-                                    ],
-                                ],
-                                'media' => [
-                                    [
-                                        'position' => 1,
-                                        'name' => 'CD',
-                                        'tracks' => [
-                                            [
-                                                'trackNo' => 1,
-                                                'songId' => $visibleSongId,
-                                                'title' => '公開楽曲',
-                                                'isDisplay' => true,
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        'position' => 2,
-                                        'name' => 'DVD',
-                                        'tracks' => [],
-                                    ],
-                                ],
-                            ],
-                            [
                                 'releaseId' => $releaseId1,
                                 'name' => '配信',
                                 'releasedOn' => '2026-05-01',
@@ -189,6 +152,43 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                                 'isDisplay' => true,
                                             ],
                                         ],
+                                    ],
+                                ],
+                            ],
+                            [
+                                'releaseId' => $releaseId2,
+                                'name' => '初回限定盤',
+                                'releasedOn' => '2026-06-01',
+                                'description' => 'CD+DVD',
+                                'jacketArtUrl' => 'https://example.com/limited.png',
+                                'orderNo' => 10,
+                                'formats' => [
+                                    [
+                                        'name' => 'CD',
+                                        'value' => 2,
+                                    ],
+                                    [
+                                        'name' => 'DVD',
+                                        'value' => 3,
+                                    ],
+                                ],
+                                'media' => [
+                                    [
+                                        'position' => 1,
+                                        'name' => 'CD',
+                                        'tracks' => [
+                                            [
+                                                'trackNo' => 1,
+                                                'songId' => $visibleSongId,
+                                                'title' => '公開楽曲',
+                                                'isDisplay' => true,
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'position' => 2,
+                                        'name' => 'DVD',
+                                        'tracks' => [],
                                     ],
                                 ],
                             ],
@@ -242,6 +242,27 @@ class ListReleaseGroupTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function sortsReleasesByOrderNoWhenReleasedOnIsSame(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+        $releaseId1 = $this->generateUuid();
+        $releaseId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '同日リリースの作品', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease($releaseId2, $releaseGroupId, '同日で order_no が大きい版', true, new ImmutableDate('2026-01-01'), orderNo: 2),
+            $this->createRelease($releaseId1, $releaseGroupId, '同日で order_no が小さい版', true, new ImmutableDate('2026-01-01'), orderNo: 1),
+        );
+
+        $this->get(route(ViewerReleaseGroupRouteMap::List))
+            ->assertStatus(200)
+            ->assertJsonPath('releaseGroups.0.releases.0.releaseId', $releaseId1)
+            ->assertJsonPath('releaseGroups.0.releases.1.releaseId', $releaseId2);
+    }
+
+    #[Test]
     public function paginatesWithCursor(): void
     {
         $releaseGroupId1 = $this->generateUuid();
@@ -256,7 +277,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
             $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01')),
         );
 
-        // 最古発売日の降順なので新しい作品が先。
+        // 最古発売日の降順なので新しい作品が先
         $response = $this->get(route(ViewerReleaseGroupRouteMap::List, ['limit' => 1]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'releaseGroups')
@@ -273,25 +294,25 @@ class ListReleaseGroupTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function sortsByOrderNoBeforeFirstReleasedOnAndPaginates(): void
+    public function sortsByOrderNoDescendingWhenFirstReleasedOnIsSameAndPaginates(): void
     {
         $releaseGroupId1 = $this->generateUuid();
         $releaseGroupId2 = $this->generateUuid();
 
         $this->storeReleaseGroups(
-            $this->createReleaseGroup($releaseGroupId1, '古いが先頭の作品', ReleaseGroupType::Single, true, orderNo: 1),
-            $this->createReleaseGroup($releaseGroupId2, '新しいが後続の作品', ReleaseGroupType::Album, true, orderNo: 2),
+            $this->createReleaseGroup($releaseGroupId1, '同日で order_no が小さい作品', ReleaseGroupType::Single, true, orderNo: 1),
+            $this->createReleaseGroup($releaseGroupId2, '同日で order_no が大きい作品', ReleaseGroupType::Album, true, orderNo: 2),
         );
         $this->storeReleases(
             $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01')),
-            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01')),
+            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-01-01')),
         );
 
-        // 発売日より order_no が優先されるため、古い作品でも order_no: 1 が先頭になる。
+        // 同じ発売日なら order_no の降順で制御する
         $response = $this->get(route(ViewerReleaseGroupRouteMap::List, ['limit' => 1]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'releaseGroups')
-            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1);
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId2);
 
         $cursor = $response->json('nextCursor');
         $this->assertIsString($cursor);
@@ -299,7 +320,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
         $this->get(route(ViewerReleaseGroupRouteMap::List, ['limit' => 1, 'cursor' => $cursor]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'releaseGroups')
-            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId2)
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1)
             ->assertJsonMissingPath('nextCursor');
     }
 }

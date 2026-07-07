@@ -16,6 +16,7 @@ const RELEASE_GROUP_TYPE_OPTIONS: Array<{ value: ReleaseGroupTypeValue; label: s
 export const CreateForm = () => {
   const [typeValue, setTypeValue] = createSignal<ReleaseGroupTypeValue>(1);
   const [isDisplay, setIsDisplay] = createSignal(true);
+  const [orderNo, setOrderNo] = createSignal(1);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
@@ -32,6 +33,7 @@ export const CreateForm = () => {
       typeValue: typeValue(),
       description: formData.get('description')?.toString() ?? '',
       isDisplay: isDisplay(),
+      orderNo: orderNo(),
     });
 
     if (data) {
@@ -106,6 +108,22 @@ export const CreateForm = () => {
                 <option value="false">表示しない</option>
               </select>
               <Show when={getFieldError('isDisplay')}>
+                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+              </Show>
+            </div>
+
+            <div>
+              <label class="label">表示補助番号</label>
+              <input
+                type="number"
+                class="input w-full"
+                name="orderNo"
+                min="1"
+                value={orderNo()}
+                onChange={e => setOrderNo(Number(e.currentTarget.value))}
+                classList={{ 'input-error': !!getFieldError('orderNo') }}
+              />
+              <Show when={getFieldError('orderNo')}>
                 {message => <p class="mt-1 text-xs text-error">{message()}</p>}
               </Show>
             </div>

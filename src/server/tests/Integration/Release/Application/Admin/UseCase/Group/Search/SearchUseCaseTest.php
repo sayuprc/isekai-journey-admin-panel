@@ -82,6 +82,32 @@ class SearchUseCaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function sortsByOrderNoDescendingWhenFirstReleasedOnIsSame(): void
+    {
+        $releaseGroupId1 = $this->generateUuid();
+        $releaseGroupId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId1, '同日で order_no が小さい作品', ReleaseGroupType::Single, true, orderNo: 1),
+            $this->createReleaseGroup($releaseGroupId2, '同日で order_no が大きい作品', ReleaseGroupType::Album, true, orderNo: 2),
+        );
+        $this->storeReleases(
+            $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-01-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+        );
+
+        $result = $this->getInstance()->handle(new SearchInputData());
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame($releaseGroupId2, $result->unwrap()->releaseGroups[0]->releaseGroupId);
+        $this->assertSame($releaseGroupId1, $result->unwrap()->releaseGroups[1]->releaseGroupId);
+    }
+
+    #[Test]
     public function paginates(): void
     {
         foreach (range(1, 30) as $i) {

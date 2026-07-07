@@ -46,16 +46,6 @@ readonly class ReleaseGroupRepository implements ReleaseGroupRepositoryInterface
     }
 
     #[Override]
-    public function maxOrderNo(): int
-    {
-        return Row::intValue(
-            $this->queryFactory->select()
-                ->from(self::TABLE)
-                ->aggregate($this->queryFactory->pdo(), 'COALESCE(MAX(`order_no`), 0)'),
-        );
-    }
-
-    #[Override]
     public function save(ReleaseGroup $releaseGroup): ReleaseGroup
     {
         $data = $releaseGroup->toArray();
