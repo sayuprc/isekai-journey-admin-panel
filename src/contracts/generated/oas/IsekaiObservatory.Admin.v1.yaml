@@ -2708,7 +2708,6 @@ components:
         - typeValue
         - description
         - isDisplay
-        - orderNo
       properties:
         title:
           $ref: '#/components/schemas/releaseGroupTitle'
@@ -2718,8 +2717,6 @@ components:
           type: string
         isDisplay:
           type: boolean
-        orderNo:
-          $ref: '#/components/schemas/orderNo'
     ReleaseGroupCreateResponse:
       type: object
       required:

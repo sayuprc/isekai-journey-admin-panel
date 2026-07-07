@@ -48,12 +48,13 @@ readonly class CreateUseCase
     private function createReleaseGroup(CreateInputData $inputData): Result
     {
         return $this->transaction->scope(function () use ($inputData): Result {
+            // 表示順は入力させず、既存の最大 order_no + 10 で自動採番する。
             $result = $this->service->prepareForCreate(
                 $inputData->title,
                 $inputData->typeValue,
                 $inputData->description,
                 $inputData->isDisplay,
-                $inputData->orderNo,
+                $this->repository->nextOrderNo(),
             );
 
             if ($result->isErr()) {

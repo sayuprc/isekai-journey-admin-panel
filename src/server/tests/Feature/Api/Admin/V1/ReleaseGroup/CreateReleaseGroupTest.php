@@ -28,7 +28,6 @@ class CreateReleaseGroupTest extends DatabaseTestCase
                 'typeValue' => ReleaseGroupType::Album->value,
                 'description' => '1st アルバム',
                 'isDisplay' => true,
-                'orderNo' => 2,
             ])->assertStatus(200)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
@@ -40,7 +39,8 @@ class CreateReleaseGroupTest extends DatabaseTestCase
                             ->where('typeValue', ReleaseGroupType::Album->value)
                             ->where('description', '1st アルバム')
                             ->where('isDisplay', true)
-                            ->where('orderNo', 2),
+                            // 表示順は自動採番 (既存なしなので 0 + 10)。
+                            ->where('orderNo', 10),
                     ),
             );
 
@@ -49,8 +49,25 @@ class CreateReleaseGroupTest extends DatabaseTestCase
             'type' => ReleaseGroupType::Album->value,
             'description' => '1st アルバム',
             'is_display' => true,
-            'order_no' => 2,
+            'order_no' => 10,
         ]);
+    }
+
+    #[Test]
+    public function assignsNextOrderNoOnCreate(): void
+    {
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($this->generateUuid(), '既存の作品', ReleaseGroupType::Single, true, orderNo: 15),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseGroupRouteMap::Create), [
+                'title' => '観測された春',
+                'typeValue' => ReleaseGroupType::Album->value,
+                'description' => '',
+                'isDisplay' => true,
+            ])->assertStatus(200)
+            ->assertJsonPath('releaseGroup.orderNo', 25);
     }
 
     #[Test]
@@ -62,7 +79,6 @@ class CreateReleaseGroupTest extends DatabaseTestCase
                 'typeValue' => ReleaseGroupType::Album->value,
                 'description' => '',
                 'isDisplay' => true,
-                'orderNo' => 1,
             ])->assertStatus(403);
     }
 }

@@ -11,7 +11,6 @@ readonly class CreateInputData
         public int $typeValue,
         public string $description,
         public bool $isDisplay,
-        public int $orderNo,
     ) {
     }
 }

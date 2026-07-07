@@ -26,7 +26,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             typeValue: ReleaseGroupType::Album->value,
             description: '1st アルバム',
             isDisplay: true,
-            orderNo: 2,
         ));
 
         $this->assertTrue($result->isOk());
@@ -37,8 +36,27 @@ class CreateUseCaseTest extends DatabaseTestCase
             'type' => ReleaseGroupType::Album->value,
             'description' => '1st アルバム',
             'is_display' => true,
-            'order_no' => 2,
+            // 表示順は自動採番 (既存なしなので 0 + 10)。
+            'order_no' => 10,
         ]);
+    }
+
+    #[Test]
+    public function assignsNextOrderNoFromExistingMax(): void
+    {
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($this->generateUuid(), '既存の作品', ReleaseGroupType::Single, true, orderNo: 15),
+        );
+
+        $result = $this->getInstance()->handle(new CreateInputData(
+            title: '観測された春',
+            typeValue: ReleaseGroupType::Album->value,
+            description: '',
+            isDisplay: true,
+        ));
+
+        $this->assertTrue($result->isOk());
+        $this->assertSame(25, $result->unwrap()->releaseGroup->orderNo->value);
     }
 
     #[Test]
@@ -49,7 +67,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             typeValue: 0,
             description: '',
             isDisplay: true,
-            orderNo: 1,
         ));
 
         $this->assertTrue($result->isErr());

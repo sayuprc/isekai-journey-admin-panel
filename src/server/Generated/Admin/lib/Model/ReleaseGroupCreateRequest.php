@@ -60,8 +60,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => 'string',
         'type_value' => '\OpenAPI\Admin\Client\Model\ReleaseGroupTypeValue',
         'description' => 'string',
-        'is_display' => 'bool',
-        'order_no' => 'int'
+        'is_display' => 'bool'
     ];
 
     /**
@@ -75,8 +74,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => null,
         'type_value' => null,
         'description' => null,
-        'is_display' => null,
-        'order_no' => 'int32'
+        'is_display' => null
     ];
 
     /**
@@ -88,8 +86,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => false,
         'type_value' => false,
         'description' => false,
-        'is_display' => false,
-        'order_no' => false
+        'is_display' => false
     ];
 
     /**
@@ -181,8 +178,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => 'title',
         'type_value' => 'typeValue',
         'description' => 'description',
-        'is_display' => 'isDisplay',
-        'order_no' => 'orderNo'
+        'is_display' => 'isDisplay'
     ];
 
     /**
@@ -194,8 +190,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => 'setTitle',
         'type_value' => 'setTypeValue',
         'description' => 'setDescription',
-        'is_display' => 'setIsDisplay',
-        'order_no' => 'setOrderNo'
+        'is_display' => 'setIsDisplay'
     ];
 
     /**
@@ -207,8 +202,7 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         'title' => 'getTitle',
         'type_value' => 'getTypeValue',
         'description' => 'getDescription',
-        'is_display' => 'getIsDisplay',
-        'order_no' => 'getOrderNo'
+        'is_display' => 'getIsDisplay'
     ];
 
     /**
@@ -272,7 +266,6 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
-        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -318,13 +311,6 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
-        if ($this->container['order_no'] === null) {
-            $invalidProperties[] = "'order_no' can't be null";
-        }
-        if (($this->container['order_no'] < 1)) {
-            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
-        }
-
         return $invalidProperties;
     }
 
@@ -449,38 +435,6 @@ class ReleaseGroupCreateRequest implements ModelInterface, ArrayAccess, \JsonSer
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
-
-        return $this;
-    }
-
-    /**
-     * Gets order_no
-     *
-     * @return int
-     */
-    public function getOrderNo()
-    {
-        return $this->container['order_no'];
-    }
-
-    /**
-     * Sets order_no
-     *
-     * @param int $order_no 表示順
-     *
-     * @return self
-     */
-    public function setOrderNo($order_no)
-    {
-        if (is_null($order_no)) {
-            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
-        }
-
-        if (($order_no < 1)) {
-            throw new \InvalidArgumentException('invalid value for $order_no when calling ReleaseGroupCreateRequest., must be bigger than or equal to 1.');
-        }
-
-        $this->container['order_no'] = $order_no;
 
         return $this;
     }

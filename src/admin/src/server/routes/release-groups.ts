@@ -26,7 +26,6 @@ export const releaseGroups = new Elysia({ prefix: '/release-groups' })
         typeValue: t.Numeric(),
         description: t.String(),
         isDisplay: t.Boolean(),
-        orderNo: t.Number(),
       }),
     },
   )
