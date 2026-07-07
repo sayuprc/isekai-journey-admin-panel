@@ -2686,6 +2686,7 @@ components:
         - typeValue
         - description
         - isDisplay
+        - orderNo
       properties:
         releaseGroupId:
           $ref: '#/components/schemas/releaseGroupId'
@@ -2697,6 +2698,8 @@ components:
           type: string
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
       description: リリースグループ（作品）
     ReleaseGroupCreateRequest:
       type: object
@@ -2784,6 +2787,7 @@ components:
         - typeValue
         - description
         - isDisplay
+        - orderNo
         - firstReleasedOn
       properties:
         releaseGroupId:
@@ -2796,6 +2800,8 @@ components:
           type: string
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
         firstReleasedOn:
           anyOf:
             - $ref: '#/components/schemas/releasedOn'
@@ -2817,6 +2823,7 @@ components:
         - typeValue
         - description
         - isDisplay
+        - orderNo
       properties:
         title:
           $ref: '#/components/schemas/releaseGroupTitle'
@@ -2826,6 +2833,8 @@ components:
           type: string
         isDisplay:
           type: boolean
+        orderNo:
+          $ref: '#/components/schemas/orderNo'
     ReleaseGroupUpdateResponse:
       type: object
       required:

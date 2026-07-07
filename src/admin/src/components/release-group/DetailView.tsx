@@ -141,6 +141,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
   const [typeValue, setTypeValue] = createSignal<ReleaseGroupTypeValue>(props.data.releaseGroup.typeValue);
   const [description, setDescription] = createSignal(props.data.releaseGroup.description);
   const [isDisplay, setIsDisplay] = createSignal(props.data.releaseGroup.isDisplay);
+  const [orderNo, setOrderNo] = createSignal(props.data.releaseGroup.orderNo);
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting: isUpdating, withSubmitting: withUpdating } = createSubmitting();
@@ -155,6 +156,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
       typeValue: typeValue(),
       description: description(),
       isDisplay: isDisplay(),
+      orderNo: orderNo(),
     });
 
     if (data) {
@@ -242,6 +244,22 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                   classList={{ 'textarea-error': !!getFieldError('description') }}
                 />
                 <Show when={getFieldError('description')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
+                </Show>
+              </div>
+
+              <div>
+                <label class="label">表示順</label>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  class="input w-full"
+                  value={orderNo()}
+                  onInput={e => setOrderNo(Number(e.currentTarget.value))}
+                  classList={{ 'input-error': !!getFieldError('orderNo') }}
+                />
+                <Show when={getFieldError('orderNo')}>
                   {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>

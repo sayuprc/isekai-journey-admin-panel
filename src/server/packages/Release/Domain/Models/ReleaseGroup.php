@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
+use Support\Domain\ValueObjects\OrderNo;
+
 readonly class ReleaseGroup
 {
     public function __construct(
@@ -12,6 +14,7 @@ readonly class ReleaseGroup
         public ReleaseGroupType $type,
         public Description $description,
         public bool $isDisplay,
+        public OrderNo $orderNo,
     ) {
     }
 
@@ -21,6 +24,7 @@ readonly class ReleaseGroup
         int $type,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): self {
         return new self(
             ReleaseGroupId::reconstruct($releaseGroupId),
@@ -28,11 +32,12 @@ readonly class ReleaseGroup
             ReleaseGroupType::from($type),
             Description::reconstruct($description),
             $isDisplay,
+            OrderNo::reconstruct($orderNo),
         );
     }
 
     /**
-     * @return array{release_group_id: string, title: string, type: value-of<ReleaseGroupType>, description: string, is_display: bool}
+     * @return array{release_group_id: string, title: string, type: value-of<ReleaseGroupType>, description: string, is_display: bool, order_no: int}
      */
     public function toArray(): array
     {
@@ -42,6 +47,7 @@ readonly class ReleaseGroup
             'type' => $this->type->value,
             'description' => $this->description->value,
             'is_display' => $this->isDisplay,
+            'order_no' => $this->orderNo->value,
         ];
     }
 

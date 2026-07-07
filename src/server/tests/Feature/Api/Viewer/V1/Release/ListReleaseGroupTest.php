@@ -271,4 +271,35 @@ class ListReleaseGroupTest extends DatabaseTestCase
             ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1)
             ->assertJsonMissingPath('nextCursor');
     }
+
+    #[Test]
+    public function sortsByOrderNoBeforeFirstReleasedOnAndPaginates(): void
+    {
+        $releaseGroupId1 = $this->generateUuid();
+        $releaseGroupId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId1, '古いが先頭の作品', ReleaseGroupType::Single, true, orderNo: 1),
+            $this->createReleaseGroup($releaseGroupId2, '新しいが後続の作品', ReleaseGroupType::Album, true, orderNo: 2),
+        );
+        $this->storeReleases(
+            $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01')),
+            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01')),
+        );
+
+        // 発売日より order_no が優先されるため、古い作品でも order_no: 1 が先頭になる。
+        $response = $this->get(route(ViewerReleaseGroupRouteMap::List, ['limit' => 1]))
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'releaseGroups')
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1);
+
+        $cursor = $response->json('nextCursor');
+        $this->assertIsString($cursor);
+
+        $this->get(route(ViewerReleaseGroupRouteMap::List, ['limit' => 1, 'cursor' => $cursor]))
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'releaseGroups')
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId2)
+            ->assertJsonMissingPath('nextCursor');
+    }
 }

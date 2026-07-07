@@ -36,6 +36,7 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
                     'release_groups.type',
                     'release_groups.description',
                     'release_groups.is_display',
+                    'release_groups.order_no',
                 ])
                 ->select(new Sql('MIN(releases.released_on)'), 'first_released_on')
                 ->outerJoin('releases', 'releases.release_group_id = release_groups.release_group_id')
@@ -44,7 +45,9 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
                 ->groupBy('release_groups.type')
                 ->groupBy('release_groups.description')
                 ->groupBy('release_groups.is_display')
-                // 最古発売日の降順（リリース未登録のグループは末尾）、同日はタイトル昇順。
+                ->groupBy('release_groups.order_no')
+                // 表示順の昇順、同順は最古発売日の降順（リリース未登録のグループは末尾）、同日はタイトル昇順。
+                ->orderBy('release_groups.order_no')
                 ->orderBy('first_released_on', 'desc')
                 ->orderBy('release_groups.title')
                 ->limit($criteria->perPage->value)
@@ -58,6 +61,7 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
                 Row::int($row, 'type'),
                 Row::string($row, 'description'),
                 Row::bool($row, 'is_display'),
+                Row::int($row, 'order_no'),
                 Row::nullableString($row, 'first_released_on'),
             ),
             $rows,

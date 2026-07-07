@@ -266,6 +266,7 @@ export const SearchList = () => {
               <th>タイトル</th>
               <th>種別</th>
               <th>初リリース日</th>
+              <th>表示順</th>
               <th>表示設定</th>
               <th>操作</th>
             </tr>
@@ -273,13 +274,13 @@ export const SearchList = () => {
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={6} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releaseGroups.length === 0}>
-                <ListState state="empty" colSpan={5} message="条件に一致するリリースグループはありません。" />
+                <ListState state="empty" colSpan={6} message="条件に一致するリリースグループはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
@@ -297,6 +298,7 @@ export const SearchList = () => {
                             ? normalizeDateDisplayValue(releaseGroup.firstReleasedOn)
                             : '—'}
                         </td>
+                        <td class="text-sm">{releaseGroup.orderNo}</td>
                         <td>
                           <span
                             class={`badge badge-sm ${

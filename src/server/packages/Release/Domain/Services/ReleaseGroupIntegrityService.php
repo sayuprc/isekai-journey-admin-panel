@@ -7,6 +7,7 @@ namespace Release\Domain\Services;
 use Release\Domain\Models\Description;
 use Release\Domain\Models\ReleaseGroup;
 use Release\Domain\Models\ReleaseGroupId;
+use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseGroupTitle;
 use Release\Domain\Models\ReleaseGroupType;
 use ResultType\Err;
@@ -16,14 +17,24 @@ use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Error\DomainError;
 use Support\Domain\Error\DomainValidationError;
 use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
 {
-    public function __construct(private readonly UuidGeneratorInterface $generator)
-    {
+    /**
+     * 新規作成時の表示順の刻み幅。間への挿入余地を残すため隙間を空けて採番する
+     */
+    private const int ORDER_NO_STEP = 10;
+
+    public function __construct(
+        private readonly UuidGeneratorInterface $generator,
+        private readonly ReleaseGroupRepositoryInterface $repository,
+    ) {
     }
 
     /**
+     * 表示順は入力させず、既存の最大 order_no + 刻み幅で自動採番する
+     *
      * @return Result<ReleaseGroup, DomainError>
      */
     public function prepareForCreate(
@@ -32,7 +43,9 @@ class ReleaseGroupIntegrityService
         string $description,
         bool $isDisplay,
     ): Result {
-        return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay);
+        $orderNo = $this->repository->maxOrderNo() + self::ORDER_NO_STEP;
+
+        return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
     /**
@@ -44,8 +57,9 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): Result {
-        return $this->build($releaseGroupId, $title, $typeValue, $description, $isDisplay);
+        return $this->build($releaseGroupId, $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
     /**
@@ -57,12 +71,14 @@ class ReleaseGroupIntegrityService
         int $typeValue,
         string $description,
         bool $isDisplay,
+        int $orderNo,
     ): Result {
-        return Result::collect4(
+        return Result::collect5(
             ReleaseGroupId::create($releaseGroupId),
             ReleaseGroupTitle::create($title),
             $this->toReleaseGroupType($typeValue),
             Description::create($description),
+            OrderNo::create($orderNo),
         )
             ->mapErr(static function (array $errors): DomainValidationError {
                 $messages = [];
@@ -75,7 +91,14 @@ class ReleaseGroupIntegrityService
 
                 return new DomainValidationError($messages);
             })
-            ->map(static fn (array $values): ReleaseGroup => new ReleaseGroup(...[...$values, $isDisplay]));
+            ->map(static fn (array $values): ReleaseGroup => new ReleaseGroup(
+                $values[0],
+                $values[1],
+                $values[2],
+                $values[3],
+                $isDisplay,
+                $values[4],
+            ));
     }
 
     /**

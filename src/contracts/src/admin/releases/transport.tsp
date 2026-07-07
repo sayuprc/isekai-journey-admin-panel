@@ -20,6 +20,7 @@ model ReleaseGroupUpdateRequest {
   typeValue: ReleaseGroupTypeValue;
   description: string;
   isDisplay: boolean;
+  orderNo: orderNo;
 }
 
 model ReleaseGroupUpdateResponse {

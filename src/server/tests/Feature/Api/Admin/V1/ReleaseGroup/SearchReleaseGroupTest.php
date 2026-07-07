@@ -55,6 +55,7 @@ class SearchReleaseGroupTest extends DatabaseTestCase
                         'typeValue' => ReleaseGroupType::Album->value,
                         'description' => 'テスト用リリースグループ',
                         'isDisplay' => true,
+                        'orderNo' => 1,
                         'firstReleasedOn' => '2026-02-01',
                     ],
                     [
@@ -63,6 +64,7 @@ class SearchReleaseGroupTest extends DatabaseTestCase
                         'typeValue' => ReleaseGroupType::Single->value,
                         'description' => 'テスト用リリースグループ',
                         'isDisplay' => true,
+                        'orderNo' => 1,
                         'firstReleasedOn' => '2026-01-01',
                     ],
                     [
@@ -71,11 +73,38 @@ class SearchReleaseGroupTest extends DatabaseTestCase
                         'typeValue' => ReleaseGroupType::Ep->value,
                         'description' => 'テスト用リリースグループ',
                         'isDisplay' => true,
+                        'orderNo' => 1,
                         'firstReleasedOn' => null,
                     ],
                 ],
                 'maxPage' => 1,
             ]);
+    }
+
+    #[Test]
+    public function sortsByOrderNoBeforeFirstReleasedOn(): void
+    {
+        $releaseGroupId1 = $this->generateUuid();
+        $releaseGroupId2 = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId1, '古いが先頭の作品', ReleaseGroupType::Single, true, orderNo: 1),
+            $this->createReleaseGroup($releaseGroupId2, '新しいが後続の作品', ReleaseGroupType::Album, true, orderNo: 2),
+        );
+        $this->storeReleases(
+            $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+            $this->createRelease($this->generateUuid(), $releaseGroupId2, '配信', true, new ImmutableDate('2026-02-01'), media: [
+                ['position' => 1, 'name' => null, 'tracks' => []],
+            ]),
+        );
+
+        $this->withAuth()
+            ->getJson(route(ReleaseGroupRouteMap::Search))
+            ->assertStatus(200)
+            ->assertJsonPath('releaseGroups.0.releaseGroupId', $releaseGroupId1)
+            ->assertJsonPath('releaseGroups.1.releaseGroupId', $releaseGroupId2);
     }
 
     #[Test]

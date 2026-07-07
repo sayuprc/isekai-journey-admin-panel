@@ -33,6 +33,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             typeValue: ReleaseGroupType::Single->value,
             description: '更新後の説明',
             isDisplay: false,
+            orderNo: 3,
         ));
 
         $this->assertTrue($result->isOk());
@@ -43,6 +44,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             'type' => ReleaseGroupType::Single->value,
             'description' => '更新後の説明',
             'is_display' => false,
+            'order_no' => 3,
         ]);
     }
 
@@ -55,6 +57,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             typeValue: ReleaseGroupType::Album->value,
             description: '説明',
             isDisplay: true,
+            orderNo: 1,
         ));
 
         $this->assertTrue($result->isErr());

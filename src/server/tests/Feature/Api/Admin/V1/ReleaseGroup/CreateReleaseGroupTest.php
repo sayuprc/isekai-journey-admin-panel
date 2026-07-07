@@ -38,7 +38,9 @@ class CreateReleaseGroupTest extends DatabaseTestCase
                             ->where('title', '観測された春')
                             ->where('typeValue', ReleaseGroupType::Album->value)
                             ->where('description', '1st アルバム')
-                            ->where('isDisplay', true),
+                            ->where('isDisplay', true)
+                            // 表示順は自動採番 (既存なしなので 0 + 10)。
+                            ->where('orderNo', 10),
                     ),
             );
 
@@ -47,7 +49,25 @@ class CreateReleaseGroupTest extends DatabaseTestCase
             'type' => ReleaseGroupType::Album->value,
             'description' => '1st アルバム',
             'is_display' => true,
+            'order_no' => 10,
         ]);
+    }
+
+    #[Test]
+    public function assignsNextOrderNoOnCreate(): void
+    {
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($this->generateUuid(), '既存の作品', ReleaseGroupType::Single, true, orderNo: 15),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseGroupRouteMap::Create), [
+                'title' => '観測された春',
+                'typeValue' => ReleaseGroupType::Album->value,
+                'description' => '',
+                'isDisplay' => true,
+            ])->assertStatus(200)
+            ->assertJsonPath('releaseGroup.orderNo', 25);
     }
 
     #[Test]

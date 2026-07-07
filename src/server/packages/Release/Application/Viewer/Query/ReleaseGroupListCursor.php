@@ -8,11 +8,12 @@ use InvalidArgumentException;
 
 final class ReleaseGroupListCursor
 {
-    public static function encode(string $firstReleasedOn, string $releaseGroupId): string
+    public static function encode(int $orderNo, string $firstReleasedOn, string $releaseGroupId): string
     {
         return base64_encode(
             (string)json_encode(
                 [
+                    'orderNo' => $orderNo,
                     'firstReleasedOn' => $firstReleasedOn,
                     'releaseGroupId' => $releaseGroupId,
                 ],
@@ -31,10 +32,10 @@ final class ReleaseGroupListCursor
 
         $data = json_decode($decoded, true, flags: JSON_THROW_ON_ERROR);
 
-        if (! is_array($data) || ! isset($data['firstReleasedOn'], $data['releaseGroupId']) || ! is_string($data['firstReleasedOn']) || ! is_string($data['releaseGroupId'])) {
+        if (! is_array($data) || ! isset($data['orderNo'], $data['firstReleasedOn'], $data['releaseGroupId']) || ! is_int($data['orderNo']) || ! is_string($data['firstReleasedOn']) || ! is_string($data['releaseGroupId'])) {
             throw new InvalidArgumentException('Invalid cursor.');
         }
 
-        return new DecodedReleaseGroupListCursor($data['firstReleasedOn'], $data['releaseGroupId']);
+        return new DecodedReleaseGroupListCursor($data['orderNo'], $data['firstReleasedOn'], $data['releaseGroupId']);
     }
 }

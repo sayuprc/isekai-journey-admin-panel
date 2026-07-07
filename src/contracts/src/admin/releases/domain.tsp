@@ -62,6 +62,7 @@ model ReleaseGroup {
   typeValue: ReleaseGroupTypeValue;
   description: string;
   isDisplay: boolean;
+  orderNo: orderNo;
 }
 
 @doc("リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）")
@@ -71,6 +72,7 @@ model ReleaseGroupSummary {
   typeValue: ReleaseGroupTypeValue;
   description: string;
   isDisplay: boolean;
+  orderNo: orderNo;
   firstReleasedOn: releasedOn | null;
 }
 

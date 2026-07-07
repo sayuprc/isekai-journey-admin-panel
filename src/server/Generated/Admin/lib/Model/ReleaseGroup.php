@@ -62,7 +62,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'string',
         'type_value' => '\OpenAPI\Admin\Client\Model\ReleaseGroupTypeValue',
         'description' => 'string',
-        'is_display' => 'bool'
+        'is_display' => 'bool',
+        'order_no' => 'int'
     ];
 
     /**
@@ -77,7 +78,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => null,
         'type_value' => null,
         'description' => null,
-        'is_display' => null
+        'is_display' => null,
+        'order_no' => 'int32'
     ];
 
     /**
@@ -90,7 +92,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => false,
         'type_value' => false,
         'description' => false,
-        'is_display' => false
+        'is_display' => false,
+        'order_no' => false
     ];
 
     /**
@@ -183,7 +186,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'title',
         'type_value' => 'typeValue',
         'description' => 'description',
-        'is_display' => 'isDisplay'
+        'is_display' => 'isDisplay',
+        'order_no' => 'orderNo'
     ];
 
     /**
@@ -196,7 +200,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'setTitle',
         'type_value' => 'setTypeValue',
         'description' => 'setDescription',
-        'is_display' => 'setIsDisplay'
+        'is_display' => 'setIsDisplay',
+        'order_no' => 'setOrderNo'
     ];
 
     /**
@@ -209,7 +214,8 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         'title' => 'getTitle',
         'type_value' => 'getTypeValue',
         'description' => 'getDescription',
-        'is_display' => 'getIsDisplay'
+        'is_display' => 'getIsDisplay',
+        'order_no' => 'getOrderNo'
     ];
 
     /**
@@ -274,6 +280,7 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('type_value', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
         $this->setIfExists('is_display', $data ?? [], null);
+        $this->setIfExists('order_no', $data ?? [], null);
     }
 
     /**
@@ -322,6 +329,13 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['is_display'] === null) {
             $invalidProperties[] = "'is_display' can't be null";
         }
+        if ($this->container['order_no'] === null) {
+            $invalidProperties[] = "'order_no' can't be null";
+        }
+        if (($this->container['order_no'] < 1)) {
+            $invalidProperties[] = "invalid value for 'order_no', must be bigger than or equal to 1.";
+        }
+
         return $invalidProperties;
     }
 
@@ -473,6 +487,38 @@ class ReleaseGroup implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable is_display cannot be null');
         }
         $this->container['is_display'] = $is_display;
+
+        return $this;
+    }
+
+    /**
+     * Gets order_no
+     *
+     * @return int
+     */
+    public function getOrderNo()
+    {
+        return $this->container['order_no'];
+    }
+
+    /**
+     * Sets order_no
+     *
+     * @param int $order_no 表示順
+     *
+     * @return self
+     */
+    public function setOrderNo($order_no)
+    {
+        if (is_null($order_no)) {
+            throw new \InvalidArgumentException('non-nullable order_no cannot be null');
+        }
+
+        if (($order_no < 1)) {
+            throw new \InvalidArgumentException('invalid value for $order_no when calling ReleaseGroup., must be bigger than or equal to 1.');
+        }
+
+        $this->container['order_no'] = $order_no;
 
         return $this;
     }
