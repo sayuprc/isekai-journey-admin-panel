@@ -16,7 +16,7 @@ use Support\UseCase\Error\UseCaseError;
 
 readonly class UploadJacketArtUseCase
 {
-    private const int MAX_BYTES = 5 * 1024 * 1024;
+    private const int MAX_BYTES = 20 * 1024 * 1024;
 
     /** @var array<string, string> */
     private const array EXTENSIONS = [
@@ -76,7 +76,7 @@ readonly class UploadJacketArtUseCase
         }
 
         if (strlen($content) > self::MAX_BYTES) {
-            $messages[] = '画像ファイルは5MB以下にしてください';
+            $messages[] = '画像ファイルは20MB以下にしてください';
         }
 
         if (! array_key_exists($contentType, self::EXTENSIONS)) {
