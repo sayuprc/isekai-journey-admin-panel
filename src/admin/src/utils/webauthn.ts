@@ -178,6 +178,25 @@ export const passkeyErrorMessage = (error: unknown, fallbackMessage: string): st
   return error instanceof Error ? error.message : fallbackMessage;
 };
 
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  describe('passkeyErrorMessage', () => {
+    it('DOMException.name をフォーム共通の日本語メッセージへ変換する', () => {
+      expect(passkeyErrorMessage(new DOMException('', 'NotAllowedError'), '失敗しました')).toBe(
+        'パスキー操作がキャンセルされたか、許可されませんでした',
+      );
+      expect(passkeyErrorMessage(new DOMException('', 'SecurityError'), '失敗しました')).toBe(
+        'この環境ではパスキーを利用できません',
+      );
+    });
+
+    it('未定義の例外名は fallback を返す', () => {
+      expect(passkeyErrorMessage(new DOMException('', 'UnknownError'), '失敗しました')).toBe('失敗しました');
+    });
+  });
+}
+
 export const isPasskeyConditionalMediationAvailable = async (): Promise<boolean> => {
   if (
     typeof window === 'undefined'

@@ -24,7 +24,9 @@
     "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
     "generate:api": "openapi-ts",
     "prism": "prism mock ../contracts/generated/oas/${ADMIN_OAS_FILE} -h 0.0.0.0",
-    "redis": "redis-commander"
+    "redis": "redis-commander",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/node": "11.0.0",
@@ -58,6 +60,7 @@
     "stylelint-order": "catalog:lint",
     "typed-css-modules": "catalog:gen",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:lint"
+    "typescript-eslint": "catalog:lint",
+    "vitest": "catalog:"
   }
 }
