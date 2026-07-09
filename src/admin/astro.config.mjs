@@ -42,6 +42,5 @@ export default defineConfig({
       noExternal: shouldBundleServerDependencies ? true : undefined,
     },
   },
-
   integrations: [solidJs()],
 });

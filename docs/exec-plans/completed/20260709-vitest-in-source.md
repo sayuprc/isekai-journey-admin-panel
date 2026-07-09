@@ -49,10 +49,12 @@ admin / viewer に Vitest を導入し、`import.meta.vitest` の補完が効き
 - 2026-07-09: in-source 移行は純関数（auth-redirect / csrf / proxy-secret / google-id-token の decode / webauthn の passkeyErrorMessage）に限定する。
 - 2026-07-09: vitest は catalog の `minimumReleaseAge`（7日）に合わせ `4.1.9` を採用。
 - 2026-07-09: admin の `decodeJwtExpMs` はテスト専用 export だったため非公開化し、in-source で検証する。
+- 2026-07-09: contracts の `fix-enum-types` も vitest in-source へ移行。CLI 用の `bun` Glob は `import.meta.main` 内の動的 import に寄せる。
 
 ## Validation
 
 - `cd src && bun --filter admin test` → 5 files / 23 tests passed
 - `cd src && bun --filter viewer test` → 1 file / 3 tests passed
+- `cd src && bun --filter contracts test` → 1 file / 5 tests passed
 - 変更ファイルの eslint 通過
 - `import.meta.vitest` の型エラーなし（プロジェクト tsc で確認）
