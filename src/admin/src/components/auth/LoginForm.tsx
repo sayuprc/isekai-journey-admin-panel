@@ -147,7 +147,7 @@ export const LoginForm = (props: LoginFormProps) => {
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <label class="label">メールアドレス</label>
         <input
-          ref={emailInput}
+          ref={el => emailInput = el}
           type="email"
           class="input"
           name="email"
