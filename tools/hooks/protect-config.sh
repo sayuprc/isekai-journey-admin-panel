@@ -4,10 +4,13 @@ set -euo pipefail
 # PreToolUse hook: リンター・フォーマッター設定ファイルへの編集をブロックする
 # エージェントがリンターエラーを設定変更で回避することを防止する
 
-input="$(cat)"
-file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
+# shellcheck source=tools/hooks/common.sh
+source "$(cd "$(dirname "$0")" && pwd)/common.sh"
 
-[ -z "$file" ] && exit 0
+input="$(cat)"
+file="$(hook_extract_file_path "$input" || true)"
+
+[ -z "${file:-}" ] && exit 0
 
 basename_file="$(basename "$file")"
 

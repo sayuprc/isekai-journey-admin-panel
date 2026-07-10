@@ -32,6 +32,27 @@ VIEWER_OAS_FILE = "IsekaiObservatory.Viewer.v1.yaml"
 
 # -- 環境構築 / コンテナ --
 
+[tasks."lefthook:install"]
+description = "lefthook の Git hook をインストールする（Cursor の core.hooksPath とも共存）"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Cursor Cloud / Desktop は local core.hooksPath を agent-hooks dispatcher に向ける。
+# lefthook は hooksPath があると install を拒否するため、一時的に unset して
+# .git/hooks へ入れたあと hooksPath を復元する。dispatcher が元の .git/hooks を呼ぶ。
+hooks_path="$(git config --local --get core.hooksPath || true)"
+if [ -n "${hooks_path}" ]; then
+  git config --local --unset-all core.hooksPath
+fi
+
+lefthook install
+
+if [ -n "${hooks_path}" ]; then
+  git config --local core.hooksPath "${hooks_path}"
+fi
+'''
+
 [tasks.setup]
 description = "環境構築をする"
 run = [
@@ -40,7 +61,7 @@ run = [
   { task = "build" },
   { tasks = ["api:composer:install", "pnpm:install"] },
   { task = "up" },
-  "lefthook install",
+  { task = "lefthook:install" },
 ]
 
 [tasks.build]

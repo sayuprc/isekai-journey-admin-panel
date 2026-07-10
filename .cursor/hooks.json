@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "bash tools/hooks/protect-config.sh",
+        "matcher": "Write|Edit|MultiEdit"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "bash tools/hooks/post-lint.sh"
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash tools/hooks/stop-verify.sh"
+      }
+    ]
+  }
+}

@@ -14,6 +14,7 @@ pre-commit:
       glob: "{app,bootstrap,packages}/**/*.php"
       run: mise run api:phpstan -- {staged_files}
 
+    # admin:lint は eslint + stylelint のフルチェック。path 引数を受けないため staged_files は渡さない。
     admin-lint:
       root: "src/admin/"
       glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
@@ -23,6 +24,16 @@ pre-commit:
       root: "src/admin/"
       glob: "src/**/*.{css,astro}"
       run: mise run admin:style -- {staged_files}
+
+    viewer-lint:
+      root: "src/viewer/"
+      glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
+      run: mise run viewer:lint
+
+    viewer-style:
+      root: "src/viewer/"
+      glob: "src/**/*.{css,astro}"
+      run: mise run viewer:style -- {staged_files}
 
     contracts-format:
       root: "src/"

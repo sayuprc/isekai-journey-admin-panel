@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# PostToolUse hook: ファイル編集後に自動リント・フォーマットを実行し、
+# PostToolUse / afterFileEdit hook: ファイル編集後に自動リント・フォーマットを実行し、
 # 残った違反を additionalContext としてエージェントにフィードバックする
 
+# shellcheck source=tools/hooks/common.sh
+source "$(cd "$(dirname "$0")" && pwd)/common.sh"
+
 input="$(cat)"
-file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
+file="$(hook_extract_file_path "$input" || true)"
 
-[ -z "$file" ] && exit 0
+[ -z "${file:-}" ] && exit 0
 
-repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+repo_root="$(hook_repo_root)"
 hook_state_dir="$repo_root/.git/agent-hooks"
 contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
+event_name="$(jq -r '.hook_event_name // .hookEventName // "PostToolUse"' <<< "$input")"
+
+emit_context() {
+  hook_emit_additional_context "$event_name" "$1"
+}
 
 # 自動生成ファイルはスキップ
 case "$file" in
@@ -33,12 +41,8 @@ case "$file" in
 
     # Docker コンテナが起動していなければエラーフィードバック
     if ! docker compose exec -T php true 2>/dev/null; then
-      jq -n '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: "ERROR: PHP コンテナが起動していません。\nFIX: mise run up を実行してコンテナを起動してください。"
-        }
-      }'
+      emit_context "ERROR: PHP コンテナが起動していません。
+FIX: mise run up を実行してコンテナを起動してください。"
       exit 0
     fi
 
@@ -52,24 +56,16 @@ case "$file" in
     diag="$(mise run api:ecs -- "$container_path" 2>&1 | head -30)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|found'; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: ("ECS violations in " + "'"$container_path"'" + ":\n" + $msg)
-        }
-      }'
+      emit_context "ECS violations in ${container_path}:
+${diag}"
     fi
 
     # mago lint（ホスト上で高速実行）
     mago_diag="$(mago lint "$file" 2>&1 | head -30)" || true
 
     if [ -n "$mago_diag" ] && echo "$mago_diag" | grep -qiE 'warning|error|help'; then
-      jq -n --arg msg "$mago_diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: ("mago lint:\n" + $msg)
-        }
-      }'
+      emit_context "mago lint:
+${mago_diag}"
     fi
     ;;
 
@@ -83,12 +79,7 @@ case "$file" in
     diag="$(bunx oxlint "$file" 2>&1 | head -20)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -108,16 +99,12 @@ case "$file" in
       diag="$diag_eslint"
     fi
     if [ -n "$diag_style" ] && echo "$diag_style" | grep -qiE 'error|warning'; then
-      diag="${diag:+$diag\n}$diag_style"
+      diag="${diag:+$diag
+}$diag_style"
     fi
 
     if [ -n "$diag" ]; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -131,12 +118,7 @@ case "$file" in
     diag="$(bunx stylelint "$file" 2>&1 | head -20)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -151,12 +133,7 @@ case "$file" in
     diag="$(bunx eslint "$file" 2>&1 | head -20)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -179,16 +156,12 @@ case "$file" in
       diag="$diag_eslint"
     fi
     if [ -n "$diag_style" ] && echo "$diag_style" | grep -qiE 'error|warning'; then
-      diag="${diag:+$diag\n}$diag_style"
+      diag="${diag:+$diag
+}$diag_style"
     fi
 
     if [ -n "$diag" ]; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -203,12 +176,7 @@ case "$file" in
     diag="$(bunx stylelint "$file" 2>&1 | head -20)" || true
 
     if [ -n "$diag" ] && echo "$diag" | grep -qiE 'error|warning'; then
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
+      emit_context "$diag"
     fi
     ;;
 
@@ -219,13 +187,8 @@ case "$file" in
 
     if ! diag="$(mise run contract:format:check 2>&1)"; then
       diag="$(printf '%s\n' "$diag" | head -20)"
-
-      jq -n --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: ("TypeSpec format violations:\n" + $msg)
-        }
-      }'
+      emit_context "TypeSpec format violations:
+${diag}"
     fi
     ;;
 esac
