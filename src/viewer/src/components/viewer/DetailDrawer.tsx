@@ -240,7 +240,7 @@ export const DetailDrawer = () => {
                 </button>
               </div>
             </div>
-            <div class="detail-body" ref={bodyRef}>
+            <div class="detail-body" ref={el => bodyRef = el}>
               <Show when={content()}>
                 <div innerHTML={content()}></div>
               </Show>

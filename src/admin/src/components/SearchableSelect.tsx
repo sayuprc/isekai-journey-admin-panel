@@ -115,7 +115,7 @@ export const SearchableSelect = (props: Props) => {
   });
 
   return (
-    <div ref={containerRef} class="relative w-full" onFocusOut={handleBlur}>
+    <div ref={el => containerRef = el} class="relative w-full" onFocusOut={handleBlur}>
       <input
         id={inputId}
         type="text"
