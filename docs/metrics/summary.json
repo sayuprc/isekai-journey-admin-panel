@@ -1,0 +1,38 @@
+{
+  "generatedAt": null,
+  "gitSha": null,
+  "status": "pending",
+  "note": "Server Metrics workflow の初回実行後に実測値へ更新されます。",
+  "badges": {
+    "coverage.json": {
+      "schemaVersion": 1,
+      "label": "coverage",
+      "message": "pending",
+      "color": "lightgrey"
+    },
+    "msi.json": {
+      "schemaVersion": 1,
+      "label": "mutation score",
+      "message": "pending",
+      "color": "lightgrey"
+    },
+    "covered-msi.json": {
+      "schemaVersion": 1,
+      "label": "covered MSI",
+      "message": "pending",
+      "color": "lightgrey"
+    },
+    "maintainability.json": {
+      "schemaVersion": 1,
+      "label": "maintainability",
+      "message": "pending",
+      "color": "lightgrey"
+    },
+    "complexity.json": {
+      "schemaVersion": 1,
+      "label": "avg CCN",
+      "message": "pending",
+      "color": "lightgrey"
+    }
+  }
+}
