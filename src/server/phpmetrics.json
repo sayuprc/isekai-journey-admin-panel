@@ -5,6 +5,8 @@
     "packages"
   ],
   "report": {
-    "html": "./reports/metrics"
+    "html": "./reports/metrics",
+    "json": "./reports/metrics.json",
+    "summary-json": "./reports/metrics-summary.json"
   }
 }

@@ -1,0 +1,19 @@
+{
+  "App\\Example": {
+    "name": "App\\Example",
+    "mi": 90.5,
+    "ccn": 3,
+    "_type": "Hal\\Metric\\ClassMetric"
+  },
+  "App\\Other": {
+    "name": "App\\Other",
+    "mi": 80.0,
+    "ccn": 5,
+    "_type": "Hal\\Metric\\ClassMetric"
+  },
+  "tree": {
+    "name": "tree",
+    "depthOfInheritanceTree": 1,
+    "_type": "Hal\\Metric\\ProjectMetric"
+  }
+}

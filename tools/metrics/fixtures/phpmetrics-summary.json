@@ -1,0 +1,14 @@
+{
+  "Complexity": {
+    "avgCyclomaticComplexityByClass": 4.0,
+    "avgWeightedMethodCountByClass": 6.0,
+    "avgRelativeSystemComplexity": 5.0,
+    "avgDifficulty": 2.0
+  },
+  "Violations": {
+    "critical": 0,
+    "error": 1,
+    "warning": 2,
+    "information": 3
+  }
+}

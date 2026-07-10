@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1710000000">
+  <project timestamp="1710000000">
+    <metrics files="2" loc="100" ncloc="80" classes="2" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="200" coveredstatements="170" elements="204" coveredelements="173"/>
+    <file name="Example.php">
+      <metrics loc="50" ncloc="40" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="100" coveredstatements="90" elements="102" coveredelements="92"/>
+    </file>
+  </project>
+</coverage>

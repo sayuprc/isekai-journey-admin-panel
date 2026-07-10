@@ -1,0 +1,149 @@
+name: Server Metrics
+
+on:
+  schedule:
+    # 毎週月曜 00:00 UTC（Infection が重いため週次）
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+env:
+  MISE_ENV: ci
+  METRICS_BRANCH: metrics
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  metrics:
+    name: Collect server metrics
+    runs-on: ubuntu-latest
+    outputs:
+      vendor-key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+
+      - name: Setup mise
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        with:
+          version: 2026.6.6
+
+      - name: Define variables
+        id: define-variables
+        run: |
+          echo "VENDOR_KEY=${VENDOR_KEY_PREFIX}${{ hashFiles('./src/server/composer.*') }}" >> $GITHUB_OUTPUT
+
+      - name: Login to GHCR
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache server docker image
+        id: cache-server-docker-image
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.SERVER_DOCKER_PATH }}
+          key: ${{ env.SERVER_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/php/Dockerfile') }}
+
+      - name: Build server image
+        if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
+        run: mise run build:php
+
+      - name: Cache mysql docker image
+        id: cache-mysql-docker-image
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.MYSQL_DOCKER_PATH }}
+          key: ${{ env.MYSQL_DOCKER_KEY_PREFIX }}${{ hashFiles('./infra/local/docker/mysql/Dockerfile', './infra/local/docker/mysql/my.cnf', './infra/local/docker/mysql/init/*') }}
+
+      - name: Build mysql image
+        if: steps.cache-mysql-docker-image.outputs.cache-hit != 'true'
+        run: mise run build:mysql
+
+      - name: Copy .env
+        run: cp src/server/.env.example src/server/.env
+
+      - name: Run Container
+        run: mise run up:test
+
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            if docker compose exec -T mysql mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; then
+              echo "MySQL is ready"
+              exit 0
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+          echo "MySQL did not become ready in time"
+          exit 1
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
+
+      - name: Composer install
+        if: steps.cache-composer.outputs.cache-hit != 'true'
+        run: mise run api:composer:install
+
+      - name: Dump autoload
+        run: mise run api:composer:dump
+
+      - name: Setup env
+        run: mise run setup:env
+
+      - name: Run migration
+        run: mise run migrate:local --auto-approve
+
+      - name: Prepare reports directory
+        run: mkdir -p src/server/reports
+
+      - name: Collect coverage
+        run: mise run api:coverage
+
+      - name: Collect infection
+        run: mise run api:infection
+
+      - name: Collect phpmetrics
+        run: mise run api:metrics
+
+      - name: Build badge JSON
+        run: |
+          mkdir -p artifacts/server-metrics
+          python3 tools/metrics/build-server-badges.py \
+            --clover src/server/reports/coverage.xml \
+            --infection-summary src/server/reports/infection-summary.json \
+            --phpmetrics src/server/reports/metrics.json \
+            --phpmetrics-summary src/server/reports/metrics-summary.json \
+            --output-dir artifacts/server-metrics \
+            --git-sha "${GITHUB_SHA}"
+
+      - name: Upload metrics artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: server-metrics
+          path: |
+            src/server/reports/
+            artifacts/server-metrics/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish badges to metrics branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/metrics/publish-metrics-branch.py \
+            --source-dir artifacts/server-metrics \
+            --branch "${METRICS_BRANCH}" \
+            --git-sha "${GITHUB_SHA}"

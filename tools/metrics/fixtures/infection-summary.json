@@ -1,0 +1,16 @@
+{
+  "stats": {
+    "totalMutantsCount": 100,
+    "killedCount": 80,
+    "notCoveredCount": 10,
+    "escapedCount": 7,
+    "errorCount": 0,
+    "syntaxErrorCount": 0,
+    "skippedCount": 0,
+    "ignoredCount": 0,
+    "timeOutCount": 3,
+    "msi": 83.0,
+    "mutationCodeCoverage": 90.0,
+    "coveredCodeMsi": 92.2
+  }
+}
