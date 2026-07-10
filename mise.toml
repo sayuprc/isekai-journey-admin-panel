@@ -386,6 +386,11 @@ run = [
   "bun run stylelint:check",
 ]
 
+[tasks."admin:test"]
+description = "Admin の Vitest（in-source）を実行する"
+dir = "src"
+run = "bun --filter admin test"
+
 [tasks."admin:tcm"]
 description = "tcm を実行する"
 dir = "src"
@@ -468,3 +473,8 @@ run = [
   "bun run eslint:check",
   "bun run stylelint:check",
 ]
+
+[tasks."viewer:test"]
+description = "Viewer の Vitest（in-source）を実行する"
+dir = "src"
+run = "bun --filter viewer test"

@@ -1,3 +1,5 @@
+/// <reference types="vitest/importMeta" />
+
 declare namespace NodeJS {
   interface ProcessEnv {
     PORT?: string;

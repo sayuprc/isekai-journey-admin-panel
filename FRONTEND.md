@@ -13,6 +13,7 @@
 - 既存スタックで解けるなら依存を増やしすぎない。
 - パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。
 - 各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する。
+- 純関数・小さなユーティリティのユニットテストは Vitest の in-source testing（`import.meta.vitest`）を優先する。モック依存の強い BFF などは当面 `bun:test` の分離ファイルでもよい。
 
 ## 境界の参照先
 

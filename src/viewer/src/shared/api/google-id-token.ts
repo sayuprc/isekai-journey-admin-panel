@@ -75,3 +75,27 @@ export const getGoogleIdToken = async (audience: string): Promise<string | null>
 
   return token;
 };
+
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  const createJwt = (payload: unknown): string => {
+    const encode = (value: unknown): string => Buffer.from(JSON.stringify(value)).toString('base64url');
+
+    return `${encode({ alg: 'RS256' })}.${encode(payload)}.signature`;
+  };
+
+  describe('decodeJwtExpMs', () => {
+    it('exp をミリ秒で返す', () => {
+      expect(decodeJwtExpMs(createJwt({ exp: 1_800_000_000 }))).toBe(1_800_000_000_000);
+    });
+
+    it('exp がなければ null を返す', () => {
+      expect(decodeJwtExpMs(createJwt({ iat: 1_800_000_000 }))).toBeNull();
+    });
+
+    it('JWT 形式でなければ null を返す', () => {
+      expect(decodeJwtExpMs('not-a-jwt')).toBeNull();
+    });
+  });
+}

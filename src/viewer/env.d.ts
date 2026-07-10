@@ -1,3 +1,5 @@
+/// <reference types="vitest/importMeta" />
+
 interface ImportMetaEnv {
   readonly API_URL: string;
 }

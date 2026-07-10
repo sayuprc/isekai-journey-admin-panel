@@ -34,6 +34,10 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      // in-source テストブロックを本番ビルドから除去する
+      'import.meta.vitest': 'undefined',
+    },
     ssr: {
       noExternal: shouldBundleServerDependencies ? true : undefined,
     },

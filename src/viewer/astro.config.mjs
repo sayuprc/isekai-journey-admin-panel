@@ -11,5 +11,11 @@ export default defineConfig({
     port: port,
     allowedHosts: ['local.isekaijoucho.fan'],
   },
+  vite: {
+    define: {
+      // in-source テストブロックを本番ビルドから除去する
+      'import.meta.vitest': 'undefined',
+    },
+  },
   integrations: [solidJs()],
 });

@@ -1,5 +1,6 @@
 {
   "recommendations": [
-    "typespec.typespec-vscode"
+    "typespec.typespec-vscode",
+    "vitest.explorer"
   ]
 }

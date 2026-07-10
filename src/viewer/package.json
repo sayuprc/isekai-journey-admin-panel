@@ -23,7 +23,9 @@
     "style:check": "bun run stylelint:check",
     "tcm": "tcm -p 'src/styles/*.module.css' .",
     "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
-    "generate:api": "openapi-ts"
+    "generate:api": "openapi-ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/solid-js": "catalog:astro",
@@ -53,6 +55,7 @@
     "stylelint-order": "catalog:lint",
     "typed-css-modules": "catalog:gen",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:lint"
+    "typescript-eslint": "catalog:lint",
+    "vitest": "catalog:"
   }
 }
