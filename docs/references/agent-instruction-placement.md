@@ -17,11 +17,12 @@ Claude Code の記事「Steering Claude Code: CLAUDE.md files, skills, hooks, ru
 
 - 常時入口: `AGENTS.md`, `CLAUDE.md`, `docs/agent-map.md`
 - Claude path rules: `.claude/rules/*.md`
+- Cursor path rules: `.cursor/rules/*.mdc`
 - APM instructions: `.apm/instructions/*.instructions.md`
 - Claude skills: `.claude/skills/*/SKILL.md`
-- Codex skills: `.agents/skills/*/SKILL.md`
-- Subagents: `.claude/agents/`, `.codex/agents/`
-- Deterministic hooks: `tools/hooks/`, `.claude/settings.json`, `.codex/hooks.json`
+- Codex / Cursor skills: `.agents/skills/*/SKILL.md` (Cursor は互換で `.claude/skills/` も読む)
+- Subagents: `.claude/agents/`, `.cursor/agents/`, `.codex/agents/`
+- Deterministic hooks: `tools/hooks/`, `.claude/settings.json`, `.cursor/hooks.json`, `.codex/hooks.json`
 
 ## 判断基準
 

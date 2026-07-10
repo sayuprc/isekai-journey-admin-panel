@@ -8,8 +8,4 @@
 - `README.md`: セットアップと主要コマンド
 - `ARCHITECTURE.md`: Source of Truth と変更ルート
 
-## Claude 向けの追加入口
-
-- パス別の詳細ルールは `.claude/rules/` の `*.md` を使う
-
 このファイルに共通ルールを複写せず、必要な内容は `docs/agent-map.md` か該当の instructions に集約します。

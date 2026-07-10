@@ -4,8 +4,12 @@ set -euo pipefail
 # PreToolUse hook: リンター・フォーマッター設定ファイルへの編集をブロックする
 # エージェントがリンターエラーを設定変更で回避することを防止する
 
-input="$(cat)"
-file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib.sh
+source "$script_dir/lib.sh"
+
+hook_read_input
+file="$(hook_file_path)"
 
 [ -z "$file" ] && exit 0
 
@@ -28,7 +32,17 @@ PROTECTED_FILES=(
 
 for p in "${PROTECTED_FILES[@]}"; do
   if [ "$basename_file" = "$p" ]; then
-    echo "BLOCKED: $file is a protected config file. Fix the code, not the linter/formatter config." >&2
+    msg="BLOCKED: $file is a protected config file. Fix the code, not the linter/formatter config."
+    if hook_is_cursor; then
+      jq -n --arg msg "$msg" '{
+        permission: "deny",
+        user_message: $msg,
+        agent_message: $msg
+      }'
+      exit 0
+    fi
+
+    echo "$msg" >&2
     exit 2
   fi
 done
