@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "bash tools/hooks/protect-config.sh",
+        "matcher": "Write|StrReplace|EditNotebook|Delete"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "bash tools/hooks/post-lint.sh",
+        "matcher": "Write|StrReplace|EditNotebook"
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash tools/hooks/stop-verify.sh"
+      }
+    ]
+  }
+}

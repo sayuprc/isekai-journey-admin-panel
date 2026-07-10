@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib.sh
+source "$script_dir/lib.sh"
+
+hook_read_input
+
+repo_root="$(cd "$script_dir/../.." && pwd)"
 hook_state_dir="$repo_root/.git/agent-hooks"
 contracts_stop_marker="$hook_state_dir/contracts-stop-verify"
 
@@ -21,6 +27,5 @@ if ! test_output="$(mise run contract:test 2>&1)"; then
 fi
 
 if [ -n "$result" ]; then
-  echo -e "$result"
-  exit 1
+  hook_emit_stop_failure "$result"
 fi

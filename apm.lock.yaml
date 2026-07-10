@@ -1,16 +1,18 @@
 lockfile_version: '1'
-generated_at: '2026-07-06T13:22:01.906080+00:00'
+generated_at: '2026-07-10T11:06:09.586246+00:00'
 apm_version: 0.22.0
 dependencies:
 - repo_url: mattpocock/skills
   name: mattpocock-skills
   host: github.com
-  resolved_commit: 5d78bd0903420f97c791f834201e550c765699f8
-  version: 5d78bd0
+  resolved_commit: 2ee14df19c2bbea2303e0a187e8619a5ddef8817
+  version: 2ee14df
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/ask-matt
   - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/code-review
+  - .agents/skills/code-review/SKILL.md
   - .agents/skills/codebase-design
   - .agents/skills/codebase-design/DEEPENING.md
   - .agents/skills/codebase-design/DESIGN-IT-TWICE.md
@@ -30,6 +32,8 @@ dependencies:
   - .agents/skills/grilling/SKILL.md
   - .agents/skills/handoff
   - .agents/skills/handoff/SKILL.md
+  - .agents/skills/implement
+  - .agents/skills/implement/SKILL.md
   - .agents/skills/improve-codebase-architecture
   - .agents/skills/improve-codebase-architecture/HTML-REPORT.md
   - .agents/skills/improve-codebase-architecture/SKILL.md
@@ -37,6 +41,8 @@ dependencies:
   - .agents/skills/prototype/LOGIC.md
   - .agents/skills/prototype/SKILL.md
   - .agents/skills/prototype/UI.md
+  - .agents/skills/research
+  - .agents/skills/research/SKILL.md
   - .agents/skills/setup-matt-pocock-skills
   - .agents/skills/setup-matt-pocock-skills/SKILL.md
   - .agents/skills/setup-matt-pocock-skills/domain.md
@@ -47,7 +53,6 @@ dependencies:
   - .agents/skills/tdd
   - .agents/skills/tdd/SKILL.md
   - .agents/skills/tdd/mocking.md
-  - .agents/skills/tdd/refactoring.md
   - .agents/skills/tdd/tests.md
   - .agents/skills/teach
   - .agents/skills/teach/GLOSSARY-FORMAT.md
@@ -55,19 +60,23 @@ dependencies:
   - .agents/skills/teach/MISSION-FORMAT.md
   - .agents/skills/teach/RESOURCES-FORMAT.md
   - .agents/skills/teach/SKILL.md
-  - .agents/skills/to-issues
-  - .agents/skills/to-issues/SKILL.md
-  - .agents/skills/to-prd
-  - .agents/skills/to-prd/SKILL.md
+  - .agents/skills/to-spec
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets
+  - .agents/skills/to-tickets/SKILL.md
   - .agents/skills/triage
   - .agents/skills/triage/AGENT-BRIEF.md
   - .agents/skills/triage/OUT-OF-SCOPE.md
   - .agents/skills/triage/SKILL.md
+  - .agents/skills/wayfinder
+  - .agents/skills/wayfinder/SKILL.md
   - .agents/skills/writing-great-skills
   - .agents/skills/writing-great-skills/GLOSSARY.md
   - .agents/skills/writing-great-skills/SKILL.md
   - .claude/skills/ask-matt
   - .claude/skills/ask-matt/SKILL.md
+  - .claude/skills/code-review
+  - .claude/skills/code-review/SKILL.md
   - .claude/skills/codebase-design
   - .claude/skills/codebase-design/DEEPENING.md
   - .claude/skills/codebase-design/DESIGN-IT-TWICE.md
@@ -87,6 +96,8 @@ dependencies:
   - .claude/skills/grilling/SKILL.md
   - .claude/skills/handoff
   - .claude/skills/handoff/SKILL.md
+  - .claude/skills/implement
+  - .claude/skills/implement/SKILL.md
   - .claude/skills/improve-codebase-architecture
   - .claude/skills/improve-codebase-architecture/HTML-REPORT.md
   - .claude/skills/improve-codebase-architecture/SKILL.md
@@ -94,6 +105,8 @@ dependencies:
   - .claude/skills/prototype/LOGIC.md
   - .claude/skills/prototype/SKILL.md
   - .claude/skills/prototype/UI.md
+  - .claude/skills/research
+  - .claude/skills/research/SKILL.md
   - .claude/skills/setup-matt-pocock-skills
   - .claude/skills/setup-matt-pocock-skills/SKILL.md
   - .claude/skills/setup-matt-pocock-skills/domain.md
@@ -104,7 +117,6 @@ dependencies:
   - .claude/skills/tdd
   - .claude/skills/tdd/SKILL.md
   - .claude/skills/tdd/mocking.md
-  - .claude/skills/tdd/refactoring.md
   - .claude/skills/tdd/tests.md
   - .claude/skills/teach
   - .claude/skills/teach/GLOSSARY-FORMAT.md
@@ -112,19 +124,22 @@ dependencies:
   - .claude/skills/teach/MISSION-FORMAT.md
   - .claude/skills/teach/RESOURCES-FORMAT.md
   - .claude/skills/teach/SKILL.md
-  - .claude/skills/to-issues
-  - .claude/skills/to-issues/SKILL.md
-  - .claude/skills/to-prd
-  - .claude/skills/to-prd/SKILL.md
+  - .claude/skills/to-spec
+  - .claude/skills/to-spec/SKILL.md
+  - .claude/skills/to-tickets
+  - .claude/skills/to-tickets/SKILL.md
   - .claude/skills/triage
   - .claude/skills/triage/AGENT-BRIEF.md
   - .claude/skills/triage/OUT-OF-SCOPE.md
   - .claude/skills/triage/SKILL.md
+  - .claude/skills/wayfinder
+  - .claude/skills/wayfinder/SKILL.md
   - .claude/skills/writing-great-skills
   - .claude/skills/writing-great-skills/GLOSSARY.md
   - .claude/skills/writing-great-skills/SKILL.md
   deployed_file_hashes:
-    .agents/skills/ask-matt/SKILL.md: sha256:fb534e029b0b4a27188f62e3839ab027c69e025915229c4524693eb1edcbb64d
+    .agents/skills/ask-matt/SKILL.md: sha256:4465bad6bb9f7426743c1013d88740594da34e0f9934d375d93bbf981d5317b5
+    .agents/skills/code-review/SKILL.md: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
     .agents/skills/codebase-design/DEEPENING.md: sha256:125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
     .agents/skills/codebase-design/DESIGN-IT-TWICE.md: sha256:21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
     .agents/skills/codebase-design/SKILL.md: sha256:a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
@@ -135,36 +150,39 @@ dependencies:
     .agents/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
     .agents/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
     .agents/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
-    .agents/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
-    .agents/skills/handoff/SKILL.md: sha256:94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059
+    .agents/skills/grilling/SKILL.md: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+    .agents/skills/handoff/SKILL.md: sha256:57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc
+    .agents/skills/implement/SKILL.md: sha256:6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
     .agents/skills/improve-codebase-architecture/HTML-REPORT.md: sha256:0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
     .agents/skills/improve-codebase-architecture/SKILL.md: sha256:0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
-    .agents/skills/prototype/LOGIC.md: sha256:da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
-    .agents/skills/prototype/SKILL.md: sha256:863611f7fb65b78265188466cacdb365cbad129d36844ec57603c708d2026b50
-    .agents/skills/prototype/UI.md: sha256:d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
-    .agents/skills/setup-matt-pocock-skills/SKILL.md: sha256:a85441f31decd5705ade6b526206d60be129dbe926251c67213fe1649da5f197
+    .agents/skills/prototype/LOGIC.md: sha256:cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c
+    .agents/skills/prototype/SKILL.md: sha256:03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc
+    .agents/skills/prototype/UI.md: sha256:e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096
+    .agents/skills/research/SKILL.md: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+    .agents/skills/setup-matt-pocock-skills/SKILL.md: sha256:def265a8b15ffb8afc3f335d69e175ba9a7fe3991218984b0e49e8345cde3b20
     .agents/skills/setup-matt-pocock-skills/domain.md: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:ed6add9fe3cdcd2d1ebb2a463cf0eb6a1a86df500f4922b31a1ab50f15b3a705
     .agents/skills/setup-matt-pocock-skills/triage-labels.md: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
-    .agents/skills/tdd/SKILL.md: sha256:13722957277ed4960061a2d254a0ed7d86f95693e88b40d1c68307e7fdc98287
+    .agents/skills/tdd/SKILL.md: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
     .agents/skills/tdd/mocking.md: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
-    .agents/skills/tdd/refactoring.md: sha256:54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
-    .agents/skills/tdd/tests.md: sha256:e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
+    .agents/skills/tdd/tests.md: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
     .agents/skills/teach/GLOSSARY-FORMAT.md: sha256:d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
     .agents/skills/teach/LEARNING-RECORD-FORMAT.md: sha256:855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
     .agents/skills/teach/MISSION-FORMAT.md: sha256:8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
     .agents/skills/teach/RESOURCES-FORMAT.md: sha256:2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
     .agents/skills/teach/SKILL.md: sha256:6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
-    .agents/skills/to-issues/SKILL.md: sha256:f8a72a5bc88aa830ae62b323a52b08934da52851b010984c55829a644c7f6ba6
-    .agents/skills/to-prd/SKILL.md: sha256:db7e7188ac4fd47f4925ae6550e0233365b3b05be40f45235ab3a0a6b0165156
+    .agents/skills/to-spec/SKILL.md: sha256:267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7
+    .agents/skills/to-tickets/SKILL.md: sha256:1846d215e24ec1219b199a708329ca915db93138d4f3675af29db4d32ee41391
     .agents/skills/triage/AGENT-BRIEF.md: sha256:5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
     .agents/skills/triage/OUT-OF-SCOPE.md: sha256:2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
     .agents/skills/triage/SKILL.md: sha256:d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+    .agents/skills/wayfinder/SKILL.md: sha256:bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
     .agents/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
     .agents/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
-    .claude/skills/ask-matt/SKILL.md: sha256:fb534e029b0b4a27188f62e3839ab027c69e025915229c4524693eb1edcbb64d
+    .claude/skills/ask-matt/SKILL.md: sha256:4465bad6bb9f7426743c1013d88740594da34e0f9934d375d93bbf981d5317b5
+    .claude/skills/code-review/SKILL.md: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
     .claude/skills/codebase-design/DEEPENING.md: sha256:125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
     .claude/skills/codebase-design/DESIGN-IT-TWICE.md: sha256:21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
     .claude/skills/codebase-design/SKILL.md: sha256:a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
@@ -175,36 +193,38 @@ dependencies:
     .claude/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
     .claude/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
     .claude/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
-    .claude/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
-    .claude/skills/handoff/SKILL.md: sha256:94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059
+    .claude/skills/grilling/SKILL.md: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+    .claude/skills/handoff/SKILL.md: sha256:57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc
+    .claude/skills/implement/SKILL.md: sha256:6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
     .claude/skills/improve-codebase-architecture/HTML-REPORT.md: sha256:0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
     .claude/skills/improve-codebase-architecture/SKILL.md: sha256:0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
-    .claude/skills/prototype/LOGIC.md: sha256:da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
-    .claude/skills/prototype/SKILL.md: sha256:863611f7fb65b78265188466cacdb365cbad129d36844ec57603c708d2026b50
-    .claude/skills/prototype/UI.md: sha256:d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
-    .claude/skills/setup-matt-pocock-skills/SKILL.md: sha256:a85441f31decd5705ade6b526206d60be129dbe926251c67213fe1649da5f197
+    .claude/skills/prototype/LOGIC.md: sha256:cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c
+    .claude/skills/prototype/SKILL.md: sha256:03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc
+    .claude/skills/prototype/UI.md: sha256:e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096
+    .claude/skills/research/SKILL.md: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+    .claude/skills/setup-matt-pocock-skills/SKILL.md: sha256:def265a8b15ffb8afc3f335d69e175ba9a7fe3991218984b0e49e8345cde3b20
     .claude/skills/setup-matt-pocock-skills/domain.md: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:ed6add9fe3cdcd2d1ebb2a463cf0eb6a1a86df500f4922b31a1ab50f15b3a705
     .claude/skills/setup-matt-pocock-skills/triage-labels.md: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
-    .claude/skills/tdd/SKILL.md: sha256:13722957277ed4960061a2d254a0ed7d86f95693e88b40d1c68307e7fdc98287
+    .claude/skills/tdd/SKILL.md: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
     .claude/skills/tdd/mocking.md: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
-    .claude/skills/tdd/refactoring.md: sha256:54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
-    .claude/skills/tdd/tests.md: sha256:e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
+    .claude/skills/tdd/tests.md: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
     .claude/skills/teach/GLOSSARY-FORMAT.md: sha256:d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
     .claude/skills/teach/LEARNING-RECORD-FORMAT.md: sha256:855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
     .claude/skills/teach/MISSION-FORMAT.md: sha256:8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
     .claude/skills/teach/RESOURCES-FORMAT.md: sha256:2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
     .claude/skills/teach/SKILL.md: sha256:6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
-    .claude/skills/to-issues/SKILL.md: sha256:f8a72a5bc88aa830ae62b323a52b08934da52851b010984c55829a644c7f6ba6
-    .claude/skills/to-prd/SKILL.md: sha256:db7e7188ac4fd47f4925ae6550e0233365b3b05be40f45235ab3a0a6b0165156
+    .claude/skills/to-spec/SKILL.md: sha256:267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7
+    .claude/skills/to-tickets/SKILL.md: sha256:1846d215e24ec1219b199a708329ca915db93138d4f3675af29db4d32ee41391
     .claude/skills/triage/AGENT-BRIEF.md: sha256:5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
     .claude/skills/triage/OUT-OF-SCOPE.md: sha256:2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
     .claude/skills/triage/SKILL.md: sha256:d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+    .claude/skills/wayfinder/SKILL.md: sha256:bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
     .claude/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
     .claude/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
-  content_hash: sha256:64d7882d379c5346447fb7cc85460efa5bddd9dc59a5ecc1bfe0ca98dca51f34
+  content_hash: sha256:7add2a93debf8a60616aab6f2d56b2e0d2476eb53f7bae4e147da9588f0fa5a9
 local_deployed_files:
 - .agents/skills/code-reviewer
 - .agents/skills/code-reviewer/SKILL.md
@@ -255,6 +275,12 @@ local_deployed_files:
 - .claude/skills/writing-great-skills/GLOSSARY.md
 - .claude/skills/writing-great-skills/SKILL.md
 - .codex/agents/docs-curator.toml
+- .cursor/agents/docs-curator.md
+- .cursor/rules/01-backend.mdc
+- .cursor/rules/02-admin.mdc
+- .cursor/rules/03-contracts.mdc
+- .cursor/rules/04-docs.mdc
+- .cursor/rules/05-viewer.mdc
 local_deployed_file_hashes:
   .agents/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
   .agents/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
@@ -291,3 +317,9 @@ local_deployed_file_hashes:
   .claude/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
   .claude/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
   .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
+  .cursor/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+  .cursor/rules/01-backend.mdc: sha256:1ef6b6f1955909905c13c4b0b1874d7c1d897ac2a2310864920c1627c980bfcf
+  .cursor/rules/02-admin.mdc: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
+  .cursor/rules/03-contracts.mdc: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
+  .cursor/rules/04-docs.mdc: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+  .cursor/rules/05-viewer.mdc: sha256:e1a729666aca66e54b7d50fd81e5d3787a740e2caf6bf537946c2b85f50104ea

@@ -1,10 +1,11 @@
 name: isekai-observatory
 version: 1.0.0
-description: Shared agent instructions for Claude and Codex
+description: Shared agent instructions
 author: sayuprc
 target:
-- claude
-- codex
+  - claude
+  - codex
+  - cursor
 dependencies:
   apm:
   - mattpocock/skills
