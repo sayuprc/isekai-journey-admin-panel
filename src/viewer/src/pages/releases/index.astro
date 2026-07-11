@@ -21,6 +21,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
         { value: '2', label: 'アルバム' },
         { value: '1', label: 'シングル' },
         { value: '3', label: 'EP' },
+        { value: '99', label: 'その他' },
       ]}
       entrySelector="[data-release-entry]"
       categoryAttrs={['releaseType']}
