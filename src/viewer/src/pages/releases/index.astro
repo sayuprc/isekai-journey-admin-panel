@@ -17,7 +17,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
     <FilterBar
       client:load
       filters={[
-        { value: 'all', label: `すべて (${releaseGroups.length})` },
+        { value: 'all', label: `すべて` },
         { value: '2', label: 'アルバム' },
         { value: '1', label: 'シングル' },
         { value: '3', label: 'EP' },
