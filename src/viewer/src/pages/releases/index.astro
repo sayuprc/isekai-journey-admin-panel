@@ -47,10 +47,11 @@ const releaseGroups = await releaseGroupContentRepository.all();
               <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
               <div class="release-card-body">
                 <div class="release-card-meta">
-                  <span class="pill" data-release-type={String(releaseGroup.type.value)}>{releaseGroup.type.name}</span>
-                  <span class="label-mono">
-                    {releaseGroup.firstReleasedOn}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
+                  <span class="release-card-badges">
+                    <span class="pill" data-release-type={String(releaseGroup.type.value)}>{releaseGroup.type.name}</span>
+                    {formatNames.map(name => <span class="format-chip">{name}</span>)}
                   </span>
+                  <span class="label-mono">{releaseGroup.firstReleasedOn}</span>
                 </div>
                 <div class="song-grid-title">{releaseGroup.title}</div>
               </div>

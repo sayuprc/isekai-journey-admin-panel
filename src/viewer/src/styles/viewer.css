@@ -739,6 +739,20 @@ a {
   border-color: color-mix(in oklab, var(--fg) 24%, transparent);
 }
 
+/* フォーマットチップ: 種別バッジと並べても紛れないよう角形で小さく抑える */
+
+.format-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--fg-muted);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+}
+
 /* セグメンテッドコントロール */
 
 .seg {
@@ -1659,6 +1673,13 @@ image-slot:hover {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+}
+
+.release-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .media-card-tags {
