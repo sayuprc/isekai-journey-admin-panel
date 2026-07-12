@@ -817,110 +817,6 @@ image-slot:hover {
   padding-left: 8px;
 }
 
-.song-card {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) 7fr;
-  cursor: pointer;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  transition: border-color 0.18s;
-}
-
-.song-card:hover {
-  border-color: var(--accent);
-}
-
-.tbl-row {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) 128px 116px;
-  gap: 18px;
-  align-items: center;
-  padding: 16px 20px;
-}
-
-.tbl-head {
-  background: var(--bg-elev);
-  border-bottom: 1px solid var(--line);
-}
-
-.tbl-body {
-  cursor: pointer;
-  border-bottom: 1px solid var(--line-soft);
-  transition: background 0.12s;
-}
-
-.tbl-body:hover {
-  background: color-mix(in oklab, var(--accent) 8%, transparent);
-}
-
-.songs-table-heading {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--fg-muted);
-}
-
-.songs-table-heading-right {
-  text-align: right;
-}
-
-.song-row-index {
-  font-family: Spectral, serif;
-  font-size: 20px;
-  font-style: italic;
-  line-height: 1;
-  color: var(--accent);
-}
-
-.song-row-title-cell {
-  min-width: 0;
-}
-
-.song-row-credit {
-  margin-top: 3px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--fg-muted);
-  white-space: nowrap;
-}
-
-.song-row-type {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--fg-muted);
-}
-
-/* テーブルでもオリジナルはアクセント色で強調して区別する。 */
-
-.song-row-type[data-song-type="1"] {
-  color: var(--accent-strong);
-}
-
-.song-row-media {
-  display: inline-flex;
-  gap: 3px;
-  align-items: baseline;
-  justify-content: flex-end;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 12px;
-  line-height: 1;
-  color: var(--fg-muted);
-  text-align: right;
-}
-
-.song-row-media strong {
-  font-family: Spectral, serif;
-  font-size: 22px;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--accent);
-}
-
 .num-cell {
   font-family: Spectral, serif;
   font-size: 16px;
@@ -1716,15 +1612,10 @@ image-slot:hover {
   font-size: 18px;
 }
 
-.timeline-title,
-.table-title {
+.timeline-title {
   font-family: "Noto Serif JP", "Shippori Mincho", serif;
   font-size: 22px;
   letter-spacing: 0.04em;
-}
-
-.table-title {
-  font-size: 15px;
 }
 
 .song-grid-title-en {
@@ -1967,36 +1858,6 @@ image-slot:hover {
   text-align: right;
 }
 
-.songs-table {
-  display: flex;
-  flex-direction: column;
-  max-height: min(72vh, 760px);
-  overflow: hidden;
-  border: 1px solid var(--line);
-}
-
-.songs-table .tbl-row {
-  grid-template-columns: 64px minmax(0, 1fr) 128px 116px;
-}
-
-.songs-table .tbl-head {
-  z-index: 2;
-  flex: 0 0 auto;
-}
-
-.songs-table-body {
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.entry-status {
-  margin-bottom: 12px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--fg-muted);
-}
-
 .entry-empty {
   display: flex;
   flex-direction: column;
@@ -2031,54 +1892,6 @@ image-slot:hover {
   font-size: 13px;
   line-height: 1.6;
   color: var(--fg-muted);
-}
-
-.songs-card-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px;
-}
-
-.song-card-body {
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-}
-
-/* flex カラム内で種別バッジを内容幅に収め、左寄せする。 */
-
-.song-card-body .pill {
-  align-self: flex-start;
-  margin-bottom: 10px;
-}
-
-/* 説明の行数を抑えてカード高さを揃え、左サムネの縦横比を保つ。 */
-
-.song-card .song-grid-description {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-
-.song-card-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid var(--line-soft);
-}
-
-.song-card-stats div {
-  display: flex;
-  flex-direction: column;
-}
-
-/* stats を下端に固定して本文の縦バランスを整える。 */
-
-.song-card .song-card-stats {
-  margin-top: auto;
 }
 
 .media-featured-grid {
@@ -2559,13 +2372,6 @@ image-slot:hover {
   color: color-mix(in oklab, var(--fg) 30%, transparent);
 }
 
-/* 横並びカードでは左タイルを本文の高さいっぱいに伸ばして揃える。 */
-
-.song-card > .song-tile {
-  height: 100%;
-  aspect-ratio: auto;
-}
-
 .mv-thumb {
   aspect-ratio: 16 / 9;
   background:
@@ -2696,7 +2502,6 @@ image-slot:hover {
   .release-grid,
   .media-card-grid,
   .recent-posts-grid,
-  .songs-card-grid,
   .events-calendar,
   .events-category-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2747,8 +2552,7 @@ image-slot:hover {
 
   .release-grid,
   .media-card-grid,
-  .recent-posts-grid,
-  .songs-card-grid {
+  .recent-posts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2839,26 +2643,13 @@ image-slot:hover {
   .release-grid,
   .media-card-grid,
   .recent-posts-grid,
-  .song-credit-grid,
-  .songs-card-grid {
+  .song-credit-grid {
     grid-template-columns: 1fr;
   }
 
   .media-mosaic {
     grid-template-columns: 1fr;
     grid-auto-rows: 132px;
-  }
-
-  .songs-table .tbl-row {
-    grid-template-columns: 44px minmax(0, 1fr) auto;
-  }
-
-  .songs-table .tbl-row > :nth-child(3) {
-    display: none;
-  }
-
-  .song-row-credit {
-    white-space: normal;
   }
 
   .media-list-row {
@@ -2932,7 +2723,6 @@ image-slot:hover {
   .media-card-grid,
   .recent-posts-grid,
   .hero-stats-grid,
-  .songs-card-grid,
   .events-calendar,
   .events-category-grid,
   .media-mosaic {
@@ -2951,8 +2741,7 @@ image-slot:hover {
     grid-template-columns: 1fr;
   }
 
-  .timeline-row,
-  .tbl-row {
+  .timeline-row {
     grid-template-columns: 1fr;
     justify-items: start;
   }

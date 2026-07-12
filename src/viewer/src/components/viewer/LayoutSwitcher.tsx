@@ -39,30 +39,6 @@ export default function LayoutSwitcher(props: Props) {
             onClick={() => setValue(option.value)}
           >
             <Switch>
-              <Match when={option.value === 'grid'}>
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <rect x="2" y="2" width="5" height="5" />
-                  <rect x="9" y="2" width="5" height="5" />
-                  <rect x="2" y="9" width="5" height="5" />
-                  <rect x="9" y="9" width="5" height="5" />
-                </svg>
-              </Match>
-              <Match when={option.value === 'table'}>
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <rect x="2" y="3" width="12" height="10" />
-                  <line x1="2" y1="6.5" x2="14" y2="6.5" />
-                  <line x1="2" y1="9.5" x2="14" y2="9.5" />
-                  <line x1="6.5" y1="3" x2="6.5" y2="13" />
-                </svg>
-              </Match>
-              <Match when={option.value === 'card'}>
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <rect x="2" y="2" width="12" height="12" />
-                  <rect x="4" y="4" width="8" height="4" class="seg-fill" />
-                  <line x1="4" y1="10" x2="12" y2="10" />
-                  <line x1="4" y1="12" x2="9" y2="12" />
-                </svg>
-              </Match>
               <Match when={option.value === 'cinema'}>
                 <svg viewBox="0 0 16 16" aria-hidden="true">
                   <rect x="2" y="3.5" width="12" height="9" />
