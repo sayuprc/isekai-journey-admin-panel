@@ -1,12 +1,7 @@
 ---
 import JacketArt from '../components/viewer/JacketArt.astro';
-// import MVThumb from '../components/viewer/MVThumb.astro';
-// import PostCard from '../components/viewer/PostCard.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
 import SongTile from '../components/viewer/SongTile.astro';
-// import { Q } from '../data/mock/site-data';
-// import { mediaTypeLabel } from '../features/media/labels';
-// import { latestMedia, latestPosts } from '../features/media/sort';
 import { releaseGroupContentRepository } from '../features/releases/content';
 import { representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
@@ -15,10 +10,11 @@ import Layout from '../layouts/Layout.astro';
 
 // 一覧は最古発売日の降順なので先頭が最新リリース。
 const latestReleaseGroup = (await releaseGroupContentRepository.all())[0] ?? null;
+
+// 最新楽曲は最後尾のもの
 const songs = (await songContentRepository.all());
 const latestSong = songs[songs.length - 1] ?? null;
-// const media = latestMedia(3);
-// const posts = latestPosts(3);
+
 const siteStats = await siteStatsRepository.get();
 
 const observationYears = (() => {
@@ -61,19 +57,7 @@ const observationYears = (() => {
           <span class="hero-ledger-leader"></span>
           <span class="hero-ledger-value">{siteStats.releaseCount}</span>
         </div>
-        {/*
-        <div class="hero-ledger-row">
-          <span class="hero-ledger-label">Media</span>
-          <span class="hero-ledger-leader"></span>
-          <span class="hero-ledger-value">{SITE_DATA.media.length}</span>
-        </div>
-        */}
       </div>
-      {/*
-      <div class="hero-actions">
-        <a class="btn" href="/media">映像を観る</a>
-      </div>
-      */}
     </div>
   </section>
 
@@ -144,41 +128,4 @@ const observationYears = (() => {
       </section>
     )
   }
-
-  {/*
-  <section class="shell">
-    <SectionHead title="最新の映像">
-      <a slot="right" class="btn" href="/media">すべての映像 →</a>
-    </SectionHead>
-    <div class="media-card-grid">
-      {
-        media.map(entry => (
-          <a href={`/media/${entry.id}`} class="media-card">
-            <MVThumb color={entry.color} label={mediaTypeLabel(entry.type).toUpperCase()} />
-            <div class="media-card-body">
-              <div class="label-mono">{entry.date} · {entry.views} views</div>
-              <div class="media-card-title">{entry.title}</div>
-              <div class="media-card-tags">
-                {Q.songsOfMedia(entry.id).map(song => <span class="pill">{song.title}</span>)}
-              </div>
-            </div>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
-  {
-    posts.length > 0 && (
-      <section class="shell">
-        <SectionHead title="最近の投稿">
-          <a slot="right" class="btn" href="/media">すべての投稿 →</a>
-        </SectionHead>
-        <div class="recent-posts-grid">
-          {posts.map(entry => <PostCard entry={entry} compact />)}
-        </div>
-      </section>
-    )
-  }
-  */}
 </Layout>
