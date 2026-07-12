@@ -7,7 +7,7 @@ import SectionHead from '../components/viewer/SectionHead.astro';
 // import { mediaTypeLabel } from '../features/media/labels';
 // import { latestMedia, latestPosts } from '../features/media/sort';
 import { releaseGroupContentRepository } from '../features/releases/content';
-import { distinctTrackCount, representativeJacketArtUrl } from '../features/releases/types';
+import { representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
 import Layout from '../layouts/Layout.astro';
 
@@ -38,46 +38,36 @@ const observationYears = (() => {
 
 <Layout pageTitle="Home">
   <section class="hero-data">
-    <div class="shell hero-data-grid">
-      <div class="hero-data-copy">
-        <div class="hero-mark hero-mark-data"><span>ヰ世界</span><span>観測所</span></div>
-        <div class="hero-en hero-en-whisper">Isekai Observatory</div>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
-          {/* <a class="btn" href="/media">映像を観る</a> */}
+    <div class="shell">
+      <div class="hero-mark hero-mark-data">ヰ世界観測所</div>
+      <div class="hero-en hero-en-whisper">Isekai Observatory</div>
+      <div class="hero-ledger">
+        <div class="hero-ledger-row">
+          <span class="hero-ledger-label">Observation Since</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">2019.12.09 <small>— {observationYears}TH YEAR</small></span>
         </div>
-      </div>
-      <div class="hero-data-stats">
-        <div class="hero-data-stat hero-data-stat-row">
-          <strong>{siteStats.songCount}</strong>
-          <div class="hero-data-stat-copy">
-            <span>楽曲</span>
-            <em>songs</em>
-          </div>
+        <div class="hero-ledger-row">
+          <span class="hero-ledger-label">Songs</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">{siteStats.songCount}</span>
         </div>
-        <div class="hero-data-stat hero-data-stat-row">
-          <strong>{siteStats.releaseCount}</strong>
-          <div class="hero-data-stat-copy">
-            <span>リリース</span>
-            <em>releases</em>
-          </div>
+        <div class="hero-ledger-row">
+          <span class="hero-ledger-label">Releases</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">{siteStats.releaseCount}</span>
         </div>
         {/*
-        <div class="hero-data-stat hero-data-stat-row">
-          <strong>{SITE_DATA.media.length}</strong>
-          <div class="hero-data-stat-copy">
-            <span>メディア</span>
-            <em>media</em>
-          </div>
+        <div class="hero-ledger-row">
+          <span class="hero-ledger-label">Media</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">{SITE_DATA.media.length}</span>
         </div>
         */}
-        <div class="hero-data-stat hero-data-stat-row">
-          <strong>{observationYears}</strong>
-          <div class="hero-data-stat-copy">
-            <span>観測年</span>
-            <em>since 2019.12.09</em>
-          </div>
-        </div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
+        {/* <a class="btn" href="/media">映像を観る</a> */}
       </div>
     </div>
   </section>
@@ -90,22 +80,32 @@ const observationYears = (() => {
           <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
             <JacketArt imageUrl={representativeJacketArtUrl(latestReleaseGroup)} label={latestReleaseGroup.title} />
           </a>
-          <div>
+          <div class="feature-body">
             <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
             <h3 class="feature-title">
               <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
             </h3>
-            <p class="feature-summary">収録曲 · {distinctTrackCount(latestReleaseGroup)} 曲</p>
-            <div class="rel-list">
+            <p class="feature-summary">収録曲</p>
+            <div class="rel-list feature-track-list">
               {
-                (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 5).map(track => (
-                  <a class="rel-chip" href={`/songs/${track.songId}`}>
-                    <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
-                    <div class="rel-main">{track.title}</div>
-                  </a>
+                (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 8).map(track => (
+                  track.songId !== null && track.isDisplay
+                    ? (
+                        <a class="rel-chip" href={`/songs/${track.songId}`}>
+                          <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
+                          <div class="rel-main">{track.title}</div>
+                        </a>
+                      )
+                    : (
+                        <div class="rel-chip" aria-disabled="true">
+                          <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
+                          <div class="rel-main">{track.title}</div>
+                        </div>
+                      )
                 ))
               }
             </div>
+            <a class="btn feature-more" href={`/releases/${latestReleaseGroup.releaseGroupId}`}>リリース詳細 →</a>
           </div>
         </div>
       </section>

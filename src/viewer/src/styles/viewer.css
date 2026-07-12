@@ -1399,91 +1399,95 @@ image-slot:hover {
   grid-template-columns: minmax(320px, 1.2fr) 1fr;
 }
 
+/* hero: 観測台帳スタイル。数字は記録行として直立で置き、accent は CTA のみに使う */
+
 .hero-data {
-  padding: 88px 0 84px;
-
-  /* border-bottom: 1px solid var(--line); */
+  position: relative;
+  padding: 128px 0 112px;
+  text-align: center;
 }
 
-.hero-data-grid {
-  display: grid;
-  grid-template-columns: minmax(420px, 0.9fr) minmax(500px, 0.95fr);
-  gap: 88px;
-  align-items: center;
-}
+/* 区切り線は「ヰ」の和文モールス (・－・・－) の反復
+   1 単位 3px で短点 1・長点 3・符号間 1 単位、反復の間に休止 12 単位 (周期 75px) */
 
-.hero-data-copy {
-  padding-top: 0;
+.hero-data::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: repeating-linear-gradient(
+    to right,
+    var(--fg-faint) 0 3px,
+    transparent 3px 6px,
+    var(--fg-faint) 6px 15px,
+    transparent 15px 18px,
+    var(--fg-faint) 18px 21px,
+    transparent 21px 24px,
+    var(--fg-faint) 24px 27px,
+    transparent 27px 30px,
+    var(--fg-faint) 30px 39px,
+    transparent 39px 75px
+  );
 }
 
 .hero-mark.hero-mark-data {
-  font-size: clamp(56px, 8.5vw, 116px);
+  font-size: clamp(48px, 6.5vw, 92px);
   line-height: 1;
-  letter-spacing: 0.06em;
-}
-
-.hero-mark.hero-mark-data span {
-  display: block;
+  letter-spacing: 0.14em;
 }
 
 .hero-en.hero-en-whisper {
-  margin-top: 12px;
-  font-size: 17px;
+  margin-top: 24px;
+  font-size: 20px;
   color: var(--fg-faint);
-  letter-spacing: 0.05em;
 }
 
-.hero-data-stats {
+.hero-ledger {
+  max-width: 520px;
+  margin: 72px auto 0;
+  text-align: left;
+}
+
+.hero-ledger-row {
   display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--line);
+  gap: 16px;
+  align-items: baseline;
+  padding: 13px 0;
 }
 
-.hero-data-stat {
-  padding: 28px 0;
-  background: transparent;
-  border-bottom: 1px solid var(--line);
+.hero-ledger-row + .hero-ledger-row {
+  border-top: 1px solid var(--line-soft);
 }
 
-.hero-data-stat-row {
-  display: grid;
-  grid-template-columns: 88px 1fr;
-  gap: 28px;
-  align-items: center;
+.hero-ledger-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
-.hero-data-stat strong {
+.hero-ledger-leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--fg-faint);
+  transform: translateY(-4px);
+}
+
+.hero-ledger-value {
   font-family: Spectral, serif;
-  font-size: 52px;
-  font-style: italic;
+  font-size: 18px;
   font-weight: 500;
-  line-height: 1;
-  color: var(--accent);
-}
-
-.hero-data-stat-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hero-data .hero-data-stat span {
-  font-family: "Shippori Mincho", serif;
-  font-size: 17px;
   color: var(--fg);
-  letter-spacing: 0.08em;
-}
-
-.hero-data-stat em {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 15px;
-  font-style: italic;
-  color: var(--fg-faint);
   letter-spacing: 0.04em;
 }
 
-.hero-data-stat-date {
-  font-family: Spectral, serif;
+.hero-ledger-value small {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--fg-faint);
+  letter-spacing: 0.12em;
 }
 
 .hero-symbol {
@@ -1546,6 +1550,11 @@ image-slot:hover {
   justify-content: center;
 }
 
+.hero-data .hero-actions {
+  justify-content: center;
+  margin-top: 64px;
+}
+
 .hero-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1596,14 +1605,40 @@ image-slot:hover {
 }
 
 .feature-grid-link {
+  --feature-art-size: 320px;
+
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: var(--feature-art-size) 1fr;
   gap: 48px;
   align-items: start;
 }
 
 .feature-art-link {
   display: block;
+}
+
+/* ジャケット(正方形)の縦幅にタイトル〜ボタンを揃え、収まらない収録曲はフェードで示す */
+
+.feature-body {
+  display: flex;
+  flex-direction: column;
+  height: var(--feature-art-size);
+}
+
+.feature-track-list {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 16px;
+  align-content: start;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
+}
+
+.feature-more {
+  align-self: flex-start;
+  margin-top: 16px;
 }
 
 .feature-title {
@@ -2648,7 +2683,6 @@ image-slot:hover {
 @media (width <= 1100px) {
 
   .two-col-section,
-  .hero-data-grid,
   .detail-hero-grid,
   .profile-grid,
   .feature-grid-link,
@@ -2672,6 +2706,17 @@ image-slot:hover {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  /* 1 カラム時はジャケット縦幅に固定せず、リスト自身の高さで切る */
+
+  .feature-body {
+    height: auto;
+  }
+
+  .feature-track-list {
+    grid-template-columns: 1fr;
+    max-height: 320px;
+  }
+
   .detail-panel {
     width: min(760px, 100vw);
   }
@@ -2681,16 +2726,8 @@ image-slot:hover {
     border-right: 0;
   }
 
-  .hero-data-stats {
-    max-width: none;
-  }
-
   .hero-data {
     padding-top: 72px;
-  }
-
-  .hero-mark.hero-mark-data span {
-    display: inline;
   }
 }
 
@@ -2902,17 +2939,12 @@ image-slot:hover {
     grid-template-columns: 1fr;
   }
 
-  .hero-data-stat-row {
-    grid-template-columns: 76px 1fr;
-    gap: 18px;
+  .hero-ledger {
+    margin-top: 48px;
   }
 
-  .hero-data-stat strong {
-    font-size: 36px;
-  }
-
-  .hero-data .hero-data-stat span {
-    font-size: 14px;
+  .hero-data .hero-actions {
+    margin-top: 48px;
   }
 
   .media-list-row {
@@ -2945,6 +2977,7 @@ image-slot:hover {
 
   .hero-mark.hero-mark-data {
     font-size: clamp(40px, 13vw, 52px);
+    letter-spacing: 0.08em;
   }
 
   .footer-grid {

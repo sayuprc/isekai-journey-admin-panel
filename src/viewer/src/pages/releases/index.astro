@@ -3,7 +3,7 @@ import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import { releaseGroupContentRepository } from '../../features/releases/content';
-import { distinctTrackCount, groupFormats, representativeJacketArtUrl } from '../../features/releases/types';
+import { groupFormats, representativeJacketArtUrl } from '../../features/releases/types';
 import Layout from '../../layouts/Layout.astro';
 
 // API は最古発売日の降順で返すのでそのまま並べる。
@@ -50,7 +50,6 @@ const releaseGroups = await releaseGroupContentRepository.all();
                   <span class="label-mono">
                     {releaseGroup.firstReleasedOn} · {releaseGroup.type.name}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
                   </span>
-                  <span class="detail-index">{distinctTrackCount(releaseGroup)} tracks</span>
                 </div>
                 <div class="song-grid-title">{releaseGroup.title}</div>
               </div>
