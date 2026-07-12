@@ -1900,6 +1900,14 @@ image-slot:hover {
   text-align: right;
 }
 
+.entry-status {
+  margin-bottom: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
 .entry-empty {
   display: flex;
   flex-direction: column;

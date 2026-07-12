@@ -1,4 +1,5 @@
 ---
+import EntryStatus from '../../components/viewer/EntryStatus';
 import FilterBar from '../../components/viewer/FilterBar';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import SongTile from '../../components/viewer/SongTile.astro';
@@ -24,6 +25,8 @@ const songs = await songContentRepository.all();
       searchAttr="songSearch"
       searchPlaceholder="タイトル・作者を検索..."
     />
+
+    <EntryStatus client:load entrySelector="[data-song-entry]" emptySelector="[data-song-empty]" />
 
     <div class="song-grid">
       <div class="entry-empty entry-empty-panel" data-song-empty hidden>
