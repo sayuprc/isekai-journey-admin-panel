@@ -3,16 +3,20 @@ import JacketArt from '../components/viewer/JacketArt.astro';
 // import MVThumb from '../components/viewer/MVThumb.astro';
 // import PostCard from '../components/viewer/PostCard.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
+import SongTile from '../components/viewer/SongTile.astro';
 // import { Q } from '../data/mock/site-data';
 // import { mediaTypeLabel } from '../features/media/labels';
 // import { latestMedia, latestPosts } from '../features/media/sort';
 import { releaseGroupContentRepository } from '../features/releases/content';
 import { representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
+import { songContentRepository } from '../features/songs/content';
 import Layout from '../layouts/Layout.astro';
 
 // 一覧は最古発売日の降順なので先頭が最新リリース。
 const latestReleaseGroup = (await releaseGroupContentRepository.all())[0] ?? null;
+const songs = (await songContentRepository.all());
+const latestSong = songs[songs.length - 1] ?? null;
 // const media = latestMedia(3);
 // const posts = latestPosts(3);
 const siteStats = await siteStatsRepository.get();
@@ -65,12 +69,41 @@ const observationYears = (() => {
         </div>
         */}
       </div>
+      {/*
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/songs">楽曲を辿る →</a>
-        {/* <a class="btn" href="/media">映像を観る</a> */}
+        <a class="btn" href="/media">映像を観る</a>
       </div>
+      */}
     </div>
   </section>
+
+  {
+    latestSong && (
+      <section class="shell">
+        <SectionHead title="最新楽曲" />
+        <div class="feature-grid-link">
+          <a href={`/songs/${latestSong.songId}`} class="feature-art-link">
+            <SongTile
+              songId={latestSong.songId}
+              title={latestSong.title}
+              mediaCount={latestSong.counts.mediaCount}
+              index={0}
+              media={latestSong.media}
+              aspectRatio="1 / 1"
+            />
+          </a>
+          <div class="feature-body">
+            <div class="eyebrow">{latestSong.type.name}</div>
+            <h3 class="feature-title">
+              <a href={`/songs/${latestSong.songId}`}>{latestSong.title}</a>
+            </h3>
+            {latestSong.description && <p class="feature-summary">{latestSong.description}</p>}
+            <a class="btn feature-more" href={`/songs/${latestSong.songId}`}>楽曲詳細 →</a>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   {
     latestReleaseGroup && (
