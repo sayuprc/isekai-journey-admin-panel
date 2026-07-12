@@ -2,7 +2,6 @@ import { createSignal, onCleanup, onMount } from 'solid-js';
 
 type Props = {
   entrySelector: string;
-  label: string;
   emptySelector?: string;
 };
 

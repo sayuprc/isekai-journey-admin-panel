@@ -1,9 +1,10 @@
 ---
+import EntryStatus from '../../components/viewer/EntryStatus';
 import FilterBar from '../../components/viewer/FilterBar';
 import JacketArt from '../../components/viewer/JacketArt.astro';
 import SectionHead from '../../components/viewer/SectionHead.astro';
 import { releaseGroupContentRepository } from '../../features/releases/content';
-import { distinctTrackCount, groupFormats, representativeJacketArtUrl } from '../../features/releases/types';
+import { groupFormats, representativeJacketArtUrl } from '../../features/releases/types';
 import Layout from '../../layouts/Layout.astro';
 
 // API は最古発売日の降順で返すのでそのまま並べる。
@@ -17,10 +18,11 @@ const releaseGroups = await releaseGroupContentRepository.all();
     <FilterBar
       client:load
       filters={[
-        { value: 'all', label: `すべて (${releaseGroups.length})` },
+        { value: 'all', label: `すべて` },
         { value: '2', label: 'アルバム' },
         { value: '1', label: 'シングル' },
         { value: '3', label: 'EP' },
+        { value: '99', label: 'その他' },
       ]}
       entrySelector="[data-release-entry]"
       categoryAttrs={['releaseType']}
@@ -28,7 +30,13 @@ const releaseGroups = await releaseGroupContentRepository.all();
       searchPlaceholder="タイトル・種別・収録曲を検索..."
     />
 
+    <EntryStatus client:load entrySelector="[data-release-entry]" emptySelector="[data-release-empty]" />
+
     <div class="release-grid">
+      <div class="entry-empty entry-empty-panel" data-release-empty hidden>
+        <div class="entry-empty-title">該当するリリースがありません</div>
+        <div class="entry-empty-description">検索語句や種別フィルタを変えて確認してください。</div>
+      </div>
       {
         releaseGroups.map((releaseGroup) => {
           const trackTitles = releaseGroup.releases
@@ -46,10 +54,11 @@ const releaseGroups = await releaseGroupContentRepository.all();
               <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
               <div class="release-card-body">
                 <div class="release-card-meta">
-                  <span class="label-mono">
-                    {releaseGroup.firstReleasedOn} · {releaseGroup.type.name}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
+                  <span class="release-card-badges">
+                    <span class="pill" data-release-type={String(releaseGroup.type.value)}>{releaseGroup.type.name}</span>
+                    {formatNames.map(name => <span class="format-chip">{name}</span>)}
                   </span>
-                  <span class="detail-index">{distinctTrackCount(releaseGroup)} tracks</span>
+                  <span class="label-mono">{releaseGroup.firstReleasedOn}</span>
                 </div>
                 <div class="song-grid-title">{releaseGroup.title}</div>
               </div>

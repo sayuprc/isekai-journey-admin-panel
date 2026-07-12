@@ -25,16 +25,3 @@ export function groupFormats(releaseGroup: ReleaseGroup): ReleaseFormat[] {
 
   return [...formatByValue.values()].toSorted((a, b) => a.value - b.value);
 }
-
-/** グループ全体の収録曲数（版をまたいだ重複は除く）。タイトルのみトラック（songId: null）はタイトルで重複排除する。 */
-export function distinctTrackCount(releaseGroup: ReleaseGroup): number {
-  const trackKeys = new Set(
-    releaseGroup.releases.flatMap(release =>
-      release.media.flatMap(medium =>
-        medium.tracks.map(track => (track.songId !== null ? `song:${track.songId}` : `title:${track.title}`)),
-      ),
-    ),
-  );
-
-  return trackKeys.size;
-}
