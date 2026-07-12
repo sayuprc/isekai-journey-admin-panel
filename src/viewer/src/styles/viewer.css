@@ -718,6 +718,27 @@ a {
   border-color: color-mix(in oklab, var(--fg) 24%, transparent);
 }
 
+/* リリース種別バッジ: アルバムはアクセント、シングルは第 2 アクセント、EP は中間色で区別する
+   その他 (99) はデフォルトの中立ピルのまま */
+
+.pill[data-release-type="2"] {
+  color: var(--accent-strong);
+  background: color-mix(in oklab, var(--accent) 20%, transparent);
+  border-color: transparent;
+}
+
+.pill[data-release-type="1"] {
+  color: var(--accent-2-strong);
+  background: color-mix(in oklab, var(--accent-2) 20%, transparent);
+  border-color: transparent;
+}
+
+.pill[data-release-type="3"] {
+  color: var(--fg-muted);
+  background: color-mix(in oklab, var(--fg) 10%, transparent);
+  border-color: color-mix(in oklab, var(--fg) 24%, transparent);
+}
+
 /* セグメンテッドコントロール */
 
 .seg {

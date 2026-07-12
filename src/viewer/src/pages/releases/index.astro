@@ -47,8 +47,9 @@ const releaseGroups = await releaseGroupContentRepository.all();
               <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
               <div class="release-card-body">
                 <div class="release-card-meta">
+                  <span class="pill" data-release-type={String(releaseGroup.type.value)}>{releaseGroup.type.name}</span>
                   <span class="label-mono">
-                    {releaseGroup.firstReleasedOn} · {releaseGroup.type.name}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
+                    {releaseGroup.firstReleasedOn}{formatNames.length > 0 ? ` · ${formatNames.join('・')}` : ''}
                   </span>
                 </div>
                 <div class="song-grid-title">{releaseGroup.title}</div>
