@@ -93,7 +93,6 @@ jobs:
           key: ${{ steps.define-variables.outputs.VENDOR_KEY }}
 
       - name: Composer install
-        if: steps.cache-composer.outputs.cache-hit != 'true'
         run: mise run api:composer:install
 
       - name: Dump autoload

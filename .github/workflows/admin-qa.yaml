@@ -38,7 +38,6 @@ jobs:
           key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Check generate code has diff
@@ -70,7 +69,6 @@ jobs:
           key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Run Format Check
@@ -102,7 +100,6 @@ jobs:
           key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Run ESLint
@@ -134,7 +131,6 @@ jobs:
           key: admin-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Run Stylelint
