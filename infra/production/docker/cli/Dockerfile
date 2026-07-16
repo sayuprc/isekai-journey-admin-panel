@@ -1,4 +1,5 @@
-FROM jdxcode/mise:2026.6.6 AS atlas
+ARG MISE_VERSION
+FROM jdxcode/mise:${MISE_VERSION} AS atlas
 
 WORKDIR /workspace
 

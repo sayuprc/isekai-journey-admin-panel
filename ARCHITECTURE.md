@@ -17,7 +17,7 @@
 - `src/contracts/`: TypeSpec による API 契約
 - `src/admin/`: Astro / SolidJS / Elysia による管理画面
 - `src/viewer/`: Astro / SolidJS による閲覧サイト
-- `mise.toml`: 開発環境の標準タスクとツール定義
+- `mise.toml`: 開発ツール・タスク定義、および CI / インフラ向け版ピンのカタログ（`[tools]` / `[vars]`）
 - `compose.yaml`: ローカルで使う proxy / php / mysql / redis の定義
 
 ## Source-Of-Truth Flow

@@ -49,19 +49,23 @@ steps:
 
   - id: build-cli-image
     name: gcr.io/cloud-builders/docker
+    entrypoint: bash
     waitFor:
       - pull-cli-image
     args:
-      - build
-      - -f
-      - infra/production/docker/cli/Dockerfile
-      - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
-      - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest
-      - --cache-from
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest
-      - .
+      - -c
+      - |
+        set -euo pipefail
+
+        MISE_VERSION=$$(./tools/read-mise-value.sh mise_version)
+
+        docker build \
+          -f infra/production/docker/cli/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:latest \
+          --build-arg "MISE_VERSION=$${MISE_VERSION}" \
+          .
 
   - id: build-admin-image
     name: gcr.io/cloud-builders/docker
@@ -73,7 +77,7 @@ steps:
       - |
         set -euo pipefail
 
-        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+        BUN_VERSION=$$(./tools/read-mise-value.sh bun)
 
         docker build \
           -f infra/production/docker/admin/Dockerfile \
@@ -94,7 +98,7 @@ steps:
       - |
         set -euo pipefail
 
-        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+        BUN_VERSION=$$(./tools/read-mise-value.sh bun)
 
         docker build \
           -f infra/production/docker/viewer/Dockerfile \
