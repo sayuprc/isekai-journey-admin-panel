@@ -14,7 +14,7 @@ const { release, releaseGroupTitle } = Astro.props;
   {
     release.jacketArtUrl && (
       <div class="release-version-art">
-        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} />
+        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} aspectRatio="auto" />
       </div>
     )
   }
