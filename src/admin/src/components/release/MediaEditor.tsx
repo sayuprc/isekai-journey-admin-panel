@@ -1,6 +1,7 @@
 import { For, Index, Show, createSignal } from 'solid-js';
 import type { ReleaseGetResponse, SongSummary } from '../../generated';
 import { client } from '../../utils/client';
+import { createSortable, reorderItems } from '../sortable';
 
 /**
  * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須。
@@ -52,6 +53,18 @@ interface MediaEditorProps {
 }
 
 export const MediaEditor = (props: MediaEditorProps) => {
+  const reorderMedia = (fromIndex: number, toIndex: number) => {
+    props.onChange(prev => reorderItems(prev, fromIndex, toIndex));
+  };
+  const reorderTracks = (mediumIndex: number, fromIndex: number, toIndex: number) => {
+    props.onChange(prev => prev.map((medium, index) => (
+      index === mediumIndex
+        ? { ...medium, tracks: reorderItems(medium.tracks, fromIndex, toIndex) }
+        : medium
+    )));
+  };
+  const mediaSortable = createSortable((_scope, fromIndex, toIndex) => reorderMedia(fromIndex, toIndex));
+  const trackSortable = createSortable<number>(reorderTracks);
   const [searchTitle, setSearchTitle] = createSignal('');
   const [manualTitle, setManualTitle] = createSignal('');
   const [searchResults, setSearchResults] = createSignal<SongSummary[]>([]);
@@ -67,24 +80,6 @@ export const MediaEditor = (props: MediaEditorProps) => {
   const removeMedium = (index: number) => {
     props.onChange(prev => prev.filter((_, i) => i !== index));
     setTargetMediumIndex(0);
-  };
-
-  const moveMedium = (index: number, direction: -1 | 1) => {
-    props.onChange((prev) => {
-      const nextIndex = index + direction;
-      if (nextIndex < 0 || nextIndex >= prev.length) {
-        return prev;
-      }
-
-      const cloned = [...prev];
-      const [medium] = cloned.splice(index, 1);
-      if (!medium) {
-        return prev;
-      }
-      cloned.splice(nextIndex, 0, medium);
-
-      return cloned;
-    });
   };
 
   const setMediumName = (index: number, name: string) => {
@@ -133,29 +128,6 @@ export const MediaEditor = (props: MediaEditorProps) => {
           ? { ...medium, tracks: medium.tracks.filter((_, j) => j !== trackIndex) }
           : medium,
       ));
-  };
-
-  const moveTrack = (mediumIndex: number, trackIndex: number, direction: -1 | 1) => {
-    props.onChange(prev =>
-      prev.map((medium, i) => {
-        if (i !== mediumIndex) {
-          return medium;
-        }
-
-        const nextIndex = trackIndex + direction;
-        if (nextIndex < 0 || nextIndex >= medium.tracks.length) {
-          return medium;
-        }
-
-        const cloned = [...medium.tracks];
-        const [track] = cloned.splice(trackIndex, 1);
-        if (!track) {
-          return medium;
-        }
-        cloned.splice(nextIndex, 0, track);
-
-        return { ...medium, tracks: cloned };
-      }));
   };
 
   const handleSongSearch = async (e: Event) => {
@@ -213,9 +185,22 @@ export const MediaEditor = (props: MediaEditorProps) => {
         >
           <Index each={props.media}>
             {(medium, mediumIndex) => (
-              <div class="rounded-box border border-base-300 bg-base-100 p-4">
+              <div
+                {...mediaSortable.dropTargetProps('release-media', mediumIndex)}
+                class="rounded-box border border-base-300 bg-base-100 p-4 transition-colors"
+                classList={{
+                  'opacity-50': mediaSortable.isDragging('release-media', mediumIndex),
+                  'border-primary bg-primary/5': mediaSortable.isDropTarget('release-media', mediumIndex),
+                }}
+              >
                 <div class="flex flex-wrap items-end justify-between gap-4">
                   <div class="flex items-end gap-4">
+                    <button
+                      {...mediaSortable.dragHandleProps('release-media', mediumIndex, `媒体${mediumIndex + 1}`)}
+                      class="btn btn-ghost btn-sm mb-1 cursor-grab active:cursor-grabbing"
+                    >
+                      ⠿
+                    </button>
                     <span class="badge badge-neutral badge-sm mb-2">媒体 {mediumIndex + 1}</span>
                     <div>
                       <label class="label">表示ラベル(任意)</label>
@@ -232,16 +217,18 @@ export const MediaEditor = (props: MediaEditorProps) => {
                     <button
                       type="button"
                       class="btn btn-ghost btn-xs"
+                      aria-label={`媒体${mediumIndex + 1}を上へ移動`}
                       disabled={mediumIndex === 0}
-                      onClick={() => moveMedium(mediumIndex, -1)}
+                      onClick={() => reorderMedia(mediumIndex, mediumIndex - 1)}
                     >
                       ↑
                     </button>
                     <button
                       type="button"
                       class="btn btn-ghost btn-xs"
+                      aria-label={`媒体${mediumIndex + 1}を下へ移動`}
                       disabled={mediumIndex === props.media.length - 1}
-                      onClick={() => moveMedium(mediumIndex, 1)}
+                      onClick={() => reorderMedia(mediumIndex, mediumIndex + 1)}
                     >
                       ↓
                     </button>
@@ -274,8 +261,27 @@ export const MediaEditor = (props: MediaEditorProps) => {
                           {/* For はオブジェクト同一性でキーするため、入力のたびに行が再生成されて IME が中断される。Index で DOM を保つ */}
                           <Index each={medium().tracks}>
                             {(track, trackIndex) => (
-                              <tr>
-                                <td>{trackIndex + 1}</td>
+                              <tr
+                                {...trackSortable.dropTargetProps(mediumIndex, trackIndex)}
+                                classList={{
+                                  'opacity-50': trackSortable.isDragging(mediumIndex, trackIndex),
+                                  'bg-primary/5': trackSortable.isDropTarget(mediumIndex, trackIndex),
+                                }}
+                              >
+                                <td>
+                                  <div class="flex items-center gap-1">
+                                    <button
+                                      {...trackSortable.dragHandleProps(
+                                        mediumIndex,
+                                        trackIndex,
+                                        `曲順${trackIndex + 1}`,
+                                      )}
+                                    >
+                                      ⠿
+                                    </button>
+                                    <span>{trackIndex + 1}</span>
+                                  </div>
+                                </td>
                                 <td>
                                   <Show
                                     when={track().songId !== null}
@@ -298,16 +304,18 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                     <button
                                       type="button"
                                       class="btn btn-ghost btn-xs"
+                                      aria-label={`曲順${trackIndex + 1}を上へ移動`}
                                       disabled={trackIndex === 0}
-                                      onClick={() => moveTrack(mediumIndex, trackIndex, -1)}
+                                      onClick={() => reorderTracks(mediumIndex, trackIndex, trackIndex - 1)}
                                     >
                                       ↑
                                     </button>
                                     <button
                                       type="button"
                                       class="btn btn-ghost btn-xs"
+                                      aria-label={`曲順${trackIndex + 1}を下へ移動`}
                                       disabled={trackIndex === medium().tracks.length - 1}
-                                      onClick={() => moveTrack(mediumIndex, trackIndex, 1)}
+                                      onClick={() => reorderTracks(mediumIndex, trackIndex, trackIndex + 1)}
                                     >
                                       ↓
                                     </button>

@@ -2,11 +2,8 @@ import { createSignal, For, Show } from 'solid-js';
 import type { Accessor, Setter } from 'solid-js';
 import type { Person, SongPersonRole } from '../../generated';
 import { client } from '../../utils/client';
-import {
-  addSelectedPersonToRole,
-  moveSelectedPerson,
-  type PersonSelections,
-} from './person-selection';
+import { createSortable, reorderItems } from '../sortable';
+import { addSelectedPersonToRole, type PersonSelections } from './person-selection';
 
 interface Props {
   selections: Accessor<PersonSelections>;
@@ -21,6 +18,13 @@ const ROLE_OPTIONS: { role: SongPersonRole; label: string }[] = [
 ];
 
 export const PersonSearchSection = (props: Props) => {
+  const reorderPersons = (role: SongPersonRole, fromIndex: number, toIndex: number) => {
+    props.setSelections(current => ({
+      ...current,
+      [role]: reorderItems(current[role], fromIndex, toIndex),
+    }));
+  };
+  const sortable = createSortable<SongPersonRole>(reorderPersons);
   const [query, setQuery] = createSignal('');
   const [searchedName, setSearchedName] = createSignal('');
   const [results, setResults] = createSignal<Person[]>([]);
@@ -92,13 +96,6 @@ export const PersonSearchSection = (props: Props) => {
     props.setSelections(current => ({
       ...current,
       [role]: current[role].filter(person => person.personId !== personId),
-    }));
-  };
-
-  const movePerson = (role: SongPersonRole, index: number, direction: -1 | 1) => {
-    props.setSelections(current => ({
-      ...current,
-      [role]: moveSelectedPerson(current[role], index, direction),
     }));
   };
 
@@ -204,15 +201,25 @@ export const PersonSearchSection = (props: Props) => {
                 <div class="mt-2 space-y-2">
                   <For each={props.selections()[option.role]}>
                     {(person, index) => (
-                      <div class="flex items-center justify-between gap-3 rounded-box border border-base-300 p-3">
-                        <span class="min-w-0 truncate">{person.name}</span>
+                      <div
+                        {...sortable.dropTargetProps(option.role, index())}
+                        class="flex items-center justify-between gap-3 rounded-box border border-base-300 p-3 transition-colors"
+                        classList={{
+                          'opacity-50': sortable.isDragging(option.role, index()),
+                          'border-primary bg-primary/5': sortable.isDropTarget(option.role, index()),
+                        }}
+                      >
+                        <div class="flex min-w-0 items-center gap-2">
+                          <button {...sortable.dragHandleProps(option.role, index(), person.name)}>⠿</button>
+                          <span class="min-w-0 truncate">{person.name}</span>
+                        </div>
                         <div class="flex shrink-0 gap-1">
                           <button
                             type="button"
                             class="btn btn-ghost btn-xs"
                             aria-label={`${person.name}を上へ移動`}
                             disabled={index() === 0}
-                            onClick={() => movePerson(option.role, index(), -1)}
+                            onClick={() => reorderPersons(option.role, index(), index() - 1)}
                           >
                             ↑
                           </button>
@@ -221,7 +228,7 @@ export const PersonSearchSection = (props: Props) => {
                             class="btn btn-ghost btn-xs"
                             aria-label={`${person.name}を下へ移動`}
                             disabled={index() === props.selections()[option.role].length - 1}
-                            onClick={() => movePerson(option.role, index(), 1)}
+                            onClick={() => reorderPersons(option.role, index(), index() + 1)}
                           >
                             ↓
                           </button>
