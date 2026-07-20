@@ -44,7 +44,7 @@
     "@typescript-eslint/parser": "catalog:lint",
     "eslint": "catalog:lint",
     "eslint-plugin-astro": "catalog:lint",
-    "eslint-plugin-import": "catalog:lint",
+    "eslint-plugin-import-x": "catalog:lint",
     "postcss-html": "catalog:lint",
     "stylelint": "catalog:lint",
     "stylelint-config-html": "catalog:lint",

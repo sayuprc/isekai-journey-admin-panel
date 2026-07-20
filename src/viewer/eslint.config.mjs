@@ -1,11 +1,11 @@
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import eslintPluginAstro from 'eslint-plugin-astro';
-import importPlugin from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 import tsEslint from 'typescript-eslint';
 
 const defaultRules = {
-  'import/order': [
+  'import-x/order': [
     'error',
     {
       alphabetize: {
@@ -34,7 +34,7 @@ export default [
   {
     plugins: {
       '@stylistic': stylistic,
-      'import': importPlugin,
+      'import-x': importX,
     },
   },
   eslint.configs.recommended,
