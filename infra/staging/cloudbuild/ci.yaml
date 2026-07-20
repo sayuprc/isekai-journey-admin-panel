@@ -73,19 +73,23 @@ steps:
 
   - id: build-db-migrate-image
     name: gcr.io/cloud-builders/docker
+    entrypoint: bash
     waitFor:
       - pull-db-migrate-image
     args:
-      - build
-      - -f
-      - infra/staging/docker/db-migrate/Dockerfile
-      - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:$COMMIT_SHA
-      - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest
-      - --cache-from
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest
-      - .
+      - -c
+      - |
+        set -euo pipefail
+
+        MISE_VERSION=$$(./tools/read-mise-value.sh mise_version)
+
+        docker build \
+          -f infra/staging/docker/db-migrate/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest \
+          --build-arg "MISE_VERSION=$${MISE_VERSION}" \
+          .
 
   - id: build-admin-image
     name: gcr.io/cloud-builders/docker
@@ -97,7 +101,7 @@ steps:
       - |
         set -euo pipefail
 
-        BUN_VERSION=$$(sed -n 's/^bun = "\(.*\)"$$/\1/p' mise.toml)
+        BUN_VERSION=$$(./tools/read-mise-value.sh bun)
 
         docker build \
           -f infra/staging/docker/admin/Dockerfile \
@@ -118,7 +122,7 @@ steps:
       - |
         set -euo pipefail
 
-        NODE_VERSION=$$(sed -n 's/^node = "\(.*\)"$$/\1/p' mise.toml)
+        NODE_VERSION=$$(./tools/read-mise-value.sh node)
 
         docker build \
           -f infra/staging/docker/viewer/Dockerfile \

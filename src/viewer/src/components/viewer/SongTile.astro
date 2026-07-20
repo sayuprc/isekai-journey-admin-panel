@@ -1,6 +1,6 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
-import type { SongMedia } from '../../features/songs/types';
+import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
 
 interface Props {
   songId: string;
@@ -8,14 +8,19 @@ interface Props {
   mediaCount: number;
   index: number;
   media?: SongMedia[];
+  releaseGroups?: SongReleaseGroup[];
   aspectRatio?: string;
 }
 
-const { mediaCount, index, media = [], aspectRatio = '16 / 9' } = Astro.props;
+const { mediaCount, index, media = [], releaseGroups = [], aspectRatio = '16 / 9' } = Astro.props;
 
 // プラットフォームとサムネイルは状態として保持せず url から導出する。
 // メディアがあれば最初にサムネイルを導出できたものを採用する。
-const thumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
+const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
+
+// メディアから導出できなければ収録リリースの最初の代表ジャケットで代替する
+const thumbnailUrl = mediaThumbnailUrl
+  ?? releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
 
 const sequence = String(index + 1).padStart(2, '0');
 ---
@@ -27,7 +32,7 @@ const sequence = String(index + 1).padStart(2, '0');
           <img
             class="song-tile-image"
             src={thumbnailUrl}
-            srcset={youtubeThumbnailSrcset(thumbnailUrl)}
+            srcset={mediaThumbnailUrl === null ? undefined : youtubeThumbnailSrcset(mediaThumbnailUrl)}
             sizes="(max-width: 640px) 50vw, 240px"
             loading="lazy"
             alt=""

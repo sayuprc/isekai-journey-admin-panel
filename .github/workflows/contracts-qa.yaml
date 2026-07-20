@@ -19,9 +19,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Setup mise
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
-        with:
-          version: 2026.6.6
+        uses: ./.github/actions/setup-mise
 
       - name: Cache node modules
         id: cache-node-modules
@@ -33,7 +31,6 @@ jobs:
           key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Check format
@@ -51,9 +48,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Setup mise
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
-        with:
-          version: 2026.6.6
+        uses: ./.github/actions/setup-mise
 
       - name: Cache node modules
         id: cache-node-modules
@@ -65,7 +60,6 @@ jobs:
           key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: mise run pnpm:install
 
       - name: Check generate code has diff

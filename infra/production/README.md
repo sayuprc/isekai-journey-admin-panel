@@ -20,4 +20,4 @@
 - Cloud Run の service / job 名は `prod-*` の値を YAML に直接定義する
 - Admin の `PUBLIC_APP_URL` は Cloud Build substitution の `_PUBLIC_APP_URL` を build arg として渡す
 - Viewer deploy job は `API_URL` / Cloudflare Worker 名 / account ID / API token secret を受け取り、Cloudflare Workers へ deploy する
-- Cloud Build 上で使う tool version は `mise.toml` か Dockerfile に明示する
+- Cloud Build 上で使う tool / base image の版は `mise.toml`（`[tools]` / `[vars]`）を Source of Truth とし、`tools/read-mise-value.sh` 経由で参照する

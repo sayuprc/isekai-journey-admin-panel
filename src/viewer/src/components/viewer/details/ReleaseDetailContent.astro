@@ -1,7 +1,5 @@
 ---
 import type { ReleaseGroup } from '../../../features/releases/types';
-import { representativeJacketArtUrl } from '../../../features/releases/types';
-import JacketArt from '../JacketArt.astro';
 import ReleaseVersionBody from './ReleaseVersionBody.astro';
 
 interface Props {
@@ -9,13 +7,11 @@ interface Props {
 }
 
 const { releaseGroup } = Astro.props;
-const jacketArtUrl = representativeJacketArtUrl(releaseGroup);
 const isSingleReleaseGroup = releaseGroup.releases.length === 1;
 ---
 
 <div class="detail-page-content release-detail-content">
-  <JacketArt imageUrl={jacketArtUrl} label={releaseGroup.title} />
-  <div class="label-mono" style="margin-top: 28px;">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
+  <div class="label-mono">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
   <h1 class="detail-title">{releaseGroup.title}</h1>
   {releaseGroup.description && <p class="detail-description" style="margin-top: 16px;">{releaseGroup.description}</p>}
 
