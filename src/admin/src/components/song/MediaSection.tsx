@@ -1,6 +1,7 @@
 import { createSignal, For, Show, type Accessor, type Setter } from 'solid-js';
 import type { Media, MediaTypeValue, RequestSongMediaLink, SongLinkedMedia } from '../../generated';
 import { client } from '../../utils/client';
+import { createSortable, reorderItems } from '../sortable';
 
 export type MediaEntry = {
   mediaId: string;
@@ -63,6 +64,10 @@ export const buildSongMediaRequest = (entries: MediaEntry[]): RequestSongMediaLi
   }));
 
 export const MediaSection = (props: Props) => {
+  const reorderEntries = (fromIndex: number, toIndex: number) => {
+    props.setEntries(prev => reorderItems(prev, fromIndex, toIndex));
+  };
+  const sortable = createSortable((_scope, fromIndex, toIndex) => reorderEntries(fromIndex, toIndex));
   const [searchTitle, setSearchTitle] = createSignal('');
   const [searchTypeValue, setSearchTypeValue] = createSignal<'' | `${MediaTypeValue}`>('');
   const [searchIsDisplay, setSearchIsDisplay] = createSignal<DisplayFilter>('');
@@ -138,24 +143,6 @@ export const MediaSection = (props: Props) => {
 
   const removeEntry = (index: number) => {
     props.setEntries(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const moveEntry = (index: number, direction: -1 | 1) => {
-    props.setEntries((prev) => {
-      const nextIndex = index + direction;
-      if (nextIndex < 0 || nextIndex >= prev.length) {
-        return prev;
-      }
-
-      const cloned = [...prev];
-      const [item] = cloned.splice(index, 1);
-      if (!item) {
-        return prev;
-      }
-      cloned.splice(nextIndex, 0, item);
-
-      return cloned;
-    });
   };
 
   const handleSearch = async (page = 1) => {
@@ -510,14 +497,24 @@ export const MediaSection = (props: Props) => {
           <div class="space-y-3">
             <For each={props.entries()}>
               {(entry, index) => (
-                <div class="rounded-box border border-base-300 bg-base-100 p-4">
+                <div
+                  {...sortable.dropTargetProps('song-media', index())}
+                  class="rounded-box border border-base-300 bg-base-100 p-4 transition-colors"
+                  classList={{
+                    'opacity-50': sortable.isDragging('song-media', index()),
+                    'border-primary bg-primary/5': sortable.isDropTarget('song-media', index()),
+                  }}
+                >
                   <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div class="min-w-0">
-                      <p class="font-medium">{entry.title}</p>
-                      <p class="text-xs text-base-content/60">{entry.typeName}</p>
-                      <a href={entry.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
-                        {entry.url}
-                      </a>
+                    <div class="flex min-w-0 items-start gap-2">
+                      <button {...sortable.dragHandleProps('song-media', index(), entry.title)}>⠿</button>
+                      <div class="min-w-0">
+                        <p class="font-medium">{entry.title}</p>
+                        <p class="text-xs text-base-content/60">{entry.typeName}</p>
+                        <a href={entry.url} target="_blank" rel="noreferrer" class="link link-hover break-all text-xs">
+                          {entry.url}
+                        </a>
+                      </div>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -532,7 +529,8 @@ export const MediaSection = (props: Props) => {
                       <button
                         type="button"
                         class="btn btn-ghost btn-xs"
-                        onClick={() => moveEntry(index(), -1)}
+                        aria-label={`${entry.title}を上へ移動`}
+                        onClick={() => reorderEntries(index(), index() - 1)}
                         disabled={index() === 0}
                       >
                         ↑
@@ -540,7 +538,8 @@ export const MediaSection = (props: Props) => {
                       <button
                         type="button"
                         class="btn btn-ghost btn-xs"
-                        onClick={() => moveEntry(index(), 1)}
+                        aria-label={`${entry.title}を下へ移動`}
+                        onClick={() => reorderEntries(index(), index() + 1)}
                         disabled={index() === props.entries().length - 1}
                       >
                         ↓
@@ -553,11 +552,6 @@ export const MediaSection = (props: Props) => {
                         削除
                       </button>
                     </div>
-                  </div>
-
-                  <div class="mt-3">
-                    <label class="text-xs text-base-content/60">表示順</label>
-                    <p class="mt-1 text-sm">{index() + 1}</p>
                   </div>
                 </div>
               )}
