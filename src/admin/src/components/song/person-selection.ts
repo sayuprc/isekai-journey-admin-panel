@@ -5,6 +5,8 @@ export type SelectedPerson = {
   name: string;
 };
 
+export type PersonSelections = Record<SongPersonRole, SelectedPerson[]>;
+
 export const addSelectedPerson = (selected: SelectedPerson[], person: SelectedPerson): SelectedPerson[] => {
   if (selected.some(item => item.personId === person.personId)) {
     return selected;
@@ -12,6 +14,15 @@ export const addSelectedPerson = (selected: SelectedPerson[], person: SelectedPe
 
   return [...selected, person];
 };
+
+export const addSelectedPersonToRole = (
+  selections: PersonSelections,
+  role: SongPersonRole,
+  person: SelectedPerson,
+): PersonSelections => ({
+  ...selections,
+  [role]: addSelectedPerson(selections[role], person),
+});
 
 export const moveSelectedPerson = (
   selected: SelectedPerson[],

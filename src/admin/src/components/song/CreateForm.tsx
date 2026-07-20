@@ -13,8 +13,8 @@ import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 import { buildSongMediaRequest, MediaSection, type MediaEntry } from './MediaSection';
+import { toRequestSongPersons, type PersonSelections } from './person-selection';
 import { PersonSearchSection } from './PersonSearchSection';
-import { toRequestSongPersons, type SelectedPerson } from './person-selection';
 
 type SongTagEntry = {
   songTagId: string;
@@ -85,9 +85,7 @@ export const CreateForm = (props: CreateFormProps) => {
   const [availableTags] = createSignal<SongTag[]>(props.data.tags);
   const [availableMedia, setAvailableMedia] = createSignal<Media[]>(props.data.media);
 
-  const [lyricists, setLyricists] = createSignal<SelectedPerson[]>([]);
-  const [composers, setComposers] = createSignal<SelectedPerson[]>([]);
-  const [arrangers, setArrangers] = createSignal<SelectedPerson[]>([]);
+  const [personSelections, setPersonSelections] = createSignal<PersonSelections>({ 1: [], 2: [], 3: [] });
   const [tags, setTags] = createSignal<SongTagEntry[]>([]);
   const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>([]);
   const [tagPickerValue, setTagPickerValue] = createSignal('');
@@ -115,9 +113,9 @@ export const CreateForm = (props: CreateFormProps) => {
   };
 
   const buildPersons = (): RequestSongPerson[] => [
-    ...toRequestSongPersons(lyricists(), 1),
-    ...toRequestSongPersons(composers(), 2),
-    ...toRequestSongPersons(arrangers(), 3),
+    ...toRequestSongPersons(personSelections()[1], 1),
+    ...toRequestSongPersons(personSelections()[2], 2),
+    ...toRequestSongPersons(personSelections()[3], 3),
   ];
 
   const handleSubmit = withSubmitting(async (e: Event) => {
@@ -292,9 +290,7 @@ export const CreateForm = (props: CreateFormProps) => {
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">関係者</legend>
           <div class="space-y-4">
-            <PersonSearchSection label="作詞" selected={lyricists} setSelected={setLyricists} />
-            <PersonSearchSection label="作曲" selected={composers} setSelected={setComposers} />
-            <PersonSearchSection label="編曲" selected={arrangers} setSelected={setArrangers} />
+            <PersonSearchSection selections={personSelections} setSelections={setPersonSelections} />
           </div>
         </fieldset>
 

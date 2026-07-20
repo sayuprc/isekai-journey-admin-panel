@@ -1,16 +1,24 @@
 import { createSignal, For, Show } from 'solid-js';
 import type { Accessor, Setter } from 'solid-js';
-import type { Person } from '../../generated';
+import type { Person, SongPersonRole } from '../../generated';
 import { client } from '../../utils/client';
-import { addSelectedPerson, moveSelectedPerson, type SelectedPerson } from './person-selection';
+import {
+  addSelectedPersonToRole,
+  moveSelectedPerson,
+  type PersonSelections,
+} from './person-selection';
 
 interface Props {
-  label: string;
-  selected: Accessor<SelectedPerson[]>;
-  setSelected: Setter<SelectedPerson[]>;
+  selections: Accessor<PersonSelections>;
+  setSelections: Setter<PersonSelections>;
 }
 
 const PER_PAGE = 25;
+const ROLE_OPTIONS: { role: SongPersonRole; label: string }[] = [
+  { role: 1, label: '作詞' },
+  { role: 2, label: '作曲' },
+  { role: 3, label: '編曲' },
+];
 
 export const PersonSearchSection = (props: Props) => {
   const [query, setQuery] = createSignal('');
@@ -21,8 +29,10 @@ export const PersonSearchSection = (props: Props) => {
   const [searching, setSearching] = createSignal(false);
   const [hasSearched, setHasSearched] = createSignal(false);
   const [searchError, setSearchError] = createSignal<string | null>(null);
+  const [targetRole, setTargetRole] = createSignal<SongPersonRole>(1);
 
-  const selectedIds = () => new Set(props.selected().map(person => person.personId));
+  const selectedIds = () => new Set(props.selections()[targetRole()].map(person => person.personId));
+  const targetLabel = () => ROLE_OPTIONS.find(option => option.role === targetRole())?.label ?? '';
 
   const search = async (name: string, nextPage = 1) => {
     if (searching()) {
@@ -70,44 +80,66 @@ export const PersonSearchSection = (props: Props) => {
   };
 
   const addPerson = (person: Person) => {
-    props.setSelected(current => addSelectedPerson(current, { personId: person.personId, name: person.name }));
+    props.setSelections(current =>
+      addSelectedPersonToRole(current, targetRole(), { personId: person.personId, name: person.name }));
   };
 
-  const removePerson = (personId: string) => {
-    props.setSelected(current => current.filter(person => person.personId !== personId));
+  const removePerson = (role: SongPersonRole, personId: string) => {
+    props.setSelections(current => ({
+      ...current,
+      [role]: current[role].filter(person => person.personId !== personId),
+    }));
+  };
+
+  const movePerson = (role: SongPersonRole, index: number, direction: -1 | 1) => {
+    props.setSelections(current => ({
+      ...current,
+      [role]: moveSelectedPerson(current[role], index, direction),
+    }));
   };
 
   return (
-    <section class="space-y-3 rounded-box border border-base-300 bg-base-100 p-4">
-      <h3 class="font-semibold">{props.label}</h3>
-
-      <div>
-        <label class="label" for={`${props.label}-person-search`}>人物名</label>
-        <div class="flex gap-2">
-          <input
-            id={`${props.label}-person-search`}
-            type="text"
-            class="input input-bordered min-w-0 flex-1"
-            value={query()}
-            placeholder="人物名で検索"
-            onInput={event => setQuery(event.currentTarget.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                void search(query().trim());
-              }
-            }}
-          />
-          <button
-            type="button"
-            class="btn btn-outline"
-            disabled={searching()}
-            onClick={() => void search(query().trim())}
-          >
-            {searching() ? '検索中...' : '検索'}
-          </button>
+    <section class="space-y-4 rounded-box border border-base-300 bg-base-100 p-4">
+      <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <div>
+          <label class="label" for="song-person-search">人物名</label>
+          <div class="flex gap-2">
+            <input
+              id="song-person-search"
+              type="text"
+              class="input input-bordered min-w-0 flex-1"
+              value={query()}
+              placeholder="人物名で検索"
+              onInput={event => setQuery(event.currentTarget.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  void search(query().trim());
+                }
+              }}
+            />
+            <button
+              type="button"
+              class="btn btn-outline"
+              disabled={searching()}
+              onClick={() => void search(query().trim())}
+            >
+              {searching() ? '検索中...' : '検索'}
+            </button>
+          </div>
+          <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
         </div>
-        <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
+        <div>
+          <label class="label" for="song-person-role">追加先</label>
+          <select
+            id="song-person-role"
+            class="select select-bordered w-full sm:w-32"
+            value={targetRole()}
+            onChange={event => setTargetRole(Number(event.currentTarget.value) as SongPersonRole)}
+          >
+            <For each={ROLE_OPTIONS}>{option => <option value={option.role}>{option.label}</option>}</For>
+          </select>
+        </div>
       </div>
 
       <Show when={hasSearched() && !searchError()}>
@@ -122,7 +154,7 @@ export const PersonSearchSection = (props: Props) => {
                   <div class="flex min-w-0 items-center gap-2">
                     <span class="truncate">{person.name}</span>
                     <Show when={selectedIds().has(person.personId)}>
-                      <span class="badge badge-sm badge-primary badge-soft">追加済み</span>
+                      <span class="badge badge-sm badge-primary badge-soft">{targetLabel()}に追加済み</span>
                     </Show>
                   </div>
                   <button
@@ -131,7 +163,7 @@ export const PersonSearchSection = (props: Props) => {
                     disabled={selectedIds().has(person.personId)}
                     onClick={() => addPerson(person)}
                   >
-                    追加
+                    {targetLabel()}に追加
                   </button>
                 </div>
               )}
@@ -164,49 +196,55 @@ export const PersonSearchSection = (props: Props) => {
         </div>
       </Show>
 
-      <div>
-        <p class="label">選択中</p>
-        <Show
-          when={props.selected().length > 0}
-          fallback={<p class="text-sm text-base-content/60">{props.label}はまだ追加されていません。</p>}
-        >
-          <div class="space-y-2">
-            <For each={props.selected()}>
-              {(person, index) => (
-                <div class="flex items-center justify-between gap-3 rounded-box border border-base-300 p-3">
-                  <span class="min-w-0 truncate">{person.name}</span>
-                  <div class="flex shrink-0 gap-1">
-                    <button
-                      type="button"
-                      class="btn btn-ghost btn-xs"
-                      aria-label={`${person.name}を上へ移動`}
-                      disabled={index() === 0}
-                      onClick={() => props.setSelected(current => moveSelectedPerson(current, index(), -1))}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-ghost btn-xs"
-                      aria-label={`${person.name}を下へ移動`}
-                      disabled={index() === props.selected().length - 1}
-                      onClick={() => props.setSelected(current => moveSelectedPerson(current, index(), 1))}
-                    >
-                      ↓
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-ghost btn-xs text-error"
-                      onClick={() => removePerson(person.personId)}
-                    >
-                      削除
-                    </button>
-                  </div>
+      <div class="grid gap-3 lg:grid-cols-3">
+        <For each={ROLE_OPTIONS}>
+          {option => (
+            <div class="rounded-box border border-base-300 p-3">
+              <p class="font-semibold">{option.label}</p>
+              <Show
+                when={props.selections()[option.role].length > 0}
+                fallback={<p class="mt-2 text-sm text-base-content/60">まだ追加されていません。</p>}
+              >
+                <div class="mt-2 space-y-2">
+                  <For each={props.selections()[option.role]}>
+                    {(person, index) => (
+                      <div class="flex items-center justify-between gap-3 rounded-box border border-base-300 p-3">
+                        <span class="min-w-0 truncate">{person.name}</span>
+                        <div class="flex shrink-0 gap-1">
+                          <button
+                            type="button"
+                            class="btn btn-ghost btn-xs"
+                            aria-label={`${person.name}を上へ移動`}
+                            disabled={index() === 0}
+                            onClick={() => movePerson(option.role, index(), -1)}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-ghost btn-xs"
+                            aria-label={`${person.name}を下へ移動`}
+                            disabled={index() === props.selections()[option.role].length - 1}
+                            onClick={() => movePerson(option.role, index(), 1)}
+                          >
+                            ↓
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-ghost btn-xs text-error"
+                            onClick={() => removePerson(option.role, person.personId)}
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </For>
                 </div>
-              )}
-            </For>
-          </div>
-        </Show>
+              </Show>
+            </div>
+          )}
+        </For>
       </div>
     </section>
   );
