@@ -29,10 +29,9 @@ export const PersonSearchSection = (props: Props) => {
   const [searching, setSearching] = createSignal(false);
   const [hasSearched, setHasSearched] = createSignal(false);
   const [searchError, setSearchError] = createSignal<string | null>(null);
-  const [targetRole, setTargetRole] = createSignal<SongPersonRole>(1);
 
-  const selectedIds = () => new Set(props.selections()[targetRole()].map(person => person.personId));
-  const targetLabel = () => ROLE_OPTIONS.find(option => option.role === targetRole())?.label ?? '';
+  const isSelected = (role: SongPersonRole, personId: string) =>
+    props.selections()[role].some(person => person.personId === personId);
 
   const search = async (name: string, nextPage = 1) => {
     if (searching()) {
@@ -79,9 +78,14 @@ export const PersonSearchSection = (props: Props) => {
     setMaxPage(data.maxPage);
   };
 
-  const addPerson = (person: Person) => {
+  const togglePerson = (role: SongPersonRole, person: Person) => {
+    if (isSelected(role, person.personId)) {
+      removePerson(role, person.personId);
+      return;
+    }
+
     props.setSelections(current =>
-      addSelectedPersonToRole(current, targetRole(), { personId: person.personId, name: person.name }));
+      addSelectedPersonToRole(current, role, { personId: person.personId, name: person.name }));
   };
 
   const removePerson = (role: SongPersonRole, personId: string) => {
@@ -100,46 +104,33 @@ export const PersonSearchSection = (props: Props) => {
 
   return (
     <section class="space-y-4 rounded-box border border-base-300 bg-base-100 p-4">
-      <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-        <div>
-          <label class="label" for="song-person-search">人物名</label>
-          <div class="flex gap-2">
-            <input
-              id="song-person-search"
-              type="text"
-              class="input input-bordered min-w-0 flex-1"
-              value={query()}
-              placeholder="人物名で検索"
-              onInput={event => setQuery(event.currentTarget.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  void search(query().trim());
-                }
-              }}
-            />
-            <button
-              type="button"
-              class="btn btn-outline"
-              disabled={searching()}
-              onClick={() => void search(query().trim())}
-            >
-              {searching() ? '検索中...' : '検索'}
-            </button>
-          </div>
-          <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
-        </div>
-        <div>
-          <label class="label" for="song-person-role">追加先</label>
-          <select
-            id="song-person-role"
-            class="select select-bordered w-full sm:w-32"
-            value={targetRole()}
-            onChange={event => setTargetRole(Number(event.currentTarget.value) as SongPersonRole)}
+      <div>
+        <label class="label" for="song-person-search">人物名</label>
+        <div class="flex gap-2">
+          <input
+            id="song-person-search"
+            type="text"
+            class="input input-bordered min-w-0 flex-1"
+            value={query()}
+            placeholder="人物名で検索"
+            onInput={event => setQuery(event.currentTarget.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                void search(query().trim());
+              }
+            }}
+          />
+          <button
+            type="button"
+            class="btn btn-outline"
+            disabled={searching()}
+            onClick={() => void search(query().trim())}
           >
-            <For each={ROLE_OPTIONS}>{option => <option value={option.role}>{option.label}</option>}</For>
-          </select>
+            {searching() ? '検索中...' : '検索'}
+          </button>
         </div>
+        <Show when={searchError()}>{message => <p class="mt-2 text-sm text-error">{message()}</p>}</Show>
       </div>
 
       <Show when={hasSearched() && !searchError()}>
@@ -151,20 +142,25 @@ export const PersonSearchSection = (props: Props) => {
             <For each={results()}>
               {person => (
                 <div class="flex items-center justify-between gap-3 rounded-box border border-base-300 p-3">
-                  <div class="flex min-w-0 items-center gap-2">
-                    <span class="truncate">{person.name}</span>
-                    <Show when={selectedIds().has(person.personId)}>
-                      <span class="badge badge-sm badge-primary badge-soft">{targetLabel()}に追加済み</span>
-                    </Show>
+                  <span class="min-w-0 truncate">{person.name}</span>
+                  <div class="join shrink-0">
+                    <For each={ROLE_OPTIONS}>
+                      {option => (
+                        <button
+                          type="button"
+                          class="btn btn-xs join-item"
+                          classList={{
+                            'btn-primary': isSelected(option.role, person.personId),
+                            'btn-outline': !isSelected(option.role, person.personId),
+                          }}
+                          aria-pressed={isSelected(option.role, person.personId)}
+                          onClick={() => togglePerson(option.role, person)}
+                        >
+                          {option.label}
+                        </button>
+                      )}
+                    </For>
                   </div>
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-xs"
-                    disabled={selectedIds().has(person.personId)}
-                    onClick={() => addPerson(person)}
-                  >
-                    {targetLabel()}に追加
-                  </button>
                 </div>
               )}
             </For>

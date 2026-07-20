@@ -89,7 +89,7 @@ describe('song form routes', () => {
 
 const authenticatedRequest = (url: string) => new Request(url, {
   headers: {
-    cookie: 'session=test-session',
+    'cookie': 'session=test-session',
     'x-csrf-token': 'csrf-token',
   },
 });
