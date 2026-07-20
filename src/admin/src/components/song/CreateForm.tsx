@@ -1,9 +1,7 @@
 import { createResource, createSignal, For, Match, Show, Switch } from 'solid-js';
 import type {
   Media,
-  Person,
   RequestSongPerson,
-  SongPersonRole,
   SongTag,
   SongType,
   SongTypeValue,
@@ -15,18 +13,14 @@ import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
 import { SearchableSelect } from '../SearchableSelect';
 import { buildSongMediaRequest, MediaSection, type MediaEntry } from './MediaSection';
-
-type PersonEntry = {
-  personId: string;
-  role: SongPersonRole;
-  orderNo: number;
-};
+import { toRequestSongPersons, type PersonSelections } from './person-selection';
+import { PersonSearchSection } from './PersonSearchSection';
 
 type SongTagEntry = {
   songTagId: string;
 };
 
-type CreateFormData = { persons: Person[]; types: SongType[]; tags: SongTag[]; media: Media[] };
+type CreateFormData = { types: SongType[]; tags: SongTag[]; media: Media[] };
 
 interface CreateFormProps {
   data: CreateFormData;
@@ -86,15 +80,12 @@ export const CreateView = () => {
 };
 
 export const CreateForm = (props: CreateFormProps) => {
-  const [persons] = createSignal<Person[]>(props.data.persons);
   const [types] = createSignal<SongType[]>(props.data.types);
   const [typeValue, setTypeValue] = createSignal<SongTypeValue | ''>('');
   const [availableTags] = createSignal<SongTag[]>(props.data.tags);
   const [availableMedia, setAvailableMedia] = createSignal<Media[]>(props.data.media);
 
-  const [lyricists, setLyricists] = createSignal<PersonEntry[]>([]);
-  const [composers, setComposers] = createSignal<PersonEntry[]>([]);
-  const [arrangers, setArrangers] = createSignal<PersonEntry[]>([]);
+  const [personSelections, setPersonSelections] = createSignal<PersonSelections>({ 1: [], 2: [], 3: [] });
   const [tags, setTags] = createSignal<SongTagEntry[]>([]);
   const [mediaEntries, setMediaEntries] = createSignal<MediaEntry[]>([]);
   const [tagPickerValue, setTagPickerValue] = createSignal('');
@@ -106,23 +97,6 @@ export const CreateForm = (props: CreateFormProps) => {
     const normalized = value?.toString().trim() ?? '';
 
     return normalized === '' ? null : normalized;
-  };
-
-  const addEntry = (setter: typeof setLyricists, role: SongPersonRole) => {
-    setter(prev => [...prev, { personId: '', role, orderNo: prev.length + 1 }]);
-  };
-
-  const removeEntry = (setter: typeof setLyricists, index: number) => {
-    setter(prev => prev.filter((_, i) => i !== index).map((entry, i) => ({ ...entry, orderNo: i + 1 })));
-  };
-
-  const updateEntry = (
-    setter: typeof setLyricists,
-    index: number,
-    field: keyof PersonEntry,
-    value: string | number,
-  ) => {
-    setter(prev => prev.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
   };
 
   const removeTagEntry = (index: number) => {
@@ -138,7 +112,11 @@ export const CreateForm = (props: CreateFormProps) => {
     setTagPickerValue('');
   };
 
-  const buildPersons = (): RequestSongPerson[] => [...lyricists(), ...composers(), ...arrangers()];
+  const buildPersons = (): RequestSongPerson[] => [
+    ...toRequestSongPersons(personSelections()[1], 1),
+    ...toRequestSongPersons(personSelections()[2], 2),
+    ...toRequestSongPersons(personSelections()[3], 3),
+  ];
 
   const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
@@ -167,16 +145,6 @@ export const CreateForm = (props: CreateFormProps) => {
     handleError(status, error);
   });
 
-  const personOptions = (entries: PersonEntry[], currentPersonId: string) => {
-    const selectedPersonIds = new Set(
-      entries.filter(entry => entry.personId !== '' && entry.personId !== currentPersonId).map(entry => entry.personId),
-    );
-
-    return persons()
-      .filter(person => !selectedPersonIds.has(person.personId) || person.personId === currentPersonId)
-      .map(person => ({ value: person.personId, label: person.name }));
-  };
-
   const tagOptions = () => {
     const selectedTagIds = new Set(tags().map(entry => entry.songTagId));
 
@@ -189,69 +157,6 @@ export const CreateForm = (props: CreateFormProps) => {
     tags()
       .map(entry => availableTags().find(tag => tag.songTagId === entry.songTagId))
       .filter((tag): tag is SongTag => tag !== undefined);
-
-  const PersonSection = (props: {
-    label: string;
-    entries: () => PersonEntry[];
-    setter: typeof setLyricists;
-    role: SongPersonRole;
-  }) => (
-    <div class="mt-4">
-      <div class="flex items-center gap-2">
-        <span class="label">{props.label}</span>
-        <button type="button" class="btn btn-xs btn-outline" onclick={() => addEntry(props.setter, props.role)}>
-          + 追加
-        </button>
-      </div>
-      <For each={props.entries()}>
-        {(entry, index) => (
-          <div class="mt-2 grid gap-3 md:grid-cols-[minmax(0,2fr)_96px_40px] md:items-center">
-            <SearchableSelect
-              options={personOptions(props.entries(), entry.personId)}
-              value={entry.personId}
-              onChange={value => updateEntry(props.setter, index(), 'personId', value)}
-              placeholder="人物を検索..."
-              required
-            />
-            <div class="flex items-center gap-2">
-              <label class="text-xs text-base-content/60">順</label>
-              <input
-                type="number"
-                class="input input-bordered w-16"
-                value={entry.orderNo}
-                onchange={e => updateEntry(props.setter, index(), 'orderNo', Number(e.currentTarget.value))}
-                required
-                min="1"
-              />
-            </div>
-            <button
-              type="button"
-              class="btn btn-ghost btn-xs btn-square text-error"
-              onclick={() => removeEntry(props.setter, index())}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-4"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
-      </For>
-      <Show when={props.entries().length === 0}>
-        <p class="mt-3 text-sm text-base-content/60">{props.label}はまだ追加されていません。</p>
-      </Show>
-    </div>
-  );
 
   const TagList = () => (
     <div class="mt-4">
@@ -384,9 +289,9 @@ export const CreateForm = (props: CreateFormProps) => {
 
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-6">
           <legend class="px-2 text-sm font-semibold text-base-content/70">関係者</legend>
-          <PersonSection label="作詞" entries={lyricists} setter={setLyricists} role={1} />
-          <PersonSection label="作曲" entries={composers} setter={setComposers} role={2} />
-          <PersonSection label="編曲" entries={arrangers} setter={setArrangers} role={3} />
+          <div class="space-y-4">
+            <PersonSearchSection selections={personSelections} setSelections={setPersonSelections} />
+          </div>
         </fieldset>
 
         <MediaSection

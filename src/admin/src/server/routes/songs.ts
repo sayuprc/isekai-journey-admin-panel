@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia';
 import {
   mediaServiceSearchMedia,
-  personServiceListPersons,
   songServiceCreateSong,
   songServiceDeleteSong,
   songServiceGetSong,
@@ -28,15 +27,13 @@ export const songs = new Elysia({ prefix: '/songs' })
   .use(authGuard)
   .get('/create-form', async ({ authSession }) => {
     return withAuthRetry(authSession, async (client) => {
-      const [persons, types, tags, media] = await Promise.all([
-        personServiceListPersons({ client }),
+      const [types, tags, media] = await Promise.all([
         songTypeServiceListSongTypes({ client }),
         songTagServiceListSongTags({ client }),
         mediaServiceSearchMedia({ client, query: { per_page: 50 } }),
       ]);
 
       return {
-        persons: resolveApiResponse(persons).persons,
         types: resolveApiResponse(types).types,
         tags: resolveApiResponse(tags).tags,
         media: resolveApiResponse(media).media,
@@ -85,9 +82,8 @@ export const songs = new Elysia({ prefix: '/songs' })
     '/:songId/edit-form',
     async ({ params: { songId }, authSession }) => {
       return withAuthRetry(authSession, async (client) => {
-        const [song, persons, types, tags, media] = await Promise.all([
+        const [song, types, tags, media] = await Promise.all([
           songServiceGetSong({ client, path: { songId } }),
-          personServiceListPersons({ client }),
           songTypeServiceListSongTypes({ client }),
           songTagServiceListSongTags({ client }),
           mediaServiceSearchMedia({ client, query: { per_page: 50 } }),
@@ -95,7 +91,6 @@ export const songs = new Elysia({ prefix: '/songs' })
 
         return {
           ...resolveApiResponse(song),
-          persons: resolveApiResponse(persons).persons,
           types: resolveApiResponse(types).types,
           tags: resolveApiResponse(tags).tags,
           media: resolveApiResponse(media).media,
