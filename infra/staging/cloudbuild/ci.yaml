@@ -277,8 +277,7 @@ steps:
       # - --wait
       - --quiet
 
-  # admin-proxy Worker はイメージ不要のため Cloud Build から直接 wrangler でデプロイする。
-  # Worker の secret (PROXY_SHARED_SECRET) はデプロイをまたいで保持されるためここでは設定しない
+  # admin-proxy Worker はイメージ不要のため Cloud Build から直接 wrangler でデプロイする
   - id: deploy-admin-proxy
     name: node:24-slim
     entrypoint: bash
@@ -289,6 +288,7 @@ steps:
       - ADMIN_PROXY_ORIGIN_URL=${_ADMIN_PROXY_ORIGIN_URL}
     secretEnv:
       - CLOUDFLARE_API_TOKEN
+      - PROXY_SHARED_SECRET
     args:
       - -c
       - bash infra/staging/cloudbuild/admin-proxy-deploy "$$(date --iso-8601=seconds)"
@@ -297,6 +297,8 @@ availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/${_CLOUDFLARE_API_TOKEN_SECRET_ID}/versions/latest
       env: CLOUDFLARE_API_TOKEN
+    - versionName: projects/$PROJECT_ID/secrets/${_ADMIN_PROXY_SHARED_SECRET_ID}/versions/latest
+      env: PROXY_SHARED_SECRET
 
 options:
   logging: CLOUD_LOGGING_ONLY

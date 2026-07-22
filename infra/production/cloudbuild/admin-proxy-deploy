@@ -16,7 +16,7 @@ cd src
 
 pnpm install --frozen-lockfile --filter admin-proxy --prod
 
-DEPLOY_MESSAGE="staging admin-proxy deploy ${DEPLOY_DATE}"
+DEPLOY_MESSAGE="production admin-proxy deploy ${DEPLOY_DATE}"
 SECRETS_FILE="$(mktemp --suffix=.json)"
 trap 'rm -f "${SECRETS_FILE}"' EXIT
 
