@@ -58,7 +58,7 @@ class ImportYouTubeCommandTest extends DatabaseTestCase
             $this->assertSame($title, $rows[$i]->title);
             $this->assertSame($type->value, (int)$rows[$i]->type);
             $this->assertSame($publishedAt, $rows[$i]->published_at);
-            $this->assertSame(1, (int)$rows[$i]->is_display);
+            $this->assertSame(0, (int)$rows[$i]->is_display);
         }
     }
 
