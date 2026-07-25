@@ -24,7 +24,7 @@ RUN apk add --no-cache \
   && adduser -S -G app app
 
 COPY --from=atlas /out/atlas /usr/local/bin/atlas
-COPY infra/dev/docker/db-migrate/db-migrate /usr/local/bin/db-migrate
+COPY infra/development/docker/db-migrate/db-migrate /usr/local/bin/db-migrate
 COPY src/server/database/atlas ./
 
 RUN chmod +x /usr/local/bin/db-migrate \

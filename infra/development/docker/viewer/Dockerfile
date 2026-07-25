@@ -13,7 +13,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-COPY infra/dev/docker/viewer/viewer-deploy /usr/local/bin/viewer-deploy
+COPY infra/development/docker/viewer/viewer-deploy /usr/local/bin/viewer-deploy
 COPY mise.toml ./
 
 RUN corepack enable \

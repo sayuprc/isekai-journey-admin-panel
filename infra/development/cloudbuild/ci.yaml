@@ -46,7 +46,7 @@ steps:
     args:
       - build
       - -f
-      - infra/dev/docker/api/Dockerfile
+      - infra/development/docker/api/Dockerfile
       - -t
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_API_IMAGE}:$COMMIT_SHA
       - -t
@@ -62,7 +62,7 @@ steps:
     args:
       - build
       - -f
-      - infra/dev/docker/cli/Dockerfile
+      - infra/development/docker/cli/Dockerfile
       - -t
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
       - -t
@@ -84,7 +84,7 @@ steps:
         MISE_VERSION=$$(./tools/read-mise-value.sh mise_version)
 
         docker build \
-          -f infra/dev/docker/db-migrate/Dockerfile \
+          -f infra/development/docker/db-migrate/Dockerfile \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:$COMMIT_SHA \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DB_MIGRATE_IMAGE}:latest \
@@ -104,7 +104,7 @@ steps:
         BUN_VERSION=$$(./tools/read-mise-value.sh bun)
 
         docker build \
-          -f infra/dev/docker/admin/Dockerfile \
+          -f infra/development/docker/admin/Dockerfile \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:$COMMIT_SHA \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_IMAGE}:latest \
@@ -125,7 +125,7 @@ steps:
         NODE_VERSION=$$(./tools/read-mise-value.sh node)
 
         docker build \
-          -f infra/dev/docker/viewer/Dockerfile \
+          -f infra/development/docker/viewer/Dockerfile \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:$COMMIT_SHA \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
@@ -292,7 +292,7 @@ steps:
       - PROXY_SHARED_SECRET
     args:
       - -c
-      - bash infra/dev/cloudbuild/admin-proxy-deploy "$$(date --iso-8601=seconds)"
+      - bash infra/development/cloudbuild/admin-proxy-deploy "$$(date --iso-8601=seconds)"
 
 availableSecrets:
   secretManager:
