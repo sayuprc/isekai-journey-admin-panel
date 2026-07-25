@@ -26,6 +26,7 @@
     "generate:api": "openapi-ts"
   },
   "dependencies": {
+    "@astrojs/sitemap": "catalog:astro",
     "@astrojs/solid-js": "catalog:astro",
     "@tailwindcss/vite": "catalog:ui",
     "astro": "catalog:astro",

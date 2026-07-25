@@ -1,6 +1,7 @@
 ---
 import ReleaseDetailContent from '../../components/viewer/details/ReleaseDetailContent.astro';
 import { releaseGroupContentRepository } from '../../features/releases/content';
+import { representativeJacketArtUrl } from '../../features/releases/types';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
@@ -11,9 +12,12 @@ export async function getStaticPaths() {
 }
 
 const { releaseGroup } = Astro.props;
+
+const pageDescription = releaseGroup.description || `ヰ世界情緒のリリース「${releaseGroup.title}」の情報`;
+const ogImageUrl = representativeJacketArtUrl(releaseGroup);
 ---
 
-<Layout pageTitle={releaseGroup.title}>
+<Layout pageTitle={releaseGroup.title} pageDescription={pageDescription} ogImageUrl={ogImageUrl}>
   <section class="shell page-section detail-page">
     <ReleaseDetailContent releaseGroup={releaseGroup} />
   </section>
