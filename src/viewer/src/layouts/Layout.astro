@@ -8,9 +8,10 @@ import '../styles/viewer.css';
 interface Props {
   pageTitle: string;
   pageDescription?: string;
+  ogImageUrl?: string | null;
 }
 
-const { pageTitle, pageDescription = 'ヰ世界情緒の非公式ファンアーカイブモック' } = Astro.props;
+const { pageTitle, pageDescription = 'ヰ世界情緒の非公式ファンサイト', ogImageUrl = null } = Astro.props;
 
 const siteTitle = 'ヰ世界観測所';
 
@@ -19,16 +20,28 @@ const generateTitle = (title: string) => {
 };
 
 const title = generateTitle(pageTitle);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImage = ogImageUrl ? new URL(ogImageUrl, Astro.site).href : null;
+const noindex = import.meta.env.SITE_NOINDEX === 'true';
 ---
 
 <!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={pageDescription} />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="ja_JP" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary" />
     <title>{title}</title>
     <script is:inline>
       (() => {

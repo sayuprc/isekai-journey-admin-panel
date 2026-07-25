@@ -1,6 +1,7 @@
 ---
 import MediaDetailContent from '../../components/viewer/details/MediaDetailContent.astro';
 import { mediaContentRepository } from '../../features/media/content';
+import { youtubeThumbnailFromUrl } from '../../features/media/labels';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
@@ -11,9 +12,12 @@ export async function getStaticPaths() {
 }
 
 const { media } = Astro.props;
+
+const pageDescription = `ヰ世界情緒のメディア「${media.title}」の情報`;
+const ogImageUrl = youtubeThumbnailFromUrl(media.url);
 ---
 
-<Layout pageTitle={media.title}>
+<Layout pageTitle={media.title} pageDescription={pageDescription} ogImageUrl={ogImageUrl}>
   <section class="shell page-section detail-page">
     <MediaDetailContent media={media} />
   </section>
