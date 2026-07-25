@@ -25,7 +25,7 @@ RUN composer install \
   --optimize-autoloader \
   --no-scripts
 
-COPY infra/dev/docker/api/php.ini /usr/local/etc/php/php.ini
+COPY infra/development/docker/api/php.ini /usr/local/etc/php/php.ini
 COPY src/contracts/generated/oas ../contracts/generated/oas
 COPY src/server ./
 
