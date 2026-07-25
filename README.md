@@ -6,7 +6,7 @@
 
 - アプリケーション本体: `src/`
 - ローカル開発環境: `compose.yaml`, `infra/local/docker/`, `mise.toml`
-- 環境別インフラ定義: `infra/staging/`, `infra/production/`
+- 環境別インフラ定義: `infra/dev/`, `infra/staging/`, `infra/production/`
 - 詳細: `ARCHITECTURE.md`
 
 ## セットアップ

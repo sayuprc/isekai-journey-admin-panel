@@ -9,6 +9,7 @@
 ## Top-Level Map
 
 - `infra/local/docker/`: ローカル開発用コンテナ定義と TLS 証明書設定
+- `infra/dev/`: 開発環境向け Cloud Build 定義とアプリケーション用 Dockerfile
 - `infra/staging/`: ステージング向け Cloud Build 定義とアプリケーション用 Dockerfile
 - `infra/production/`: 本番向け Cloud Build 定義とアプリケーション用 Dockerfile
 - `docs/`: ADR、設計原則、実行計画、技術的負債の記録
@@ -43,7 +44,7 @@
 | 管理画面の UI / BFF | `src/admin` | 必要なら `src/contracts` | `cd src && bun --filter admin lint:check`, `style:check`, `build` |
 | 閲覧サイトの UI | `src/viewer` | 必要なら `src/contracts` | `cd src && bun --filter viewer lint:check`, `style:check`, `build` |
 | 開発環境 | `mise.toml`, `compose.yaml`, `infra/local/docker/` | 関連 docs | 起動確認と影響範囲の明記 |
-| 環境別インフラ | `infra/staging/`, `infra/production/` | 関連 docs | Cloud Build 設定、Dockerfile、build context の確認 |
+| 環境別インフラ | `infra/dev/`, `infra/staging/`, `infra/production/` | 関連 docs | Cloud Build 設定、Dockerfile、build context の確認 |
 
 ## Detail Documents
 
