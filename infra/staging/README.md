@@ -1,19 +1,29 @@
 # Staging Infrastructure
 
-ステージング向けビルド定義の入口です。
+ステージング向けビルド定義の入口です
 
 ## Cloud Build
 
-- `cloudbuild/ci.yaml`: API / CLI / DB migrate / Admin / Viewer のコンテナを build / push し、Cloud Run service / job を deploy する
+- `cloudbuild/ci.yaml`: API / CLI / DB migrate / Admin / Viewer のコンテナを build / push し、Cloud Run service / job と Cloudflare Worker を deploy する
 - Cloud Build から実行する build command は YAML に直接定義する
 
 ## Dockerfiles
 
-- `docker/api/Dockerfile`: Laravel API 用。FrankenPHP Alpine を使う
-- `docker/cli/Dockerfile`: artisan job 用。PHP CLI と Laravel application を含める
-- `docker/db-migrate/Dockerfile`: migration job 用。Atlas と schema 定義のみを含める
-- `docker/admin/Dockerfile`: Admin 用。build stage で `bun --filter admin build` し、runtime stage は Bun slim image を使う
-- `docker/viewer/Dockerfile`: Viewer deploy job 用。`viewer-deploy` を entrypoint にする
+- `docker/api/Dockerfile`: Laravel API 用で FrankenPHP を使う
+- `docker/cli/Dockerfile`: artisan job 用で PHP CLI と Laravel application を含める
+- `docker/db-migrate/Dockerfile`: migration job 用で Atlas と schema 定義のみを含める
+- `docker/admin/Dockerfile`: Admin 用で build stage では `bun --filter admin build`、runtime stage では Bun slim image を使う
+- `docker/viewer/Dockerfile`: Viewer deploy job 用で `viewer-deploy` を entrypoint にする
+
+## 初回構築前提
+
+- Cloud Build trigger に staging 用の substitution value を設定する
+- `_CLOUDFLARE_API_TOKEN_SECRET_ID` が指す Secret Manager secret を作成する
+- Cloud Build service account に Artifact Registry、Cloud Run、Service Account User、Secret Manager の必要権限を付与する
+- API / Admin service と DB migrate / Admin invite job の runtime env / secret は `ci.yaml` で定義しないため初回デプロイ前に別経路で設定する
+- DB migrate job には `DB_USERNAME` / `DB_PASSWORD` / `DB_HOST` / `DB_PORT` / `DB_DATABASE` を設定する
+- `_ADMIN_PROXY_SHARED_SECRET_ID` が指す Secret Manager secret に version を追加する
+- Admin service は同じ secret を参照し、Cloud Build が admin-proxy Worker へ同期する
 
 ## Notes
 
