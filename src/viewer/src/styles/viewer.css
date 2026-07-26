@@ -1102,6 +1102,51 @@ image-slot:hover {
   overflow-y: auto;
 }
 
+.drawer-skeleton {
+  display: grid;
+  gap: 14px;
+}
+
+.drawer-skeleton-line {
+  height: 14px;
+  background: var(--bg-elev-2);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+.drawer-skeleton-eyebrow {
+  width: 120px;
+}
+
+.drawer-skeleton-title {
+  width: 60%;
+  height: 32px;
+}
+
+.drawer-skeleton-art {
+  width: min(160px, 100%);
+  aspect-ratio: 1 / 1;
+  background: var(--bg-elev-2);
+  border-radius: 6px;
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+.drawer-skeleton-short {
+  width: 40%;
+}
+
+@keyframes skeleton-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
 .detail-title {
   margin: 10px 0 4px;
   font-family: "Noto Serif JP", "Shippori Mincho", serif;
