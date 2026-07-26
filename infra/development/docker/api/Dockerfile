@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     libcap \
     unzip \
   && install-php-extensions \
+    apcu \
     intl \
     opcache \
     pdo \
@@ -30,6 +31,8 @@ COPY src/contracts/generated/oas ../contracts/generated/oas
 COPY src/server ./
 
 RUN composer dump-autoload --optimize --no-dev --no-interaction \
+	# OpenAPI schema の Filesystem キャッシュをイメージに焼き込む
+	&& php artisan openapi:cache \
 	&& setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
 	# /config/caddy および /data/caddy への書き込み権限を付与
 	&& chown -R www-data:www-data /config/caddy /data/caddy \
