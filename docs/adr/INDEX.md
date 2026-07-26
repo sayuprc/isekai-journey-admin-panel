@@ -15,3 +15,4 @@
 | ADR-0009 | accepted | 開発環境に Docker を採用する | [api, admin, client] |
 | ADR-0010 | accepted | パッケージ管理に pnpm を採用する | [api, admin, client] |
 | ADR-0011 | accepted | API の ORM を Eloquent から emonkak/orm へ移行する | [api] |
+| ADR-0012 | accepted | CHECK 制約を使わない | [api, admin] |
