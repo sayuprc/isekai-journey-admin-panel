@@ -15,6 +15,8 @@ RUN apt-get update \
   && curl https://mise.run | sh
 
 ENV PATH=/root/.local/bin:${PATH}
+# 環境バッジの表示判定に使う
+ENV APP_ENV=development
 
 COPY mise.toml ./
 
@@ -40,8 +42,6 @@ ARG BUN_VERSION
 FROM oven/bun:${BUN_VERSION}-slim AS runtime
 
 ENV TZ=Asia/Tokyo
-# 環境バッジの表示判定に使う
-ENV APP_ENV=development
 
 WORKDIR /app
 
