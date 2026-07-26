@@ -35,7 +35,7 @@ table "release_tracks" {
   }
 
   check "release_tracks_song_id_title_at_least_one" {
-    expr = "(`song_id` IS NOT NULL) OR (`title` IS NOT NULL)"
+    expr = "((`song_id` is not null) or (`title` is not null))"
   }
 
   index "fk_release_tracks_song_id" {
