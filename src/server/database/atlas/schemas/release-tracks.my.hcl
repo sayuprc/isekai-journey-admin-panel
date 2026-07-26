@@ -34,10 +34,6 @@ table "release_tracks" {
     columns = [column.release_id, column.position, column.track_no]
   }
 
-  check "release_tracks_song_id_title_at_least_one" {
-    expr = "((`song_id` is not null) or (`title` is not null))"
-  }
-
   index "fk_release_tracks_song_id" {
     columns = [column.song_id]
   }
