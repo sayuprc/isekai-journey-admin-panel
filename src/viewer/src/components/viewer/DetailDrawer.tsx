@@ -92,6 +92,7 @@ const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
+  const [loading, setLoading] = createSignal(false);
   const [shareLabel, setShareLabel] = createSignal('共有');
   let loadSequence = 0;
   let bodyRef: HTMLDivElement | undefined;
@@ -105,14 +106,19 @@ export const DetailDrawer = () => {
     const sequence = loadSequence + 1;
     loadSequence = sequence;
 
+    // 体感遅延を抑えるため fetch の完了を待たずに開き、届くまでスケルトンを見せる
+    commitStack();
+    setContent('');
+    setLoading(true);
+    setShareLabel('共有');
+
     try {
       const html = await fetchTargetFragment(target);
       if (sequence !== loadSequence) return false;
 
-      commitStack();
       setContent(html);
+      setLoading(false);
       bodyRef?.scrollTo({ top: 0, behavior: 'auto' });
-      setShareLabel('共有');
       return true;
     } catch {
       if (sequence === loadSequence) {
@@ -138,6 +144,7 @@ export const DetailDrawer = () => {
     loadSequence += 1;
     setStack([]);
     setContent('');
+    setLoading(false);
     setShareLabel('共有');
   };
 
@@ -241,6 +248,16 @@ export const DetailDrawer = () => {
               </div>
             </div>
             <div class="detail-body" ref={el => bodyRef = el}>
+              <Show when={loading()}>
+                <div class="drawer-skeleton" aria-hidden="true">
+                  <div class="drawer-skeleton-line drawer-skeleton-eyebrow"></div>
+                  <div class="drawer-skeleton-line drawer-skeleton-title"></div>
+                  <div class="drawer-skeleton-art"></div>
+                  <div class="drawer-skeleton-line"></div>
+                  <div class="drawer-skeleton-line"></div>
+                  <div class="drawer-skeleton-line drawer-skeleton-short"></div>
+                </div>
+              </Show>
               <Show when={content()}>
                 <div innerHTML={content()}></div>
               </Show>
