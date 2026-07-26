@@ -29,6 +29,8 @@ export default defineConfig({
       CACHE_TOKEN: envField.string({ context: 'server', access: 'secret' }),
       // proxy Worker 経由を検証する共有シークレット。未設定の環境では検証しない
       PROXY_SHARED_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // 環境バッジの表示判定に使う。未設定時は production 扱いでバッジを出さない
+      APP_ENV: envField.string({ context: 'server', access: 'public', default: 'production' }),
       PUBLIC_APP_URL: envField.string({ context: 'client', access: 'public' }),
     },
   },

@@ -1,4 +1,5 @@
 ---
+import EnvironmentBadge from '../components/EnvironmentBadge.astro';
 import { Sidebar } from '../components/Sidebar';
 import '../styles/app.css';
 
@@ -28,6 +29,7 @@ const title = generateTitle(pageTitle);
     <title>{title}</title>
   </head>
   <body>
+    <EnvironmentBadge />
     <div class="flex min-h-screen">
       <Sidebar currentPath={currentPath} />
       <div class="flex flex-1 flex-col">
