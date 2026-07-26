@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 
 const { media } = Astro.props;
 
-const pageDescription = `ヰ世界情緒のメディア「${media.title}」の情報`;
+const pageDescription = `ヰ世界情緒が出演するメディア「${media.title}」の情報`;
 const ogImageUrl = youtubeThumbnailFromUrl(media.url);
 ---
 
