@@ -32,4 +32,5 @@
 - Cloud Run jobs の service account は `_JOB_SERVICE_ACCOUNT` で受け取る
 - Admin の `PUBLIC_APP_URL` は Cloud Build substitution の `_PUBLIC_APP_URL` を build arg として渡す
 - Viewer deploy job は `API_URL` / `SITE_URL` / Cloudflare Worker 名 / account ID / API token secret を受け取り、Cloudflare Workers へ deploy する
+- `APP_ENV=production` を Admin は Dockerfile の `ENV`、Viewer deploy job は runtime env で渡す。production では環境バッジを表示しない
 - Cloud Build 上で使う tool / base image の版は `mise.toml`（`[tools]` / `[vars]`）を Source of Truth とし、`tools/read-mise-value.sh` 経由で参照する

@@ -271,7 +271,8 @@ steps:
       - --service-account
       - ${_JOB_SERVICE_ACCOUNT}
       - --set-env-vars
-      - API_URL=${_API_URL},SITE_URL=${_SITE_URL},CLOUDFLARE_WORKER_NAME=${_CLOUDFLARE_WORKER_NAME},CLOUDFLARE_ACCOUNT_ID=${_CLOUDFLARE_ACCOUNT_ID}
+      # APP_ENV は環境バッジの表示判定に使う。production ではバッジを表示しない
+      - API_URL=${_API_URL},SITE_URL=${_SITE_URL},APP_ENV=production,CLOUDFLARE_WORKER_NAME=${_CLOUDFLARE_WORKER_NAME},CLOUDFLARE_ACCOUNT_ID=${_CLOUDFLARE_ACCOUNT_ID}
       - --set-secrets
       - CLOUDFLARE_API_TOKEN=${_CLOUDFLARE_API_TOKEN_SECRET_ID}:latest
       # - --wait
