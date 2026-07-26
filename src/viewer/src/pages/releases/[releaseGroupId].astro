@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 
 const { releaseGroup } = Astro.props;
 
-const pageDescription = releaseGroup.description || `ヰ世界情緒のリリース「${releaseGroup.title}」の情報`;
+const pageDescription = releaseGroup.description || `ヰ世界情緒が参加するリリース「${releaseGroup.title}」の情報`;
 const ogImageUrl = representativeJacketArtUrl(releaseGroup);
 ---
 
