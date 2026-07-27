@@ -84,7 +84,7 @@ readonly class ImportYouTubeUseCase
                 $url->value,
                 new DateTimeImmutable($video->publishedAt)->setTimezone(new DateTimeZone(date_default_timezone_get())),
                 $this->resolveType($video->title, $isShort)->value,
-                true,
+                false,
             );
         }
 
