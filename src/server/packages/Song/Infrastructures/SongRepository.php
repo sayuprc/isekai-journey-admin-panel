@@ -13,6 +13,7 @@ use Song\Domain\Models\Tag\SongTag;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\OrderNoResetter;
 use Support\Infrastructures\Database\QueryFactory;
 use Support\Infrastructures\Database\Row;
 
@@ -33,6 +34,7 @@ readonly class SongRepository implements SongRepositoryInterface
         private QueryFactory $queryFactory,
         private UuidConverterInterface $converter,
         private SongTagRepositoryInterface $songTagRepository,
+        private OrderNoResetter $orderNoResetter,
     ) {
     }
 
@@ -155,6 +157,12 @@ readonly class SongRepository implements SongRepositoryInterface
             ->aggregate($this->queryFactory->pdo(), 'MAX(order_no)');
 
         return Row::intValue($max);
+    }
+
+    #[Override]
+    public function resetOrderNumbers(): array
+    {
+        return $this->orderNoResetter->reset('songs', 'song_id');
     }
 
     private function deleteChildren(string $binSongId): void

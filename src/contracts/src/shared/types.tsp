@@ -44,3 +44,10 @@ scalar cursor extends string;
 @maxValue(50)
 @friendlyName("limit")
 scalar limit extends int32;
+
+@doc("表示順の採番リセット結果")
+@friendlyName("OrderNoResetResponse")
+model OrderNoResetResponse {
+  @doc("更新した件数")
+  updatedCount: int32;
+}

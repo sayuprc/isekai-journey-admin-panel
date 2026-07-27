@@ -15,4 +15,6 @@ enum ReleaseGroupRouteMap: string
     case Update = 'releaseGroup.update';
 
     case Delete = 'releaseGroup.delete';
+
+    case ResetOrderNumbers = 'releaseGroup.reset-order-numbers';
 }

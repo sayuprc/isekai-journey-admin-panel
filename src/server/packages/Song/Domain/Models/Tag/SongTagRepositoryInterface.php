@@ -36,4 +36,9 @@ interface SongTagRepositoryInterface
     public function delete(SongTagId $songTagId): void;
 
     public function getMaxOrderNo(): int;
+
+    /**
+     * @return list<array{id: string, order_no: int}>
+     */
+    public function resetOrderNumbers(): array;
 }

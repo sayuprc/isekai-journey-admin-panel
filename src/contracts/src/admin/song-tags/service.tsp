@@ -62,4 +62,9 @@ interface SongTagService {
   @doc("楽曲タグ削除API")
   @delete
   deleteSongTag(@path songTagId: uuid): NoContent | BadRequest | Unauthorized | Forbidden | Unprocessable | ServerError;
+
+  @doc("楽曲タグの表示順を現行順のまま 10 刻みで振り直す")
+  @route("/reset-order-numbers")
+  @post
+  resetSongTagOrderNumbers(): Ok<OrderNoResetResponse> | Unauthorized | Forbidden | ServerError;
 }

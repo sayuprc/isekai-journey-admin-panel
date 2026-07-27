@@ -736,6 +736,32 @@ paths:
               $ref: '#/components/schemas/PersonCreateRequest'
       security:
         - BearerAuth: []
+  /persons/reset-order-numbers:
+    post:
+      operationId: PersonService_resetPersonOrderNumbers
+      description: 人物の表示順を現行順のまま 10 刻みで振り直す
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNoResetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Person
+      security:
+        - BearerAuth: []
   /persons/search:
     get:
       operationId: PersonService_searchPersons
@@ -997,6 +1023,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ReleaseGroupCreateRequest'
+      security:
+        - BearerAuth: []
+  /release-groups/reset-order-numbers:
+    post:
+      operationId: ReleaseGroupService_resetReleaseGroupOrderNumbers
+      description: リリースグループの表示順を現行順のまま 10 刻みで振り直す
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNoResetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - ReleaseGroup
       security:
         - BearerAuth: []
   /release-groups/search:
@@ -1490,6 +1542,32 @@ paths:
               $ref: '#/components/schemas/SongTagCreateRequest'
       security:
         - BearerAuth: []
+  /song-tags/reset-order-numbers:
+    post:
+      operationId: SongTagService_resetSongTagOrderNumbers
+      description: 楽曲タグの表示順を現行順のまま 10 刻みで振り直す
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNoResetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - SongTag
+      security:
+        - BearerAuth: []
   /song-tags/search:
     get:
       operationId: SongTagService_searchSongTags
@@ -1753,6 +1831,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SongCreateRequest'
+      security:
+        - BearerAuth: []
+  /songs/reset-order-numbers:
+    post:
+      operationId: SongService_resetSongOrderNumbers
+      description: 楽曲の表示順を現行順のまま 10 刻みで振り直す
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNoResetResponse'
+        '401':
+          description: Access is unauthorized.
+        '403':
+          description: Access is forbidden.
+        '500':
+          description: Server error
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Song
       security:
         - BearerAuth: []
   /songs/search:
@@ -2329,6 +2433,16 @@ components:
           items:
             $ref: '#/components/schemas/Track'
       description: リリース内の媒体(トラックリストの区切り)。name は Disc 表示用の任意ラベル
+    OrderNoResetResponse:
+      type: object
+      required:
+        - updatedCount
+      properties:
+        updatedCount:
+          type: integer
+          format: int32
+          description: 更新した件数
+      description: 表示順の採番リセット結果
     PerPage:
       type: integer
       format: int32

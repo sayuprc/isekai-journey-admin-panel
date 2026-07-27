@@ -17,4 +17,6 @@ enum PersonRouteMap: string
     case Update = 'persons.update';
 
     case Delete = 'persons.delete';
+
+    case ResetOrderNumbers = 'persons.reset-order-numbers';
 }

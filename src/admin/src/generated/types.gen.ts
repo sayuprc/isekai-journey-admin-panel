@@ -172,6 +172,16 @@ export type Medium = {
 };
 
 /**
+ * 表示順の採番リセット結果
+ */
+export type OrderNoResetResponse = {
+    /**
+     * 更新した件数
+     */
+    updatedCount: number;
+};
+
+/**
  * 1ページあたりの件数
  */
 export type PerPage = 25 | 50 | 100;
@@ -1633,6 +1643,45 @@ export type PersonServiceCreatePersonResponses = {
 
 export type PersonServiceCreatePersonResponse = PersonServiceCreatePersonResponses[keyof PersonServiceCreatePersonResponses];
 
+export type PersonServiceResetPersonOrderNumbersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/persons/reset-order-numbers';
+};
+
+export type PersonServiceResetPersonOrderNumbersErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PersonServiceResetPersonOrderNumbersResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: OrderNoResetResponse;
+};
+
+export type PersonServiceResetPersonOrderNumbersResponse = PersonServiceResetPersonOrderNumbersResponses[keyof PersonServiceResetPersonOrderNumbersResponses];
+
 export type PersonServiceSearchPersonsData = {
     body?: never;
     path?: never;
@@ -1918,6 +1967,45 @@ export type ReleaseGroupServiceCreateReleaseGroupResponses = {
 };
 
 export type ReleaseGroupServiceCreateReleaseGroupResponse = ReleaseGroupServiceCreateReleaseGroupResponses[keyof ReleaseGroupServiceCreateReleaseGroupResponses];
+
+export type ReleaseGroupServiceResetReleaseGroupOrderNumbersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/release-groups/reset-order-numbers';
+};
+
+export type ReleaseGroupServiceResetReleaseGroupOrderNumbersErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type ReleaseGroupServiceResetReleaseGroupOrderNumbersResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: OrderNoResetResponse;
+};
+
+export type ReleaseGroupServiceResetReleaseGroupOrderNumbersResponse = ReleaseGroupServiceResetReleaseGroupOrderNumbersResponses[keyof ReleaseGroupServiceResetReleaseGroupOrderNumbersResponses];
 
 export type ReleaseGroupServiceSearchReleaseGroupsData = {
     body?: never;
@@ -2464,6 +2552,45 @@ export type SongTagServiceCreateSongTagResponses = {
 
 export type SongTagServiceCreateSongTagResponse = SongTagServiceCreateSongTagResponses[keyof SongTagServiceCreateSongTagResponses];
 
+export type SongTagServiceResetSongTagOrderNumbersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/song-tags/reset-order-numbers';
+};
+
+export type SongTagServiceResetSongTagOrderNumbersErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type SongTagServiceResetSongTagOrderNumbersResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: OrderNoResetResponse;
+};
+
+export type SongTagServiceResetSongTagOrderNumbersResponse = SongTagServiceResetSongTagOrderNumbersResponses[keyof SongTagServiceResetSongTagOrderNumbersResponses];
+
 export type SongTagServiceSearchSongTagsData = {
     body?: never;
     path?: never;
@@ -2753,6 +2880,45 @@ export type SongServiceCreateSongResponses = {
 };
 
 export type SongServiceCreateSongResponse = SongServiceCreateSongResponses[keyof SongServiceCreateSongResponses];
+
+export type SongServiceResetSongOrderNumbersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/songs/reset-order-numbers';
+};
+
+export type SongServiceResetSongOrderNumbersErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: unknown;
+    /**
+     * Access is forbidden.
+     */
+    403: unknown;
+    /**
+     * Server error
+     */
+    500: unknown;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type SongServiceResetSongOrderNumbersResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: OrderNoResetResponse;
+};
+
+export type SongServiceResetSongOrderNumbersResponse = SongServiceResetSongOrderNumbersResponses[keyof SongServiceResetSongOrderNumbersResponses];
 
 export type SongServiceSearchSongsData = {
     body?: never;

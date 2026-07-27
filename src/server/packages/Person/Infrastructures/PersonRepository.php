@@ -12,6 +12,7 @@ use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\OrderNoResetter;
 use Support\Infrastructures\Database\QueryFactory;
 use Support\Infrastructures\Database\Row;
 use Support\Infrastructures\Database\SqlHelper;
@@ -26,6 +27,7 @@ readonly class PersonRepository implements PersonRepositoryInterface
     public function __construct(
         private QueryFactory $queryFactory,
         private UuidConverterInterface $converter,
+        private OrderNoResetter $orderNoResetter,
     ) {
     }
 
@@ -166,6 +168,12 @@ readonly class PersonRepository implements PersonRepositoryInterface
             ->aggregate($this->queryFactory->pdo(), 'MAX(order_no)');
 
         return Row::intValue($max);
+    }
+
+    #[Override]
+    public function resetOrderNumbers(): array
+    {
+        return $this->orderNoResetter->reset(self::TABLE, 'person_id');
     }
 
     private function applyNameFilter(SelectBuilder $query, PersonSearchCriteria $criteria): SelectBuilder

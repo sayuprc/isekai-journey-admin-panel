@@ -3,6 +3,7 @@ import {
   personServiceCreatePerson,
   personServiceDeletePerson,
   personServiceGetPerson,
+  personServiceResetPersonOrderNumbers,
   personServiceSearchPersons,
   personServiceUpdatePerson,
 } from '../../generated';
@@ -41,6 +42,11 @@ export const persons = new Elysia({ prefix: '/persons' })
       }),
     },
   )
+  .post('/reset-order-numbers', async ({ authSession }) => {
+    return withAuthRetry(authSession, async (client) => {
+      return resolveApiResponse(await personServiceResetPersonOrderNumbers({ client }));
+    });
+  })
   .get(
     '/:personId',
     async ({ params: { personId }, authSession }) => {

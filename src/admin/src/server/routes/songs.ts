@@ -4,6 +4,7 @@ import {
   songServiceCreateSong,
   songServiceDeleteSong,
   songServiceGetSong,
+  songServiceResetSongOrderNumbers,
   songServiceSearchSongs,
   songServiceUpdateSong,
   songTagServiceListSongTags,
@@ -103,6 +104,11 @@ export const songs = new Elysia({ prefix: '/songs' })
       }),
     },
   )
+  .post('/reset-order-numbers', async ({ authSession }) => {
+    return withAuthRetry(authSession, async (client) => {
+      return resolveApiResponse(await songServiceResetSongOrderNumbers({ client }));
+    });
+  })
   .get(
     '/:songId',
     async ({ params: { songId }, authSession }) => {

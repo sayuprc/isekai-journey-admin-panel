@@ -17,4 +17,9 @@ interface SongRepositoryInterface
     public function delete(SongId $songId): void;
 
     public function getMaxOrderNo(): int;
+
+    /**
+     * @return list<array{id: string, order_no: int}>
+     */
+    public function resetOrderNumbers(): array;
 }

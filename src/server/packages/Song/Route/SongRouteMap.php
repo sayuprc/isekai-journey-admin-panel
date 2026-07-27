@@ -15,4 +15,6 @@ enum SongRouteMap: string
     case Update = 'songs.update';
 
     case Delete = 'songs.delete';
+
+    case ResetOrderNumbers = 'songs.reset-order-numbers';
 }

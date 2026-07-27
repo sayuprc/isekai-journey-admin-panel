@@ -4,6 +4,7 @@ import {
   songTagServiceDeleteSongTag,
   songTagServiceGetSongTag,
   songTagServiceListSongTags,
+  songTagServiceResetSongTagOrderNumbers,
   songTagServiceSearchSongTags,
   songTagServiceUpdateSongTag,
 } from '../../generated';
@@ -19,19 +20,11 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
       return resolveApiResponse(await songTagServiceListSongTags({ client }));
     });
   })
-  .get(
-    '/:songTagId',
-    async ({ params: { songTagId }, authSession }) => {
-      return withAuthRetry(authSession, async (client) => {
-        return resolveApiResponse(await songTagServiceGetSongTag({ client, path: { songTagId } }));
-      });
-    },
-    {
-      params: t.Object({
-        songTagId: t.String(),
-      }),
-    },
-  )
+  .post('/reset-order-numbers', async ({ authSession }) => {
+    return withAuthRetry(authSession, async (client) => {
+      return resolveApiResponse(await songTagServiceResetSongTagOrderNumbers({ client }));
+    });
+  })
   .get(
     '/search',
     async ({ query, authSession }) => {
@@ -57,6 +50,19 @@ export const songTags = new Elysia({ prefix: '/song-tags' })
         order: t.Optional(t.Union([t.Literal('asc'), t.Literal('desc')])),
         page: t.Optional(t.Number()),
         per_page: t.Optional(t.Number()),
+      }),
+    },
+  )
+  .get(
+    '/:songTagId',
+    async ({ params: { songTagId }, authSession }) => {
+      return withAuthRetry(authSession, async (client) => {
+        return resolveApiResponse(await songTagServiceGetSongTag({ client, path: { songTagId } }));
+      });
+    },
+    {
+      params: t.Object({
+        songTagId: t.String(),
       }),
     },
   )

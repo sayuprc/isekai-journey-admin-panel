@@ -59,6 +59,11 @@ interface ReleaseGroupService {
     @query page?: page = 1,
     @query("per_page") perPage?: PerPage = PerPage.twentyFive,
   ): Ok<ReleaseGroupSearchResponse> | Unauthorized | Forbidden | ServerError;
+
+  @doc("リリースグループの表示順を現行順のまま 10 刻みで振り直す")
+  @route("/reset-order-numbers")
+  @post
+  resetReleaseGroupOrderNumbers(): Ok<OrderNoResetResponse> | Unauthorized | Forbidden | ServerError;
 }
 
 @tag("Release")
