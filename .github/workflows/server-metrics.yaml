@@ -120,7 +120,7 @@ jobs:
       - name: Build badge JSON
         run: |
           mkdir -p artifacts/server-metrics
-          python3 tools/metrics/build-server-badges.py \
+          ./tools/metrics/build-server-badges.sh \
             --clover src/server/reports/coverage.xml \
             --infection-summary src/server/reports/infection-summary.json \
             --phpmetrics src/server/reports/metrics.json \
@@ -142,7 +142,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 tools/metrics/publish-metrics-branch.py \
+          ./tools/metrics/publish-metrics-branch.sh \
             --source-dir artifacts/server-metrics \
             --branch "${METRICS_BRANCH}" \
             --git-sha "${GITHUB_SHA}"

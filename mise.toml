@@ -286,7 +286,7 @@ run = "docker compose exec php composer metrics"
 [tasks."api:metrics:badges"]
 description = "coverage / infection / phpmetrics のレポートから shields.io バッジ JSON を生成する"
 run = '''
-python3 tools/metrics/build-server-badges.py \
+./tools/metrics/build-server-badges.sh \
   --clover src/server/reports/coverage.xml \
   --infection-summary src/server/reports/infection-summary.json \
   --phpmetrics src/server/reports/metrics.json \

@@ -54,10 +54,12 @@ completed
 - 2026-07-10: 外部 SaaS / Gist PAT は使わず、専用 `metrics` ブランチ + `raw.githubusercontent.com` + shields.io endpoint でバッジ化する。既存の `check-index.yml` と同様に `GITHUB_TOKEN` だけで完結し、メトリクス更新で `dev` にノイズ PR を出さないため。
 - 2026-07-10: 実行は schedule（週次）+ `workflow_dispatch`。Infection が重いため PR / 毎 push の Server QA には載せない。
 - 2026-07-10: バッジ対象は coverage %、Infection MSI %、PhpMetrics の平均 Maintainability Index。詳細は Artifact / summary JSON。
+- 2026-07-27: バッジ生成と metrics ブランチ publish を Python から bash + jq に置き換えた。ubuntu-latest / ローカルに Python を要求しないため。
 
 ## Validation
 
-- `python3 -m unittest tools.metrics.test_build_server_badges -v` が通る
+- `./tools/metrics/test-build-server-badges.sh` が通る
 - `.github/workflows/server-metrics.yaml` が YAML としてパースできる
 - README の shields.io endpoint URL が `metrics` ブランチの `docs/metrics/badges/*.json` を指す
+- バッジ生成 / publish は bash + jq のみ（Python 非依存）
 

@@ -14,6 +14,15 @@
 
 詳細サマリは `metrics` ブランチの `docs/metrics/summary.json` にあります。HTML レポートなどは GitHub Actions の Artifact `server-metrics` に残ります。
 
+## 仕組み
+
+1. 週次 / 手動 CI で coverage・Infection・PhpMetrics を計測する
+2. `tools/metrics/build-server-badges.sh`（bash + jq）がレポートから shields.io endpoint JSON を作る
+3. `tools/metrics/publish-metrics-branch.sh` が `metrics` ブランチへ push する
+4. README のバッジがその JSON を読む
+
+Python は使いません。追加シークレットも不要です。
+
 ## 実行タイミング
 
 - 週次 schedule（月曜 00:00 UTC）
@@ -27,8 +36,13 @@ PR / 毎 push の `Server QA` には載せません（Infection が重いため�
 mise run api:coverage
 mise run api:infection
 mise run api:metrics
+mise run api:metrics:badges
+```
 
-python3 tools/metrics/build-server-badges.py \
+または直接:
+
+```bash
+./tools/metrics/build-server-badges.sh \
   --clover src/server/reports/coverage.xml \
   --infection-summary src/server/reports/infection-summary.json \
   --phpmetrics src/server/reports/metrics.json \
@@ -40,24 +54,12 @@ python3 tools/metrics/build-server-badges.py \
 フィクスチャでのスクリプト検証:
 
 ```bash
-python3 tools/metrics/build-server-badges.py \
-  --clover tools/metrics/fixtures/clover.xml \
-  --infection-summary tools/metrics/fixtures/infection-summary.json \
-  --phpmetrics tools/metrics/fixtures/phpmetrics.json \
-  --phpmetrics-summary tools/metrics/fixtures/phpmetrics-summary.json \
-  --output-dir artifacts/server-metrics-fixture \
-  --git-sha fixture
-```
-
-または:
-
-```bash
-python3 -m unittest tools.metrics.test_build_server_badges -v
+./tools/metrics/test-build-server-badges.sh
 ```
 
 ## バッジ URL
 
-`metrics` ブランチの raw JSON を shields.io endpoint で描画します。追加シークレットは不要です。
+`metrics` ブランチの raw JSON を shields.io endpoint で描画します。
 
 ```text
 https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/<name>.json
