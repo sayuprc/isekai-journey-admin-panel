@@ -3,6 +3,30 @@
 
 hook_input="${hook_input-}"
 
+# Agent hooks often run with a minimal PATH. Ensure mise is discoverable.
+hook_ensure_mise() {
+  if command -v mise >/dev/null 2>&1; then
+    return 0
+  fi
+
+  local candidate
+  for candidate in \
+    "${HOME:+$HOME/.local/bin}" \
+    "${XDG_DATA_HOME:+$XDG_DATA_HOME/mise/shims}" \
+    "${HOME:+$HOME/.mise/shims}" \
+    /usr/local/bin
+  do
+    if [ -n "$candidate" ] && [ -x "$candidate/mise" ]; then
+      PATH="$candidate:$PATH"
+      export PATH
+      return 0
+    fi
+  done
+
+  echo "mise: command not found (install mise and ensure it is on PATH)" >&2
+  return 127
+}
+
 hook_read_input() {
   if [ -z "${hook_input}" ]; then
     hook_input="$(cat)"

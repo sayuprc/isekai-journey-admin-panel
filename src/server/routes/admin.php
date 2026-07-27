@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Admin\V1\Person\CreatePersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\DeletePersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\GetPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\ListPersonController;
+use App\Http\Controllers\Api\Admin\V1\Person\ResetPersonOrderNumbersController;
 use App\Http\Controllers\Api\Admin\V1\Person\SearchPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
 use App\Http\Controllers\Api\Admin\V1\Release\CreateReleaseController;
@@ -33,17 +34,20 @@ use App\Http\Controllers\Api\Admin\V1\Release\UploadJacketArtController;
 use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\CreateReleaseGroupController;
 use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\DeleteReleaseGroupController;
 use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\GetReleaseGroupController;
+use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\ResetReleaseGroupOrderNumbersController;
 use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\SearchReleaseGroupController;
 use App\Http\Controllers\Api\Admin\V1\ReleaseGroup\UpdateReleaseGroupController;
 use App\Http\Controllers\Api\Admin\V1\Song\CreateSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\DeleteSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\GetSongController;
+use App\Http\Controllers\Api\Admin\V1\Song\ResetSongOrderNumbersController;
 use App\Http\Controllers\Api\Admin\V1\Song\SearchSongController;
 use App\Http\Controllers\Api\Admin\V1\Song\UpdateSongController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\CreateSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\DeleteSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\GetSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\ListSongTagController;
+use App\Http\Controllers\Api\Admin\V1\SongTag\ResetSongTagOrderNumbersController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\SearchSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongTag\UpdateSongTagController;
 use App\Http\Controllers\Api\Admin\V1\SongType\ListSongTypeController;
@@ -93,6 +97,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(static function () {
                 Route::prefix('persons')->group(static function () {
                     Route::post('/', [CreatePersonController::class, 'handle'])->name(PersonRouteMap::Create);
                     Route::get('/', [ListPersonController::class, 'handle'])->name(PersonRouteMap::List);
+                    Route::post('/reset-order-numbers', [ResetPersonOrderNumbersController::class, 'handle'])->name(PersonRouteMap::ResetOrderNumbers);
                     Route::put('/{personId}', [UpdatePersonController::class, 'handle'])->name(PersonRouteMap::Update);
                     Route::delete('/{personId}', [DeletePersonController::class, 'handle'])->name(PersonRouteMap::Delete);
                     Route::get('/search', [SearchPersonController::class, 'handle'])->name(PersonRouteMap::Search);
@@ -109,6 +114,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(static function () {
 
                 Route::prefix('songs')->group(static function () {
                     Route::post('/', [CreateSongController::class, 'handle'])->name(SongRouteMap::Create);
+                    Route::post('/reset-order-numbers', [ResetSongOrderNumbersController::class, 'handle'])->name(SongRouteMap::ResetOrderNumbers);
                     Route::put('/{songId}', [UpdateSongController::class, 'handle'])->name(SongRouteMap::Update);
                     Route::delete('/{songId}', [DeleteSongController::class, 'handle'])->name(SongRouteMap::Delete);
                     Route::get('/search', [SearchSongController::class, 'handle'])->name(SongRouteMap::Search);
@@ -117,6 +123,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(static function () {
 
                 Route::prefix('release-groups')->group(static function () {
                     Route::post('/', [CreateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Create);
+                    Route::post('/reset-order-numbers', [ResetReleaseGroupOrderNumbersController::class, 'handle'])->name(ReleaseGroupRouteMap::ResetOrderNumbers);
                     Route::put('/{releaseGroupId}', [UpdateReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Update);
                     Route::delete('/{releaseGroupId}', [DeleteReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Delete);
                     Route::get('/search', [SearchReleaseGroupController::class, 'handle'])->name(ReleaseGroupRouteMap::Search);
@@ -143,6 +150,7 @@ Route::middleware(AdminOpenApiValidator::class)->group(static function () {
                 Route::prefix('song-tags')->group(static function () {
                     Route::post('/', [CreateSongTagController::class, 'handle'])->name(SongTagRouteMap::Create);
                     Route::get('/', [ListSongTagController::class, 'handle'])->name(SongTagRouteMap::List);
+                    Route::post('/reset-order-numbers', [ResetSongTagOrderNumbersController::class, 'handle'])->name(SongTagRouteMap::ResetOrderNumbers);
                     Route::put('/{songTagId}', [UpdateSongTagController::class, 'handle'])->name(SongTagRouteMap::Update);
                     Route::delete('/{songTagId}', [DeleteSongTagController::class, 'handle'])->name(SongTagRouteMap::Delete);
                     Route::get('/search', [SearchSongTagController::class, 'handle'])->name(SongTagRouteMap::Search);

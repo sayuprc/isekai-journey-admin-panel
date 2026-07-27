@@ -34,4 +34,11 @@ interface PersonRepositoryInterface
     public function delete(PersonId $personId): void;
 
     public function getMaxOrderNo(): int;
+
+    /**
+     * 現行 order_no 昇順（同値は person_id 昇順）を保ったまま 10 刻みで振り直す
+     *
+     * @return list<array{id: string, order_no: int}>
+     */
+    public function resetOrderNumbers(): array;
 }

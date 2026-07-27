@@ -9,6 +9,7 @@ use Release\Domain\Models\ReleaseGroup;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Support\Contracts\Uuid\UuidConverterInterface;
+use Support\Infrastructures\Database\OrderNoResetter;
 use Support\Infrastructures\Database\QueryFactory;
 use Support\Infrastructures\Database\Row;
 
@@ -22,6 +23,7 @@ readonly class ReleaseGroupRepository implements ReleaseGroupRepositoryInterface
     public function __construct(
         private QueryFactory $queryFactory,
         private UuidConverterInterface $converter,
+        private OrderNoResetter $orderNoResetter,
     ) {
     }
 
@@ -85,6 +87,12 @@ readonly class ReleaseGroupRepository implements ReleaseGroupRepositoryInterface
             ->from(self::TABLE)
             ->where('release_group_id', '=', $this->converter->toBin($releaseGroupId->value))
             ->execute($this->queryFactory->pdo());
+    }
+
+    #[Override]
+    public function resetOrderNumbers(): array
+    {
+        return $this->orderNoResetter->reset(self::TABLE, 'release_group_id');
     }
 
     /**

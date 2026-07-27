@@ -62,4 +62,9 @@ interface PersonService {
   @doc("人物削除API")
   @delete
   deletePerson(@path personId: uuid): NoContent | BadRequest | Unauthorized | Forbidden | Unprocessable | ServerError;
+
+  @doc("人物の表示順を現行順のまま 10 刻みで振り直す")
+  @route("/reset-order-numbers")
+  @post
+  resetPersonOrderNumbers(): Ok<OrderNoResetResponse> | Unauthorized | Forbidden | ServerError;
 }

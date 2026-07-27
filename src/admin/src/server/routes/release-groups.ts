@@ -3,6 +3,7 @@ import {
   releaseGroupServiceCreateReleaseGroup,
   releaseGroupServiceDeleteReleaseGroup,
   releaseGroupServiceGetReleaseGroup,
+  releaseGroupServiceResetReleaseGroupOrderNumbers,
   releaseGroupServiceSearchReleaseGroups,
   releaseGroupServiceUpdateReleaseGroup,
 } from '../../generated';
@@ -66,6 +67,11 @@ export const releaseGroups = new Elysia({ prefix: '/release-groups' })
       }),
     },
   )
+  .post('/reset-order-numbers', async ({ authSession }) => {
+    return withAuthRetry(authSession, async (client) => {
+      return resolveApiResponse(await releaseGroupServiceResetReleaseGroupOrderNumbers({ client }));
+    });
+  })
   .get(
     '/:releaseGroupId',
     async ({ params: { releaseGroupId }, authSession }) => {

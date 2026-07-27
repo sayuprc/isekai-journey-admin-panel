@@ -49,6 +49,12 @@ esac
 case "$file" in
   */src/server/*.php)
     cd "$repo_root"
+    hook_ensure_mise || {
+      add_context "ERROR: mise が見つかりません。
+FIX: mise をインストールし、PATH に通してください。"
+      emit_collected_contexts
+      exit 0
+    }
 
     # Docker コンテナが起動していなければエラーフィードバック
     if ! docker compose exec -T php true 2>/dev/null; then
@@ -194,6 +200,12 @@ ${mago_diag}"
 
   src/contracts/*.tsp|*/src/contracts/*.tsp)
     cd "$repo_root"
+    hook_ensure_mise || {
+      add_context "ERROR: mise が見つかりません。
+FIX: mise をインストールし、PATH に通してください。"
+      emit_collected_contexts
+      exit 0
+    }
 
     mise run contract:format >/dev/null 2>&1 || true
 

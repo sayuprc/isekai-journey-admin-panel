@@ -61,4 +61,9 @@ interface SongService {
   @doc("楽曲削除API")
   @delete
   deleteSong(@path songId: uuid): NoContent | BadRequest | Unauthorized | Forbidden | Unprocessable | ServerError;
+
+  @doc("楽曲の表示順を現行順のまま 10 刻みで振り直す")
+  @route("/reset-order-numbers")
+  @post
+  resetSongOrderNumbers(): Ok<OrderNoResetResponse> | Unauthorized | Forbidden | ServerError;
 }

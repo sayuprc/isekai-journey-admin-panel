@@ -1,6 +1,7 @@
 import { For, Match, Show, Switch, createResource, createSignal } from 'solid-js';
 import type { ReleaseGroupTypeValue } from '../../generated';
 import { client } from '../../utils/client';
+import { setFlash } from '../Flash';
 import { ListState } from '../ListState';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
@@ -169,6 +170,35 @@ export const SearchList = () => {
     updateUrl(DEFAULT_PARAMS);
   };
 
+  const [resetting, setResetting] = createSignal(false);
+
+  const handleResetOrderNumbers = async () => {
+    if (!window.confirm('表示順を現行の並びのまま 10 刻みで振り直します。よろしいですか？')) {
+      return;
+    }
+
+    setResetting(true);
+
+    try {
+      const { data, status } = await client.api['release-groups']['reset-order-numbers'].post();
+
+      if (status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+
+      if (!data) {
+        setFlash('表示順の振り直しに失敗しました', 'error');
+        return;
+      }
+
+      setFlash(`表示順を振り直しました（${data.updatedCount} 件更新）`);
+      await refetch();
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSearch} class="mb-4 flex flex-wrap items-end gap-4">
@@ -253,7 +283,15 @@ export const SearchList = () => {
         </button>
       </form>
 
-      <div class="mb-4 flex justify-end">
+      <div class="mb-4 flex justify-end gap-2">
+        <button
+          type="button"
+          class="btn btn-outline btn-sm"
+          disabled={resetting()}
+          onClick={() => void handleResetOrderNumbers()}
+        >
+          表示順を振り直す
+        </button>
         <a href="/release-groups/create" class="btn btn-primary btn-sm">
           新規作成
         </a>
