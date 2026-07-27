@@ -16,6 +16,10 @@ rm -f "$contracts_stop_marker"
 
 cd "$repo_root"
 
+hook_ensure_mise || {
+  hook_emit_stop_failure "mise が見つかりません。mise をインストールし、PATH に通してください。"
+}
+
 result=""
 
 if ! format_output="$(mise run contract:format:check 2>&1)"; then
