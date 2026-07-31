@@ -4,9 +4,36 @@ on:
   schedule:
     - cron: "0 0 * * *"
   pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/viewer/**"
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/viewer-qa.yaml"
+      - ".github/actions/**"
   push:
     branches:
       - dev
+    paths:
+      - "src/viewer/**"
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/viewer-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
 
 env:
   MISE_ENV: ci

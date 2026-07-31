@@ -2,9 +2,32 @@ name: Contracts QA
 
 on:
   pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
   push:
     branches:
       - dev
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
 
 jobs:
   format:
