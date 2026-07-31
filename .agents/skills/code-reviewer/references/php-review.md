@@ -5,10 +5,11 @@
 - [ ] PHP 8.5+ の機能（Readonly クラス/プロパティ、コンストラクタプロモーションなど）が適切に使われているか。
 - [ ] すべての関数の引数と戻り値に型宣言があるか。
 
-## エラーハンドリング
-- [ ] ビジネスロジックの結果に `ResultType\Ok` と `ResultType\Err` を使用しているか。
-- [ ] 期待されるビジネスロジックの失敗（バリデーション失敗、エンティティ不在など）に対して例外をスローしていないか。
-- [ ] 例外は予期しないシステムエラー（DB接続失敗など）のみに使用されているか。
+## エラーハンドリング (ADR-0013)
+- [ ] 期待される業務エラーを例外で表現しているか（業務ルール違反は `BusinessRuleViolationException`、入力検証は `DomainValidationException`、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外）。
+- [ ] 複数 field の検証エラーを `Support\Domain\Validation\FieldErrors` で集約しているか。
+- [ ] 例外 → HTTP の変換を `App\Http\Responses\ApiExceptionRenderer` に任せ、UseCase / Presenter で catch して詰め替えていないか。
+- [ ] ValueObject を public コンストラクタ（`new`）で構築しているか。`create()` / `reconstruct()` は存在しない。
 
 ## アーキテクチャ (ヘキサゴナル)
 - **Domain Layer**:

@@ -53,14 +53,14 @@ Result を server 全層から撤去し例外ベースへ移行する。
 
 ### Stage 2: 内部例外化 (ワイヤ不変)
 
-- [ ] Support 基盤: 例外階層 (UseCase 例外 + ドメイン例外)、ハンドラの match 表 (例外クラス → {code, status})、InputData→VO 組立て役の仕組み、CLI 用 catch trait を導入する
-- [ ] VO 基盤: 基底クラスのコンストラクタを public 化する (create / reconstruct は移行完了まで温存)
-- [ ] パッケージ単位で例外化する: Auth → Song → Media → Release → Person → AdminUser → SiteStats / AuditLog の順に UseCase / Presenter / Controller / Command とテストを移行する
+- [x] Support 基盤: 例外階層 (UseCase 例外 + ドメイン例外)、ハンドラの match 表 (例外クラス → {code, status})、InputData→VO 組立て役の仕組み、CLI 用 catch trait を導入する
+- [x] VO 基盤: 基底クラスのコンストラクタを public 化する (create / reconstruct は移行完了まで温存)
+- [x] パッケージ単位で例外化する: Auth (+AdminUser) → Song → Media → Release → Person / SiteStats / AuditLog の順に UseCase / Presenter / Controller / Command とテストを移行する
 
 ### 仕上げ
 
-- [ ] 基底から `create()` / `reconstruct()` を削除し、`UseCaseError` 群・`Support\Domain\Error` の Result 用エラー型を削除、composer から `sayuprc/result-type` を除去する
-- [ ] `.claude/rules/01-backend.md` の業務エラー規約を例外方針へ書き換え、近接文書 (ARCHITECTURE.md 等) を点検する
+- [x] 基底から `create()` / `reconstruct()` を削除し、`UseCaseError` 群・`Support\Domain\Error` の Result 用エラー型を削除、composer から `sayuprc/result-type` を除去する
+- [x] `.claude/rules/01-backend.md` の業務エラー規約を例外方針へ書き換え、近接文書 (ARCHITECTURE.md 等) を点検する
 
 ## Decision Log
 
@@ -70,7 +70,16 @@ Result を server 全層から撤去し例外ベースへ移行する。
 - 2026-07-31: エンベロープの組み立ては `App\Http\Responses\ApiError` に一元化した。trait のほか、直接エラーを返していた `OpenApiValidator` / `Authenticate` ミドルウェアと `RefreshPresenter` (ボディなし 401 を返していた) もここへ寄せた。Stage 2 のハンドラ match 表も同クラスを使う
 - 2026-07-31: contracts の service.tsp は共有ラッパーモデル参照のため変更不要だった。エンベロープ変更は `shared/response.tsp` のみで完結
 - 2026-07-31: admin の `bun test` の 4 件の失敗 (astro:env/server 解決エラー) は本変更前から存在する既知の問題で今回の範囲外
+- 2026-07-31: 422 の担い手は `DomainValidationException` に 1 本化し、集約用の `FieldErrors` とともに `Support\Domain` に配置した (当初案の UseCase 層 ValidationFailedException は廃止)。IntegrityService などドメインサービスも同じ仕組みで field 集約するため
+- 2026-07-31: TextValueObject の NFC 正規化は create/reconstruct 削除に伴いコンストラクタへ移設。基底に `@phpstan-consistent-constructor` を付与
+- 2026-07-31: 422 の field 名は VO クラス FQCN から論理名 (title, email 等) へ変更。FQCN はクライアントが利用不能でありワイヤ改善として許容 (Stage 2「ワイヤ不変」からの軽微な逸脱)。あわせて複数 field の一括報告が有効になった
+- 2026-07-31: Authenticate/Refresh/Login/RecoveryFinish 系の失敗は UnauthenticatedException に集約 (旧実装でも最終的に 401)。RegisterStart/Finish はユーザー列挙防止のため固定メッセージの BusinessRuleViolationException へ詰め替え、旧 Presenter の squash を UseCase に移設
+- 2026-07-31: RegistrationTokenConsumeService / RecoveryCodeVerifyService / JwtHandler の verify は「期待される不在」を表すため例外ではなく nullable 戻り値に変更
+- 2026-07-31: mago lint の指摘 (101 errors) は移行前 (102 errors) から増えておらず既存負債と判断
+- 2026-07-31: code-reviewer レビュー (3 並列) の指摘に対応。(1) JwtHandler::verify が ExpiredException しか捕捉せず改ざんトークン等で 500 になる問題を修正 (DomainException|InvalidArgumentException|UnexpectedValueException を捕捉、回帰テスト 2 件追加。旧実装から潜在していた不具合)、(2) テスト変換で生じた expectException 後の到達不能アサーション 11 箇所を try/catch 形式へ復元 (ロールバック検証を含む)、(3) Refresh の不正形式 ID → 401 経路にユニットテスト追加、(4) TrackTest の冗長な代入を整理。Song Get の resourceName '楽曲' と Update/Delete の 'Song' の表記揺れは移行前からの既存挙動のため温存
 
 ## Validation
 
--
+- `mise run api:ecs` / `api:phpstan` (level 10) / `api:arkitect` / `api:test` (603 tests, skip 3 は既存) すべて green
+- `src/server` から `ResultType\` への参照 0 件、composer から `sayuprc/result-type` 除去済み
+- Stage 1: `contract:format:check` / `contract:test` / `contract:compile:*`、admin lint/style/format/build、viewer format/lint/build すべて green (PR #909 でマージ済み)
