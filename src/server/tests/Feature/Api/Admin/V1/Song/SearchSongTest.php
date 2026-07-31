@@ -58,6 +58,7 @@ class SearchSongTest extends DatabaseTestCase
             $this->createSong($uuid2, '比較テスト楽曲B', '比較テスト楽曲B説明', SongType::Cover, true, 2, [], [], [], []),
         );
 
+        // 部分一致なので '比較テスト楽曲B' もヒットする
         $this->withAuth()
             ->get(route(SongRouteMap::Search, ['title' => 'テスト楽曲']))
             ->assertStatus(200)
@@ -72,6 +73,16 @@ class SearchSongTest extends DatabaseTestCase
                         ],
                         'isDisplay' => true,
                         'orderNo' => 1,
+                    ],
+                    [
+                        'songId' => $uuid2,
+                        'title' => '比較テスト楽曲B',
+                        'type' => [
+                            'name' => 'カバー曲',
+                            'value' => 2,
+                        ],
+                        'isDisplay' => true,
+                        'orderNo' => 2,
                     ],
                 ],
                 'maxPage' => 1,

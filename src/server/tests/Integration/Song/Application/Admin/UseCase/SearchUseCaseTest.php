@@ -55,9 +55,12 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $output = $result->unwrap();
 
-        $this->assertCount(1, $output->songs);
+        // 部分一致なので '比較テスト楽曲B' もヒットする
+        $this->assertCount(2, $output->songs);
         $this->assertSame($uuid1, $output->songs[0]->songId);
         $this->assertSame('テスト楽曲', $output->songs[0]->title);
+        $this->assertSame($uuid2, $output->songs[1]->songId);
+        $this->assertSame('比較テスト楽曲B', $output->songs[1]->title);
     }
 
     #[Test]

@@ -174,9 +174,11 @@ readonly class PersonRepository implements PersonRepositoryInterface
             return $query;
         }
 
-        $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->name->get()));
-
-        return $query->where('name_lower', 'LIKE', $keyword . '%');
+        return $query->where(
+            'name_lower',
+            'LIKE',
+            '%' . SqlHelper::escapeLike(mb_strtolower($criteria->name->get())) . '%',
+        );
     }
 
     /**

@@ -55,10 +55,11 @@ readonly class SongQueryService implements SongQueryServiceInterface
         $query = $this->queryFactory->select()->from('songs');
 
         if ($criteria->title->isPresent()) {
-            // 前方一致検索でインデックスを活用
-            // 中間一致が必要な場合は、外部の検索エンジン（Elasticsearch など）を利用すること
-            $keyword = SqlHelper::escapeLike(mb_strtolower($criteria->title->get()));
-            $query = $query->where('title_lower', 'LIKE', $keyword . '%');
+            $query = $query->where(
+                'title_lower',
+                'LIKE',
+                '%' . SqlHelper::escapeLike(mb_strtolower($criteria->title->get())) . '%',
+            );
         }
 
         if ($criteria->type->isPresent()) {

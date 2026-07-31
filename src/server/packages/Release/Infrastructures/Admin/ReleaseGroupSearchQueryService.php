@@ -81,8 +81,11 @@ readonly class ReleaseGroupSearchQueryService implements ReleaseGroupSearchQuery
         $query = $this->queryFactory->select()->from('release_groups');
 
         if ($criteria->title->isPresent()) {
-            $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->where('release_groups.title', 'LIKE', '%' . $keyword . '%');
+            $query = $query->where(
+                'release_groups.title',
+                'LIKE',
+                '%' . SqlHelper::escapeLike($criteria->title->get()) . '%',
+            );
         }
 
         if ($criteria->type->isPresent()) {
