@@ -21,8 +21,6 @@
     "lint:check": "bun run eslint:check",
     "style": "bun run stylelint:fix",
     "style:check": "bun run stylelint:check",
-    "tcm": "tcm -p 'src/styles/*.module.css' .",
-    "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
     "generate:api": "openapi-ts"
   },
   "dependencies": {
@@ -52,7 +50,6 @@
     "stylelint-config-recess-order": "catalog:lint",
     "stylelint-config-standard": "catalog:lint",
     "stylelint-order": "catalog:lint",
-    "typed-css-modules": "catalog:gen",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:lint"
   }

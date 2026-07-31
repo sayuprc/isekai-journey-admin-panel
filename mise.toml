@@ -387,16 +387,6 @@ run = [
   "bun run stylelint:check",
 ]
 
-[tasks."admin:tcm"]
-description = "tcm を実行する"
-dir = "src"
-run = "bun --filter admin tcm"
-
-[tasks."admin:tcm:watch"]
-description = "tcm を --watch オプション付きで実行する"
-dir = "src"
-run = "bun --filter admin tcm:watch"
-
 [tasks."admin:prism"]
 description = "Prism のモックサーバーを起動する"
 dir = "src"
