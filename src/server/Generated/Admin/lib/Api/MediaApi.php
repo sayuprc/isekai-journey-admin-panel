@@ -145,7 +145,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\MediaCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\MediaCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function mediaServiceCreateMedia($media_create_request, string $contentType = self::contentTypes['mediaServiceCreateMedia'][0])
     {
@@ -161,7 +161,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\MediaCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\MediaCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function mediaServiceCreateMediaWithHttpInfo($media_create_request, string $contentType = self::contentTypes['mediaServiceCreateMedia'][0])
     {
@@ -203,9 +203,27 @@ class MediaApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -249,10 +267,34 @@ class MediaApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -491,10 +533,34 @@ class MediaApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -666,7 +732,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\MediaGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\MediaGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function mediaServiceGetMedia($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
     {
@@ -682,7 +748,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\MediaGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\MediaGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function mediaServiceGetMediaWithHttpInfo($media_id, string $contentType = self::contentTypes['mediaServiceGetMedia'][0])
     {
@@ -718,6 +784,18 @@ class MediaApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 404:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Admin\Client\Model\ErrorResponse',
@@ -726,7 +804,13 @@ class MediaApi
                     );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -762,6 +846,22 @@ class MediaApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -773,7 +873,15 @@ class MediaApi
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -962,7 +1070,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\MediaSearchResponse
+     * @return \OpenAPI\Admin\Client\Model\MediaSearchResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function mediaServiceSearchMedia($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
@@ -982,7 +1090,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\MediaSearchResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\MediaSearchResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function mediaServiceSearchMediaWithHttpInfo($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['mediaServiceSearchMedia'][0])
     {
@@ -1018,6 +1126,24 @@ class MediaApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -1046,6 +1172,30 @@ class MediaApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Admin\Client\Model\MediaSearchResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1278,7 +1428,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\MediaUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\MediaUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function mediaServiceUpdateMedia($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
     {
@@ -1295,7 +1445,7 @@ class MediaApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\MediaUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\MediaUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function mediaServiceUpdateMediaWithHttpInfo($media_id, $media_update_request, string $contentType = self::contentTypes['mediaServiceUpdateMedia'][0])
     {
@@ -1337,6 +1487,18 @@ class MediaApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 404:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Admin\Client\Model\ErrorResponse',
@@ -1345,7 +1507,13 @@ class MediaApi
                     );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -1389,6 +1557,22 @@ class MediaApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -1400,7 +1584,15 @@ class MediaApi
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

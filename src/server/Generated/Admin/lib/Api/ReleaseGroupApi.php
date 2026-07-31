@@ -145,7 +145,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function releaseGroupServiceCreateReleaseGroup($release_group_create_request, string $contentType = self::contentTypes['releaseGroupServiceCreateReleaseGroup'][0])
     {
@@ -161,7 +161,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupCreateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function releaseGroupServiceCreateReleaseGroupWithHttpInfo($release_group_create_request, string $contentType = self::contentTypes['releaseGroupServiceCreateReleaseGroup'][0])
     {
@@ -203,9 +203,27 @@ class ReleaseGroupApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -249,10 +267,34 @@ class ReleaseGroupApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -491,6 +533,22 @@ class ReleaseGroupApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -502,7 +560,15 @@ class ReleaseGroupApi
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -674,7 +740,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function releaseGroupServiceGetReleaseGroup($release_group_id, string $contentType = self::contentTypes['releaseGroupServiceGetReleaseGroup'][0])
     {
@@ -690,7 +756,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupGetResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function releaseGroupServiceGetReleaseGroupWithHttpInfo($release_group_id, string $contentType = self::contentTypes['releaseGroupServiceGetReleaseGroup'][0])
     {
@@ -726,6 +792,18 @@ class ReleaseGroupApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 404:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Admin\Client\Model\ErrorResponse',
@@ -734,7 +812,13 @@ class ReleaseGroupApi
                     );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -770,6 +854,22 @@ class ReleaseGroupApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -781,7 +881,15 @@ class ReleaseGroupApi
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -970,7 +1078,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupSearchResponse
+     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupSearchResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function releaseGroupServiceSearchReleaseGroups($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['releaseGroupServiceSearchReleaseGroups'][0])
     {
@@ -990,7 +1098,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupSearchResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupSearchResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function releaseGroupServiceSearchReleaseGroupsWithHttpInfo($title = null, $type = null, $is_display = null, $page = null, $per_page = null, string $contentType = self::contentTypes['releaseGroupServiceSearchReleaseGroups'][0])
     {
@@ -1026,6 +1134,24 @@ class ReleaseGroupApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -1054,6 +1180,30 @@ class ReleaseGroupApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Admin\Client\Model\ReleaseGroupSearchResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -1286,7 +1436,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError
+     * @return \OpenAPI\Admin\Client\Model\ReleaseGroupUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function releaseGroupServiceUpdateReleaseGroup($release_group_id, $release_group_update_request, string $contentType = self::contentTypes['releaseGroupServiceUpdateReleaseGroup'][0])
     {
@@ -1303,7 +1453,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ValidationError, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\ReleaseGroupUpdateResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function releaseGroupServiceUpdateReleaseGroupWithHttpInfo($release_group_id, $release_group_update_request, string $contentType = self::contentTypes['releaseGroupServiceUpdateReleaseGroup'][0])
     {
@@ -1339,6 +1489,18 @@ class ReleaseGroupApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
                 case 404:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Admin\Client\Model\ErrorResponse',
@@ -1347,7 +1509,13 @@ class ReleaseGroupApi
                     );
                 case 422:
                     return $this->handleResponseWithDataType(
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $request,
                         $response,
                     );
@@ -1383,6 +1551,22 @@ class ReleaseGroupApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -1394,7 +1578,15 @@ class ReleaseGroupApi
                 case 422:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Admin\Client\Model\ValidationError',
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

@@ -132,7 +132,7 @@ class SongTypeApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Admin\Client\Model\SongTypeListResponse
+     * @return \OpenAPI\Admin\Client\Model\SongTypeListResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse
      */
     public function songTypeServiceListSongTypes(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
@@ -147,7 +147,7 @@ class SongTypeApi
      *
      * @throws \OpenAPI\Admin\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Admin\Client\Model\SongTypeListResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Admin\Client\Model\SongTypeListResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse|\OpenAPI\Admin\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function songTypeServiceListSongTypesWithHttpInfo(string $contentType = self::contentTypes['songTypeServiceListSongTypes'][0])
     {
@@ -183,6 +183,24 @@ class SongTypeApi
                         $request,
                         $response,
                     );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -211,6 +229,30 @@ class SongTypeApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Admin\Client\Model\SongTypeListResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Admin\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\Auth;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
+use App\Http\Responses\ApiError;
 use Auth\Application\Admin\UseCase\Recovery\RecoveryStartOutputData;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Admin\Client\Model\ErrorResponse;
 use OpenAPI\Admin\Client\Model\RecoveryStartResponse;
 use ResultType\Result;
 use Support\UseCase\Error\InvalidInputError;
@@ -29,12 +29,12 @@ class RecoveryStartPresenter
                     ->setPublicKey((object)$output->publicKey),
                 200,
             ],
-            function (UseCaseError $error) {
+            static function (UseCaseError $error) {
                 if ($error instanceof InvalidInputError) {
-                    return [$this->toValidationError($error), 422];
+                    return ApiError::validationFailed($error->errors);
                 }
 
-                return [new ErrorResponse()->setMessage('リカバリーに失敗しました。入力内容を確認してください。'), 400];
+                return ApiError::businessRuleViolation('リカバリーに失敗しました。入力内容を確認してください。');
             },
         );
 

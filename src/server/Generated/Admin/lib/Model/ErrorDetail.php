@@ -1,6 +1,6 @@
 <?php
 /**
- * ValidationError
+ * ErrorDetail
  *
  * PHP version 8.1
  *
@@ -32,15 +32,16 @@ use \ArrayAccess;
 use \OpenAPI\Admin\Client\ObjectSerializer;
 
 /**
- * ValidationError Class Doc Comment
+ * ErrorDetail Class Doc Comment
  *
  * @category Class
+ * @description フィールド単位のエラー詳細
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
+class ErrorDetail implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +50,7 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'ValidationError';
+    protected static $openAPIModelName = 'ErrorDetail';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,7 +58,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'errors' => '\OpenAPI\Admin\Client\Model\ValidationErrorDetail[]'
+        'field' => 'string',
+        'message' => 'string'
     ];
 
     /**
@@ -68,7 +70,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'errors' => null
+        'field' => null,
+        'message' => null
     ];
 
     /**
@@ -77,7 +80,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'errors' => false
+        'field' => false,
+        'message' => false
     ];
 
     /**
@@ -166,7 +170,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'errors' => 'errors'
+        'field' => 'field',
+        'message' => 'message'
     ];
 
     /**
@@ -175,7 +180,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'errors' => 'setErrors'
+        'field' => 'setField',
+        'message' => 'setMessage'
     ];
 
     /**
@@ -184,7 +190,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'errors' => 'getErrors'
+        'field' => 'getField',
+        'message' => 'getMessage'
     ];
 
     /**
@@ -244,7 +251,8 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('errors', $data ?? [], null);
+        $this->setIfExists('field', $data ?? [], null);
+        $this->setIfExists('message', $data ?? [], null);
     }
 
     /**
@@ -274,8 +282,11 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['errors'] === null) {
-            $invalidProperties[] = "'errors' can't be null";
+        if ($this->container['field'] === null) {
+            $invalidProperties[] = "'field' can't be null";
+        }
+        if ($this->container['message'] === null) {
+            $invalidProperties[] = "'message' can't be null";
         }
         return $invalidProperties;
     }
@@ -293,28 +304,55 @@ class ValidationError implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets errors
+     * Gets field
      *
-     * @return \OpenAPI\Admin\Client\Model\ValidationErrorDetail[]
+     * @return string
      */
-    public function getErrors()
+    public function getField()
     {
-        return $this->container['errors'];
+        return $this->container['field'];
     }
 
     /**
-     * Sets errors
+     * Sets field
      *
-     * @param \OpenAPI\Admin\Client\Model\ValidationErrorDetail[] $errors errors
+     * @param string $field field
      *
      * @return self
      */
-    public function setErrors($errors)
+    public function setField($field)
     {
-        if (is_null($errors)) {
-            throw new \InvalidArgumentException('non-nullable errors cannot be null');
+        if (is_null($field)) {
+            throw new \InvalidArgumentException('non-nullable field cannot be null');
         }
-        $this->container['errors'] = $errors;
+        $this->container['field'] = $field;
+
+        return $this;
+    }
+
+    /**
+     * Gets message
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->container['message'];
+    }
+
+    /**
+     * Sets message
+     *
+     * @param string $message message
+     *
+     * @return self
+     */
+    public function setMessage($message)
+    {
+        if (is_null($message)) {
+            throw new \InvalidArgumentException('non-nullable message cannot be null');
+        }
+        $this->container['message'] = $message;
 
         return $this;
     }

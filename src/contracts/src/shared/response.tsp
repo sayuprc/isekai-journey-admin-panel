@@ -20,10 +20,12 @@ model BadRequest {
 
 model Unauthorized {
   @statusCode _: 401;
+  @body body: ErrorResponse;
 }
 
 model Forbidden {
   @statusCode _: 403;
+  @body body: ErrorResponse;
 }
 
 model NotFound {
@@ -33,22 +35,12 @@ model NotFound {
 
 model Unprocessable {
   @statusCode _: 422;
-  @body body: ValidationError;
-}
-
-@friendlyName("ValidationError")
-model ValidationError {
-  errors: ValidationErrorDetail[];
-}
-
-@friendlyName("ValidationErrorDetail")
-model ValidationErrorDetail {
-  field: string;
-  message: string;
+  @body body: ErrorResponse;
 }
 
 model InternalServerError {
   @statusCode _: 500;
+  @body body: ErrorResponse;
 }
 
 model Unavailable {
@@ -59,9 +51,30 @@ model GatewayTimeout {
   @statusCode _: 504;
 }
 
+@doc("エラー分類を表す機械可読なコード")
+@friendlyName("ErrorCode")
+enum ErrorCode {
+  Unauthenticated: "unauthenticated",
+  PermissionDenied: "permission_denied",
+  NotFound: "not_found",
+  ValidationFailed: "validation_failed",
+  BusinessRuleViolation: "business_rule_violation",
+  InternalError: "internal_error",
+}
+
+@doc("フィールド単位のエラー詳細")
+@friendlyName("ErrorDetail")
+model ErrorDetail {
+  field: string;
+  message: string;
+}
+
+@doc("全エラーステータス共通のレスポンス")
 @friendlyName("ErrorResponse")
 model ErrorResponse {
+  code: ErrorCode;
   message: string;
+  details?: ErrorDetail[];
 }
 
 alias ServerError = InternalServerError | Unavailable | GatewayTimeout;

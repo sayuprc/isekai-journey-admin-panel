@@ -134,7 +134,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Viewer\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse
+     * @return \OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse|\OpenAPI\Viewer\Client\Model\ErrorResponse
      */
     public function releaseGroupServiceListReleaseGroups($cursor = null, $limit = null, string $contentType = self::contentTypes['releaseGroupServiceListReleaseGroups'][0])
     {
@@ -151,7 +151,7 @@ class ReleaseGroupApi
      *
      * @throws \OpenAPI\Viewer\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse|\OpenAPI\Viewer\Client\Model\ErrorResponse, HTTP status code, HTTP response headers (array of strings)
      */
     public function releaseGroupServiceListReleaseGroupsWithHttpInfo($cursor = null, $limit = null, string $contentType = self::contentTypes['releaseGroupServiceListReleaseGroups'][0])
     {
@@ -187,6 +187,12 @@ class ReleaseGroupApi
                         $request,
                         $response,
                     );
+                case 500:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Viewer\Client\Model\ErrorResponse',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -215,6 +221,14 @@ class ReleaseGroupApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Viewer\Client\Model\ReleaseGroupListResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 500:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Viewer\Client\Model\ErrorResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

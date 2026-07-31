@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware\Admin;
 
+use App\Http\Responses\ApiError;
 use Auth\Application\Admin\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\Admin\UseCase\Authenticate\AuthenticateUseCase;
 use Closure;
@@ -24,13 +25,17 @@ class Authenticate
         $accessToken = $request->bearerToken();
 
         if (! is_string($accessToken)) {
-            return response()->json(status: 401);
+            [$payload, $status] = ApiError::unauthenticated();
+
+            return response()->json($payload, $status);
         }
 
         $result = $this->useCase->handle(new AuthenticateInputData($accessToken));
 
         if ($result->isErr()) {
-            return response()->json(status: 401);
+            [$payload, $status] = ApiError::unauthenticated();
+
+            return response()->json($payload, $status);
         }
 
         return $next($request);
