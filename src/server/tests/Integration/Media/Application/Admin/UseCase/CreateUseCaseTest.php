@@ -34,8 +34,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             ),
         );
 
-        $this->assertTrue($result->isOk());
-
         $media = DB::table('media')->first();
         $this->assertNotNull($media);
         $this->assertSame('テストメディアMV', $media->title);

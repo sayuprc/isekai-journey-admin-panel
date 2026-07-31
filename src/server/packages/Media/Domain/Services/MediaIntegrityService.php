@@ -14,13 +14,10 @@ use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Validation\FieldErrors;
 
 class MediaIntegrityService
 {
@@ -31,7 +28,7 @@ class MediaIntegrityService
     }
 
     /**
-     * @return Result<Media, DomainError>
+     * @throws DomainValidationException
      */
     public function prepareForCreate(
         string $title,
@@ -39,8 +36,8 @@ class MediaIntegrityService
         string $publishedAt,
         int $typeValue,
         bool $isDisplay,
-    ): Result {
-        $result = $this->build(
+    ): Media {
+        $media = $this->build(
             $this->generator->generate(),
             $title,
             $url,
@@ -49,21 +46,15 @@ class MediaIntegrityService
             $isDisplay,
         );
 
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $media = $result->unwrap();
-
         if (! is_null($this->repository->findByUrl($media->url))) {
-            return new Err(new DomainValidationError(['url' => ['同じURLのメディアが既に存在します']]));
+            throw new DomainValidationException(['url' => ['同じURLのメディアが既に存在します']]);
         }
 
-        return new Ok($media);
+        return $media;
     }
 
     /**
-     * @return Result<Media, DomainError>
+     * @throws DomainValidationException
      */
     public function prepareForUpdate(
         string $mediaId,
@@ -72,8 +63,8 @@ class MediaIntegrityService
         string $publishedAt,
         int $typeValue,
         bool $isDisplay,
-    ): Result {
-        $result = $this->build(
+    ): Media {
+        $media = $this->build(
             $mediaId,
             $title,
             $url,
@@ -82,23 +73,15 @@ class MediaIntegrityService
             $isDisplay,
         );
 
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $media = $result->unwrap();
         $found = $this->repository->findByUrl($media->url);
 
         if (! is_null($found) && ! $found->equals($media)) {
-            return new Err(new DomainValidationError(['url' => ['同じURLのメディアが既に存在します']]));
+            throw new DomainValidationException(['url' => ['同じURLのメディアが既に存在します']]);
         }
 
-        return new Ok($media);
+        return $media;
     }
 
-    /**
-     * @return Result<Media, DomainError>
-     */
     private function build(
         string $mediaId,
         string $title,
@@ -106,56 +89,51 @@ class MediaIntegrityService
         string $publishedAt,
         int $typeValue,
         bool $isDisplay,
-    ): Result {
-        return Result::collect6(
-            MediaId::create($mediaId),
-            MediaTitle::create($title),
-            MediaUrl::create($url),
-            $this->toPublishedAt($publishedAt),
-            $this->toMediaType($typeValue),
-            new Ok($isDisplay),
-        )
-            ->mapErr(static function (array $errors): DomainError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+    ): Media {
+        $errors = new FieldErrors();
+        $mediaIdVo = $errors->collect('mediaId', static fn (): MediaId => new MediaId($mediaId));
+        $titleVo = $errors->collect('title', static fn (): MediaTitle => new MediaTitle($title));
+        $urlVo = $errors->collect('url', static fn (): MediaUrl => new MediaUrl($url));
+        $publishedAtVo = $errors->collect('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt));
+        $errors->throwIfFailed();
 
-                return new DomainValidationError($messages);
-            })
-            ->map(static fn (array $values): Media => new Media(...$values));
+        assert(! is_null($mediaIdVo) && ! is_null($titleVo) && ! is_null($urlVo) && ! is_null($publishedAtVo));
+
+        return new Media(
+            $mediaIdVo,
+            $titleVo,
+            $urlVo,
+            $publishedAtVo,
+            $this->toMediaType($typeValue),
+            $isDisplay,
+        );
     }
 
     /**
-     * @return Result<MediaPublishedAt, DomainError>
+     * @throws InvalidDomainException
      */
-    private function toPublishedAt(string $publishedAt): Result
+    private function toPublishedAt(string $publishedAt): MediaPublishedAt
     {
         $normalized = trim($publishedAt);
 
         if ($normalized === '') {
-            return new Err(new EntityRuleViolationError('publishedAt', '公開日は必須です'));
+            throw new InvalidDomainException('公開日は必須です');
         }
 
         try {
-            return MediaPublishedAt::create(
+            return new MediaPublishedAt(
                 new DateTimeImmutable($normalized)->setTimezone(new DateTimeZone(date_default_timezone_get())),
             );
         } catch (DateMalformedStringException) {
-            return new Err(new EntityRuleViolationError('publishedAt', '公開日が不正です'));
+            throw new InvalidDomainException('公開日が不正です');
         }
     }
 
     /**
-     * 未知・不正な種別値は投入を止めず MediaType::Other に倒す。
-     *
-     * @return Result<MediaType, DomainError>
+     * 未知・不正な種別値は投入を止めず MediaType::Other に倒す
      */
-    private function toMediaType(int $typeValue): Result
+    private function toMediaType(int $typeValue): MediaType
     {
-        return new Ok(MediaType::tryFrom($typeValue) ?? MediaType::Other);
+        return MediaType::tryFrom($typeValue) ?? MediaType::Other;
     }
 }

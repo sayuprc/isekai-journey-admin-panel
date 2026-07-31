@@ -10,8 +10,8 @@ use Release\Application\Admin\UseCase\Update\UpdateUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -74,11 +74,10 @@ class UpdateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('新版名', $result->unwrap()->release->name->value);
+        $this->assertSame('新版名', $result->release->name->value);
         // 所属先グループは更新で変わらない。
-        $this->assertSame($releaseGroupId, $result->unwrap()->release->releaseGroupId->value);
-        $this->assertSame(20, $result->unwrap()->release->orderNo->value);
+        $this->assertSame($releaseGroupId, $result->release->releaseGroupId->value);
+        $this->assertSame(20, $result->release->orderNo->value);
 
         $this->assertDatabaseHas('releases', [
             'name' => '新版名',
@@ -142,8 +141,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertTrue($result->isOk());
-
         $this->assertDatabaseCount('release_tracks', 2);
         $this->assertDatabaseHas('release_tracks', [
             'track_no' => 2,
@@ -155,6 +152,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function notFound(): void
     {
+        $this->expectException(ResourceNotFoundException::class);
+
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $this->generateUuid(),
             name: '新版名',
@@ -166,9 +165,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
             formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
     }
 
     #[Test]
@@ -190,6 +186,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
             $this->createRelease($releaseId, $releaseGroupId, '旧版名', true),
         );
 
+        $this->expectException(DomainValidationException::class);
+
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $releaseId,
             name: '新版名',
@@ -210,11 +208,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
                 ],
             ],
         ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['media' => ['同じ曲順を複数指定することはできません。']], $error->errors);
     }
 
     private function getInstance(): UpdateUseCase

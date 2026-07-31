@@ -11,7 +11,7 @@ use Media\Domain\Models\MediaType;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -49,8 +49,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
             ),
         );
 
-        $this->assertTrue($result->isOk());
-
         $media = DB::table('media')->first();
         $this->assertNotNull($media);
         $this->assertSame('テストメディア配信アーカイブ', $media->title);
@@ -71,19 +69,21 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $mediaId = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(
-            new UpdateInputData(
-                $mediaId,
-                'テストメディア',
-                'https://example.com/media',
-                '2024-04-02T10:20:30+09:00',
-                MediaType::Mv->value,
-                true,
-            ),
-        );
+        try {
+            $this->getInstance()->handle(
+                new UpdateInputData(
+                    $mediaId,
+                    'テストメディア',
+                    'https://example.com/media',
+                    '2024-04-02T10:20:30+09:00',
+                    MediaType::Mv->value,
+                    true,
+                ),
+            );
+            $this->fail('ResourceNotFoundException が発生しませんでした');
+        } catch (ResourceNotFoundException) {
+        }
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
         $this->assertDatabaseMissing('media', ['title' => 'テストメディア']);
     }
 

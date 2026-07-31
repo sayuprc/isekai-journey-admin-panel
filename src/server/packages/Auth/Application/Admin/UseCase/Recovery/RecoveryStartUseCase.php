@@ -12,16 +12,8 @@ use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use Auth\Domain\Services\RecoveryCode\RecoveryCodeVerifyService;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\Domain\Validation\FieldErrors;
 
 readonly class RecoveryStartUseCase
 {
@@ -35,18 +27,10 @@ readonly class RecoveryStartUseCase
     ) {
     }
 
-    /**
-     * @return Result<RecoveryStartOutputData, UseCaseError>
-     */
-    public function handle(RecoveryStartInputData $inputData): Result
+    public function handle(RecoveryStartInputData $inputData): RecoveryStartOutputData
     {
-        $emailResult = Email::create($inputData->email);
+        $email = FieldErrors::single('email', static fn (): Email => new Email($inputData->email));
 
-        if ($emailResult->isErr()) {
-            return new Err($this->handleError($emailResult->unwrapErr()));
-        }
-
-        $email = $emailResult->unwrap();
         $adminUser = $this->adminUserRepository->findByEmail($email);
 
         // ユーザー列挙を防ぐため、メールの実在やコードの正否に依らず常に同一形状の
@@ -58,11 +42,11 @@ readonly class RecoveryStartUseCase
         $recoveryCodeId = null;
 
         if (! is_null($adminUser)) {
-            $verifyResult = $this->verifyService->verify($inputData->plainCode, $adminUser->adminUserId);
+            $recoveryCode = $this->verifyService->verify($inputData->plainCode, $adminUser->adminUserId);
 
-            if ($verifyResult->isOk()) {
+            if (! is_null($recoveryCode)) {
                 $adminUserId = $adminUser->adminUserId->value;
-                $recoveryCodeId = $verifyResult->unwrap()->recoveryCodeId->value;
+                $recoveryCodeId = $recoveryCode->recoveryCodeId->value;
             }
         }
 
@@ -83,15 +67,6 @@ readonly class RecoveryStartUseCase
             $recoveryCodeId,
         ));
 
-        return new Ok(new RecoveryStartOutputData($authCeremonyId, $startResult->publicKey));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+        return new RecoveryStartOutputData($authCeremonyId, $startResult->publicKey);
     }
 }

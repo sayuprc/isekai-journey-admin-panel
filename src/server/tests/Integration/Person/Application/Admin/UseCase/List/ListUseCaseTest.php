@@ -23,8 +23,7 @@ class ListUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle();
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals([$person], $result->unwrap()->persons);
+        $this->assertEquals([$person], $result->persons);
     }
 
     private function getInstance(): ListUseCase

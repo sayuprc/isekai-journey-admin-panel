@@ -20,6 +20,6 @@ readonly class AccessTokenFactory implements AccessTokenFactoryInterface
     #[Override]
     public function create(AccessTokenPayload $payload): AccessToken
     {
-        return new AccessToken(Jwt::reconstruct($this->jwt->generate($payload)));
+        return new AccessToken(new Jwt($this->jwt->generate($payload)));
     }
 }

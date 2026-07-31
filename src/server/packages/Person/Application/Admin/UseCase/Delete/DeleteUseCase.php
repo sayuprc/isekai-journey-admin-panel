@@ -8,19 +8,14 @@ use AdminUser\Domain\Models\Permission;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonUsageCheckerInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class DeleteUseCase
 {
@@ -33,43 +28,31 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WritePerson)
-            ->andThen(fn () => $this->deletePerson($inputData));
-    }
+        $this->authorizer->ensure(Permission::WritePerson);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deletePerson(DeleteInputData $inputData): Result
-    {
-        return PersonId::create($inputData->personId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($personId): Result {
-                $person = $this->repository->find($personId);
+        $personId = FieldErrors::single('personId', static fn (): PersonId => new PersonId($inputData->personId));
 
-                if (is_null($person)) {
-                    return new Err(new NotFoundError('Person', $personId->value));
-                }
+        $this->transaction->scope(function () use ($personId): void {
+            $person = $this->repository->find($personId);
 
-                if ($this->usageChecker->isUsed($personId)) {
-                    return new Err(new BusinessLogicError('この人物は楽曲に使用されているため削除できません'));
-                }
+            if (is_null($person)) {
+                throw new ResourceNotFoundException('Person', $personId->value);
+            }
 
-                $this->repository->delete($personId);
+            if ($this->usageChecker->isUsed($personId)) {
+                throw new BusinessRuleViolationException('この人物は楽曲に使用されているため削除できません');
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::Person,
-                    $person->personId,
-                    $person->toArray(),
-                );
+            $this->repository->delete($personId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::Person,
+                $person->personId,
+                $person->toArray(),
+            );
+        });
     }
 }

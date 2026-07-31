@@ -16,6 +16,7 @@ use Song\Domain\Models\SongType;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -110,8 +111,7 @@ class SongIntegrityServiceTest extends TestCase
             [],
         );
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedSong, $result->unwrap());
+        $this->assertEquals($expectedSong, $result);
     }
 
     #[Test]
@@ -143,6 +143,8 @@ class SongIntegrityServiceTest extends TestCase
             ])
             ->once();
 
+        $this->expectException(BusinessRuleViolationException::class);
+
         $result = $this->getInstance()->prepareForCreate(
             $title,
             $description,
@@ -153,8 +155,6 @@ class SongIntegrityServiceTest extends TestCase
             $persons,
             [],
         );
-
-        $this->assertTrue($result->isErr());
     }
 
     #[Test]
@@ -213,8 +213,7 @@ class SongIntegrityServiceTest extends TestCase
             [],
         );
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedSong, $result->unwrap());
+        $this->assertEquals($expectedSong, $result);
     }
 
     #[Test]
@@ -248,6 +247,8 @@ class SongIntegrityServiceTest extends TestCase
             ])
             ->once();
 
+        $this->expectException(BusinessRuleViolationException::class);
+
         $result = $this->getInstance()->prepareForUpdate(
             $songId,
             $title,
@@ -260,8 +261,6 @@ class SongIntegrityServiceTest extends TestCase
             $persons,
             [],
         );
-
-        $this->assertTrue($result->isErr());
     }
 
     private function getInstance(): SongIntegrityService

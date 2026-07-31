@@ -8,14 +8,9 @@ use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Query\ReleaseGroupDetailQueryServiceInterface;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class GetUseCase
 {
@@ -26,31 +21,19 @@ readonly class GetUseCase
     ) {
     }
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    public function handle(GetInputData $inputData): Result
+    public function handle(GetInputData $inputData): GetOutputData
     {
-        return $this->authorizer->require(Permission::ReadRelease)
-            ->andThen(fn () => $this->getReleaseGroup($inputData));
-    }
+        $this->authorizer->ensure(Permission::ReadRelease);
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    private function getReleaseGroup(GetInputData $inputData): Result
-    {
-        return ReleaseGroupId::create($inputData->releaseGroupId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(function (ReleaseGroupId $releaseGroupId): Result {
-                if (is_null($found = $this->repository->find($releaseGroupId))) {
-                    return new Err(new NotFoundError('ReleaseGroup', $releaseGroupId->value));
-                }
+        $releaseGroupId = FieldErrors::single('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($inputData->releaseGroupId));
 
-                return new Ok(new GetOutputData(
-                    $found,
-                    $this->query->findReferencedReleases($releaseGroupId),
-                ));
-            });
+        if (is_null($found = $this->repository->find($releaseGroupId))) {
+            throw new ResourceNotFoundException('ReleaseGroup', $releaseGroupId->value);
+        }
+
+        return new GetOutputData(
+            $found,
+            $this->query->findReferencedReleases($releaseGroupId),
+        );
     }
 }

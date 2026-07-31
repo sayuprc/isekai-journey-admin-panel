@@ -35,12 +35,12 @@ readonly class RegistrationToken
         int $status,
     ): self {
         return new self(
-            RegistrationTokenId::reconstruct($registrationTokenId),
-            HashedTokenValue::reconstruct($token),
-            Email::reconstruct($email),
+            new RegistrationTokenId($registrationTokenId),
+            new HashedTokenValue($token),
+            new Email($email),
             Role::from($role),
             Permissions::reconstruct($permissions),
-            ExpiredAt::reconstruct($expiredAt),
+            new ExpiredAt($expiredAt),
             ConsumptionStatus::from($status),
         );
     }

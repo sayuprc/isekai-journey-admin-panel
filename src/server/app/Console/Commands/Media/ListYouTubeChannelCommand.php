@@ -20,7 +20,7 @@ class ListYouTubeChannelCommand extends Command
 
     public function handle(ListYouTubeChannelUseCase $useCase): int
     {
-        $channels = $useCase->handle(new ListYouTubeChannelInputData())->unwrap()->channels;
+        $channels = $useCase->handle(new ListYouTubeChannelInputData())->channels;
 
         if ($channels === []) {
             $this->warn('チャンネルが登録されていません');

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Responses\ApiError;
+use App\Http\Responses\ApiExceptionRenderer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\UseCaseException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,15 +25,13 @@ return Application::configure(basePath: dirname(__DIR__))
         // API のみのアプリのため、Accept ヘッダに依存せず常に JSON で例外を返す
         $exceptions->shouldRenderJsonWhen(static fn (): bool => true);
 
-        // 予期しない例外は統一エンベロープの 500 で返す
-        // ルーティング由来の HTTP 例外 (404, 405 等) は契約外のため Laravel の既定に任せる
-        $exceptions->render(static function (\Throwable $e) {
-            if ($e instanceof HttpExceptionInterface) {
-                return null;
-            }
+        // 期待される業務例外は 4xx として描画されるためログには記録しない
+        $exceptions->dontReport([
+            UseCaseException::class,
+            BusinessRuleViolationException::class,
+            DomainValidationException::class,
+        ]);
 
-            [$payload, $status] = ApiError::internalError();
-
-            return response()->json($payload, $status);
-        });
+        // 例外 → {code, status} の対応表は ApiExceptionRenderer に集約する
+        $exceptions->render(ApiExceptionRenderer::render(...));
     })->create();

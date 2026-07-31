@@ -12,43 +12,40 @@ use Auth\Infrastructures\Auth\UseCaseAuthorizationContext;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\TestCase;
 
 class UseCaseAuthorizerTest extends TestCase
 {
     #[Test]
-    public function returnsAuthenticationErrorWhenCurrentUserDoesNotExist(): void
+    public function unauthenticatedWhenCurrentUserDoesNotExist(): void
     {
-        $result = $this->createAuthorizer(new AuthContext())->require(Permission::ReadMedia);
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $this->createAuthorizer(new AuthContext())->ensure(Permission::ReadMedia);
     }
 
     #[Test]
-    public function returnsAuthorizationErrorWhenCurrentUserDoesNotHavePermission(): void
+    public function permissionDeniedWhenCurrentUserDoesNotHavePermission(): void
     {
         $context = new AuthContext();
         $context->set($this->createGeneralUser([]));
 
-        $result = $this->createAuthorizer($context)->require(Permission::ReadMedia);
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $this->createAuthorizer($context)->ensure(Permission::ReadMedia);
     }
 
     #[Test]
-    public function returnsOkWhenCurrentUserHasPermission(): void
+    public function returnsUserWhenCurrentUserHasPermission(): void
     {
         $context = new AuthContext();
         $context->set($this->createGeneralUser([Permission::ReadMedia->value]));
 
-        $result = $this->createAuthorizer($context)->require(Permission::ReadMedia);
+        $user = $this->createAuthorizer($context)->ensure(Permission::ReadMedia);
 
-        $this->assertTrue($result->isOk());
-        $this->assertTrue($result->unwrap()->can(Permission::ReadMedia));
+        $this->assertTrue($user->can(Permission::ReadMedia));
     }
 
     /**

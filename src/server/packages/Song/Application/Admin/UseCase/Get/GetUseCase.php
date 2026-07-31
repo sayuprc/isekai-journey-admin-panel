@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Get;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Application\Admin\Assemble\SongAssembler;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class GetUseCase
 {
@@ -26,28 +21,16 @@ readonly class GetUseCase
     ) {
     }
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    public function handle(GetInputData $inputData): Result
+    public function handle(GetInputData $inputData): GetOutputData
     {
-        return $this->authorizer->require(Permission::ReadSong)
-            ->andThen(fn () => $this->getSong($inputData));
-    }
+        $this->authorizer->ensure(Permission::ReadSong);
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    private function getSong(GetInputData $inputData): Result
-    {
-        return SongId::create($inputData->songId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(function (SongId $songId): Result {
-                if (is_null($found = $this->repository->find($songId))) {
-                    return new Err(new NotFoundError('楽曲', $songId->value));
-                }
+        $songId = FieldErrors::single('songId', static fn (): SongId => new SongId($inputData->songId));
 
-                return new Ok(new GetOutputData($this->assembler->assemble($found)));
-            });
+        if (is_null($found = $this->repository->find($songId))) {
+            throw new ResourceNotFoundException('楽曲', $songId->value);
+        }
+
+        return new GetOutputData($this->assembler->assemble($found));
     }
 }

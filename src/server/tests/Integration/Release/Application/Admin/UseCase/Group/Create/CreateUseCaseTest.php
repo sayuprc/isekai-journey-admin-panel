@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Group\Create\CreateInputData;
 use Release\Application\Admin\UseCase\Group\Create\CreateUseCase;
 use Release\Domain\Models\ReleaseGroupType;
-use Support\UseCase\Error\InvalidInputError;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -29,8 +29,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             orderNo: 1,
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('観測された春', $result->unwrap()->releaseGroup->title->value);
+        $this->assertSame('観測された春', $result->releaseGroup->title->value);
 
         $this->assertDatabaseHas('release_groups', [
             'title' => '観測された春',
@@ -56,13 +55,14 @@ class CreateUseCaseTest extends DatabaseTestCase
             orderNo: 7,
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame(7, $result->unwrap()->releaseGroup->orderNo->value);
+        $this->assertSame(7, $result->releaseGroup->orderNo->value);
     }
 
     #[Test]
     public function createFailsWhenTypeIsInvalid(): void
     {
+        $this->expectException(DomainValidationException::class);
+
         $result = $this->getInstance()->handle(new CreateInputData(
             title: '観測された春',
             typeValue: 0,
@@ -70,11 +70,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             isDisplay: true,
             orderNo: 1,
         ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['typeValue' => ['不正なリリースグループ種別です: 0']], $error->errors);
     }
 
     private function getInstance(): CreateUseCase

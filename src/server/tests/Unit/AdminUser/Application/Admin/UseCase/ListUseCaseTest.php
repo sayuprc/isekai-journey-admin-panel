@@ -34,10 +34,7 @@ class ListUseCaseTest extends TestCase
             ->andReturn([])
             ->once();
 
-        $result = $this->getInstance()->handle();
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(0, $response->adminUsers);
     }
@@ -52,10 +49,7 @@ class ListUseCaseTest extends TestCase
             ])
             ->once();
 
-        $result = $this->getInstance()->handle();
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
+        $response = $this->getInstance()->handle();
 
         $this->assertCount(2, $response->adminUsers);
 

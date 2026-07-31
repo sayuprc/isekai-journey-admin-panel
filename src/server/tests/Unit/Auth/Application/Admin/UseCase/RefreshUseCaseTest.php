@@ -18,9 +18,9 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -106,10 +106,10 @@ class RefreshUseCaseTest extends TestCase
 
         $this->refreshTokenIssueService->shouldReceive('issue')
             ->with($adminUserId)
-            ->andReturn(new Ok([
+            ->andReturn([
                 'token' => $nextRefreshToken,
                 'plainToken' => 'next-plain-token',
-            ]))
+            ])
             ->once();
 
         $this->accessTokenIssueService->shouldReceive('issue')
@@ -122,12 +122,11 @@ class RefreshUseCaseTest extends TestCase
             ->andReturnTrue()
             ->once();
 
-        $result = $this->getInstance()->handle(new RefreshInputData($storedToken->refreshTokenId->value, $plainToken));
+        $output = $this->getInstance()->handle(new RefreshInputData($storedToken->refreshTokenId->value, $plainToken));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('access-token', $result->unwrap()->accessToken->jwt->value);
-        $this->assertSame($nextRefreshToken->refreshTokenId->value, $result->unwrap()->refreshTokenId);
-        $this->assertSame('next-plain-token', $result->unwrap()->plainRefreshToken);
+        $this->assertSame('access-token', $output->accessToken->jwt->value);
+        $this->assertSame($nextRefreshToken->refreshTokenId->value, $output->refreshTokenId);
+        $this->assertSame('next-plain-token', $output->plainRefreshToken);
         $this->assertCount(2, $this->savedRefreshTokens);
         $this->assertTrue($this->savedRefreshTokens[0]->equals($storedToken));
         $this->assertFalse($this->savedRefreshTokens[0]->isAvailable(new DateTimeImmutable('2019-12-09 12:00:00')));
@@ -143,9 +142,28 @@ class RefreshUseCaseTest extends TestCase
         $this->accessTokenIssueService->shouldNotReceive('issue');
         $this->tokenHasher->shouldNotReceive('verify');
 
-        $result = $this->getInstance()->handle(new RefreshInputData($this->generateUuid(), 'invalid-refresh-token'));
+        try {
+            $this->getInstance()->handle(new RefreshInputData($this->generateUuid(), 'invalid-refresh-token'));
+            $this->fail('UnauthenticatedException が発生しませんでした');
+        } catch (UnauthenticatedException) {
+        }
 
-        $this->assertTrue($result->isErr());
+        $this->assertSame([], $this->savedRefreshTokens);
+    }
+
+    #[Test]
+    public function unauthenticatedWhenRefreshTokenIdIsMalformed(): void
+    {
+        $this->refreshTokenIssueService->shouldNotReceive('issue');
+        $this->accessTokenIssueService->shouldNotReceive('issue');
+        $this->tokenHasher->shouldNotReceive('verify');
+
+        try {
+            $this->getInstance()->handle(new RefreshInputData('not-a-uuid', 'plain-refresh-token'));
+            $this->fail('UnauthenticatedException が発生しませんでした');
+        } catch (UnauthenticatedException) {
+        }
+
         $this->assertSame([], $this->savedRefreshTokens);
     }
 

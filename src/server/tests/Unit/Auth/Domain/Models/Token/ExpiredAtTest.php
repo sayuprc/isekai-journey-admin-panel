@@ -17,7 +17,7 @@ class ExpiredAtTest extends TestCase
     #[DataProvider('isExpiredDataProvider')]
     public function isExpired(DateTimeImmutable $value, DateTimeInterface $now, bool $expected): void
     {
-        $expiredAt = ExpiredAt::reconstruct($value);
+        $expiredAt = new ExpiredAt($value);
 
         $this->assertSame($expected, $expiredAt->isExpired($now));
     }

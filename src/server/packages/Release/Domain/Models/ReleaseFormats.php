@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\DomainValidationException;
 
 /**
  * @extends ImmutableCollection<int, ReleaseFormat>
@@ -18,14 +15,14 @@ readonly class ReleaseFormats extends ImmutableCollection
     /**
      * @param list<int> $values
      *
-     * @return Result<self, DomainValidationError>
+     * @throws DomainValidationException
      */
-    public static function fromArray(array $values): Result
+    public static function fromArray(array $values): self
     {
         if ($values === []) {
-            return new Err(new DomainValidationError([
+            throw new DomainValidationException([
                 'formatValues' => ['提供形態は 1 つ以上指定してください。'],
-            ]));
+            ]);
         }
 
         $formats = [];
@@ -35,22 +32,22 @@ readonly class ReleaseFormats extends ImmutableCollection
             $format = ReleaseFormat::tryFrom($value);
 
             if (is_null($format)) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'formatValues' => ["不正な提供形態です: {$value}"],
-                ]));
+                ]);
             }
 
             if (isset($seenValues[$format->value])) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'formatValues' => ['同じ提供形態を複数指定することはできません。'],
-                ]));
+                ]);
             }
 
             $seenValues[$format->value] = true;
             $formats[] = $format;
         }
 
-        return new Ok(new self($formats));
+        return new self($formats);
     }
 
     /**

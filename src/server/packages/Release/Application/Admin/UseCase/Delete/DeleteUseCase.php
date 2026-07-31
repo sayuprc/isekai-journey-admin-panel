@@ -7,16 +7,12 @@ namespace Release\Application\Admin\UseCase\Delete;
 use AdminUser\Domain\Models\Permission;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteUseCase
 {
@@ -28,39 +24,27 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WriteRelease)
-            ->andThen(fn () => $this->deleteRelease($inputData));
-    }
+        $this->authorizer->ensure(Permission::WriteRelease);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deleteRelease(DeleteInputData $inputData): Result
-    {
-        return ReleaseId::create($inputData->releaseId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(fn (ReleaseId $releaseId): Result => $this->transaction->scope(function () use ($releaseId): Result {
-                $release = $this->repository->find($releaseId);
+        $releaseId = FieldErrors::single('releaseId', static fn (): ReleaseId => new ReleaseId($inputData->releaseId));
 
-                if (is_null($release)) {
-                    return new Ok(null);
-                }
+        $this->transaction->scope(function () use ($releaseId): void {
+            $release = $this->repository->find($releaseId);
 
-                $this->repository->delete($releaseId);
+            if (is_null($release)) {
+                return;
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::Release,
-                    $release->releaseId,
-                    $release->toArray(),
-                );
+            $this->repository->delete($releaseId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::Release,
+                $release->releaseId,
+                $release->toArray(),
+            );
+        });
     }
 }

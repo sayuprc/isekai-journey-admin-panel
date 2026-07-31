@@ -7,13 +7,8 @@ namespace AdminUser\Domain\Services\RegistrationToken;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationToken;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use SensitiveParameter;
 use Support\Contracts\ClockInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
 
 class RegistrationTokenConsumeService
 {
@@ -25,9 +20,9 @@ class RegistrationTokenConsumeService
     }
 
     /**
-     * @return Result<RegistrationToken, DomainError>
+     * 平文トークンに一致する利用可能な登録トークンを返す。なければ null
      */
-    public function verify(#[SensitiveParameter] string $plainToken, Email $email): Result
+    public function verify(#[SensitiveParameter] string $plainToken, Email $email): ?RegistrationToken
     {
         $tokens = $this->repository->findUnusedByEmailForUpdate($email);
 
@@ -37,12 +32,12 @@ class RegistrationTokenConsumeService
             }
 
             if (! $token->isAvailable($this->clock->now())) {
-                return new Err(new BusinessRuleViolationError('token_not_found'));
+                return null;
             }
 
-            return new Ok($token);
+            return $token;
         }
 
-        return new Err(new BusinessRuleViolationError('token_not_found'));
+        return null;
     }
 }

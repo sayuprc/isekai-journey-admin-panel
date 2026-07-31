@@ -59,9 +59,9 @@ trait EntityFactory
     protected function createPerson(string $personId, string $name, int $orderNo): Person
     {
         return new Person(
-            PersonId::reconstruct($personId),
-            PersonName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
+            new PersonId($personId),
+            new PersonName($name),
+            new OrderNo($orderNo),
         );
     }
 
@@ -121,16 +121,16 @@ trait EntityFactory
         assert($type instanceof SongType);
 
         return new Song(
-            SongId::reconstruct($songId),
-            Title::reconstruct($title),
-            Description::reconstruct($description),
-            is_null($lyricsLink) ? null : LyricsLink::reconstruct($lyricsLink),
+            new SongId($songId),
+            new Title($title),
+            new Description($description),
+            is_null($lyricsLink) ? null : new LyricsLink($lyricsLink),
             $type,
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
-            SongTagReferences::fromArray($tags)->unwrap(),
-            SongPersons::fromArray($persons)->unwrap(),
-            SongMediaLinks::fromArray(is_array($media) ? $media : [])->unwrap(),
+            new OrderNo($orderNo),
+            SongTagReferences::fromArray($tags),
+            SongPersons::fromArray($persons),
+            SongMediaLinks::fromArray(is_array($media) ? $media : []),
         );
     }
 
@@ -187,9 +187,9 @@ trait EntityFactory
     protected function createSongTag(string $songTagId, string $name, int $orderNo): SongTag
     {
         return new SongTag(
-            SongTagId::reconstruct($songTagId),
-            SongTagName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
+            new SongTagId($songTagId),
+            new SongTagName($name),
+            new OrderNo($orderNo),
         );
     }
 
@@ -202,10 +202,10 @@ trait EntityFactory
         ?DateTimeImmutable $publishedAt = null,
     ): Media {
         return new Media(
-            MediaId::reconstruct($mediaId),
-            MediaTitle::reconstruct($title),
-            MediaUrl::reconstruct($url),
-            MediaPublishedAt::reconstruct($publishedAt ?? new DateTimeImmutable('2024-01-01 00:00:00')),
+            new MediaId($mediaId),
+            new MediaTitle($title),
+            new MediaUrl($url),
+            new MediaPublishedAt($publishedAt ?? new DateTimeImmutable('2024-01-01 00:00:00')),
             $type,
             $isDisplay,
         );
@@ -225,12 +225,12 @@ trait EntityFactory
         int $orderNo = 1,
     ): ReleaseGroup {
         return new ReleaseGroup(
-            ReleaseGroupId::reconstruct($releaseGroupId),
-            ReleaseGroupTitle::reconstruct($title),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseGroupTitle($title),
             $type,
-            ReleaseDescription::reconstruct($description),
+            new ReleaseDescription($description),
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
         );
     }
 
@@ -250,14 +250,14 @@ trait EntityFactory
         int $orderNo = 1,
     ): Release {
         return new Release(
-            ReleaseId::reconstruct($releaseId),
-            ReleaseGroupId::reconstruct($releaseGroupId),
-            ReleaseName::reconstruct($name),
-            ReleasedOn::reconstruct($releasedOn ?? new ImmutableDate('2024-01-01')),
-            ReleaseDescription::reconstruct($description),
-            is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
+            new ReleaseId($releaseId),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseName($name),
+            new ReleasedOn($releasedOn ?? new ImmutableDate('2024-01-01')),
+            new ReleaseDescription($description),
+            is_null($jacketArtUrl) ? null : new JacketArtUrl($jacketArtUrl),
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
             ReleaseFormats::reconstruct($formats ?? [ReleaseFormat::Cd->value]),
             ReleaseMedia::reconstruct($media),
         );
@@ -283,7 +283,7 @@ trait EntityFactory
 
     protected function createAccessToken(string $jwt): AccessToken
     {
-        return new AccessToken(Jwt::reconstruct($jwt));
+        return new AccessToken(new Jwt($jwt));
     }
 
     protected function createRefreshToken(
@@ -294,10 +294,10 @@ trait EntityFactory
         ConsumptionStatus $status,
     ): RefreshToken {
         return new RefreshToken(
-            RefreshTokenId::reconstruct($refreshTokenId),
-            AdminUserId::reconstruct($adminUserId),
-            HashedTokenValue::reconstruct($tokenValue),
-            ExpiredAt::reconstruct($expiredAt),
+            new RefreshTokenId($refreshTokenId),
+            new AdminUserId($adminUserId),
+            new HashedTokenValue($tokenValue),
+            new ExpiredAt($expiredAt),
             $status,
         );
     }

@@ -8,14 +8,17 @@ use AdminUser\Application\Cli\UseCase\IssueRegistrationToken\IssueRegistrationTo
 use AdminUser\Application\Cli\UseCase\IssueRegistrationToken\IssueRegistrationTokenUseCase;
 use AdminUser\Domain\Models\Permission;
 use AdminUser\Domain\Models\Role;
+use App\Console\Commands\Concerns\ResolvesUseCaseExceptionMessage;
 use Illuminate\Console\Command;
 use Override;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\UseCaseException;
 
 class InviteCommand extends Command
 {
+    use ResolvesUseCaseExceptionMessage;
+
     #[Override]
     protected $signature = 'admin:invite {email} {--p|privilege} {permissions?*}';
 
@@ -48,39 +51,18 @@ class InviteCommand extends Command
             }
         }
 
-        $result = $useCase->handle(new IssueRegistrationTokenInputData($email, $role->value, $permissions));
-
-        if ($result->isErr()) {
-            $this->error($this->resolveErrorMessage($result->unwrapErr()));
+        try {
+            $output = $useCase->handle(new IssueRegistrationTokenInputData($email, $role->value, $permissions));
+        } catch (BusinessRuleViolationException|DomainValidationException|UseCaseException $e) {
+            $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;
         }
-
-        $output = $result->unwrap();
 
         $this->line($output->plainToken);
         $this->info(sprintf('有効期限: %s', $output->token->expiredAt->value->format('Y-m-d H:i:s')));
 
         return Command::SUCCESS;
-    }
-
-    private function resolveErrorMessage(UseCaseError $error): string
-    {
-        if ($error instanceof BusinessLogicError) {
-            return $error->message;
-        }
-
-        if (! $error instanceof InvalidInputError) {
-            return '';
-        }
-
-        foreach ($error->errors as $messages) {
-            if ($messages !== []) {
-                return $messages[0];
-            }
-        }
-
-        return '';
     }
 
     private function isPrivilege(): bool

@@ -15,11 +15,8 @@ use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class ImportYouTubeUseCase
 {
@@ -33,10 +30,7 @@ readonly class ImportYouTubeUseCase
     ) {
     }
 
-    /**
-     * @return Result<ImportYouTubeOutputData, UseCaseError>
-     */
-    public function handle(ImportYouTubeInputData $inputData): Result
+    public function handle(ImportYouTubeInputData $inputData): ImportYouTubeOutputData
     {
         $results = [];
 
@@ -44,7 +38,7 @@ readonly class ImportYouTubeUseCase
             $results[] = $this->importChannel($channel);
         }
 
-        return new Ok(new ImportYouTubeOutputData($results));
+        return new ImportYouTubeOutputData($results);
     }
 
     private function importChannel(YouTubeChannel $channel): ChannelImportResult
@@ -58,7 +52,7 @@ readonly class ImportYouTubeUseCase
         $videosToImport = [];
 
         foreach ($videos as $video) {
-            $url = MediaUrl::reconstruct($video->url);
+            $url = new MediaUrl($video->url);
 
             // 動画は新しい順に取得されるため、保存済みの動画に到達した時点で以降は取り込み済みとみなす
             if (! is_null($this->mediaRepository->findByUrl($url))) {
@@ -75,7 +69,7 @@ readonly class ImportYouTubeUseCase
         $mediaList = [];
 
         foreach ($videosToImport as $video) {
-            $url = MediaUrl::reconstruct($video->url);
+            $url = new MediaUrl($video->url);
             $isShort = $this->isKnownShort($video) || ($shortsByVideoId[$video->videoId] ?? false);
 
             $mediaList[] = Media::reconstruct(

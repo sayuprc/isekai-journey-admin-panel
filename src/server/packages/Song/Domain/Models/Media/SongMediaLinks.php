@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Song\Domain\Models\Media;
 
 use Media\Domain\Models\MediaId;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -21,44 +18,47 @@ readonly class SongMediaLinks extends ImmutableCollection
     /**
      * @param list<array{mediaId: string, orderNo: int}> $items
      *
-     * @return Result<self, DomainValidationError>
+     * @throws DomainValidationException
      */
-    public static function fromArray(array $items): Result
+    public static function fromArray(array $items): self
     {
         $links = [];
         $seen = [];
 
         foreach ($items as $item) {
-            $result = Result::collect(
-                MediaId::create($item['mediaId']),
-                OrderNo::create($item['orderNo']),
-            )->map(static fn (array $items): SongMediaLink => new SongMediaLink(...$items));
+            $messages = [];
+            $mediaId = null;
+            $orderNo = null;
 
-            if ($result->isErr()) {
-                $messages = [];
-                foreach ($result->unwrapErr() as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
-
-                return new Err(new DomainValidationError($messages));
+            try {
+                $mediaId = new MediaId($item['mediaId']);
+            } catch (InvalidDomainException $e) {
+                $messages['mediaId'] = [$e->getMessage()];
             }
 
-            $link = $result->unwrap();
+            try {
+                $orderNo = new OrderNo($item['orderNo']);
+            } catch (InvalidDomainException $e) {
+                $messages['orderNo'] = [$e->getMessage()];
+            }
+
+            if (is_null($mediaId) || is_null($orderNo)) {
+                throw new DomainValidationException($messages);
+            }
+
+            $link = new SongMediaLink($mediaId, $orderNo);
 
             if (isset($seen[$link->mediaId->value])) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'media' => ['同じメディアを複数指定することはできません。'],
-                ]));
+                ]);
             }
 
             $seen[$link->mediaId->value] = true;
             $links[] = $link;
         }
 
-        return new Ok(new self($links));
+        return new self($links);
     }
 
     /**

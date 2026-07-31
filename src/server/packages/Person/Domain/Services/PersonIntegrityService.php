@@ -8,14 +8,10 @@ use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
 use Person\Domain\Models\PersonRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Validation\FieldErrors;
 use Support\Domain\ValueObjects\OrderNo;
 
 class PersonIntegrityService
@@ -27,70 +23,49 @@ class PersonIntegrityService
     }
 
     /**
-     * @return Result<Person, DomainError>
+     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
-    public function prepareForCreate(string $name): Result
+    public function prepareForCreate(string $name): Person
     {
-        $result = $this->build(
+        $person = $this->build(
             $this->generator->generate(),
             $name,
             $this->repository->getMaxOrderNo() + 10,
         );
 
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $person = $result->unwrap();
-
         if (! is_null($this->repository->findByName($person->name))) {
-            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
+            throw new BusinessRuleViolationException(sprintf('すでに使われている名前です "%s"', $name));
         }
 
-        return new Ok($person);
+        return $person;
     }
 
     /**
-     * @return Result<Person, DomainError>
+     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
-    public function prepareForUpdate(string $personId, string $name, int $orderNo): Result
+    public function prepareForUpdate(string $personId, string $name, int $orderNo): Person
     {
-        $result = $this->build($personId, $name, $orderNo);
-
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $person = $result->unwrap();
+        $person = $this->build($personId, $name, $orderNo);
 
         if (! is_null($found = $this->repository->findByName($person->name)) && ! $found->equals($person)) {
-            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
+            throw new BusinessRuleViolationException(sprintf('すでに使われている名前です "%s"', $name));
         }
 
-        return new Ok($person);
+        return $person;
     }
 
-    /**
-     * @return Result<Person, DomainError>
-     */
-    private function build(string $personId, string $name, int $orderNo): Result
+    private function build(string $personId, string $name, int $orderNo): Person
     {
-        return Result::collect3(
-            PersonId::create($personId),
-            PersonName::create($name),
-            OrderNo::create($orderNo),
-        )
-            ->mapErr(static function (array $errors): DomainValidationError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+        $errors = new FieldErrors();
+        $personIdVo = $errors->collect('personId', static fn (): PersonId => new PersonId($personId));
+        $nameVo = $errors->collect('name', static fn (): PersonName => new PersonName($name));
+        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
+        $errors->throwIfFailed();
 
-                return new DomainValidationError($messages);
-            })
-            ->map(static fn (array $values): Person => new Person(...$values));
+        assert(! is_null($personIdVo) && ! is_null($nameVo) && ! is_null($orderNoVo));
+
+        return new Person($personIdVo, $nameVo, $orderNoVo);
     }
 }

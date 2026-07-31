@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth\Application\Admin\UseCase\RegisterStart;
 
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenConsumeService;
@@ -12,21 +13,14 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Validation\FieldErrors;
 
 readonly class RegisterStartUseCase
 {
+    private const string FAILED_MESSAGE = '登録に失敗しました。入力内容を確認してください。';
+
     public function __construct(
         private RegistrationTokenConsumeService $consumeService,
         private AdminUserIntegrityService $integrityService,
@@ -37,36 +31,28 @@ readonly class RegisterStartUseCase
     ) {
     }
 
-    /**
-     * @return Result<RegisterStartOutputData, UseCaseError>
-     */
-    public function handle(RegisterStartInputData $inputData): Result
+    public function handle(RegisterStartInputData $inputData): RegisterStartOutputData
     {
-        $emailResult = Email::create($inputData->email);
+        $errors = new FieldErrors();
+        $email = $errors->collect('email', static fn (): Email => new Email($inputData->email));
+        $name = $errors->collect('name', static fn (): AdminUserName => new AdminUserName($inputData->name));
+        $errors->throwIfFailed();
 
-        if ($emailResult->isErr()) {
-            return new Err($this->handleError($emailResult->unwrapErr()));
+        assert(! is_null($email) && ! is_null($name));
+
+        $token = $this->consumeService->verify($inputData->plainToken, $email);
+
+        if (is_null($token)) {
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
-        $tokenResult = $this->consumeService->verify($inputData->plainToken, $emailResult->unwrap());
-
-        if ($tokenResult->isErr()) {
-            return new Err($this->handleError($tokenResult->unwrapErr()));
+        try {
+            $adminUser = $this->integrityService->prepareForCreate($name, $token->email, $token->role, $token->permissions);
+        } catch (BusinessRuleViolationException) {
+            // ユーザー列挙を防ぐため、失敗理由に依らず同一メッセージで返す
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
-        $token = $tokenResult->unwrap();
-        $adminUserResult = $this->integrityService->prepareForCreate(
-            $inputData->name,
-            $token->email->value,
-            $token->role->value,
-            $token->permissions->toArray(),
-        );
-
-        if ($adminUserResult->isErr()) {
-            return new Err($this->handleError($adminUserResult->unwrapErr()));
-        }
-
-        $adminUser = $adminUserResult->unwrap();
         $authCeremonyId = $this->uuidGenerator->generate();
         $startResult = $this->passkeyAuthenticator->startRegistration(
             $this->userHandleGenerator->generate(),
@@ -83,16 +69,6 @@ readonly class RegisterStartUseCase
             $startResult->optionsJson,
         ));
 
-        return new Ok(new RegisterStartOutputData($authCeremonyId, $startResult->publicKey));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+        return new RegisterStartOutputData($authCeremonyId, $startResult->publicKey);
     }
 }

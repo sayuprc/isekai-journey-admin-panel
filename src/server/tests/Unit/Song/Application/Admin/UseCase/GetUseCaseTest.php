@@ -17,7 +17,7 @@ use Song\Domain\Models\Persons\SongPersonRole;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -89,9 +89,7 @@ class GetUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new GetInputData($songId));
 
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
+        $response = $result;
 
         $this->assertSame($songId, $response->song->songId);
         $this->assertSame('テスト楽曲', $response->song->title);
@@ -121,13 +119,9 @@ class GetUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new GetInputData($songId));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertFalse($result->isOk());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(NotFoundError::class, $error);
-        $this->assertSame('楽曲', $error->resourceName);
-        $this->assertSame($songId, $error->identifier);
+        $result = $this->getInstance()->handle(new GetInputData($songId));
     }
 
     private function getInstance(): GetUseCase

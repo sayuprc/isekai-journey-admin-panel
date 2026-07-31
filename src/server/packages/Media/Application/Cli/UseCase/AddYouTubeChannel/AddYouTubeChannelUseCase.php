@@ -8,13 +8,9 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelId;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelName;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Validation\FieldErrors;
 
 readonly class AddYouTubeChannelUseCase
 {
@@ -24,31 +20,23 @@ readonly class AddYouTubeChannelUseCase
     ) {
     }
 
-    /**
-     * @return Result<AddYouTubeChannelOutputData, UseCaseError>
-     */
-    public function handle(AddYouTubeChannelInputData $inputData): Result
+    public function handle(AddYouTubeChannelInputData $inputData): AddYouTubeChannelOutputData
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $channelIdResult = YouTubeChannelId::create($inputData->channelId);
+        return $this->transaction->scope(function () use ($inputData): AddYouTubeChannelOutputData {
+            $errors = new FieldErrors();
+            $channelId = $errors->collect('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
+            $name = $errors->collect('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name));
+            $errors->throwIfFailed();
 
-            if ($channelIdResult->isErr()) {
-                return new Err(new InvalidInputError(['channelId' => [$channelIdResult->unwrapErr()->message]]));
-            }
+            assert(! is_null($channelId) && ! is_null($name));
 
-            $nameResult = YouTubeChannelName::create($inputData->name);
-
-            if ($nameResult->isErr()) {
-                return new Err(new InvalidInputError(['name' => [$nameResult->unwrapErr()->message]]));
-            }
-
-            $channel = new YouTubeChannel($channelIdResult->unwrap(), $nameResult->unwrap());
+            $channel = new YouTubeChannel($channelId, $name);
 
             if (! is_null($this->repository->find($channel->channelId))) {
-                return new Err(new BusinessLogicError(sprintf('すでに登録されているチャンネルです "%s"', $channel->channelId->value)));
+                throw new BusinessRuleViolationException(sprintf('すでに登録されているチャンネルです "%s"', $channel->channelId->value));
             }
 
-            return new Ok(new AddYouTubeChannelOutputData($this->repository->save($channel)));
+            return new AddYouTubeChannelOutputData($this->repository->save($channel));
         });
     }
 }

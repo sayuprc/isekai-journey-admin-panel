@@ -16,9 +16,7 @@ class ListUseCaseTest extends TestCase
     {
         $result = $this->getInstance()->handle();
 
-        $this->assertTrue($result->isOk());
-
-        $this->assertCount(2, $types = $result->unwrap()->types);
+        $this->assertCount(2, $types = $result->types);
         $this->assertSame(SongType::cases(), $types);
     }
 

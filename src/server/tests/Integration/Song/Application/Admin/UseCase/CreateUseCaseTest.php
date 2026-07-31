@@ -47,8 +47,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             ),
         );
 
-        $this->assertTrue($result->isOk());
-
         $songs = DB::table('songs')->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);

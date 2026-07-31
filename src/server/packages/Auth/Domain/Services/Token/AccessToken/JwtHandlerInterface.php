@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Auth\Domain\Services\Token\AccessToken;
 
-use ResultType\Result;
-use Support\Domain\Error\DomainError;
-
 interface JwtHandlerInterface
 {
     public function generate(AccessTokenPayload $payload): string;
 
     /**
-     * @return Result<AccessTokenPayload, DomainError>
+     * 検証に成功したらペイロードを返す。失効や不正な内容の場合は null
      */
-    public function verify(string $jwt): Result;
+    public function verify(string $jwt): ?AccessTokenPayload;
 }

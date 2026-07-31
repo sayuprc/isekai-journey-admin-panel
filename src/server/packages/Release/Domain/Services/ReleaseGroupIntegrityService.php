@@ -9,13 +9,10 @@ use Release\Domain\Models\ReleaseGroup;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupTitle;
 use Release\Domain\Models\ReleaseGroupType;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Validation\FieldErrors;
 use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
@@ -25,7 +22,7 @@ class ReleaseGroupIntegrityService
     }
 
     /**
-     * @return Result<ReleaseGroup, DomainError>
+     * @throws DomainValidationException
      */
     public function prepareForCreate(
         string $title,
@@ -33,12 +30,12 @@ class ReleaseGroupIntegrityService
         string $description,
         bool $isDisplay,
         int $orderNo,
-    ): Result {
+    ): ReleaseGroup {
         return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
     /**
-     * @return Result<ReleaseGroup, DomainError>
+     * @throws DomainValidationException
      */
     public function prepareForUpdate(
         string $releaseGroupId,
@@ -47,13 +44,10 @@ class ReleaseGroupIntegrityService
         string $description,
         bool $isDisplay,
         int $orderNo,
-    ): Result {
+    ): ReleaseGroup {
         return $this->build($releaseGroupId, $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
-    /**
-     * @return Result<ReleaseGroup, DomainError>
-     */
     private function build(
         string $releaseGroupId,
         string $title,
@@ -61,46 +55,32 @@ class ReleaseGroupIntegrityService
         string $description,
         bool $isDisplay,
         int $orderNo,
-    ): Result {
-        return Result::collect5(
-            ReleaseGroupId::create($releaseGroupId),
-            ReleaseGroupTitle::create($title),
-            $this->toReleaseGroupType($typeValue),
-            Description::create($description),
-            OrderNo::create($orderNo),
-        )
-            ->mapErr(static function (array $errors): DomainValidationError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+    ): ReleaseGroup {
+        $errors = new FieldErrors();
+        $releaseGroupIdVo = $errors->collect('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
+        $titleVo = $errors->collect('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title));
+        $typeVo = $errors->collect('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue));
+        $descriptionVo = $errors->collect('description', static fn (): Description => new Description($description));
+        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
+        $errors->throwIfFailed();
 
-                return new DomainValidationError($messages);
-            })
-            ->map(static fn (array $values): ReleaseGroup => new ReleaseGroup(
-                $values[0],
-                $values[1],
-                $values[2],
-                $values[3],
-                $isDisplay,
-                $values[4],
-            ));
+        assert(! is_null($releaseGroupIdVo) && ! is_null($titleVo) && ! is_null($typeVo) && ! is_null($descriptionVo) && ! is_null($orderNoVo));
+
+        return new ReleaseGroup(
+            $releaseGroupIdVo,
+            $titleVo,
+            $typeVo,
+            $descriptionVo,
+            $isDisplay,
+            $orderNoVo,
+        );
     }
 
     /**
-     * @return Result<ReleaseGroupType, DomainError>
+     * @throws InvalidDomainException
      */
-    private function toReleaseGroupType(int $typeValue): Result
+    private function toReleaseGroupType(int $typeValue): ReleaseGroupType
     {
-        $type = ReleaseGroupType::tryFrom($typeValue);
-
-        if (is_null($type)) {
-            return new Err(new EntityRuleViolationError('typeValue', "不正なリリースグループ種別です: {$typeValue}"));
-        }
-
-        return new Ok($type);
+        return ReleaseGroupType::tryFrom($typeValue) ?? throw new InvalidDomainException("不正なリリースグループ種別です: {$typeValue}");
     }
 }

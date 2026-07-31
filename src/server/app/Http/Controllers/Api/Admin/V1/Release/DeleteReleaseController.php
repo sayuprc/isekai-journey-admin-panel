@@ -20,6 +20,8 @@ class DeleteReleaseController extends Controller
 
     public function handle(string $releaseId): JsonResponse
     {
-        return $this->presenter->present($this->useCase->handle(new DeleteInputData($releaseId)));
+        $this->useCase->handle(new DeleteInputData($releaseId));
+
+        return $this->presenter->present();
     }
 }

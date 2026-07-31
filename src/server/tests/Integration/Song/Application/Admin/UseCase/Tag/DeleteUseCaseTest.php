@@ -30,7 +30,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('song_tags')->get()->all());
 
         $this->assertAuditLogCount(1);

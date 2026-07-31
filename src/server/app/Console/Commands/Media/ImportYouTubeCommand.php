@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Media;
 
-use App\Console\Commands\Concerns\ResolvesUseCaseErrorMessage;
 use Illuminate\Console\Command;
 use Media\Application\Cli\UseCase\ImportYouTube\ImportYouTubeInputData;
 use Media\Application\Cli\UseCase\ImportYouTube\ImportYouTubeUseCase;
@@ -12,8 +11,6 @@ use Override;
 
 class ImportYouTubeCommand extends Command
 {
-    use ResolvesUseCaseErrorMessage;
-
     #[Override]
     protected $signature = 'media:youtube:import';
 
@@ -22,15 +19,7 @@ class ImportYouTubeCommand extends Command
 
     public function handle(ImportYouTubeUseCase $useCase): int
     {
-        $result = $useCase->handle(new ImportYouTubeInputData());
-
-        if ($result->isErr()) {
-            $this->error($this->resolveErrorMessage($result->unwrapErr()));
-
-            return Command::FAILURE;
-        }
-
-        $output = $result->unwrap();
+        $output = $useCase->handle(new ImportYouTubeInputData());
 
         if ($output->results === []) {
             $this->warn('チャンネルが登録されていません');
