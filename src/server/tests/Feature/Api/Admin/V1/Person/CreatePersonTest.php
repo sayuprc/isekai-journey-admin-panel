@@ -48,6 +48,7 @@ class CreatePersonTest extends DatabaseTestCase
                 'name' => 'テスト人物',
             ])->assertStatus(400)
             ->assertExactJson([
+                'code' => 'business_rule_violation',
                 'message' => 'すでに使われている名前です "テスト人物"',
             ]);
     }
@@ -61,8 +62,10 @@ class CreatePersonTest extends DatabaseTestCase
             ])->assertStatus(422)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
+                    ->where('code', 'validation_failed')
+                    ->whereType('message', 'string')
                     ->has(
-                        'errors',
+                        'details',
                         1,
                         static fn (AssertableJson $json) => $json
                             ->where('field', 'name')

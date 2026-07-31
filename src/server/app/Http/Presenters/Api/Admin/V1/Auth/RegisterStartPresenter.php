@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Presenters\Api\Admin\V1\Auth;
 
 use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
+use App\Http\Responses\ApiError;
 use Auth\Application\Admin\UseCase\RegisterStart\RegisterStartOutputData;
 use Illuminate\Http\JsonResponse;
-use OpenAPI\Admin\Client\Model\ErrorResponse;
 use OpenAPI\Admin\Client\Model\RegisterStartResponse;
 use ResultType\Result;
 use Support\UseCase\Error\InvalidInputError;
@@ -29,12 +29,12 @@ class RegisterStartPresenter
                     ->setPublicKey((object)$output->publicKey),
                 200,
             ],
-            function (UseCaseError $error) {
+            static function (UseCaseError $error) {
                 if ($error instanceof InvalidInputError) {
-                    return [$this->toValidationError($error), 422];
+                    return ApiError::validationFailed($error->errors);
                 }
 
-                return [new ErrorResponse()->setMessage('登録に失敗しました。入力内容を確認してください。'), 400];
+                return ApiError::businessRuleViolation('登録に失敗しました。入力内容を確認してください。');
             },
         );
 

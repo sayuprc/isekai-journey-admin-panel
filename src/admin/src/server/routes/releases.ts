@@ -36,7 +36,11 @@ export const releases = new Elysia({ prefix: '/releases' })
 
     if (!(file instanceof File)) {
       set.status = 422;
-      return { errors: [{ field: 'jacketArt', message: '画像ファイルは必須です' }] };
+      return {
+        code: 'validation_failed',
+        message: '入力内容に誤りがあります',
+        details: [{ field: 'jacketArt', message: '画像ファイルは必須です' }],
+      };
     }
 
     const content = await file.arrayBuffer();

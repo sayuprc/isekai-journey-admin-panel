@@ -1,16 +1,14 @@
 import { createSignal } from 'solid-js';
 
-type ValidationErrorDetail = {
+type ErrorDetail = {
   field: string;
   message: string;
 };
 
-type ValidationErrorBody = {
-  errors: ValidationErrorDetail[];
-};
-
 type ErrorResponseBody = {
+  code: string;
   message: string;
+  details?: ErrorDetail[];
 };
 
 type EdenError = {
@@ -23,18 +21,16 @@ const isEdenError = (error: unknown): error is EdenError =>
 
 const extractErrorBody = (error: unknown): unknown => (isEdenError(error) ? error.value : error);
 
-const isValidationError = (body: unknown): body is ValidationErrorBody =>
-  typeof body === 'object' && body !== null && 'errors' in body && Array.isArray((body as ValidationErrorBody).errors);
-
 const isErrorResponse = (body: unknown): body is ErrorResponseBody =>
   typeof body === 'object'
   && body !== null
+  && 'code' in body
   && 'message' in body
   && typeof (body as ErrorResponseBody).message === 'string';
 
 export const createFormErrors = () => {
   const [formError, setFormError] = createSignal<string | null>(null);
-  const [fieldErrors, setFieldErrors] = createSignal<ValidationErrorDetail[]>([]);
+  const [fieldErrors, setFieldErrors] = createSignal<ErrorDetail[]>([]);
 
   const getFieldError = (field: string): string | undefined => fieldErrors().find(e => e.field === field)?.message;
 
@@ -53,17 +49,17 @@ export const createFormErrors = () => {
 
     const body = extractErrorBody(error);
 
-    if (status === 422 && isValidationError(body)) {
-      setFieldErrors(body.errors);
+    if (!isErrorResponse(body)) {
+      setFormError('予期しないエラーが発生しました');
       return;
     }
 
-    if (isErrorResponse(body)) {
-      setFormError(body.message);
+    if (status === 422 && body.details !== undefined) {
+      setFieldErrors(body.details);
       return;
     }
 
-    setFormError('予期しないエラーが発生しました');
+    setFormError(body.message);
   };
 
   return { formError, setFormError, fieldErrors, getFieldError, clearErrors, handleError };

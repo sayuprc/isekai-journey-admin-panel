@@ -59,6 +59,7 @@ class DeleteSongTagTest extends DatabaseTestCase
             ->delete(route(SongTagRouteMap::Delete, $songTagId))
             ->assertStatus(400)
             ->assertExactJson([
+                'code' => 'business_rule_violation',
                 'message' => 'この楽曲タグは楽曲に使用されているため削除できません',
             ]);
 

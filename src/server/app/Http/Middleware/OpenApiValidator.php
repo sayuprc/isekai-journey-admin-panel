@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Http\Responses\ApiError;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,8 +15,6 @@ use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use League\OpenAPIValidation\Schema\Exception\FormatMismatch;
 use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use OpenAPI\Admin\Client\Model\ValidationError;
-use OpenAPI\Admin\Client\Model\ValidationErrorDetail;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +51,9 @@ abstract class OpenApiValidator
         try {
             $this->builder->getRoutedRequestValidator()->validate($operationAddress, $psrRequest);
         } catch (InvalidSecurity) {
-            return response()->json([], 401);
+            [$payload, $status] = ApiError::unauthenticated();
+
+            return response()->json($payload, $status);
         } catch (ValidationFailed $e) {
             // TODO 項目ごとのバリデーションエラーを表示したい
             return $this->handleValidationFailed($e);
@@ -70,7 +71,9 @@ abstract class OpenApiValidator
             ]);
 
             // サーバーレスポンス不整合はサーバー内部の問題なので 500 として返す
-            return response()->json(status: 500);
+            [$payload, $status] = ApiError::internalError();
+
+            return response()->json($payload, $status);
         }
 
         return $response;
@@ -91,39 +94,35 @@ abstract class OpenApiValidator
     {
         $previous = $exception->getPrevious();
 
-        if ($previous instanceof SchemaMismatch) {
-            $detail = $this->formatSchemaMismatch($previous);
-        } else {
-            $detail = new ValidationErrorDetail()
-                ->setField('')
-                ->setMessage('予期せぬエラー');
-        }
+        [$field, $message] = $previous instanceof SchemaMismatch
+            ? $this->formatSchemaMismatch($previous)
+            : ['', '予期せぬエラー'];
 
-        $error = new ValidationError()->setErrors([$detail]);
+        [$payload, $status] = ApiError::validationFailed([$field => [$message]]);
 
-        return response()->json($error, 422);
+        return response()->json($payload, $status);
     }
 
-    private function formatSchemaMismatch(SchemaMismatch $exception): ValidationErrorDetail
+    /**
+     * @return array{0: string, 1: string} field とメッセージの組
+     */
+    private function formatSchemaMismatch(SchemaMismatch $exception): array
     {
         $breadcrumb = $exception->dataBreadCrumb();
 
         if (is_null($breadcrumb)) {
-            $field = '';
-            $message = '予期せぬエラー';
-        } else {
-            /** @var array<string> */
-            $chain = $breadcrumb->buildChain();
-            $field = implode('/', $chain);
-
-            $message = match (true) {
-                $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
-                default => $exception->getMessage(),
-            };
+            return ['', '予期せぬエラー'];
         }
 
-        return new ValidationErrorDetail()
-            ->setField($field)
-            ->setMessage($message);
+        /** @var array<string> */
+        $chain = $breadcrumb->buildChain();
+        $field = implode('/', $chain);
+
+        $message = match (true) {
+            $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
+            default => $exception->getMessage(),
+        };
+
+        return [$field, $message];
     }
 }

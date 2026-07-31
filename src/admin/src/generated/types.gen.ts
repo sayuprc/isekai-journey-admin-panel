@@ -68,8 +68,26 @@ export type AuditLogSummary = {
  */
 export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Release' | 'ReleaseGroup' | 'Song' | 'SongTag';
 
-export type ErrorResponse = {
+/**
+ * エラー分類を表す機械可読なコード
+ */
+export type ErrorCode = 'unauthenticated' | 'permission_denied' | 'not_found' | 'validation_failed' | 'business_rule_violation' | 'internal_error';
+
+/**
+ * フィールド単位のエラー詳細
+ */
+export type ErrorDetail = {
+    field: string;
     message: string;
+};
+
+/**
+ * 全エラーステータス共通のレスポンス
+ */
+export type ErrorResponse = {
+    code: ErrorCode;
+    message: string;
+    details?: Array<ErrorDetail>;
 };
 
 export type GenerateRecoveryCodesResponse = {
@@ -638,15 +656,6 @@ export type Track = {
     trackNo: OrderNo;
 };
 
-export type ValidationError = {
-    errors: Array<ValidationErrorDetail>;
-};
-
-export type ValidationErrorDetail = {
-    field: string;
-    message: string;
-};
-
 export type Version = 'v1';
 
 /**
@@ -860,15 +869,15 @@ export type AdminUserServiceListAdminUsersErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -878,6 +887,8 @@ export type AdminUserServiceListAdminUsersErrors = {
      */
     504: unknown;
 };
+
+export type AdminUserServiceListAdminUsersError = AdminUserServiceListAdminUsersErrors[keyof AdminUserServiceListAdminUsersErrors];
 
 export type AdminUserServiceListAdminUsersResponses = {
     /**
@@ -908,15 +919,15 @@ export type AuditLogServiceSearchAuditLogsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -926,6 +937,8 @@ export type AuditLogServiceSearchAuditLogsErrors = {
      */
     504: unknown;
 };
+
+export type AuditLogServiceSearchAuditLogsError = AuditLogServiceSearchAuditLogsErrors[keyof AuditLogServiceSearchAuditLogsErrors];
 
 export type AuditLogServiceSearchAuditLogsResponses = {
     /**
@@ -949,11 +962,11 @@ export type AuditLogServiceGetAuditLogErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -961,7 +974,7 @@ export type AuditLogServiceGetAuditLogErrors = {
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -998,15 +1011,15 @@ export type AuthenticateServiceLoginFinishErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1043,15 +1056,15 @@ export type AuthenticateServiceLoginStartErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1088,15 +1101,15 @@ export type AuthenticateServiceRecoveryFinishErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1133,15 +1146,15 @@ export type AuthenticateServiceRecoveryStartErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1174,15 +1187,15 @@ export type AuthenticateServiceRefreshErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1219,15 +1232,15 @@ export type AuthenticateServiceRegisterFinishErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1264,15 +1277,15 @@ export type AuthenticateServiceRegisterStartErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1309,19 +1322,19 @@ export type MediaServiceCreateMediaErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1360,15 +1373,15 @@ export type MediaServiceSearchMediaErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1378,6 +1391,8 @@ export type MediaServiceSearchMediaErrors = {
      */
     504: unknown;
 };
+
+export type MediaServiceSearchMediaError = MediaServiceSearchMediaErrors[keyof MediaServiceSearchMediaErrors];
 
 export type MediaServiceSearchMediaResponses = {
     /**
@@ -1405,19 +1420,19 @@ export type MediaServiceDeleteMediaErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1452,11 +1467,11 @@ export type MediaServiceGetMediaErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -1464,11 +1479,11 @@ export type MediaServiceGetMediaErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1507,11 +1522,11 @@ export type MediaServiceUpdateMediaErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -1519,11 +1534,11 @@ export type MediaServiceUpdateMediaErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1556,15 +1571,15 @@ export type PersonServiceListPersonsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1574,6 +1589,8 @@ export type PersonServiceListPersonsErrors = {
      */
     504: unknown;
 };
+
+export type PersonServiceListPersonsError = PersonServiceListPersonsErrors[keyof PersonServiceListPersonsErrors];
 
 export type PersonServiceListPersonsResponses = {
     /**
@@ -1599,19 +1616,19 @@ export type PersonServiceCreatePersonErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1650,15 +1667,15 @@ export type PersonServiceSearchPersonsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1668,6 +1685,8 @@ export type PersonServiceSearchPersonsErrors = {
      */
     504: unknown;
 };
+
+export type PersonServiceSearchPersonsError = PersonServiceSearchPersonsErrors[keyof PersonServiceSearchPersonsErrors];
 
 export type PersonServiceSearchPersonsResponses = {
     /**
@@ -1695,19 +1714,19 @@ export type PersonServiceDeletePersonErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1742,11 +1761,11 @@ export type PersonServiceGetPersonErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -1754,11 +1773,11 @@ export type PersonServiceGetPersonErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1797,11 +1816,11 @@ export type PersonServiceUpdatePersonErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -1809,11 +1828,11 @@ export type PersonServiceUpdatePersonErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1846,11 +1865,11 @@ export type RecoveryCodeServiceGenerateErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1860,6 +1879,8 @@ export type RecoveryCodeServiceGenerateErrors = {
      */
     504: unknown;
 };
+
+export type RecoveryCodeServiceGenerateError = RecoveryCodeServiceGenerateErrors[keyof RecoveryCodeServiceGenerateErrors];
 
 export type RecoveryCodeServiceGenerateResponses = {
     /**
@@ -1885,19 +1906,19 @@ export type ReleaseGroupServiceCreateReleaseGroupErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1936,15 +1957,15 @@ export type ReleaseGroupServiceSearchReleaseGroupsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -1954,6 +1975,8 @@ export type ReleaseGroupServiceSearchReleaseGroupsErrors = {
      */
     504: unknown;
 };
+
+export type ReleaseGroupServiceSearchReleaseGroupsError = ReleaseGroupServiceSearchReleaseGroupsErrors[keyof ReleaseGroupServiceSearchReleaseGroupsErrors];
 
 export type ReleaseGroupServiceSearchReleaseGroupsResponses = {
     /**
@@ -1981,11 +2004,11 @@ export type ReleaseGroupServiceDeleteReleaseGroupErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -1993,11 +2016,11 @@ export type ReleaseGroupServiceDeleteReleaseGroupErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2032,11 +2055,11 @@ export type ReleaseGroupServiceGetReleaseGroupErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2044,11 +2067,11 @@ export type ReleaseGroupServiceGetReleaseGroupErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2083,11 +2106,11 @@ export type ReleaseGroupServiceUpdateReleaseGroupErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2095,11 +2118,11 @@ export type ReleaseGroupServiceUpdateReleaseGroupErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2136,19 +2159,19 @@ export type ReleaseServiceCreateReleaseErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2185,19 +2208,19 @@ export type ReleaseServiceUploadJacketArtErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2232,11 +2255,11 @@ export type ReleaseServiceDeleteReleaseErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2244,11 +2267,11 @@ export type ReleaseServiceDeleteReleaseErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2283,11 +2306,11 @@ export type ReleaseServiceGetReleaseErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2295,11 +2318,11 @@ export type ReleaseServiceGetReleaseErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2338,11 +2361,11 @@ export type ReleaseServiceUpdateReleaseErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2350,11 +2373,11 @@ export type ReleaseServiceUpdateReleaseErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2387,15 +2410,15 @@ export type SongTagServiceListSongTagsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2405,6 +2428,8 @@ export type SongTagServiceListSongTagsErrors = {
      */
     504: unknown;
 };
+
+export type SongTagServiceListSongTagsError = SongTagServiceListSongTagsErrors[keyof SongTagServiceListSongTagsErrors];
 
 export type SongTagServiceListSongTagsResponses = {
     /**
@@ -2430,19 +2455,19 @@ export type SongTagServiceCreateSongTagErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2481,15 +2506,15 @@ export type SongTagServiceSearchSongTagsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2499,6 +2524,8 @@ export type SongTagServiceSearchSongTagsErrors = {
      */
     504: unknown;
 };
+
+export type SongTagServiceSearchSongTagsError = SongTagServiceSearchSongTagsErrors[keyof SongTagServiceSearchSongTagsErrors];
 
 export type SongTagServiceSearchSongTagsResponses = {
     /**
@@ -2526,19 +2553,19 @@ export type SongTagServiceDeleteSongTagErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2573,11 +2600,11 @@ export type SongTagServiceGetSongTagErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2585,11 +2612,11 @@ export type SongTagServiceGetSongTagErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2628,11 +2655,11 @@ export type SongTagServiceUpdateSongTagErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2640,11 +2667,11 @@ export type SongTagServiceUpdateSongTagErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2677,15 +2704,15 @@ export type SongTypeServiceListSongTypesErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2695,6 +2722,8 @@ export type SongTypeServiceListSongTypesErrors = {
      */
     504: unknown;
 };
+
+export type SongTypeServiceListSongTypesError = SongTypeServiceListSongTypesErrors[keyof SongTypeServiceListSongTypesErrors];
 
 export type SongTypeServiceListSongTypesResponses = {
     /**
@@ -2720,19 +2749,19 @@ export type SongServiceCreateSongErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2773,15 +2802,15 @@ export type SongServiceSearchSongsErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2791,6 +2820,8 @@ export type SongServiceSearchSongsErrors = {
      */
     504: unknown;
 };
+
+export type SongServiceSearchSongsError = SongServiceSearchSongsErrors[keyof SongServiceSearchSongsErrors];
 
 export type SongServiceSearchSongsResponses = {
     /**
@@ -2818,19 +2849,19 @@ export type SongServiceDeleteSongErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2865,11 +2896,11 @@ export type SongServiceGetSongErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2877,11 +2908,11 @@ export type SongServiceGetSongErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */
@@ -2920,11 +2951,11 @@ export type SongServiceUpdateSongErrors = {
     /**
      * Access is unauthorized.
      */
-    401: unknown;
+    401: ErrorResponse;
     /**
      * Access is forbidden.
      */
-    403: unknown;
+    403: ErrorResponse;
     /**
      * The server cannot find the requested resource.
      */
@@ -2932,11 +2963,11 @@ export type SongServiceUpdateSongErrors = {
     /**
      * Client error
      */
-    422: ValidationError;
+    422: ErrorResponse;
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
     /**
      * Service unavailable.
      */

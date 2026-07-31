@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\Auth;
 
+use App\Http\Responses\ApiError;
 use Auth\Application\Admin\UseCase\Refresh\RefreshOutputData;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Admin\Client\Model\RefreshTokenResponse;
@@ -25,7 +26,11 @@ class RefreshPresenter
                     ->setRefreshToken($output->plainRefreshToken),
                 200,
             ),
-            static fn (UseCaseError $_) => response()->json(status: 401),
+            static function (UseCaseError $_) {
+                [$payload, $status] = ApiError::unauthenticated();
+
+                return response()->json($payload, $status);
+            },
         );
     }
 }

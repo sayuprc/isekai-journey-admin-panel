@@ -56,7 +56,7 @@ class UploadJacketArtTest extends DatabaseTestCase
                 'CONTENT_TYPE' => 'text/plain',
             ], 'not image')
             ->assertStatus(422)
-            ->assertJsonStructure(['errors']);
+            ->assertJsonStructure(['code', 'message', 'details']);
     }
 
     #[Test]
@@ -72,7 +72,7 @@ class UploadJacketArtTest extends DatabaseTestCase
                 'CONTENT_TYPE' => 'image/png',
             ], 'not image')
             ->assertStatus(422)
-            ->assertJsonPath('errors.0.field', 'jacketArt');
+            ->assertJsonPath('details.0.field', 'jacketArt');
     }
 
     private function pngContent(): string
