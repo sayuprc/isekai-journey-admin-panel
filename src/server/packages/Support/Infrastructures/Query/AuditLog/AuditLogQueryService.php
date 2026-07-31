@@ -123,8 +123,11 @@ readonly class AuditLogQueryService implements AuditLogQueryServiceInterface
         }
 
         if ($criteria->adminUserName->isPresent()) {
-            $escaped = SqlHelper::escapeLike($criteria->adminUserName->get());
-            $query = $query->where('admin_users.name', 'LIKE', $escaped . '%');
+            $query = $query->where(
+                'admin_users.name',
+                'LIKE',
+                '%' . SqlHelper::escapeLike($criteria->adminUserName->get()) . '%',
+            );
         }
 
         return $query;

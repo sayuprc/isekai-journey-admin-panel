@@ -57,9 +57,12 @@ class SongQueryServiceTest extends DatabaseTestCase
 
         $results = $this->getInstance()->search($this->criteria(title: new Some('テスト楽曲')));
 
-        $this->assertCount(1, $results);
+        // 部分一致なので '比較テスト楽曲B' もヒットする
+        $this->assertCount(2, $results);
         $this->assertSame($uuid1, $results[0]->songId);
         $this->assertSame('テスト楽曲', $results[0]->title);
+        $this->assertSame($uuid2, $results[1]->songId);
+        $this->assertSame('比較テスト楽曲B', $results[1]->title);
     }
 
     #[Test]

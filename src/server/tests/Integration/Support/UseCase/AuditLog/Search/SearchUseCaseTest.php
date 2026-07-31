@@ -110,7 +110,7 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->assertTrue($resultByTarget->isOk());
         $this->assertCount(2, $resultByTarget->unwrap()->auditLogs);
 
-        // 前方一致でヒット（'検索' は '検索テストユーザーB' の前方に一致）
+        // 部分一致でヒット（'検索' を含むのは '検索テストユーザーB' のみ）
         $resultByActor = $this->getInstance()->handle(new SearchInputData(adminUserName: '検索'));
         $this->assertTrue($resultByActor->isOk());
         $this->assertCount(1, $resultByActor->unwrap()->auditLogs);
@@ -122,10 +122,10 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->assertTrue($resultExact->isOk());
         $this->assertCount(2, $resultExact->unwrap()->auditLogs);
 
-        // 中間/後方は前方一致なのでヒットしない（'テストユーザーA' は '監査テストユーザーA' の前方ではない）
+        // 中間一致でもヒットする（'テストユーザーA' は '監査テストユーザーA' に含まれる）
         $resultSuffix = $this->getInstance()->handle(new SearchInputData(adminUserName: 'テストユーザーA'));
         $this->assertTrue($resultSuffix->isOk());
-        $this->assertCount(0, $resultSuffix->unwrap()->auditLogs);
+        $this->assertCount(2, $resultSuffix->unwrap()->auditLogs);
 
         // 不一致
         $resultNoHit = $this->getInstance()->handle(new SearchInputData(adminUserName: '存在しない'));
@@ -143,12 +143,13 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->insertAuditLog($actorWithPercent, AuditAction::Create, AuditTargetType::Song, $this->generateUuid(), new DateTimeImmutable('2026-04-01 10:00:00'));
         $this->insertAuditLog($plainActor, AuditAction::Create, AuditTargetType::Song, $this->generateUuid(), new DateTimeImmutable('2026-04-02 10:00:00'));
 
-        // '%' を素のメタ文字として扱うと全件ヒットしてしまう。エスケープされていれば前方一致は 0 件
+        // '%' を素のメタ文字として扱うと全件ヒットしてしまう。エスケープされていればリテラル '%' を含む名前のみヒット
         $resultPercent = $this->getInstance()->handle(new SearchInputData(adminUserName: '%'));
         $this->assertTrue($resultPercent->isOk());
-        $this->assertCount(0, $resultPercent->unwrap()->auditLogs, '"%" がメタ文字として解釈されないこと');
+        $this->assertCount(1, $resultPercent->unwrap()->auditLogs, '"%" がメタ文字として解釈されないこと');
+        $this->assertSame('100%担当', $resultPercent->unwrap()->auditLogs[0]->adminUserName);
 
-        // 名前内の '%' をリテラルとして扱うので '100%' で前方一致がヒット
+        // 名前内の '%' をリテラルとして扱うので '100%' で部分一致がヒット
         $resultLiteral = $this->getInstance()->handle(new SearchInputData(adminUserName: '100%'));
         $this->assertTrue($resultLiteral->isOk());
         $this->assertCount(1, $resultLiteral->unwrap()->auditLogs);
