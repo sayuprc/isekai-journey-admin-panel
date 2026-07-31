@@ -40,7 +40,6 @@ catalogs:
     postcss-html: 1.8.1
   gen:
     "@hey-api/openapi-ts": 0.99.0
-    typed-css-modules: 0.9.1
 
 allowBuilds:
   bcrypt: false
