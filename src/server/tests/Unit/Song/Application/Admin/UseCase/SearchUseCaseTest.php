@@ -18,8 +18,8 @@ use Song\Application\Admin\UseCase\Search\SearchInputData;
 use Song\Application\Admin\UseCase\Search\SearchUseCase;
 use Song\Domain\Criteria\SongSearchCriteria;
 use Song\Domain\Models\SongType;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -60,9 +60,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->songs);
         $this->assertSame(1, $output->maxPage);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $output->songs[0]->songId);
@@ -91,9 +89,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(title: 'テスト楽曲'));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->songs);
         $this->assertSame('テスト楽曲', $output->songs[0]->title);
     }
@@ -121,9 +117,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(type: SongType::Original->value));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->songs);
         $this->assertSame(SongType::Original, $output->songs[0]->type);
     }
@@ -151,9 +145,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(isDisplay: false));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->songs);
         $this->assertFalse($output->songs[0]->isDisplay);
     }
@@ -166,10 +158,9 @@ class SearchUseCaseTest extends TestCase
 
         $context = $this->app->make(AuthContext::class);
 
-        $result = new SearchUseCase($this->authorizer($context), $this->query)->handle(new SearchInputData());
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $result = new SearchUseCase($this->authorizer($context), $this->query)->handle(new SearchInputData());
     }
 
     #[Test]
@@ -189,10 +180,9 @@ class SearchUseCaseTest extends TestCase
             [],
         ));
 
-        $result = new SearchUseCase($this->authorizer($context), $this->query)->handle(new SearchInputData());
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = new SearchUseCase($this->authorizer($context), $this->query)->handle(new SearchInputData());
     }
 
     private function getInstance(): SearchUseCase

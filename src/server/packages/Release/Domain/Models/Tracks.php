@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\SongId;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Validation\FieldErrors;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -21,45 +18,35 @@ readonly class Tracks extends ImmutableCollection
     /**
      * @param list<array{songId: ?string, title: ?string, trackNo: int}> $items
      *
-     * @return Result<self, DomainValidationError>
+     * @throws DomainValidationException
      */
-    public static function fromArray(array $items): Result
+    public static function fromArray(array $items): self
     {
         $tracks = [];
         $seenTrackNos = [];
 
         foreach ($items as $item) {
-            $result = Result::collect3(
-                is_null($item['songId']) ? new Ok(null) : SongId::create($item['songId']),
-                is_null($item['title']) ? new Ok(null) : TrackTitle::create($item['title']),
-                OrderNo::create($item['trackNo']),
-            )->andThen(static fn (array $values): Result => Track::create(...$values)->mapErr(static fn (EntityRuleViolationError $error): array => [$error]));
+            $errors = new FieldErrors();
+            $songId = $errors->collect('songId', static fn (): ?SongId => is_null($item['songId']) ? null : new SongId($item['songId']));
+            $title = $errors->collect('title', static fn (): ?TrackTitle => is_null($item['title']) ? null : new TrackTitle($item['title']));
+            $trackNo = $errors->collect('trackNo', static fn (): OrderNo => new OrderNo($item['trackNo']));
+            $errors->throwIfFailed();
 
-            if ($result->isErr()) {
-                $messages = [];
-                foreach ($result->unwrapErr() as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
+            assert(! is_null($trackNo));
 
-                return new Err(new DomainValidationError($messages));
-            }
-
-            $track = $result->unwrap();
+            $track = FieldErrors::single('media', static fn (): Track => Track::create($songId, $title, $trackNo));
 
             if (isset($seenTrackNos[$track->trackNo->value])) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'media' => ['同じ曲順を複数指定することはできません。'],
-                ]));
+                ]);
             }
 
             $seenTrackNos[$track->trackNo->value] = true;
             $tracks[] = $track;
         }
 
-        return new Ok(new self($tracks));
+        return new self($tracks);
     }
 
     /**

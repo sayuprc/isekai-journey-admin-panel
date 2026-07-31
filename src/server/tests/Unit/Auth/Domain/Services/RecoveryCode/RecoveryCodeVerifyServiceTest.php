@@ -17,7 +17,6 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use Support\Domain\Error\BusinessRuleViolationError;
 use Tests\TestCase;
 
 class RecoveryCodeVerifyServiceTest extends TestCase
@@ -40,7 +39,7 @@ class RecoveryCodeVerifyServiceTest extends TestCase
     #[Test]
     public function verifyReturnsMatchingUnusedCode(): void
     {
-        $adminUserId = AdminUserId::reconstruct(self::ADMIN_USER_ID);
+        $adminUserId = new AdminUserId(self::ADMIN_USER_ID);
         $code = $this->buildCode(ConsumptionStatus::Unused, null);
 
         $this->repository->shouldReceive('findUnusedByAdminUserIdForUpdate')
@@ -53,16 +52,13 @@ class RecoveryCodeVerifyServiceTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $result = $this->getInstance()->verify('A3KP-9QXR', $adminUserId);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame($code, $result->unwrap());
+        $this->assertSame($code, $this->getInstance()->verify('A3KP-9QXR', $adminUserId));
     }
 
     #[Test]
-    public function verifyReturnsErrorWhenNoCodeMatches(): void
+    public function verifyReturnsNullWhenNoCodeMatches(): void
     {
-        $adminUserId = AdminUserId::reconstruct(self::ADMIN_USER_ID);
+        $adminUserId = new AdminUserId(self::ADMIN_USER_ID);
         $code = $this->buildCode(ConsumptionStatus::Unused, null);
 
         $this->repository->shouldReceive('findUnusedByAdminUserIdForUpdate')
@@ -75,34 +71,26 @@ class RecoveryCodeVerifyServiceTest extends TestCase
             ->andReturn(false)
             ->once();
 
-        $result = $this->getInstance()->verify('WRONG-CODE', $adminUserId);
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $result->unwrapErr());
-        $this->assertSame('recovery_code_not_found', $result->unwrapErr()->message);
+        $this->assertNull($this->getInstance()->verify('WRONG-CODE', $adminUserId));
     }
 
     #[Test]
-    public function verifyReturnsSameErrorWhenAdminUserHasNoCodes(): void
+    public function verifyReturnsNullWhenAdminUserHasNoCodes(): void
     {
-        $adminUserId = AdminUserId::reconstruct(self::ADMIN_USER_ID);
+        $adminUserId = new AdminUserId(self::ADMIN_USER_ID);
 
         $this->repository->shouldReceive('findUnusedByAdminUserIdForUpdate')
             ->with($adminUserId)
             ->andReturn([])
             ->once();
 
-        $result = $this->getInstance()->verify('A3KP-9QXR', $adminUserId);
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $result->unwrapErr());
-        $this->assertSame('recovery_code_not_found', $result->unwrapErr()->message);
+        $this->assertNull($this->getInstance()->verify('A3KP-9QXR', $adminUserId));
     }
 
     #[Test]
-    public function verifyReturnsSameErrorWhenMatchedCodeIsConsumed(): void
+    public function verifyReturnsNullWhenMatchedCodeIsConsumed(): void
     {
-        $adminUserId = AdminUserId::reconstruct(self::ADMIN_USER_ID);
+        $adminUserId = new AdminUserId(self::ADMIN_USER_ID);
         $code = $this->buildCode(ConsumptionStatus::Consumed, new DateTimeImmutable('2026-01-01 00:00:00'));
 
         $this->repository->shouldReceive('findUnusedByAdminUserIdForUpdate')
@@ -115,19 +103,15 @@ class RecoveryCodeVerifyServiceTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $result = $this->getInstance()->verify('A3KP-9QXR', $adminUserId);
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $result->unwrapErr());
-        $this->assertSame('recovery_code_not_found', $result->unwrapErr()->message);
+        $this->assertNull($this->getInstance()->verify('A3KP-9QXR', $adminUserId));
     }
 
     private function buildCode(ConsumptionStatus $status, ?DateTimeImmutable $usedAt): RecoveryCode
     {
         return new RecoveryCode(
-            RecoveryCodeId::reconstruct('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
-            AdminUserId::reconstruct(self::ADMIN_USER_ID),
-            HashedCodeValue::reconstruct('hashed-code'),
+            new RecoveryCodeId('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'),
+            new AdminUserId(self::ADMIN_USER_ID),
+            new HashedCodeValue('hashed-code'),
             $status,
             $usedAt,
         );

@@ -50,10 +50,8 @@ class RefreshUseCaseTest extends DatabaseTestCase
         );
         $this->storeRefreshTokens($refreshToken);
 
-        $result = $this->app->make(RefreshUseCase::class)
+        $this->app->make(RefreshUseCase::class)
             ->handle(new RefreshInputData($refreshToken->refreshTokenId->value, $plainToken));
-
-        $this->assertTrue($result->isOk());
 
         $this->assertAuditLogCount(1);
         $log = $this->findAuditLog(AuditAction::Refresh, AuditTargetType::AdminUser, $adminUser->adminUserId->value);

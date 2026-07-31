@@ -22,13 +22,11 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
             new IssueRegistrationTokenInputData('invitee@example.com', Role::General->value, []),
         );
 
-        $this->assertTrue($result->isOk());
-
         $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
         $row = array_first($rows);
-        $plain = $result->unwrap()->plainToken;
+        $plain = $result->plainToken;
 
         $this->assertNotSame($plain, $row->token);
         $this->assertTrue(hash_equals(hash('sha256', $plain), $row->token));
@@ -49,8 +47,6 @@ class IssueRegistrationTokenUseCaseTest extends DatabaseTestCase
                 [Permission::ReadAdminUser->value, Permission::WriteAdminUser->value],
             ),
         );
-
-        $this->assertTrue($result->isOk());
 
         $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);

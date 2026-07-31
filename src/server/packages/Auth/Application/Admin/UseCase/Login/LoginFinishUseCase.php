@@ -14,21 +14,12 @@ use Auth\Domain\Services\PasskeyAuthenticationResult;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Throwable;
 
 readonly class LoginFinishUseCase
@@ -47,41 +38,39 @@ readonly class LoginFinishUseCase
     }
 
     /**
-     * @return Result<LoginFinishOutputData, UseCaseError>
+     * @throws UnauthenticatedException
      */
-    public function handle(LoginFinishInputData $inputData): Result
+    public function handle(LoginFinishInputData $inputData): LoginFinishOutputData
     {
         $state = $this->ceremonyStore->pull($inputData->authCeremonyId);
 
         if (is_null($state) || $state->type !== PasskeyCeremonyType::Login) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         $credentialId = $this->passkeyAuthenticator->credentialId($inputData->credential);
 
         if (is_null($credentialId)) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         return $this->transaction->scope(
-            fn (): Result => $this->authenticateAndPersist($state, $credentialId, $inputData->credential),
+            fn (): LoginFinishOutputData => $this->authenticateAndPersist($state, $credentialId, $inputData->credential),
         );
     }
 
     /**
      * @param array<string, mixed> $credential
-     *
-     * @return Result<LoginFinishOutputData, UseCaseError>
      */
     private function authenticateAndPersist(
         PasskeyCeremonyState $state,
         string $credentialId,
         array $credential,
-    ): Result {
+    ): LoginFinishOutputData {
         $passkey = $this->passkeyRepository->findByAdminUserIdAndCredentialIdForUpdate($state->adminUserId, $credentialId);
 
         if (is_null($passkey)) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         try {
@@ -92,36 +81,27 @@ readonly class LoginFinishUseCase
                 $passkey->userHandle,
             );
         } catch (Throwable) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         if ($verification->credentialId !== $passkey->credentialId) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         return $this->persist($state, $passkey, $verification);
     }
 
-    /**
-     * @return Result<LoginFinishOutputData, UseCaseError>
-     */
     private function persist(
         PasskeyCeremonyState $state,
         AdminUserPasskey $passkey,
         PasskeyAuthenticationResult $verification,
-    ): Result {
-        $refreshTokenResult = $this->refreshTokenIssueService->issue($state->adminUserId);
-
-        if ($refreshTokenResult->isErr()) {
-            return new Err($this->handleError($refreshTokenResult->unwrapErr()));
-        }
-
-        ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $refreshTokenResult->unwrap();
+    ): LoginFinishOutputData {
+        ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $this->refreshTokenIssueService->issue($state->adminUserId);
 
         $updatedPasskey = $passkey->withCounter($verification->signCount, $this->clock->now());
 
         if (! $this->passkeyRepository->updateCounter($updatedPasskey, $passkey->signCount)) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         $accessToken = $this->accessTokenIssueService->issue($refreshToken->refreshTokenId->value);
@@ -139,19 +119,10 @@ readonly class LoginFinishUseCase
             $refreshToken->adminUserId,
         );
 
-        return new Ok(new LoginFinishOutputData(
+        return new LoginFinishOutputData(
             $accessToken,
             $refreshToken->refreshTokenId->value,
             $plainRefreshToken,
-        ));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+        );
     }
 }

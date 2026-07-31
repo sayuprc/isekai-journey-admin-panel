@@ -20,9 +20,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -56,7 +54,7 @@ class AuthenticateUseCaseTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
         $adminUserId = $this->generateUuid();
@@ -79,9 +77,9 @@ class AuthenticateUseCaseTest extends TestCase
             ->andReturn($this->createAdminUser($adminUserId, 'example@example.com', Role::General, []))
             ->once();
 
-        $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
+        $this->getInstance()->handle(new AuthenticateInputData('access_token'));
 
-        $this->assertTrue($result->isOk());
+        $this->assertNotNull($this->context->get());
     }
 
     #[Test]
@@ -89,12 +87,12 @@ class AuthenticateUseCaseTest extends TestCase
     {
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new Err(new EntityRuleViolationError('exp', '期限切れです')))
+            ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
+        $this->getInstance()->handle(new AuthenticateInputData('access_token'));
     }
 
     #[Test]
@@ -104,7 +102,7 @@ class AuthenticateUseCaseTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
         $this->refreshTokenRepository->shouldReceive('findActive')
@@ -112,9 +110,9 @@ class AuthenticateUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
+        $this->getInstance()->handle(new AuthenticateInputData('access_token'));
     }
 
     #[Test]
@@ -124,7 +122,7 @@ class AuthenticateUseCaseTest extends TestCase
 
         $this->jwtHandler->shouldReceive('verify')
             ->with('access_token')
-            ->andReturn(new Ok(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId)))
+            ->andReturn(new AccessTokenPayload('', 0, 0, 0, $refreshTokenId))
             ->once();
 
         $adminUserId = $this->generateUuid();
@@ -147,9 +145,9 @@ class AuthenticateUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new AuthenticateInputData('access_token'));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
+        $this->getInstance()->handle(new AuthenticateInputData('access_token'));
     }
 
     private function getInstance(): AuthenticateUseCase

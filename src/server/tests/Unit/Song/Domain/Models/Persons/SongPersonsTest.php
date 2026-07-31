@@ -6,6 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Persons;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Persons\SongPersons;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\TestCase;
 
 class SongPersonsTest extends TestCase
@@ -19,8 +20,7 @@ class SongPersonsTest extends TestCase
             ['personId' => 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'role' => 3, 'orderNo' => 3],
         ]);
 
-        $this->assertTrue($result->isOk());
-        $persons = $result->unwrap();
+        $persons = $result;
 
         $this->assertCount(3, $persons);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $persons[0]->personId->value);
@@ -37,22 +37,20 @@ class SongPersonsTest extends TestCase
     {
         $result = SongPersons::fromArray([]);
 
-        $this->assertTrue($result->isOk());
-        $this->assertCount(0, $result->unwrap());
+        $this->assertCount(0, $result);
     }
 
     #[Test]
     public function fromArrayFailsWhenSameRoleIsDuplicatedForSamePerson(): void
     {
-        $result = SongPersons::fromArray([
-            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 1],
-            ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 2],
-        ]);
-
-        $this->assertTrue($result->isErr());
-        $this->assertSame(
-            ['persons' => ['同じ人物に同じ role を重複指定できません']],
-            $result->unwrapErr()->errors,
-        );
+        try {
+            SongPersons::fromArray([
+                ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 1],
+                ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 2],
+            ]);
+            $this->fail('DomainValidationException が発生しませんでした');
+        } catch (DomainValidationException $e) {
+            $this->assertSame(['persons' => ['同じ人物に同じ role を重複指定できません']], $e->errors);
+        }
     }
 }

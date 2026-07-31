@@ -23,12 +23,8 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\DomainValidationError;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -62,12 +58,12 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
         $plainToken = 'plain-token';
 
         $token = new RegistrationToken(
-            RegistrationTokenId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-            HashedTokenValue::reconstruct('hashed'),
-            Email::reconstruct($email),
+            new RegistrationTokenId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+            new HashedTokenValue('hashed'),
+            new Email($email),
             Role::General,
             Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             ConsumptionStatus::Unused,
         );
 
@@ -82,10 +78,10 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->once();
 
         $this->issueService->shouldReceive('issue')
-            ->withArgs(static fn (Email $arg, int $role, array $permissions): bool => $arg->value === $email
-                && $role === Role::General->value
-                && $permissions === [])
-            ->andReturn(new Ok(['token' => $token, 'plainToken' => $plainToken]))
+            ->withArgs(static fn (Email $arg, Role $role, Permissions $permissions): bool => $arg->value === $email
+                && $role === Role::General
+                && $permissions->toArray() === [])
+            ->andReturn(['token' => $token, 'plainToken' => $plainToken])
             ->once();
 
         $this->repository->shouldReceive('save')
@@ -93,12 +89,10 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->andReturn($token)
             ->once();
 
-        $result = $this->getInstance()->handle(
+        $output = $this->getInstance()->handle(
             new IssueRegistrationTokenInputData($email, Role::General->value, []),
         );
 
-        $this->assertTrue($result->isOk());
-        $output = $result->unwrap();
         $this->assertSame($plainToken, $output->plainToken);
         $this->assertTrue($output->token->equals($token));
     }
@@ -118,39 +112,11 @@ class IssueRegistrationTokenUseCaseTest extends TestCase
             ->andReturn($this->createAdminUser('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $email))
             ->once();
 
-        $result = $this->getInstance()->handle(
+        $this->expectException(BusinessRuleViolationException::class);
+
+        $this->getInstance()->handle(
             new IssueRegistrationTokenInputData($email, Role::General->value, []),
         );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessLogicError::class, $result->unwrapErr());
-    }
-
-    #[Test]
-    public function issueFailsIfIssueServiceReturnsErr(): void
-    {
-        $email = 'invitee@example.com';
-
-        $this->transaction->shouldReceive('scope')
-            ->withArgs(static fn (Closure $_) => true)
-            ->andReturnUsing(static fn (Closure $arg) => $arg())
-            ->once();
-
-        $this->adminUserRepository->shouldReceive('findByEmail')
-            ->withArgs(static fn (Email $arg): bool => $arg->value === $email)
-            ->andReturn(null)
-            ->once();
-
-        $this->issueService->shouldReceive('issue')
-            ->andReturn(new Err(new DomainValidationError([])))
-            ->once();
-
-        $result = $this->getInstance()->handle(
-            new IssueRegistrationTokenInputData($email, Role::General->value, []),
-        );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
     }
 
     private function getInstance(): IssueRegistrationTokenUseCase

@@ -30,13 +30,8 @@ class Authenticate
             return response()->json($payload, $status);
         }
 
-        $result = $this->useCase->handle(new AuthenticateInputData($accessToken));
-
-        if ($result->isErr()) {
-            [$payload, $status] = ApiError::unauthenticated();
-
-            return response()->json($payload, $status);
-        }
+        // 認証失敗は UseCase が UnauthenticatedException を投げ、例外ハンドラが 401 に変換する
+        $this->useCase->handle(new AuthenticateInputData($accessToken));
 
         return $next($request);
     }

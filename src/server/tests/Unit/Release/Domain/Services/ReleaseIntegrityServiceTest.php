@@ -17,8 +17,8 @@ use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -88,11 +88,10 @@ class ReleaseIntegrityServiceTest extends TestCase
             ],
         );
 
-        $this->assertTrue($result->isOk());
         $this->assertSame([
             ['song_id' => self::SONG_ID, 'title' => null, 'track_no' => 1],
             ['song_id' => null, 'title' => '管理対象外の楽曲', 'track_no' => 2],
-        ], $result->unwrap()->media->toArray()[0]['tracks']);
+        ], $result->media->toArray()[0]['tracks']);
     }
 
     #[Test]
@@ -113,6 +112,8 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->andReturn(null)
             ->once();
 
+        $this->expectException(BusinessRuleViolationException::class);
+
         $result = $this->getInstance()->prepareForCreate(
             self::RELEASE_GROUP_ID,
             '初回限定盤',
@@ -130,9 +131,6 @@ class ReleaseIntegrityServiceTest extends TestCase
                 ],
             ],
         );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $result->unwrapErr());
     }
 
     #[Test]
@@ -142,6 +140,8 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->with()
             ->andReturn(self::RELEASE_ID)
             ->once();
+
+        $this->expectException(DomainValidationException::class);
 
         $result = $this->getInstance()->prepareForCreate(
             self::RELEASE_GROUP_ID,
@@ -154,9 +154,6 @@ class ReleaseIntegrityServiceTest extends TestCase
             [],
             [],
         );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(DomainValidationError::class, $result->unwrapErr());
     }
 
     #[Test]
@@ -166,6 +163,8 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->with()
             ->andReturn(self::RELEASE_ID)
             ->once();
+
+        $this->expectException(DomainValidationException::class);
 
         $result = $this->getInstance()->prepareForCreate(
             self::RELEASE_GROUP_ID,
@@ -178,9 +177,6 @@ class ReleaseIntegrityServiceTest extends TestCase
             [ReleaseFormat::Cd->value, ReleaseFormat::Cd->value],
             [],
         );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(DomainValidationError::class, $result->unwrapErr());
     }
 
     private function getInstance(): ReleaseIntegrityService

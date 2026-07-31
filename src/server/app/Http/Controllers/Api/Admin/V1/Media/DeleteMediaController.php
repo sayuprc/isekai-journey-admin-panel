@@ -20,6 +20,8 @@ class DeleteMediaController extends Controller
 
     public function handle(string $mediaId): JsonResponse
     {
-        return $this->presenter->present($this->useCase->handle(new DeleteInputData($mediaId)));
+        $this->useCase->handle(new DeleteInputData($mediaId));
+
+        return $this->presenter->present();
     }
 }

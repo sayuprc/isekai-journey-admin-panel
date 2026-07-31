@@ -33,7 +33,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $repository->save($token);
 
-        $found = $repository->findByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+        $found = $repository->findByEmailForUpdate(new Email('invitee@example.com'));
 
         $this->assertNotNull($found);
         $this->assertTrue($found->equals($token));
@@ -47,7 +47,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findByEmailForUpdateNotFound(): void
     {
-        $found = $this->getInstance()->findByEmailForUpdate(Email::reconstruct('no-such@example.com'));
+        $found = $this->getInstance()->findByEmailForUpdate(new Email('no-such@example.com'));
 
         $this->assertNull($found);
     }
@@ -73,7 +73,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
             'updated_at' => new DateTimeImmutable('+1 hour')->format('Y-m-d H:i:s'),
         ]);
 
-        $found = $repository->findByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+        $found = $repository->findByEmailForUpdate(new Email('invitee@example.com'));
 
         $this->assertNotNull($found);
         $this->assertSame($newerId, $found->registrationTokenId->value);
@@ -94,7 +94,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
         $repository->save($unused);
         $repository->save($otherEmail);
 
-        $found = $repository->findUnusedByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+        $found = $repository->findUnusedByEmailForUpdate(new Email('invitee@example.com'));
 
         $this->assertCount(1, $found);
         $this->assertTrue($found[0]->equals($unused));
@@ -108,7 +108,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $this->startCapturingQueries();
 
-        $this->getInstance()->findByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+        $this->getInstance()->findByEmailForUpdate(new Email('invitee@example.com'));
 
         $selectQueries = array_values(array_filter(
             $this->capturedQueries(),
@@ -130,7 +130,7 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
 
         $repository->save($token->consume());
 
-        $found = $repository->findByEmailForUpdate(Email::reconstruct('invitee@example.com'));
+        $found = $repository->findByEmailForUpdate(new Email('invitee@example.com'));
 
         $this->assertNotNull($found);
         $this->assertSame(ConsumptionStatus::Consumed, $found->status);
@@ -161,12 +161,12 @@ class RegistrationTokenRepositoryTest extends DatabaseTestCase
     private function buildToken(string $email, string $hashedToken, ConsumptionStatus $status, array $permissions = []): RegistrationToken
     {
         return new RegistrationToken(
-            RegistrationTokenId::reconstruct($this->generateUuid()),
-            HashedTokenValue::reconstruct($hashedToken),
-            Email::reconstruct($email),
+            new RegistrationTokenId($this->generateUuid()),
+            new HashedTokenValue($hashedToken),
+            new Email($email),
             Role::General,
             Permissions::reconstruct($permissions),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             $status,
         );
     }

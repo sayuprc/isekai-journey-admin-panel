@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth\Application\Admin\UseCase\RegisterFinish;
 
 use AdminUser\Domain\Exceptions\DuplicateAdminUserEmailException;
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\RegistrationToken\RegistrationTokenRepositoryInterface;
@@ -20,27 +22,19 @@ use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyRegistrationResult;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 use Throwable;
 
 readonly class RegisterFinishUseCase
 {
+    private const string FAILED_MESSAGE = '登録に失敗しました。入力内容を確認してください。';
+
     public function __construct(
         private TransactionInterface $transaction,
         private AdminUserRepositoryInterface $adminUserRepository,
@@ -59,19 +53,16 @@ readonly class RegisterFinishUseCase
     ) {
     }
 
-    /**
-     * @return Result<RegisterFinishOutputData, UseCaseError>
-     */
-    public function handle(RegisterFinishInputData $inputData): Result
+    public function handle(RegisterFinishInputData $inputData): RegisterFinishOutputData
     {
         $state = $this->ceremonyStore->pull($inputData->authCeremonyId);
 
         if (is_null($state) || $state->type !== PasskeyCeremonyType::Register) {
-            return new Err(new BusinessLogicError('register_ceremony_not_found'));
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
         if (is_null($state->name)) {
-            return new Err(new BusinessLogicError('register_ceremony_not_found'));
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
         try {
@@ -80,62 +71,52 @@ readonly class RegisterFinishUseCase
                 $state->optionsJson,
             );
         } catch (Throwable) {
-            return new Err(new BusinessLogicError('passkey_verification_failed'));
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
-        return $this->transaction->scope(fn (): Result => $this->persist($state, $inputData->plainToken, $verification));
+        $name = $state->name;
+
+        return $this->transaction->scope(
+            fn (): RegisterFinishOutputData => $this->persist($state, $name, $inputData->plainToken, $verification),
+        );
     }
 
-    /**
-     * @return Result<RegisterFinishOutputData, UseCaseError>
-     */
     private function persist(
         PasskeyCeremonyState $state,
+        string $name,
         string $plainToken,
         PasskeyRegistrationResult $verification,
-    ): Result {
-        if (is_null($state->name)) {
-            return new Err(new BusinessLogicError('register_ceremony_not_found'));
+    ): RegisterFinishOutputData {
+        // state は start で検証済みの自前データのため、形式不正は不変条件違反として扱う
+        $email = new Email($state->email);
+
+        $token = $this->consumeService->verify($plainToken, $email);
+
+        if (is_null($token)) {
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
-        $emailResult = Email::create($state->email);
-
-        if ($emailResult->isErr()) {
-            return new Err($this->handleError($emailResult->unwrapErr()));
+        try {
+            $adminUser = $this->integrityService->prepareForCreateWithId(
+                new AdminUserId($state->adminUserId),
+                new AdminUserName($name),
+                $token->email,
+                $token->role,
+                $token->permissions,
+            );
+        } catch (BusinessRuleViolationException) {
+            // ユーザー列挙を防ぐため、失敗理由に依らず同一メッセージで返す
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
-        $tokenResult = $this->consumeService->verify($plainToken, $emailResult->unwrap());
-
-        if ($tokenResult->isErr()) {
-            return new Err($this->handleError($tokenResult->unwrapErr()));
-        }
-
-        $token = $tokenResult->unwrap();
-        $adminUserResult = $this->integrityService->prepareForCreateWithId(
-            $state->adminUserId,
-            $state->name,
-            $token->email->value,
-            $token->role->value,
-            $token->permissions->toArray(),
+        ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $this->refreshTokenIssueService->issue(
+            $adminUser->adminUserId->value,
         );
-
-        if ($adminUserResult->isErr()) {
-            return new Err($this->handleError($adminUserResult->unwrapErr()));
-        }
-
-        $adminUser = $adminUserResult->unwrap();
-        $refreshTokenResult = $this->refreshTokenIssueService->issue($adminUser->adminUserId->value);
-
-        if ($refreshTokenResult->isErr()) {
-            return new Err($this->handleError($refreshTokenResult->unwrapErr()));
-        }
-
-        ['token' => $refreshToken, 'plainToken' => $plainRefreshToken] = $refreshTokenResult->unwrap();
 
         try {
             $adminUser = $this->adminUserRepository->register($adminUser);
-        } catch (DuplicateAdminUserEmailException $exception) {
-            return new Err(new BusinessLogicError($exception->getMessage()));
+        } catch (DuplicateAdminUserEmailException) {
+            throw new BusinessRuleViolationException(self::FAILED_MESSAGE);
         }
 
         $adminUserPasskeyId = $this->uuidGenerator->generate();
@@ -144,7 +125,7 @@ readonly class RegisterFinishUseCase
             $adminUserPasskeyId,
             $adminUser->adminUserId->value,
             $verification->userHandle,
-            $state->name,
+            $name,
             $verification->credentialId,
             $verification->publicKey,
             $verification->aaguid,
@@ -173,20 +154,10 @@ readonly class RegisterFinishUseCase
             $adminUser->adminUserId,
         );
 
-        return new Ok(new RegisterFinishOutputData(
+        return new RegisterFinishOutputData(
             $accessToken,
             $refreshToken->refreshTokenId->value,
             $plainRefreshToken,
-        ));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+        );
     }
 }

@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Media\Application\Viewer\UseCase\List;
 
 use Media\Application\Viewer\Query\MediaQueryServiceInterface;
-use ResultType\Ok;
-use ResultType\Result;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class ListUseCase
 {
@@ -19,16 +16,13 @@ readonly class ListUseCase
     {
     }
 
-    /**
-     * @return Result<ListOutputData, UseCaseError>
-     */
-    public function handle(ListInputData $inputData): Result
+    public function handle(ListInputData $inputData): ListOutputData
     {
         $page = $this->query->list(
             $inputData->cursor,
             min(self::MAX_LIMIT, $inputData->limit ?? self::DEFAULT_LIMIT),
         );
 
-        return new Ok(new ListOutputData($page->media, $page->nextCursor));
+        return new ListOutputData($page->media, $page->nextCursor);
     }
 }

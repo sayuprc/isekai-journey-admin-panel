@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Support\Domain\ValueObjects\String;
 
-use ResultType\Result;
-use Support\Domain\Error\EntityRuleViolationError;
-
 /**
  * 人間が読むテキストを表す値オブジェクトの基底。
  *
@@ -15,16 +12,8 @@ use Support\Domain\Error\EntityRuleViolationError;
  */
 abstract readonly class TextValueObject extends StringValueObject
 {
-    /**
-     * @return Result<static, EntityRuleViolationError>
-     */
-    public static function create(string $value): Result
+    public function __construct(string $value)
     {
-        return parent::create(TextNormalizer::toNfc($value));
-    }
-
-    public static function reconstruct(string $value): static
-    {
-        return parent::reconstruct(TextNormalizer::toNfc($value));
+        parent::__construct(TextNormalizer::toNfc($value));
     }
 }

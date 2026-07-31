@@ -51,7 +51,7 @@ class PersonRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findNotFound(): void
     {
-        $found = $this->getInstance()->find(PersonId::reconstruct($this->generateUuid()));
+        $found = $this->getInstance()->find(new PersonId($this->generateUuid()));
 
         $this->assertNull($found);
     }

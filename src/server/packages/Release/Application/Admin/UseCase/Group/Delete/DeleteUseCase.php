@@ -8,18 +8,13 @@ use AdminUser\Domain\Models\Permission;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteUseCase
 {
@@ -32,43 +27,31 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WriteRelease)
-            ->andThen(fn () => $this->deleteReleaseGroup($inputData));
-    }
+        $this->authorizer->ensure(Permission::WriteRelease);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deleteReleaseGroup(DeleteInputData $inputData): Result
-    {
-        return ReleaseGroupId::create($inputData->releaseGroupId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(fn (ReleaseGroupId $releaseGroupId): Result => $this->transaction->scope(function () use ($releaseGroupId): Result {
-                $releaseGroup = $this->repository->find($releaseGroupId);
+        $releaseGroupId = FieldErrors::single('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($inputData->releaseGroupId));
 
-                if (is_null($releaseGroup)) {
-                    return new Ok(null);
-                }
+        $this->transaction->scope(function () use ($releaseGroupId): void {
+            $releaseGroup = $this->repository->find($releaseGroupId);
 
-                if ($this->releaseRepository->existsByReleaseGroupId($releaseGroupId)) {
-                    return new Err(new BusinessLogicError('リリースが存在するため削除できません。'));
-                }
+            if (is_null($releaseGroup)) {
+                return;
+            }
 
-                $this->repository->delete($releaseGroupId);
+            if ($this->releaseRepository->existsByReleaseGroupId($releaseGroupId)) {
+                throw new BusinessRuleViolationException('リリースが存在するため削除できません。');
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::ReleaseGroup,
-                    $releaseGroup->releaseGroupId,
-                    $releaseGroup->toArray(),
-                );
+            $this->repository->delete($releaseGroupId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::ReleaseGroup,
+                $releaseGroup->releaseGroupId,
+                $releaseGroup->toArray(),
+            );
+        });
     }
 }

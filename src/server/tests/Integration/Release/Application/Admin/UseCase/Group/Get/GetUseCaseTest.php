@@ -10,8 +10,8 @@ use Release\Application\Admin\UseCase\Group\Get\GetInputData;
 use Release\Application\Admin\UseCase\Group\Get\GetUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -43,11 +43,10 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($releaseGroupId));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($releaseGroupId, $result->unwrap()->releaseGroup->releaseGroupId->value);
+        $this->assertSame($releaseGroupId, $result->releaseGroup->releaseGroupId->value);
 
         // 傘下リリースは発売日順、formatValues は提供形態の値順
-        $releases = $result->unwrap()->releases;
+        $releases = $result->releases;
         $this->assertCount(2, $releases);
         $this->assertSame($releaseId1, $releases[0]->releaseId);
         $this->assertSame(20, $releases[0]->orderNo);
@@ -74,27 +73,24 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($releaseGroupId));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($releaseId1, $result->unwrap()->releases[0]->releaseId);
-        $this->assertSame($releaseId2, $result->unwrap()->releases[1]->releaseId);
+        $this->assertSame($releaseId1, $result->releases[0]->releaseId);
+        $this->assertSame($releaseId2, $result->releases[1]->releaseId);
     }
 
     #[Test]
     public function invalidId(): void
     {
-        $result = $this->getInstance()->handle(new GetInputData('invalid-id'));
+        $this->expectException(DomainValidationException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
+        $result = $this->getInstance()->handle(new GetInputData('invalid-id'));
     }
 
     #[Test]
     public function notFound(): void
     {
-        $result = $this->getInstance()->handle(new GetInputData($this->generateUuid()));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
+        $result = $this->getInstance()->handle(new GetInputData($this->generateUuid()));
     }
 
     private function getInstance(): GetUseCase

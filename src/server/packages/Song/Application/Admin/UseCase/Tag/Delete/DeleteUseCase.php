@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Tag\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteUseCase
 {
@@ -29,43 +26,35 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WriteSong)
-            ->andThen(fn () => $this->deleteSongTag($inputData));
-    }
+        $this->authorizer->ensure(Permission::WriteSong);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deleteSongTag(DeleteInputData $inputData): Result
-    {
-        return SongTagId::create($inputData->songTagId)
-            ->mapErr(static fn (): UseCaseError => new InvalidInputError(['songTagId' => ['IDが不正です']]))
-            ->andThen(fn (SongTagId $songTagId): Result => $this->transaction->scope(function () use ($songTagId): Result {
-                $tag = $this->repository->find($songTagId);
+        try {
+            $songTagId = new SongTagId($inputData->songTagId);
+        } catch (InvalidDomainException) {
+            throw new DomainValidationException(['songTagId' => ['IDが不正です']]);
+        }
 
-                if (is_null($tag)) {
-                    return new Ok(null);
-                }
+        $this->transaction->scope(function () use ($songTagId): void {
+            $tag = $this->repository->find($songTagId);
 
-                if ($this->repository->isUsed($songTagId)) {
-                    return new Err(new BusinessLogicError('この楽曲タグは楽曲に使用されているため削除できません'));
-                }
+            if (is_null($tag)) {
+                return;
+            }
 
-                $this->repository->delete($songTagId);
+            if ($this->repository->isUsed($songTagId)) {
+                throw new BusinessRuleViolationException('この楽曲タグは楽曲に使用されているため削除できません');
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::SongTag,
-                    $tag->songTagId,
-                    $tag->toArray(),
-                );
+            $this->repository->delete($songTagId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::SongTag,
+                $tag->songTagId,
+                $tag->toArray(),
+            );
+        });
     }
 }

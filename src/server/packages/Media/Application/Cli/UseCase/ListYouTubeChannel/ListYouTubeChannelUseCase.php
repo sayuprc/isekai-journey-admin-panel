@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Media\Application\Cli\UseCase\ListYouTubeChannel;
 
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
-use ResultType\Ok;
-use ResultType\Result;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class ListYouTubeChannelUseCase
 {
@@ -15,11 +12,8 @@ readonly class ListYouTubeChannelUseCase
     {
     }
 
-    /**
-     * @return Result<ListYouTubeChannelOutputData, UseCaseError>
-     */
-    public function handle(ListYouTubeChannelInputData $inputData): Result
+    public function handle(ListYouTubeChannelInputData $inputData): ListYouTubeChannelOutputData
     {
-        return new Ok(new ListYouTubeChannelOutputData($this->repository->findAll()));
+        return new ListYouTubeChannelOutputData($this->repository->findAll());
     }
 }

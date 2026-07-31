@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Media;
 
-use App\Console\Commands\Concerns\ResolvesUseCaseErrorMessage;
+use App\Console\Commands\Concerns\ResolvesUseCaseExceptionMessage;
 use Illuminate\Console\Command;
 use Media\Application\Cli\UseCase\RemoveYouTubeChannel\RemoveYouTubeChannelInputData;
 use Media\Application\Cli\UseCase\RemoveYouTubeChannel\RemoveYouTubeChannelUseCase;
 use Override;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\UseCaseException;
 
 class RemoveYouTubeChannelCommand extends Command
 {
-    use ResolvesUseCaseErrorMessage;
+    use ResolvesUseCaseExceptionMessage;
 
     #[Override]
     protected $signature = 'media:youtube-channel:remove {channelId}';
@@ -24,10 +27,10 @@ class RemoveYouTubeChannelCommand extends Command
     {
         $channelId = $this->argument('channelId');
 
-        $result = $useCase->handle(new RemoveYouTubeChannelInputData($channelId));
-
-        if ($result->isErr()) {
-            $this->error($this->resolveErrorMessage($result->unwrapErr()));
+        try {
+            $useCase->handle(new RemoveYouTubeChannelInputData($channelId));
+        } catch (BusinessRuleViolationException|DomainValidationException|UseCaseException $e) {
+            $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;
         }

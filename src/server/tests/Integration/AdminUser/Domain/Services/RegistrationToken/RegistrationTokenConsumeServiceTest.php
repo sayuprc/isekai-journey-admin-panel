@@ -30,23 +30,23 @@ class RegistrationTokenConsumeServiceTest extends DatabaseTestCase
         $older = $this->saveToken('plain-old-token', 'invitee@example.com', new DateTimeImmutable('-1 hour'));
         $newer = $this->saveToken('plain-new-token', 'invitee@example.com', new DateTimeImmutable());
 
-        $result = $this->getInstance()->verify('plain-old-token', Email::reconstruct('invitee@example.com'));
+        $result = $this->getInstance()->verify('plain-old-token', new Email('invitee@example.com'));
 
-        $this->assertTrue($result->isOk());
-        $this->assertTrue($result->unwrap()->equals($older));
-        $this->assertFalse($result->unwrap()->equals($newer));
-        $this->assertTrue($hasher->verify('plain-old-token', $result->unwrap()->token->value));
+        $this->assertNotNull($result);
+        $this->assertTrue($result->equals($older));
+        $this->assertFalse($result->equals($newer));
+        $this->assertTrue($hasher->verify('plain-old-token', $result->token->value));
     }
 
     private function saveToken(string $plainToken, string $email, DateTimeImmutable $createdAt): RegistrationToken
     {
         $token = new RegistrationToken(
-            RegistrationTokenId::reconstruct($this->generateUuid()),
-            HashedTokenValue::reconstruct($this->app->make(TokenHasherInterface::class)->hash($plainToken)),
-            Email::reconstruct($email),
+            new RegistrationTokenId($this->generateUuid()),
+            new HashedTokenValue($this->app->make(TokenHasherInterface::class)->hash($plainToken)),
+            new Email($email),
             Role::General,
             Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             ConsumptionStatus::Unused,
         );
 

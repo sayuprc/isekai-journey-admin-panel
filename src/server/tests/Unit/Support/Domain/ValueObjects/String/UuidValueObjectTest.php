@@ -6,6 +6,7 @@ namespace Tests\Unit\Support\Domain\ValueObjects\String;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\String\UuidValueObject;
 use Tests\TestCase;
 
@@ -15,10 +16,7 @@ class UuidValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(string $value): void
     {
-        $result = Uuid::create($value);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame($value, $result->unwrap()->value);
+        $this->assertSame($value, new Uuid($value)->value);
     }
 
     public static function provideProperlyStoresValue(): array
@@ -33,10 +31,10 @@ class UuidValueObjectTest extends TestCase
     #[DataProvider('provideThrowExceptionWhenInvalidFormat')]
     public function throwExceptionWhenInvalidFormat(string $value): void
     {
-        $result = Uuid::create($value);
+        $this->expectException(InvalidDomainException::class);
+        $this->expectExceptionMessage('形式が不正です: ' . $value);
 
-        $this->assertTrue($result->isErr());
-        $this->assertSame('形式が不正です: ' . $value, $result->unwrapErr()->message);
+        new Uuid($value);
     }
 
     public static function provideThrowExceptionWhenInvalidFormat(): array
@@ -60,23 +58,23 @@ class UuidValueObjectTest extends TestCase
     {
         return [
             [
-                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
-                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new Uuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new Uuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
                 true,
             ],
             [
-                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
-                Uuid::reconstruct('B47477D8-B090-4163-9A2B-C179CC8E692F'),
+                new Uuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new Uuid('B47477D8-B090-4163-9A2B-C179CC8E692F'),
                 false,
             ],
             [
-                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
-                OtherUuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new Uuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new OtherUuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
                 false,
             ],
             [
-                Uuid::reconstruct('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
-                OtherUuid::reconstruct('B47477D8-B090-4163-9A2B-C179CC8E692F'),
+                new Uuid('dd23940f-6c8c-4316-a3dd-4ab030fcfcac'),
+                new OtherUuid('B47477D8-B090-4163-9A2B-C179CC8E692F'),
                 false,
             ],
         ];

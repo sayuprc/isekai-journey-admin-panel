@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Validation\FieldErrors;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -19,52 +17,34 @@ readonly class Media extends ImmutableCollection
     /**
      * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      *
-     * @return Result<self, DomainValidationError>
+     * @throws DomainValidationException
      */
-    public static function fromArray(array $items): Result
+    public static function fromArray(array $items): self
     {
         $media = [];
         $seenPositions = [];
 
         foreach ($items as $item) {
-            $positionResult = OrderNo::create($item['position']);
-
-            if ($positionResult->isErr()) {
-                $error = $positionResult->unwrapErr();
-
-                return new Err(new DomainValidationError([$error->field => [$error->message]]));
-            }
+            $position = FieldErrors::single('position', static fn (): OrderNo => new OrderNo($item['position']));
 
             $normalizedName = self::normalizeName($item['name']);
-            $nameResult = is_null($normalizedName)
-                ? new Ok(null)
-                : MediumName::create($normalizedName);
+            $name = is_null($normalizedName)
+                ? null
+                : FieldErrors::single('name', static fn (): MediumName => new MediumName($normalizedName));
 
-            if ($nameResult->isErr()) {
-                $error = $nameResult->unwrapErr();
-
-                return new Err(new DomainValidationError([$error->field => [$error->message]]));
-            }
-
-            $tracksResult = Tracks::fromArray($item['tracks']);
-
-            if ($tracksResult->isErr()) {
-                return new Err($tracksResult->unwrapErr());
-            }
-
-            $medium = new Medium($positionResult->unwrap(), $nameResult->unwrap(), $tracksResult->unwrap());
+            $medium = new Medium($position, $name, Tracks::fromArray($item['tracks']));
 
             if (isset($seenPositions[$medium->position->value])) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'media' => ['同じ媒体順を複数指定することはできません。'],
-                ]));
+                ]);
             }
 
             $seenPositions[$medium->position->value] = true;
             $media[] = $medium;
         }
 
-        return new Ok(new self($media));
+        return new self($media);
     }
 
     /**

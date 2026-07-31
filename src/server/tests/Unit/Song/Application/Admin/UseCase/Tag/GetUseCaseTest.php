@@ -12,7 +12,7 @@ use Song\Application\Admin\UseCase\Tag\Get\GetInputData;
 use Song\Application\Admin\UseCase\Tag\Get\GetUseCase;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -40,9 +40,7 @@ class GetUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
 
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
+        $response = $result;
 
         $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $response->tag->songTagId->value);
         $this->assertSame('テストタグA', $response->tag->name->value);
@@ -57,13 +55,9 @@ class GetUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(NotFoundError::class, $error);
-        $this->assertSame('SongTag', $error->resourceName);
-        $this->assertSame('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $error->identifier);
+        $result = $this->getInstance()->handle(new GetInputData('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB'));
     }
 
     private function getInstance(): GetUseCase

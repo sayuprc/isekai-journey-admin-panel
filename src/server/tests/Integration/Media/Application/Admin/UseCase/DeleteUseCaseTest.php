@@ -12,6 +12,7 @@ use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Song\Domain\Models\SongType;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -43,7 +44,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($mediaId));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('media')->get()->all());
 
         $this->assertAuditLogCount(1);
@@ -81,10 +81,13 @@ class DeleteUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $result = $this->getInstance()->handle(new DeleteInputData($mediaId));
+        try {
+            $this->getInstance()->handle(new DeleteInputData($mediaId));
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException $e) {
+            $this->assertSame('このメディアは楽曲に使用されているため削除できません', $e->getMessage());
+        }
 
-        $this->assertTrue($result->isErr());
-        $this->assertSame('このメディアは楽曲に使用されているため削除できません', $result->unwrapErr()->message);
         $this->assertCount(1, DB::table('media')->get()->all());
         $this->assertAuditLogCount(0);
     }

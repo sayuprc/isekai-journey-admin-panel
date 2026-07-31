@@ -25,9 +25,7 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($uuid));
 
-        $this->assertTrue($result->isOk());
-
-        $response = $result->unwrap();
+        $response = $result;
 
         $this->assertSame($uuid, $response->tag->songTagId->value);
         $this->assertSame('テストタグA', $response->tag->name->value);

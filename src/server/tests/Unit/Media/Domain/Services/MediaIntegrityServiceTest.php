@@ -13,6 +13,7 @@ use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -56,16 +57,18 @@ class MediaIntegrityServiceTest extends TestCase
                 ),
             );
 
-        $result = $this->getInstance()->prepareForCreate(
-            '新規メディア',
-            $url,
-            '2024-03-01T12:34:56+09:00',
-            MediaType::Mv->value,
-            true,
-        );
-
-        $this->assertTrue($result->isErr());
-        $this->assertSame(['url' => ['同じURLのメディアが既に存在します']], $result->unwrapErr()->errors);
+        try {
+            $this->getInstance()->prepareForCreate(
+                '新規メディア',
+                $url,
+                '2024-03-01T12:34:56+09:00',
+                MediaType::Mv->value,
+                true,
+            );
+            $this->fail('DomainValidationException が発生しませんでした');
+        } catch (DomainValidationException $e) {
+            $this->assertSame(['url' => ['同じURLのメディアが既に存在します']], $e->errors);
+        }
     }
 
     #[Test]
@@ -96,9 +99,8 @@ class MediaIntegrityServiceTest extends TestCase
             false,
         );
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($mediaId, $result->unwrap()->mediaId->value);
-        $this->assertSame('2024-04-02 10:20:30', $result->unwrap()->publishedAt?->value->format('Y-m-d H:i:s'));
+        $this->assertSame($mediaId, $result->mediaId->value);
+        $this->assertSame('2024-04-02 10:20:30', $result->publishedAt?->value->format('Y-m-d H:i:s'));
     }
 
     #[Test]
@@ -122,8 +124,7 @@ class MediaIntegrityServiceTest extends TestCase
             true,
         );
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame(MediaType::Other, $result->unwrap()->type);
+        $this->assertSame(MediaType::Other, $result->type);
     }
 
     private function getInstance(): MediaIntegrityService

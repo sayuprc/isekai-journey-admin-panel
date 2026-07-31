@@ -8,13 +8,10 @@ use AdminUser\Domain\Models\Permission;
 use Media\Domain\Criteria\MediaSearchCriteria;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Models\MediaType;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
@@ -24,20 +21,10 @@ readonly class SearchUseCase
     ) {
     }
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    public function handle(SearchInputData $inputData): Result
+    public function handle(SearchInputData $inputData): SearchOutputData
     {
-        return $this->authorizer->require(Permission::ReadMedia)
-            ->andThen(fn () => $this->searchMedia($inputData));
-    }
+        $this->authorizer->ensure(Permission::ReadMedia);
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    private function searchMedia(SearchInputData $inputData): Result
-    {
         $criteria = new MediaSearchCriteria(
             $inputData->title === Arg::Optional
                 ? new None()
@@ -52,9 +39,9 @@ readonly class SearchUseCase
             $inputData->perPage,
         );
 
-        return new Ok(new SearchOutputData(
+        return new SearchOutputData(
             $this->repository->search($criteria),
             $this->repository->maxPage($criteria),
-        ));
+        );
     }
 }

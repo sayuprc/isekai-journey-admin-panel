@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AdminUser\Domain\Services;
 
+use AdminUser\Domain\Models\AdminUserId;
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use AdminUser\Domain\Models\Email;
+use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\AdminUserIntegrityService;
 use DateTimeImmutable;
@@ -15,7 +18,7 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -66,10 +69,14 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($adminUserName, $email, $role->value, $permissions);
+        $actual = $this->getInstance()->prepareForCreate(
+            new AdminUserName($adminUserName),
+            new Email($email),
+            $role,
+            Permissions::fromArray($permissions),
+        );
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedUser, $result->unwrap());
+        $this->assertEquals($expectedUser, $actual);
     }
 
     #[Test]
@@ -82,18 +89,6 @@ class AdminUserIntegrityServiceTest extends TestCase
         $role = Role::General;
         $permissions = [];
 
-        $this->generator->shouldReceive('generate')
-            ->with()
-            ->andReturn($uuid)
-            ->once();
-
-        $this->clock->shouldReceive('now')
-            ->with()
-            ->andReturn($now)
-            ->once();
-
-        $expectedUser = $this->createAdminUser($uuid, $email, $role, $permissions, $now);
-
         $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmail')
@@ -101,12 +96,18 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturn($existingUser)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($adminUserName, $email, $role->value, $permissions);
+        $this->generator->shouldReceive('generate')->never();
+        $this->clock->shouldReceive('now')->never();
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $error->message);
+        $this->expectException(BusinessRuleViolationException::class);
+        $this->expectExceptionMessage('すでに使われているメールアドレスです "example@example.com"');
+
+        $this->getInstance()->prepareForCreate(
+            new AdminUserName($adminUserName),
+            new Email($email),
+            $role,
+            Permissions::fromArray($permissions),
+        );
     }
 
     #[Test]
@@ -131,10 +132,15 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->prepareForCreateWithId($uuid, $adminUserName, $email, $role->value, $permissions);
+        $actual = $this->getInstance()->prepareForCreateWithId(
+            new AdminUserId($uuid),
+            new AdminUserName($adminUserName),
+            new Email($email),
+            $role,
+            Permissions::fromArray($permissions),
+        );
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedUser, $result->unwrap());
+        $this->assertEquals($expectedUser, $actual);
     }
 
     #[Test]
@@ -147,11 +153,6 @@ class AdminUserIntegrityServiceTest extends TestCase
         $role = Role::General;
         $permissions = [];
 
-        $this->clock->shouldReceive('now')
-            ->with()
-            ->andReturn($now)
-            ->once();
-
         $existingUser = $this->createAdminUser('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $email, $role, $permissions, $now);
 
         $this->repository->shouldReceive('findByEmailForUpdate')
@@ -159,12 +160,18 @@ class AdminUserIntegrityServiceTest extends TestCase
             ->andReturn($existingUser)
             ->once();
 
-        $result = $this->getInstance()->prepareForCreateWithId($uuid, $adminUserName, $email, $role->value, $permissions);
+        $this->clock->shouldReceive('now')->never();
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われているメールアドレスです "example@example.com"', $error->message);
+        $this->expectException(BusinessRuleViolationException::class);
+        $this->expectExceptionMessage('すでに使われているメールアドレスです "example@example.com"');
+
+        $this->getInstance()->prepareForCreateWithId(
+            new AdminUserId($uuid),
+            new AdminUserName($adminUserName),
+            new Email($email),
+            $role,
+            Permissions::fromArray($permissions),
+        );
     }
 
     private function getInstance(): AdminUserIntegrityService

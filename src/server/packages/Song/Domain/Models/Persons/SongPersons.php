@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Song\Domain\Models\Persons;
 
 use Person\Domain\Models\PersonId;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -21,46 +18,55 @@ readonly class SongPersons extends ImmutableCollection
     /**
      * @param list<array{personId: string, role: int, orderNo: int}> $items
      *
-     * @return Result<self, DomainValidationError>
+     * @throws DomainValidationException
      */
-    public static function fromArray(array $items): Result
+    public static function fromArray(array $items): self
     {
         $persons = [];
         $duplicates = [];
 
         foreach ($items as $item) {
-            $result = Result::collect3(
-                PersonId::create($item['personId']),
-                self::toRole($item['role']),
-                OrderNo::create($item['orderNo']),
-            )->map(static fn (array $values) => new SongPerson(...$values));
+            $messages = [];
+            $personId = null;
+            $role = null;
+            $orderNo = null;
 
-            if ($result->isErr()) {
-                $messages = [];
-                foreach ($result->unwrapErr() as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
-
-                return new Err(new DomainValidationError($messages));
+            try {
+                $personId = new PersonId($item['personId']);
+            } catch (InvalidDomainException $e) {
+                $messages['personId'] = [$e->getMessage()];
             }
 
-            $person = $result->unwrap();
+            try {
+                $role = self::toRole($item['role']);
+            } catch (InvalidDomainException $e) {
+                $messages['role'] = [$e->getMessage()];
+            }
+
+            try {
+                $orderNo = new OrderNo($item['orderNo']);
+            } catch (InvalidDomainException $e) {
+                $messages['orderNo'] = [$e->getMessage()];
+            }
+
+            if (is_null($personId) || is_null($role) || is_null($orderNo)) {
+                throw new DomainValidationException($messages);
+            }
+
+            $person = new SongPerson($personId, $role, $orderNo);
             $key = $person->personId->value . ':' . $person->role->value;
 
             if (isset($duplicates[$key])) {
-                return new Err(new DomainValidationError([
+                throw new DomainValidationException([
                     'persons' => ['同じ人物に同じ role を重複指定できません'],
-                ]));
+                ]);
             }
 
             $duplicates[$key] = true;
             $persons[] = $person;
         }
 
-        return new Ok(new self($persons));
+        return new self($persons);
     }
 
     /**
@@ -86,16 +92,10 @@ readonly class SongPersons extends ImmutableCollection
     }
 
     /**
-     * @return Result<SongPersonRole, EntityRuleViolationError>
+     * @throws InvalidDomainException
      */
-    private static function toRole(int $role): Result
+    private static function toRole(int $role): SongPersonRole
     {
-        $found = SongPersonRole::tryFrom($role);
-
-        if (is_null($found)) {
-            return new Err(new EntityRuleViolationError('role', "不正な role です: {$role}"));
-        }
-
-        return new Ok($found);
+        return SongPersonRole::tryFrom($role) ?? throw new InvalidDomainException("不正な role です: {$role}");
     }
 }

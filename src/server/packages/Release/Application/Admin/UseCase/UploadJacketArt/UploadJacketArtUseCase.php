@@ -6,13 +6,9 @@ namespace Release\Application\Admin\UseCase\UploadJacketArt;
 
 use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Storage\JacketArtStorageInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Support\Domain\Exceptions\DomainValidationException;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class UploadJacketArtUseCase
 {
@@ -32,25 +28,15 @@ readonly class UploadJacketArtUseCase
     ) {
     }
 
-    /**
-     * @return Result<UploadJacketArtOutputData, UseCaseError>
-     */
-    public function handle(UploadJacketArtInputData $inputData): Result
+    public function handle(UploadJacketArtInputData $inputData): UploadJacketArtOutputData
     {
-        return $this->authorizer->require(Permission::WriteRelease)
-            ->andThen(fn () => $this->upload($inputData));
-    }
+        $this->authorizer->ensure(Permission::WriteRelease);
 
-    /**
-     * @return Result<UploadJacketArtOutputData, UseCaseError>
-     */
-    private function upload(UploadJacketArtInputData $inputData): Result
-    {
         $contentType = $this->normalizeContentType($inputData->contentType);
         $errors = $this->validate($inputData->content, $contentType);
 
         if ($errors !== []) {
-            return new Err(new InvalidInputError($errors));
+            throw new DomainValidationException($errors);
         }
 
         $key = sprintf(
@@ -59,9 +45,9 @@ readonly class UploadJacketArtUseCase
             self::EXTENSIONS[$contentType],
         );
 
-        return new Ok(new UploadJacketArtOutputData(
+        return new UploadJacketArtOutputData(
             $this->storage->put($key, $inputData->content, $contentType),
-        ));
+        );
     }
 
     /**

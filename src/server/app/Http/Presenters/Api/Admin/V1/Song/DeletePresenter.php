@@ -4,23 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\Song;
 
-use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
-use ResultType\Result;
-use Support\UseCase\Error\UseCaseError;
 
 class DeletePresenter
 {
-    use ResolvesUseCaseError;
-
-    /**
-     * @param Result<null, UseCaseError> $result
-     */
-    public function present(Result $result): JsonResponse
+    public function present(): JsonResponse
     {
-        return $result->match(
-            static fn () => response()->json(status: 204),
-            fn (UseCaseError $error) => response()->json(...$this->resolveError($error)),
-        );
+        return response()->json(status: 204);
     }
 }

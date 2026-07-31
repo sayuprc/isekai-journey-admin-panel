@@ -14,7 +14,7 @@ readonly class SongTagReference
 
     public static function reconstruct(string $songTagId): self
     {
-        return new self(SongTagId::reconstruct($songTagId));
+        return new self(new SongTagId($songTagId));
     }
 
     /**

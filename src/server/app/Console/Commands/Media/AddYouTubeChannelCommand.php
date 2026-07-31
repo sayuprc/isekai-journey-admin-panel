@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Media;
 
-use App\Console\Commands\Concerns\ResolvesUseCaseErrorMessage;
+use App\Console\Commands\Concerns\ResolvesUseCaseExceptionMessage;
 use Illuminate\Console\Command;
 use Media\Application\Cli\UseCase\AddYouTubeChannel\AddYouTubeChannelInputData;
 use Media\Application\Cli\UseCase\AddYouTubeChannel\AddYouTubeChannelUseCase;
 use Override;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\UseCaseException;
 
 class AddYouTubeChannelCommand extends Command
 {
-    use ResolvesUseCaseErrorMessage;
+    use ResolvesUseCaseExceptionMessage;
 
     #[Override]
     protected $signature = 'media:youtube-channel:add {channelId} {name}';
@@ -30,15 +33,15 @@ class AddYouTubeChannelCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $useCase->handle(new AddYouTubeChannelInputData($this->argument('channelId'), $name));
-
-        if ($result->isErr()) {
-            $this->error($this->resolveErrorMessage($result->unwrapErr()));
+        try {
+            $output = $useCase->handle(new AddYouTubeChannelInputData($this->argument('channelId'), $name));
+        } catch (BusinessRuleViolationException|DomainValidationException|UseCaseException $e) {
+            $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;
         }
 
-        $channel = $result->unwrap()->channel;
+        $channel = $output->channel;
 
         $this->info(sprintf('チャンネルを追加しました: %s (%s)', $channel->name->value, $channel->channelId->value));
 

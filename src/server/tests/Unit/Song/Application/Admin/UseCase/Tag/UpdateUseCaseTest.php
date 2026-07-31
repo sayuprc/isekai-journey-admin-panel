@@ -9,8 +9,6 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
 use Song\Application\Admin\UseCase\Tag\Update\UpdateInputData;
 use Song\Application\Admin\UseCase\Tag\Update\UpdateUseCase;
 use Song\Domain\Models\Tag\SongTag;
@@ -18,9 +16,9 @@ use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\DomainValidationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -67,7 +65,7 @@ class UpdateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songTagId, $name, $orderNo)
-            ->andReturn(new Ok($tag = $this->createSongTag($songTagId, $name, $orderNo)))
+            ->andReturn($tag = $this->createSongTag($songTagId, $name, $orderNo))
             ->once();
 
         $this->repository->shouldReceive('save')
@@ -80,8 +78,6 @@ class UpdateUseCaseTest extends TestCase
             ->once();
 
         $result = $this->getInstance()->handle(new UpdateInputData($songTagId, $name, $orderNo));
-
-        $this->assertTrue($result->isOk());
     }
 
     #[Test]
@@ -103,12 +99,12 @@ class UpdateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songTagId, $name, $orderNo)
-            ->andReturn(new Err(new DomainValidationError([])))
+            ->andThrow(new DomainValidationException([]))
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, $name, $orderNo));
+        $this->expectException(DomainValidationException::class);
 
-        $this->assertTrue($result->isErr());
+        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, $name, $orderNo));
     }
 
     #[Test]
@@ -126,13 +122,9 @@ class UpdateUseCaseTest extends TestCase
             ->andReturnNull()
             ->once();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, 'テストタグA', 1));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(NotFoundError::class, $error);
-        $this->assertSame('SongTag', $error->resourceName);
-        $this->assertSame($songTagId, $error->identifier);
+        $result = $this->getInstance()->handle(new UpdateInputData($songTagId, 'テストタグA', 1));
     }
 
     private function getInstance(): UpdateUseCase

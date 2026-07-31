@@ -89,7 +89,7 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
             $this->buildCode($this->generateUuid(), 'hashed-other', ConsumptionStatus::Unused, null),
         ]);
 
-        $found = $repository->findUnusedByIdForUpdate(RecoveryCodeId::reconstruct($targetId), $this->adminUserId);
+        $found = $repository->findUnusedByIdForUpdate(new RecoveryCodeId($targetId), $this->adminUserId);
 
         $this->assertNotNull($found);
         $this->assertSame('hashed-target', $found->code->value);
@@ -104,7 +104,7 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
             $this->buildCode($consumedId, 'hashed-consumed', ConsumptionStatus::Consumed, now()->toDateTimeImmutable()),
         ]);
 
-        $found = $repository->findUnusedByIdForUpdate(RecoveryCodeId::reconstruct($consumedId), $this->adminUserId);
+        $found = $repository->findUnusedByIdForUpdate(new RecoveryCodeId($consumedId), $this->adminUserId);
 
         $this->assertNull($found);
     }
@@ -113,7 +113,7 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
     public function findUnusedByIdForUpdateReturnsNullForUnknownId(): void
     {
         $found = $this->getInstance()->findUnusedByIdForUpdate(
-            RecoveryCodeId::reconstruct($this->generateUuid()),
+            new RecoveryCodeId($this->generateUuid()),
             $this->adminUserId,
         );
 
@@ -133,7 +133,7 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
         $this->app->make(AdminUserRepository::class)->register($otherAdminUser);
 
         $found = $repository->findUnusedByIdForUpdate(
-            RecoveryCodeId::reconstruct($targetId),
+            new RecoveryCodeId($targetId),
             $otherAdminUser->adminUserId,
         );
 
@@ -180,9 +180,9 @@ class RecoveryCodeRepositoryTest extends DatabaseTestCase
     private function buildCode(string $recoveryCodeId, string $hashedCode, ConsumptionStatus $status, ?DateTimeImmutable $usedAt): RecoveryCode
     {
         return new RecoveryCode(
-            RecoveryCodeId::reconstruct($recoveryCodeId),
+            new RecoveryCodeId($recoveryCodeId),
             $this->adminUserId,
-            HashedCodeValue::reconstruct($hashedCode),
+            new HashedCodeValue($hashedCode),
             $status,
             $usedAt,
         );

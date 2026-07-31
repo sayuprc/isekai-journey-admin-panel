@@ -6,6 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Tags;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Tags\SongTagReferences;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\TestCase;
 
 class SongTagReferencesTest extends TestCase
@@ -20,8 +21,7 @@ class SongTagReferencesTest extends TestCase
 
         $result = SongTagReferences::fromArray($input);
 
-        $this->assertTrue($result->isOk());
-        $tags = $result->unwrap();
+        $tags = $result;
 
         $this->assertCount(2, $tags);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $tags[0]->songTagId->value);
@@ -36,13 +36,12 @@ class SongTagReferencesTest extends TestCase
             ['songTagId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'],
         ];
 
-        $result = SongTagReferences::fromArray($input);
-
-        $this->assertTrue($result->isErr());
-        $this->assertSame(
-            ['songTagId' => ['同じ楽曲タグを複数指定することはできません。']],
-            $result->unwrapErr()->errors,
-        );
+        try {
+            SongTagReferences::fromArray($input);
+            $this->fail('DomainValidationException が発生しませんでした');
+        } catch (DomainValidationException $e) {
+            $this->assertSame(['songTagId' => ['同じ楽曲タグを複数指定することはできません。']], $e->errors);
+        }
     }
 
     #[Test]
@@ -50,7 +49,6 @@ class SongTagReferencesTest extends TestCase
     {
         $result = SongTagReferences::fromArray([]);
 
-        $this->assertTrue($result->isOk());
-        $this->assertCount(0, $result->unwrap());
+        $this->assertCount(0, $result);
     }
 }

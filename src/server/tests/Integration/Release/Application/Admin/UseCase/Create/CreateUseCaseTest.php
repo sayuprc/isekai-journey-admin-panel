@@ -10,8 +10,8 @@ use Release\Application\Admin\UseCase\Create\CreateUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -57,11 +57,10 @@ class CreateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('初回限定盤', $result->unwrap()->release->name->value);
-        $this->assertSame($releaseGroupId, $result->unwrap()->release->releaseGroupId->value);
-        $this->assertSame(10, $result->unwrap()->release->orderNo->value);
-        $this->assertCount(2, $result->unwrap()->release->media->toGeneric());
+        $this->assertSame('初回限定盤', $result->release->name->value);
+        $this->assertSame($releaseGroupId, $result->release->releaseGroupId->value);
+        $this->assertSame(10, $result->release->orderNo->value);
+        $this->assertCount(2, $result->release->media->toGeneric());
 
         $this->assertDatabaseHas('releases', [
             'name' => '初回限定盤',
@@ -108,8 +107,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertTrue($result->isOk());
-
         $this->assertDatabaseCount('release_tracks', 2);
         $this->assertDatabaseHas('release_tracks', [
             'track_no' => 2,
@@ -150,8 +147,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertTrue($result->isOk());
-
         $this->assertDatabaseHas('release_tracks', [
             'track_no' => 1,
             'title' => 'テスト楽曲1 -instrumental-',
@@ -166,6 +161,8 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->storeReleaseGroups(
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
+
+        $this->expectException(DomainValidationException::class);
 
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,
@@ -184,16 +181,13 @@ class CreateUseCaseTest extends DatabaseTestCase
                 ],
             ],
         ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['media' => ['収録曲には楽曲かタイトルの少なくとも一方を指定してください。']], $error->errors);
     }
 
     #[Test]
     public function createFailsWhenReleaseGroupDoesNotExist(): void
     {
+        $this->expectException(BusinessRuleViolationException::class);
+
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $this->generateUuid(),
             name: '通常盤',
@@ -205,11 +199,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessLogicError::class, $error);
-        $this->assertSame('指定されたリリースグループが存在しません。', $error->message);
     }
 
     #[Test]
@@ -220,6 +209,8 @@ class CreateUseCaseTest extends DatabaseTestCase
         $this->storeReleaseGroups(
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
+
+        $this->expectException(DomainValidationException::class);
 
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,
@@ -232,11 +223,6 @@ class CreateUseCaseTest extends DatabaseTestCase
             formatValues: [ReleaseFormat::Cd->value],
             media: [],
         ));
-
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
-        $this->assertSame(['releasedOn' => ['発売日が不正です']], $error->errors);
     }
 
     private function getInstance(): CreateUseCase

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Viewer\V1\Media;
 
-use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use DateTime;
 use Illuminate\Http\JsonResponse;
 use Media\Application\Viewer\Query\MediaListItem;
@@ -18,28 +17,16 @@ use OpenAPI\Viewer\Client\Model\MediaType;
 use OpenAPI\Viewer\Client\Model\MediaTypeValue;
 use OpenAPI\Viewer\Client\Model\SongType;
 use OpenAPI\Viewer\Client\Model\SongTypeValue;
-use ResultType\Result;
-use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
 {
-    use ResolvesUseCaseError;
-
-    /**
-     * @param Result<ListOutputData, UseCaseError> $result
-     */
-    public function present(Result $result): JsonResponse
+    public function present(ListOutputData $outputData): JsonResponse
     {
-        [$data, $status] = $result->match(
-            fn (ListOutputData $outputData) => [
-                new MediaListResponse(['next_cursor' => $outputData->nextCursor])
-                    ->setMedia(array_map($this->toOpenApiMediaListItem(...), $outputData->media)),
-                200,
-            ],
-            fn (UseCaseError $error) => $this->resolveError($error),
+        return response()->json(
+            new MediaListResponse(['next_cursor' => $outputData->nextCursor])
+                ->setMedia(array_map($this->toOpenApiMediaListItem(...), $outputData->media)),
+            200,
         );
-
-        return response()->json($data, $status);
     }
 
     private function toOpenApiMediaListItem(MediaListItem $media): OpenApiMediaListItem

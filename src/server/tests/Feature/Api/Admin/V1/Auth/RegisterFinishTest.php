@@ -186,12 +186,12 @@ class RegisterFinishTest extends DatabaseTestCase
         $hashedToken = $this->app->make(TokenHasherInterface::class)->hash($plainToken);
 
         $this->app->make(RegistrationTokenRepositoryInterface::class)->save(new RegistrationToken(
-            RegistrationTokenId::reconstruct($id),
-            HashedTokenValue::reconstruct($hashedToken),
-            Email::reconstruct($email),
+            new RegistrationTokenId($id),
+            new HashedTokenValue($hashedToken),
+            new Email($email),
             Role::General,
             Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             ConsumptionStatus::Unused,
         ));
 

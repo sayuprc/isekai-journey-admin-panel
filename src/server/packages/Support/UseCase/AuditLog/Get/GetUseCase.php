@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Support\UseCase\AuditLog\Get;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\UseCase\AuditLog\Query\AuditLogQueryServiceInterface;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class GetUseCase
 {
@@ -21,26 +17,16 @@ readonly class GetUseCase
     ) {
     }
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    public function handle(GetInputData $inputData): Result
+    public function handle(GetInputData $inputData): GetOutputData
     {
-        return $this->authorizer->require(Permission::ReadAuditLog)
-            ->andThen(fn () => $this->getAuditLog($inputData));
-    }
+        $this->authorizer->ensure(Permission::ReadAuditLog);
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    private function getAuditLog(GetInputData $inputData): Result
-    {
         $found = $this->query->find($inputData->auditLogId);
 
         if (is_null($found)) {
-            return new Err(new NotFoundError('監査ログ', $inputData->auditLogId));
+            throw new ResourceNotFoundException('監査ログ', $inputData->auditLogId);
         }
 
-        return new Ok(new GetOutputData($found));
+        return new GetOutputData($found);
     }
 }

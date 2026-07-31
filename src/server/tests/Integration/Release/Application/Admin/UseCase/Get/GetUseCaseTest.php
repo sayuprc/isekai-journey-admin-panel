@@ -10,8 +10,8 @@ use Release\Application\Admin\UseCase\Get\GetUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
+use Support\Domain\Exceptions\DomainValidationException;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -60,36 +60,32 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($releaseId));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($releaseId, $result->unwrap()->release->releaseId->value);
-        $this->assertSame('観測された春', $result->unwrap()->releaseGroup->title->value);
-        $this->assertCount(2, $result->unwrap()->release->media->toGeneric());
+        $this->assertSame($releaseId, $result->release->releaseId->value);
+        $this->assertSame('観測された春', $result->releaseGroup->title->value);
+        $this->assertCount(2, $result->release->media->toGeneric());
 
         // 収録曲は媒体順 → 曲順で並ぶ。
-        $this->assertCount(2, $result->unwrap()->songs);
-        $this->assertSame(1, $result->unwrap()->songs[0]->mediumPosition);
-        $this->assertSame('テスト楽曲1', $result->unwrap()->songs[0]->title);
-        $this->assertSame(2, $result->unwrap()->songs[1]->mediumPosition);
-        $this->assertSame('テスト楽曲2', $result->unwrap()->songs[1]->title);
+        $this->assertCount(2, $result->songs);
+        $this->assertSame(1, $result->songs[0]->mediumPosition);
+        $this->assertSame('テスト楽曲1', $result->songs[0]->title);
+        $this->assertSame(2, $result->songs[1]->mediumPosition);
+        $this->assertSame('テスト楽曲2', $result->songs[1]->title);
     }
 
     #[Test]
     public function invalidId(): void
     {
-        $result = $this->getInstance()->handle(new GetInputData('invalid-id'));
+        $this->expectException(DomainValidationException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(InvalidInputError::class, $error);
+        $result = $this->getInstance()->handle(new GetInputData('invalid-id'));
     }
 
     #[Test]
     public function notFound(): void
     {
-        $result = $this->getInstance()->handle(new GetInputData($this->generateUuid()));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
+        $result = $this->getInstance()->handle(new GetInputData($this->generateUuid()));
     }
 
     private function getInstance(): GetUseCase

@@ -204,7 +204,7 @@ class SongTagRepositoryTest extends DatabaseTestCase
             [],
         ));
 
-        $result = $this->getInstance()->isUsed(SongTagId::reconstruct($songTagId));
+        $result = $this->getInstance()->isUsed(new SongTagId($songTagId));
 
         $this->assertTrue($result);
     }
@@ -216,8 +216,8 @@ class SongTagRepositoryTest extends DatabaseTestCase
 
         $this->storeSongTags($this->createSongTag($songTagId, 'テストタグA', 1));
 
-        $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($songTagId)));
-        $this->assertFalse($this->getInstance()->isUsed(SongTagId::reconstruct($this->generateUuid())));
+        $this->assertFalse($this->getInstance()->isUsed(new SongTagId($songTagId)));
+        $this->assertFalse($this->getInstance()->isUsed(new SongTagId($this->generateUuid())));
     }
 
     private function getInstance(): SongTagRepository

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\Track;
 use Release\Domain\Models\TrackTitle;
 use Song\Domain\Models\SongId;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
@@ -19,16 +19,11 @@ class TrackTest extends TestCase
     #[Test]
     public function canCreateReferenceTrack(): void
     {
-        $result = Track::create(
-            SongId::reconstruct(self::SONG_ID),
+        $track = Track::create(
+            new SongId(self::SONG_ID),
             null,
-            OrderNo::reconstruct(1),
+            new OrderNo(1),
         );
-
-        $this->assertTrue($result->isOk());
-
-        $track = $result->unwrap();
-
         $this->assertSame(self::SONG_ID, $track->songId?->value);
         $this->assertNull($track->title);
         $this->assertSame(['song_id' => self::SONG_ID, 'title' => null, 'track_no' => 1], $track->toArray());
@@ -37,16 +32,11 @@ class TrackTest extends TestCase
     #[Test]
     public function canCreateTitleOnlyTrack(): void
     {
-        $result = Track::create(
+        $track = Track::create(
             null,
-            TrackTitle::reconstruct('管理対象外の楽曲'),
-            OrderNo::reconstruct(1),
+            new TrackTitle('管理対象外の楽曲'),
+            new OrderNo(1),
         );
-
-        $this->assertTrue($result->isOk());
-
-        $track = $result->unwrap();
-
         $this->assertNull($track->songId);
         $this->assertSame('管理対象外の楽曲', $track->title?->value);
         $this->assertSame(['song_id' => null, 'title' => '管理対象外の楽曲', 'track_no' => 1], $track->toArray());
@@ -55,16 +45,11 @@ class TrackTest extends TestCase
     #[Test]
     public function canCreateReferenceTrackWithOverriddenTitle(): void
     {
-        $result = Track::create(
-            SongId::reconstruct(self::SONG_ID),
-            TrackTitle::reconstruct('楽曲A -instrumental-'),
-            OrderNo::reconstruct(1),
+        $track = Track::create(
+            new SongId(self::SONG_ID),
+            new TrackTitle('楽曲A -instrumental-'),
+            new OrderNo(1),
         );
-
-        $this->assertTrue($result->isOk());
-
-        $track = $result->unwrap();
-
         $this->assertSame(self::SONG_ID, $track->songId?->value);
         $this->assertSame('楽曲A -instrumental-', $track->title?->value);
         $this->assertSame(['song_id' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'track_no' => 1], $track->toArray());
@@ -73,10 +58,9 @@ class TrackTest extends TestCase
     #[Test]
     public function cannotCreateWithNeitherSongIdNorTitle(): void
     {
-        $result = Track::create(null, null, OrderNo::reconstruct(1));
+        $this->expectException(InvalidDomainException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(EntityRuleViolationError::class, $result->unwrapErr());
+        $track = Track::create(null, null, new OrderNo(1));
     }
 
     #[Test]

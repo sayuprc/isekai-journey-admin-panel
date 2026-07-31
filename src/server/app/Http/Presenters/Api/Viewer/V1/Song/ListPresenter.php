@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Viewer\V1\Song;
 
-use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use DateTime;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Viewer\Client\Model\MediaType;
@@ -19,32 +18,20 @@ use OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary as OpenApiSongReleaseGro
 use OpenAPI\Viewer\Client\Model\SongType;
 use OpenAPI\Viewer\Client\Model\SongTypeValue;
 use Release\Domain\Models\ReleaseGroupType;
-use ResultType\Result;
 use Song\Application\Viewer\Query\SongListItem;
 use Song\Application\Viewer\Query\SongMediaSummary;
 use Song\Application\Viewer\Query\SongReleaseGroupSummary;
 use Song\Application\Viewer\UseCase\List\ListOutputData;
-use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
 {
-    use ResolvesUseCaseError;
-
-    /**
-     * @param Result<ListOutputData, UseCaseError> $result
-     */
-    public function present(Result $result): JsonResponse
+    public function present(ListOutputData $outputData): JsonResponse
     {
-        [$data, $status] = $result->match(
-            fn (ListOutputData $outputData) => [
-                new SongListResponse(['next_cursor' => $outputData->nextCursor])
-                    ->setSongs(array_map($this->toOpenApiSongListItem(...), $outputData->songs)),
-                200,
-            ],
-            fn (UseCaseError $error) => $this->resolveError($error),
+        return response()->json(
+            new SongListResponse(['next_cursor' => $outputData->nextCursor])
+                ->setSongs(array_map($this->toOpenApiSongListItem(...), $outputData->songs)),
+            200,
         );
-
-        return response()->json($data, $status);
     }
 
     private function toOpenApiSongListItem(SongListItem $song): OpenApiSongListItem

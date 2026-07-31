@@ -11,7 +11,7 @@ use Song\Application\Admin\UseCase\Update\UpdateUseCase;
 use Song\Domain\Models\SongType;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -68,8 +68,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
             ),
         );
 
-        $this->assertTrue($result->isOk());
-
         $songs = DB::table('songs')->get()->all();
         $this->assertCount(1, $songs);
         $song = array_first($songs);
@@ -102,22 +100,24 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $songId = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(
-            new UpdateInputData(
-                $songId,
-                'テスト楽曲',
-                'テスト楽曲説明',
-                null,
-                SongType::Original->value,
-                true,
-                1,
-                [],
-                [],
-            ),
-        );
+        try {
+            $this->getInstance()->handle(
+                new UpdateInputData(
+                    $songId,
+                    'テスト楽曲',
+                    'テスト楽曲説明',
+                    null,
+                    SongType::Original->value,
+                    true,
+                    1,
+                    [],
+                    [],
+                ),
+            );
+            $this->fail('ResourceNotFoundException が発生しませんでした');
+        } catch (ResourceNotFoundException) {
+        }
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
         $this->assertDatabaseMissing('songs', ['title' => 'テスト楽曲']);
     }
 

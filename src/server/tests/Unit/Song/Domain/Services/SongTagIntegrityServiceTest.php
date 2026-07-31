@@ -12,7 +12,7 @@ use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -59,8 +59,7 @@ class SongTagIntegrityServiceTest extends TestCase
 
         $result = $this->getInstance()->prepareForCreate($name);
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedTag, $result->unwrap());
+        $this->assertEquals($expectedTag, $result);
     }
 
     #[Test]
@@ -87,12 +86,9 @@ class SongTagIntegrityServiceTest extends TestCase
             ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, 10))
             ->once();
 
-        $result = $this->getInstance()->prepareForCreate($name);
+        $this->expectException(BusinessRuleViolationException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われている名前です "テストタグA"', $error->message);
+        $result = $this->getInstance()->prepareForCreate($name);
     }
 
     #[Test]
@@ -111,8 +107,7 @@ class SongTagIntegrityServiceTest extends TestCase
 
         $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($expectedTag, $result->unwrap());
+        $this->assertEquals($expectedTag, $result);
     }
 
     #[Test]
@@ -129,12 +124,9 @@ class SongTagIntegrityServiceTest extends TestCase
             ->andReturn($this->createSongTag('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', $name, 10))
             ->once();
 
-        $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
+        $this->expectException(BusinessRuleViolationException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessRuleViolationError::class, $error);
-        $this->assertSame('すでに使われている名前です "テストタグA"', $error->message);
+        $result = $this->getInstance()->prepareForUpdate($songTagId, $name, $orderNo);
     }
 
     private function getInstance(): SongTagIntegrityService

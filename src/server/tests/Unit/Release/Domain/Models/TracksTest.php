@@ -6,6 +6,7 @@ namespace Tests\Unit\Release\Domain\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\Tracks;
+use Support\Domain\Exceptions\DomainValidationException;
 use Tests\TestCase;
 
 class TracksTest extends TestCase
@@ -21,45 +22,48 @@ class TracksTest extends TestCase
             ['songId' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'trackNo' => 3],
         ]);
 
-        $this->assertTrue($result->isOk());
         $this->assertSame([
             ['song_id' => self::SONG_ID, 'title' => null, 'track_no' => 1],
             ['song_id' => null, 'title' => '管理対象外の楽曲', 'track_no' => 2],
             ['song_id' => self::SONG_ID, 'title' => '楽曲A -instrumental-', 'track_no' => 3],
-        ], $result->unwrap()->toArray());
+        ], $result->toArray());
     }
 
     #[Test]
     public function cannotCreateWithNeitherSongIdNorTitle(): void
     {
-        $result = Tracks::fromArray([
-            ['songId' => null, 'title' => null, 'trackNo' => 1],
-        ]);
-
-        $this->assertTrue($result->isErr());
-        $this->assertArrayHasKey('media', $result->unwrapErr()->errors);
+        try {
+            Tracks::fromArray([
+                ['songId' => null, 'title' => null, 'trackNo' => 1],
+            ]);
+            $this->fail('DomainValidationException が発生しませんでした');
+        } catch (DomainValidationException $e) {
+            $this->assertArrayHasKey('media', $e->errors);
+        }
     }
 
     #[Test]
     public function cannotCreateWithEmptyTitle(): void
     {
+        $this->expectException(DomainValidationException::class);
+
         $result = Tracks::fromArray([
             ['songId' => null, 'title' => '', 'trackNo' => 1],
         ]);
-
-        $this->assertTrue($result->isErr());
     }
 
     #[Test]
     public function cannotCreateWithDuplicatedTrackNos(): void
     {
-        $result = Tracks::fromArray([
-            ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
-            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
-        ]);
-
-        $this->assertTrue($result->isErr());
-        $this->assertSame(['同じ曲順を複数指定することはできません。'], $result->unwrapErr()->errors['media']);
+        try {
+            Tracks::fromArray([
+                ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
+                ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
+            ]);
+            $this->fail('DomainValidationException が発生しませんでした');
+        } catch (DomainValidationException $e) {
+            $this->assertSame(['同じ曲順を複数指定することはできません。'], $e->errors['media']);
+        }
     }
 
     #[Test]
