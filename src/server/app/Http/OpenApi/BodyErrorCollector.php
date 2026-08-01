@@ -6,6 +6,7 @@ namespace App\Http\OpenApi;
 
 use InvalidArgumentException;
 use League\OpenAPIValidation\PSR7\OperationAddress;
+use LogicException;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Exceptions\SchemaException;
 use Opis\JsonSchema\Validator;
@@ -57,8 +58,9 @@ final class BodyErrorCollector
 
         try {
             $result = $this->validator()->validate($body, $pointer);
-        } catch (InvalidArgumentException|SchemaException) {
-            // 対象 operation に JSON body スキーマがない (GET / multipart 等)
+        } catch (InvalidArgumentException|RuntimeException|SchemaException) {
+            // 対象 operation に JSON body スキーマがない (GET / multipart 等)。
+            // opis は pointer 未解決を素の RuntimeException で報告するため合わせて握る
             return [];
         }
 
@@ -82,8 +84,9 @@ final class BodyErrorCollector
         if (is_null($validator)) {
             $document = json_decode(json_encode(Yaml::parseFile($this->yamlPath), JSON_THROW_ON_ERROR), flags: JSON_THROW_ON_ERROR);
 
+            // collect の catch (RuntimeException) に握られないよう、設定バグは LogicException で区別する
             if (! is_object($document)) {
-                throw new RuntimeException("OpenAPI ドキュメントを object として解釈できません: {$this->yamlPath}");
+                throw new LogicException("OpenAPI ドキュメントを object として解釈できません: {$this->yamlPath}");
             }
 
             $validator = new Validator();

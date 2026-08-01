@@ -86,7 +86,7 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
       Fields 前提の Unit / Integration の書き換え
 - [x] 9. .claude/rules/01-backend.md の検証規約 (Field 使い分け節を含む) を新原則で
       書き直し、code-reviewer チェックリストを追従
-- [ ] 10. 全検証 (server + admin) を通し、code-reviewer レビュー → 修正 → PR 作成
+- [x] 10. 全検証 (server + admin) を通し、code-reviewer レビュー → 修正 → PR 作成
 
 ## Decision Log
 
@@ -114,6 +114,9 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 - CLI (2026-08-01): media:youtube-channel:remove に不正 ID を渡し、
   「YouTube チャンネルIDの形式が不正です」表示 + exit 1 を確認
 - server (2026-08-01): api:ecs / api:phpstan / api:arkitect / api:test (603 件) 全通過
+- code-reviewer レビュー (2026-08-01): 重大 1 件 (opis の pointer 未解決が素の RuntimeException で
+  catch を素通りし 422 が 500 化) を catch 拡張 + 設定バグの LogicException 分離で修正、
+  再現ケースで解消を確認。警告 1 件 (チェックリストの旧記述残りと 3 箇所同期漏れ) を同期修正
 - admin (2026-08-01): admin:check (biome / eslint / stylelint) 通過
 - Step 1 プロトタイプ (2026-08-01): opis/json-schema ^2.6 で成立を確認。
   OpenAPI 3.1 yaml を registerRaw + pointer fragment $ref で無変換解決、
