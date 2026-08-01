@@ -28,9 +28,10 @@ readonly class Media extends ImmutableCollection
         foreach ($items as $item) {
             $normalizedName = self::normalizeName($item['name']);
 
-            $positionField = Field::of('position', static fn (): OrderNo => new OrderNo($item['position']));
-            $nameField = Field::of('name', static fn (): ?MediumName => is_null($normalizedName) ? null : new MediumName($normalizedName));
-            Fields::validate($positionField, $nameField);
+            Fields::validate(
+                $positionField = Field::of('position', static fn (): OrderNo => new OrderNo($item['position'])),
+                $nameField = Field::of('name', static fn (): ?MediumName => is_null($normalizedName) ? null : new MediumName($normalizedName)),
+            );
 
             $medium = new Medium(
                 $positionField->value(),

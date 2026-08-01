@@ -28,10 +28,11 @@ readonly class Tracks extends ImmutableCollection
         $seenTrackNos = [];
 
         foreach ($items as $item) {
-            $songIdField = Field::of('songId', static fn (): ?SongId => is_null($item['songId']) ? null : new SongId($item['songId']));
-            $titleField = Field::of('title', static fn (): ?TrackTitle => is_null($item['title']) ? null : new TrackTitle($item['title']));
-            $trackNoField = Field::of('trackNo', static fn (): OrderNo => new OrderNo($item['trackNo']));
-            Fields::validate($songIdField, $titleField, $trackNoField);
+            Fields::validate(
+                $songIdField = Field::of('songId', static fn (): ?SongId => is_null($item['songId']) ? null : new SongId($item['songId'])),
+                $titleField = Field::of('title', static fn (): ?TrackTitle => is_null($item['title']) ? null : new TrackTitle($item['title'])),
+                $trackNoField = Field::of('trackNo', static fn (): OrderNo => new OrderNo($item['trackNo'])),
+            );
 
             try {
                 $track = Track::create(

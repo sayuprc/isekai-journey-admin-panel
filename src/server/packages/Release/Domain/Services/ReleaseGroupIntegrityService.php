@@ -57,12 +57,13 @@ class ReleaseGroupIntegrityService
         bool $isDisplay,
         int $orderNo,
     ): ReleaseGroup {
-        $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
-        $titleField = Field::of('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title));
-        $typeField = Field::of('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue));
-        $descriptionField = Field::of('description', static fn (): Description => new Description($description));
-        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        Fields::validate($releaseGroupIdField, $titleField, $typeField, $descriptionField, $orderNoField);
+        Fields::validate(
+            $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId)),
+            $titleField = Field::of('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title)),
+            $typeField = Field::of('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue)),
+            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new ReleaseGroup(
             $releaseGroupIdField->value(),

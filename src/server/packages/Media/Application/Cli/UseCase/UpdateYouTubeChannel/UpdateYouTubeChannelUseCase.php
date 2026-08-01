@@ -24,9 +24,10 @@ readonly class UpdateYouTubeChannelUseCase
     public function handle(UpdateYouTubeChannelInputData $inputData): UpdateYouTubeChannelOutputData
     {
         return $this->transaction->scope(function () use ($inputData): UpdateYouTubeChannelOutputData {
-            $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
-            $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name));
-            Fields::validate($channelIdField, $nameField);
+            Fields::validate(
+                $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId)),
+                $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name)),
+            );
 
             $channelId = $channelIdField->value();
 

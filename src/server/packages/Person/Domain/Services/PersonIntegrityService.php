@@ -59,10 +59,11 @@ class PersonIntegrityService
 
     private function build(string $personId, string $name, int $orderNo): Person
     {
-        $personIdField = Field::of('personId', static fn (): PersonId => new PersonId($personId));
-        $nameField = Field::of('name', static fn (): PersonName => new PersonName($name));
-        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        Fields::validate($personIdField, $nameField, $orderNoField);
+        Fields::validate(
+            $personIdField = Field::of('personId', static fn (): PersonId => new PersonId($personId)),
+            $nameField = Field::of('name', static fn (): PersonName => new PersonName($name)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new Person($personIdField->value(), $nameField->value(), $orderNoField->value());
     }

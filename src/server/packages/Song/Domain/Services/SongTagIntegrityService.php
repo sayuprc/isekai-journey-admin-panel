@@ -60,10 +60,11 @@ class SongTagIntegrityService
 
     private function build(string $songTagId, string $name, int $orderNo): SongTag
     {
-        $songTagIdField = Field::of('songTagId', static fn (): SongTagId => new SongTagId($songTagId));
-        $nameField = Field::of('name', static fn (): SongTagName => new SongTagName($name));
-        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        Fields::validate($songTagIdField, $nameField, $orderNoField);
+        Fields::validate(
+            $songTagIdField = Field::of('songTagId', static fn (): SongTagId => new SongTagId($songTagId)),
+            $nameField = Field::of('name', static fn (): SongTagName => new SongTagName($name)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new SongTag($songTagIdField->value(), $nameField->value(), $orderNoField->value());
     }

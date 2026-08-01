@@ -34,9 +34,10 @@ readonly class RegisterStartUseCase
 
     public function handle(RegisterStartInputData $inputData): RegisterStartOutputData
     {
-        $emailField = Field::of('email', static fn (): Email => new Email($inputData->email));
-        $nameField = Field::of('name', static fn (): AdminUserName => new AdminUserName($inputData->name));
-        Fields::validate($emailField, $nameField);
+        Fields::validate(
+            $emailField = Field::of('email', static fn (): Email => new Email($inputData->email)),
+            $nameField = Field::of('name', static fn (): AdminUserName => new AdminUserName($inputData->name)),
+        );
 
         $email = $emailField->value();
         $name = $nameField->value();

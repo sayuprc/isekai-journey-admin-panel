@@ -124,10 +124,11 @@ class SongIntegrityService
      */
     private function buildRelations(array $persons, array $tags, array $media): array
     {
-        $personsField = Field::of('persons', static fn (): SongPersons => SongPersons::fromArray($persons));
-        $tagsField = Field::of('tags', static fn (): SongTagReferences => SongTagReferences::fromArray($tags));
-        $mediaField = Field::of('media', static fn (): SongMediaLinks => SongMediaLinks::fromArray($media));
-        Fields::validate($personsField, $tagsField, $mediaField);
+        Fields::validate(
+            $personsField = Field::of('persons', static fn (): SongPersons => SongPersons::fromArray($persons)),
+            $tagsField = Field::of('tags', static fn (): SongTagReferences => SongTagReferences::fromArray($tags)),
+            $mediaField = Field::of('media', static fn (): SongMediaLinks => SongMediaLinks::fromArray($media)),
+        );
 
         return [$personsField->value(), $tagsField->value(), $mediaField->value()];
     }
@@ -159,13 +160,14 @@ class SongIntegrityService
         SongTagReferences $tags,
         SongMediaLinks $media,
     ): Song {
-        $songIdField = Field::of('songId', static fn (): SongId => new SongId($songId));
-        $titleField = Field::of('title', static fn (): Title => new Title($title));
-        $descriptionField = Field::of('description', static fn (): Description => new Description($description));
-        $lyricsLinkField = Field::of('lyricsLink', fn (): ?LyricsLink => $this->toLyricsLink($lyricsLink));
-        $typeField = Field::of('typeValue', static fn (): SongType => SongType::fromValue($type));
-        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        Fields::validate($songIdField, $titleField, $descriptionField, $lyricsLinkField, $typeField, $orderNoField);
+        Fields::validate(
+            $songIdField = Field::of('songId', static fn (): SongId => new SongId($songId)),
+            $titleField = Field::of('title', static fn (): Title => new Title($title)),
+            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
+            $lyricsLinkField = Field::of('lyricsLink', fn (): ?LyricsLink => $this->toLyricsLink($lyricsLink)),
+            $typeField = Field::of('typeValue', static fn (): SongType => SongType::fromValue($type)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new Song(
             $songIdField->value(),

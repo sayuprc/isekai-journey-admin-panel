@@ -91,11 +91,12 @@ class MediaIntegrityService
         int $typeValue,
         bool $isDisplay,
     ): Media {
-        $mediaIdField = Field::of('mediaId', static fn (): MediaId => new MediaId($mediaId));
-        $titleField = Field::of('title', static fn (): MediaTitle => new MediaTitle($title));
-        $urlField = Field::of('url', static fn (): MediaUrl => new MediaUrl($url));
-        $publishedAtField = Field::of('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt));
-        Fields::validate($mediaIdField, $titleField, $urlField, $publishedAtField);
+        Fields::validate(
+            $mediaIdField = Field::of('mediaId', static fn (): MediaId => new MediaId($mediaId)),
+            $titleField = Field::of('title', static fn (): MediaTitle => new MediaTitle($title)),
+            $urlField = Field::of('url', static fn (): MediaUrl => new MediaUrl($url)),
+            $publishedAtField = Field::of('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt)),
+        );
 
         return new Media(
             $mediaIdField->value(),

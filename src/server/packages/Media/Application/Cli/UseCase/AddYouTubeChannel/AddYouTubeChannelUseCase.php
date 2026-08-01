@@ -24,9 +24,10 @@ readonly class AddYouTubeChannelUseCase
     public function handle(AddYouTubeChannelInputData $inputData): AddYouTubeChannelOutputData
     {
         return $this->transaction->scope(function () use ($inputData): AddYouTubeChannelOutputData {
-            $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
-            $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name));
-            Fields::validate($channelIdField, $nameField);
+            Fields::validate(
+                $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId)),
+                $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name)),
+            );
 
             $channel = new YouTubeChannel($channelIdField->value(), $nameField->value());
 

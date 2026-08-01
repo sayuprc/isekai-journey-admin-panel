@@ -28,10 +28,11 @@ readonly class IssueRegistrationTokenUseCase
     public function handle(IssueRegistrationTokenInputData $inputData): IssueRegistrationTokenOutputData
     {
         return $this->transaction->scope(function () use ($inputData): IssueRegistrationTokenOutputData {
-            $emailField = Field::of('email', static fn (): Email => new Email($inputData->email));
-            $roleField = Field::of('role', static fn (): Role => Role::fromValue($inputData->role));
-            $permissionsField = Field::of('permissions', static fn (): Permissions => Permissions::fromArray($inputData->permissions));
-            Fields::validate($emailField, $roleField, $permissionsField);
+            Fields::validate(
+                $emailField = Field::of('email', static fn (): Email => new Email($inputData->email)),
+                $roleField = Field::of('role', static fn (): Role => Role::fromValue($inputData->role)),
+                $permissionsField = Field::of('permissions', static fn (): Permissions => Permissions::fromArray($inputData->permissions)),
+            );
 
             $email = $emailField->value();
             $role = $roleField->value();
