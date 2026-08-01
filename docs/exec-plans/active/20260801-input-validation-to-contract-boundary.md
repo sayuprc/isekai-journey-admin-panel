@@ -65,11 +65,16 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
       全違反 + JSON pointer を収集できることを検証する。不可なら代替 (league の
       schema 部分の fork / justinrainbow 等) を比較して Decision Log に記録
 - [x] 2. ADR-0014 を作成し、ADR-0013 の Decision L36-38 に superseded 注記を入れる
-- [ ] 3. 契約の形式制約を VO ルールと突き合わせて補完する (tracks.title / media.name の
+- [x] 3. 契約の形式制約を VO ルールと突き合わせて補完する (tracks.title / media.name の
       minLength(1) 等)。契約と生成物を再生成してコミット
-- [ ] 4. OpenApiValidator に body の収集検証を実装する: League の検証前に body を
-      スキーマへ全件照合し、違反があれば keyword → 日本語メッセージ変換の上
-      `ApiError::validationFailed` で返す。既存 TODO を解消
+      → 突き合わせの結果、trackTitle / mediumName / mediaTitle の @minLength(1)、
+      mediaUrl @format("uri")、mediaPublishedAt utcDateTime、uuid / orderNo scalar まで
+      契約に既に存在し補完不要だった。契約変更なし
+- [x] 4. OpenApiValidator に body の収集検証を実装する: League が invalid と判定した
+      リクエストに対して body をスキーマへ全件照合し、違反があれば keyword → 日本語
+      メッセージ変換の上 `ApiError::validationFailed` で返す。既存 TODO を解消
+      (App\Http\OpenApi\BodyErrorCollector / BodyErrorFormatter / SchemaErrorMessages。
+      正常系はコスト増ゼロ、通過判定は League のまま)
 - [ ] 5. server の Field / Fields 全 16 箇所を直接 `new` に置換し、
       Support\Domain\Validation と DomainValidationException、Renderer の 422 arm を削除。
       Tracks / Media の順序重複チェックは BusinessRuleViolationException へ移す
