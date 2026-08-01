@@ -78,12 +78,13 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 - [x] 5. server の Field / Fields 全 16 箇所を直接 `new` に置換し、
       Support\Domain\Validation と DomainValidationException、Renderer の 422 arm を削除。
       Tracks / Media の順序重複チェックは BusinessRuleViolationException へ移す
-- [ ] 6. CLI 4 コマンド (IssueRegistrationToken / YouTubeChannel 3 種) の Field を除去し、
+- [x] 6. CLI 4 コマンド (IssueRegistrationToken / YouTubeChannel 3 種) の Field を除去し、
       InvalidDomainException がコマンドエラー表示 + 非ゼロ exit になることを確認
-- [ ] 7. admin の 422 details 消費箇所を、パス形式キーに追従させる
+- [x] 7. admin の 422 details 消費箇所を、パス形式キーに追従させる
+      → flat な field 名は互換。getFieldError を prefix 一致に拡張しネストパスを配下 field として表示
 - [x] 8. テストを移行する: Feature の 422 期待値 (details キー / メッセージ)、
       Fields 前提の Unit / Integration の書き換え
-- [ ] 9. .claude/rules/01-backend.md の検証規約 (Field 使い分け節を含む) を新原則で
+- [x] 9. .claude/rules/01-backend.md の検証規約 (Field 使い分け節を含む) を新原則で
       書き直し、code-reviewer チェックリストを追従
 - [ ] 10. 全検証 (server + admin) を通し、code-reviewer レビュー → 修正 → PR 作成
 
@@ -110,6 +111,10 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 
 ## Validation
 
+- CLI (2026-08-01): media:youtube-channel:remove に不正 ID を渡し、
+  「YouTube チャンネルIDの形式が不正です」表示 + exit 1 を確認
+- server (2026-08-01): api:ecs / api:phpstan / api:arkitect / api:test (603 件) 全通過
+- admin (2026-08-01): admin:check (biome / eslint / stylelint) 通過
 - Step 1 プロトタイプ (2026-08-01): opis/json-schema ^2.6 で成立を確認。
   OpenAPI 3.1 yaml を registerRaw + pointer fragment $ref で無変換解決、
   setMaxErrors + ErrorFormatter でネスト含む全違反を JSON pointer キーで収集、

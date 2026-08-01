@@ -32,7 +32,19 @@ export const createFormErrors = () => {
   const [formError, setFormError] = createSignal<string | null>(null);
   const [fieldErrors, setFieldErrors] = createSignal<ErrorDetail[]>([]);
 
-  const getFieldError = (field: string): string | undefined => fieldErrors().find(e => e.field === field)?.message;
+  // ネストした field はパス形式 (例: media/0/tracks/1/trackNo) で届くため、
+  // 完全一致に加えて配下のエラーも prefix 一致で拾い、パス付きで表示する
+  const getFieldError = (field: string): string | undefined => {
+    const matches = fieldErrors().filter(e => e.field === field || e.field.startsWith(`${field}/`));
+
+    if (matches.length === 0) {
+      return undefined;
+    }
+
+    return matches
+      .map(e => (e.field === field ? e.message : `${e.field.slice(field.length + 1)}: ${e.message}`))
+      .join('\n');
+  };
 
   const clearErrors = () => {
     setFormError(null);

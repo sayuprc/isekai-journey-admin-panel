@@ -21,12 +21,14 @@ paths:
 ## 実装規約
 
 - 期待される業務エラーは例外で表現する (ADR-0013)
-  - 業務ルール違反は `BusinessRuleViolationException`、入力検証は `DomainValidationException` (集約は `Support\Domain\Validation` の `Field::of` + `Fields::validate`)、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外
+  - 業務ルール違反 (重複、存在チェック、契約で表現できない配列内ルール等) は `BusinessRuleViolationException`、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外
   - 例外 → HTTP の変換は `App\Http\Responses\ApiExceptionRenderer` の対応表のみが担う。UseCase / Presenter で catch して詰め替えない
-- ValueObject の構築は public コンストラクタ (`new`) に一本化する。不正値は `InvalidDomainException`
-  - `Field` と直接 `new` の使い分けは「その場所がこの値の最初の検証境界か」で決める
-    - `Field::of` を使う: その値の検証をここが初めて担い、失敗を field 名つき 422 で呼び出し主に直させる場所 (フォーム入力、OpenApiValidator を通らない CLI 入力など)
-    - 直接 `new` する: 正しさを既に契約 (OpenApiValidator 済みの path パラメータ)、永続化層 (DB 復元)、ドメイン自身 (トークンの中身、生成 ID) が保証している値の表明。失敗は 500 = バグとして表面化させる
+- 入力形式検証 (必須 / 型 / 長さ / format / enum) の単一情報源は TypeSpec 契約 (ADR-0014)
+  - 422 を作るのは `OpenApiValidator` middleware だけ。body の全 field 集約は `App\Http\OpenApi\BodyErrorCollector` が担い、メッセージは `SchemaErrorMessages` の変換表で日本語化する
+  - UseCase / Domain で入力形式を検証しない。形式ルールを追加するときは契約に書く
+- ValueObject の構築は public コンストラクタ (`new`) に一本化し、常に「この値は正しいはず」の表明とする
+  - 不正値の `InvalidDomainException` は契約とドメインの不整合 = バグとして 500 で表面化する。catch して 4xx に変換しない
+  - 例外は契約境界を通らない CLI のみ。Console 側が入力エラーとして表示する
   - 一度 VO になった値は primitive に戻さず VO のまま流す。境界の検証は一度きり
 - API 契約が変わる変更は `src/contracts` を起点に考える
 - `src/server/Generated/` は手動編集しない
