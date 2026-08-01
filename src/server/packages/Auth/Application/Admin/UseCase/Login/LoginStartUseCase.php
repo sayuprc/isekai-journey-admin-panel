@@ -27,7 +27,7 @@ readonly class LoginStartUseCase
 
     public function handle(LoginStartInputData $inputData): LoginStartOutputData
     {
-        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validate();
+        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validated();
 
         $adminUser = $this->adminUserRepository->findByEmail($email);
         $passkeys = is_null($adminUser)

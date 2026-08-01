@@ -29,7 +29,7 @@ readonly class RecoveryStartUseCase
 
     public function handle(RecoveryStartInputData $inputData): RecoveryStartOutputData
     {
-        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validate();
+        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validated();
 
         $adminUser = $this->adminUserRepository->findByEmail($email);
 

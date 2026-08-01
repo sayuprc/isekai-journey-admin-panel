@@ -8,7 +8,7 @@
 ## エラーハンドリング (ADR-0013)
 - [ ] 期待される業務エラーを例外で表現しているか（業務ルール違反は `BusinessRuleViolationException`、入力検証は `DomainValidationException`、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外）。
 - [ ] 複数 field の検証エラーを `Support\Domain\Validation` の `Field::of` + `Fields::validate` で集約し、VO は `value()` から取り出しているか (再 new しない)。
-- [ ] 単一 field の検証は `Field::of(...)->validate()` で完結させているか。複数 field で `validate()` をチェーンすると最初の失敗で throw され集約が壊れる。
+- [ ] 単一 field の検証は `Field::of(...)->validated()` で完結させているか。複数 field で `validated()` をチェーンすると最初の失敗で throw され集約が壊れる。
 - [ ] 例外 → HTTP の変換を `App\Http\Responses\ApiExceptionRenderer` に任せ、UseCase / Presenter で catch して詰め替えていないか。
 - [ ] ValueObject を public コンストラクタ（`new`）で構築しているか。`create()` / `reconstruct()` は存在しない。
 

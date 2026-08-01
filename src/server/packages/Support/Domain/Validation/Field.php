@@ -61,7 +61,7 @@ final class Field
      *
      * @return T
      */
-    public function validate(): mixed
+    public function validated(): mixed
     {
         if ($this->errors !== []) {
             throw new DomainValidationException($this->errors);

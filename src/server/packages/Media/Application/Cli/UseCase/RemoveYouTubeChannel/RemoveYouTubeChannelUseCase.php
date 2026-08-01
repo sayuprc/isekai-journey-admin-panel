@@ -21,7 +21,7 @@ readonly class RemoveYouTubeChannelUseCase
     public function handle(RemoveYouTubeChannelInputData $inputData): void
     {
         $this->transaction->scope(function () use ($inputData): void {
-            $channelId = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId))->validate();
+            $channelId = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId))->validated();
 
             if (is_null($this->repository->find($channelId))) {
                 throw new BusinessRuleViolationException(sprintf('登録されていないチャンネルです "%s"', $channelId->value));
