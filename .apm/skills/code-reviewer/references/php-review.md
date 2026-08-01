@@ -19,7 +19,7 @@
   - [ ] 外部フレームワーク（Laravel/Eloquent）への依存がないか。
   - [ ] ロジックが Entity/Value Object 内に適切にカプセル化されているか。
 - **Application Layer**:
-  - [ ] Interactor (Use Case) が含まれているか。
+  - [ ] UseCase が含まれているか。
   - [ ] Repository Interface を使用（DI）しているか。
   - [ ] Domain と UI を分離するために InputData/OutputData や Assembler を使用しているか。
 - **Infrastructures Layer**:

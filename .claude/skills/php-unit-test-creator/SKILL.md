@@ -15,7 +15,7 @@ description: プロジェクトのテスト規約に従って、Laravel/PHP の�
 
 2. **テストファイルパスの決定**:
    - テストは `src/server/tests/Unit/` 配下に、対象クラスのディレクトリ構造を模して配置します。
-   - 例: `src/server/packages/Song/Application/Interactors/CreateInteractor.php` -> `src/server/tests/Unit/Song/Application/Interactors/CreateInteractorTest.php`
+   - 例: `src/server/packages/Song/Application/Admin/UseCase/Create/CreateUseCase.php` -> `src/server/tests/Unit/Song/Application/Admin/UseCase/CreateUseCaseTest.php`
 
 3. **テストクラスの初期化**:
    - `declare(strict_types=1);` を使用します。
@@ -29,9 +29,9 @@ description: プロジェクトのテスト規約に従って、Laravel/PHP の�
    - 各テストメソッドには `#[Test]` アトリビュートを使用します。
    - 以下の網羅を目指します：
      - **正常系**: 有効な入力、期待される振る舞い。
-     - **異常系**: 無効な入力、依存先の失敗（例: リポジトリが `Err` を返す場合）。
+     - **異常系**: 無効な入力、依存先の失敗（例: サービスが `BusinessRuleViolationException` を投げる場合）。
    - Mockery のエクスペクテーション（`shouldReceive`, `once`, `andReturn`）を使用します。
-   - `$this->assertTrue($result->isOk())` または標準的な PHPUnit のアサーションを使用して結果を検証します。
+   - 例外を期待する場合は `expectException()`、それ以外は標準的な PHPUnit のアサーションを使用して結果を検証します。
    - コードのフォーマットは `mise run api:ecs:fix` で適宜フォーマット修正を実行します。
 
 5. **テストの実行**:
@@ -41,34 +41,33 @@ description: プロジェクトのテスト規約に従って、Laravel/PHP の�
 
 具体的なコードパターン、モックのエクスペクテーション、共通のアサーションについては、[patterns.md](references/patterns.md) を参照してください。
 
-## 例: Interactor のテスト
+## 例: UseCase のテスト
 
 ```php
 <?php
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Song\Application\Interactors;
+namespace Tests\Unit\Song\Application\Admin\UseCase;
 
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Ok;
-use Song\Application\Interactors\CreateInteractor;
-use Song\Domain\Models\SongRepositoryInterface;
+use Song\Application\Admin\UseCase\Create\CreateUseCase;
+use Song\Domain\Services\SongIntegrityService;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
-class CreateInteractorTest extends TestCase
+class CreateUseCaseTest extends TestCase
 {
     use EntityFactory;
 
-    private MockInterface&SongRepositoryInterface $repository;
+    private MockInterface&SongIntegrityService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = Mockery::mock(SongRepositoryInterface::class);
+        $this->service = Mockery::mock(SongIntegrityService::class);
     }
 
     #[Test]
@@ -77,9 +76,9 @@ class CreateInteractorTest extends TestCase
         // ... テストロジック ...
     }
 
-    private function getInstance(): CreateInteractor
+    private function getInstance(): CreateUseCase
     {
-        return new CreateInteractor($this->repository);
+        return new CreateUseCase($this->service);
     }
 }
 ```

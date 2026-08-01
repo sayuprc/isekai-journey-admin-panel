@@ -270,7 +270,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e9c5496bc5b0c6bb454f59a5279457ccbd2037aa22df34a3b11728230dfa94fd
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
 - kind: project-relative
   target: agents
   value: .agents/skills/exec-plan
@@ -306,7 +306,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
 - kind: project-relative
   target: agents
   value: .agents/skills/php-feature-test-creator/references/patterns.md
@@ -333,7 +333,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
 - kind: project-relative
   target: agents
   value: .agents/skills/php-integration-test-creator/references/patterns.md
@@ -342,7 +342,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
 - kind: project-relative
   target: agents
   value: .agents/skills/php-unit-test-creator
@@ -360,7 +360,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
 - kind: project-relative
   target: agents
   value: .agents/skills/php-unit-test-creator/references/patterns.md
@@ -522,7 +522,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e9c5496bc5b0c6bb454f59a5279457ccbd2037aa22df34a3b11728230dfa94fd
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
 - kind: project-relative
   target: claude
   value: .claude/skills/codebase-design
@@ -774,7 +774,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
 - kind: project-relative
   target: claude
   value: .claude/skills/php-feature-test-creator/references/patterns.md
@@ -801,7 +801,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
 - kind: project-relative
   target: claude
   value: .claude/skills/php-integration-test-creator/references/patterns.md
@@ -810,7 +810,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
 - kind: project-relative
   target: claude
   value: .claude/skills/php-unit-test-creator
@@ -828,7 +828,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
 - kind: project-relative
   target: claude
   value: .claude/skills/php-unit-test-creator/references/patterns.md
@@ -1885,13 +1885,13 @@ local_deployed_file_hashes:
   .agents/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
   .agents/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
   .agents/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
-  .agents/skills/code-reviewer/references/php-review.md: sha256:e9c5496bc5b0c6bb454f59a5279457ccbd2037aa22df34a3b11728230dfa94fd
+  .agents/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
   .agents/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
-  .agents/skills/php-feature-test-creator/SKILL.md: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  .agents/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
   .agents/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
-  .agents/skills/php-integration-test-creator/SKILL.md: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
-  .agents/skills/php-integration-test-creator/references/patterns.md: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
-  .agents/skills/php-unit-test-creator/SKILL.md: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  .agents/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .agents/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .agents/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .agents/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
   .agents/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
   .agents/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
@@ -1905,13 +1905,13 @@ local_deployed_file_hashes:
   .claude/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
   .claude/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
   .claude/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
-  .claude/skills/code-reviewer/references/php-review.md: sha256:e9c5496bc5b0c6bb454f59a5279457ccbd2037aa22df34a3b11728230dfa94fd
+  .claude/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
   .claude/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
-  .claude/skills/php-feature-test-creator/SKILL.md: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  .claude/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
   .claude/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
-  .claude/skills/php-integration-test-creator/SKILL.md: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
-  .claude/skills/php-integration-test-creator/references/patterns.md: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
-  .claude/skills/php-unit-test-creator/SKILL.md: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  .claude/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .claude/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .claude/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .claude/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
   .claude/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
   .claude/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
