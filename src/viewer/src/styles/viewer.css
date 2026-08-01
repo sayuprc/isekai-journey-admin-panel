@@ -1318,6 +1318,16 @@ image-slot:hover {
   transform: none;
 }
 
+.release-medium .rel-chip[href],
+.feature-track-list .rel-chip[href] {
+  border-left: 2px solid var(--accent);
+}
+
+.rel-arrow {
+  font-size: 14px;
+  color: var(--accent);
+}
+
 /* ユーティリティ */
 
 .spacer-lg {
