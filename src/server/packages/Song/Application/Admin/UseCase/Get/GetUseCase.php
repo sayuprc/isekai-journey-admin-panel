@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use Song\Application\Admin\Assemble\SongAssembler;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -23,9 +22,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadSong);
+        $this->authorizer->authorize(Permission::ReadSong);
 
-        $songId = FieldErrors::single('songId', static fn (): SongId => new SongId($inputData->songId));
+        $songId = new SongId($inputData->songId);
 
         if (is_null($found = $this->repository->find($songId))) {
             throw new ResourceNotFoundException('楽曲', $songId->value);

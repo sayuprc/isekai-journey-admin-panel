@@ -10,7 +10,6 @@ use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -29,9 +28,9 @@ readonly class DeleteUseCase
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->authorizer->ensure(Permission::WriteRelease);
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-        $releaseGroupId = FieldErrors::single('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($inputData->releaseGroupId));
+        $releaseGroupId = new ReleaseGroupId($inputData->releaseGroupId);
 
         $this->transaction->scope(function () use ($releaseGroupId): void {
             $releaseGroup = $this->repository->find($releaseGroupId);

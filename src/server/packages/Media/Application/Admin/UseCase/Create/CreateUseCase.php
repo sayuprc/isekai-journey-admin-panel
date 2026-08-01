@@ -26,7 +26,7 @@ readonly class CreateUseCase
 
     public function handle(CreateInputData $inputData): CreateOutputData
     {
-        $this->authorizer->ensure(Permission::WriteMedia);
+        $this->authorizer->authorize(Permission::WriteMedia);
 
         return $this->transaction->scope(function () use ($inputData): CreateOutputData {
             $media = $this->service->prepareForCreate(

@@ -7,7 +7,6 @@ namespace Person\Application\Admin\UseCase\Get;
 use AdminUser\Domain\Models\Permission;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -21,9 +20,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadPerson);
+        $this->authorizer->authorize(Permission::ReadPerson);
 
-        $personId = FieldErrors::single('personId', static fn (): PersonId => new PersonId($inputData->personId));
+        $personId = new PersonId($inputData->personId);
 
         if (is_null($found = $this->repository->find($personId))) {
             throw new ResourceNotFoundException('Person', $personId->value);

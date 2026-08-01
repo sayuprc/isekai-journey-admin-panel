@@ -19,7 +19,7 @@ use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\Exceptions\PermissionDeniedException;
 use Support\UseCase\Exceptions\UnauthenticatedException;
@@ -131,7 +131,7 @@ class DeleteUseCaseTest extends TestCase
         $this->repository->shouldNotReceive('isUsed');
         $this->repository->shouldNotReceive('delete');
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
     }

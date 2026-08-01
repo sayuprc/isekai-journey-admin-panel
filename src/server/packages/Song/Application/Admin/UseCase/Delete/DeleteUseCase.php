@@ -8,8 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -28,13 +26,9 @@ readonly class DeleteUseCase
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->authorizer->ensure(Permission::WriteSong);
+        $this->authorizer->authorize(Permission::WriteSong);
 
-        try {
-            $songId = new SongId($inputData->songId);
-        } catch (InvalidDomainException) {
-            throw new DomainValidationException(['songId' => ['IDが不正です']]);
-        }
+        $songId = new SongId($inputData->songId);
 
         $this->transaction->scope(function () use ($songId): void {
             $song = $this->repository->find($songId);

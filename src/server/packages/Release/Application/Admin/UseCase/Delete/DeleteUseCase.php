@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -26,9 +25,9 @@ readonly class DeleteUseCase
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->authorizer->ensure(Permission::WriteRelease);
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-        $releaseId = FieldErrors::single('releaseId', static fn (): ReleaseId => new ReleaseId($inputData->releaseId));
+        $releaseId = new ReleaseId($inputData->releaseId);
 
         $this->transaction->scope(function () use ($releaseId): void {
             $release = $this->repository->find($releaseId);

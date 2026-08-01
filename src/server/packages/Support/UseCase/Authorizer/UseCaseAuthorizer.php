@@ -20,7 +20,7 @@ readonly class UseCaseAuthorizer
      * @throws UnauthenticatedException
      * @throws PermissionDeniedException
      */
-    public function ensure(Permission $permission): AuthorizableUserInterface
+    public function authorize(Permission $permission): AuthorizableUserInterface
     {
         $user = $this->context->currentUser();
 

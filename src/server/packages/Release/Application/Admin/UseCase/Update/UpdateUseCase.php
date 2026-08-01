@@ -9,7 +9,6 @@ use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Release\Domain\Services\ReleaseIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -29,9 +28,9 @@ readonly class UpdateUseCase
 
     public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        $this->authorizer->ensure(Permission::WriteRelease);
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-        $releaseId = FieldErrors::single('releaseId', static fn (): ReleaseId => new ReleaseId($inputData->releaseId));
+        $releaseId = new ReleaseId($inputData->releaseId);
 
         return $this->transaction->scope(function () use ($inputData, $releaseId): UpdateOutputData {
             if (is_null($found = $this->repository->find($releaseId))) {

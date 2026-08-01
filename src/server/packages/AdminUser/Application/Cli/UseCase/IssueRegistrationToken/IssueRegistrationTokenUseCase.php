@@ -12,7 +12,8 @@ use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenIssueService;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 
 readonly class IssueRegistrationTokenUseCase
 {
@@ -27,13 +28,14 @@ readonly class IssueRegistrationTokenUseCase
     public function handle(IssueRegistrationTokenInputData $inputData): IssueRegistrationTokenOutputData
     {
         return $this->transaction->scope(function () use ($inputData): IssueRegistrationTokenOutputData {
-            $errors = new FieldErrors();
-            $email = $errors->collect('email', static fn (): Email => new Email($inputData->email));
-            $role = $errors->collect('role', static fn (): Role => Role::fromValue($inputData->role));
-            $permissions = $errors->collect('permissions', static fn (): Permissions => Permissions::fromArray($inputData->permissions));
-            $errors->throwIfFailed();
+            $emailField = Field::of('email', static fn (): Email => new Email($inputData->email));
+            $roleField = Field::of('role', static fn (): Role => Role::fromValue($inputData->role));
+            $permissionsField = Field::of('permissions', static fn (): Permissions => Permissions::fromArray($inputData->permissions));
+            Fields::validate($emailField, $roleField, $permissionsField);
 
-            assert(! is_null($email) && ! is_null($role) && ! is_null($permissions));
+            $email = $emailField->value();
+            $role = $roleField->value();
+            $permissions = $permissionsField->value();
 
             if (! is_null($this->adminUserRepository->findByEmail($email))) {
                 throw new BusinessRuleViolationException(sprintf('すでに使われているメールアドレスです "%s"', $inputData->email));

@@ -21,7 +21,8 @@ use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\Exceptions\DomainValidationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseIntegrityService
@@ -121,37 +122,40 @@ class ReleaseIntegrityService
         array $formatValues,
         array $media,
     ): Release {
-        $errors = new FieldErrors();
-        $formatsVo = $errors->collect('formatValues', static fn (): ReleaseFormats => ReleaseFormats::fromArray($formatValues));
-        $mediaVo = $errors->collect('media', static fn (): Media => Media::fromArray($media));
-        $releaseIdVo = $errors->collect('releaseId', static fn (): ReleaseId => new ReleaseId($releaseId));
-        $releaseGroupIdVo = $errors->collect('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
-        $nameVo = $errors->collect('name', static fn (): ReleaseName => new ReleaseName($name));
-        $releasedOnVo = $errors->collect('releasedOn', fn (): ReleasedOn => $this->toReleasedOn($releasedOn));
-        $descriptionVo = $errors->collect('description', static fn (): Description => new Description($description));
         $normalizedJacketArtUrl = $this->normalizeOptionalString($jacketArtUrl);
-        $jacketArtUrlVo = is_null($normalizedJacketArtUrl)
-            ? null
-            : $errors->collect('jacketArtUrl', static fn (): JacketArtUrl => new JacketArtUrl($normalizedJacketArtUrl));
-        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        $errors->throwIfFailed();
 
-        assert(
-            ! is_null($formatsVo) && ! is_null($mediaVo) && ! is_null($releaseIdVo) && ! is_null($releaseGroupIdVo)
-                                  && ! is_null($nameVo) && ! is_null($releasedOnVo) && ! is_null($descriptionVo) && ! is_null($orderNoVo),
+        $formatsField = Field::of('formatValues', static fn (): ReleaseFormats => ReleaseFormats::fromArray($formatValues));
+        $mediaField = Field::of('media', static fn (): Media => Media::fromArray($media));
+        $releaseIdField = Field::of('releaseId', static fn (): ReleaseId => new ReleaseId($releaseId));
+        $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
+        $nameField = Field::of('name', static fn (): ReleaseName => new ReleaseName($name));
+        $releasedOnField = Field::of('releasedOn', fn (): ReleasedOn => $this->toReleasedOn($releasedOn));
+        $descriptionField = Field::of('description', static fn (): Description => new Description($description));
+        $jacketArtUrlField = Field::of('jacketArtUrl', static fn (): ?JacketArtUrl => is_null($normalizedJacketArtUrl) ? null : new JacketArtUrl($normalizedJacketArtUrl));
+        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
+        Fields::validate(
+            $formatsField,
+            $mediaField,
+            $releaseIdField,
+            $releaseGroupIdField,
+            $nameField,
+            $releasedOnField,
+            $descriptionField,
+            $jacketArtUrlField,
+            $orderNoField,
         );
 
         return new Release(
-            $releaseIdVo,
-            $releaseGroupIdVo,
-            $nameVo,
-            $releasedOnVo,
-            $descriptionVo,
-            $jacketArtUrlVo,
+            $releaseIdField->value(),
+            $releaseGroupIdField->value(),
+            $nameField->value(),
+            $releasedOnField->value(),
+            $descriptionField->value(),
+            $jacketArtUrlField->value(),
             $isDisplay,
-            $orderNoVo,
-            $formatsVo,
-            $mediaVo,
+            $orderNoField->value(),
+            $formatsField->value(),
+            $mediaField->value(),
         );
     }
 

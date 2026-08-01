@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use Media\Application\Admin\Query\MediaDetailQueryServiceInterface;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -23,9 +22,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadMedia);
+        $this->authorizer->authorize(Permission::ReadMedia);
 
-        $mediaId = FieldErrors::single('mediaId', static fn (): MediaId => new MediaId($inputData->mediaId));
+        $mediaId = new MediaId($inputData->mediaId);
 
         if (is_null($found = $this->repository->find($mediaId))) {
             throw new ResourceNotFoundException('Media', $mediaId->value);

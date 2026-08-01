@@ -7,7 +7,9 @@ namespace Release\Domain\Models;
 use Song\Domain\Models\SongId;
 use Support\Collection\ImmutableCollection;
 use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -26,15 +28,20 @@ readonly class Tracks extends ImmutableCollection
         $seenTrackNos = [];
 
         foreach ($items as $item) {
-            $errors = new FieldErrors();
-            $songId = $errors->collect('songId', static fn (): ?SongId => is_null($item['songId']) ? null : new SongId($item['songId']));
-            $title = $errors->collect('title', static fn (): ?TrackTitle => is_null($item['title']) ? null : new TrackTitle($item['title']));
-            $trackNo = $errors->collect('trackNo', static fn (): OrderNo => new OrderNo($item['trackNo']));
-            $errors->throwIfFailed();
+            $songIdField = Field::of('songId', static fn (): ?SongId => is_null($item['songId']) ? null : new SongId($item['songId']));
+            $titleField = Field::of('title', static fn (): ?TrackTitle => is_null($item['title']) ? null : new TrackTitle($item['title']));
+            $trackNoField = Field::of('trackNo', static fn (): OrderNo => new OrderNo($item['trackNo']));
+            Fields::validate($songIdField, $titleField, $trackNoField);
 
-            assert(! is_null($trackNo));
-
-            $track = FieldErrors::single('media', static fn (): Track => Track::create($songId, $title, $trackNo));
+            try {
+                $track = Track::create(
+                    $songIdField->value(),
+                    $titleField->value(),
+                    $trackNoField->value(),
+                );
+            } catch (InvalidDomainException $e) {
+                throw new DomainValidationException(['media' => [$e->getMessage()]]);
+            }
 
             if (isset($seenTrackNos[$track->trackNo->value])) {
                 throw new DomainValidationException([

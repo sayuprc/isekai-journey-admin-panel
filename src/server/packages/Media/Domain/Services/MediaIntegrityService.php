@@ -17,7 +17,8 @@ use Media\Domain\Models\MediaUrl;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\DomainValidationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 
 class MediaIntegrityService
 {
@@ -90,20 +91,17 @@ class MediaIntegrityService
         int $typeValue,
         bool $isDisplay,
     ): Media {
-        $errors = new FieldErrors();
-        $mediaIdVo = $errors->collect('mediaId', static fn (): MediaId => new MediaId($mediaId));
-        $titleVo = $errors->collect('title', static fn (): MediaTitle => new MediaTitle($title));
-        $urlVo = $errors->collect('url', static fn (): MediaUrl => new MediaUrl($url));
-        $publishedAtVo = $errors->collect('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt));
-        $errors->throwIfFailed();
-
-        assert(! is_null($mediaIdVo) && ! is_null($titleVo) && ! is_null($urlVo) && ! is_null($publishedAtVo));
+        $mediaIdField = Field::of('mediaId', static fn (): MediaId => new MediaId($mediaId));
+        $titleField = Field::of('title', static fn (): MediaTitle => new MediaTitle($title));
+        $urlField = Field::of('url', static fn (): MediaUrl => new MediaUrl($url));
+        $publishedAtField = Field::of('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt));
+        Fields::validate($mediaIdField, $titleField, $urlField, $publishedAtField);
 
         return new Media(
-            $mediaIdVo,
-            $titleVo,
-            $urlVo,
-            $publishedAtVo,
+            $mediaIdField->value(),
+            $titleField->value(),
+            $urlField->value(),
+            $publishedAtField->value(),
             $this->toMediaType($typeValue),
             $isDisplay,
         );

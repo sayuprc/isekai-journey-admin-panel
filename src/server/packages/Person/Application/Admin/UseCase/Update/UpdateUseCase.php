@@ -9,7 +9,6 @@ use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -29,9 +28,9 @@ readonly class UpdateUseCase
 
     public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        $this->authorizer->ensure(Permission::WritePerson);
+        $this->authorizer->authorize(Permission::WritePerson);
 
-        $personId = FieldErrors::single('personId', static fn (): PersonId => new PersonId($inputData->personId));
+        $personId = new PersonId($inputData->personId);
 
         return $this->transaction->scope(function () use ($inputData, $personId): UpdateOutputData {
             if (is_null($this->repository->find($personId))) {

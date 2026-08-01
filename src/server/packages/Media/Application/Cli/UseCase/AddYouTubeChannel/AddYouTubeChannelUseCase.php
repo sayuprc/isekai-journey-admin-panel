@@ -10,7 +10,8 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannelName;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 
 readonly class AddYouTubeChannelUseCase
 {
@@ -23,14 +24,11 @@ readonly class AddYouTubeChannelUseCase
     public function handle(AddYouTubeChannelInputData $inputData): AddYouTubeChannelOutputData
     {
         return $this->transaction->scope(function () use ($inputData): AddYouTubeChannelOutputData {
-            $errors = new FieldErrors();
-            $channelId = $errors->collect('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
-            $name = $errors->collect('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name));
-            $errors->throwIfFailed();
+            $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
+            $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name));
+            Fields::validate($channelIdField, $nameField);
 
-            assert(! is_null($channelId) && ! is_null($name));
-
-            $channel = new YouTubeChannel($channelId, $name);
+            $channel = new YouTubeChannel($channelIdField->value(), $nameField->value());
 
             if (! is_null($this->repository->find($channel->channelId))) {
                 throw new BusinessRuleViolationException(sprintf('すでに登録されているチャンネルです "%s"', $channel->channelId->value));

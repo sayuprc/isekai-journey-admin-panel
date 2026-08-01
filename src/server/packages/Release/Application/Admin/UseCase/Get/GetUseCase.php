@@ -9,7 +9,6 @@ use Release\Application\Admin\Query\ReleaseDetailQueryServiceInterface;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -25,9 +24,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadRelease);
+        $this->authorizer->authorize(Permission::ReadRelease);
 
-        $releaseId = FieldErrors::single('releaseId', static fn (): ReleaseId => new ReleaseId($inputData->releaseId));
+        $releaseId = new ReleaseId($inputData->releaseId);
 
         if (is_null($found = $this->repository->find($releaseId))) {
             throw new ResourceNotFoundException('Release', $releaseId->value);

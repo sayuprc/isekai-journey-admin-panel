@@ -22,7 +22,7 @@ readonly class SearchUseCase
 
     public function handle(SearchInputData $inputData): SearchOutputData
     {
-        $this->authorizer->ensure(Permission::ReadPerson);
+        $this->authorizer->authorize(Permission::ReadPerson);
 
         $criteria = new PersonSearchCriteria(
             $inputData->name === Arg::Optional

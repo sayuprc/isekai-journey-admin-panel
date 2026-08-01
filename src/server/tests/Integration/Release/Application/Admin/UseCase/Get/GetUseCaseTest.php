@@ -10,7 +10,7 @@ use Release\Application\Admin\UseCase\Get\GetUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -75,7 +75,7 @@ class GetUseCaseTest extends DatabaseTestCase
     #[Test]
     public function invalidId(): void
     {
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->handle(new GetInputData('invalid-id'));
     }

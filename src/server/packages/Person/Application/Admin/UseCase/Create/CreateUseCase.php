@@ -26,7 +26,7 @@ readonly class CreateUseCase
 
     public function handle(CreateInputData $inputData): CreateOutputData
     {
-        $this->authorizer->ensure(Permission::WritePerson);
+        $this->authorizer->authorize(Permission::WritePerson);
 
         return $this->transaction->scope(function () use ($inputData): CreateOutputData {
             $person = $this->service->prepareForCreate($inputData->name);

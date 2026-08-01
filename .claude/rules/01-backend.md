@@ -21,7 +21,7 @@ paths:
 ## 実装規約
 
 - 期待される業務エラーは例外で表現する (ADR-0013)
-  - 業務ルール違反は `BusinessRuleViolationException`、入力検証は `DomainValidationException` (集約は `Support\Domain\Validation\FieldErrors`)、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外
+  - 業務ルール違反は `BusinessRuleViolationException`、入力検証は `DomainValidationException` (集約は `Support\Domain\Validation` の `Field::of` + `Fields::validate`)、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外
   - 例外 → HTTP の変換は `App\Http\Responses\ApiExceptionRenderer` の対応表のみが担う。UseCase / Presenter で catch して詰め替えない
 - ValueObject の構築は public コンストラクタ (`new`) に一本化する。不正値は `InvalidDomainException`
 - API 契約が変わる変更は `src/contracts` を起点に考える

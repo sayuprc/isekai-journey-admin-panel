@@ -19,7 +19,7 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadAuditLog);
+        $this->authorizer->authorize(Permission::ReadAuditLog);
 
         $found = $this->query->find($inputData->auditLogId);
 

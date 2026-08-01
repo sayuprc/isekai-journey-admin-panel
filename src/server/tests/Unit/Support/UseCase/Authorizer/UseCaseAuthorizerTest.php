@@ -23,7 +23,7 @@ class UseCaseAuthorizerTest extends TestCase
     {
         $this->expectException(UnauthenticatedException::class);
 
-        $this->createAuthorizer(new AuthContext())->ensure(Permission::ReadMedia);
+        $this->createAuthorizer(new AuthContext())->authorize(Permission::ReadMedia);
     }
 
     #[Test]
@@ -34,7 +34,7 @@ class UseCaseAuthorizerTest extends TestCase
 
         $this->expectException(PermissionDeniedException::class);
 
-        $this->createAuthorizer($context)->ensure(Permission::ReadMedia);
+        $this->createAuthorizer($context)->authorize(Permission::ReadMedia);
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class UseCaseAuthorizerTest extends TestCase
         $context = new AuthContext();
         $context->set($this->createGeneralUser([Permission::ReadMedia->value]));
 
-        $user = $this->createAuthorizer($context)->ensure(Permission::ReadMedia);
+        $user = $this->createAuthorizer($context)->authorize(Permission::ReadMedia);
 
         $this->assertTrue($user->can(Permission::ReadMedia));
     }
