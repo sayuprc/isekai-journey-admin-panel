@@ -14,7 +14,6 @@ use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use Auth\Domain\Services\RecoveryCode\RecoveryCodeVerifyService;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 
 readonly class RecoveryStartUseCase
 {
@@ -30,10 +29,7 @@ readonly class RecoveryStartUseCase
 
     public function handle(RecoveryStartInputData $inputData): RecoveryStartOutputData
     {
-        $emailField = Field::of('email', static fn (): Email => new Email($inputData->email));
-        Fields::validate($emailField);
-
-        $email = $emailField->value();
+        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validate();
 
         $adminUser = $this->adminUserRepository->findByEmail($email);
 

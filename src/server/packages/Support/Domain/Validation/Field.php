@@ -54,6 +54,23 @@ final class Field
     }
 
     /**
+     * 自身のエラーがあれば DomainValidationException を投げ、なければ構築済みの値を返す
+     *
+     * 単一 field の検証はこれで完結する。複数 field をまとめて報告する場合は
+     * Fields::validate で集約してから value() で取り出す
+     *
+     * @return T
+     */
+    public function validate(): mixed
+    {
+        if ($this->errors !== []) {
+            throw new DomainValidationException($this->errors);
+        }
+
+        return ($this->value)();
+    }
+
+    /**
      * 構築済みの値を返す。構築に失敗していた場合は元の例外を再 throw する
      *
      * Fields::validate の通過後は失敗した Field に到達しないことが保証される
