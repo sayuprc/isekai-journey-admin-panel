@@ -6,7 +6,7 @@ ADR-0014: 入力形式検証の契約境界への集約 (エラーハンドリ�
 
 ## Status
 
-in-progress
+completed
 
 ## Background
 
@@ -111,6 +111,7 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 
 ## Validation
 
+- PR #913 をレビュー・マージ済み (2026-08-01、refactor/api-handling へ)
 - CLI (2026-08-01): media:youtube-channel:remove に不正 ID を渡し、
   「YouTube チャンネルIDの形式が不正です」表示 + exit 1 を確認
 - server (2026-08-01): api:ecs / api:phpstan / api:arkitect / api:test (603 件) 全通過

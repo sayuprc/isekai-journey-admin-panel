@@ -2,7 +2,7 @@
 
 ## Status
 
-in-progress
+completed
 
 ## Background
 
@@ -81,6 +81,8 @@ Result を server 全層から撤去し例外ベースへ移行する。
 
 ## Validation
 
+- Stage 2 本体は PR #910、レビュー指摘対応は PR #912 でマージ済み。検証集約 (Field/Fields) は
+  その後 ADR-0014 (PR #913) で契約境界への集約に置き換えられた
 - `mise run api:ecs` / `api:phpstan` (level 10) / `api:arkitect` / `api:test` (603 tests, skip 3 は既存) すべて green
 - `src/server` から `ResultType\` への参照 0 件、composer から `sayuprc/result-type` 除去済み
 - Stage 1: `contract:format:check` / `contract:test` / `contract:compile:*`、admin lint/style/format/build、viewer format/lint/build すべて green (PR #909 でマージ済み)
