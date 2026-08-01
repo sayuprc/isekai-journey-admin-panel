@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\Track;
 use Release\Domain\Models\TrackTitle;
 use Song\Domain\Models\SongId;
-use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 use Tests\TestCase;
 
@@ -58,7 +58,7 @@ class TrackTest extends TestCase
     #[Test]
     public function cannotCreateWithNeitherSongIdNorTitle(): void
     {
-        $this->expectException(InvalidDomainException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $track = Track::create(null, null, new OrderNo(1));
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Admin\V1\Song;
 
+use Illuminate\Testing\Fluent\AssertableJson;
 use Media\Domain\Models\MediaType;
 use Media\Infrastructures\MediaRepository;
 use Person\Infrastructures\PersonRepository;
@@ -316,7 +317,12 @@ class UpdateSongTest extends DatabaseTestCase
                     ['songTagId' => $tag->songTagId->value],
                 ],
                 'media' => [],
-            ])->assertStatus(422);
+            ])->assertStatus(400)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->where('code', 'business_rule_violation')
+                    ->where('message', '同じ楽曲タグを複数指定することはできません。'),
+            );
     }
 
     #[Test]

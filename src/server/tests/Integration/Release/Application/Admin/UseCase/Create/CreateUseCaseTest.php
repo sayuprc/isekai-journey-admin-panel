@@ -11,7 +11,7 @@ use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -162,7 +162,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,
@@ -210,7 +210,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,

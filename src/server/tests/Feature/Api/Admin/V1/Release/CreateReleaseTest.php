@@ -274,18 +274,11 @@ class CreateReleaseTest extends DatabaseTestCase
                         ],
                     ],
                 ],
-            ])->assertStatus(422)
+            ])->assertStatus(400)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
-                    ->where('code', 'validation_failed')
-                    ->whereType('message', 'string')
-                    ->has(
-                        'details',
-                        1,
-                        static fn (AssertableJson $json) => $json
-                            ->where('field', 'media')
-                            ->where('message', '収録曲には楽曲かタイトルの少なくとも一方を指定してください。'),
-                    ),
+                    ->where('code', 'business_rule_violation')
+                    ->where('message', '収録曲には楽曲かタイトルの少なくとも一方を指定してください。'),
             );
     }
 
@@ -354,7 +347,7 @@ class CreateReleaseTest extends DatabaseTestCase
                         1,
                         static fn (AssertableJson $json) => $json
                             ->where('field', 'releasedOn')
-                            ->where('message', 'The value does not match the expected format: date.'),
+                            ->where('message', '日付は YYYY-MM-DD 形式で指定してください'),
                     ),
             );
     }

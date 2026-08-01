@@ -10,7 +10,7 @@ use Media\Application\Cli\UseCase\RemoveYouTubeChannel\RemoveYouTubeChannelInput
 use Media\Application\Cli\UseCase\RemoveYouTubeChannel\RemoveYouTubeChannelUseCase;
 use Override;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\Exceptions\UseCaseException;
 
 class RemoveYouTubeChannelCommand extends Command
@@ -29,7 +29,7 @@ class RemoveYouTubeChannelCommand extends Command
 
         try {
             $useCase->handle(new RemoveYouTubeChannelInputData($channelId));
-        } catch (BusinessRuleViolationException|DomainValidationException|UseCaseException $e) {
+        } catch (BusinessRuleViolationException|InvalidDomainException|UseCaseException $e) {
             $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;

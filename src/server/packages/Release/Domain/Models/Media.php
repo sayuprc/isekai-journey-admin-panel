@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Release\Domain\Models;
 
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -18,7 +16,7 @@ readonly class Media extends ImmutableCollection
     /**
      * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $items
      *
-     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
     public static function fromArray(array $items): self
     {
@@ -28,21 +26,14 @@ readonly class Media extends ImmutableCollection
         foreach ($items as $item) {
             $normalizedName = self::normalizeName($item['name']);
 
-            Fields::validate(
-                $positionField = Field::of('position', static fn (): OrderNo => new OrderNo($item['position'])),
-                $nameField = Field::of('name', static fn (): ?MediumName => is_null($normalizedName) ? null : new MediumName($normalizedName)),
-            );
-
             $medium = new Medium(
-                $positionField->value(),
-                $nameField->value(),
+                new OrderNo($item['position']),
+                is_null($normalizedName) ? null : new MediumName($normalizedName),
                 Tracks::fromArray($item['tracks']),
             );
 
             if (isset($seenPositions[$medium->position->value])) {
-                throw new DomainValidationException([
-                    'media' => ['同じ媒体順を複数指定することはできません。'],
-                ]);
+                throw new BusinessRuleViolationException('同じ媒体順を複数指定することはできません。');
             }
 
             $seenPositions[$medium->position->value] = true;

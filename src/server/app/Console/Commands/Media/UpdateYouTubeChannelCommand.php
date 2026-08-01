@@ -10,7 +10,7 @@ use Media\Application\Cli\UseCase\UpdateYouTubeChannel\UpdateYouTubeChannelInput
 use Media\Application\Cli\UseCase\UpdateYouTubeChannel\UpdateYouTubeChannelUseCase;
 use Override;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\Exceptions\UseCaseException;
 
 class UpdateYouTubeChannelCommand extends Command
@@ -35,7 +35,7 @@ class UpdateYouTubeChannelCommand extends Command
 
         try {
             $output = $useCase->handle(new UpdateYouTubeChannelInputData($this->argument('channelId'), $name));
-        } catch (BusinessRuleViolationException|DomainValidationException|UseCaseException $e) {
+        } catch (BusinessRuleViolationException|InvalidDomainException|UseCaseException $e) {
             $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;

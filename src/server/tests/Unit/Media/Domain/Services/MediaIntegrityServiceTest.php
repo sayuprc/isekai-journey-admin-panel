@@ -13,7 +13,7 @@ use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -65,9 +65,9 @@ class MediaIntegrityServiceTest extends TestCase
                 MediaType::Mv->value,
                 true,
             );
-            $this->fail('DomainValidationException が発生しませんでした');
-        } catch (DomainValidationException $e) {
-            $this->assertSame(['url' => ['同じURLのメディアが既に存在します']], $e->errors);
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException $e) {
+            $this->assertSame('同じURLのメディアが既に存在します', $e->getMessage());
         }
     }
 

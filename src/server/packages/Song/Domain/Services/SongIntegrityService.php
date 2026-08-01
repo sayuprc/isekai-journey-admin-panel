@@ -19,9 +19,6 @@ use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -45,7 +42,6 @@ class SongIntegrityService
      * @param list<person>    $persons
      * @param list<songMedia> $media
      *
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(
@@ -82,7 +78,6 @@ class SongIntegrityService
      * @param list<person>    $persons
      * @param list<songMedia> $media
      *
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(
@@ -124,13 +119,7 @@ class SongIntegrityService
      */
     private function buildRelations(array $persons, array $tags, array $media): array
     {
-        Fields::validate(
-            $personsField = Field::of('persons', static fn (): SongPersons => SongPersons::fromArray($persons)),
-            $tagsField = Field::of('tags', static fn (): SongTagReferences => SongTagReferences::fromArray($tags)),
-            $mediaField = Field::of('media', static fn (): SongMediaLinks => SongMediaLinks::fromArray($media)),
-        );
-
-        return [$personsField->value(), $tagsField->value(), $mediaField->value()];
+        return [SongPersons::fromArray($persons), SongTagReferences::fromArray($tags), SongMediaLinks::fromArray($media)];
     }
 
     private function assertRelationsExist(SongPersons $persons, SongTagReferences $tags, SongMediaLinks $media): void
@@ -160,23 +149,14 @@ class SongIntegrityService
         SongTagReferences $tags,
         SongMediaLinks $media,
     ): Song {
-        Fields::validate(
-            $songIdField = Field::of('songId', static fn (): SongId => new SongId($songId)),
-            $titleField = Field::of('title', static fn (): Title => new Title($title)),
-            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
-            $lyricsLinkField = Field::of('lyricsLink', fn (): ?LyricsLink => $this->toLyricsLink($lyricsLink)),
-            $typeField = Field::of('typeValue', static fn (): SongType => SongType::fromValue($type)),
-            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
-        );
-
         return new Song(
-            $songIdField->value(),
-            $titleField->value(),
-            $descriptionField->value(),
-            $lyricsLinkField->value(),
-            $typeField->value(),
+            new SongId($songId),
+            new Title($title),
+            new Description($description),
+            $this->toLyricsLink($lyricsLink),
+            SongType::fromValue($type),
             $isDisplay,
-            $orderNoField->value(),
+            new OrderNo($orderNo),
             $tags,
             $persons,
             $media,

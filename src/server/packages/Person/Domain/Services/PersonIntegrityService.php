@@ -10,9 +10,6 @@ use Person\Domain\Models\PersonName;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class PersonIntegrityService
@@ -24,7 +21,6 @@ class PersonIntegrityService
     }
 
     /**
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(string $name): Person
@@ -43,7 +39,6 @@ class PersonIntegrityService
     }
 
     /**
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(string $personId, string $name, int $orderNo): Person
@@ -59,12 +54,6 @@ class PersonIntegrityService
 
     private function build(string $personId, string $name, int $orderNo): Person
     {
-        Fields::validate(
-            $personIdField = Field::of('personId', static fn (): PersonId => new PersonId($personId)),
-            $nameField = Field::of('name', static fn (): PersonName => new PersonName($name)),
-            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
-        );
-
-        return new Person($personIdField->value(), $nameField->value(), $orderNoField->value());
+        return new Person(new PersonId($personId), new PersonName($name), new OrderNo($orderNo));
     }
 }

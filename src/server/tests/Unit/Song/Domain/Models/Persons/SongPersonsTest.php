@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Persons;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Persons\SongPersons;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\TestCase;
 
 class SongPersonsTest extends TestCase
@@ -48,9 +48,9 @@ class SongPersonsTest extends TestCase
                 ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 1],
                 ['personId' => 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'role' => 1, 'orderNo' => 2],
             ]);
-            $this->fail('DomainValidationException が発生しませんでした');
-        } catch (DomainValidationException $e) {
-            $this->assertSame(['persons' => ['同じ人物に同じ role を重複指定できません']], $e->errors);
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException $e) {
+            $this->assertSame('同じ人物に同じ role を重複指定できません', $e->getMessage());
         }
     }
 }

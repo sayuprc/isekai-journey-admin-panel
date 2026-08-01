@@ -35,6 +35,8 @@ Result の伝搬は server の 131 ファイルに波及していた。
 - HTTP ステータスの割当 (401/403/404/422/400) は現状維持とする
 - 入力形式の検証は Application 層の組立て役が担い、ValueObject を検証の単一情報源としたまま
   全 field のエラーを集約して 1 つの例外を投げる
+  (この項は [ADR-0014](ADR-0014-consolidate-input-format-validation-at-contract-boundary.md)
+  で置き換えられた。形式検証の単一情報源は契約に移り、集約は OpenApiValidator が担う)
 - ValueObject の構築は public コンストラクタに一本化し、`create()` / `reconstruct()` を廃止する
 - 移行はワイヤ形式の刷新を先行させ、その後パッケージ単位で内部を例外化する 2 段階で行う
 

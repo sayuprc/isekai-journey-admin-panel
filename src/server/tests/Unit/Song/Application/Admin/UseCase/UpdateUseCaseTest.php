@@ -21,7 +21,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
@@ -166,10 +166,10 @@ class UpdateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
-            ->andThrow(new DomainValidationException([]))
+            ->andThrow(new BusinessRuleViolationException('検証エラー'))
             ->once();
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(
             new UpdateInputData(

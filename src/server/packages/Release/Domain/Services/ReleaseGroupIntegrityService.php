@@ -10,10 +10,7 @@ use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupTitle;
 use Release\Domain\Models\ReleaseGroupType;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Exceptions\DomainValidationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
@@ -22,9 +19,6 @@ class ReleaseGroupIntegrityService
     {
     }
 
-    /**
-     * @throws DomainValidationException
-     */
     public function prepareForCreate(
         string $title,
         int $typeValue,
@@ -35,9 +29,6 @@ class ReleaseGroupIntegrityService
         return $this->build($this->generator->generate(), $title, $typeValue, $description, $isDisplay, $orderNo);
     }
 
-    /**
-     * @throws DomainValidationException
-     */
     public function prepareForUpdate(
         string $releaseGroupId,
         string $title,
@@ -57,21 +48,13 @@ class ReleaseGroupIntegrityService
         bool $isDisplay,
         int $orderNo,
     ): ReleaseGroup {
-        Fields::validate(
-            $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId)),
-            $titleField = Field::of('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title)),
-            $typeField = Field::of('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue)),
-            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
-            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
-        );
-
         return new ReleaseGroup(
-            $releaseGroupIdField->value(),
-            $titleField->value(),
-            $typeField->value(),
-            $descriptionField->value(),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseGroupTitle($title),
+            $this->toReleaseGroupType($typeValue),
+            new Description($description),
             $isDisplay,
-            $orderNoField->value(),
+            new OrderNo($orderNo),
         );
     }
 

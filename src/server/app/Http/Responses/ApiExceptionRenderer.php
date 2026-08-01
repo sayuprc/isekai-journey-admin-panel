@@ -6,7 +6,6 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
 use Support\UseCase\Exceptions\PermissionDeniedException;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Support\UseCase\Exceptions\UnauthenticatedException;
@@ -33,7 +32,6 @@ final class ApiExceptionRenderer
             $e instanceof UnauthenticatedException => ApiError::unauthenticated(),
             $e instanceof PermissionDeniedException => ApiError::permissionDenied(),
             $e instanceof ResourceNotFoundException => ApiError::notFound($e->getMessage()),
-            $e instanceof DomainValidationException => ApiError::validationFailed($e->errors),
             $e instanceof BusinessRuleViolationException => ApiError::businessRuleViolation($e->getMessage()),
             default => ApiError::internalError(),
         };

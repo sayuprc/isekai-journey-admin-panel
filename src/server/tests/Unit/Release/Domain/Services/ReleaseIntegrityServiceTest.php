@@ -18,7 +18,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -141,7 +141,7 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->andReturn(self::RELEASE_ID)
             ->once();
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->prepareForCreate(
             self::RELEASE_GROUP_ID,
@@ -164,7 +164,7 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->andReturn(self::RELEASE_ID)
             ->once();
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->prepareForCreate(
             self::RELEASE_GROUP_ID,

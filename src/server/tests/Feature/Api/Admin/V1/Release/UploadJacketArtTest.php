@@ -71,8 +71,9 @@ class UploadJacketArtTest extends DatabaseTestCase
             ->call('POST', route(ReleaseRouteMap::UploadJacketArt), [], [], [], [
                 'CONTENT_TYPE' => 'image/png',
             ], 'not image')
-            ->assertStatus(422)
-            ->assertJsonPath('details.0.field', 'jacketArt');
+            ->assertStatus(400)
+            ->assertJsonPath('code', 'business_rule_violation')
+            ->assertJsonPath('message', '画像ファイルの内容が不正です');
     }
 
     private function pngContent(): string

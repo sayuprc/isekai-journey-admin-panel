@@ -20,7 +20,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -150,10 +150,10 @@ class CreateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons, [])
-            ->andThrow(new DomainValidationException([]))
+            ->andThrow(new BusinessRuleViolationException('検証エラー'))
             ->once();
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(
             new CreateInputData(

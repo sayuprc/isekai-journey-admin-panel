@@ -19,10 +19,7 @@ use Release\Domain\Models\ReleaseName;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseIntegrityService
@@ -38,7 +35,6 @@ class ReleaseIntegrityService
      * @param list<int>                                                                                                     $formatValues
      * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(
@@ -59,7 +55,6 @@ class ReleaseIntegrityService
      * @param list<int>                                                                                                     $formatValues
      * @param list<array{position: int, name: ?string, tracks: list<array{songId: ?string, title: ?string, trackNo: int}>}> $media
      *
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(
@@ -124,38 +119,17 @@ class ReleaseIntegrityService
     ): Release {
         $normalizedJacketArtUrl = $this->normalizeOptionalString($jacketArtUrl);
 
-        $formatsField = Field::of('formatValues', static fn (): ReleaseFormats => ReleaseFormats::fromArray($formatValues));
-        $mediaField = Field::of('media', static fn (): Media => Media::fromArray($media));
-        $releaseIdField = Field::of('releaseId', static fn (): ReleaseId => new ReleaseId($releaseId));
-        $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
-        $nameField = Field::of('name', static fn (): ReleaseName => new ReleaseName($name));
-        $releasedOnField = Field::of('releasedOn', fn (): ReleasedOn => $this->toReleasedOn($releasedOn));
-        $descriptionField = Field::of('description', static fn (): Description => new Description($description));
-        $jacketArtUrlField = Field::of('jacketArtUrl', static fn (): ?JacketArtUrl => is_null($normalizedJacketArtUrl) ? null : new JacketArtUrl($normalizedJacketArtUrl));
-        $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        Fields::validate(
-            $formatsField,
-            $mediaField,
-            $releaseIdField,
-            $releaseGroupIdField,
-            $nameField,
-            $releasedOnField,
-            $descriptionField,
-            $jacketArtUrlField,
-            $orderNoField,
-        );
-
         return new Release(
-            $releaseIdField->value(),
-            $releaseGroupIdField->value(),
-            $nameField->value(),
-            $releasedOnField->value(),
-            $descriptionField->value(),
-            $jacketArtUrlField->value(),
+            new ReleaseId($releaseId),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseName($name),
+            $this->toReleasedOn($releasedOn),
+            new Description($description),
+            is_null($normalizedJacketArtUrl) ? null : new JacketArtUrl($normalizedJacketArtUrl),
             $isDisplay,
-            $orderNoField->value(),
-            $formatsField->value(),
-            $mediaField->value(),
+            new OrderNo($orderNo),
+            ReleaseFormats::fromArray($formatValues),
+            Media::fromArray($media),
         );
     }
 

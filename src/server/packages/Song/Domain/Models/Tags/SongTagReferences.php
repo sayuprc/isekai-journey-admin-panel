@@ -6,8 +6,7 @@ namespace Song\Domain\Models\Tags;
 
 use Song\Domain\Models\Tag\SongTagId;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 
 /**
  * @extends ImmutableCollection<int, SongTagReference>
@@ -17,7 +16,7 @@ readonly class SongTagReferences extends ImmutableCollection
     /**
      * @param list<array{songTagId: string}> $items
      *
-     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
     public static function fromArray(array $items): self
     {
@@ -25,16 +24,10 @@ readonly class SongTagReferences extends ImmutableCollection
         $seen = [];
 
         foreach ($items as $item) {
-            try {
-                $tag = new SongTagReference(new SongTagId($item['songTagId']));
-            } catch (InvalidDomainException $e) {
-                throw new DomainValidationException(['songTagId' => [$e->getMessage()]]);
-            }
+            $tag = new SongTagReference(new SongTagId($item['songTagId']));
 
             if (isset($seen[$tag->songTagId->value])) {
-                throw new DomainValidationException([
-                    'songTagId' => ['同じ楽曲タグを複数指定することはできません。'],
-                ]);
+                throw new BusinessRuleViolationException('同じ楽曲タグを複数指定することはできません。');
             }
 
             $seen[$tag->songTagId->value] = true;

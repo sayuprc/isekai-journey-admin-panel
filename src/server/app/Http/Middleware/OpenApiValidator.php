@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Http\OpenApi\BodyErrorCollector;
 use App\Http\Responses\ApiError;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use League\OpenAPIValidation\Schema\Exception\FormatMismatch;
 use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,8 +57,7 @@ abstract class OpenApiValidator
 
             return response()->json($payload, $status);
         } catch (ValidationFailed $e) {
-            // TODO 項目ごとのバリデーションエラーを表示したい
-            return $this->handleValidationFailed($e);
+            return $this->handleValidationFailed($e, $psrRequest, $operationAddress);
         }
 
         $response = $next($request);
@@ -90,8 +91,21 @@ abstract class OpenApiValidator
 
     abstract protected function getRoutePrefixPattern(): string;
 
-    private function handleValidationFailed(ValidationFailed $exception): JsonResponse
-    {
+    private function handleValidationFailed(
+        ValidationFailed $exception,
+        ServerRequestInterface $psrRequest,
+        OperationAddress $operationAddress,
+    ): JsonResponse {
+        // 契約スキーマに対する body の全違反を一括報告する (ADR-0014)。
+        // body 以外 (query / path 等) の違反は従来どおり先頭 1 件の報告に落ちる
+        $details = new BodyErrorCollector($this->getPath())->collect($operationAddress, (string)$psrRequest->getBody());
+
+        if ($details !== []) {
+            [$payload, $status] = ApiError::validationFailed($details);
+
+            return response()->json($payload, $status);
+        }
+
         $previous = $exception->getPrevious();
 
         [$field, $message] = $previous instanceof SchemaMismatch

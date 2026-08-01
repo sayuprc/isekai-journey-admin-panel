@@ -15,10 +15,8 @@ use Media\Domain\Models\MediaTitle;
 use Media\Domain\Models\MediaType;
 use Media\Domain\Models\MediaUrl;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 
 class MediaIntegrityService
 {
@@ -29,7 +27,7 @@ class MediaIntegrityService
     }
 
     /**
-     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(
         string $title,
@@ -48,14 +46,14 @@ class MediaIntegrityService
         );
 
         if (! is_null($this->repository->findByUrl($media->url))) {
-            throw new DomainValidationException(['url' => ['同じURLのメディアが既に存在します']]);
+            throw new BusinessRuleViolationException('同じURLのメディアが既に存在します');
         }
 
         return $media;
     }
 
     /**
-     * @throws DomainValidationException
+     * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(
         string $mediaId,
@@ -77,7 +75,7 @@ class MediaIntegrityService
         $found = $this->repository->findByUrl($media->url);
 
         if (! is_null($found) && ! $found->equals($media)) {
-            throw new DomainValidationException(['url' => ['同じURLのメディアが既に存在します']]);
+            throw new BusinessRuleViolationException('同じURLのメディアが既に存在します');
         }
 
         return $media;
@@ -91,18 +89,11 @@ class MediaIntegrityService
         int $typeValue,
         bool $isDisplay,
     ): Media {
-        Fields::validate(
-            $mediaIdField = Field::of('mediaId', static fn (): MediaId => new MediaId($mediaId)),
-            $titleField = Field::of('title', static fn (): MediaTitle => new MediaTitle($title)),
-            $urlField = Field::of('url', static fn (): MediaUrl => new MediaUrl($url)),
-            $publishedAtField = Field::of('publishedAt', fn (): MediaPublishedAt => $this->toPublishedAt($publishedAt)),
-        );
-
         return new Media(
-            $mediaIdField->value(),
-            $titleField->value(),
-            $urlField->value(),
-            $publishedAtField->value(),
+            new MediaId($mediaId),
+            new MediaTitle($title),
+            new MediaUrl($url),
+            $this->toPublishedAt($publishedAt),
             $this->toMediaType($typeValue),
             $isDisplay,
         );
