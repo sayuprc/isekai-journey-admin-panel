@@ -16,7 +16,7 @@ use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Services\SongTagIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
@@ -99,10 +99,10 @@ class UpdateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songTagId, $name, $orderNo)
-            ->andThrow(new DomainValidationException([]))
+            ->andThrow(new BusinessRuleViolationException('検証エラー'))
             ->once();
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(new UpdateInputData($songTagId, $name, $orderNo));
     }

@@ -10,8 +10,6 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannelName;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 
 readonly class UpdateYouTubeChannelUseCase
 {
@@ -24,18 +22,13 @@ readonly class UpdateYouTubeChannelUseCase
     public function handle(UpdateYouTubeChannelInputData $inputData): UpdateYouTubeChannelOutputData
     {
         return $this->transaction->scope(function () use ($inputData): UpdateYouTubeChannelOutputData {
-            Fields::validate(
-                $channelIdField = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId)),
-                $nameField = Field::of('name', static fn (): YouTubeChannelName => new YouTubeChannelName($inputData->name)),
-            );
-
-            $channelId = $channelIdField->value();
+            $channelId = new YouTubeChannelId($inputData->channelId);
 
             if (is_null($this->repository->find($channelId))) {
                 throw new BusinessRuleViolationException(sprintf('登録されていないチャンネルです "%s"', $channelId->value));
             }
 
-            $channel = new YouTubeChannel($channelId, $nameField->value());
+            $channel = new YouTubeChannel($channelId, new YouTubeChannelName($inputData->name));
 
             return new UpdateYouTubeChannelOutputData($this->repository->save($channel));
         });

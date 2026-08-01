@@ -7,7 +7,7 @@ namespace Release\Application\Admin\UseCase\UploadJacketArt;
 use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Storage\JacketArtStorageInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 
 readonly class UploadJacketArtUseCase
@@ -33,11 +33,7 @@ readonly class UploadJacketArtUseCase
         $this->authorizer->authorize(Permission::WriteRelease);
 
         $contentType = $this->normalizeContentType($inputData->contentType);
-        $errors = $this->validate($inputData->content, $contentType);
-
-        if ($errors !== []) {
-            throw new DomainValidationException($errors);
-        }
+        $this->assertValidImage($inputData->content, $contentType);
 
         $key = sprintf(
             'release-jacket-art/%s.%s',
@@ -51,34 +47,30 @@ readonly class UploadJacketArtUseCase
     }
 
     /**
-     * @return array<string, list<string>>
+     * multipart のファイル内容は契約 (JSON Schema) で検証できないため業務ルールとして検証する
+     *
+     * @throws BusinessRuleViolationException
      */
-    private function validate(string $content, string $contentType): array
+    private function assertValidImage(string $content, string $contentType): void
     {
-        $messages = [];
-
         if ($content === '') {
-            $messages[] = '画像ファイルは必須です';
+            throw new BusinessRuleViolationException('画像ファイルは必須です');
         }
 
         if (strlen($content) > self::MAX_BYTES) {
-            $messages[] = '画像ファイルは20MB以下にしてください';
+            throw new BusinessRuleViolationException('画像ファイルは20MB以下にしてください');
         }
 
         if (! array_key_exists($contentType, self::EXTENSIONS)) {
-            $messages[] = '画像ファイルはJPEG、PNG、WebPのいずれかを指定してください';
+            throw new BusinessRuleViolationException('画像ファイルはJPEG、PNG、WebPのいずれかを指定してください');
         }
 
-        if ($content !== '' && $messages === []) {
-            /** @var array{0: int, 1: int, 2: int, 3: string, mime: string, channels?: int, bits?: int}|false $imageInfo */
-            $imageInfo = @getimagesizefromstring($content);
+        /** @var array{0: int, 1: int, 2: int, 3: string, mime: string, channels?: int, bits?: int}|false $imageInfo */
+        $imageInfo = @getimagesizefromstring($content);
 
-            if ($imageInfo === false || $imageInfo['mime'] !== $contentType) {
-                $messages[] = '画像ファイルの内容が不正です';
-            }
+        if ($imageInfo === false || $imageInfo['mime'] !== $contentType) {
+            throw new BusinessRuleViolationException('画像ファイルの内容が不正です');
         }
-
-        return $messages === [] ? [] : ['jacketArt' => $messages];
     }
 
     private function normalizeContentType(string $contentType): string

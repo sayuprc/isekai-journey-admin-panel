@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Release\Domain\Models;
 
 use Song\Domain\Models\SongId;
-use Support\Domain\Exceptions\InvalidDomainException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -24,12 +24,14 @@ readonly class Track
     }
 
     /**
-     * @throws InvalidDomainException
+     * 楽曲かタイトルの一方必須は契約 (JSON Schema) で表現しない配列内ルールのため業務エラーとする
+     *
+     * @throws BusinessRuleViolationException
      */
     public static function create(?SongId $songId, ?TrackTitle $title, OrderNo $trackNo): self
     {
         if (is_null($songId) && is_null($title)) {
-            throw new InvalidDomainException('収録曲には楽曲かタイトルの少なくとも一方を指定してください。');
+            throw new BusinessRuleViolationException('収録曲には楽曲かタイトルの少なくとも一方を指定してください。');
         }
 
         return new self($songId, $title, $trackNo);

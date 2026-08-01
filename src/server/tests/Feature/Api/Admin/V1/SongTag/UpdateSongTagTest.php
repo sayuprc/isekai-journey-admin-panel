@@ -110,13 +110,11 @@ class UpdateSongTagTest extends DatabaseTestCase
                 static fn (AssertableJson $json) => $json
                     ->where('code', 'validation_failed')
                     ->whereType('message', 'string')
-                    ->has(
-                        'details',
-                        1,
-                        static fn (AssertableJson $json) => $json
-                            ->where('field', 'name')
-                            ->whereType('message', 'string'),
-                    ),
+                    ->has('details', 2)
+                    ->where('details.0.field', 'name')
+                    ->whereType('details.0.message', 'string')
+                    ->where('details.1.field', 'orderNo')
+                    ->whereType('details.1.message', 'string'),
             );
     }
 }

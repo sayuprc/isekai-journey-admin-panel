@@ -6,7 +6,7 @@ namespace Tests\Unit\Song\Domain\Models\Tags;
 
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\Tags\SongTagReferences;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\TestCase;
 
 class SongTagReferencesTest extends TestCase
@@ -38,9 +38,9 @@ class SongTagReferencesTest extends TestCase
 
         try {
             SongTagReferences::fromArray($input);
-            $this->fail('DomainValidationException が発生しませんでした');
-        } catch (DomainValidationException $e) {
-            $this->assertSame(['songTagId' => ['同じ楽曲タグを複数指定することはできません。']], $e->errors);
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException $e) {
+            $this->assertSame('同じ楽曲タグを複数指定することはできません。', $e->getMessage());
         }
     }
 

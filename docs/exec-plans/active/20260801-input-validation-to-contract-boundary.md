@@ -75,13 +75,13 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
       メッセージ変換の上 `ApiError::validationFailed` で返す。既存 TODO を解消
       (App\Http\OpenApi\BodyErrorCollector / BodyErrorFormatter / SchemaErrorMessages。
       正常系はコスト増ゼロ、通過判定は League のまま)
-- [ ] 5. server の Field / Fields 全 16 箇所を直接 `new` に置換し、
+- [x] 5. server の Field / Fields 全 16 箇所を直接 `new` に置換し、
       Support\Domain\Validation と DomainValidationException、Renderer の 422 arm を削除。
       Tracks / Media の順序重複チェックは BusinessRuleViolationException へ移す
 - [ ] 6. CLI 4 コマンド (IssueRegistrationToken / YouTubeChannel 3 種) の Field を除去し、
       InvalidDomainException がコマンドエラー表示 + 非ゼロ exit になることを確認
 - [ ] 7. admin の 422 details 消費箇所を、パス形式キーに追従させる
-- [ ] 8. テストを移行する: Feature の 422 期待値 (details キー / メッセージ)、
+- [x] 8. テストを移行する: Feature の 422 期待値 (details キー / メッセージ)、
       Fields 前提の Unit / Integration の書き換え
 - [ ] 9. .claude/rules/01-backend.md の検証規約 (Field 使い分け節を含む) を新原則で
       書き直し、code-reviewer チェックリストを追従

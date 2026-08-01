@@ -10,7 +10,7 @@ use Release\Application\Admin\UseCase\Update\UpdateUseCase;
 use Release\Domain\Models\ReleaseFormat;
 use Release\Domain\Models\ReleaseGroupType;
 use Song\Domain\Models\SongType;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -186,7 +186,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             $this->createRelease($releaseId, $releaseGroupId, '旧版名', true),
         );
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseId: $releaseId,

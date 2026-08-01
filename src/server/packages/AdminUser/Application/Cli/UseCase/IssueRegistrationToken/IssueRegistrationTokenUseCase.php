@@ -12,8 +12,6 @@ use AdminUser\Domain\Models\Role;
 use AdminUser\Domain\Services\RegistrationToken\RegistrationTokenIssueService;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 
 readonly class IssueRegistrationTokenUseCase
 {
@@ -28,15 +26,9 @@ readonly class IssueRegistrationTokenUseCase
     public function handle(IssueRegistrationTokenInputData $inputData): IssueRegistrationTokenOutputData
     {
         return $this->transaction->scope(function () use ($inputData): IssueRegistrationTokenOutputData {
-            Fields::validate(
-                $emailField = Field::of('email', static fn (): Email => new Email($inputData->email)),
-                $roleField = Field::of('role', static fn (): Role => Role::fromValue($inputData->role)),
-                $permissionsField = Field::of('permissions', static fn (): Permissions => Permissions::fromArray($inputData->permissions)),
-            );
-
-            $email = $emailField->value();
-            $role = $roleField->value();
-            $permissions = $permissionsField->value();
+            $email = new Email($inputData->email);
+            $role = Role::fromValue($inputData->role);
+            $permissions = Permissions::fromArray($inputData->permissions);
 
             if (! is_null($this->adminUserRepository->findByEmail($email))) {
                 throw new BusinessRuleViolationException(sprintf('すでに使われているメールアドレスです "%s"', $inputData->email));

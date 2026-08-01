@@ -6,7 +6,8 @@ namespace Tests\Unit\Release\Domain\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use Release\Domain\Models\Tracks;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Tests\TestCase;
 
 class TracksTest extends TestCase
@@ -32,20 +33,18 @@ class TracksTest extends TestCase
     #[Test]
     public function cannotCreateWithNeitherSongIdNorTitle(): void
     {
-        try {
-            Tracks::fromArray([
-                ['songId' => null, 'title' => null, 'trackNo' => 1],
-            ]);
-            $this->fail('DomainValidationException が発生しませんでした');
-        } catch (DomainValidationException $e) {
-            $this->assertArrayHasKey('media', $e->errors);
-        }
+        $this->expectException(BusinessRuleViolationException::class);
+        $this->expectExceptionMessage('収録曲には楽曲かタイトルの少なくとも一方を指定してください。');
+
+        Tracks::fromArray([
+            ['songId' => null, 'title' => null, 'trackNo' => 1],
+        ]);
     }
 
     #[Test]
     public function cannotCreateWithEmptyTitle(): void
     {
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = Tracks::fromArray([
             ['songId' => null, 'title' => '', 'trackNo' => 1],
@@ -55,15 +54,13 @@ class TracksTest extends TestCase
     #[Test]
     public function cannotCreateWithDuplicatedTrackNos(): void
     {
-        try {
-            Tracks::fromArray([
-                ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
-                ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
-            ]);
-            $this->fail('DomainValidationException が発生しませんでした');
-        } catch (DomainValidationException $e) {
-            $this->assertSame(['同じ曲順を複数指定することはできません。'], $e->errors['media']);
-        }
+        $this->expectException(BusinessRuleViolationException::class);
+        $this->expectExceptionMessage('同じ曲順を複数指定することはできません。');
+
+        Tracks::fromArray([
+            ['songId' => self::SONG_ID, 'title' => null, 'trackNo' => 1],
+            ['songId' => null, 'title' => '管理対象外の楽曲', 'trackNo' => 1],
+        ]);
     }
 
     #[Test]

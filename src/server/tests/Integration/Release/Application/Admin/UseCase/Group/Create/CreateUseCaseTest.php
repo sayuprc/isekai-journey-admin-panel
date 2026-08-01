@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Group\Create\CreateInputData;
 use Release\Application\Admin\UseCase\Group\Create\CreateUseCase;
 use Release\Domain\Models\ReleaseGroupType;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -61,7 +61,7 @@ class CreateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function createFailsWhenTypeIsInvalid(): void
     {
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->handle(new CreateInputData(
             title: '観測された春',

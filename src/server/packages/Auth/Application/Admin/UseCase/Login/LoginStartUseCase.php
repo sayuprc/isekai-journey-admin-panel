@@ -12,7 +12,6 @@ use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Validation\Field;
 
 readonly class LoginStartUseCase
 {
@@ -27,7 +26,7 @@ readonly class LoginStartUseCase
 
     public function handle(LoginStartInputData $inputData): LoginStartOutputData
     {
-        $email = Field::of('email', static fn (): Email => new Email($inputData->email))->validated();
+        $email = new Email($inputData->email);
 
         $adminUser = $this->adminUserRepository->findByEmail($email);
         $passkeys = is_null($adminUser)

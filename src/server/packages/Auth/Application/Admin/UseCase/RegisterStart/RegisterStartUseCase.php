@@ -15,8 +15,6 @@ use Auth\Domain\Services\PasskeyAuthenticatorInterface;
 use Auth\Domain\Services\PasskeyUserHandleGeneratorInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 
 readonly class RegisterStartUseCase
 {
@@ -34,13 +32,8 @@ readonly class RegisterStartUseCase
 
     public function handle(RegisterStartInputData $inputData): RegisterStartOutputData
     {
-        Fields::validate(
-            $emailField = Field::of('email', static fn (): Email => new Email($inputData->email)),
-            $nameField = Field::of('name', static fn (): AdminUserName => new AdminUserName($inputData->name)),
-        );
-
-        $email = $emailField->value();
-        $name = $nameField->value();
+        $email = new Email($inputData->email);
+        $name = new AdminUserName($inputData->name);
 
         $token = $this->consumeService->verify($inputData->plainToken, $email);
 

@@ -10,9 +10,6 @@ use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\Field;
-use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class SongTagIntegrityService
@@ -24,7 +21,6 @@ class SongTagIntegrityService
     }
 
     /**
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(string $name): SongTag
@@ -44,7 +40,6 @@ class SongTagIntegrityService
     }
 
     /**
-     * @throws DomainValidationException
      * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(string $songTagId, string $name, int $orderNo): SongTag
@@ -60,12 +55,6 @@ class SongTagIntegrityService
 
     private function build(string $songTagId, string $name, int $orderNo): SongTag
     {
-        Fields::validate(
-            $songTagIdField = Field::of('songTagId', static fn (): SongTagId => new SongTagId($songTagId)),
-            $nameField = Field::of('name', static fn (): SongTagName => new SongTagName($name)),
-            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
-        );
-
-        return new SongTag($songTagIdField->value(), $nameField->value(), $orderNoField->value());
+        return new SongTag(new SongTagId($songTagId), new SongTagName($name), new OrderNo($orderNo));
     }
 }
