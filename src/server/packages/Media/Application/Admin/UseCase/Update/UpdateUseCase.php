@@ -9,7 +9,6 @@ use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Media\Domain\Services\MediaIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -29,9 +28,9 @@ readonly class UpdateUseCase
 
     public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        $this->authorizer->ensure(Permission::WriteMedia);
+        $this->authorizer->authorize(Permission::WriteMedia);
 
-        $mediaId = FieldErrors::single('mediaId', static fn (): MediaId => new MediaId($inputData->mediaId));
+        $mediaId = new MediaId($inputData->mediaId);
 
         return $this->transaction->scope(function () use ($inputData, $mediaId): UpdateOutputData {
             if (is_null($this->repository->find($mediaId))) {

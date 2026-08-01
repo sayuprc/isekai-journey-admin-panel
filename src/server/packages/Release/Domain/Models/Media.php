@@ -6,7 +6,8 @@ namespace Release\Domain\Models;
 
 use Support\Collection\ImmutableCollection;
 use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -25,14 +26,18 @@ readonly class Media extends ImmutableCollection
         $seenPositions = [];
 
         foreach ($items as $item) {
-            $position = FieldErrors::single('position', static fn (): OrderNo => new OrderNo($item['position']));
-
             $normalizedName = self::normalizeName($item['name']);
-            $name = is_null($normalizedName)
-                ? null
-                : FieldErrors::single('name', static fn (): MediumName => new MediumName($normalizedName));
 
-            $medium = new Medium($position, $name, Tracks::fromArray($item['tracks']));
+            Fields::validate(
+                $positionField = Field::of('position', static fn (): OrderNo => new OrderNo($item['position'])),
+                $nameField = Field::of('name', static fn (): ?MediumName => is_null($normalizedName) ? null : new MediumName($normalizedName)),
+            );
+
+            $medium = new Medium(
+                $positionField->value(),
+                $nameField->value(),
+                Tracks::fromArray($item['tracks']),
+            );
 
             if (isset($seenPositions[$medium->position->value])) {
                 throw new DomainValidationException([

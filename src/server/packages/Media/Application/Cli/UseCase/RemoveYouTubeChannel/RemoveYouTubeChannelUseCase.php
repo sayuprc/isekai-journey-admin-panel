@@ -8,7 +8,7 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannelId;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
 
 readonly class RemoveYouTubeChannelUseCase
 {
@@ -21,7 +21,7 @@ readonly class RemoveYouTubeChannelUseCase
     public function handle(RemoveYouTubeChannelInputData $inputData): void
     {
         $this->transaction->scope(function () use ($inputData): void {
-            $channelId = FieldErrors::single('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId));
+            $channelId = Field::of('channelId', static fn (): YouTubeChannelId => new YouTubeChannelId($inputData->channelId))->validated();
 
             if (is_null($this->repository->find($channelId))) {
                 throw new BusinessRuleViolationException(sprintf('登録されていないチャンネルです "%s"', $channelId->value));

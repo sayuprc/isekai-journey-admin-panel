@@ -16,7 +16,7 @@ use Person\Domain\Services\PersonUsageCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -95,7 +95,7 @@ class DeleteUseCaseTest extends TestCase
         $this->usageChecker->shouldNotReceive('isUsed');
         $this->repository->shouldNotReceive('delete');
 
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(InvalidDomainException::class);
 
         $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
     }

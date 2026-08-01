@@ -7,7 +7,6 @@ namespace Song\Application\Admin\UseCase\Tag\Get;
 use AdminUser\Domain\Models\Permission;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -21,9 +20,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadSong);
+        $this->authorizer->authorize(Permission::ReadSong);
 
-        $songTagId = FieldErrors::single('songTagId', static fn (): SongTagId => new SongTagId($inputData->songTagId));
+        $songTagId = new SongTagId($inputData->songTagId);
 
         if (is_null($found = $this->repository->find($songTagId))) {
             throw new ResourceNotFoundException('SongTag', $songTagId->value);

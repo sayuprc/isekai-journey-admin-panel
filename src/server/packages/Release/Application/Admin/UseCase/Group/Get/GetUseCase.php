@@ -8,7 +8,6 @@ use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Query\ReleaseGroupDetailQueryServiceInterface;
 use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
 use Support\UseCase\Exceptions\ResourceNotFoundException;
 
@@ -23,9 +22,9 @@ readonly class GetUseCase
 
     public function handle(GetInputData $inputData): GetOutputData
     {
-        $this->authorizer->ensure(Permission::ReadRelease);
+        $this->authorizer->authorize(Permission::ReadRelease);
 
-        $releaseGroupId = FieldErrors::single('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($inputData->releaseGroupId));
+        $releaseGroupId = new ReleaseGroupId($inputData->releaseGroupId);
 
         if (is_null($found = $this->repository->find($releaseGroupId))) {
             throw new ResourceNotFoundException('ReleaseGroup', $releaseGroupId->value);

@@ -18,7 +18,7 @@ readonly class ListUseCase
 
     public function handle(): ListOutputData
     {
-        $this->authorizer->ensure(Permission::ReadAdminUser);
+        $this->authorizer->authorize(Permission::ReadAdminUser);
 
         return new ListOutputData($this->repository->all());
     }

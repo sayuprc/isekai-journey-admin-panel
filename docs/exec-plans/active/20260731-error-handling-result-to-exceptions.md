@@ -71,6 +71,7 @@ Result を server 全層から撤去し例外ベースへ移行する。
 - 2026-07-31: contracts の service.tsp は共有ラッパーモデル参照のため変更不要だった。エンベロープ変更は `shared/response.tsp` のみで完結
 - 2026-07-31: admin の `bun test` の 4 件の失敗 (astro:env/server 解決エラー) は本変更前から存在する既知の問題で今回の範囲外
 - 2026-07-31: 422 の担い手は `DomainValidationException` に 1 本化し、集約用の `FieldErrors` とともに `Support\Domain` に配置した (当初案の UseCase 層 ValidationFailedException は廃止)。IntegrityService などドメインサービスも同じ仕組みで field 集約するため
+- 2026-08-01: `FieldErrors` (インスタンス生成 + check + throwIfFailed の 3 段プロトコル) を `Field::of` + `Fields::validate` に置き換えた。throwIfFailed 忘れで検証失敗が握りつぶされる余地をなくし、`Field<T>::value()` で構築済み VO を型付きで取り出すことで validate 通過後の再構築 (二重 new) も廃止するため。なお固定アリティ validate1..N + 分割代入で Field 変数を消す案は検討の上、ボイラープレートと位置依存を嫌って見送った (全 field の試行結果を揃える合流点として変数受けは維持)
 - 2026-07-31: TextValueObject の NFC 正規化は create/reconstruct 削除に伴いコンストラクタへ移設。基底に `@phpstan-consistent-constructor` を付与
 - 2026-07-31: 422 の field 名は VO クラス FQCN から論理名 (title, email 等) へ変更。FQCN はクライアントが利用不能でありワイヤ改善として許容 (Stage 2「ワイヤ不変」からの軽微な逸脱)。あわせて複数 field の一括報告が有効になった
 - 2026-07-31: Authenticate/Refresh/Login/RecoveryFinish 系の失敗は UnauthenticatedException に集約 (旧実装でも最終的に 401)。RegisterStart/Finish はユーザー列挙防止のため固定メッセージの BusinessRuleViolationException へ詰め替え、旧 Presenter の squash を UseCase に移設

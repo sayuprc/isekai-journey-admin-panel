@@ -12,7 +12,8 @@ use Release\Domain\Models\ReleaseGroupType;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\DomainValidationException;
 use Support\Domain\Exceptions\InvalidDomainException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class ReleaseGroupIntegrityService
@@ -56,23 +57,21 @@ class ReleaseGroupIntegrityService
         bool $isDisplay,
         int $orderNo,
     ): ReleaseGroup {
-        $errors = new FieldErrors();
-        $releaseGroupIdVo = $errors->collect('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId));
-        $titleVo = $errors->collect('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title));
-        $typeVo = $errors->collect('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue));
-        $descriptionVo = $errors->collect('description', static fn (): Description => new Description($description));
-        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        $errors->throwIfFailed();
-
-        assert(! is_null($releaseGroupIdVo) && ! is_null($titleVo) && ! is_null($typeVo) && ! is_null($descriptionVo) && ! is_null($orderNoVo));
+        Fields::validate(
+            $releaseGroupIdField = Field::of('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($releaseGroupId)),
+            $titleField = Field::of('title', static fn (): ReleaseGroupTitle => new ReleaseGroupTitle($title)),
+            $typeField = Field::of('typeValue', fn (): ReleaseGroupType => $this->toReleaseGroupType($typeValue)),
+            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new ReleaseGroup(
-            $releaseGroupIdVo,
-            $titleVo,
-            $typeVo,
-            $descriptionVo,
+            $releaseGroupIdField->value(),
+            $titleField->value(),
+            $typeField->value(),
+            $descriptionField->value(),
             $isDisplay,
-            $orderNoVo,
+            $orderNoField->value(),
         );
     }
 

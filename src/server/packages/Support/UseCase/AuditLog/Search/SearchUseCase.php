@@ -22,7 +22,7 @@ readonly class SearchUseCase
 
     public function handle(SearchInputData $inputData): SearchOutputData
     {
-        $this->authorizer->ensure(Permission::ReadAuditLog);
+        $this->authorizer->authorize(Permission::ReadAuditLog);
 
         $criteria = new AuditLogSearchCriteria(
             $inputData->from === Arg::Optional ? new None() : new Some($inputData->from),

@@ -23,7 +23,7 @@ readonly class SearchUseCase
 
     public function handle(SearchInputData $inputData): SearchOutputData
     {
-        $this->authorizer->ensure(Permission::ReadSong);
+        $this->authorizer->authorize(Permission::ReadSong);
 
         $criteria = new SongSearchCriteria(
             $inputData->title === Arg::Optional

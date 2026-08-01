@@ -10,7 +10,6 @@ use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -31,9 +30,9 @@ readonly class UpdateUseCase
 
     public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        $this->authorizer->ensure(Permission::WriteSong);
+        $this->authorizer->authorize(Permission::WriteSong);
 
-        $songId = FieldErrors::single('songId', static fn (): SongId => new SongId($inputData->songId));
+        $songId = new SongId($inputData->songId);
 
         return $this->transaction->scope(function () use ($inputData, $songId): UpdateOutputData {
             if (is_null($this->repository->find($songId))) {

@@ -23,7 +23,7 @@ readonly class SearchUseCase
 
     public function handle(SearchInputData $inputData): SearchOutputData
     {
-        $this->authorizer->ensure(Permission::ReadMedia);
+        $this->authorizer->authorize(Permission::ReadMedia);
 
         $criteria = new MediaSearchCriteria(
             $inputData->title === Arg::Optional

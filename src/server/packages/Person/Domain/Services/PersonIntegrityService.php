@@ -11,7 +11,8 @@ use Person\Domain\Models\PersonRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class PersonIntegrityService
@@ -58,14 +59,12 @@ class PersonIntegrityService
 
     private function build(string $personId, string $name, int $orderNo): Person
     {
-        $errors = new FieldErrors();
-        $personIdVo = $errors->collect('personId', static fn (): PersonId => new PersonId($personId));
-        $nameVo = $errors->collect('name', static fn (): PersonName => new PersonName($name));
-        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        $errors->throwIfFailed();
+        Fields::validate(
+            $personIdField = Field::of('personId', static fn (): PersonId => new PersonId($personId)),
+            $nameField = Field::of('name', static fn (): PersonName => new PersonName($name)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
-        assert(! is_null($personIdVo) && ! is_null($nameVo) && ! is_null($orderNoVo));
-
-        return new Person($personIdVo, $nameVo, $orderNoVo);
+        return new Person($personIdField->value(), $nameField->value(), $orderNoField->value());
     }
 }

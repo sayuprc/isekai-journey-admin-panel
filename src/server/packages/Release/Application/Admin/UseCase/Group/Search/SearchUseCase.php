@@ -23,7 +23,7 @@ readonly class SearchUseCase
 
     public function handle(SearchInputData $inputData): SearchOutputData
     {
-        $this->authorizer->ensure(Permission::ReadRelease);
+        $this->authorizer->authorize(Permission::ReadRelease);
 
         $criteria = new ReleaseGroupSearchCriteria(
             $inputData->title === Arg::Optional

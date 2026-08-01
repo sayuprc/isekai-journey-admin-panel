@@ -20,7 +20,8 @@ use Song\Domain\Models\Title;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -123,15 +124,13 @@ class SongIntegrityService
      */
     private function buildRelations(array $persons, array $tags, array $media): array
     {
-        $errors = new FieldErrors();
-        $personsVo = $errors->collect('persons', static fn (): SongPersons => SongPersons::fromArray($persons));
-        $tagsVo = $errors->collect('tags', static fn (): SongTagReferences => SongTagReferences::fromArray($tags));
-        $mediaVo = $errors->collect('media', static fn (): SongMediaLinks => SongMediaLinks::fromArray($media));
-        $errors->throwIfFailed();
+        Fields::validate(
+            $personsField = Field::of('persons', static fn (): SongPersons => SongPersons::fromArray($persons)),
+            $tagsField = Field::of('tags', static fn (): SongTagReferences => SongTagReferences::fromArray($tags)),
+            $mediaField = Field::of('media', static fn (): SongMediaLinks => SongMediaLinks::fromArray($media)),
+        );
 
-        assert(! is_null($personsVo) && ! is_null($tagsVo) && ! is_null($mediaVo));
-
-        return [$personsVo, $tagsVo, $mediaVo];
+        return [$personsField->value(), $tagsField->value(), $mediaField->value()];
     }
 
     private function assertRelationsExist(SongPersons $persons, SongTagReferences $tags, SongMediaLinks $media): void
@@ -161,25 +160,23 @@ class SongIntegrityService
         SongTagReferences $tags,
         SongMediaLinks $media,
     ): Song {
-        $errors = new FieldErrors();
-        $songIdVo = $errors->collect('songId', static fn (): SongId => new SongId($songId));
-        $titleVo = $errors->collect('title', static fn (): Title => new Title($title));
-        $descriptionVo = $errors->collect('description', static fn (): Description => new Description($description));
-        $lyricsLinkVo = $errors->collect('lyricsLink', fn (): ?LyricsLink => $this->toLyricsLink($lyricsLink));
-        $typeVo = $errors->collect('typeValue', static fn (): SongType => SongType::fromValue($type));
-        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        $errors->throwIfFailed();
-
-        assert(! is_null($songIdVo) && ! is_null($titleVo) && ! is_null($descriptionVo) && ! is_null($typeVo) && ! is_null($orderNoVo));
+        Fields::validate(
+            $songIdField = Field::of('songId', static fn (): SongId => new SongId($songId)),
+            $titleField = Field::of('title', static fn (): Title => new Title($title)),
+            $descriptionField = Field::of('description', static fn (): Description => new Description($description)),
+            $lyricsLinkField = Field::of('lyricsLink', fn (): ?LyricsLink => $this->toLyricsLink($lyricsLink)),
+            $typeField = Field::of('typeValue', static fn (): SongType => SongType::fromValue($type)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
         return new Song(
-            $songIdVo,
-            $titleVo,
-            $descriptionVo,
-            $lyricsLinkVo,
-            $typeVo,
+            $songIdField->value(),
+            $titleField->value(),
+            $descriptionField->value(),
+            $lyricsLinkField->value(),
+            $typeField->value(),
             $isDisplay,
-            $orderNoVo,
+            $orderNoField->value(),
             $tags,
             $persons,
             $media,

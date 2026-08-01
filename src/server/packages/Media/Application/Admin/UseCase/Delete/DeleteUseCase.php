@@ -9,8 +9,6 @@ use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -28,13 +26,9 @@ readonly class DeleteUseCase
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->authorizer->ensure(Permission::WriteMedia);
+        $this->authorizer->authorize(Permission::WriteMedia);
 
-        try {
-            $mediaId = new MediaId($inputData->mediaId);
-        } catch (InvalidDomainException) {
-            throw new DomainValidationException(['mediaId' => ['IDが不正です']]);
-        }
+        $mediaId = new MediaId($inputData->mediaId);
 
         $this->transaction->scope(function () use ($mediaId): void {
             $media = $this->repository->find($mediaId);

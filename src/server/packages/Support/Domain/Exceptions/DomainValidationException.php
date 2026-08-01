@@ -7,7 +7,7 @@ namespace Support\Domain\Exceptions;
 /**
  * 複数 field にまたがるドメイン検証エラーの集約
  *
- * Application 層の FieldErrors を経由して ValidationFailedException に変換される
+ * Fields::validate による集約を経由して ValidationFailedException に変換される
  */
 class DomainValidationException extends InvalidDomainException
 {

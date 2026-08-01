@@ -9,7 +9,6 @@ use Release\Domain\Models\ReleaseGroupId;
 use Release\Domain\Models\ReleaseGroupRepositoryInterface;
 use Release\Domain\Services\ReleaseGroupIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -29,9 +28,9 @@ readonly class UpdateUseCase
 
     public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        $this->authorizer->ensure(Permission::WriteRelease);
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-        $releaseGroupId = FieldErrors::single('releaseGroupId', static fn (): ReleaseGroupId => new ReleaseGroupId($inputData->releaseGroupId));
+        $releaseGroupId = new ReleaseGroupId($inputData->releaseGroupId);
 
         return $this->transaction->scope(function () use ($inputData, $releaseGroupId): UpdateOutputData {
             if (is_null($this->repository->find($releaseGroupId))) {

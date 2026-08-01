@@ -30,7 +30,7 @@ readonly class UploadJacketArtUseCase
 
     public function handle(UploadJacketArtInputData $inputData): UploadJacketArtOutputData
     {
-        $this->authorizer->ensure(Permission::WriteRelease);
+        $this->authorizer->authorize(Permission::WriteRelease);
 
         $contentType = $this->normalizeContentType($inputData->contentType);
         $errors = $this->validate($inputData->content, $contentType);

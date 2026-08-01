@@ -10,7 +10,6 @@ use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonUsageCheckerInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Validation\FieldErrors;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
@@ -30,9 +29,9 @@ readonly class DeleteUseCase
 
     public function handle(DeleteInputData $inputData): void
     {
-        $this->authorizer->ensure(Permission::WritePerson);
+        $this->authorizer->authorize(Permission::WritePerson);
 
-        $personId = FieldErrors::single('personId', static fn (): PersonId => new PersonId($inputData->personId));
+        $personId = new PersonId($inputData->personId);
 
         $this->transaction->scope(function () use ($personId): void {
             $person = $this->repository->find($personId);

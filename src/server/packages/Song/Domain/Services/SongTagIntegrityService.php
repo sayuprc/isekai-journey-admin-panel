@@ -11,7 +11,8 @@ use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\Exceptions\DomainValidationException;
-use Support\Domain\Validation\FieldErrors;
+use Support\Domain\Validation\Field;
+use Support\Domain\Validation\Fields;
 use Support\Domain\ValueObjects\OrderNo;
 
 class SongTagIntegrityService
@@ -59,14 +60,12 @@ class SongTagIntegrityService
 
     private function build(string $songTagId, string $name, int $orderNo): SongTag
     {
-        $errors = new FieldErrors();
-        $songTagIdVo = $errors->collect('songTagId', static fn (): SongTagId => new SongTagId($songTagId));
-        $nameVo = $errors->collect('name', static fn (): SongTagName => new SongTagName($name));
-        $orderNoVo = $errors->collect('orderNo', static fn (): OrderNo => new OrderNo($orderNo));
-        $errors->throwIfFailed();
+        Fields::validate(
+            $songTagIdField = Field::of('songTagId', static fn (): SongTagId => new SongTagId($songTagId)),
+            $nameField = Field::of('name', static fn (): SongTagName => new SongTagName($name)),
+            $orderNoField = Field::of('orderNo', static fn (): OrderNo => new OrderNo($orderNo)),
+        );
 
-        assert(! is_null($songTagIdVo) && ! is_null($nameVo) && ! is_null($orderNoVo));
-
-        return new SongTag($songTagIdVo, $nameVo, $orderNoVo);
+        return new SongTag($songTagIdField->value(), $nameField->value(), $orderNoField->value());
     }
 }
