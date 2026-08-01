@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Support\UseCase\AuditLog\Search;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\AuditLog\Query\AuditLogQueryServiceInterface;
 use Support\UseCase\AuditLog\Query\AuditLogSearchCriteria;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
@@ -23,20 +20,10 @@ readonly class SearchUseCase
     ) {
     }
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    public function handle(SearchInputData $inputData): Result
+    public function handle(SearchInputData $inputData): SearchOutputData
     {
-        return $this->authorizer->require(Permission::ReadAuditLog)
-            ->andThen(fn () => $this->searchAuditLogs($inputData));
-    }
+        $this->authorizer->authorize(Permission::ReadAuditLog);
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    private function searchAuditLogs(SearchInputData $inputData): Result
-    {
         $criteria = new AuditLogSearchCriteria(
             $inputData->from === Arg::Optional ? new None() : new Some($inputData->from),
             $inputData->to === Arg::Optional ? new None() : new Some($inputData->to),
@@ -48,11 +35,9 @@ readonly class SearchUseCase
             $inputData->perPage,
         );
 
-        return new Ok(
-            new SearchOutputData(
-                $this->query->search($criteria),
-                $this->query->maxPage($criteria),
-            ),
+        return new SearchOutputData(
+            $this->query->search($criteria),
+            $this->query->maxPage($criteria),
         );
     }
 }

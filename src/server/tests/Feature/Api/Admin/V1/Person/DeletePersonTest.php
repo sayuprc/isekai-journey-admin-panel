@@ -37,7 +37,9 @@ class DeletePersonTest extends DatabaseTestCase
             ->delete(route(PersonRouteMap::Delete, 'invalid-id'))
             ->assertStatus(422)
             ->assertExactJson([
-                'errors' => [
+                'code' => 'validation_failed',
+                'message' => '入力内容に誤りがあります',
+                'details' => [
                     [
                         'field' => '',
                         'message' => '予期せぬエラー',
@@ -67,6 +69,7 @@ class DeletePersonTest extends DatabaseTestCase
             ->delete(route(PersonRouteMap::Delete, $personId))
             ->assertStatus(400)
             ->assertExactJson([
+                'code' => 'business_rule_violation',
                 'message' => 'この人物は楽曲に使用されているため削除できません',
             ]);
     }

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Group\Update\UpdateInputData;
 use Release\Application\Admin\UseCase\Group\Update\UpdateUseCase;
 use Release\Domain\Models\ReleaseGroupType;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -36,8 +36,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             orderNo: 3,
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('新タイトル', $result->unwrap()->releaseGroup->title->value);
+        $this->assertSame('新タイトル', $result->releaseGroup->title->value);
 
         $this->assertDatabaseHas('release_groups', [
             'title' => '新タイトル',
@@ -51,6 +50,8 @@ class UpdateUseCaseTest extends DatabaseTestCase
     #[Test]
     public function notFound(): void
     {
+        $this->expectException(ResourceNotFoundException::class);
+
         $result = $this->getInstance()->handle(new UpdateInputData(
             releaseGroupId: $this->generateUuid(),
             title: '新タイトル',
@@ -59,9 +60,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
             isDisplay: true,
             orderNo: 1,
         ));
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
     }
 
     private function getInstance(): UpdateUseCase

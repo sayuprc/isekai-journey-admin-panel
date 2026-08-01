@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace SiteStats\Application\Viewer\UseCase\Get;
 
-use ResultType\Ok;
-use ResultType\Result;
 use SiteStats\Application\Viewer\Query\SiteStatsQueryServiceInterface;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class GetUseCase
 {
@@ -15,13 +12,10 @@ readonly class GetUseCase
     {
     }
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    public function handle(): Result
+    public function handle(): GetOutputData
     {
         $siteStats = $this->query->get();
 
-        return new Ok(new GetOutputData($siteStats->songCount, $siteStats->releaseCount));
+        return new GetOutputData($siteStats->songCount, $siteStats->releaseCount);
     }
 }

@@ -9,8 +9,6 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
 use Song\Application\Admin\Assemble\AssembledPerson;
 use Song\Application\Admin\Assemble\AssembledSong;
 use Song\Application\Admin\Assemble\SongAssembler;
@@ -22,7 +20,7 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
@@ -78,7 +76,7 @@ class CreateUseCaseTest extends TestCase
         $this->service->shouldReceive('prepareForCreate')
             ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons, [])
             ->andReturn(
-                new Ok($song = $this->createSong(
+                $song = $this->createSong(
                     $songId,
                     $title,
                     $description,
@@ -88,7 +86,7 @@ class CreateUseCaseTest extends TestCase
                     $orderNo,
                     [],
                     $persons,
-                )),
+                ),
             )
             ->once();
 
@@ -129,8 +127,6 @@ class CreateUseCaseTest extends TestCase
                 $persons,
             ),
         );
-
-        $this->assertTrue($result->isOk());
     }
 
     #[Test]
@@ -154,8 +150,10 @@ class CreateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForCreate')
             ->with($title, $description, $lyricsLink, $typeValue, $isDisplay, [], $persons, [])
-            ->andReturn(new Err(new DomainValidationError([])))
+            ->andThrow(new BusinessRuleViolationException('検証エラー'))
             ->once();
+
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(
             new CreateInputData(
@@ -168,8 +166,6 @@ class CreateUseCaseTest extends TestCase
                 $persons,
             ),
         );
-
-        $this->assertTrue($result->isErr());
     }
 
     /**

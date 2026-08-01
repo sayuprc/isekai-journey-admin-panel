@@ -1,6 +1,6 @@
 ---
 name: php-feature-test-creator
-description: プロジェクトのフィーチャーテスト規約（API testing, Console testing, FileRepositoryTransaction）に従って、PHP のフィーチャーテストを作成します。「PHP のフィーチャーテストを作成して」や「API/コマンドのテストを書いて」と依頼された際に使用します。
+description: プロジェクトのフィーチャーテスト規約（API testing, Console testing, DatabaseTestCase）に従って、PHP のフィーチャーテストを作成します。「PHP のフィーチャーテストを作成して」や「API/コマンドのテストを書いて」と依頼された際に使用します。
 ---
 
 # PHP Feature Test Creator
@@ -17,12 +17,12 @@ description: プロジェクトのフィーチャーテスト規約（API testin
    - API は `src/server/tests/Feature/Api/`、Console は `src/server/tests/Feature/Console/` 配下に配置します。
 
 3. **テストクラスの初期化**:
-   - `declare(strict_types=1);` を使用し、`Tests\TestCase` を継承します。
-   - `use Tests\Support\FileRepositoryTransaction;` と `use Tests\Support\Domain\EntityFactory;` を含めます。
+   - `declare(strict_types=1);` を使用し、`Tests\Support\DatabaseTestCase` を継承します。
+   - `use Tests\Support\Domain\EntityFactory;` を含め、認証が必要な API は `Tests\Feature\Api\Admin\WithAuth` を使用します。
 
 4. **テストケースの記述**:
    - `#[Test]` アトリビュートを使用します。
-   - **データ準備**: `factory()` メソッドを使用してファイルリポジトリに状態を作成します。
+   - **データ準備**: `EntityFactory` で生成し、`EntityStore` のヘルパーまたはリポジトリで保存します。
    - **実行**:
      - API: `postJson()`, `getJson()` 等。
      - Console: `artisan()`。

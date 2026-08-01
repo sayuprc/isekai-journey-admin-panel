@@ -4,6 +4,28 @@ export type ClientOptions = {
     baseUrl: 'https://local.api.isekaijoucho.fan/{version}' | (string & {});
 };
 
+/**
+ * エラー分類を表す機械可読なコード
+ */
+export type ErrorCode = 'unauthenticated' | 'permission_denied' | 'not_found' | 'validation_failed' | 'business_rule_violation' | 'internal_error';
+
+/**
+ * フィールド単位のエラー詳細
+ */
+export type ErrorDetail = {
+    field: string;
+    message: string;
+};
+
+/**
+ * 全エラーステータス共通のレスポンス
+ */
+export type ErrorResponse = {
+    code: ErrorCode;
+    message: string;
+    details?: Array<ErrorDetail>;
+};
+
 export type IsekaiObservatoryViewerVersion = 'v1';
 
 export type MediaListItem = {
@@ -312,8 +334,10 @@ export type MediaServiceListMediaErrors = {
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
 };
+
+export type MediaServiceListMediaError = MediaServiceListMediaErrors[keyof MediaServiceListMediaErrors];
 
 export type MediaServiceListMediaResponses = {
     /**
@@ -338,8 +362,10 @@ export type ReleaseGroupServiceListReleaseGroupsErrors = {
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
 };
+
+export type ReleaseGroupServiceListReleaseGroupsError = ReleaseGroupServiceListReleaseGroupsErrors[keyof ReleaseGroupServiceListReleaseGroupsErrors];
 
 export type ReleaseGroupServiceListReleaseGroupsResponses = {
     /**
@@ -361,8 +387,10 @@ export type SiteStatsServiceGetSiteStatsErrors = {
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
 };
+
+export type SiteStatsServiceGetSiteStatsError = SiteStatsServiceGetSiteStatsErrors[keyof SiteStatsServiceGetSiteStatsErrors];
 
 export type SiteStatsServiceGetSiteStatsResponses = {
     /**
@@ -387,8 +415,10 @@ export type SongServiceListSongsErrors = {
     /**
      * Server error
      */
-    500: unknown;
+    500: ErrorResponse;
 };
+
+export type SongServiceListSongsError = SongServiceListSongsErrors[keyof SongServiceListSongsErrors];
 
 export type SongServiceListSongsResponses = {
     /**

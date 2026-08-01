@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Viewer\V1\Release;
 
-use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use DateTime;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Viewer\Client\Model\ReleaseFormat as OpenApiReleaseFormat;
@@ -22,28 +21,16 @@ use Release\Application\Viewer\Query\ReleaseMediumItem;
 use Release\Application\Viewer\Query\ReleaseTrackItem;
 use Release\Application\Viewer\UseCase\List\ListOutputData;
 use Release\Domain\Models\ReleaseFormat;
-use ResultType\Result;
-use Support\UseCase\Error\UseCaseError;
 
 class ListPresenter
 {
-    use ResolvesUseCaseError;
-
-    /**
-     * @param Result<ListOutputData, UseCaseError> $result
-     */
-    public function present(Result $result): JsonResponse
+    public function present(ListOutputData $outputData): JsonResponse
     {
-        [$data, $status] = $result->match(
-            fn (ListOutputData $outputData) => [
-                new ReleaseGroupListResponse(['next_cursor' => $outputData->nextCursor])
-                    ->setReleaseGroups(array_map($this->toOpenApiReleaseGroupListItem(...), $outputData->releaseGroups)),
-                200,
-            ],
-            fn (UseCaseError $error) => $this->resolveError($error),
+        return response()->json(
+            new ReleaseGroupListResponse(['next_cursor' => $outputData->nextCursor])
+                ->setReleaseGroups(array_map($this->toOpenApiReleaseGroupListItem(...), $outputData->releaseGroups)),
+            200,
         );
-
-        return response()->json($data, $status);
     }
 
     private function toOpenApiReleaseGroupListItem(ReleaseGroupListItem $releaseGroup): OpenApiReleaseGroupListItem

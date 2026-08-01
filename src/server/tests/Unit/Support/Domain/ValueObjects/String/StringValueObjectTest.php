@@ -15,10 +15,7 @@ class StringValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(string $value): void
     {
-        $result = StringObject::create($value);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame($value, $result->unwrap()->value);
+        $this->assertSame($value, new StringObject($value)->value);
     }
 
     public static function provideProperlyStoresValue(): array
@@ -40,23 +37,23 @@ class StringValueObjectTest extends TestCase
     {
         return [
             [
-                StringObject::reconstruct('1'),
-                StringObject::reconstruct('1'),
+                new StringObject('1'),
+                new StringObject('1'),
                 true,
             ],
             [
-                StringObject::reconstruct('1'),
-                StringObject::reconstruct('2'),
+                new StringObject('1'),
+                new StringObject('2'),
                 false,
             ],
             [
-                StringObject::reconstruct('1'),
-                OtherStringObject::reconstruct('1'),
+                new StringObject('1'),
+                new OtherStringObject('1'),
                 false,
             ],
             [
-                StringObject::reconstruct('1'),
-                OtherStringObject::reconstruct('2'),
+                new StringObject('1'),
+                new OtherStringObject('2'),
                 false,
             ],
         ];

@@ -7,13 +7,10 @@ namespace Person\Application\Admin\UseCase\Search;
 use AdminUser\Domain\Models\Permission;
 use Person\Domain\Criteria\PersonSearchCriteria;
 use Person\Domain\Models\PersonRepositoryInterface;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
@@ -23,20 +20,10 @@ readonly class SearchUseCase
     ) {
     }
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    public function handle(SearchInputData $inputData): Result
+    public function handle(SearchInputData $inputData): SearchOutputData
     {
-        return $this->authorizer->require(Permission::ReadPerson)
-            ->andThen(fn () => $this->searchPersons($inputData));
-    }
+        $this->authorizer->authorize(Permission::ReadPerson);
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    private function searchPersons(SearchInputData $inputData): Result
-    {
         $criteria = new PersonSearchCriteria(
             $inputData->name === Arg::Optional
                 ? new None()
@@ -47,11 +34,9 @@ readonly class SearchUseCase
             $inputData->perPage,
         );
 
-        return new Ok(
-            new SearchOutputData(
-                $this->repository->search($criteria),
-                $this->repository->maxPage($criteria),
-            ),
+        return new SearchOutputData(
+            $this->repository->search($criteria),
+            $this->repository->maxPage($criteria),
         );
     }
 }

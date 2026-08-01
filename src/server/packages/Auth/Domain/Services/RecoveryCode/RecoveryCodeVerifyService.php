@@ -7,12 +7,7 @@ namespace Auth\Domain\Services\RecoveryCode;
 use AdminUser\Domain\Models\AdminUserId;
 use Auth\Domain\Models\RecoveryCode\RecoveryCode;
 use Auth\Domain\Models\RecoveryCode\RecoveryCodeRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use SensitiveParameter;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
 
 class RecoveryCodeVerifyService
 {
@@ -23,9 +18,9 @@ class RecoveryCodeVerifyService
     }
 
     /**
-     * @return Result<RecoveryCode, DomainError>
+     * 平文コードに一致する利用可能なリカバリーコードを返す。なければ null
      */
-    public function verify(#[SensitiveParameter] string $plainCode, AdminUserId $adminUserId): Result
+    public function verify(#[SensitiveParameter] string $plainCode, AdminUserId $adminUserId): ?RecoveryCode
     {
         $codes = $this->repository->findUnusedByAdminUserIdForUpdate($adminUserId);
 
@@ -35,12 +30,12 @@ class RecoveryCodeVerifyService
             }
 
             if (! $code->isAvailable()) {
-                return new Err(new BusinessRuleViolationError('recovery_code_not_found'));
+                return null;
             }
 
-            return new Ok($code);
+            return $code;
         }
 
-        return new Err(new BusinessRuleViolationError('recovery_code_not_found'));
+        return null;
     }
 }

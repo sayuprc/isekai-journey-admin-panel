@@ -9,6 +9,7 @@ use Person\Application\Admin\UseCase\Delete\DeleteInputData;
 use Person\Application\Admin\UseCase\Delete\DeleteUseCase;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Domain\Models\SongType;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Tests\Support\Concerns\AssertsAuditLog;
@@ -31,7 +32,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($uuid));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('persons')->get()->all());
 
         $this->assertAuditLogCount(1);
@@ -56,12 +56,14 @@ class DeleteUseCaseTest extends DatabaseTestCase
             [['personId' => $personId, 'role' => 1, 'orderNo' => 1]],
         ));
 
-        $result = $this->getInstance()->handle(new DeleteInputData($personId));
+        try {
+            $this->getInstance()->handle(new DeleteInputData($personId));
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException $e) {
+            $this->assertSame('この人物は楽曲に使用されているため削除できません', $e->getMessage());
+        }
 
-        $this->assertTrue($result->isErr());
-        $this->assertSame('この人物は楽曲に使用されているため削除できません', $result->unwrapErr()->message);
         $this->assertCount(1, DB::table('persons')->get()->all());
-
         $this->assertAuditLogCount(0);
     }
 

@@ -8,13 +8,10 @@ use AdminUser\Domain\Models\Permission;
 use Release\Application\Admin\Query\ReleaseGroupSearchQueryServiceInterface;
 use Release\Domain\Criteria\ReleaseGroupSearchCriteria;
 use Release\Domain\Models\ReleaseGroupType;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Optional\Arg;
 use Support\Optional\None;
 use Support\Optional\Some;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class SearchUseCase
 {
@@ -24,20 +21,10 @@ readonly class SearchUseCase
     ) {
     }
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    public function handle(SearchInputData $inputData): Result
+    public function handle(SearchInputData $inputData): SearchOutputData
     {
-        return $this->authorizer->require(Permission::ReadRelease)
-            ->andThen(fn () => $this->searchReleaseGroups($inputData));
-    }
+        $this->authorizer->authorize(Permission::ReadRelease);
 
-    /**
-     * @return Result<SearchOutputData, UseCaseError>
-     */
-    private function searchReleaseGroups(SearchInputData $inputData): Result
-    {
         $criteria = new ReleaseGroupSearchCriteria(
             $inputData->title === Arg::Optional
                 ? new None()
@@ -52,9 +39,9 @@ readonly class SearchUseCase
             $inputData->perPage,
         );
 
-        return new Ok(new SearchOutputData(
+        return new SearchOutputData(
             $this->query->search($criteria),
             $this->query->maxPage($criteria),
-        ));
+        );
     }
 }

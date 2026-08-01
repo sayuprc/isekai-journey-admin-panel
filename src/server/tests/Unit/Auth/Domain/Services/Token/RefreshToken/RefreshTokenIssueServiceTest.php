@@ -80,15 +80,12 @@ class RefreshTokenIssueServiceTest extends TestCase
             ConsumptionStatus::Unused,
         );
 
-        $result = $this->getInstance()->issue($adminUserId);
+        $issued = $this->getInstance()->issue($adminUserId);
 
-        $this->assertTrue($result->isOk());
-        $unwrapped = $result->unwrap();
-        $this->assertIsArray($unwrapped);
-        $this->assertArrayHasKey('token', $unwrapped);
-        $this->assertArrayHasKey('plainToken', $unwrapped);
-        $this->assertEquals($expectedRefreshToken, $unwrapped['token']);
-        $this->assertSame($generatedToken, $unwrapped['plainToken']);
+        $this->assertArrayHasKey('token', $issued);
+        $this->assertArrayHasKey('plainToken', $issued);
+        $this->assertEquals($expectedRefreshToken, $issued['token']);
+        $this->assertSame($generatedToken, $issued['plainToken']);
     }
 
     private function getInstance(): RefreshTokenIssueService

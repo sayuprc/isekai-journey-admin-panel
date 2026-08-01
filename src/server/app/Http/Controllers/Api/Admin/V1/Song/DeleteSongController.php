@@ -20,6 +20,8 @@ class DeleteSongController extends Controller
 
     public function handle(string $songId): JsonResponse
     {
-        return $this->presenter->present($this->useCase->handle(new DeleteInputData($songId)));
+        $this->useCase->handle(new DeleteInputData($songId));
+
+        return $this->presenter->present();
     }
 }

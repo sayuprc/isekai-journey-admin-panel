@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Song\Domain\Models\Tags;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Support\Collection\ImmutableCollection;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 
 /**
  * @extends ImmutableCollection<int, SongTagReference>
@@ -19,39 +16,25 @@ readonly class SongTagReferences extends ImmutableCollection
     /**
      * @param list<array{songTagId: string}> $items
      *
-     * @return Result<self, DomainValidationError>
+     * @throws BusinessRuleViolationException
      */
-    public static function fromArray(array $items): Result
+    public static function fromArray(array $items): self
     {
         $tags = [];
         $seen = [];
 
         foreach ($items as $item) {
-            $result = SongTagId::create($item['songTagId'])
-                ->map(static fn (SongTagId $songTagId) => new SongTagReference($songTagId));
-
-            if ($result->isErr()) {
-                $messages = [];
-                $error = $result->unwrapErr();
-                $messages[$error->field] = [];
-                $messages[$error->field][] = $error->message;
-
-                return new Err(new DomainValidationError($messages));
-            }
-
-            $tag = $result->unwrap();
+            $tag = new SongTagReference(new SongTagId($item['songTagId']));
 
             if (isset($seen[$tag->songTagId->value])) {
-                return new Err(new DomainValidationError([
-                    'songTagId' => ['同じ楽曲タグを複数指定することはできません。'],
-                ]));
+                throw new BusinessRuleViolationException('同じ楽曲タグを複数指定することはできません。');
             }
 
             $seen[$tag->songTagId->value] = true;
             $tags[] = $tag;
         }
 
-        return new Ok(new self($tags));
+        return new self($tags);
     }
 
     /**

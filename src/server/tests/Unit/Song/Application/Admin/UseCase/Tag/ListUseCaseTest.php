@@ -14,8 +14,8 @@ use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Song\Application\Admin\UseCase\Tag\List\ListUseCase;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -45,9 +45,7 @@ class ListUseCaseTest extends TestCase
 
         $result = $this->getInstance($this->privilegedContext())->handle();
 
-        $this->assertTrue($result->isOk());
-
-        $tags = $result->unwrap()->tags;
+        $tags = $result->tags;
 
         $this->assertCount(2, $tags);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $tags[0]->songTagId->value);
@@ -61,10 +59,9 @@ class ListUseCaseTest extends TestCase
     #[Test]
     public function unauthenticated(): void
     {
-        $result = $this->getInstance($this->app->make(AuthContext::class))->handle();
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertFalse($result->isOk());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $result = $this->getInstance($this->app->make(AuthContext::class))->handle();
     }
 
     #[Test]
@@ -80,10 +77,9 @@ class ListUseCaseTest extends TestCase
             [],
         ));
 
-        $result = $this->getInstance($context)->handle();
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertFalse($result->isOk());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = $this->getInstance($context)->handle();
     }
 
     private function getInstance(AuthContext $context): ListUseCase

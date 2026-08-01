@@ -18,9 +18,9 @@ readonly class Person
     public static function reconstruct(string $personId, string $name, int $orderNo): self
     {
         return new self(
-            PersonId::reconstruct($personId),
-            PersonName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
+            new PersonId($personId),
+            new PersonName($name),
+            new OrderNo($orderNo),
         );
     }
 

@@ -17,7 +17,7 @@ use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\AuditLog\Search\SearchInputData;
 use Support\UseCase\AuditLog\Search\SearchUseCase;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -38,9 +38,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(3, $output->auditLogs);
         $this->assertSame(AuditAction::Delete, $output->auditLogs[0]->action);
@@ -64,9 +62,7 @@ class SearchUseCaseTest extends DatabaseTestCase
             to: new DateTimeImmutable('2026-04-02 23:59:59'),
         ));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(1, $output->auditLogs);
         $this->assertSame(AuditAction::Update, $output->auditLogs[0]->action);
@@ -86,9 +82,7 @@ class SearchUseCaseTest extends DatabaseTestCase
             targetType: AuditTargetType::Song,
         ));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(1, $output->auditLogs);
         $this->assertSame(AuditAction::Update, $output->auditLogs[0]->action);
@@ -107,30 +101,25 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->insertAuditLog($otherActorId, AuditAction::Update, AuditTargetType::Song, $targetId, new DateTimeImmutable('2026-04-03 10:00:00'));
 
         $resultByTarget = $this->getInstance()->handle(new SearchInputData(targetId: $targetId));
-        $this->assertTrue($resultByTarget->isOk());
-        $this->assertCount(2, $resultByTarget->unwrap()->auditLogs);
+        $this->assertCount(2, $resultByTarget->auditLogs);
 
         // 部分一致でヒット（'検索' を含むのは '検索テストユーザーB' のみ）
         $resultByActor = $this->getInstance()->handle(new SearchInputData(adminUserName: '検索'));
-        $this->assertTrue($resultByActor->isOk());
-        $this->assertCount(1, $resultByActor->unwrap()->auditLogs);
-        $this->assertSame($targetId, $resultByActor->unwrap()->auditLogs[0]->targetId);
-        $this->assertSame('検索テストユーザーB', $resultByActor->unwrap()->auditLogs[0]->adminUserName);
+        $this->assertCount(1, $resultByActor->auditLogs);
+        $this->assertSame($targetId, $resultByActor->auditLogs[0]->targetId);
+        $this->assertSame('検索テストユーザーB', $resultByActor->auditLogs[0]->adminUserName);
 
         // 名前完全一致
         $resultExact = $this->getInstance()->handle(new SearchInputData(adminUserName: '監査テストユーザーA'));
-        $this->assertTrue($resultExact->isOk());
-        $this->assertCount(2, $resultExact->unwrap()->auditLogs);
+        $this->assertCount(2, $resultExact->auditLogs);
 
         // 中間一致でもヒットする（'テストユーザーA' は '監査テストユーザーA' に含まれる）
         $resultSuffix = $this->getInstance()->handle(new SearchInputData(adminUserName: 'テストユーザーA'));
-        $this->assertTrue($resultSuffix->isOk());
-        $this->assertCount(2, $resultSuffix->unwrap()->auditLogs);
+        $this->assertCount(2, $resultSuffix->auditLogs);
 
         // 不一致
         $resultNoHit = $this->getInstance()->handle(new SearchInputData(adminUserName: '存在しない'));
-        $this->assertTrue($resultNoHit->isOk());
-        $this->assertCount(0, $resultNoHit->unwrap()->auditLogs);
+        $this->assertCount(0, $resultNoHit->auditLogs);
     }
 
     #[Test]
@@ -145,15 +134,13 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         // '%' を素のメタ文字として扱うと全件ヒットしてしまう。エスケープされていればリテラル '%' を含む名前のみヒット
         $resultPercent = $this->getInstance()->handle(new SearchInputData(adminUserName: '%'));
-        $this->assertTrue($resultPercent->isOk());
-        $this->assertCount(1, $resultPercent->unwrap()->auditLogs, '"%" がメタ文字として解釈されないこと');
-        $this->assertSame('100%担当', $resultPercent->unwrap()->auditLogs[0]->adminUserName);
+        $this->assertCount(1, $resultPercent->auditLogs, '"%" がメタ文字として解釈されないこと');
+        $this->assertSame('100%担当', $resultPercent->auditLogs[0]->adminUserName);
 
         // 名前内の '%' をリテラルとして扱うので '100%' で部分一致がヒット
         $resultLiteral = $this->getInstance()->handle(new SearchInputData(adminUserName: '100%'));
-        $this->assertTrue($resultLiteral->isOk());
-        $this->assertCount(1, $resultLiteral->unwrap()->auditLogs);
-        $this->assertSame('100%担当', $resultLiteral->unwrap()->auditLogs[0]->adminUserName);
+        $this->assertCount(1, $resultLiteral->auditLogs);
+        $this->assertSame('100%担当', $resultLiteral->auditLogs[0]->adminUserName);
     }
 
     #[Test]
@@ -172,11 +159,11 @@ class SearchUseCaseTest extends DatabaseTestCase
             );
         }
 
-        $page1 = $this->getInstance()->handle(new SearchInputData(page: 1, perPage: PerPage::TwentyFive))->unwrap();
+        $page1 = $this->getInstance()->handle(new SearchInputData(page: 1, perPage: PerPage::TwentyFive));
         $this->assertCount(25, $page1->auditLogs);
         $this->assertSame(2, $page1->maxPage);
 
-        $page2 = $this->getInstance()->handle(new SearchInputData(page: 2, perPage: PerPage::TwentyFive))->unwrap();
+        $page2 = $this->getInstance()->handle(new SearchInputData(page: 2, perPage: PerPage::TwentyFive));
         $this->assertCount($totalCount - 25, $page2->auditLogs);
         $this->assertSame(2, $page2->maxPage);
     }
@@ -197,10 +184,9 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $useCase = $this->app->make(SearchUseCase::class);
 
-        $result = $useCase->handle(new SearchInputData());
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = $useCase->handle(new SearchInputData());
     }
 
     private function getInstance(): SearchUseCase

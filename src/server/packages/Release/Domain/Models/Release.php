@@ -40,14 +40,14 @@ readonly class Release
         array $media,
     ): self {
         return new self(
-            ReleaseId::reconstruct($releaseId),
-            ReleaseGroupId::reconstruct($releaseGroupId),
-            ReleaseName::reconstruct($name),
-            ReleasedOn::reconstruct($releasedOn),
-            Description::reconstruct($description),
-            is_null($jacketArtUrl) ? null : JacketArtUrl::reconstruct($jacketArtUrl),
+            new ReleaseId($releaseId),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseName($name),
+            new ReleasedOn($releasedOn),
+            new Description($description),
+            is_null($jacketArtUrl) ? null : new JacketArtUrl($jacketArtUrl),
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
             ReleaseFormats::reconstruct($formats),
             Media::reconstruct($media),
         );

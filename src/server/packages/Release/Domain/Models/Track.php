@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Release\Domain\Models;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\SongId;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -27,23 +24,25 @@ readonly class Track
     }
 
     /**
-     * @return Result<self, EntityRuleViolationError>
+     * 楽曲かタイトルの一方必須は契約 (JSON Schema) で表現しない配列内ルールのため業務エラーとする
+     *
+     * @throws BusinessRuleViolationException
      */
-    public static function create(?SongId $songId, ?TrackTitle $title, OrderNo $trackNo): Result
+    public static function create(?SongId $songId, ?TrackTitle $title, OrderNo $trackNo): self
     {
         if (is_null($songId) && is_null($title)) {
-            return new Err(new EntityRuleViolationError('media', '収録曲には楽曲かタイトルの少なくとも一方を指定してください。'));
+            throw new BusinessRuleViolationException('収録曲には楽曲かタイトルの少なくとも一方を指定してください。');
         }
 
-        return new Ok(new self($songId, $title, $trackNo));
+        return new self($songId, $title, $trackNo);
     }
 
     public static function reconstruct(?string $songId, ?string $title, int $trackNo): self
     {
         return new self(
-            is_null($songId) ? null : SongId::reconstruct($songId),
-            is_null($title) ? null : TrackTitle::reconstruct($title),
-            OrderNo::reconstruct($trackNo),
+            is_null($songId) ? null : new SongId($songId),
+            is_null($title) ? null : new TrackTitle($title),
+            new OrderNo($trackNo),
         );
     }
 

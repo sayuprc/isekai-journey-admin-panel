@@ -60,8 +60,6 @@ class DeleteUseCaseTest extends TestCase
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData($songId));
-
-        $this->assertTrue($result->isOk());
     }
 
     private function getInstance(): DeleteUseCase

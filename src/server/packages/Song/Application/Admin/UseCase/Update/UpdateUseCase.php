@@ -5,27 +5,16 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Application\Admin\Assemble\SongAssembler;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class UpdateUseCase
 {
@@ -39,64 +28,40 @@ readonly class UpdateUseCase
     ) {
     }
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    public function handle(UpdateInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        return $this->authorizer->require(Permission::WriteSong)
-            ->andThen(fn () => $this->updateSong($inputData));
-    }
+        $this->authorizer->authorize(Permission::WriteSong);
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    private function updateSong(UpdateInputData $inputData): Result
-    {
-        return SongId::create($inputData->songId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(fn (SongId $songId): Result => $this->transaction->scope(function () use ($inputData, $songId): Result {
-                if (is_null($this->repository->find($songId))) {
-                    return new Err(new NotFoundError('Song', $songId->value));
-                }
+        $songId = new SongId($inputData->songId);
 
-                $result = $this->service->prepareForUpdate(
-                    $inputData->songId,
-                    $inputData->title,
-                    $inputData->description,
-                    $inputData->lyricsLink,
-                    $inputData->typeValue,
-                    $inputData->isDisplay,
-                    $inputData->orderNo,
-                    $inputData->tags,
-                    $inputData->persons,
-                    $inputData->media,
-                );
+        return $this->transaction->scope(function () use ($inputData, $songId): UpdateOutputData {
+            if (is_null($this->repository->find($songId))) {
+                throw new ResourceNotFoundException('Song', $songId->value);
+            }
 
-                if ($result->isErr()) {
-                    return new Err($this->handleError($result->unwrapErr()));
-                }
+            $song = $this->service->prepareForUpdate(
+                $inputData->songId,
+                $inputData->title,
+                $inputData->description,
+                $inputData->lyricsLink,
+                $inputData->typeValue,
+                $inputData->isDisplay,
+                $inputData->orderNo,
+                $inputData->tags,
+                $inputData->persons,
+                $inputData->media,
+            );
 
-                $song = $this->repository->save($result->unwrap());
+            $song = $this->repository->save($song);
 
-                $this->recorder->record(
-                    AuditAction::Update,
-                    AuditTargetType::Song,
-                    $song->songId,
-                    $song->toArray(),
-                );
+            $this->recorder->record(
+                AuditAction::Update,
+                AuditTargetType::Song,
+                $song->songId,
+                $song->toArray(),
+            );
 
-                return new Ok(new UpdateOutputData($this->assembler->assemble($song)));
-            }));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+            return new UpdateOutputData($this->assembler->assemble($song));
+        });
     }
 }

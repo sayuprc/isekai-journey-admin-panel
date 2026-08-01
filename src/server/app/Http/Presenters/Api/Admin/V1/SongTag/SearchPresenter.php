@@ -4,36 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Presenters\Api\Admin\V1\SongTag;
 
-use App\Http\Presenters\Api\Support\ResolvesUseCaseError;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Admin\Client\Model\SongTagSearchResponse;
-use ResultType\Result;
 use Song\Application\Admin\UseCase\Tag\Search\SearchOutputData;
-use Support\UseCase\Error\UseCaseError;
 
 class SearchPresenter
 {
-    use ResolvesUseCaseError;
-
     public function __construct(private readonly Converter $converter)
     {
     }
 
-    /**
-     * @param Result<SearchOutputData, UseCaseError> $result
-     */
-    public function present(Result $result): JsonResponse
+    public function present(SearchOutputData $outputData): JsonResponse
     {
-        [$data, $status] = $result->match(
-            fn (SearchOutputData $outputData) => [
-                new SongTagSearchResponse()
-                    ->setTags(array_map($this->converter->toOpenApiSongTag(...), $outputData->tags))
-                    ->setMaxPage($outputData->maxPage),
-                200,
-            ],
-            fn (UseCaseError $error) => $this->resolveError($error),
+        return response()->json(
+            new SongTagSearchResponse()
+                ->setTags(array_map($this->converter->toOpenApiSongTag(...), $outputData->tags))
+                ->setMaxPage($outputData->maxPage),
+            200,
         );
-
-        return response()->json($data, $status);
     }
 }

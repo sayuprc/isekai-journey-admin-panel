@@ -6,6 +6,7 @@ namespace Tests\Unit\Support\Domain\ValueObjects\Numeric;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\Domain\ValueObjects\Numeric\PositiveIntegerValueObject;
 use Tests\TestCase;
 
@@ -14,20 +15,17 @@ class PositiveIntegerValueObjectTest extends TestCase
     #[Test]
     public function properlyStoresValue(): void
     {
-        $result = PositiveIntegerObject::create(1);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame(1, $result->unwrap()->value);
+        $this->assertSame(1, new PositiveIntegerObject(1)->value);
     }
 
     #[Test]
     #[DataProvider('provideThrowExceptionWhenInvalidValue')]
     public function throwExceptionWhenInvalidValue(int $value): void
     {
-        $result = PositiveIntegerObject::create($value);
+        $this->expectException(InvalidDomainException::class);
+        $this->expectExceptionMessage('正の整数ではありません: ' . $value);
 
-        $this->assertTrue($result->isErr());
-        $this->assertSame('正の整数ではありません: ' . $value, $result->unwrapErr()->message);
+        new PositiveIntegerObject($value);
     }
 
     public static function provideThrowExceptionWhenInvalidValue(): array
@@ -49,23 +47,23 @@ class PositiveIntegerValueObjectTest extends TestCase
     {
         return [
             [
-                PositiveIntegerObject::reconstruct(1),
-                PositiveIntegerObject::reconstruct(1),
+                new PositiveIntegerObject(1),
+                new PositiveIntegerObject(1),
                 true,
             ],
             [
-                PositiveIntegerObject::reconstruct(1),
-                PositiveIntegerObject::reconstruct(2),
+                new PositiveIntegerObject(1),
+                new PositiveIntegerObject(2),
                 false,
             ],
             [
-                PositiveIntegerObject::reconstruct(1),
-                OtherPositiveIntegerObject::reconstruct(1),
+                new PositiveIntegerObject(1),
+                new OtherPositiveIntegerObject(1),
                 false,
             ],
             [
-                PositiveIntegerObject::reconstruct(1),
-                OtherPositiveIntegerObject::reconstruct(2),
+                new PositiveIntegerObject(1),
+                new OtherPositiveIntegerObject(2),
                 false,
             ],
         ];

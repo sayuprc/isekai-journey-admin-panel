@@ -66,6 +66,7 @@ class DeleteMediaTest extends DatabaseTestCase
             ->delete(route(MediaRouteMap::Delete, $mediaId))
             ->assertStatus(400)
             ->assertExactJson([
+                'code' => 'business_rule_violation',
                 'message' => 'このメディアは楽曲に使用されているため削除できません',
             ]);
 

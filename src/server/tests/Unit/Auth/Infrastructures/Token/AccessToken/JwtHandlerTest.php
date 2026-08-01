@@ -86,12 +86,9 @@ class JwtHandlerTest extends TestCase
             ))
             ->once();
 
-        $result = $handler->verify($jwt);
+        $payload = $handler->verify($jwt);
 
-        $this->assertTrue($result->isOk());
-
-        $payload = $result->unwrap();
-
+        $this->assertNotNull($payload);
         $this->assertSame('iss', $payload->iss);
         $this->assertSame($now->getTimestamp(), $payload->iat);
         $this->assertSame($afterAHour->getTimestamp(), $payload->exp);
@@ -100,7 +97,7 @@ class JwtHandlerTest extends TestCase
     }
 
     #[Test]
-    public function throwExceptionWhenExpireToken(): void
+    public function returnsNullWhenExpireToken(): void
     {
         $handler = $this->getInstance(new JwtConfig('HS256', str_repeat('k', 256), 'iss'));
 
@@ -117,9 +114,45 @@ class JwtHandlerTest extends TestCase
             ->andReturn(new DateTimeImmutable())
             ->once();
 
-        $result = $handler->verify($jwt);
+        $this->assertNull($handler->verify($jwt));
+    }
 
-        $this->assertFalse($result->isOk());
+    #[Test]
+    public function returnsNullWhenSignatureIsInvalid(): void
+    {
+        $now = new DateTimeImmutable();
+
+        $handler = $this->getInstance(new JwtConfig('HS256', str_repeat('k', 256), 'iss'));
+
+        $jwt = $handler->generate(new AccessTokenPayload(
+            iss: 'iss',
+            iat: $now->getTimestamp(),
+            exp: $now->modify('+1 hours')->getTimestamp(),
+            nbf: $now->getTimestamp(),
+            jti: 'jti',
+        ));
+
+        $otherKeyHandler = $this->getInstance(new JwtConfig('HS256', str_repeat('x', 256), 'iss'));
+
+        $this->clock->shouldReceive('now')
+            ->with()
+            ->andReturn($now)
+            ->once();
+
+        $this->assertNull($otherKeyHandler->verify($jwt));
+    }
+
+    #[Test]
+    public function returnsNullWhenJwtIsMalformed(): void
+    {
+        $handler = $this->getInstance(new JwtConfig('HS256', str_repeat('k', 256), 'iss'));
+
+        $this->clock->shouldReceive('now')
+            ->with()
+            ->andReturn(new DateTimeImmutable())
+            ->once();
+
+        $this->assertNull($handler->verify('not-a-jwt'));
     }
 
     private function getInstance(JwtConfig $config): JwtHandler

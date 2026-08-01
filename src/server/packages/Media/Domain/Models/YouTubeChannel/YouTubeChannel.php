@@ -15,8 +15,8 @@ readonly class YouTubeChannel
     public static function reconstruct(string $channelId, string $name): self
     {
         return new self(
-            YouTubeChannelId::reconstruct($channelId),
-            YouTubeChannelName::reconstruct($name),
+            new YouTubeChannelId($channelId),
+            new YouTubeChannelName($name),
         );
     }
 

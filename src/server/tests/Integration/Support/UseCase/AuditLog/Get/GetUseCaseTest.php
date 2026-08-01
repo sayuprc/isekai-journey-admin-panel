@@ -15,8 +15,8 @@ use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\AuditLog\Get\GetInputData;
 use Support\UseCase\AuditLog\Get\GetUseCase;
-use Support\UseCase\Error\AuthorizationError;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
 use Tests\Support\Domain\EntityStore;
@@ -40,9 +40,7 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($auditLogId));
 
-        $this->assertTrue($result->isOk());
-
-        $detail = $result->unwrap()->auditLog;
+        $detail = $result->auditLog;
 
         $this->assertSame($auditLogId, $detail->auditLogId);
         $this->assertSame($actorId, $detail->adminUserId);
@@ -58,13 +56,9 @@ class GetUseCaseTest extends DatabaseTestCase
     {
         $auditLogId = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(new GetInputData($auditLogId));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(NotFoundError::class, $error);
-        $this->assertSame('監査ログ', $error->resourceName);
-        $this->assertSame($auditLogId, $error->identifier);
+        $result = $this->getInstance()->handle(new GetInputData($auditLogId));
     }
 
     #[Test]
@@ -83,10 +77,9 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $useCase = $this->app->make(GetUseCase::class);
 
-        $result = $useCase->handle(new GetInputData($this->generateUuid()));
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = $useCase->handle(new GetInputData($this->generateUuid()));
     }
 
     private function getInstance(): GetUseCase

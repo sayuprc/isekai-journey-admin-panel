@@ -6,6 +6,7 @@ namespace Tests\Integration\Auth\Application\Admin\UseCase;
 
 use Auth\Application\Admin\UseCase\Authenticate\AuthenticateInputData;
 use Auth\Application\Admin\UseCase\Authenticate\AuthenticateUseCase;
+use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Token\RefreshToken\ConsumptionStatus;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Infrastructures\Token\AccessToken\JwtHandler;
@@ -54,9 +55,9 @@ class AuthenticateUseCaseTest extends DatabaseTestCase
         $this->storeAdminUsers($user);
         $this->storeRefreshTokens($refreshToken);
 
-        $result = $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
+        $this->getInstance()->handle(new AuthenticateInputData($accessToken->jwt->value));
 
-        $this->assertTrue($result->isOk());
+        $this->assertNotNull($this->app->make(AuthContext::class)->get());
     }
 
     private function createJwt(AccessTokenPayload $payload): string

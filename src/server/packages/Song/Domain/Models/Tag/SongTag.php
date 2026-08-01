@@ -18,9 +18,9 @@ readonly class SongTag
     public static function reconstruct(string $songTagId, string $name, int $orderNo): self
     {
         return new self(
-            SongTagId::reconstruct($songTagId),
-            SongTagName::reconstruct($name),
-            OrderNo::reconstruct($orderNo),
+            new SongTagId($songTagId),
+            new SongTagName($name),
+            new OrderNo($orderNo),
         );
     }
 

@@ -11,16 +11,7 @@ use Auth\Domain\Models\PasskeyCeremonyState;
 use Auth\Domain\Models\PasskeyCeremonyStoreInterface;
 use Auth\Domain\Models\PasskeyCeremonyType;
 use Auth\Domain\Services\PasskeyAuthenticatorInterface;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class LoginStartUseCase
 {
@@ -33,18 +24,10 @@ readonly class LoginStartUseCase
     ) {
     }
 
-    /**
-     * @return Result<LoginStartOutputData, UseCaseError>
-     */
-    public function handle(LoginStartInputData $inputData): Result
+    public function handle(LoginStartInputData $inputData): LoginStartOutputData
     {
-        $emailResult = Email::create($inputData->email);
+        $email = new Email($inputData->email);
 
-        if ($emailResult->isErr()) {
-            return new Err($this->handleError($emailResult->unwrapErr()));
-        }
-
-        $email = $emailResult->unwrap();
         $adminUser = $this->adminUserRepository->findByEmail($email);
         $passkeys = is_null($adminUser)
             ? []
@@ -69,15 +52,6 @@ readonly class LoginStartUseCase
             $startResult->optionsJson,
         ));
 
-        return new Ok(new LoginStartOutputData($authCeremonyId, $startResult->publicKey));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+        return new LoginStartOutputData($authCeremonyId, $startResult->publicKey);
     }
 }

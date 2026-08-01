@@ -19,8 +19,8 @@
     "laravel/tinker": "^2.10",
     "league/openapi-psr7-validator": "^0.24.0",
     "nyholm/psr7": "^1.8",
+    "opis/json-schema": "^2.6",
     "sayuprc/date-type": "^0.2.0",
-    "sayuprc/result-type": "^0.5",
     "symfony/psr-http-message-bridge": "^8.0",
     "web-auth/webauthn-lib": "^5.2.5"
   },

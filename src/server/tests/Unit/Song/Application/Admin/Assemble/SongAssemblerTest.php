@@ -75,9 +75,9 @@ class SongAssemblerTest extends TestCase
                 return $idValues === $expectedIds;
             })
             ->andReturn([
-                new Person(PersonId::reconstruct($lyricistId), PersonName::reconstruct('テスト作詞者'), OrderNo::reconstruct(1)),
-                new Person(PersonId::reconstruct($composerId), PersonName::reconstruct('テスト作曲者'), OrderNo::reconstruct(1)),
-                new Person(PersonId::reconstruct($arrangerId), PersonName::reconstruct('テスト編曲者'), OrderNo::reconstruct(1)),
+                new Person(new PersonId($lyricistId), new PersonName('テスト作詞者'), new OrderNo(1)),
+                new Person(new PersonId($composerId), new PersonName('テスト作曲者'), new OrderNo(1)),
+                new Person(new PersonId($arrangerId), new PersonName('テスト編曲者'), new OrderNo(1)),
             ])
             ->once();
 

@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Song\Domain\Services;
 
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Tag\SongTag;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagName;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 class SongTagIntegrityService
@@ -27,71 +21,40 @@ class SongTagIntegrityService
     }
 
     /**
-     * @return Result<SongTag, DomainError>
+     * @throws BusinessRuleViolationException
      */
-    public function prepareForCreate(string $name): Result
+    public function prepareForCreate(string $name): SongTag
     {
-        $result = $this->build(
+        $tag = $this->build(
             $this->generator->generate(),
             $name,
             // 更新時に同じ値になることを防ぐために +10 で採番
             $this->repository->getMaxOrderNo() + 10,
         );
 
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $tag = $result->unwrap();
-
         if (! is_null($this->repository->findByName($tag->name))) {
-            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
+            throw new BusinessRuleViolationException(sprintf('すでに使われている名前です "%s"', $name));
         }
 
-        return new Ok($tag);
+        return $tag;
     }
 
     /**
-     * @return Result<SongTag, DomainError>
+     * @throws BusinessRuleViolationException
      */
-    public function prepareForUpdate(string $songTagId, string $name, int $orderNo): Result
+    public function prepareForUpdate(string $songTagId, string $name, int $orderNo): SongTag
     {
-        $result = $this->build($songTagId, $name, $orderNo);
-
-        if ($result->isErr()) {
-            return new Err($result->unwrapErr());
-        }
-
-        $tag = $result->unwrap();
+        $tag = $this->build($songTagId, $name, $orderNo);
 
         if (! is_null($found = $this->repository->findByName($tag->name)) && ! $found->equals($tag)) {
-            return new Err(new BusinessRuleViolationError(sprintf('すでに使われている名前です "%s"', $name)));
+            throw new BusinessRuleViolationException(sprintf('すでに使われている名前です "%s"', $name));
         }
 
-        return new Ok($tag);
+        return $tag;
     }
 
-    /**
-     * @return Result<SongTag, DomainError>
-     */
-    private function build(string $songTagId, string $name, int $orderNo): Result
+    private function build(string $songTagId, string $name, int $orderNo): SongTag
     {
-        return Result::collect3(
-            SongTagId::create($songTagId),
-            SongTagName::create($name),
-            OrderNo::create($orderNo),
-        )
-            ->mapErr(static function (array $errors): DomainValidationError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
-
-                return new DomainValidationError($messages);
-            })
-            ->map(static fn (array $values): SongTag => new SongTag(...$values));
+        return new SongTag(new SongTagId($songTagId), new SongTagName($name), new OrderNo($orderNo));
     }
 }

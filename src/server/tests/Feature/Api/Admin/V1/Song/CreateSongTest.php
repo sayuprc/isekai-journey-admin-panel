@@ -161,7 +161,12 @@ class CreateSongTest extends DatabaseTestCase
                     ['songTagId' => $tag->songTagId->value],
                 ],
                 'media' => [],
-            ])->assertStatus(422);
+            ])->assertStatus(400)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->where('code', 'business_rule_violation')
+                    ->where('message', '同じ楽曲タグを複数指定することはできません。'),
+            );
     }
 
     #[Test]

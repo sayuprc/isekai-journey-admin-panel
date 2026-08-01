@@ -5,16 +5,10 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Tag\Get;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class GetUseCase
 {
@@ -24,28 +18,16 @@ readonly class GetUseCase
     ) {
     }
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    public function handle(GetInputData $inputData): Result
+    public function handle(GetInputData $inputData): GetOutputData
     {
-        return $this->authorizer->require(Permission::ReadSong)
-            ->andThen(fn () => $this->getSongTag($inputData));
-    }
+        $this->authorizer->authorize(Permission::ReadSong);
 
-    /**
-     * @return Result<GetOutputData, UseCaseError>
-     */
-    private function getSongTag(GetInputData $inputData): Result
-    {
-        return SongTagId::create($inputData->songTagId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(function (SongTagId $songTagId): Result {
-                if (is_null($found = $this->repository->find($songTagId))) {
-                    return new Err(new NotFoundError('SongTag', $songTagId->value));
-                }
+        $songTagId = new SongTagId($inputData->songTagId);
 
-                return new Ok(new GetOutputData($found));
-            });
+        if (is_null($found = $this->repository->find($songTagId))) {
+            throw new ResourceNotFoundException('SongTag', $songTagId->value);
+        }
+
+        return new GetOutputData($found);
     }
 }

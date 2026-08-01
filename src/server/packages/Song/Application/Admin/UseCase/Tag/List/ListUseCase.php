@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Tag\List;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class ListUseCase
 {
@@ -19,20 +16,10 @@ readonly class ListUseCase
     ) {
     }
 
-    /**
-     * @return Result<ListOutputData, UseCaseError>
-     */
-    public function handle(): Result
+    public function handle(): ListOutputData
     {
-        return $this->authorizer->require(Permission::ReadSong)
-            ->andThen(fn () => $this->listSongTags());
-    }
+        $this->authorizer->authorize(Permission::ReadSong);
 
-    /**
-     * @return Result<ListOutputData, UseCaseError>
-     */
-    private function listSongTags(): Result
-    {
-        return new Ok(new ListOutputData($this->repository->all()));
+        return new ListOutputData($this->repository->all());
     }
 }

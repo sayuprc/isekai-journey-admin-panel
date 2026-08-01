@@ -20,9 +20,9 @@ readonly class PasskeyCeremonyState
         // Recovery 以外の ceremony では null。
         public ?string $recoveryCodeId = null,
     ) {
-        AuthCeremonyId::reconstruct($this->authCeremonyId);
-        Email::reconstruct($this->email);
-        AdminUserId::reconstruct($this->adminUserId);
+        new AuthCeremonyId($this->authCeremonyId);
+        new Email($this->email);
+        new AdminUserId($this->adminUserId);
     }
 
     /**

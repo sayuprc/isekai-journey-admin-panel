@@ -34,8 +34,8 @@ trait WithAuth
 
         $user = $this->createAdminUser($this->generateUuid(), $email, $role);
 
-        $result = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap();
-        $refreshToken = $result['token'];
+        $issued = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value);
+        $refreshToken = $issued['token'];
 
         $this->app->make(AdminUserRepository::class)->register($user);
         $this->app->make(RefreshTokenRepository::class)->save($refreshToken);

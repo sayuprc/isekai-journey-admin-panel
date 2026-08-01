@@ -9,16 +9,12 @@ use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
 use Auth\Domain\Services\Token\AccessToken\AccessTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\RefreshTokenIssueService;
 use Auth\Domain\Services\Token\RefreshToken\TokenHasherInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 
 readonly class RefreshUseCase
 {
@@ -33,34 +29,31 @@ readonly class RefreshUseCase
     }
 
     /**
-     * @return Result<RefreshOutputData, UseCaseError>
+     * @throws UnauthenticatedException
      */
-    public function handle(RefreshInputData $inputData): Result
+    public function handle(RefreshInputData $inputData): RefreshOutputData
     {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $refreshTokenId = RefreshTokenId::create($inputData->refreshTokenId);
-
-            if ($refreshTokenId->isErr()) {
-                return new Err(new InvalidInputError([$refreshTokenId->unwrapErr()->field => [$refreshTokenId->unwrapErr()->message]]));
+        return $this->transaction->scope(function () use ($inputData): RefreshOutputData {
+            try {
+                $refreshTokenId = new RefreshTokenId($inputData->refreshTokenId);
+            } catch (InvalidDomainException) {
+                // リフレッシュトークン ID は資格情報の一部のため、形式不正も認証失敗として扱う
+                throw new UnauthenticatedException();
             }
 
-            $refreshToken = $this->refreshTokenRepository->findActive($refreshTokenId->unwrap());
+            $refreshToken = $this->refreshTokenRepository->findActive($refreshTokenId);
 
             if (is_null($refreshToken)) {
-                return new Err(new AuthenticationError());
+                throw new UnauthenticatedException();
             }
 
             if (! $this->tokenHasher->verify($inputData->refreshToken, $refreshToken->token->value)) {
-                return new Err(new AuthenticationError());
+                throw new UnauthenticatedException();
             }
 
-            $issued = $this->refreshTokenIssueService->issue($refreshToken->adminUserId->value);
-
-            if ($issued->isErr()) {
-                return new Err(new AuthenticationError());
-            }
-
-            ['token' => $nextRefreshToken, 'plainToken' => $plainToken] = $issued->unwrap();
+            ['token' => $nextRefreshToken, 'plainToken' => $plainToken] = $this->refreshTokenIssueService->issue(
+                $refreshToken->adminUserId->value,
+            );
 
             $this->refreshTokenRepository->save($refreshToken->consume());
             $this->refreshTokenRepository->save($nextRefreshToken);
@@ -75,12 +68,10 @@ readonly class RefreshUseCase
                 $refreshToken->adminUserId,
             );
 
-            return new Ok(
-                new RefreshOutputData(
-                    $this->accessTokenIssueService->issue($nextRefreshToken->refreshTokenId->value),
-                    $nextRefreshToken->refreshTokenId->value,
-                    $plainToken,
-                ),
+            return new RefreshOutputData(
+                $this->accessTokenIssueService->issue($nextRefreshToken->refreshTokenId->value),
+                $nextRefreshToken->refreshTokenId->value,
+                $plainToken,
             );
         });
     }

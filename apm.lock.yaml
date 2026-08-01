@@ -1,6 +1,6 @@
 lockfile_version: '1'
-generated_at: '2026-07-10T11:06:09.586246+00:00'
-apm_version: 0.22.0
+generated_at: '2026-08-01T13:40:17.105819+00:00'
+apm_version: 0.26.0
 dependencies:
 - repo_url: mattpocock/skills
   name: mattpocock-skills
@@ -225,6 +225,1606 @@ dependencies:
     .claude/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
     .claude/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
   content_hash: sha256:7add2a93debf8a60616aab6f2d56b2e0d2476eb53f7bae4e147da9588f0fa5a9
+deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/frontend-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/general-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/php-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+- kind: project-relative
+  target: agents
+  value: .agents/skills/exec-plan
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/exec-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+- kind: project-relative
+  target: agents
+  value: .agents/skills/pr-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/pr-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+- kind: project-relative
+  target: claude
+  value: .claude/agents/docs-curator.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+- kind: project-relative
+  target: claude
+  value: .claude/rules/01-backend.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
+- kind: project-relative
+  target: claude
+  value: .claude/rules/02-admin.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
+- kind: project-relative
+  target: claude
+  value: .claude/rules/03-contracts.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
+- kind: project-relative
+  target: claude
+  value: .claude/rules/04-docs.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+- kind: project-relative
+  target: claude
+  value: .claude/rules/05-viewer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7130f3803bc15a881451465c4459ff2945a0d12c35da439df22c3670b1d0cbbc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ask-matt
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ask-matt/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4465bad6bb9f7426743c1013d88740594da34e0f9934d375d93bbf981d5317b5
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-review
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-review/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/frontend-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/general-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/php-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/codebase-design
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/codebase-design/DEEPENING.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
+- kind: project-relative
+  target: claude
+  value: .claude/skills/codebase-design/DESIGN-IT-TWICE.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
+- kind: project-relative
+  target: claude
+  value: .claude/skills/codebase-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
+- kind: project-relative
+  target: claude
+  value: .claude/skills/diagnosing-bugs
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/diagnosing-bugs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:7a0779480f323a66d109404646bcc1a14bf0232b45b3e3ea93b652a035718acb
+- kind: project-relative
+  target: claude
+  value: .claude/skills/diagnosing-bugs/scripts/hitl-loop.template.sh
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/domain-modeling
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/domain-modeling/ADR-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/domain-modeling/CONTEXT-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+- kind: project-relative
+  target: claude
+  value: .claude/skills/domain-modeling/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
+- kind: project-relative
+  target: claude
+  value: .claude/skills/exec-plan
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/exec-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grill-me
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grill-me/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grill-with-docs
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grill-with-docs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grilling
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/grilling/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+- kind: project-relative
+  target: claude
+  value: .claude/skills/handoff
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/handoff/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/implement
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/implement/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-codebase-architecture
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-codebase-architecture/HTML-REPORT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/improve-codebase-architecture/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pr-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pr-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype/LOGIC.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/prototype/UI.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096
+- kind: project-relative
+  target: claude
+  value: .claude/skills/research
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/research/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:def265a8b15ffb8afc3f335d69e175ba9a7fe3991218984b0e49e8345cde3b20
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/domain.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/issue-tracker-github.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/issue-tracker-local.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:ed6add9fe3cdcd2d1ebb2a463cf0eb6a1a86df500f4922b31a1ab50f15b3a705
+- kind: project-relative
+  target: claude
+  value: .claude/skills/setup-matt-pocock-skills/triage-labels.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/tdd
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/tdd/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/tdd/mocking.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
+- kind: project-relative
+  target: claude
+  value: .claude/skills/tdd/tests.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach/GLOSSARY-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach/LEARNING-RECORD-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach/MISSION-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach/RESOURCES-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
+- kind: project-relative
+  target: claude
+  value: .claude/skills/teach/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
+- kind: project-relative
+  target: claude
+  value: .claude/skills/to-spec
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/to-spec/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/to-tickets
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/to-tickets/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:1846d215e24ec1219b199a708329ca915db93138d4f3675af29db4d32ee41391
+- kind: project-relative
+  target: claude
+  value: .claude/skills/triage
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/triage/AGENT-BRIEF.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/triage/OUT-OF-SCOPE.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
+- kind: project-relative
+  target: claude
+  value: .claude/skills/triage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/wayfinder
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/wayfinder/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/writing-great-skills
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/writing-great-skills/GLOSSARY.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/writing-great-skills/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
+- kind: project-relative
+  target: codex
+  value: .agents/skills/ask-matt
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/ask-matt/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4465bad6bb9f7426743c1013d88740594da34e0f9934d375d93bbf981d5317b5
+- kind: project-relative
+  target: codex
+  value: .agents/skills/code-review
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/code-review/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/codebase-design
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/codebase-design/DEEPENING.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
+- kind: project-relative
+  target: codex
+  value: .agents/skills/codebase-design/DESIGN-IT-TWICE.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
+- kind: project-relative
+  target: codex
+  value: .agents/skills/codebase-design/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
+- kind: project-relative
+  target: codex
+  value: .agents/skills/diagnosing-bugs
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/diagnosing-bugs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:7a0779480f323a66d109404646bcc1a14bf0232b45b3e3ea93b652a035718acb
+- kind: project-relative
+  target: codex
+  value: .agents/skills/diagnosing-bugs/scripts/hitl-loop.template.sh
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8
+- kind: project-relative
+  target: codex
+  value: .agents/skills/domain-modeling
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/domain-modeling/ADR-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+- kind: project-relative
+  target: codex
+  value: .agents/skills/domain-modeling/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grill-me
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grill-me/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grill-with-docs
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grill-with-docs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grilling
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/grilling/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+- kind: project-relative
+  target: codex
+  value: .agents/skills/handoff
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/handoff/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc
+- kind: project-relative
+  target: codex
+  value: .agents/skills/implement
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/implement/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-codebase-architecture
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-codebase-architecture/HTML-REPORT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
+- kind: project-relative
+  target: codex
+  value: .agents/skills/improve-codebase-architecture/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype/LOGIC.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:cf372862bccd3db7f18ea57abd76d6c32e6adf65b9e7f46c73d433e107567a5c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:03074862d4b6e4eaf472aa75146e1d193dd9e3bba0e4303a9b2425562d1d44cc
+- kind: project-relative
+  target: codex
+  value: .agents/skills/prototype/UI.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:e2ca04434be54acdee2f5df582ef8038fadf582bbcc99be0d2e27737ff8ed096
+- kind: project-relative
+  target: codex
+  value: .agents/skills/research
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/research/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:def265a8b15ffb8afc3f335d69e175ba9a7fe3991218984b0e49e8345cde3b20
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/domain.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:ed6add9fe3cdcd2d1ebb2a463cf0eb6a1a86df500f4922b31a1ab50f15b3a705
+- kind: project-relative
+  target: codex
+  value: .agents/skills/setup-matt-pocock-skills/triage-labels.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/tdd
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/tdd/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/tdd/mocking.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
+- kind: project-relative
+  target: codex
+  value: .agents/skills/tdd/tests.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach/GLOSSARY-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach/LEARNING-RECORD-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach/MISSION-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach/RESOURCES-FORMAT.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
+- kind: project-relative
+  target: codex
+  value: .agents/skills/teach/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
+- kind: project-relative
+  target: codex
+  value: .agents/skills/to-spec
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/to-spec/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7
+- kind: project-relative
+  target: codex
+  value: .agents/skills/to-tickets
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/to-tickets/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:1846d215e24ec1219b199a708329ca915db93138d4f3675af29db4d32ee41391
+- kind: project-relative
+  target: codex
+  value: .agents/skills/triage
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/triage/AGENT-BRIEF.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/triage/OUT-OF-SCOPE.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
+- kind: project-relative
+  target: codex
+  value: .agents/skills/triage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+- kind: project-relative
+  target: codex
+  value: .agents/skills/wayfinder
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/wayfinder/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  active_owner: mattpocock/skills
+  content_hash: sha256:bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
+- kind: project-relative
+  target: codex
+  value: .agents/skills/writing-great-skills
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/writing-great-skills/GLOSSARY.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
+- kind: project-relative
+  target: codex
+  value: .agents/skills/writing-great-skills/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills
+  - .
+  active_owner: mattpocock/skills
+  content_hash: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
+- kind: project-relative
+  target: codex
+  value: .codex/agents/docs-curator.toml
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
+- kind: project-relative
+  target: cursor
+  value: .cursor/agents/docs-curator.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/01-backend.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/02-admin.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/03-contracts.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/04-docs.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/05-viewer.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e1a729666aca66e54b7d50fd81e5d3787a740e2caf6bf537946c2b85f50104ea
 local_deployed_files:
 - .agents/skills/code-reviewer
 - .agents/skills/code-reviewer/SKILL.md
@@ -285,19 +1885,19 @@ local_deployed_file_hashes:
   .agents/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
   .agents/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
   .agents/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
-  .agents/skills/code-reviewer/references/php-review.md: sha256:1b83167389855eb25dacd34e79a06aac9d7715ff556f2ff73fd23d000b4730d9
+  .agents/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
   .agents/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
-  .agents/skills/php-feature-test-creator/SKILL.md: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  .agents/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
   .agents/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
-  .agents/skills/php-integration-test-creator/SKILL.md: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
-  .agents/skills/php-integration-test-creator/references/patterns.md: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
-  .agents/skills/php-unit-test-creator/SKILL.md: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  .agents/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .agents/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .agents/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .agents/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
   .agents/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
   .agents/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
   .agents/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
   .claude/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
-  .claude/rules/01-backend.md: sha256:8eee1bc000c5f14a27da280992b305ee3e44b5956c6066c2b33fca811c016ecd
+  .claude/rules/01-backend.md: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
   .claude/rules/02-admin.md: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
   .claude/rules/03-contracts.md: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
   .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
@@ -305,20 +1905,20 @@ local_deployed_file_hashes:
   .claude/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
   .claude/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
   .claude/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
-  .claude/skills/code-reviewer/references/php-review.md: sha256:1b83167389855eb25dacd34e79a06aac9d7715ff556f2ff73fd23d000b4730d9
+  .claude/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
   .claude/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
-  .claude/skills/php-feature-test-creator/SKILL.md: sha256:e44e195d486191d7dc170edd874b9986c38b3e4b9cac54307aa14934f60ebd3d
+  .claude/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
   .claude/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
-  .claude/skills/php-integration-test-creator/SKILL.md: sha256:73dbdab98458509a8ba06925e07ae973482b60b09f06d678cb317af0709a247d
-  .claude/skills/php-integration-test-creator/references/patterns.md: sha256:61343d00b9b6d2612b38daa04df14099437b834509792f27b828215209f27d12
-  .claude/skills/php-unit-test-creator/SKILL.md: sha256:6ecf20f06de3555f95ec6eaa5dcfe9e153468eedc5c5ad642c46888a1342823a
+  .claude/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .claude/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .claude/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .claude/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
   .claude/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
   .claude/skills/writing-great-skills/GLOSSARY.md: sha256:eaab3564313cec3d35209bb42b05c797dcb350c075a079936c4dd173f9d8e8d8
   .claude/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
   .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
   .cursor/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
-  .cursor/rules/01-backend.mdc: sha256:1ef6b6f1955909905c13c4b0b1874d7c1d897ac2a2310864920c1627c980bfcf
+  .cursor/rules/01-backend.mdc: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
   .cursor/rules/02-admin.mdc: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
   .cursor/rules/03-contracts.mdc: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
   .cursor/rules/04-docs.mdc: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a

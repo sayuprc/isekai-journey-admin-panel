@@ -27,12 +27,12 @@ readonly class ReleaseGroup
         int $orderNo,
     ): self {
         return new self(
-            ReleaseGroupId::reconstruct($releaseGroupId),
-            ReleaseGroupTitle::reconstruct($title),
+            new ReleaseGroupId($releaseGroupId),
+            new ReleaseGroupTitle($title),
             ReleaseGroupType::from($type),
-            Description::reconstruct($description),
+            new Description($description),
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
         );
     }
 

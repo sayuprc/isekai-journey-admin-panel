@@ -24,8 +24,7 @@ class GetUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new GetInputData($person->personId->value));
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals($person, $result->unwrap()->person);
+        $this->assertEquals($person, $result->person);
     }
 
     private function getInstance(): GetUseCase
