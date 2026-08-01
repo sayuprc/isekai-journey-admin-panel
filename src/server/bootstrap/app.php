@@ -8,7 +8,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\Exceptions\DomainValidationException;
 use Support\UseCase\Exceptions\UseCaseException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -29,7 +28,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->dontReport([
             UseCaseException::class,
             BusinessRuleViolationException::class,
-            DomainValidationException::class,
         ]);
 
         // 例外 → {code, status} の対応表は ApiExceptionRenderer に集約する
