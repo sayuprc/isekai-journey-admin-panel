@@ -2,6 +2,7 @@
 import JacketArt from '../components/viewer/JacketArt.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
 import SongTile from '../components/viewer/SongTile.astro';
+import TrackChip from '../components/viewer/TrackChip.astro';
 import { releaseGroupContentRepository } from '../features/releases/content';
 import { representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
@@ -94,19 +95,7 @@ const siteStats = await siteStatsRepository.get();
             <div class="rel-list feature-track-list">
               {
                 (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 8).map(track => (
-                  track.songId !== null && track.isDisplay
-                    ? (
-                        <a class="rel-chip" href={`/songs/${track.songId}`}>
-                          <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
-                          <div class="rel-main">{track.title}</div>
-                        </a>
-                      )
-                    : (
-                        <div class="rel-chip" aria-disabled="true">
-                          <span class="detail-index">{String(track.trackNo).padStart(2, '0')}</span>
-                          <div class="rel-main">{track.title}</div>
-                        </div>
-                      )
+                  <TrackChip track={track} />
                 ))
               }
             </div>

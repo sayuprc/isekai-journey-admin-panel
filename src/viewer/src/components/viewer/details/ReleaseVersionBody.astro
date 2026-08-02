@@ -1,6 +1,7 @@
 ---
 import type { Release } from '../../../features/releases/types';
 import JacketArt from '../JacketArt.astro';
+import TrackChip from '../TrackChip.astro';
 
 interface Props {
   release: Release;
@@ -37,24 +38,7 @@ const { release, releaseGroupTitle, loading = 'lazy' } = Astro.props;
               ? (
                   <div class="rel-list">
                     {medium.tracks.map(track => (
-                      track.songId !== null && track.isDisplay
-                        ? (
-                            <a class="rel-chip" href={`/songs/${track.songId}`}>
-                              <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
-                              <div class="rel-copy">
-                                <div class="rel-main">{track.title}</div>
-                              </div>
-                              <span class="rel-arrow">→</span>
-                            </a>
-                          )
-                        : (
-                            <div class="rel-chip" aria-disabled="true">
-                              <span class="detail-index" style="min-width:28px;">{String(track.trackNo).padStart(2, '0')}</span>
-                              <div class="rel-copy">
-                                <div class="rel-main">{track.title}</div>
-                              </div>
-                            </div>
-                          )
+                      <TrackChip track={track} />
                     ))}
                   </div>
                 )
