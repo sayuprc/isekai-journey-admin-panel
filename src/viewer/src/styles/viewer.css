@@ -1510,13 +1510,6 @@ image-slot:hover {
   letter-spacing: 0.04em;
 }
 
-.hero-ledger-value small {
-  font-family: "Noto Serif JP", serif;
-  font-size: 11px;
-  color: var(--fg-faint);
-  letter-spacing: 0.12em;
-}
-
 .hero-ledger-link {
   text-decoration: none;
 }
