@@ -140,6 +140,8 @@
   --shadow: 0 20px 60px rgba(40, 40, 60, 0.07);
 }
 
+/* sunflower-2 は現在 THEMES から外しているが将来再提供する予定のため配色定義を残す */
+
 [data-palette="sunflower-2"] {
   --bg: #0f0f11;
   --bg-elev: #18181c;
