@@ -15,5 +15,11 @@ export default defineConfig({
     port: port,
     allowedHosts: ['local.isekaijoucho.fan'],
   },
-  integrations: [solidJs(), sitemap()],
+  integrations: [
+    solidJs(),
+    sitemap({
+      // fragments はドロワー用の部分 HTML なのでクロール対象から外す
+      filter: page => !page.includes('/fragments/'),
+    }),
+  ],
 });
