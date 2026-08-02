@@ -1465,10 +1465,11 @@ image-slot:hover {
   letter-spacing: 0.14em;
 }
 
-.hero-en.hero-en-whisper {
+.hero-tagline {
   margin-top: 24px;
-  font-size: 20px;
-  color: var(--fg-faint);
+  font-size: 15px;
+  color: var(--fg-muted);
+  letter-spacing: 0.12em;
 }
 
 .hero-ledger {
@@ -1489,10 +1490,9 @@ image-slot:hover {
 }
 
 .hero-ledger-label {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-family: "Noto Serif JP", serif;
+  font-size: 12px;
   color: var(--fg-muted);
-  text-transform: uppercase;
   letter-spacing: 0.16em;
 }
 
@@ -1511,8 +1511,8 @@ image-slot:hover {
 }
 
 .hero-ledger-value small {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-family: "Noto Serif JP", serif;
+  font-size: 11px;
   color: var(--fg-faint);
   letter-spacing: 0.12em;
 }
