@@ -1,4 +1,5 @@
 ---
+import BottomNav from '../components/common/BottomNav.astro';
 import Footer from '../components/common/Footer.astro';
 import Header from '../components/common/Header.astro';
 import { DetailDrawer } from '../components/viewer/DetailDrawer';
@@ -58,6 +59,7 @@ const noindex = import.meta.env.SITE_NOINDEX === 'true';
       <slot />
     </main>
     <Footer />
+    <BottomNav currentPath={Astro.url.pathname} />
     <DetailDrawer client:load />
     <script is:inline>
       (() => {
@@ -122,50 +124,10 @@ const noindex = import.meta.env.SITE_NOINDEX === 'true';
           picker.dataset.themeReady = 'true';
         };
 
-        const initMobileNav = () => {
-          const trigger = document.querySelector('[data-nav-trigger]');
-          const links = document.querySelector('[data-nav-links]');
-          if (!(trigger instanceof HTMLButtonElement) || !(links instanceof HTMLElement) || trigger.dataset.navReady === 'true') {
-            return;
-          }
-
-          const close = () => {
-            trigger.setAttribute('aria-expanded', 'false');
-            document.documentElement.removeAttribute('data-nav-open');
-          };
-
-          trigger.addEventListener('click', () => {
-            const open = trigger.getAttribute('aria-expanded') === 'true';
-            if (open) {
-              close();
-            } else {
-              trigger.setAttribute('aria-expanded', 'true');
-              document.documentElement.setAttribute('data-nav-open', 'true');
-            }
-          });
-
-          links.addEventListener('click', (event) => {
-            const target = event.target;
-            if (target instanceof Element && target.closest('a[href]')) {
-              close();
-            }
-          });
-
-          window.addEventListener('resize', () => {
-            if (window.innerWidth > 720) close();
-          });
-
-          trigger.dataset.navReady = 'true';
-        };
-
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => {
-            initThemeControls();
-            initMobileNav();
-          }, { once: true });
+          document.addEventListener('DOMContentLoaded', initThemeControls, { once: true });
         } else {
           initThemeControls();
-          initMobileNav();
         }
       })();
     </script>
