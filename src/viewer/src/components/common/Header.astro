@@ -24,12 +24,7 @@ const { currentPath } = Astro.props;
       </div>
     </a>
     <EnvironmentBadge />
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-label="メニューを開く" data-nav-trigger>
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <div class="nav-links" data-nav-links>
+    <div class="nav-links">
       {
         navLinks.map(link => (
           <a href={link.href} class={isActivePath(currentPath, link.href) ? 'active' : undefined}>
