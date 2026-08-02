@@ -16,24 +16,6 @@ const songs = (await songContentRepository.all());
 const latestSong = songs[songs.length - 1] ?? null;
 
 const siteStats = await siteStatsRepository.get();
-
-const observationYears = (() => {
-  const OBSERVATION_START = new Date('2019-12-09');
-
-  const now = new Date();
-
-  let years = now.getFullYear() - OBSERVATION_START.getFullYear();
-
-  const beforeAnniversary = now.getMonth() < OBSERVATION_START.getMonth()
-    || (now.getMonth() === OBSERVATION_START.getMonth() && now.getDate() < OBSERVATION_START.getDate());
-
-  if (beforeAnniversary) {
-    years -= 1;
-  }
-
-  return years;
-})();
-
 ---
 
 <Layout pageTitle="">
@@ -45,7 +27,7 @@ const observationYears = (() => {
         <div class="hero-ledger-row">
           <span class="hero-ledger-label">観測開始</span>
           <span class="hero-ledger-leader"></span>
-          <span class="hero-ledger-value">2019.12.09 <small>— {observationYears}年</small></span>
+          <span class="hero-ledger-value">2019.12.09</span>
         </div>
         <a class="hero-ledger-row hero-ledger-link" href="/songs">
           <span class="hero-ledger-label">楽曲</span>
