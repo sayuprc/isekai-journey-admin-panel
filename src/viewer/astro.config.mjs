@@ -22,4 +22,10 @@ export default defineConfig({
       filter: page => !page.includes('/fragments/'),
     }),
   ],
+  vite: {
+    build: {
+      // 小さなスクリプトも全ページへのインライン展開ではなくハッシュ付きファイルとしてキャッシュさせる
+      assetsInlineLimit: 0,
+    },
+  },
 });
