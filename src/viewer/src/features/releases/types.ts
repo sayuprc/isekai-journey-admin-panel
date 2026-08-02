@@ -8,6 +8,11 @@ export type ReleaseMedium = ReleaseMediumItem;
 
 export type ReleaseTrack = ReleaseTrackItem;
 
+/** トラック詳細へのリンク可否。楽曲未紐づけまたは非表示のトラックはリンクしない。 */
+export function isLinkableTrack(track: ReleaseTrack): track is ReleaseTrack & { songId: string } {
+  return track.songId !== null && track.isDisplay;
+}
+
 /** 代表ジャケット: 公開リリースを発売日順に見て最初に設定されているもの。 */
 export function representativeJacketArtUrl(releaseGroup: ReleaseGroup): string | null {
   return releaseGroup.releases.find(release => release.jacketArtUrl !== null)?.jacketArtUrl ?? null;

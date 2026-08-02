@@ -1,6 +1,7 @@
 ---
 import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { SongDetail } from '../../../features/songs/types';
+import DetailSectionHead from './DetailSectionHead.astro';
 
 interface Props {
   song: SongDetail;
@@ -24,12 +25,7 @@ const formatPublishedAt = (value: string): string =>
   <h1 class="detail-title">{song.title}</h1>
   <p class="detail-description" style="margin-top: 24px;">{song.description}</p>
 
-  <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-    <div>
-      <span class="label-mono">CREDITS</span>
-      <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">クレジット</span>
-    </div>
-  </div>
+  <DetailSectionHead title="クレジット" />
   <dl class="song-credit-grid">
     {
       creditItems.map(item => (
@@ -47,13 +43,7 @@ const formatPublishedAt = (value: string): string =>
   {
     releaseGroups.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-          <div>
-            <span class="label-mono">RELEASES</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">収録リリース</span>
-          </div>
-          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{releaseGroups.length}</span>
-        </div>
+        <DetailSectionHead title="収録リリース" count={releaseGroups.length} />
         <div class="rel-list">
           {
             releaseGroups.map(releaseGroup => (
@@ -76,9 +66,9 @@ const formatPublishedAt = (value: string): string =>
                 }
                 <div class="rel-copy">
                   <div class="rel-main">{releaseGroup.title}</div>
-                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
+                  <div class="label-mono rel-sub">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
                 </div>
-                <span style="font-size:14px;color:var(--fg-faint);">→</span>
+                <span class="rel-arrow rel-arrow-muted">→</span>
               </a>
             ))
           }
@@ -90,13 +80,7 @@ const formatPublishedAt = (value: string): string =>
   {
     media.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-          <div>
-            <span class="label-mono">MEDIA</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">関連メディア</span>
-          </div>
-          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{media.length}</span>
-        </div>
+        <DetailSectionHead title="関連メディア" count={media.length} />
         <div class="rel-list">
           {media.map((entry) => {
             // プラットフォームとサムネイルは状態として保持せず url から導出する。
@@ -125,9 +109,9 @@ const formatPublishedAt = (value: string): string =>
                 }
                 <div class="rel-copy">
                   <div class="rel-main">{entry.title}</div>
-                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{formatPublishedAt(entry.publishedAt)} · {mediaPlatformLabel(entry.url)} · {entry.type.name}</div>
+                  <div class="label-mono rel-sub">{formatPublishedAt(entry.publishedAt)} · {mediaPlatformLabel(entry.url)} · {entry.type.name}</div>
                 </div>
-                <span style="font-size:14px;color:var(--fg-faint);">→</span>
+                <span class="rel-arrow rel-arrow-muted">→</span>
               </a>
             );
           })}
