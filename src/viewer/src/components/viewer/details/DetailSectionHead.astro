@@ -1,17 +1,13 @@
 ---
 interface Props {
-  en: string;
-  jp: string;
+  title: string;
   count?: number;
 }
 
-const { en, jp, count } = Astro.props;
+const { title, count } = Astro.props;
 ---
 
 <div class="detail-section-head">
-  <div>
-    <span class="label-mono">{en}</span>
-    <span class="detail-section-head-jp">{jp}</span>
-  </div>
+  <span class="detail-section-head-title">{title}</span>
   {count !== undefined && <span class="detail-section-head-count">{count}</span>}
 </div>

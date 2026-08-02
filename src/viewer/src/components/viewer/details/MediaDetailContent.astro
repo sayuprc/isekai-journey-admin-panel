@@ -53,7 +53,7 @@ const formatPublishedAt = (value: string): string =>
   {
     songs.length > 0 && (
       <>
-        <DetailSectionHead en="SONGS" jp="関連楽曲" count={songs.length} />
+        <DetailSectionHead title="関連楽曲" count={songs.length} />
         <div class="rel-list">
           {
             songs.map(song => (

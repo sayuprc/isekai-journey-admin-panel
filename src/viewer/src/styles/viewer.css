@@ -1368,11 +1368,11 @@ image-slot:hover {
   border-bottom: 1px solid var(--line);
 }
 
-.detail-section-head-jp {
-  margin-left: 12px;
+.detail-section-head-title {
   font-family: "Shippori Mincho", serif;
   font-size: 14px;
   color: var(--fg);
+  letter-spacing: 0.08em;
 }
 
 .detail-section-head-count {
