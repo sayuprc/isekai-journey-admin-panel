@@ -1,6 +1,7 @@
 ---
 import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { MediaDetail } from '../../../features/media/types';
+import DetailSectionHead from './DetailSectionHead.astro';
 
 interface Props {
   media: MediaDetail;
@@ -52,22 +53,16 @@ const formatPublishedAt = (value: string): string =>
   {
     songs.length > 0 && (
       <>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;margin-top:36px;margin-bottom:16px;border-bottom:1px solid var(--line);">
-          <div>
-            <span class="label-mono">SONGS</span>
-            <span style="margin-left:12px;font-family:'Shippori Mincho',serif;font-size:14px;color:var(--fg);">関連楽曲</span>
-          </div>
-          <span style="font-family:Spectral,serif;font-size:18px;font-weight:500;color:var(--accent);">{songs.length}</span>
-        </div>
+        <DetailSectionHead en="SONGS" jp="関連楽曲" count={songs.length} />
         <div class="rel-list">
           {
             songs.map(song => (
               <a class="rel-chip" href={`/songs/${song.songId}`}>
                 <div class="rel-copy">
                   <div class="rel-main">{song.title}</div>
-                  <div class="label-mono" style=" margin-top: 2px;font-size: 10px;">{song.type.name}</div>
+                  <div class="label-mono rel-sub">{song.type.name}</div>
                 </div>
-                <span style="font-size:14px;color:var(--fg-faint);">→</span>
+                <span class="rel-arrow rel-arrow-muted">→</span>
               </a>
             ))
           }

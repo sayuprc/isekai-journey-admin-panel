@@ -7,12 +7,6 @@ interface Props {
 }
 
 const { currentPath } = Astro.props;
-
-// navLinks の href に対応するアイコン
-const iconPaths: Record<string, string[]> = {
-  '/songs': ['M9 18V5l12-2v13', 'M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z', 'M18 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
-  '/releases': ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z', 'M12 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z'],
-};
 ---
 
 <nav class="bottom-nav" aria-label="モバイルナビゲーション">
@@ -20,7 +14,7 @@ const iconPaths: Record<string, string[]> = {
     navLinks.map(link => (
       <a href={link.href} class={isActivePath(currentPath, link.href) ? 'active' : undefined}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          {(iconPaths[link.href] ?? []).map(d => (
+          {link.iconPaths.map(d => (
             <path d={d} />
           ))}
         </svg>
