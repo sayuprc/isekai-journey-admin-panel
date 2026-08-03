@@ -33,7 +33,7 @@ export default function LayoutSwitcher(props: Props) {
         {option => (
           <button
             type="button"
-            class={value() === option.value ? 'active' : undefined}
+            class={value() === option.value ? 'is-active' : undefined}
             title={option.label}
             aria-label={option.label}
             onClick={() => setValue(option.value)}
