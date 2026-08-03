@@ -31,11 +31,8 @@
     "@fontsource/noto-serif-jp": "catalog:fonts",
     "@fontsource/shippori-mincho": "catalog:fonts",
     "@fontsource/spectral": "catalog:fonts",
-    "@tailwindcss/vite": "catalog:ui",
     "astro": "catalog:astro",
-    "daisyui": "catalog:ui",
     "solid-js": "catalog:astro",
-    "tailwindcss": "catalog:ui",
     "wrangler": "catalog:"
   },
   "devDependencies": {

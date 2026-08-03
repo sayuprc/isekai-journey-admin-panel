@@ -171,8 +171,6 @@
 
 html,
 body {
-  padding: 0;
-  margin: 0;
   font-family: "Noto Serif JP", "Shippori Mincho", serif;
   font-size: 16px;
   font-weight: 400;
@@ -194,41 +192,13 @@ body {
   background-attachment: fixed;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 ::selection {
   color: var(--fg);
   background: color-mix(in oklab, var(--accent) 40%, transparent);
 }
 
-.font-serif {
-  font-family: "Noto Serif JP", "Shippori Mincho", serif;
-}
-
-.font-mincho {
-  font-family: "Shippori Mincho", "Noto Serif JP", serif;
-}
-
-.font-mono {
-  font-family: "JetBrains Mono", monospace;
-}
-
 .font-en {
   font-family: "EB Garamond", serif;
-  letter-spacing: 0.02em;
-}
-
-.num {
-  font-family: Spectral, serif;
-  font-style: normal;
-  font-weight: 500;
-  font-feature-settings:
-    "lnum" 1,
-    "tnum" 1;
-  font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: 0.02em;
 }
 
@@ -368,10 +338,6 @@ a {
   display: block;
 }
 
-.hero-index-title:hover {
-  color: var(--accent-strong) !important;
-}
-
 /* モバイル用のボトムナビ。720px 以下でのみ表示する */
 
 .bottom-nav {
@@ -405,7 +371,7 @@ a {
   transition: color 0.2s ease;
 }
 
-.bottom-nav a.active {
+.bottom-nav a.is-active {
   --bottom-nav-icon: var(--accent);
 
   color: var(--fg);
@@ -431,11 +397,11 @@ a {
   color: var(--accent-2);
 }
 
-.nav-links a.active {
+.nav-links a.is-active {
   color: var(--fg);
 }
 
-.nav-links a.active::after {
+.nav-links a.is-active::after {
   position: absolute;
   bottom: -19px;
   left: 50%;
@@ -609,7 +575,7 @@ a {
   border-color: var(--line-soft);
 }
 
-.theme-opt.active {
+.theme-opt.is-active {
   background: color-mix(in oklab, var(--accent) 12%, transparent);
   border-color: var(--accent);
 }
@@ -649,7 +615,7 @@ a {
   opacity: 0;
 }
 
-.theme-opt.active .check {
+.theme-opt.is-active .check {
   opacity: 1;
 }
 
@@ -711,17 +677,6 @@ a {
   border-color: var(--accent);
 }
 
-.btn-primary {
-  color: var(--accent-contrast);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.btn-primary:hover {
-  background: var(--accent-strong);
-  border-color: var(--accent-strong);
-}
-
 /* ピル / バッジ */
 
 .pill {
@@ -735,12 +690,6 @@ a {
   white-space: nowrap;
   border: 1px solid var(--line);
   border-radius: 999px;
-}
-
-.pill.solid {
-  color: var(--accent-strong);
-  background: color-mix(in oklab, var(--accent) 18%, transparent);
-  border-color: transparent;
 }
 
 /* 楽曲種別バッジ: オリジナルはアクセント、カバーは中間色で一目で区別する。 */
@@ -834,7 +783,7 @@ a {
   stroke: none;
 }
 
-.seg button.active {
+.seg button.is-active {
   color: var(--accent-strong);
   background: color-mix(in oklab, var(--accent) 18%, var(--bg-elev-2));
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent);
@@ -844,7 +793,7 @@ a {
   transform: translateY(1px);
 }
 
-.seg button:not(.active):hover {
+.seg button:not(.is-active):hover {
   color: var(--fg);
   background: color-mix(in oklab, var(--fg) 5%, transparent);
 }
@@ -860,50 +809,6 @@ image-slot {
 
 image-slot:hover {
   border-color: var(--accent);
-}
-
-/* Songs / Events 用 */
-
-.song-meta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.song-meta-cell {
-  display: inline-flex;
-  gap: 3px;
-  align-items: baseline;
-}
-
-.timeline-row {
-  display: grid;
-  grid-template-columns: 56px 1fr auto auto auto;
-  gap: 24px;
-  align-items: center;
-  padding: 18px 0;
-  cursor: pointer;
-  border-bottom: 1px solid var(--line-soft);
-  transition: padding 0.15s;
-}
-
-.timeline-row:hover {
-  padding-left: 8px;
-}
-
-.num-cell {
-  font-family: Spectral, serif;
-  font-size: 16px;
-  font-style: italic;
-  color: var(--accent);
-  text-align: center;
-}
-
-.event-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  text-align: right;
 }
 
 /* 罫線とディテール */
@@ -1003,14 +908,6 @@ image-slot:hover {
   margin: 0;
   font-size: 12px;
   line-height: 1.8;
-  color: var(--fg-muted);
-}
-
-.footer-tagline {
-  font-family: "EB Garamond", serif;
-  font-size: 14px;
-  font-style: italic;
-  line-height: 1.6;
   color: var(--fg-muted);
 }
 
@@ -1173,21 +1070,6 @@ image-slot:hover {
   font-size: 18px;
   font-style: italic;
   color: var(--accent-2);
-}
-
-.stat-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  margin-top: 32px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.stat-cell {
-  padding: 18px 16px;
-  text-align: left;
-  background: var(--bg-elev);
 }
 
 .rel-list {
@@ -1378,25 +1260,7 @@ image-slot:hover {
   color: var(--accent);
 }
 
-/* ユーティリティ */
-
-.spacer-lg {
-  height: 96px;
-}
-
-.spacer-md {
-  height: 48px;
-}
-
-.spacer-sm {
-  height: 24px;
-}
-
 /* ページ間遷移 */
-
-.page {
-  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
 
 @keyframes page-in {
 
@@ -1411,54 +1275,14 @@ image-slot:hover {
   }
 }
 
-/* プレースホルダー画像（パターン付き） */
-
-.placeholder-art {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  color: var(--fg-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  background:
-    repeating-linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--accent) 6%, transparent) 0,
-      color-mix(in oklab, var(--accent) 6%, transparent) 12px,
-      transparent 12px,
-      transparent 24px
-    ),
-    color-mix(in oklab, var(--accent) 12%, var(--bg-elev-2));
-}
-
 .page-section {
   padding-top: 32px;
 }
 
-.two-col-section,
-.detail-hero-grid,
 .profile-grid {
   display: grid;
-  gap: 48px;
-}
-
-.two-col-section {
   grid-template-columns: 1fr 1.4fr;
   gap: 64px;
-}
-
-.detail-hero-grid {
-  grid-template-columns: minmax(280px, 420px) 1fr;
-  align-items: start;
-  margin-bottom: 28px;
-}
-
-.detail-hero-grid-wide {
-  grid-template-columns: minmax(320px, 1.2fr) 1fr;
 }
 
 /* hero: 観測台帳スタイル。数字は記録行として直立で置き、accent は CTA のみに使う */
@@ -1570,53 +1394,11 @@ image-slot:hover {
   transform: translateX(3px);
 }
 
-.hero-symbol {
-  position: relative;
-  padding: 120px 0 96px;
-  overflow: hidden;
-}
-
-.hero-stars {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.18;
-}
-
-.hero-symbol-inner {
-  position: relative;
-  text-align: center;
-}
-
 .hero-mark {
   font-family: "Shippori Mincho", serif;
   font-size: clamp(56px, 9vw, 128px);
   line-height: 1;
   letter-spacing: 0.18em;
-}
-
-.hero-en {
-  margin-top: 24px;
-  font-family: "EB Garamond", serif;
-  font-size: 22px;
-  font-style: italic;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-}
-
-.hero-divider {
-  width: 64px;
-  height: 1px;
-  margin: 48px auto;
-  background: var(--line);
-}
-
-.hero-copy {
-  font-size: 14px;
-  color: var(--fg-muted);
-  letter-spacing: 0.2em;
 }
 
 .hero-actions {
@@ -1626,31 +1408,11 @@ image-slot:hover {
   margin-top: 40px;
 }
 
-.hero-symbol .hero-actions {
-  justify-content: center;
-}
-
 .hero-data .hero-actions {
   justify-content: center;
   margin-top: 64px;
 }
 
-.hero-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  max-width: 800px;
-  margin: 96px auto 0;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.hero-stats-grid div {
-  padding: 24px;
-  background: var(--bg-elev);
-}
-
-.hero-stats-grid strong,
 .detail-index {
   font-family: Spectral, serif;
   font-style: italic;
@@ -1659,33 +1421,6 @@ image-slot:hover {
 
 .rel-chip .detail-index {
   min-width: 28px;
-}
-
-.hero-stats-grid strong {
-  display: block;
-  font-size: 40px;
-  line-height: 1;
-}
-
-.hero-symbol .hero-stats-grid span {
-  display: block;
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--fg-muted);
-}
-
-.news-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.news-row {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  gap: 20px;
-  align-items: center;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line-soft);
 }
 
 .feature-grid-link {
@@ -1733,9 +1468,7 @@ image-slot:hover {
 }
 
 .feature-summary,
-.detail-description,
-.event-row-description,
-.song-grid-description {
+.detail-description {
   line-height: 1.85;
   color: var(--fg-muted);
 }
@@ -1785,8 +1518,7 @@ image-slot:hover {
 }
 
 .media-card-title,
-.song-grid-title,
-.event-row-title {
+.song-grid-title {
   font-family: "Noto Serif JP", "Shippori Mincho", serif;
   letter-spacing: 0.04em;
 }
@@ -1805,29 +1537,6 @@ image-slot:hover {
 
 .song-grid-card:hover {
   transform: translateY(-2px);
-}
-
-.event-row-title {
-  font-size: 18px;
-}
-
-.timeline-title {
-  font-family: "Noto Serif JP", "Shippori Mincho", serif;
-  font-size: 22px;
-  letter-spacing: 0.04em;
-}
-
-.song-grid-title-en {
-  margin-top: 2px;
-  font-family: "EB Garamond", serif;
-  font-size: 12px;
-  font-style: italic;
-  color: var(--accent-2);
-}
-
-.song-grid-description {
-  margin: 12px 0 0;
-  font-size: 13px;
 }
 
 .song-grid-meta,
@@ -1918,8 +1627,7 @@ image-slot:hover {
   letter-spacing: 0.04em;
 }
 
-.post-card-text,
-.post-detail-text {
+.post-card-text {
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 6;
@@ -1934,8 +1642,7 @@ image-slot:hover {
   -webkit-line-clamp: 4;
 }
 
-.post-card-image,
-.post-detail-image {
+.post-card-image {
   aspect-ratio: 4 / 3;
   background:
     linear-gradient(
@@ -1946,8 +1653,7 @@ image-slot:hover {
     repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 8px);
 }
 
-.post-card-stats,
-.post-detail-stats {
+.post-card-stats {
   display: flex;
   gap: 16px;
   margin-top: auto;
@@ -1957,70 +1663,18 @@ image-slot:hover {
   letter-spacing: 0.1em;
 }
 
-.post-detail-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-}
-
-.upcoming-event-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 48px;
-  align-items: center;
-  padding: 48px;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 8%, transparent), transparent);
-  border: 1px solid var(--line);
-}
-
-.upcoming-date {
-  padding-right: 48px;
-  text-align: center;
-  border-right: 1px solid var(--line);
-}
-
-.upcoming-date div {
-  font-family: "EB Garamond", serif;
-  font-size: 14px;
-  font-style: italic;
-  color: var(--accent);
-}
-
-.upcoming-date strong {
-  display: block;
-  font-family: "Shippori Mincho", serif;
-  font-size: 56px;
-  line-height: 1;
-}
-
-.upcoming-event-card .upcoming-date span {
-  display: block;
-  margin-top: 8px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 12px;
-  color: var(--fg-muted);
-}
-
-.media-list,
-.event-list {
+.media-list {
   display: flex;
   flex-direction: column;
 }
 
-.media-list-row,
-.event-row {
+.media-list-row {
   display: grid;
+  grid-template-columns: 80px 240px 1fr auto;
   gap: 24px;
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid var(--line-soft);
-}
-
-.media-list-row {
-  grid-template-columns: 80px 240px 1fr auto;
 }
 
 .song-meta-inline {
@@ -2035,33 +1689,6 @@ image-slot:hover {
 .media-list-thumb {
   aspect-ratio: 16 / 9;
   overflow: hidden;
-}
-
-.event-row {
-  grid-template-columns: 140px 100px 1fr 200px auto auto;
-}
-
-.event-row-highlight {
-  padding-right: 24px;
-  padding-left: 24px;
-  background: color-mix(in oklab, var(--accent) 6%, transparent);
-  border-left: 2px solid var(--accent);
-}
-
-.event-row-date {
-  font-family: "Shippori Mincho", serif;
-  font-size: 22px;
-  letter-spacing: 0.04em;
-}
-
-.event-row-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  color: var(--fg-muted);
-  text-align: right;
 }
 
 .entry-status {
@@ -2175,82 +1802,6 @@ image-slot:hover {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.events-group {
-  margin-bottom: 64px;
-}
-
-.events-group-label {
-  margin-bottom: 16px;
-}
-
-.events-calendar {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px;
-}
-
-.events-year {
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-  font-family: Spectral, serif;
-  font-size: 48px;
-  font-style: italic;
-  color: var(--accent);
-  border-bottom: 1px solid var(--line);
-}
-
-.events-month {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.events-month-empty {
-  opacity: 0.35;
-}
-
-.events-month-link,
-.events-category-link {
-  display: block;
-}
-
-.events-category-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-}
-
-.events-category-card {
-  padding: 24px;
-  border: 1px solid var(--line);
-}
-
-.events-category-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.events-category-title {
-  font-family: "Shippori Mincho", serif;
-  font-size: 20px;
-  letter-spacing: 0.08em;
-}
-
-.events-category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.profile-grid {
-  grid-template-columns: 1fr 1.4fr;
-  gap: 64px;
-}
-
 .profile-portrait {
   width: 100%;
   aspect-ratio: 3 / 4;
@@ -2323,24 +1874,6 @@ image-slot:hover {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.detail-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 32px;
-  margin-top: 32px;
-}
-
-.detail-meta-grid div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.detail-meta-grid strong {
-  font-size: 14px;
-  font-weight: 500;
-}
-
 .song-credit-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -2400,7 +1933,6 @@ image-slot:hover {
   white-space: nowrap;
 }
 
-.color-block,
 .jacket-art,
 .mv-thumb {
   position: relative;
@@ -2487,13 +2019,6 @@ image-slot:hover {
   font-size: 10px;
   color: var(--fg-muted);
   letter-spacing: 0.08em;
-}
-
-.color-block {
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  background: linear-gradient(135deg, var(--tile-color), color-mix(in oklab, var(--tile-color) 50%, transparent));
 }
 
 .jacket-art {
@@ -2636,11 +2161,6 @@ image-slot:hover {
   fill: white;
 }
 
-.detail-panel .song-detail-content .detail-hero-grid {
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
 .detail-panel .song-detail-content .jacket-art {
   max-width: 280px;
 }
@@ -2654,20 +2174,8 @@ image-slot:hover {
   margin-top: 6px;
 }
 
-.detail-panel .song-detail-content .detail-meta-grid {
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
 .detail-panel .song-credit-grid {
   grid-template-columns: 1fr;
-}
-
-.detail-panel .release-detail-content .detail-hero-grid,
-.detail-panel .media-detail-content .detail-hero-grid,
-.detail-panel .media-detail-content .detail-hero-grid-wide {
-  grid-template-columns: 1fr;
-  gap: 24px;
 }
 
 .detail-panel .media-detail-content .mv-thumb {
@@ -2684,44 +2192,29 @@ image-slot:hover {
   margin-top: 6px;
 }
 
-.detail-panel .release-detail-content .detail-meta-grid {
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
+/* ブレークポイントは max-width を降順に並べ、狭い側の指定が後勝ちになるようにする */
 
-.event-hero {
-  padding: 36px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--accent) 24%, var(--bg-elev-2)),
-    color-mix(in oklab, var(--accent) 8%, var(--bg-elev-2))
-  );
-  border: 1px solid var(--line);
-}
+@media (width <= 1280px) {
 
-@media (width <= 1100px) {
-
-  .two-col-section,
-  .detail-hero-grid,
   .profile-grid,
   .feature-grid-link,
-  .media-featured-grid,
-  .event-row,
-  .upcoming-event-card {
+  .media-featured-grid {
     grid-template-columns: 1fr;
   }
 
-  .song-grid,
+  .song-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .release-grid,
   .media-card-grid,
-  .recent-posts-grid,
-  .events-calendar,
-  .events-category-grid {
+  .recent-posts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .media-mosaic {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 164px;
   }
 
   /* 1 カラム時はジャケット縦幅に固定せず、リスト自身の高さで切る */
@@ -2739,30 +2232,25 @@ image-slot:hover {
     width: min(760px, 100vw);
   }
 
-  .upcoming-date {
-    padding-right: 0;
-    border-right: 0;
-  }
-
   .hero-data {
     padding-top: 72px;
   }
 }
 
-@media (width <= 1280px) {
-
-  .song-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .media-mosaic {
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 164px;
-  }
-}
-
 @media (width <= 960px) {
 
+  .shell,
+  .nav-inner {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .song-grid,
   .release-grid,
   .media-card-grid,
   .recent-posts-grid {
@@ -2774,6 +2262,14 @@ image-slot:hover {
     grid-auto-rows: 148px;
   }
 
+  .media-list-row {
+    grid-template-columns: 1fr;
+  }
+
+  .chronology-grid {
+    grid-template-columns: 1fr;
+  }
+
   .viewer-filters-spacer {
     display: none;
   }
@@ -2783,6 +2279,24 @@ image-slot:hover {
     order: 10;
     width: 100%;
     min-width: 100%;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-data .hero-actions {
+    margin-top: 48px;
+  }
+
+  .hero-ledger {
+    margin-top: 48px;
+  }
+
+  .section-head,
+  .section-head-left {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -2873,75 +2387,12 @@ image-slot:hover {
     padding: 24px 20px 40px;
   }
 
-  .detail-meta-grid,
-  .detail-panel .song-detail-content .detail-meta-grid,
-  .detail-panel .release-detail-content .detail-meta-grid {
-    grid-template-columns: 1fr;
-  }
-
   .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer-grid > :first-child {
     grid-column: 1 / -1;
-  }
-}
-
-@media (width <= 800px) {
-
-  .shell,
-  .nav-inner {
-    padding-right: 20px;
-    padding-left: 20px;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .song-grid,
-  .release-grid,
-  .media-card-grid,
-  .recent-posts-grid,
-  .hero-stats-grid,
-  .events-calendar,
-  .events-category-grid,
-  .media-mosaic {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-ledger {
-    margin-top: 48px;
-  }
-
-  .hero-data .hero-actions {
-    margin-top: 48px;
-  }
-
-  .media-list-row {
-    grid-template-columns: 1fr;
-  }
-
-  .timeline-row {
-    grid-template-columns: 1fr;
-    justify-items: start;
-  }
-
-  .chronology-grid,
-  .detail-meta-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-head,
-  .section-head-left {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 
