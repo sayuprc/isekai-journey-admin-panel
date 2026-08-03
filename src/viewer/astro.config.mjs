@@ -7,6 +7,20 @@ import { defineConfig } from 'astro/config';
 const port = Number(import.meta.env.PORT ?? '3000');
 const site = process.env.SITE_URL ?? 'https://local.isekaijoucho.fan';
 
+// @fontsource の @font-face は woff2 と woff を並記するが、woff2 に対応しないブラウザは対象外
+// Vite が URL を解決する前に woff の参照を落とし、ビルド成果物から woff ファイルごと除く
+const dropLegacyWoffSource = () => ({
+  name: 'drop-legacy-woff-source',
+  enforce: 'pre',
+  transform(code, id) {
+    if (!id.includes('@fontsource') || !id.endsWith('.css')) {
+      return null;
+    }
+
+    return code.replace(/,\s*url\([^)]+\.woff\)\s*format\('woff'\)/g, '');
+  },
+});
+
 // https://astro.build/config
 export default defineConfig({
   site: site,
@@ -27,5 +41,6 @@ export default defineConfig({
       // 小さなスクリプトも全ページへのインライン展開ではなくハッシュ付きファイルとしてキャッシュさせる
       assetsInlineLimit: 0,
     },
+    plugins: [dropLegacyWoffSource()],
   },
 });
