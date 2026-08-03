@@ -26,6 +26,11 @@
   "dependencies": {
     "@astrojs/sitemap": "catalog:astro",
     "@astrojs/solid-js": "catalog:astro",
+    "@fontsource/eb-garamond": "catalog:fonts",
+    "@fontsource/jetbrains-mono": "catalog:fonts",
+    "@fontsource/noto-serif-jp": "catalog:fonts",
+    "@fontsource/shippori-mincho": "catalog:fonts",
+    "@fontsource/spectral": "catalog:fonts",
     "@tailwindcss/vite": "catalog:ui",
     "astro": "catalog:astro",
     "daisyui": "catalog:ui",
