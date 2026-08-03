@@ -1,6 +1,6 @@
 /* ヰ世界情緒ファンサイト - 共通スタイル */
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap");
+/* Web フォントの読み込みは styles/fonts.ts に置き、Layout.astro から参照する */
 
 :root {
   --bg: #0e0e10;
@@ -216,12 +216,8 @@ a {
   font-family: "JetBrains Mono", monospace;
 }
 
-.font-cormorant {
-  font-family: "EB Garamond", "Cormorant Garamond", serif;
-}
-
 .font-en {
-  font-family: "EB Garamond", "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   letter-spacing: 0.02em;
 }
 
@@ -1011,7 +1007,7 @@ image-slot:hover {
 }
 
 .footer-tagline {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 14px;
   font-style: italic;
   line-height: 1.6;
@@ -1173,7 +1169,7 @@ image-slot:hover {
 }
 
 .detail-title-en {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 18px;
   font-style: italic;
   color: var(--accent-2);
@@ -1603,7 +1599,7 @@ image-slot:hover {
 
 .hero-en {
   margin-top: 24px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 22px;
   font-style: italic;
   color: var(--accent);
@@ -1812,7 +1808,7 @@ image-slot:hover {
 
 .song-grid-title-en {
   margin-top: 2px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 12px;
   font-style: italic;
   color: var(--accent-2);
@@ -1976,7 +1972,7 @@ image-slot:hover {
 }
 
 .upcoming-date div {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 14px;
   font-style: italic;
   color: var(--accent);
@@ -2116,7 +2112,7 @@ image-slot:hover {
 
 .feature-subtitle {
   margin-bottom: 24px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "EB Garamond", serif;
   font-size: 18px;
   font-style: italic;
   color: var(--accent);
