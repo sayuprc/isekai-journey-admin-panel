@@ -2,6 +2,4 @@ import type { MediaListItem, MediaSongSummary } from '../../generated/types.gen.
 
 export type Media = MediaListItem;
 
-export type MediaDetail = MediaListItem;
-
 export type MediaSong = MediaSongSummary;

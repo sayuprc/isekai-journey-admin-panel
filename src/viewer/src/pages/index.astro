@@ -9,12 +9,8 @@ import { siteStatsRepository } from '../features/site-stats/api';
 import { songContentRepository } from '../features/songs/content';
 import Layout from '../layouts/Layout.astro';
 
-// 一覧は最古発売日の降順なので先頭が最新リリース。
-const latestReleaseGroup = (await releaseGroupContentRepository.all())[0] ?? null;
-
-// 最新楽曲は最後尾のもの
-const songs = (await songContentRepository.all());
-const latestSong = songs[songs.length - 1] ?? null;
+const latestReleaseGroup = await releaseGroupContentRepository.latest();
+const latestSong = await songContentRepository.latest();
 
 const siteStats = await siteStatsRepository.get();
 ---
