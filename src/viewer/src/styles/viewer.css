@@ -2181,7 +2181,9 @@ image-slot:hover {
   margin-top: 6px;
 }
 
-@media (width <= 1100px) {
+/* ブレークポイントは max-width を降順に並べ、狭い側の指定が後勝ちになるようにする */
+
+@media (width <= 1280px) {
 
   .profile-grid,
   .feature-grid-link,
@@ -2189,7 +2191,10 @@ image-slot:hover {
     grid-template-columns: 1fr;
   }
 
-  .song-grid,
+  .song-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .release-grid,
   .media-card-grid,
   .recent-posts-grid {
@@ -2197,7 +2202,8 @@ image-slot:hover {
   }
 
   .media-mosaic {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 164px;
   }
 
   /* 1 カラム時はジャケット縦幅に固定せず、リスト自身の高さで切る */
@@ -2220,20 +2226,20 @@ image-slot:hover {
   }
 }
 
-@media (width <= 1280px) {
-
-  .song-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .media-mosaic {
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 164px;
-  }
-}
-
 @media (width <= 960px) {
 
+  .shell,
+  .nav-inner {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .song-grid,
   .release-grid,
   .media-card-grid,
   .recent-posts-grid {
@@ -2245,6 +2251,14 @@ image-slot:hover {
     grid-auto-rows: 148px;
   }
 
+  .media-list-row {
+    grid-template-columns: 1fr;
+  }
+
+  .chronology-grid {
+    grid-template-columns: 1fr;
+  }
+
   .viewer-filters-spacer {
     display: none;
   }
@@ -2254,6 +2268,24 @@ image-slot:hover {
     order: 10;
     width: 100%;
     min-width: 100%;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-data .hero-actions {
+    margin-top: 48px;
+  }
+
+  .hero-ledger {
+    margin-top: 48px;
+  }
+
+  .section-head,
+  .section-head-left {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -2350,54 +2382,6 @@ image-slot:hover {
 
   .footer-grid > :first-child {
     grid-column: 1 / -1;
-  }
-}
-
-@media (width <= 800px) {
-
-  .shell,
-  .nav-inner {
-    padding-right: 20px;
-    padding-left: 20px;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .song-grid,
-  .release-grid,
-  .media-card-grid,
-  .recent-posts-grid,
-  .media-mosaic {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-ledger {
-    margin-top: 48px;
-  }
-
-  .hero-data .hero-actions {
-    margin-top: 48px;
-  }
-
-  .media-list-row {
-    grid-template-columns: 1fr;
-  }
-
-  .chronology-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-head,
-  .section-head-left {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 
