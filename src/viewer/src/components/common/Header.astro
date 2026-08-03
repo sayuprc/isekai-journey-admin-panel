@@ -28,7 +28,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
     <div class="nav-links">
       {
         navLinks.map(link => (
-          <a href={link.href} class={isActivePath(currentPath, link.href) ? 'active' : undefined}>
+          <a href={link.href} class={isActivePath(currentPath, link.href) ? 'is-active' : undefined}>
             {link.label}
           </a>
         ))
@@ -58,7 +58,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
             {
               THEMES.map(theme => (
                 <button
-                  class:list={['theme-opt', theme.value === DEFAULT_PALETTE && 'active']}
+                  class:list={['theme-opt', theme.value === DEFAULT_PALETTE && 'is-active']}
                   type="button"
                   aria-pressed={theme.value === DEFAULT_PALETTE ? 'true' : 'false'}
                   data-palette-option={theme.value}
@@ -106,7 +106,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
       pop.hidden = !open;
 
       if (open) {
-        (options.find(option => option.classList.contains('active')) ?? options[0]).focus();
+        (options.find(option => option.classList.contains('is-active')) ?? options[0]).focus();
       }
     };
 
@@ -128,7 +128,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
 
       for (const option of options) {
         const isActive = option.dataset.paletteOption === theme.value;
-        option.classList.toggle('active', isActive);
+        option.classList.toggle('is-active', isActive);
         option.setAttribute('aria-pressed', String(isActive));
       }
     };
