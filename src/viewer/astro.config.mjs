@@ -9,6 +9,7 @@ const site = process.env.SITE_URL ?? 'https://local.isekaijoucho.fan';
 
 // @fontsource の @font-face は woff2 と woff を並記するが、woff2 に対応しないブラウザは対象外
 // Vite が URL を解決する前に woff の参照を落とし、ビルド成果物から woff ファイルごと除く
+/** @type {() => NonNullable<import('astro').ViteUserConfig['plugins']>[number]} */
 const dropLegacyWoffSource = () => ({
   name: 'drop-legacy-woff-source',
   enforce: 'pre',
