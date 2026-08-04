@@ -1,7 +1,6 @@
 ---
 import SongDetailContent from '../../components/viewer/details/SongDetailContent.astro';
 import { songContentRepository } from '../../features/songs/content';
-import { songJsonLd } from '../../features/songs/structured-data';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
@@ -26,7 +25,6 @@ const ogImage = jacketReleaseGroup?.jacketArtUrl
   pageDescription={pageDescription}
   ogImage={ogImage}
   breadcrumbs={[{ label: '楽曲', href: '/songs' }, { label: song.title, href: null }]}
-  structuredData={[songJsonLd(song, { site: Astro.site, description: pageDescription, imageUrl: ogImage?.url ?? null })]}
 >
   <section class="shell page-section detail-page">
     <SongDetailContent song={song} />

@@ -1,7 +1,6 @@
 ---
 import ReleaseDetailContent from '../../components/viewer/details/ReleaseDetailContent.astro';
 import { releaseGroupContentRepository } from '../../features/releases/content';
-import { releaseGroupJsonLd } from '../../features/releases/structured-data';
 import { representativeJacketArtUrl } from '../../features/releases/types';
 import Layout from '../../layouts/Layout.astro';
 
@@ -24,7 +23,6 @@ const ogImage = jacketArtUrl === null ? null : { url: jacketArtUrl, alt: `${rele
   pageDescription={pageDescription}
   ogImage={ogImage}
   breadcrumbs={[{ label: 'リリース', href: '/releases' }, { label: releaseGroup.title, href: null }]}
-  structuredData={[releaseGroupJsonLd(releaseGroup, { site: Astro.site, description: pageDescription })]}
 >
   <section class="shell page-section detail-page">
     <ReleaseDetailContent releaseGroup={releaseGroup} />

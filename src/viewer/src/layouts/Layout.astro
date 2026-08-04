@@ -4,8 +4,8 @@ import Breadcrumb from '../components/common/Breadcrumb.astro';
 import Footer from '../components/common/Footer.astro';
 import Header from '../components/common/Header.astro';
 import { DetailDrawer } from '../components/viewer/DetailDrawer';
+import type { BreadcrumbItem } from '../shared/breadcrumb';
 import { DEFAULT_OG_IMAGE, type OgImage, SITE_DESCRIPTION, SITE_TITLE } from '../shared/site';
-import { type BreadcrumbItem, breadcrumbListJsonLd, type JsonLd, serializeJsonLd, websiteJsonLd } from '../shared/structured-data';
 import { DEFAULT_PALETTE, PALETTE_STORAGE_KEY, THEMES } from '../shared/themes';
 import '../styles/fonts';
 import '../styles/reset.css';
@@ -17,17 +17,9 @@ interface Props {
   ogImage?: OgImage | null;
   /** ホームは自動で先頭に付くので、一覧から現在地までを渡す。空なら導線を出さない */
   breadcrumbs?: readonly BreadcrumbItem[];
-  /** WebSite と BreadcrumbList に足すページ固有の JSON-LD */
-  structuredData?: readonly JsonLd[];
 }
 
-const {
-  pageTitle,
-  pageDescription = SITE_DESCRIPTION,
-  ogImage = null,
-  breadcrumbs = [],
-  structuredData = [],
-} = Astro.props;
+const { pageTitle, pageDescription = SITE_DESCRIPTION, ogImage = null, breadcrumbs = [] } = Astro.props;
 
 const generateTitle = (title: string) => {
   return title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
@@ -42,11 +34,6 @@ const twitterCard = ogImage === null ? 'summary' : 'summary_large_image';
 const noindex = import.meta.env.SITE_NOINDEX === 'true';
 
 const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホーム', href: '/' }, ...breadcrumbs] : [];
-const jsonLd = serializeJsonLd([
-  websiteJsonLd(Astro.site),
-  ...(trail.length > 0 ? [breadcrumbListJsonLd(trail, Astro.site)] : []),
-  ...structuredData,
-]);
 ---
 
 <!doctype html>
@@ -67,7 +54,6 @@ const jsonLd = serializeJsonLd([
     <meta property="og:image" content={cardImageUrl} />
     <meta property="og:image:alt" content={cardImage.alt} />
     <meta name="twitter:card" content={twitterCard} />
-    <script type="application/ld+json" is:inline set:html={jsonLd} />
     <title>{title}</title>
     {/* FOUC 防止のため描画前に palette を適用する。保存値は既知のテーマのみ許可し、廃止テーマ等の不正値は既定に修復する */}
     <script

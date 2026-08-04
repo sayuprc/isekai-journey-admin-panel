@@ -5,8 +5,6 @@ export const SITE_TITLE = 'ヰ世界観測所';
 
 export const SITE_DESCRIPTION = 'ヰ世界情緒の非公式ファンサイト';
 
-export const ARTIST_NAME = 'ヰ世界情緒';
-
 export type OgImage = {
   url: string;
   alt: string;
