@@ -1,30 +1,24 @@
 import { mediaServiceListMedia } from '../../generated/sdk.gen.js';
 import { apiClient } from '../../shared/api/client.js';
+import { collectAll } from '../../shared/api/collect-all.js';
 import type { Media } from './types.js';
 
 async function all(): Promise<Media[]> {
-  const media: Media[] = [];
-  let cursor: string | undefined;
+  return collectAll(
+    async (cursor, limit) => {
+      const { data, error, response } = await mediaServiceListMedia({
+        client: apiClient,
+        query: { limit, cursor },
+      });
 
-  while (true) {
-    const { data, error, response } = await mediaServiceListMedia({
-      client: apiClient,
-      query: { limit: 50, cursor },
-    });
+      if (!data) {
+        throw new Error(`mediaServiceListMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      }
 
-    if (!data) {
-      throw new Error(`mediaServiceListMedia failed: HTTP ${response.status} ${JSON.stringify(error)}`);
-    }
-
-    media.push(...data.media);
-
-    if (!data.nextCursor) {
-      break;
-    }
-    cursor = data.nextCursor;
-  }
-
-  return media;
+      return data;
+    },
+    data => ({ items: data.media, nextCursor: data.nextCursor }),
+  );
 }
 
 export const mediaRepository = {
