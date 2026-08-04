@@ -67,8 +67,9 @@ export default function FilterBar(props: Props) {
         <div class="viewer-filters-spacer" />
         <input
           class="viewer-search"
-          type="text"
+          type="search"
           placeholder={props.searchPlaceholder}
+          aria-label={props.searchPlaceholder}
           value={query()}
           onInput={event => setQuery(event.currentTarget.value)}
         />
