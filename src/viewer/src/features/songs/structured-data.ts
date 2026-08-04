@@ -8,16 +8,13 @@ type SongJsonLdContext = {
   imageUrl: string | null;
 };
 
-const person = (name: string): JsonLd => ({ '@type': 'Person', 'name': name });
-
-/** 楽曲詳細の MusicRecording。作家クレジットは楽曲そのものではなく MusicComposition 側に置く */
+/**
+ * 楽曲詳細の MusicRecording
+ * 作詞・作曲・編曲のクレジットは画面には出すが、ここには出さない
+ * 非公式サイトが第三者について機械可読な主張を撒く形になり、誤りがあっても本人に訂正手段がないため
+ * byArtist はサイトの主題そのもので、サイト名と description で既に明示している主張なので残す
+ */
 export function songJsonLd(song: Song, { site, description, imageUrl }: SongJsonLdContext): JsonLd {
-  const credits: JsonLd = {
-    ...(song.composers.length > 0 ? { composer: song.composers.map(person) } : {}),
-    ...(song.lyricists.length > 0 ? { lyricist: song.lyricists.map(person) } : {}),
-    ...(song.arrangers.length > 0 ? { contributor: song.arrangers.map(person) } : {}),
-  };
-
   return {
     '@context': 'https://schema.org',
     '@type': 'MusicRecording',
@@ -34,9 +31,6 @@ export function songJsonLd(song: Song, { site, description, imageUrl }: SongJson
             'url': absoluteUrl(`/releases/${releaseGroup.releaseGroupId}`, site),
           })),
         }
-      : {}),
-    ...(Object.keys(credits).length > 0
-      ? { recordingOf: { '@type': 'MusicComposition', 'name': song.title, ...credits } }
       : {}),
   };
 }
