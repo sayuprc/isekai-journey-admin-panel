@@ -1,11 +1,11 @@
 ---
 import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
-import type { SongDetail } from '../../../features/songs/types';
+import type { Song } from '../../../features/songs/types';
 import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../../shared/image';
 import DetailSectionHead from './DetailSectionHead.astro';
 
 interface Props {
-  song: SongDetail;
+  song: Song;
 }
 
 const { song } = Astro.props;
