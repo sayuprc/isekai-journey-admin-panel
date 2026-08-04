@@ -1322,6 +1322,36 @@ image-slot:hover {
   padding-top: 32px;
 }
 
+/* パンくず: 詳細ページから一覧へ戻る導線 */
+
+.breadcrumb {
+  padding-top: 24px;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  margin-right: 8px;
+  color: var(--fg-faint);
+  content: "/";
+}
+
+.breadcrumb-link:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: var(--fg);
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
