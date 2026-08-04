@@ -22,7 +22,7 @@ const siteStats = await siteStatsRepository.get();
 <Layout pageTitle="">
   <section class="hero-data">
     <div class="shell">
-      <div class="hero-mark hero-mark-data">ヰ世界観測所</div>
+      <h1 class="hero-mark hero-mark-data">ヰ世界観測所</h1>
       <div class="hero-tagline">ヰ世界情緒の非公式ファンサイト</div>
       <div class="hero-ledger">
         <div class="hero-ledger-row">
@@ -49,7 +49,7 @@ const siteStats = await siteStatsRepository.get();
       <section class="shell">
         <SectionHead title="最新楽曲" />
         <div class="feature-grid-link">
-          <a href={`/songs/${latestSong.songId}`} class="feature-art-link">
+          <a href={`/songs/${latestSong.songId}`} class="feature-art-link" aria-label={latestSong.title}>
             <SongTile
               songId={latestSong.songId}
               title={latestSong.title}

@@ -67,8 +67,9 @@ const noindex = import.meta.env.SITE_NOINDEX === 'true';
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
     <Header currentPath={Astro.url.pathname} />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />
