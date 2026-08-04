@@ -1,4 +1,5 @@
 type IndexedEntry = {
+  id: string;
   data: {
     index: number;
   };
@@ -11,12 +12,13 @@ export function stripIndex<T extends { index: number }>(data: T): Omit<T, 'index
   return entity;
 }
 
+// getStaticPaths が entry.id を params に使うため、並べ替えても id を落とさない
 export function sortByIndex<T extends { index: number }>(
   entries: ReadonlyArray<IndexedEntry>,
-): Array<{ data: T }> {
+): Array<{ id: string; data: T }> {
   return [...entries]
     .sort((a, b) => a.data.index - b.data.index)
-    .map(entry => ({ data: entry.data as T }));
+    .map(entry => ({ id: entry.id, data: entry.data as T }));
 }
 
 export function allFromCollection<T extends { index: number }>(
