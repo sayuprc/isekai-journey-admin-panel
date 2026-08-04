@@ -1,6 +1,7 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
 import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
+import { assetImageSrcset } from '../../shared/image';
 
 interface Props {
   songId: string;
@@ -12,9 +13,19 @@ interface Props {
   aspectRatio?: string;
   /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
   loading?: 'lazy' | 'eager';
+  /** 表示枠の幅。既定は枠が不明な場合の安全側 */
+  sizes?: string;
 }
 
-const { mediaCount, index, media = [], releaseGroups = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
+const {
+  mediaCount,
+  index,
+  media = [],
+  releaseGroups = [],
+  aspectRatio = '16 / 9',
+  loading = 'lazy',
+  sizes = '100vw',
+} = Astro.props;
 
 // プラットフォームとサムネイルは状態として保持せず url から導出する。
 // メディアがあれば最初にサムネイルを導出できたものを採用する。
@@ -23,6 +34,13 @@ const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ??
 // メディアから導出できなければ収録リリースの最初の代表ジャケットで代替する
 const thumbnailUrl = mediaThumbnailUrl
   ?? releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
+
+// メディアのサムネイルは YouTube の解像度違い、ジャケットは変換で幅違いを用意する
+const thumbnailSrcset = mediaThumbnailUrl !== null
+  ? youtubeThumbnailSrcset(mediaThumbnailUrl)
+  : thumbnailUrl === null
+    ? undefined
+    : assetImageSrcset(thumbnailUrl, [240, 480, 720]);
 
 const sequence = String(index + 1).padStart(2, '0');
 ---
@@ -34,8 +52,8 @@ const sequence = String(index + 1).padStart(2, '0');
           <img
             class="song-tile-image"
             src={thumbnailUrl}
-            srcset={mediaThumbnailUrl === null ? undefined : youtubeThumbnailSrcset(mediaThumbnailUrl)}
-            sizes="(max-width: 640px) 50vw, 240px"
+            srcset={thumbnailSrcset}
+            sizes={thumbnailSrcset === undefined ? undefined : sizes}
             loading={loading}
             fetchpriority={loading === 'eager' ? 'high' : undefined}
             decoding="async"

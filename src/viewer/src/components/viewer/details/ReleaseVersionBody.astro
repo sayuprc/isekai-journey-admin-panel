@@ -17,7 +17,13 @@ const { release, releaseGroupTitle, loading = 'lazy' } = Astro.props;
   {
     release.jacketArtUrl && (
       <div class="release-version-art">
-        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} aspectRatio="auto" loading={loading} />
+        <JacketArt
+          imageUrl={release.jacketArtUrl}
+          label={`${releaseGroupTitle} ${release.name}`}
+          aspectRatio="auto"
+          loading={loading}
+          sizes="160px"
+        />
       </div>
     )
   }

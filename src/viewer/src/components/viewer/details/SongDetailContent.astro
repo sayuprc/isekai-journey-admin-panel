@@ -1,6 +1,7 @@
 ---
 import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { Song } from '../../../features/songs/types';
+import { assetImageSrcset } from '../../../shared/image';
 import DetailSectionHead from './DetailSectionHead.astro';
 
 interface Props {
@@ -54,6 +55,8 @@ const formatPublishedAt = (value: string): string =>
                         <img
                           class="rel-thumb"
                           src={releaseGroup.jacketArtUrl}
+                          srcset={assetImageSrcset(releaseGroup.jacketArtUrl, [96, 192])}
+                          sizes="96px"
                           width="96"
                           height="54"
                           loading="lazy"

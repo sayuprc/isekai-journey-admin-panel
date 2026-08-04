@@ -55,6 +55,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
                 imageUrl={representativeJacketArtUrl(releaseGroup)}
                 label={releaseGroup.title}
                 loading={index === 0 ? 'eager' : 'lazy'}
+                sizes="(max-width: 720px) 100vw, (max-width: 1280px) 50vw, 33vw"
               />
               <div class="release-card-body">
                 <div class="release-card-meta">
