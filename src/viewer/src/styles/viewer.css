@@ -8,7 +8,7 @@
   --bg-elev-2: #1c1c21;
   --fg: #f4f4f5;
   --fg-muted: #939395;
-  --fg-faint: #5e5e60;
+  --fg-faint: #808082;
   --line: #353537;
   --line-soft: #232325;
   --accent: #d31b28;
@@ -31,7 +31,7 @@
   --bg-elev-2: #1c1c21;
   --fg: #f4f4f5;
   --fg-muted: #939395;
-  --fg-faint: #5e5e60;
+  --fg-faint: #808082;
   --line: #353537;
   --line-soft: #232325;
   --accent: #d31b28;
@@ -54,7 +54,7 @@
   --bg-elev-2: #e2d9dc;
   --fg: #1e1f22;
   --fg-muted: #777678;
-  --fg-faint: #a8a6a7;
+  --fg-faint: #727274;
   --line: #cfcbcb;
   --line-soft: #e0dbdc;
   --accent: #60c3d0;
@@ -77,7 +77,7 @@
   --bg-elev-2: #d2e6ff;
   --fg: #1a1d20;
   --fg-muted: #76797c;
-  --fg-faint: #a8abae;
+  --fg-faint: #727477;
   --line: #d0d2d5;
   --line-soft: #e1e3e6;
   --accent: #1c8bf4;
@@ -100,7 +100,7 @@
   --bg-elev-2: #1c2029;
   --fg: #f1f3f6;
   --fg-muted: #939599;
-  --fg-faint: #5f6166;
+  --fg-faint: #808284;
   --line: #37393e;
   --line-soft: #25272c;
   --accent: #1d70ec;
@@ -123,7 +123,7 @@
   --bg-elev-2: #fef9c3;
   --fg: #1e201e;
   --fg-muted: #7a7b79;
-  --fg-faint: #adadaa;
+  --fg-faint: #727774;
   --line: #d5d4d1;
   --line-soft: #e6e5e3;
   --accent: #fad423;
@@ -148,7 +148,7 @@
   --bg-elev-2: #222227;
   --fg: #f3f4f6;
   --fg-muted: #939496;
-  --fg-faint: #5f5f61;
+  --fg-faint: #808284;
   --line: #363638;
   --line-soft: #242426;
   --accent: #c5a358;
@@ -195,6 +195,47 @@ body {
 ::selection {
   color: var(--fg);
   background: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+/* キーボード操作時のフォーカス表示 */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 200;
+  padding: 10px 18px;
+  font-family: "Noto Serif JP", serif;
+  font-size: 14px;
+  color: var(--accent-contrast);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  background: var(--accent);
+  border-radius: 0 0 6px 6px;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
 }
 
 .font-en {
@@ -860,6 +901,7 @@ image-slot:hover {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  max-width: 100%;
   margin-bottom: 32px;
 }
 
@@ -875,18 +917,17 @@ image-slot:hover {
 
 .viewer-search {
   min-width: 280px;
+  max-width: 100%;
   padding: 8px 16px;
   font-family: "Noto Serif JP", serif;
   font-size: 13px;
   color: var(--fg);
-  outline: none;
   background: var(--bg-elev);
   border: 1px solid var(--line);
 }
 
-.viewer-search,
-.viewer-filters {
-  max-width: 100%;
+.viewer-search:focus-visible {
+  border-color: var(--accent);
 }
 
 .footer-brand {
@@ -911,7 +952,7 @@ image-slot:hover {
   color: var(--fg-muted);
 }
 
-.footer-col h4 {
+.footer-col-title {
   margin: 0 0 16px;
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
@@ -1203,13 +1244,15 @@ image-slot:hover {
   transform: translateX(2px);
 }
 
-.rel-chip[aria-disabled="true"] {
+.rel-chip[data-unlinked] {
   cursor: default;
+  border-left: 2px dashed var(--line);
+  opacity: 0.72;
 }
 
-.rel-chip[aria-disabled="true"]:hover {
+.rel-chip[data-unlinked]:hover {
   background: var(--bg-elev-2);
-  border-color: transparent;
+  border-color: var(--line);
   transform: none;
 }
 
@@ -1395,6 +1438,7 @@ image-slot:hover {
 }
 
 .hero-mark {
+  margin: 0;
   font-family: "Shippori Mincho", serif;
   font-size: clamp(56px, 9vw, 128px);
   line-height: 1;

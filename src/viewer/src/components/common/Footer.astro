@@ -15,8 +15,8 @@ import { navLinks } from '../../shared/nav';
           当サイトは非公式ファンサイトです。<br />ヰ世界情緒および関係各社とは一切関係ありません。<br />当サイトで扱う楽曲・画像・映像などの著作権等はすべて各権利者に帰属します。
         </p>
       </div>
-      <div class="footer-col">
-        <h4>Archive</h4>
+      <nav class="footer-col" aria-label="サイトマップ">
+        <h2 class="footer-col-title">Archive</h2>
         <ul>
           {
             navLinks.map(link => (
@@ -26,9 +26,9 @@ import { navLinks } from '../../shared/nav';
             ))
           }
         </ul>
-      </div>
-      <div class="footer-col">
-        <h4>External</h4>
+      </nav>
+      <nav class="footer-col" aria-label="外部リンク">
+        <h2 class="footer-col-title">External</h2>
         <ul>
           <li><a href="https://www.youtube.com/@isekaijoucho" target="_blank" rel="noopener noreferrer">YouTube</a></li>
           <li><a href="https://www.youtube.com/@isekaijoucho_sub" target="_blank" rel="noopener noreferrer">YouTube(sub)</a></li>
@@ -38,14 +38,14 @@ import { navLinks } from '../../shared/nav';
           <li><a href="https://kamitsubaki.jp/artist/isekaijoucho" target="_blank" rel="noopener noreferrer">Official Site</a></li>
           <li><a href="https://linktr.ee/isekaijoucho" target="_blank" rel="noopener noreferrer">Linktree</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <h4>About</h4>
+      </nav>
+      <nav class="footer-col" aria-label="サイト情報">
+        <h2 class="footer-col-title">About</h2>
         <ul>
           <li><a href="/site-policy">サイトポリシー</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
-      </div>
+      </nav>
     </div>
   </div>
 </footer>

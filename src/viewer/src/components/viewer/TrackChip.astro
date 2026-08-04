@@ -22,7 +22,7 @@ const trackNo = String(track.trackNo).padStart(2, '0');
         </a>
       )
     : (
-        <div class="rel-chip" aria-disabled="true">
+        <div class="rel-chip" data-unlinked>
           <span class="detail-index">{trackNo}</span>
           <div class="rel-copy">
             <div class="rel-main">{track.title}</div>
