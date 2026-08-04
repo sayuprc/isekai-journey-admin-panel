@@ -4,9 +4,11 @@ interface Props {
   color?: string;
   label: string;
   aspectRatio?: string;
+  /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
+  loading?: 'lazy' | 'eager';
 }
 
-const { imageUrl = null, color = 'var(--accent)', label, aspectRatio = '1 / 1' } = Astro.props;
+const { imageUrl = null, color = 'var(--accent)', label, aspectRatio = '1 / 1', loading = 'lazy' } = Astro.props;
 ---
 
 {
@@ -16,7 +18,9 @@ const { imageUrl = null, color = 'var(--accent)', label, aspectRatio = '1 / 1' }
           class="jacket-art jacket-art-image"
           style={`--tile-aspect:${aspectRatio};aspect-ratio:var(--tile-aspect);width:100%;object-fit:cover;`}
           src={imageUrl}
-          loading="lazy"
+          loading={loading}
+          fetchpriority={loading === 'eager' ? 'high' : undefined}
+          decoding="async"
           alt={label}
         />
       )

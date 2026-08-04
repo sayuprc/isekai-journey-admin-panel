@@ -50,6 +50,7 @@ const songs = await songContentRepository.all();
                 index={index}
                 media={song.media}
                 releaseGroups={song.releaseGroups}
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
               <div class="song-grid-body">
                 <div class="song-grid-meta">
