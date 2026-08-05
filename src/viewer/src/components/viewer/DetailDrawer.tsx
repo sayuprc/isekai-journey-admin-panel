@@ -11,6 +11,8 @@ interface DrawerTarget {
 }
 
 const maxCachedFragments = 8;
+// 指してすぐには取りにいかない Astro の prefetch (hover) と同じ猶予に揃える
+const hoverPrefetchDelay = 80;
 const fragmentHtmlCache = new Map<string, string>();
 const fragmentRequestCache = new Map<string, Promise<string>>();
 
@@ -89,6 +91,19 @@ const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
   return request;
 };
 
+// 一覧カードのクリックはページ遷移ではなく fragment の取得になるので、先読みも fragment を対象にする
+// Save-Data と低速回線では通信を増やさない
+const prefetchAllowed = (): boolean => {
+  const { connection } = navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+
+  if (connection === undefined) return true;
+  if (connection.saveData === true) return false;
+
+  return connection.effectiveType === undefined || !connection.effectiveType.includes('2g');
+};
+
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
@@ -96,6 +111,8 @@ export const DetailDrawer = () => {
   const [shareLabel, setShareLabel] = createSignal('共有');
   let loadSequence = 0;
   let bodyRef: HTMLDivElement | undefined;
+  let prefetchTimer = 0;
+  let prefetchPath = '';
 
   const current = createMemo(() => {
     const items = stack();
@@ -201,13 +218,37 @@ export const DetailDrawer = () => {
     }
   };
 
+  // 一覧の上を横切っただけのカードは、次のカードに入った時点で予約が取り消されるので取得しない
+  // 取得済み / 取得中なら fetchTargetFragment 側のキャッシュで即返るので、同じリンクを何度指しても無害
+  const handlePrefetch = (event: Event) => {
+    if (!prefetchAllowed()) return;
+
+    const target = resolveAnchorTarget(event.target);
+    // 同じリンクの中での移動では取り直さない
+    if (target !== null && target.fragmentPath === prefetchPath) return;
+
+    window.clearTimeout(prefetchTimer);
+    prefetchPath = target?.fragmentPath ?? '';
+
+    if (target === null) return;
+
+    prefetchTimer = window.setTimeout(() => {
+      void fetchTargetFragment(target).catch(() => {});
+    }, hoverPrefetchDelay);
+  };
+
   onMount(() => {
     document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('pointerover', handlePrefetch);
+    document.addEventListener('focusin', handlePrefetch);
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('pointerover', handlePrefetch);
+      document.removeEventListener('focusin', handlePrefetch);
       window.removeEventListener('keydown', handleKeyDown);
+      window.clearTimeout(prefetchTimer);
     };
   });
 
