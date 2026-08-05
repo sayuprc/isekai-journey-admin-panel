@@ -37,6 +37,10 @@ export default defineConfig({
     }),
   ],
   vite: {
+    build: {
+      // 小さなスクリプトも全ページへのインライン展開ではなくハッシュ付きファイルとしてキャッシュさせる
+      assetsInlineLimit: 0,
+    },
     plugins: [dropLegacyWoffSource()],
   },
 });
