@@ -89,6 +89,19 @@ const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
   return request;
 };
 
+// 一覧カードのクリックはページ遷移ではなく fragment の取得になるので、先読みも fragment を対象にする
+// Save-Data と低速回線では通信を増やさない
+const prefetchAllowed = (): boolean => {
+  const { connection } = navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+
+  if (connection === undefined) return true;
+  if (connection.saveData === true) return false;
+
+  return connection.effectiveType === undefined || !connection.effectiveType.includes('2g');
+};
+
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
@@ -201,12 +214,26 @@ export const DetailDrawer = () => {
     }
   };
 
+  // 取得済み / 取得中なら fetchTargetFragment 側のキャッシュで即返るので、同じリンクを何度指しても無害
+  const handlePrefetch = (event: Event) => {
+    if (!prefetchAllowed()) return;
+
+    const target = resolveAnchorTarget(event.target);
+    if (!target) return;
+
+    void fetchTargetFragment(target).catch(() => {});
+  };
+
   onMount(() => {
     document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('pointerover', handlePrefetch);
+    document.addEventListener('focusin', handlePrefetch);
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('pointerover', handlePrefetch);
+      document.removeEventListener('focusin', handlePrefetch);
       window.removeEventListener('keydown', handleKeyDown);
     };
   });

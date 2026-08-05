@@ -16,7 +16,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
     <SectionHead title="リリース" level={1} />
 
     <FilterBar
-      client:load
+      client:idle
       filters={[
         { value: 'all', label: `すべて` },
         { value: '2', label: 'アルバム' },
@@ -30,7 +30,12 @@ const releaseGroups = await releaseGroupContentRepository.all();
       searchPlaceholder="タイトル・種別・収録曲を検索..."
     />
 
-    <EntryStatus client:load entrySelector="[data-release-entry]" emptySelector="[data-release-empty]" />
+    <EntryStatus
+      client:idle
+      entrySelector="[data-release-entry]"
+      emptySelector="[data-release-empty]"
+      initialCount={releaseGroups.length}
+    />
 
     <div class="release-grid">
       <div class="entry-empty entry-empty-panel" data-release-empty hidden>

@@ -3,6 +3,8 @@ import { createSignal, onCleanup, onMount } from 'solid-js';
 type Props = {
   entrySelector: string;
   emptySelector?: string;
+  // SSR 時点の件数 hydration が遅れても 0 件と表示しないために渡す
+  initialCount?: number;
 };
 
 function countMatchedEntries(selector: string): number {
@@ -12,7 +14,7 @@ function countMatchedEntries(selector: string): number {
 }
 
 export default function EntryStatus(props: Props) {
-  const [count, setCount] = createSignal(0);
+  const [count, setCount] = createSignal(props.initialCount ?? 0);
 
   const updateCount = () => {
     const nextCount = countMatchedEntries(props.entrySelector);

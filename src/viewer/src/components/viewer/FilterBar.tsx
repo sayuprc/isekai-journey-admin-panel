@@ -17,10 +17,19 @@ type Props = {
 export default function FilterBar(props: Props) {
   const [filter, setFilter] = createSignal(props.defaultFilter ?? 'all');
   const [query, setQuery] = createSignal('');
+  // 絞り込みのない初回は SSR の DOM と結果が同じなので、全 entry の走査ごと省く
+  let firstRun = true;
 
   createEffect(() => {
     const f = filter();
     const q = query().trim().toLowerCase();
+    const skipInitialScan = firstRun && f === 'all' && q === '';
+    firstRun = false;
+
+    if (skipInitialScan) {
+      return;
+    }
+
     const entries = document.querySelectorAll(props.entrySelector);
 
     for (const entry of entries) {

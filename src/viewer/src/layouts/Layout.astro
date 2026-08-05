@@ -84,6 +84,7 @@ const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホ
     </main>
     <Footer />
     <BottomNav currentPath={Astro.url.pathname} />
-    <DetailDrawer client:load />
+    {/* 初期状態は何も描画しないので初回ペイントには不要 遅れている間のクリックは通常遷移になる */}
+    <DetailDrawer client:idle />
   </body>
 </html>
