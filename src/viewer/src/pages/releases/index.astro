@@ -38,7 +38,7 @@ const releaseGroups = await releaseGroupContentRepository.all();
         <div class="entry-empty-description">検索語句や種別フィルタを変えて確認してください。</div>
       </div>
       {
-        releaseGroups.map((releaseGroup) => {
+        releaseGroups.map((releaseGroup, index) => {
           const trackTitles = releaseGroup.releases
             .flatMap(release => release.media.flatMap(medium => medium.tracks.map(track => track.title)));
           const formatNames = groupFormats(releaseGroup).map(format => format.name);
@@ -51,7 +51,12 @@ const releaseGroups = await releaseGroupContentRepository.all();
               data-release-type={String(releaseGroup.type.value)}
               data-release-search={`${releaseGroup.title} ${releaseGroup.type.name} ${trackTitles.join(' ')}`.toLowerCase()}
             >
-              <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
+              <JacketArt
+                imageUrl={representativeJacketArtUrl(releaseGroup)}
+                label={releaseGroup.title}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                sizes="(max-width: 720px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              />
               <div class="release-card-body">
                 <div class="release-card-meta">
                   <span class="release-card-badges">
