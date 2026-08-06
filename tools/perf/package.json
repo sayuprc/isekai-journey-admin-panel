@@ -1,0 +1,22 @@
+{
+  "name": "viewer-perf",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "viewer のパフォーマンスを本番環境で計測する",
+  "scripts": {
+    "measure": "node measure.ts",
+    "scan": "unlighthouse-ci --config-file unlighthouse.config.ts --reporter jsonExpanded",
+    "rank": "node rank.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lighthouse": "13.4.1",
+    "puppeteer": "25.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "typescript": "7.0.2",
+    "unlighthouse": "^0.18.0"
+  }
+}

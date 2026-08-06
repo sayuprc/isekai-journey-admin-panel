@@ -5,3 +5,7 @@ mise.*.toml
 
 # APM dependencies
 apm_modules/
+
+# パフォーマンス計測の生レポート (1 計測あたり数百 MB)
+docs/perf/reports/
+docs/perf/scans/

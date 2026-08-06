@@ -1,0 +1,45 @@
+{
+  "origin": "https://isekaijoucho.fan",
+  "pages": [
+    {
+      "key": "top",
+      "path": "/",
+      "note": "トップ"
+    },
+    {
+      "key": "songs-index",
+      "path": "/songs/",
+      "note": "楽曲一覧。全件をカードで描画する最も重い一覧"
+    },
+    {
+      "key": "song-detail",
+      "path": "/songs/7a8d5f95-66e8-4db1-86c4-a5bafd24d753/",
+      "note": "楽曲詳細の最遅。scan で mobile 4 位 16583ms / desktop 1 位 13204ms。計測期間中は固定する"
+    },
+    {
+      "key": "releases-index",
+      "path": "/releases/",
+      "note": "リリース一覧。songs-index と同じ構造だが件数が少ない"
+    },
+    {
+      "key": "release-detail",
+      "path": "/releases/68624920-94d3-4334-a3db-e9c0ad177f6b/",
+      "note": "リリース詳細の最遅。scan で mobile / desktop とも 1 位 (86136ms / 87754ms)。計測期間中は固定する"
+    },
+    {
+      "key": "media-detail",
+      "path": "/media/017bf8b3-7d93-4658-bc5c-5be6455fea2a/",
+      "note": "メディア詳細の最遅。scan で mobile / desktop とも 1 位 (9343ms / 10454ms)。計測期間中は固定する"
+    },
+    {
+      "key": "contact",
+      "path": "/contact/",
+      "note": "対照ページ。固有コンテンツがほぼ無く、共通オーバーヘッドの削減がそのまま出る"
+    },
+    {
+      "key": "site-policy",
+      "path": "/site-policy/",
+      "note": "対照ページ。テキストのみで画像も hydration も無い"
+    }
+  ]
+}

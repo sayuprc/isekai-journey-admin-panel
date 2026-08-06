@@ -459,3 +459,29 @@ run = [
   "bun run eslint:check",
   "bun run stylelint:check",
 ]
+
+# -- perf --
+
+[tasks."perf:install"]
+description = "パフォーマンス計測ツールの依存をインストールする"
+dir = "tools/perf"
+run = "pnpm install"
+
+[tasks."perf:measure"]
+description = "viewer のパフォーマンスを本番環境で計測する"
+usage = 'arg "<label>" help="計測ラベル (例: baseline, 921-logo-svg)"'
+dir = "tools/perf"
+run = "node measure.ts --label ${usage_label}"
+
+[tasks."perf:scan"]
+description = "全ページを走査して遅いページを探す (探索用。前後比較には使わない)"
+usage = 'arg "<label>" help="スキャンラベル (例: baseline, final)"'
+dir = "tools/perf"
+run = [
+  # pnpm 経由だと実行前の依存チェックが ERR_PNPM_IGNORED_BUILDS で落ちるため直接叩く
+  # --build-static で結果を見返すための HTML レポートも出す
+  "./node_modules/.bin/unlighthouse-ci --config-file unlighthouse.config.ts --reporter jsonExpanded --build-static --mobile --output-path ../../docs/perf/scans/${usage_label}/mobile",
+  "./node_modules/.bin/unlighthouse-ci --config-file unlighthouse.config.ts --reporter jsonExpanded --build-static --desktop --output-path ../../docs/perf/scans/${usage_label}/desktop",
+  "node rank.ts ../../docs/perf/scans/${usage_label}/mobile/ci-result.json ../../docs/perf/scans/${usage_label}/desktop/ci-result.json",
+]
+
