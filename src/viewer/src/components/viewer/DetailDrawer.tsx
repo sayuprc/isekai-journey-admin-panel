@@ -5,23 +5,22 @@ import { SITE_TITLE } from '../../shared/site';
 type DrawerKind = 'song' | 'release' | 'media';
 
 interface DrawerTarget {
-  fragmentPath: string;
   id: string;
   kind: DrawerKind;
   pathname: string;
 }
 
-const maxCachedFragments = 8;
+const maxCachedDetails = 8;
 // 指してすぐには取りにいかない Astro の prefetch (hover) と同じ猶予に揃える
 const hoverPrefetchDelay = 80;
-const fragmentHtmlCache = new Map<string, string>();
-const fragmentRequestCache = new Map<string, Promise<string>>();
+const detailHtmlCache = new Map<string, string>();
+const detailRequestCache = new Map<string, Promise<string>>();
 
 const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
   const patterns = [
-    { fragment: '/fragments/songs/', kind: 'song' as const, prefix: '/songs/' },
-    { fragment: '/fragments/releases/', kind: 'release' as const, prefix: '/releases/' },
-    { fragment: '/fragments/media/', kind: 'media' as const, prefix: '/media/' },
+    { kind: 'song' as const, prefix: '/songs/' },
+    { kind: 'release' as const, prefix: '/releases/' },
+    { kind: 'media' as const, prefix: '/media/' },
   ];
 
   for (const pattern of patterns) {
@@ -29,7 +28,6 @@ const resolveDrawerTarget = (pathname: string): DrawerTarget | null => {
     const id = pathname.slice(pattern.prefix.length).split('/')[0];
     if (!id) return null;
     return {
-      fragmentPath: `${pattern.fragment}${id}/`,
       id,
       kind: pattern.kind,
       pathname: `${pattern.prefix}${id}`,
@@ -53,46 +51,62 @@ const resolveAnchorTarget = (eventTarget: EventTarget | null): DrawerTarget | nu
   return resolveDrawerTarget(url.pathname);
 };
 
-const fetchTargetFragment = (target: DrawerTarget): Promise<string> => {
-  const cachedHtml = fragmentHtmlCache.get(target.fragmentPath);
+// 詳細ページ本体からドロワーに出す部分だけを抜き出す
+// キャッシュには抜き出した後の HTML を入れ、レイアウト分を保持しない
+const extractDetailContent = (pageHtml: string, pathname: string): string => {
+  const content = new DOMParser()
+    .parseFromString(pageHtml, 'text/html')
+    .querySelector('.detail-page-content');
+
+  if (content === null) {
+    throw new Error(`Missing .detail-page-content in ${pathname}`);
+  }
+
+  return content.outerHTML;
+};
+
+const fetchTargetDetail = (target: DrawerTarget): Promise<string> => {
+  const cachedHtml = detailHtmlCache.get(target.pathname);
   if (cachedHtml !== undefined) {
-    fragmentHtmlCache.delete(target.fragmentPath);
-    fragmentHtmlCache.set(target.fragmentPath, cachedHtml);
+    detailHtmlCache.delete(target.pathname);
+    detailHtmlCache.set(target.pathname, cachedHtml);
     return Promise.resolve(cachedHtml);
   }
 
-  const cachedRequest = fragmentRequestCache.get(target.fragmentPath);
+  const cachedRequest = detailRequestCache.get(target.pathname);
   if (cachedRequest) return cachedRequest;
 
-  const request = fetch(target.fragmentPath)
+  // ビルド成果物は trailing slash 付きなので、リダイレクトを挟まないよう合わせて取得する
+  const request = fetch(`${target.pathname}/`)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${target.fragmentPath}: ${response.status}`);
+        throw new Error(`Failed to fetch ${target.pathname}: ${response.status}`);
       }
 
       return response.text();
     })
-    .then((html) => {
-      fragmentHtmlCache.set(target.fragmentPath, html);
-      if (fragmentHtmlCache.size > maxCachedFragments) {
-        const oldestKey = fragmentHtmlCache.keys().next().value;
+    .then((pageHtml) => {
+      const html = extractDetailContent(pageHtml, target.pathname);
+      detailHtmlCache.set(target.pathname, html);
+      if (detailHtmlCache.size > maxCachedDetails) {
+        const oldestKey = detailHtmlCache.keys().next().value;
         if (oldestKey !== undefined) {
-          fragmentHtmlCache.delete(oldestKey);
+          detailHtmlCache.delete(oldestKey);
         }
       }
-      fragmentRequestCache.delete(target.fragmentPath);
+      detailRequestCache.delete(target.pathname);
       return html;
     })
     .catch((error: unknown) => {
-      fragmentRequestCache.delete(target.fragmentPath);
+      detailRequestCache.delete(target.pathname);
       throw error;
     });
 
-  fragmentRequestCache.set(target.fragmentPath, request);
+  detailRequestCache.set(target.pathname, request);
   return request;
 };
 
-// 一覧カードのクリックはページ遷移ではなく fragment の取得になるので、先読みも fragment を対象にする
+// 一覧カードのクリックはページ遷移ではなく詳細ページの取得になるので、先読みも同じ URL を対象にする
 // Save-Data と低速回線では通信を増やさない
 const prefetchAllowed = (): boolean => {
   const { connection } = navigator as Navigator & {
@@ -159,7 +173,7 @@ export const DetailDrawer = () => {
     setShareLabel('共有');
 
     try {
-      const html = await fetchTargetFragment(target);
+      const html = await fetchTargetDetail(target);
       if (sequence !== loadSequence) return false;
 
       setContent(html);
@@ -240,7 +254,7 @@ export const DetailDrawer = () => {
     if (!target) return;
 
     const shareUrl = new URL(target.pathname, window.location.origin).toString();
-    // 識別子を共有シートに出さないよう、fragment が持つ表示タイトルを使う
+    // 識別子を共有シートに出さないよう、詳細コンテンツが持つ表示タイトルを使う
     const shareTitle = bodyRef?.querySelector('[data-share-title]')?.getAttribute('data-share-title')
       ?? SITE_TITLE;
 
@@ -316,21 +330,21 @@ export const DetailDrawer = () => {
   };
 
   // 一覧の上を横切っただけのカードは、次のカードに入った時点で予約が取り消されるので取得しない
-  // 取得済み / 取得中なら fetchTargetFragment 側のキャッシュで即返るので、同じリンクを何度指しても無害
+  // 取得済み / 取得中なら fetchTargetDetail 側のキャッシュで即返るので、同じリンクを何度指しても無害
   const handlePrefetch = (event: Event) => {
     if (!prefetchAllowed()) return;
 
     const target = resolveAnchorTarget(event.target);
     // 同じリンクの中での移動では取り直さない
-    if (target !== null && target.fragmentPath === prefetchPath) return;
+    if (target !== null && target.pathname === prefetchPath) return;
 
     window.clearTimeout(prefetchTimer);
-    prefetchPath = target?.fragmentPath ?? '';
+    prefetchPath = target?.pathname ?? '';
 
     if (target === null) return;
 
     prefetchTimer = window.setTimeout(() => {
-      void fetchTargetFragment(target).catch(() => {});
+      void fetchTargetDetail(target).catch(() => {});
     }, hoverPrefetchDelay);
   };
 
@@ -342,8 +356,8 @@ export const DetailDrawer = () => {
     if (target === null) return;
 
     window.clearTimeout(prefetchTimer);
-    prefetchPath = target.fragmentPath;
-    void fetchTargetFragment(target).catch(() => {});
+    prefetchPath = target.pathname;
+    void fetchTargetDetail(target).catch(() => {});
   };
 
   // 開閉に合わせて背面を操作不能にする (スクロールロック + inert + フォーカスの移動と復帰)
