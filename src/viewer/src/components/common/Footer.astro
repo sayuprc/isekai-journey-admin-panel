@@ -1,3 +1,7 @@
+---
+import { navLinks } from '../../shared/nav';
+---
+
 <footer class="site-footer">
   <div class="shell">
     <div class="footer-grid">
@@ -14,12 +18,13 @@
       <div class="footer-col">
         <h4>Archive</h4>
         <ul>
-          <li><a href="/songs">楽曲</a></li>
-          <li><a href="/releases">リリース</a></li>
-          {/*
-          <li><a href="/media">メディア</a></li>
-          <li><a href="/profile">人物</a></li>
-          */}
+          {
+            navLinks.map(link => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
       <div class="footer-col">

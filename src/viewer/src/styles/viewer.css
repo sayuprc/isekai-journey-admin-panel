@@ -1341,6 +1341,43 @@ image-slot:hover {
   color: var(--accent);
 }
 
+.rel-arrow-muted {
+  color: var(--fg-faint);
+}
+
+/* チップ内の補足行 (日付・種別など) */
+
+.rel-sub {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+/* 詳細ページのセクション見出し */
+
+.detail-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-section-head-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 14px;
+  color: var(--fg);
+  letter-spacing: 0.08em;
+}
+
+.detail-section-head-count {
+  font-family: Spectral, serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
 /* ユーティリティ */
 
 .spacer-lg {
@@ -1618,6 +1655,10 @@ image-slot:hover {
   font-family: Spectral, serif;
   font-style: italic;
   color: var(--accent);
+}
+
+.rel-chip .detail-index {
+  min-width: 28px;
 }
 
 .hero-stats-grid strong {
