@@ -18,9 +18,17 @@ interface Props {
   ogImage?: OgImage | null;
   /** ホームは自動で先頭に付くので、一覧から現在地までを渡す。空なら導線を出さない */
   breadcrumbs?: readonly BreadcrumbItem[];
+  /** エラーページのように、実体のある URL として索引させたくないページで立てる */
+  noindex?: boolean;
 }
 
-const { pageTitle, pageDescription = SITE_DESCRIPTION, ogImage = null, breadcrumbs = [] } = Astro.props;
+const {
+  pageTitle,
+  pageDescription = SITE_DESCRIPTION,
+  ogImage = null,
+  breadcrumbs = [],
+  noindex: pageNoindex = false,
+} = Astro.props;
 
 const generateTitle = (title: string) => {
   return title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
@@ -32,7 +40,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const cardImage = ogImage ?? DEFAULT_OG_IMAGE;
 const cardImageUrl = new URL(cardImage.url, Astro.site).href;
 const twitterCard = ogImage === null ? 'summary' : 'summary_large_image';
-const noindex = import.meta.env.SITE_NOINDEX === 'true';
+const noindex = pageNoindex || import.meta.env.SITE_NOINDEX === 'true';
 
 const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホーム', href: '/' }, ...breadcrumbs] : [];
 ---
