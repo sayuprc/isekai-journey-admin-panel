@@ -1,7 +1,7 @@
 ---
 import { mediaPlatformLabel, youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../../features/media/labels';
 import type { SongDetail } from '../../../features/songs/types';
-import { cdnImageSrcset, cdnImageUrl } from '../../../shared/images';
+import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../../shared/image';
 
 interface Props {
   song: SongDetail;
@@ -64,8 +64,8 @@ const formatPublishedAt = (value: string): string =>
                     ? (
                         <img
                           class="rel-thumb"
-                          src={cdnImageUrl(releaseGroup.jacketArtUrl, 320)}
-                          srcset={cdnImageSrcset(releaseGroup.jacketArtUrl)}
+                          src={assetImageUrl(releaseGroup.jacketArtUrl, 320)}
+                          srcset={assetImageSrcset(releaseGroup.jacketArtUrl, JACKET_WIDTHS)}
                           sizes="96px"
                           loading="lazy"
                           alt={releaseGroup.title}

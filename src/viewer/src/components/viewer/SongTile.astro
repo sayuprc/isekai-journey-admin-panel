@@ -1,7 +1,7 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
 import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
-import { cdnImageSrcset, cdnImageUrl } from '../../shared/images';
+import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../shared/image';
 
 interface Props {
   songId: string;
@@ -23,12 +23,12 @@ const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ??
 const jacketArtUrl = releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
 
 const thumbnailUrl = mediaThumbnailUrl
-  ?? (jacketArtUrl === null ? null : cdnImageUrl(jacketArtUrl, 640));
+  ?? (jacketArtUrl === null ? null : assetImageUrl(jacketArtUrl, 640));
 
 const thumbnailSrcset = mediaThumbnailUrl !== null
   ? youtubeThumbnailSrcset(mediaThumbnailUrl)
   : jacketArtUrl !== null
-    ? cdnImageSrcset(jacketArtUrl)
+    ? assetImageSrcset(jacketArtUrl, JACKET_WIDTHS)
     : undefined;
 
 const sequence = String(index + 1).padStart(2, '0');
