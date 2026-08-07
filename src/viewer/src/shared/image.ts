@@ -21,6 +21,14 @@ const transformableOrigin = ((): string | null => {
   }
 })();
 
+/**
+ * 画像の配信元へ事前接続するためのオリジン
+ * 画像が 1 枚しかないページでは DNS + TCP + TLS が LCP のクリティカルパスに丸ごと乗るため、
+ * head の preconnect で前倒しする
+ * 変換が効かない環境では別オリジンを使わないので null になる
+ */
+export const preconnectOrigin = transformableOrigin;
+
 function transformableUrl(imageUrl: string): URL | null {
   if (transformableOrigin === null) {
     return null;
