@@ -1,12 +1,24 @@
 ---
+import { cdnImageSrcset, cdnImageUrl } from '../../shared/images';
+
 interface Props {
   imageUrl?: string | null;
   color?: string;
   label: string;
   aspectRatio?: string;
+  sizes?: string;
 }
 
-const { imageUrl = null, color = 'var(--accent)', label, aspectRatio = '1 / 1' } = Astro.props;
+// sizes は呼び出し側が表示枠に合わせて渡す
+// CSS の実寸から計算した値を渡さないと、srcset が実際より大きい variant を選んで転送量が増える
+// 既定値は最も広いケース (一覧カード) に合わせ、指定漏れでも解像度不足にはならないようにする
+const {
+  imageUrl = null,
+  color = 'var(--accent)',
+  label,
+  aspectRatio = '1 / 1',
+  sizes = '(max-width: 1100px) calc(100vw - 40px), calc((min(1480px, 100vw) - 160px) / 3)',
+} = Astro.props;
 ---
 
 {
@@ -15,7 +27,9 @@ const { imageUrl = null, color = 'var(--accent)', label, aspectRatio = '1 / 1' }
         <img
           class="jacket-art jacket-art-image"
           style={`--tile-aspect:${aspectRatio};aspect-ratio:var(--tile-aspect);width:100%;object-fit:cover;`}
-          src={imageUrl}
+          src={cdnImageUrl(imageUrl, 640)}
+          srcset={cdnImageSrcset(imageUrl)}
+          sizes={sizes}
           loading="lazy"
           alt={label}
         />

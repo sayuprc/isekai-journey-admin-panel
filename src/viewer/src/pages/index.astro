@@ -78,7 +78,11 @@ const siteStats = await siteStatsRepository.get();
         <SectionHead title="最新リリース" />
         <div class="feature-grid-link">
           <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
-            <JacketArt imageUrl={representativeJacketArtUrl(latestReleaseGroup)} label={latestReleaseGroup.title} />
+            <JacketArt
+              imageUrl={representativeJacketArtUrl(latestReleaseGroup)}
+              label={latestReleaseGroup.title}
+              sizes="(max-width: 1100px) calc(100vw - 40px), 320px"
+            />
           </a>
           <div class="feature-body">
             <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
