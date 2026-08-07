@@ -67,7 +67,10 @@ const formatPublishedAt = (value: string): string =>
                           src={assetImageUrl(releaseGroup.jacketArtUrl, 320)}
                           srcset={assetImageSrcset(releaseGroup.jacketArtUrl, JACKET_WIDTHS)}
                           sizes="96px"
+                          width="96"
+                          height="54"
                           loading="lazy"
+                          decoding="async"
                           alt={releaseGroup.title}
                         />
                       )
@@ -116,7 +119,10 @@ const formatPublishedAt = (value: string): string =>
                           src={thumbnailUrl}
                           srcset={youtubeThumbnailSrcset(thumbnailUrl)}
                           sizes="96px"
+                          width="96"
+                          height="54"
                           loading="lazy"
+                          decoding="async"
                           alt={entry.title}
                         />
                       )

@@ -27,7 +27,9 @@ const formatPublishedAt = (value: string): string =>
               src={thumbnailUrl}
               srcset={youtubeThumbnailSrcset(thumbnailUrl)}
               sizes="(max-width: 720px) 100vw, 640px"
-              loading="lazy"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
               alt={media.title}
             />
           )
