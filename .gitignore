@@ -6,6 +6,12 @@ mise.*.toml
 # APM dependencies
 apm_modules/
 
-# パフォーマンス計測の生レポート (1 計測あたり数百 MB)
-docs/perf/reports/
+# パフォーマンス計測の生レポート
+# 全 run は合計 1.5GB あるため、中央値の run だけ追跡する
+docs/perf/reports/**
+!docs/perf/reports/**/
+!docs/perf/reports/**/median.html
+!docs/perf/reports/**/median.json
+
+# unlighthouse の全ページスキャン (1.8GB)
 docs/perf/scans/

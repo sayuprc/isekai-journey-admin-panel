@@ -52,12 +52,16 @@ node measure.ts --label 923-self-host-fonts --pages songs-index,contact --runs 5
 | --- | --- | --- |
 | `results.jsonl` | 1 計測 1 行のサマリ (中央値と IQR、転送量)。記事のグラフはこれを入力にする | 追跡する |
 | `runs.jsonl` | run 1 行の指標と LCP 要素。分布を見るときはこちら | 追跡する |
-| `reports/<label>/<formFactor>/<page>/run-N.json` | 各 run の Lighthouse 生レポート | 追跡しない |
-| `reports/<label>/<formFactor>/<page>/median.html` | 中央値の run の HTML レポート | 追跡しない |
+| `reports/<label>/<formFactor>/<page>/median.json` | 中央値の run の Lighthouse レポート | 追跡する |
+| `reports/<label>/<formFactor>/<page>/median.html` | 中央値の run の HTML レポート | 追跡する |
+| `reports/<label>/<formFactor>/<page>/run-N.json` | 各 run の生レポート | 追跡しない |
 | `scans/<label>/ci-result.json` | 全ページスキャンの結果 | 追跡しない |
 
-`reports/` と `scans/` は合計 3.3GB になるため git 管理から外しています
-消すと生レポートは再現できないので、記事を書き終えるまでローカルに残してください
+中央値の run だけ追跡しています (384 ファイル、258MB)
+リクエスト単位のタイミングや audit の詳細はここから読めます
+
+全 run (1.5GB) と `scans/` (1.8GB) は追跡していません
+消すと再現できないので、記事を書き終えるまでローカルに残してください
 
 ただし run ごとの指標は `runs.jsonl` に抽出済みです
 中央値と IQR だけでは run 1 のコールドや分布の二峰性が追えないため、生レポートを消す前に必ず実行してください
