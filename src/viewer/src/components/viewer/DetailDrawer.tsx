@@ -1,5 +1,6 @@
-import { Show, createMemo, createSignal, onMount } from 'solid-js';
+import { Show, createEffect, createMemo, createSignal, on, onMount } from 'solid-js';
 import { kindLabel } from '../../shared/labels';
+import { SITE_TITLE } from '../../shared/site';
 
 type DrawerKind = 'song' | 'release' | 'media';
 
@@ -104,6 +105,26 @@ const prefetchAllowed = (): boolean => {
   return connection.effectiveType === undefined || !connection.effectiveType.includes('2g');
 };
 
+// ドロワーの各階層を 1 履歴エントリとして積むので、履歴 state には開いている階層のパス一覧を持たせる
+const readDrawerPaths = (state: unknown): string[] | null => {
+  if (typeof state !== 'object' || state === null) return null;
+
+  const { drawerPaths } = state as { drawerPaths?: unknown };
+  if (!Array.isArray(drawerPaths) || drawerPaths.length === 0) return null;
+  if (!drawerPaths.every(path => typeof path === 'string')) return null;
+
+  return drawerPaths;
+};
+
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
 export const DetailDrawer = () => {
   const [stack, setStack] = createSignal<DrawerTarget[]>([]);
   const [content, setContent] = createSignal('');
@@ -111,13 +132,21 @@ export const DetailDrawer = () => {
   const [shareLabel, setShareLabel] = createSignal('共有');
   let loadSequence = 0;
   let bodyRef: HTMLDivElement | undefined;
+  let panelRef: HTMLElement | undefined;
+  let overlayRef: HTMLDivElement | undefined;
   let prefetchTimer = 0;
   let prefetchPath = '';
+  // 戻る操作は popstate で完結させるため、応答が返るまで多重発火させない
+  let historyNavPending = false;
+  let restoreFocusTo: HTMLElement | null = null;
+  let inertedElements: Element[] = [];
 
   const current = createMemo(() => {
     const items = stack();
     return items[items.length - 1] ?? null;
   });
+
+  const isOpen = createMemo(() => current() !== null);
 
   const loadTarget = async (target: DrawerTarget, commitStack: () => void) => {
     const sequence = loadSequence + 1;
@@ -150,11 +179,15 @@ export const DetailDrawer = () => {
     if (!target) return false;
     if (current()?.pathname === target.pathname) return true;
 
-    return loadTarget(target, () => setStack((prev) => {
-      const last = prev[prev.length - 1];
-      if (last?.pathname === target.pathname) return prev;
-      return [...prev, target];
-    }));
+    return loadTarget(target, () => {
+      const nextStack = [...stack(), target];
+      setStack(nextStack);
+      window.history.pushState(
+        { drawerPaths: nextStack.map(item => item.pathname) },
+        '',
+        target.pathname,
+      );
+    });
   };
 
   const closeDrawer = () => {
@@ -165,16 +198,41 @@ export const DetailDrawer = () => {
     setShareLabel('共有');
   };
 
-  const goBack = async () => {
-    const prev = stack();
-    if (prev.length <= 1) {
+  // × / オーバーレイ / Esc は積んだ階層ぶんまとめて履歴を戻し、実際の閉じ処理は popstate に任せる
+  const requestClose = () => {
+    const depth = stack().length;
+    if (depth === 0 || historyNavPending) return;
+
+    historyNavPending = true;
+    window.history.go(-depth);
+  };
+
+  const goBack = () => {
+    if (!current() || historyNavPending) return;
+
+    historyNavPending = true;
+    window.history.back();
+  };
+
+  const handlePopState = (event: PopStateEvent) => {
+    historyNavPending = false;
+
+    const paths = readDrawerPaths(event.state);
+    if (paths === null) {
+      if (current()) closeDrawer();
+      return;
+    }
+
+    const targets = paths.map(resolveDrawerTarget).filter(target => target !== null);
+    const nextTarget = targets[targets.length - 1];
+    if (targets.length !== paths.length || !nextTarget) {
       closeDrawer();
       return;
     }
 
-    const nextStack = prev.slice(0, -1);
-    const target = nextStack[nextStack.length - 1];
-    await loadTarget(target, () => setStack(nextStack));
+    if (current()?.pathname === nextTarget.pathname && stack().length === targets.length) return;
+
+    void loadTarget(nextTarget, () => setStack(targets));
   };
 
   const handleShare = async () => {
@@ -182,11 +240,14 @@ export const DetailDrawer = () => {
     if (!target) return;
 
     const shareUrl = new URL(target.pathname, window.location.origin).toString();
+    // 識別子を共有シートに出さないよう、fragment が持つ表示タイトルを使う
+    const shareTitle = bodyRef?.querySelector('[data-share-title]')?.getAttribute('data-share-title')
+      ?? SITE_TITLE;
 
     try {
       if (navigator.share) {
         await navigator.share({
-          title: target.id.toUpperCase(),
+          title: shareTitle,
           url: shareUrl,
         });
         return;
@@ -212,9 +273,45 @@ export const DetailDrawer = () => {
     void openDrawer(drawerTarget.pathname);
   };
 
+  const trapFocus = (event: KeyboardEvent) => {
+    if (!panelRef) return;
+
+    const focusables = panelRef.querySelectorAll<HTMLElement>(focusableSelector);
+    if (focusables.length === 0) {
+      event.preventDefault();
+      panelRef.focus();
+      return;
+    }
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    const insidePanel = active instanceof Element && panelRef.contains(active);
+
+    if (event.shiftKey) {
+      if (!insidePanel || active === first || active === panelRef) {
+        event.preventDefault();
+        last.focus();
+      }
+      return;
+    }
+
+    if (!insidePanel || active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && current()) {
-      closeDrawer();
+    if (!current()) return;
+
+    if (event.key === 'Escape') {
+      requestClose();
+      return;
+    }
+
+    if (event.key === 'Tab') {
+      trapFocus(event);
     }
   };
 
@@ -237,17 +334,67 @@ export const DetailDrawer = () => {
     }, hoverPrefetchDelay);
   };
 
+  // タップは指が触れた時点で開く意思が確定しているので、猶予なしで即取得する
+  const handleTouchPrefetch = (event: Event) => {
+    if (!prefetchAllowed()) return;
+
+    const target = resolveAnchorTarget(event.target);
+    if (target === null) return;
+
+    window.clearTimeout(prefetchTimer);
+    prefetchPath = target.fragmentPath;
+    void fetchTargetFragment(target).catch(() => {});
+  };
+
+  // 開閉に合わせて背面を操作不能にする (スクロールロック + inert + フォーカスの移動と復帰)
+  createEffect(on(isOpen, (open) => {
+    if (open) {
+      restoreFocusTo = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      document.body.classList.add('drawer-lock');
+
+      for (const child of document.body.children) {
+        if (overlayRef !== undefined && child.contains(overlayRef)) continue;
+        if (child.hasAttribute('inert')) continue;
+        child.setAttribute('inert', '');
+        inertedElements.push(child);
+      }
+
+      panelRef?.focus();
+      return;
+    }
+
+    document.body.classList.remove('drawer-lock');
+    for (const element of inertedElements) {
+      element.removeAttribute('inert');
+    }
+    inertedElements = [];
+
+    if (restoreFocusTo?.isConnected) {
+      restoreFocusTo.focus();
+    }
+    restoreFocusTo = null;
+  }, { defer: true }));
+
   onMount(() => {
+    // リロード直後は前回セッションのドロワー state が残っていることがあるので捨てる
+    if (readDrawerPaths(window.history.state) !== null) {
+      window.history.replaceState(null, '');
+    }
+
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('pointerover', handlePrefetch);
     document.addEventListener('focusin', handlePrefetch);
+    document.addEventListener('touchstart', handleTouchPrefetch, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('popstate', handlePopState);
 
     return () => {
       document.removeEventListener('click', handleDocumentClick);
       document.removeEventListener('pointerover', handlePrefetch);
       document.removeEventListener('focusin', handlePrefetch);
+      document.removeEventListener('touchstart', handleTouchPrefetch);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('popstate', handlePopState);
       window.clearTimeout(prefetchTimer);
     };
   });
@@ -255,13 +402,21 @@ export const DetailDrawer = () => {
   return (
     <Show when={current()}>
       {target => (
-        <div class="detail-overlay" onClick={closeDrawer}>
-          <aside class="detail-panel" onClick={event => event.stopPropagation()}>
+        <div class="detail-overlay" ref={el => overlayRef = el} onClick={requestClose}>
+          <aside
+            class="detail-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${kindLabel(target().kind)}の詳細`}
+            tabindex="-1"
+            ref={el => panelRef = el}
+            onClick={event => event.stopPropagation()}
+          >
             <div class="detail-head">
               <div style={{ 'display': 'flex', 'align-items': 'center', 'gap': '12px' }}>
                 <Show when={stack().length > 1}>
-                  <button class="icon-btn" type="button" onClick={() => void goBack()} title="戻る">
-                    ←
+                  <button class="icon-btn" type="button" onClick={goBack} title="戻る" aria-label="戻る">
+                    <span aria-hidden="true">←</span>
                   </button>
                 </Show>
                 <div class="label-mono">{kindLabel(target().kind)}</div>
@@ -279,16 +434,17 @@ export const DetailDrawer = () => {
                   class="icon-btn drawer-open-link"
                   href={target().pathname}
                   title="この詳細ページを開く"
+                  aria-label="この詳細ページを開く"
                   data-drawer-bypass="true"
                 >
-                  ↗
+                  <span aria-hidden="true">↗</span>
                 </a>
-                <button class="icon-btn" type="button" onClick={closeDrawer} title="閉じる">
-                  ×
+                <button class="icon-btn" type="button" onClick={requestClose} title="閉じる" aria-label="閉じる">
+                  <span aria-hidden="true">×</span>
                 </button>
               </div>
             </div>
-            <div class="detail-body" ref={el => bodyRef = el}>
+            <div class="detail-body" aria-busy={loading()} ref={el => bodyRef = el}>
               <Show when={loading()}>
                 <div class="drawer-skeleton" aria-hidden="true">
                   <div class="drawer-skeleton-line drawer-skeleton-eyebrow"></div>

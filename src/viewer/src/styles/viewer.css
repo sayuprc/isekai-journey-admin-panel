@@ -982,6 +982,12 @@ image-slot:hover {
 
 /* ─── Detail Panel ─── */
 
+/* ドロワー表示中は背面ページをスクロールさせない */
+
+body.drawer-lock {
+  overflow: hidden;
+}
+
 .detail-overlay {
   position: fixed;
   inset: 0;

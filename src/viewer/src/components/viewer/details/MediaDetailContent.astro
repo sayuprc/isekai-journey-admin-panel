@@ -18,7 +18,7 @@ const formatPublishedAt = (value: string): string =>
   new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
 ---
 
-<div class="detail-page-content media-detail-content">
+<div class="detail-page-content media-detail-content" data-share-title={media.title}>
   <a class="media-detail-thumbnail-link" href={media.url} target="_blank" rel="noopener noreferrer">
     {
       thumbnailUrl
