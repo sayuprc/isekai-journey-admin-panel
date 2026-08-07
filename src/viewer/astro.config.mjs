@@ -30,17 +30,14 @@ export default defineConfig({
     port: port,
     allowedHosts: ['local.isekaijoucho.fan'],
   },
-  // 一覧カードのクリックは DetailDrawer が fragment を取りに行くので、ページ全体の先読みは
+  // 一覧カードのクリックは DetailDrawer が詳細ページを取りに行くので、Astro 側の先読みは
   // 実際に遷移するリンク (ナビ) だけに絞る。opt-in にするため prefetchAll は既定の false のまま
   prefetch: {
     defaultStrategy: 'hover',
   },
   integrations: [
     solidJs(),
-    sitemap({
-      // fragments はドロワー用の部分 HTML なのでクロール対象から外す
-      filter: page => !page.includes('/fragments/'),
-    }),
+    sitemap(),
   ],
   vite: {
     build: {
