@@ -1726,6 +1726,17 @@ image-slot:hover {
   display: block;
 }
 
+/* 一覧は 300 件超を一度に描くので、画面外のカードはレイアウトと描画を省く
+   高さは auto で実測値を再利用させ、初回だけ概算値を使う */
+
+.song-grid-card,
+.release-card {
+  /* auto 付きを解釈しないブラウザ向けに固定値を先に置く。未指定だと画面外カードが高さ 0 に潰れる */
+  contain-intrinsic-size: 260px;
+  contain-intrinsic-size: auto 260px;
+  content-visibility: auto;
+}
+
 .media-card-body,
 .song-grid-body,
 .release-card-body {

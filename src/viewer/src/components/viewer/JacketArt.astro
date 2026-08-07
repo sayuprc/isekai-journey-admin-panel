@@ -7,6 +7,8 @@ interface Props {
   label: string;
   aspectRatio?: string;
   sizes?: string;
+  /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
+  loading?: 'lazy' | 'eager';
 }
 
 // sizes は呼び出し側が表示枠に合わせて渡す
@@ -17,6 +19,7 @@ const {
   color = 'var(--accent)',
   label,
   aspectRatio = '1 / 1',
+  loading = 'lazy',
   sizes = '(max-width: 1100px) calc(100vw - 40px), calc((min(1480px, 100vw) - 160px) / 3)',
 } = Astro.props;
 ---
@@ -30,7 +33,9 @@ const {
           src={assetImageUrl(imageUrl, 640)}
           srcset={assetImageSrcset(imageUrl, JACKET_WIDTHS)}
           sizes={sizes}
-          loading="lazy"
+          loading={loading}
+          fetchpriority={loading === 'eager' ? 'high' : undefined}
+          decoding="async"
           alt={label}
         />
       )
