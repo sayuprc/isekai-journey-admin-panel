@@ -14,11 +14,11 @@ const { currentPath } = Astro.props;
 const defaultTheme = themeByValue(DEFAULT_PALETTE);
 ---
 
-<nav class="site-nav">
+<nav class="site-nav" aria-label="メインナビゲーション">
   <div class="nav-inner">
     <a class="brand" href="/">
-      <img class="brand-logo brand-logo-dark" src="/logo-dark.svg" alt="" width="300" height="200" />
-      <img class="brand-logo brand-logo-light" src="/logo-light.svg" alt="" width="300" height="200" />
+      <img class="brand-logo brand-logo-dark" src="/logo-dark.svg" alt="" width="300" height="200" decoding="async" />
+      <img class="brand-logo brand-logo-light" src="/logo-light.svg" alt="" width="300" height="200" decoding="async" />
       <div class="brand-text">
         <span class="brand-mark">ヰ世界観測所</span>
         <span class="brand-en">Isekai Observatory</span>
@@ -27,11 +27,19 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
     <EnvironmentBadge />
     <div class="nav-links">
       {
-        navLinks.map(link => (
-          <a href={link.href} class={isActivePath(currentPath, link.href) ? 'active' : undefined}>
-            {link.label}
-          </a>
-        ))
+        navLinks.map((link) => {
+          const isActive = isActivePath(currentPath, link.href);
+          return (
+            <a
+              href={link.href}
+              class={isActive ? 'is-active' : undefined}
+              aria-current={isActive ? 'page' : undefined}
+              data-astro-prefetch
+            >
+              {link.label}
+            </a>
+          );
+        })
       }
     </div>
     <div class="nav-utils">
@@ -58,7 +66,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
             {
               THEMES.map(theme => (
                 <button
-                  class:list={['theme-opt', theme.value === DEFAULT_PALETTE && 'active']}
+                  class:list={['theme-opt', theme.value === DEFAULT_PALETTE && 'is-active']}
                   type="button"
                   aria-pressed={theme.value === DEFAULT_PALETTE ? 'true' : 'false'}
                   data-palette-option={theme.value}
@@ -106,7 +114,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
       pop.hidden = !open;
 
       if (open) {
-        (options.find(option => option.classList.contains('active')) ?? options[0]).focus();
+        (options.find(option => option.classList.contains('is-active')) ?? options[0]).focus();
       }
     };
 
@@ -128,7 +136,7 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
 
       for (const option of options) {
         const isActive = option.dataset.paletteOption === theme.value;
-        option.classList.toggle('active', isActive);
+        option.classList.toggle('is-active', isActive);
         option.setAttribute('aria-pressed', String(isActive));
       }
     };

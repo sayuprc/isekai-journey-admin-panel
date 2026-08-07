@@ -1,30 +1,24 @@
 import { releaseGroupServiceListReleaseGroups } from '../../generated/sdk.gen.js';
 import { apiClient } from '../../shared/api/client.js';
+import { collectAll } from '../../shared/api/collect-all.js';
 import type { ReleaseGroup } from './types.js';
 
 async function all(): Promise<ReleaseGroup[]> {
-  const releaseGroups: ReleaseGroup[] = [];
-  let cursor: string | undefined;
+  return collectAll(
+    async (cursor, limit) => {
+      const { data, error, response } = await releaseGroupServiceListReleaseGroups({
+        client: apiClient,
+        query: { limit, cursor },
+      });
 
-  while (true) {
-    const { data, error, response } = await releaseGroupServiceListReleaseGroups({
-      client: apiClient,
-      query: { limit: 50, cursor },
-    });
+      if (!data) {
+        throw new Error(`releaseGroupServiceListReleaseGroups failed: HTTP ${response.status} ${JSON.stringify(error)}`);
+      }
 
-    if (!data) {
-      throw new Error(`releaseGroupServiceListReleaseGroups failed: HTTP ${response.status} ${JSON.stringify(error)}`);
-    }
-
-    releaseGroups.push(...data.releaseGroups);
-
-    if (!data.nextCursor) {
-      break;
-    }
-    cursor = data.nextCursor;
-  }
-
-  return releaseGroups;
+      return data;
+    },
+    data => ({ items: data.releaseGroups, nextCursor: data.nextCursor }),
+  );
 }
 
 export const releaseGroupRepository = {

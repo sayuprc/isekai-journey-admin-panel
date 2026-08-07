@@ -1,21 +1,17 @@
 import { getCollection } from 'astro:content';
+import { allFromCollection, latestFromCollection } from '../../shared/content/collection';
+import type { SongCollectionItem } from './schema';
 import type { Song } from './types';
 
-type SongCollectionItem = Song & {
-  index: number;
-};
-
 async function all(): Promise<Song[]> {
-  return (await getCollection('songs'))
-    .sort((a, b) => (a.data as SongCollectionItem).index - (b.data as SongCollectionItem).index)
-    .map((entry) => {
-      const { index, ...song } = entry.data as SongCollectionItem;
-      void index;
+  return allFromCollection<SongCollectionItem>(await getCollection('songs'));
+}
 
-      return song;
-    });
+async function latest(): Promise<Song | null> {
+  return latestFromCollection<SongCollectionItem>(await getCollection('songs'), 'last');
 }
 
 export const songContentRepository = {
   all,
+  latest,
 };

@@ -1,9 +1,12 @@
 ---
 import BottomNav from '../components/common/BottomNav.astro';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
 import Footer from '../components/common/Footer.astro';
 import Header from '../components/common/Header.astro';
 import { DetailDrawer } from '../components/viewer/DetailDrawer';
+import type { BreadcrumbItem } from '../shared/breadcrumb';
 import { preconnectOrigin } from '../shared/image';
+import { DEFAULT_OG_IMAGE, type OgImage, SITE_DESCRIPTION, SITE_TITLE } from '../shared/site';
 import { DEFAULT_PALETTE, PALETTE_STORAGE_KEY, THEMES } from '../shared/themes';
 import '../styles/fonts';
 import '../styles/reset.css';
@@ -12,21 +15,26 @@ import '../styles/viewer.css';
 interface Props {
   pageTitle: string;
   pageDescription?: string;
-  ogImageUrl?: string | null;
+  ogImage?: OgImage | null;
+  /** ホームは自動で先頭に付くので、一覧から現在地までを渡す。空なら導線を出さない */
+  breadcrumbs?: readonly BreadcrumbItem[];
 }
 
-const { pageTitle, pageDescription = 'ヰ世界情緒の非公式ファンサイト', ogImageUrl = null } = Astro.props;
-
-const siteTitle = 'ヰ世界観測所';
+const { pageTitle, pageDescription = SITE_DESCRIPTION, ogImage = null, breadcrumbs = [] } = Astro.props;
 
 const generateTitle = (title: string) => {
-  return title ? `${title} | ${siteTitle}` : siteTitle;
+  return title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
 };
 
 const title = generateTitle(pageTitle);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-const ogImage = ogImageUrl ? new URL(ogImageUrl, Astro.site).href : null;
+// ページ固有の画像がないページはサイトアイコンで代替し、カードの大きさは固有画像の有無で切り替える
+const cardImage = ogImage ?? DEFAULT_OG_IMAGE;
+const cardImageUrl = new URL(cardImage.url, Astro.site).href;
+const twitterCard = ogImage === null ? 'summary' : 'summary_large_image';
 const noindex = import.meta.env.SITE_NOINDEX === 'true';
+
+const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホーム', href: '/' }, ...breadcrumbs] : [];
 ---
 
 <!doctype html>
@@ -39,14 +47,15 @@ const noindex = import.meta.env.SITE_NOINDEX === 'true';
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={pageDescription} />
-    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:site_name" content={SITE_TITLE} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content="ja_JP" />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={cardImageUrl} />
+    <meta property="og:image:alt" content={cardImage.alt} />
+    <meta name="twitter:card" content={twitterCard} />
     <title>{title}</title>
     {/* FOUC 防止のため描画前に palette を適用する。保存値は既知のテーマのみ許可し、廃止テーマ等の不正値は既定に修復する */}
     <script
@@ -69,12 +78,15 @@ const noindex = import.meta.env.SITE_NOINDEX === 'true';
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
     <Header currentPath={Astro.url.pathname} />
-    <main>
+    <main id="main-content">
+      {trail.length > 0 && <Breadcrumb items={trail} />}
       <slot />
     </main>
     <Footer />
     <BottomNav currentPath={Astro.url.pathname} />
-    <DetailDrawer client:load />
+    {/* 初期状態は何も描画しないので初回ペイントには不要 遅れている間のクリックは通常遷移になる */}
+    <DetailDrawer client:idle />
   </body>
 </html>
