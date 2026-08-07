@@ -335,26 +335,39 @@ async function warmup(url: string, times: number, origin: string): Promise<Cache
   return headers;
 }
 
-async function measurePage(port: number, url: string, formFactor: FormFactor, runs: number): Promise<RunResult[]> {
+// run ごとにブラウザを立て直す
+//
+// Lighthouse の storage reset も CDP の Network.clearBrowserCache も HTTP キャッシュを消しきれず、
+// 2 回目以降は first-party の immutable 資産がキャッシュから読まれて transferSize がヘッダ分だけになる
+// (self-host した CSS 98KB が 0.4KB として記録された)
+// simulate はその transferSize からダウンロード時間を計算するため、転送量だけでなく LCP と FCP まで
+// 楽観側にずれる。全ての run を初回訪問と同じ条件に揃えるにはプロセスごと分けるしかない
+async function measurePage(url: string, formFactor: FormFactor, runs: number): Promise<RunResult[]> {
   const results: RunResult[] = [];
 
   for (let i = 0; i < runs; i += 1) {
-    const runner = await lighthouse(
-      url,
-      { port: port, output: ['json', 'html'], logLevel: 'error' },
-      { extends: 'lighthouse:default', settings: { onlyCategories: ['performance'], throttlingMethod: 'simulate', ...PRESETS[formFactor] } } as any,
-    );
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
 
-    if (!runner) {
-      throw new Error(`Lighthouse の実行に失敗しました: ${url}`);
+    try {
+      const runner = await lighthouse(
+        url,
+        { port: Number(new URL(browser.wsEndpoint()).port), output: ['json', 'html'], logLevel: 'error' },
+        { extends: 'lighthouse:default', settings: { onlyCategories: ['performance'], throttlingMethod: 'simulate', ...PRESETS[formFactor] } } as any,
+      );
+
+      if (!runner) {
+        throw new Error(`Lighthouse の実行に失敗しました: ${url}`);
+      }
+
+      const lhr = runner.lhr as unknown as Record<string, any>;
+      const metrics = metricsOf(lhr);
+
+      results.push({ lhr: lhr, json: runner.report[0], html: runner.report[1], metrics: metrics });
+
+      process.stdout.write(`    run ${i + 1}/${runs}: LCP ${Math.round(metrics.lcp ?? 0)}ms\n`);
+    } finally {
+      await browser.close();
     }
-
-    const lhr = runner.lhr as unknown as Record<string, any>;
-    const metrics = metricsOf(lhr);
-
-    results.push({ lhr: lhr, json: runner.report[0], html: runner.report[1], metrics: metrics });
-
-    process.stdout.write(`    run ${i + 1}/${runs}: LCP ${Math.round(metrics.lcp ?? 0)}ms\n`);
   }
 
   return results;
@@ -380,12 +393,9 @@ async function main(): Promise<void> {
   console.log(`label=${args.label} origin=${config.origin} runs=${args.runs} formFactor=${args.formFactor.join(',')}`);
   console.log(`content: songs=${counts.songs} releases=${counts.releases} media=${counts.media}`);
 
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
-  const port = Number(new URL(browser.wsEndpoint()).port);
-
   mkdirSync(perfDir, { recursive: true });
 
-  try {
+  {
     for (const formFactor of args.formFactor) {
       for (const page of targets) {
         const url = `${config.origin}${page.path}`;
@@ -396,7 +406,7 @@ async function main(): Promise<void> {
 
         console.log(`  warmup: cf-cache-status=${headers.cacheStatus} encoding=${headers.encoding} (サブリソースも暖め済み)`);
 
-        const results = await measurePage(port, url, formFactor, args.runs);
+        const results = await measurePage(url, formFactor, args.runs);
 
         // 中央値の回を代表として残す。レポートを後から Lighthouse Viewer で開き直すため
         const ordered = [...results].sort((a, b) => (a.metrics.lcp ?? 0) - (b.metrics.lcp ?? 0));
@@ -423,8 +433,12 @@ async function main(): Promise<void> {
           metrics: Object.fromEntries(
             METRIC_KEYS.map(name => [name, summarize(results.map(result => result.metrics[name]))]),
           ),
-          ...resourcesOf(representative.lhr),
-          criticalChainDepth: criticalChainDepthOf(representative.lhr),
+          // 転送量とチェーンの深さは run 1 から採る
+          // 2 回目以降は first-party の immutable 資産が Chrome のキャッシュから読まれ、
+          // transferSize がヘッダ分だけになる (self-host した CSS で 98KB が 0.4KB として記録された)
+          // 初回訪問の実態を残したいので、キャッシュが空の run 1 を代表にする
+          ...resourcesOf(results[0].lhr),
+          criticalChainDepth: criticalChainDepthOf(results[0].lhr),
         };
 
         appendFileSync(resultsPath, `${JSON.stringify(summary)}\n`);
@@ -434,8 +448,6 @@ async function main(): Promise<void> {
         console.log(`  => LCP ${lcp.median}ms (IQR ${lcp.iqr}) / ${path.relative(repoRoot, reportDir)}`);
       }
     }
-  } finally {
-    await browser.close();
   }
 
   console.log(`\n${path.relative(repoRoot, resultsPath)} に追記しました`);
