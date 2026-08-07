@@ -57,6 +57,7 @@ const siteStats = await siteStatsRepository.get();
               media={latestSong.media}
               releaseGroups={latestSong.releaseGroups}
               aspectRatio="1 / 1"
+              loading="eager"
             />
           </a>
           <div class="feature-body">
@@ -82,7 +83,6 @@ const siteStats = await siteStatsRepository.get();
               imageUrl={representativeJacketArtUrl(latestReleaseGroup)}
               label={latestReleaseGroup.title}
               sizes="(max-width: 1100px) calc(100vw - 40px), 320px"
-              loading="eager"
             />
           </a>
           <div class="feature-body">
