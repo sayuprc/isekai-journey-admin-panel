@@ -505,6 +505,61 @@ quality=80 での出力サイズはほぼ同じで、WebP を選ぶ理由があ�
 
 ---
 
+## 施策 3: 画像変換のゾーン選択と preconnect
+
+`#951` が別実装の画像変換 (`shared/image.ts`) を持っていたため、どちらが速いかを実測して決めた
+
+### 変換ゾーンの比較
+
+| ゾーン | 形式 | コールド変換 | ウォーム |
+| --- | --- | --- | --- |
+| viewer | `/cdn-cgi/image/.../<絶対 URL>` | 0.60〜0.77s | 0.135s |
+| assets | `<origin>/cdn-cgi/image/...<path>` | **0.15〜0.16s** | 0.140s |
+
+viewer ゾーンは変換元を別ゾーンから取りに行くため初回生成が 4 倍遅い
+一方 viewer ゾーンなら画像が HTML と同一オリジンになり、既存の接続を再利用できる
+
+### 実測 (`923-self-host-fonts` → `957b-assets-zone`)
+
+assets ゾーンへ移すとオリジンが 2 つから 3 つに増える
+**接続確立は固定コストなので、画像枚数で符号が変わった**
+
+| 画像枚数 | ページ | mobile | desktop |
+| --- | --- | --- | --- |
+| 4 枚 | releases-index | -7% | **-22%** |
+| 2 枚 | song-detail | +183% (IQR 3335, 判定不能) | -10% |
+| 1 枚 | release-detail | **+131%** | **+114%** |
+| 0 枚 | contact / site-policy 他 | ±5% 以内 | ±9% 以内 |
+
+枚数が多いページでは接続コストが償却されて別オリジンの並列性が勝ち、1 枚のページでは丸ごと LCP に乗る
+
+### preconnect (`957c-preconnect`)
+
+`<link rel="preconnect">` で接続確立を前倒しした
+
+| ページ | 923 (viewer) | 957b (assets) | 957c (preconnect) |
+| --- | --- | --- | --- |
+| release-detail (mobile) | 2788 | 6446 | 5235 (-19%) |
+| release-detail (desktop) | 889 | 1905 | 1695 (-11%) |
+| song-detail (mobile) | 2391 | 6776 | 3758 (-45%) |
+| releases-index (mobile) | 10243 | 9525 | 9581 |
+| releases-index (desktop) | 3176 | 2487 | 2875 |
+| top (mobile) | 7542 | 7923 | 6098 (-23%) |
+
+**画像 1 枚のページは preconnect でも viewer ゾーンの水準まで戻らない** (923 比で +88〜+91%)
+別オリジンの接続コストを完全には隠せないという構造的な限界がある
+
+### 決定
+
+**assets ゾーン + preconnect を採る**
+
+- 一覧ページを重視する方針に合う (releases-index は 923 比で mobile -6% / desktop -9%)
+- 詳細ページの不利は preconnect で 2〜4 割戻せる
+- release-detail は 923 比では +88% だが、baseline (85845ms) 比では依然 -94%
+- コールド変換の 0.5 秒問題が消えるため、デプロイ時プリウォームが不要になる
+
+---
+
 ## Acceptance Criteria
 
 - `docs/perf/results.jsonl` に baseline から最終形までの全計測が計測時刻・件数付きで残っている
