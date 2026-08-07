@@ -51,7 +51,11 @@ const releaseGroups = await releaseGroupContentRepository.all();
               data-release-type={String(releaseGroup.type.value)}
               data-release-search={`${releaseGroup.title} ${releaseGroup.type.name} ${trackTitles.join(' ')}`.toLowerCase()}
             >
-              <JacketArt imageUrl={representativeJacketArtUrl(releaseGroup)} label={releaseGroup.title} />
+              <JacketArt
+                imageUrl={representativeJacketArtUrl(releaseGroup)}
+                label={releaseGroup.title}
+                sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1100px) calc((100vw - 128px) / 2), calc((min(1480px, 100vw) - 160px) / 3)"
+              />
               <div class="release-card-body">
                 <div class="release-card-meta">
                   <span class="release-card-badges">

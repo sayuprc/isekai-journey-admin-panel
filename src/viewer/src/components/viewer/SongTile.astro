@@ -1,6 +1,7 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
 import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
+import { cdnImageSrcset, cdnImageUrl } from '../../shared/images';
 
 interface Props {
   songId: string;
@@ -19,8 +20,16 @@ const { mediaCount, index, media = [], releaseGroups = [], aspectRatio = '16 / 9
 const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
 
 // メディアから導出できなければ収録リリースの最初の代表ジャケットで代替する
+const jacketArtUrl = releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
+
 const thumbnailUrl = mediaThumbnailUrl
-  ?? releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
+  ?? (jacketArtUrl === null ? null : cdnImageUrl(jacketArtUrl, 640));
+
+const thumbnailSrcset = mediaThumbnailUrl !== null
+  ? youtubeThumbnailSrcset(mediaThumbnailUrl)
+  : jacketArtUrl !== null
+    ? cdnImageSrcset(jacketArtUrl)
+    : undefined;
 
 const sequence = String(index + 1).padStart(2, '0');
 ---
@@ -32,8 +41,8 @@ const sequence = String(index + 1).padStart(2, '0');
           <img
             class="song-tile-image"
             src={thumbnailUrl}
-            srcset={mediaThumbnailUrl === null ? undefined : youtubeThumbnailSrcset(mediaThumbnailUrl)}
-            sizes="(max-width: 640px) 50vw, 240px"
+            srcset={thumbnailSrcset}
+            sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1100px) calc((100vw - 124px) / 2), calc((min(1480px, 100vw) - 180px) / 4)"
             loading="lazy"
             alt=""
           />
