@@ -5,16 +5,18 @@ import JacketArt from '../JacketArt.astro';
 interface Props {
   release: Release;
   releaseGroupTitle: string;
+  /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
+  loading?: 'lazy' | 'eager';
 }
 
-const { release, releaseGroupTitle } = Astro.props;
+const { release, releaseGroupTitle, loading = 'lazy' } = Astro.props;
 ---
 
 <div class={release.jacketArtUrl ? 'release-version-content has-jacket' : 'release-version-content'}>
   {
     release.jacketArtUrl && (
       <div class="release-version-art">
-        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} aspectRatio="auto" sizes="160px" />
+        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} aspectRatio="auto" sizes="160px" loading={loading} />
       </div>
     )
   }
