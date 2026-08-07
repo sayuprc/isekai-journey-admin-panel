@@ -1,5 +1,5 @@
 ---
-import { cdnImageSrcset, cdnImageUrl } from '../../shared/images';
+import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../shared/image';
 
 interface Props {
   imageUrl?: string | null;
@@ -27,8 +27,8 @@ const {
         <img
           class="jacket-art jacket-art-image"
           style={`--tile-aspect:${aspectRatio};aspect-ratio:var(--tile-aspect);width:100%;object-fit:cover;`}
-          src={cdnImageUrl(imageUrl, 640)}
-          srcset={cdnImageSrcset(imageUrl)}
+          src={assetImageUrl(imageUrl, 640)}
+          srcset={assetImageSrcset(imageUrl, JACKET_WIDTHS)}
           sizes={sizes}
           loading="lazy"
           alt={label}

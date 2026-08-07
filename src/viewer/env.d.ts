@@ -1,6 +1,7 @@
 interface ImportMetaEnv {
   readonly API_URL: string;
   readonly APP_ENV?: string;
+  readonly ASSETS_URL?: string;
   readonly SITE_NOINDEX?: string;
 }
 
