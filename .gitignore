@@ -2,6 +2,7 @@ mise.*.toml
 !mise.ci.toml
 
 .worktree/
+artifacts/
 
 # APM dependencies
 apm_modules/

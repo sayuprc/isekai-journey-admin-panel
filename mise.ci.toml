@@ -78,3 +78,15 @@ fi
 [tasks."pnpm:install"]
 dir = "src"
 run = "pnpm i --frozen-lockfile"
+
+[tasks."api:coverage"]
+description = "CI 環境でテストカバレッジを出力する"
+run = "docker compose exec -T php composer coverage"
+
+[tasks."api:infection"]
+description = "CI 環境でミューテーションテストを実行する"
+run = "docker compose exec -T php composer infection"
+
+[tasks."api:metrics"]
+description = "CI 環境でコードメトリクスを出力する"
+run = "docker compose exec -T php composer metrics"

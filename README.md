@@ -2,6 +2,14 @@
 
 ヰ世界情緒の情報を管理するためのモノレポです。
 
+[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/coverage.json)](docs/metrics/README.md)
+[![mutation score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/msi.json)](docs/metrics/README.md)
+[![covered MSI](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/covered-msi.json)](docs/metrics/README.md)
+[![maintainability](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/maintainability.json)](docs/metrics/README.md)
+[![avg CCN](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sayuprc/isekai-observatory/metrics/docs/metrics/badges/complexity.json)](docs/metrics/README.md)
+
+Server のカバレッジ / Infection / PhpMetrics は週次 CI で更新されます。詳細は `docs/metrics/README.md`。
+
 ## 構成
 
 - アプリケーション本体: `src/`

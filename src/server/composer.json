@@ -86,8 +86,8 @@
     "test-unit": "paratest tests/Unit",
     "test-integration": "paratest tests/Integration",
     "test-feature": "paratest tests/Feature",
-    "coverage": "php artisan test --env=testing --coverage-html=\"reports/coverage\"",
-    "infection": "infection --threads=4",
+    "coverage": "php artisan test --env=testing --coverage-html=\"reports/coverage\" --coverage-clover=\"reports/coverage.xml\"",
+    "infection": "infection --threads=4 --logger-summary-json=reports/infection-summary.json",
     "metrics": "phpmetrics --config=phpmetrics.json"
   },
   "extra": {

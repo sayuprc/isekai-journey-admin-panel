@@ -284,6 +284,18 @@ run = "docker compose exec php composer infection"
 description = "コードメトリクスを出力する"
 run = "docker compose exec php composer metrics"
 
+[tasks."api:metrics:badges"]
+description = "coverage / infection / phpmetrics のレポートから shields.io バッジ JSON を生成する"
+run = '''
+./tools/metrics/build-server-badges.sh \
+  --clover src/server/reports/coverage.xml \
+  --infection-summary src/server/reports/infection-summary.json \
+  --phpmetrics src/server/reports/metrics.json \
+  --phpmetrics-summary src/server/reports/metrics-summary.json \
+  --output-dir artifacts/server-metrics \
+  --git-sha "$(git rev-parse HEAD)"
+'''
+
 [tasks."api:tinker"]
 description = "Laravel tinker を実行する"
 run = "docker compose exec php php artisan tinker"

@@ -23,6 +23,7 @@
 - `product-specs/INDEX.md`: 機能や施策の仕様メモ
 - `references/INDEX.md`: 外部資料や参考実装の要点
 - `exec-plans/README.md`: 実行計画の運用方法
+- `metrics/README.md`: server のカバレッジ / Infection / PhpMetrics バッジ運用
 - `tech-debt-tracker.md`: 継続的に追う技術的負債
 
 ## Placement Guide
