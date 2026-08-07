@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { navLinks } from '../shared/nav';
 ---
 
 <Layout pageTitle="ページが見つかりません" pageDescription="指定された URL のページは見つかりませんでした" noindex>
@@ -10,9 +9,5 @@ import { navLinks } from '../shared/nav';
     <p class="error-description">
       指定された URL のページは、削除されたか場所が変わった可能性があります
     </p>
-    <div class="error-actions">
-      <a class="btn" href="/">ホーム</a>
-      {navLinks.map(link => <a class="btn" href={link.href}>{link.label}</a>)}
-    </div>
   </section>
 </Layout>

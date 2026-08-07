@@ -2586,11 +2586,3 @@ body.drawer-lock {
   line-height: 1.9;
   color: var(--fg-muted);
 }
-
-.error-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 40px;
-}
