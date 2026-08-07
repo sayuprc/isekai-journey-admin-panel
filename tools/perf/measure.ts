@@ -261,15 +261,63 @@ async function contentCounts(origin: string): Promise<ContentCounts> {
   };
 }
 
+// HTML からサブリソースの URL を集める
+// srcset は "url 320w, url 640w" 形式なので候補ごとに URL 部分だけを取り出す
+function subresourceUrlsOf(html: string, origin: string): string[] {
+  const found = new Set<string>();
+
+  for (const [, value] of html.matchAll(/(?:\bsrc|\bhref)="([^"]+)"/g)) {
+    found.add(value);
+  }
+
+  for (const [, value] of html.matchAll(/\bsrcset="([^"]+)"/g)) {
+    for (const candidate of value.split(',')) {
+      const url = candidate.trim().split(/\s+/)[0];
+
+      if (url) {
+        found.add(url);
+      }
+    }
+  }
+
+  return [...found]
+    .filter(url => !url.startsWith('data:') && !url.startsWith('#') && !url.endsWith('/'))
+    .map(url => (url.startsWith('http') ? url : new URL(url, origin).toString()));
+}
+
+async function fetchAll(urls: string[], concurrency: number): Promise<void> {
+  const queue = [...urls];
+
+  const worker = async (): Promise<void> => {
+    for (let url = queue.pop(); url !== undefined; url = queue.pop()) {
+      try {
+        const response = await fetch(url, { headers: { accept: 'image/avif,image/webp,image/*,*/*' } });
+
+        await response.arrayBuffer();
+      } catch {
+        // 温めるだけなので失敗は無視する
+      }
+    }
+  };
+
+  await Promise.all(Array.from({ length: concurrency }, worker));
+}
+
 // デプロイ直後の初回リクエストはコールドで TTFB が跳ねる
 // 本計測の前に暖めたうえで、キャッシュ状態を示すヘッダを記録して回ごとの条件差を検出できるようにする
-async function warmup(url: string, times: number): Promise<CacheHeaders> {
+//
+// HTML だけでなくサブリソースも暖める必要がある
+// Cloudflare Image Transformations は variant ごとに初回リクエストで生成されるため、
+// HTML しか暖めないと画像がコールドのまま計測され、LCP が数秒単位で悪化する
+// (実測で同一 variant がコールド 0.71s / ウォーム 0.19s)
+async function warmup(url: string, times: number, origin: string): Promise<CacheHeaders> {
   let headers: CacheHeaders = { cacheStatus: null, age: null, encoding: null };
+  let html = '';
 
   for (let i = 0; i < times; i += 1) {
     const response = await fetch(url, { headers: { 'accept-encoding': 'gzip, br, zstd' } });
 
-    await response.arrayBuffer();
+    html = await response.text();
 
     headers = {
       cacheStatus: response.headers.get('cf-cache-status'),
@@ -277,6 +325,12 @@ async function warmup(url: string, times: number): Promise<CacheHeaders> {
       encoding: response.headers.get('content-encoding'),
     };
   }
+
+  // 2 周するのは、1 周目で生成された variant を確実に HIT 状態にするため
+  const subresources = subresourceUrlsOf(html, origin);
+
+  await fetchAll(subresources, 8);
+  await fetchAll(subresources, 8);
 
   return headers;
 }
@@ -338,9 +392,9 @@ async function main(): Promise<void> {
 
         console.log(`\n[${formFactor}/${page.key}] ${url}`);
 
-        const headers = await warmup(url, args.warmup);
+        const headers = await warmup(url, args.warmup, config.origin);
 
-        console.log(`  warmup: cf-cache-status=${headers.cacheStatus} encoding=${headers.encoding}`);
+        console.log(`  warmup: cf-cache-status=${headers.cacheStatus} encoding=${headers.encoding} (サブリソースも暖め済み)`);
 
         const results = await measurePage(port, url, formFactor, args.runs);
 
