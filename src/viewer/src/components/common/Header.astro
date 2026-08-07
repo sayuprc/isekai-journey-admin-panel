@@ -1,6 +1,4 @@
 ---
-import DarkLogo from '../../assets/logo-dark.svg';
-import LightLogo from '../../assets/logo-light.svg';
 import { navLinks } from '../../shared/nav';
 import { isActivePath } from '../../shared/routing';
 import { DEFAULT_PALETTE, THEMES, themeByValue, themeLabel, themeSubLabel } from '../../shared/themes';
@@ -19,8 +17,8 @@ const defaultTheme = themeByValue(DEFAULT_PALETTE);
 <nav class="site-nav">
   <div class="nav-inner">
     <a class="brand" href="/">
-      <DarkLogo class="brand-logo brand-logo-dark" />
-      <LightLogo class="brand-logo brand-logo-light" />
+      <img class="brand-logo brand-logo-dark" src="/logo-dark.svg" alt="" width="300" height="200" />
+      <img class="brand-logo brand-logo-light" src="/logo-light.svg" alt="" width="300" height="200" />
       <div class="brand-text">
         <span class="brand-mark">ヰ世界観測所</span>
         <span class="brand-en">Isekai Observatory</span>
