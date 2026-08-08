@@ -39,9 +39,9 @@ readonly class SongQueryService implements SongQueryServiceInterface
         if (is_string($cursor)) {
             $decoded = SongListCursor::decode($cursor);
 
-            // キーセットページング: (order_no, song_id) の昇順で cursor より後ろを取る
+            // キーセットページング: (order_no 降順, song_id 昇順) で cursor より後ろを取る
             $query = $query->where(Sql::format(
-                '(order_no > %s OR (order_no = %s AND song_id > %s))',
+                '(order_no < %s OR (order_no = %s AND song_id > %s))',
                 Sql::value($decoded->orderNo),
                 Sql::value($decoded->orderNo),
                 Sql::value($this->converter->toBin($decoded->songId)),
@@ -49,7 +49,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
         }
 
         $songRows = $this->queryFactory->fetchAll(
-            $query->orderBy('order_no')
+            $query->orderBy('order_no', 'desc')
                 ->orderBy('song_id')
                 ->limit($limit + 1),
         );

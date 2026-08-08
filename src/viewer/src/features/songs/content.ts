@@ -8,7 +8,7 @@ async function all(): Promise<Song[]> {
 }
 
 async function latest(): Promise<Song | null> {
-  return latestFromCollection<SongCollectionItem>(await getCollection('songs'), 'last');
+  return latestFromCollection<SongCollectionItem>(await getCollection('songs'), 'first');
 }
 
 export const songContentRepository = {
