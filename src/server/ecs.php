@@ -204,5 +204,6 @@ return ECSConfig::configure()
             __DIR__ . '/bootstrap/providers.php',
             __DIR__ . '/app/Providers/EnvProviders',
             __DIR__ . '/app/Providers/WebRequestServiceProvider.php',
+            __DIR__ . '/config/valinor.php',
         ],
     ]);
