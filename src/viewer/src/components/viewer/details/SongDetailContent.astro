@@ -12,9 +12,9 @@ const { song } = Astro.props;
 const media = song.media;
 const releaseGroups = song.releaseGroups;
 const creditItems = [
-  { en: 'LYRICS', label: '作詞', names: song.lyricists },
-  { en: 'MUSIC', label: '作曲', names: song.composers },
-  { en: 'ARRANGE', label: '編曲', names: song.arrangers },
+  { label: '作詞', names: song.lyricists },
+  { label: '作曲', names: song.composers },
+  { label: '編曲', names: song.arrangers },
 ].map(item => item.names.length > 0 ? item : { ...item, names: ['-'] });
 
 const formatPublishedAt = (value: string): string =>
@@ -31,10 +31,7 @@ const formatPublishedAt = (value: string): string =>
     {
       creditItems.map(item => (
         <div class="song-credit-item">
-          <dt class="song-credit-label">
-            <span class="song-credit-en label-mono">{item.en}</span>
-            <span class="song-credit-jp">{item.label}</span>
-          </dt>
+          <dt class="song-credit-label">{item.label}</dt>
           <dd class="song-credit-value">{item.names.join(' / ')}</dd>
         </div>
       ))
