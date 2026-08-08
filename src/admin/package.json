@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,14 +20,12 @@
     "lint:check": "bun run eslint:check",
     "style": "bun run stylelint:fix",
     "style:check": "bun run stylelint:check",
-    "tcm": "tcm -p 'src/styles/*.module.css' .",
-    "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
     "generate:api": "openapi-ts",
     "prism": "prism mock ../contracts/generated/oas/${ADMIN_OAS_FILE} -h 0.0.0.0",
     "redis": "redis-commander"
   },
   "dependencies": {
-    "@astrojs/node": "11.0.2",
+    "@astrojs/node": "11.0.3",
     "@astrojs/solid-js": "catalog:astro",
     "@elysiajs/eden": "1.4.9",
     "@tailwindcss/vite": "catalog:ui",
@@ -56,7 +54,6 @@
     "stylelint-config-recess-order": "catalog:lint",
     "stylelint-config-standard": "catalog:lint",
     "stylelint-order": "catalog:lint",
-    "typed-css-modules": "catalog:gen",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:lint"
   }

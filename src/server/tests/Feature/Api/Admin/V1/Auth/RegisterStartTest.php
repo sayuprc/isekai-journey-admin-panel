@@ -147,12 +147,12 @@ class RegisterStartTest extends DatabaseTestCase
         $hashedToken = $this->app->make(TokenHasherInterface::class)->hash($plainToken);
 
         $this->app->make(RegistrationTokenRepositoryInterface::class)->save(new RegistrationToken(
-            RegistrationTokenId::reconstruct($this->generateUuid()),
-            HashedTokenValue::reconstruct($hashedToken),
-            Email::reconstruct($email),
+            new RegistrationTokenId($this->generateUuid()),
+            new HashedTokenValue($hashedToken),
+            new Email($email),
             Role::General,
             Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             ConsumptionStatus::Unused,
         ));
     }

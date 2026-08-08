@@ -27,10 +27,10 @@ readonly class RefreshToken
         int $status,
     ): self {
         return new self(
-            RefreshTokenId::reconstruct($refreshTokenId),
-            AdminUserId::reconstruct($adminUserId),
-            HashedTokenValue::reconstruct($token),
-            ExpiredAt::reconstruct($expiredAt),
+            new RefreshTokenId($refreshTokenId),
+            new AdminUserId($adminUserId),
+            new HashedTokenValue($token),
+            new ExpiredAt($expiredAt),
             ConsumptionStatus::from($status),
         );
     }

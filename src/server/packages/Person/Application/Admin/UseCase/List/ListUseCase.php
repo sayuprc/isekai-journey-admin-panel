@@ -6,10 +6,7 @@ namespace Person\Application\Admin\UseCase\List;
 
 use AdminUser\Domain\Models\Permission;
 use Person\Domain\Models\PersonRepositoryInterface;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class ListUseCase
 {
@@ -19,12 +16,10 @@ readonly class ListUseCase
     ) {
     }
 
-    /**
-     * @return Result<ListOutputData, UseCaseError>
-     */
-    public function handle(): Result
+    public function handle(): ListOutputData
     {
-        return $this->authorizer->require(Permission::ReadPerson)
-            ->andThen(fn () => new Ok(new ListOutputData($this->repository->all())));
+        $this->authorizer->authorize(Permission::ReadPerson);
+
+        return new ListOutputData($this->repository->all());
     }
 }

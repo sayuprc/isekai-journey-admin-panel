@@ -11,10 +11,10 @@ const songs = await songContentRepository.all();
 
 <Layout pageTitle="楽曲" pageDescription="ヰ世界情緒の楽曲一覧">
   <section class="shell page-section">
-    <SectionHead title="楽曲" />
+    <SectionHead title="楽曲" level={1} />
 
     <FilterBar
-      client:load
+      client:idle
       filters={[
         { value: 'all', label: `すべて` },
         { value: '1', label: 'オリジナル曲' },
@@ -26,7 +26,12 @@ const songs = await songContentRepository.all();
       searchPlaceholder="タイトル・作者を検索..."
     />
 
-    <EntryStatus client:load entrySelector="[data-song-entry]" emptySelector="[data-song-empty]" />
+    <EntryStatus
+      client:idle
+      entrySelector="[data-song-entry]"
+      emptySelector="[data-song-empty]"
+      initialCount={songs.length}
+    />
 
     <div class="song-grid">
       <div class="entry-empty entry-empty-panel" data-song-empty hidden>
@@ -50,6 +55,7 @@ const songs = await songContentRepository.all();
                 index={index}
                 media={song.media}
                 releaseGroups={song.releaseGroups}
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
               <div class="song-grid-body">
                 <div class="song-grid-meta">

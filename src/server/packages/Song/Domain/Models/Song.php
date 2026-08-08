@@ -44,13 +44,13 @@ readonly class Song
         array $media,
     ): self {
         return new self(
-            SongId::reconstruct($songId),
-            Title::reconstruct($title),
-            Description::reconstruct($description),
-            is_null($lyricsLink) ? null : LyricsLink::reconstruct($lyricsLink),
+            new SongId($songId),
+            new Title($title),
+            new Description($description),
+            is_null($lyricsLink) ? null : new LyricsLink($lyricsLink),
             SongType::from($type),
             $isDisplay,
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
             SongTagReferences::reconstruct($tags),
             SongPersons::reconstruct($persons),
             SongMediaLinks::reconstruct($media),

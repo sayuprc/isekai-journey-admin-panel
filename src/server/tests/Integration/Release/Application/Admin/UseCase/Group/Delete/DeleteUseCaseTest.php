@@ -9,9 +9,9 @@ use PHPUnit\Framework\Attributes\Test;
 use Release\Application\Admin\UseCase\Group\Delete\DeleteInputData;
 use Release\Application\Admin\UseCase\Group\Delete\DeleteUseCase;
 use Release\Domain\Models\ReleaseGroupType;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\BusinessLogicError;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -34,7 +34,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($releaseGroupId));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('release_groups')->get()->all());
 
         $this->assertAuditLogCount(1);
@@ -57,12 +56,12 @@ class DeleteUseCaseTest extends DatabaseTestCase
             $this->createRelease($releaseId, $releaseGroupId, '通常盤', true),
         );
 
-        $result = $this->getInstance()->handle(new DeleteInputData($releaseGroupId));
+        try {
+            $this->getInstance()->handle(new DeleteInputData($releaseGroupId));
+            $this->fail('BusinessRuleViolationException が発生しませんでした');
+        } catch (BusinessRuleViolationException) {
+        }
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessLogicError::class, $error);
-        $this->assertSame('リリースが存在するため削除できません。', $error->message);
         $this->assertCount(1, DB::table('release_groups')->get()->all());
     }
 
@@ -71,7 +70,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(new DeleteInputData($this->generateUuid()));
 
-        $this->assertTrue($result->isOk());
         $this->assertAuditLogCount(0);
     }
 

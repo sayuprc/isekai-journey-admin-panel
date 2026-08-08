@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Http\OpenApi\BodyErrorCollector;
+use App\Http\Responses\ApiError;
 use App\OpenApi\SchemaProvider;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -16,8 +18,7 @@ use League\OpenAPIValidation\PSR7\RoutedServerRequestValidator;
 use League\OpenAPIValidation\Schema\Exception\FormatMismatch;
 use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use OpenAPI\Admin\Client\Model\ValidationError;
-use OpenAPI\Admin\Client\Model\ValidationErrorDetail;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,10 +62,11 @@ abstract class OpenApiValidator
         try {
             $this->requestValidator->validate($operationAddress, $psrRequest);
         } catch (InvalidSecurity) {
-            return response()->json([], 401);
+            [$payload, $status] = ApiError::unauthenticated();
+
+            return response()->json($payload, $status);
         } catch (ValidationFailed $e) {
-            // TODO 項目ごとのバリデーションエラーを表示したい
-            return $this->handleValidationFailed($e);
+            return $this->handleValidationFailed($e, $psrRequest, $operationAddress);
         }
 
         $response = $next($request);
@@ -79,7 +81,9 @@ abstract class OpenApiValidator
             ]);
 
             // サーバーレスポンス不整合はサーバー内部の問題なので 500 として返す
-            return response()->json(status: 500);
+            [$payload, $status] = ApiError::internalError();
+
+            return response()->json($payload, $status);
         }
 
         return $response;
@@ -96,43 +100,52 @@ abstract class OpenApiValidator
 
     abstract protected function getRoutePrefixPattern(): string;
 
-    private function handleValidationFailed(ValidationFailed $exception): JsonResponse
-    {
-        $previous = $exception->getPrevious();
+    private function handleValidationFailed(
+        ValidationFailed $exception,
+        ServerRequestInterface $psrRequest,
+        OperationAddress $operationAddress,
+    ): JsonResponse {
+        // 契約スキーマに対する body の全違反を一括報告する (ADR-0014)。
+        // body 以外 (query / path 等) の違反は従来どおり先頭 1 件の報告に落ちる
+        $details = new BodyErrorCollector($this->getPath())->collect($operationAddress, (string)$psrRequest->getBody());
 
-        if ($previous instanceof SchemaMismatch) {
-            $detail = $this->formatSchemaMismatch($previous);
-        } else {
-            $detail = new ValidationErrorDetail()
-                ->setField('')
-                ->setMessage('予期せぬエラー');
+        if ($details !== []) {
+            [$payload, $status] = ApiError::validationFailed($details);
+
+            return response()->json($payload, $status);
         }
 
-        $error = new ValidationError()->setErrors([$detail]);
+        $previous = $exception->getPrevious();
 
-        return response()->json($error, 422);
+        [$field, $message] = $previous instanceof SchemaMismatch
+            ? $this->formatSchemaMismatch($previous)
+            : ['', '予期せぬエラー'];
+
+        [$payload, $status] = ApiError::validationFailed([$field => [$message]]);
+
+        return response()->json($payload, $status);
     }
 
-    private function formatSchemaMismatch(SchemaMismatch $exception): ValidationErrorDetail
+    /**
+     * @return array{0: string, 1: string} field とメッセージの組
+     */
+    private function formatSchemaMismatch(SchemaMismatch $exception): array
     {
         $breadcrumb = $exception->dataBreadCrumb();
 
         if (is_null($breadcrumb)) {
-            $field = '';
-            $message = '予期せぬエラー';
-        } else {
-            /** @var array<string> */
-            $chain = $breadcrumb->buildChain();
-            $field = implode('/', $chain);
-
-            $message = match (true) {
-                $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
-                default => $exception->getMessage(),
-            };
+            return ['', '予期せぬエラー'];
         }
 
-        return new ValidationErrorDetail()
-            ->setField($field)
-            ->setMessage($message);
+        /** @var array<string> */
+        $chain = $breadcrumb->buildChain();
+        $field = implode('/', $chain);
+
+        $message = match (true) {
+            $exception instanceof FormatMismatch => sprintf('The value does not match the expected format: %s.', $exception->format()),
+            default => $exception->getMessage(),
+        };
+
+        return [$field, $message];
     }
 }

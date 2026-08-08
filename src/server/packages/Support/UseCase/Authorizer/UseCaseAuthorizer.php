@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Support\UseCase\Authorizer;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 
 readonly class UseCaseAuthorizer
 {
@@ -19,20 +15,23 @@ readonly class UseCaseAuthorizer
     }
 
     /**
-     * @return Result<AuthorizableUserInterface, UseCaseError>
+     * 認証・認可を検証し、失敗時は例外を投げる
+     *
+     * @throws UnauthenticatedException
+     * @throws PermissionDeniedException
      */
-    public function require(Permission $permission): Result
+    public function authorize(Permission $permission): AuthorizableUserInterface
     {
         $user = $this->context->currentUser();
 
         if (is_null($user)) {
-            return new Err(new AuthenticationError());
+            throw new UnauthenticatedException();
         }
 
         if (! $user->can($permission)) {
-            return new Err(new AuthorizationError());
+            throw new PermissionDeniedException();
         }
 
-        return new Ok($user);
+        return $user;
     }
 }

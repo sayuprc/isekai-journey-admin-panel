@@ -1,6 +1,6 @@
 {
   "name": "viewer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,18 +21,18 @@
     "lint:check": "bun run eslint:check",
     "style": "bun run stylelint:fix",
     "style:check": "bun run stylelint:check",
-    "tcm": "tcm -p 'src/styles/*.module.css' .",
-    "tcm:watch": "tcm -w -p 'src/styles/*.module.css' .",
     "generate:api": "openapi-ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "catalog:astro",
     "@astrojs/solid-js": "catalog:astro",
-    "@tailwindcss/vite": "catalog:ui",
+    "@fontsource/eb-garamond": "catalog:fonts",
+    "@fontsource/jetbrains-mono": "catalog:fonts",
+    "@fontsource/noto-serif-jp": "catalog:fonts",
+    "@fontsource/shippori-mincho": "catalog:fonts",
+    "@fontsource/spectral": "catalog:fonts",
     "astro": "catalog:astro",
-    "daisyui": "catalog:ui",
     "solid-js": "catalog:astro",
-    "tailwindcss": "catalog:ui",
     "wrangler": "catalog:"
   },
   "devDependencies": {
@@ -52,7 +52,6 @@
     "stylelint-config-recess-order": "catalog:lint",
     "stylelint-config-standard": "catalog:lint",
     "stylelint-order": "catalog:lint",
-    "typed-css-modules": "catalog:gen",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:lint"
   }

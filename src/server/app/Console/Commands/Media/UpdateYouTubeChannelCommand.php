@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Media;
 
-use App\Console\Commands\Concerns\ResolvesUseCaseErrorMessage;
+use App\Console\Commands\Concerns\ResolvesUseCaseExceptionMessage;
 use Illuminate\Console\Command;
 use Media\Application\Cli\UseCase\UpdateYouTubeChannel\UpdateYouTubeChannelInputData;
 use Media\Application\Cli\UseCase\UpdateYouTubeChannel\UpdateYouTubeChannelUseCase;
 use Override;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\InvalidDomainException;
+use Support\UseCase\Exceptions\UseCaseException;
 
 class UpdateYouTubeChannelCommand extends Command
 {
-    use ResolvesUseCaseErrorMessage;
+    use ResolvesUseCaseExceptionMessage;
 
     #[Override]
     protected $signature = 'media:youtube-channel:update {channelId} {name}';
@@ -30,15 +33,15 @@ class UpdateYouTubeChannelCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $useCase->handle(new UpdateYouTubeChannelInputData($this->argument('channelId'), $name));
-
-        if ($result->isErr()) {
-            $this->error($this->resolveErrorMessage($result->unwrapErr()));
+        try {
+            $output = $useCase->handle(new UpdateYouTubeChannelInputData($this->argument('channelId'), $name));
+        } catch (BusinessRuleViolationException|InvalidDomainException|UseCaseException $e) {
+            $this->error($this->resolveExceptionMessage($e));
 
             return Command::FAILURE;
         }
 
-        $channel = $result->unwrap()->channel;
+        $channel = $output->channel;
 
         $this->info(sprintf('チャンネルを更新しました: %s (%s)', $channel->name->value, $channel->channelId->value));
 

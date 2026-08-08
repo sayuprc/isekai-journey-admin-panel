@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Song\Application\Admin\UseCase\Delete;
 
 use AdminUser\Domain\Models\Permission;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\SongId;
 use Song\Domain\Models\SongRepositoryInterface;
 use Support\Contracts\TransactionInterface;
@@ -15,9 +12,7 @@ use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class DeleteUseCase
 {
@@ -29,39 +24,27 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WriteSong)
-            ->andThen(fn () => $this->deleteSong($inputData));
-    }
+        $this->authorizer->authorize(Permission::WriteSong);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deleteSong(DeleteInputData $inputData): Result
-    {
-        return SongId::create($inputData->songId)
-            ->mapErr(static fn (): UseCaseError => new InvalidInputError(['songId' => ['IDが不正です']]))
-            ->andThen(fn (SongId $songId): Result => $this->transaction->scope(function () use ($songId): Result {
-                $song = $this->repository->find($songId);
+        $songId = new SongId($inputData->songId);
 
-                if (is_null($song)) {
-                    return new Err(new NotFoundError('Song', $songId->value));
-                }
+        $this->transaction->scope(function () use ($songId): void {
+            $song = $this->repository->find($songId);
 
-                $this->repository->delete($songId);
+            if (is_null($song)) {
+                throw new ResourceNotFoundException('Song', $songId->value);
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::Song,
-                    $song->songId,
-                    $song->toArray(),
-                );
+            $this->repository->delete($songId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::Song,
+                $song->songId,
+                $song->toArray(),
+            );
+        });
     }
 }

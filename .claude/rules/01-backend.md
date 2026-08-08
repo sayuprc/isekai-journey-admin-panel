@@ -20,7 +20,16 @@ paths:
 
 ## 実装規約
 
-- 期待される業務エラーは例外ではなく `ResultType\Ok` / `ResultType\Err` で返す
+- 期待される業務エラーは例外で表現する (ADR-0013)
+  - 業務ルール違反 (重複、存在チェック、契約で表現できない配列内ルール等) は `BusinessRuleViolationException`、認証/認可/NotFound は `Support\UseCase\Exceptions` の各例外
+  - 例外 → HTTP の変換は `App\Http\Responses\ApiExceptionRenderer` の対応表のみが担う。UseCase / Presenter で catch して詰め替えない
+- 入力形式検証 (必須 / 型 / 長さ / format / enum) の単一情報源は TypeSpec 契約 (ADR-0014)
+  - 422 を作るのは `OpenApiValidator` middleware だけ。body の全 field 集約は `App\Http\OpenApi\BodyErrorCollector` が担い、メッセージは `SchemaErrorMessages` の変換表で日本語化する
+  - UseCase / Domain で入力形式を検証しない。形式ルールを追加するときは契約に書く
+- ValueObject の構築は public コンストラクタ (`new`) に一本化し、常に「この値は正しいはず」の表明とする
+  - 不正値の `InvalidDomainException` は契約とドメインの不整合 = バグとして 500 で表面化する。catch して 4xx に変換しない
+  - 例外は契約境界を通らない CLI のみ。Console 側が入力エラーとして表示する
+  - 一度 VO になった値は primitive に戻さず VO のまま流す。境界の検証は一度きり
 - API 契約が変わる変更は `src/contracts` を起点に考える
 - `src/server/Generated/` は手動編集しない
 

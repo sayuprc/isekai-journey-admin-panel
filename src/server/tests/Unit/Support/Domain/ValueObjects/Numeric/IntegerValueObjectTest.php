@@ -15,10 +15,7 @@ class IntegerValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(int $value): void
     {
-        $result = IntegerObject::create($value);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame($value, $result->unwrap()->value);
+        $this->assertSame($value, new IntegerObject($value)->value);
     }
 
     public static function provideProperlyStoresValue(): array
@@ -41,23 +38,23 @@ class IntegerValueObjectTest extends TestCase
     {
         return [
             [
-                IntegerObject::reconstruct(1),
-                IntegerObject::reconstruct(1),
+                new IntegerObject(1),
+                new IntegerObject(1),
                 true,
             ],
             [
-                IntegerObject::reconstruct(1),
-                IntegerObject::reconstruct(2),
+                new IntegerObject(1),
+                new IntegerObject(2),
                 false,
             ],
             [
-                IntegerObject::reconstruct(1),
-                OtherIntegerObject::reconstruct(1),
+                new IntegerObject(1),
+                new OtherIntegerObject(1),
                 false,
             ],
             [
-                IntegerObject::reconstruct(1),
-                OtherIntegerObject::reconstruct(2),
+                new IntegerObject(1),
+                new OtherIntegerObject(2),
                 false,
             ],
         ];

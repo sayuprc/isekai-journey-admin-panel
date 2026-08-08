@@ -8,18 +8,8 @@ use AdminUser\Domain\Models\AdminUserRepositoryInterface;
 use Auth\Domain\Models\AuthContext;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenId;
 use Auth\Domain\Models\Token\RefreshToken\RefreshTokenRepositoryInterface;
-use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
 use Auth\Domain\Services\Token\AccessToken\JwtHandlerInterface;
-use LogicException;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 
 readonly class AuthenticateUseCase
 {
@@ -32,38 +22,31 @@ readonly class AuthenticateUseCase
     }
 
     /**
-     * @return Result<AuthenticateOutputData, UseCaseError>
+     * @throws UnauthenticatedException
      */
-    public function handle(AuthenticateInputData $inputData): Result
+    public function handle(AuthenticateInputData $inputData): AuthenticateOutputData
     {
-        return $this->jwtHandler->verify($inputData->accessToken)
-            ->mapErr(static function (DomainError $error): UseCaseError {
-                return match (true) {
-                    $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-                    $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-                    default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-                };
-            })
-            ->andThen(function (AccessTokenPayload $payload): Result {
-                return RefreshTokenId::create($payload->jti)
-                    ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-                    ->andThen(function (RefreshTokenId $refreshTokenId): Result {
-                        $foundRefreshToken = $this->refreshTokenRepository->findActive($refreshTokenId);
+        $payload = $this->jwtHandler->verify($inputData->accessToken);
 
-                        if (is_null($foundRefreshToken)) {
-                            return new Err(new NotFoundError('リフレッシュトークン', $refreshTokenId->value));
-                        }
+        if (is_null($payload)) {
+            throw new UnauthenticatedException();
+        }
 
-                        $foundUser = $this->userRepository->find($foundRefreshToken->adminUserId);
+        // jti は自前で署名した JWT 由来のため、形式不正は不変条件違反として扱う
+        $refreshToken = $this->refreshTokenRepository->findActive(new RefreshTokenId($payload->jti));
 
-                        if (is_null($foundUser)) {
-                            return new Err(new NotFoundError('ユーザー', $foundRefreshToken->adminUserId->value));
-                        }
+        if (is_null($refreshToken)) {
+            throw new UnauthenticatedException();
+        }
 
-                        $this->context->set($foundUser);
+        $user = $this->userRepository->find($refreshToken->adminUserId);
 
-                        return new Ok(new AuthenticateOutputData());
-                    });
-            });
+        if (is_null($user)) {
+            throw new UnauthenticatedException();
+        }
+
+        $this->context->set($user);
+
+        return new AuthenticateOutputData();
     }
 }

@@ -28,10 +28,10 @@ readonly class Media
         bool $isDisplay,
     ): self {
         return new self(
-            MediaId::reconstruct($mediaId),
-            MediaTitle::reconstruct($title),
-            MediaUrl::reconstruct($url),
-            MediaPublishedAt::reconstruct($publishedAt),
+            new MediaId($mediaId),
+            new MediaTitle($title),
+            new MediaUrl($url),
+            new MediaPublishedAt($publishedAt),
             MediaType::from($type),
             $isDisplay,
         );

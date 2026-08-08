@@ -28,9 +28,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(1, $output->songs);
         $this->assertSame($uuid, $output->songs[0]->songId);
@@ -51,13 +49,14 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(title: 'テスト楽曲'));
 
-        $this->assertTrue($result->isOk());
+        $output = $result;
 
-        $output = $result->unwrap();
-
-        $this->assertCount(1, $output->songs);
+        // 部分一致なので '比較テスト楽曲B' もヒットする
+        $this->assertCount(2, $output->songs);
         $this->assertSame($uuid1, $output->songs[0]->songId);
         $this->assertSame('テスト楽曲', $output->songs[0]->title);
+        $this->assertSame($uuid2, $output->songs[1]->songId);
+        $this->assertSame('比較テスト楽曲B', $output->songs[1]->title);
     }
 
     #[Test]
@@ -73,9 +72,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(type: SongType::Original->value));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(1, $output->songs);
         $this->assertSame($uuid1, $output->songs[0]->songId);
@@ -93,9 +90,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(title: '存在しないタイトル'));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
 
         $this->assertCount(0, $output->songs);
         $this->assertSame(0, $output->maxPage);

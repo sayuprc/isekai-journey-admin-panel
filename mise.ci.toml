@@ -2,14 +2,6 @@
 SERVER_IMAGE = "ghcr.io/sayuprc/isekai-observatory-api:{{vars.server_tag}}"
 OPENAPI_IMAGE = "ghcr.io/sayuprc/openapi-generator:{{vars.openapi_tag}}"
 MYSQL_IMAGE = "ghcr.io/sayuprc/isekai-observatory-mysql:{{vars.mysql_tag}}"
-SERVER_DOCKER_PATH = "/tmp/cache/docker/server"
-SERVER_DOCKER_KEY_PREFIX = "docker-server-"
-VENDOR_PATH = "./src/server/vendor"
-VENDOR_KEY_PREFIX = "composer-"
-OPENAPI_GENERATOR_CLI_DOCKER_PATH = "/tmp/cache/docker/openapi-generator-cli"
-OPENAPI_GENERATOR_CLI_DOCKER_KEY_PREFIX = "docker-openapi-generator-cli-"
-MYSQL_DOCKER_PATH = "/tmp/cache/docker/mysql"
-MYSQL_DOCKER_KEY_PREFIX = "docker-mysql-"
 
 [tasks."build:php"]
 description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
@@ -22,7 +14,6 @@ docker build -t $SERVER_IMAGE ./infra/local/docker/php \
   --build-arg USERNAME=$(id -u -n) \
   --build-arg GROUPNAME=$(id -g -n)
 docker push $SERVER_IMAGE
-mkdir -p $SERVER_DOCKER_PATH
 '''
 
 [tasks."build:openapi-generator"]
@@ -35,7 +26,6 @@ docker build -t $OPENAPI_IMAGE ./infra/local/docker/openapi-generator \
   --build-arg USERNAME=$(id -u -n) \
   --build-arg GROUPNAME=$(id -g -n)
 docker push $OPENAPI_IMAGE
-mkdir -p $OPENAPI_GENERATOR_CLI_DOCKER_PATH
 '''
 
 [tasks."build:mysql"]
@@ -44,7 +34,6 @@ run = '''
 docker build -t $MYSQL_IMAGE ./infra/local/docker/mysql \
   --build-arg TAG={{vars.mysql_tag}}
 docker push $MYSQL_IMAGE
-mkdir -p $MYSQL_DOCKER_PATH
 '''
 
 [tasks.up]

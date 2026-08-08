@@ -50,7 +50,7 @@ class RefreshTokenRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findActiveNotFound(): void
     {
-        $found = $this->getInstance()->findActive(RefreshTokenId::reconstruct($this->generateUuid()));
+        $found = $this->getInstance()->findActive(new RefreshTokenId($this->generateUuid()));
 
         $this->assertNull($found);
     }

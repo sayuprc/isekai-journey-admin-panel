@@ -23,14 +23,13 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Ok;
 use RuntimeException;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\TransactionInterface;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
-use Support\UseCase\Error\AuthenticationError;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -103,7 +102,7 @@ class LoginFinishUseCaseTest extends TestCase
             ->once();
         $this->refreshTokenIssueService->shouldReceive('issue')
             ->with($adminUserId)
-            ->andReturn(new Ok(['token' => $refreshToken, 'plainToken' => 'plain-refresh-token']))
+            ->andReturn(['token' => $refreshToken, 'plainToken' => 'plain-refresh-token'])
             ->once();
         $this->clock->shouldReceive('now')
             ->andReturn($now)
@@ -128,16 +127,15 @@ class LoginFinishUseCaseTest extends TestCase
                 && $targetType === AuditTargetType::AdminUser)
             ->once();
 
-        $result = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
+        $output = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame('access-token', $result->unwrap()->accessToken->jwt->value);
-        $this->assertSame($refreshToken->refreshTokenId->value, $result->unwrap()->refreshTokenId);
-        $this->assertSame('plain-refresh-token', $result->unwrap()->plainRefreshToken);
+        $this->assertSame('access-token', $output->accessToken->jwt->value);
+        $this->assertSame($refreshToken->refreshTokenId->value, $output->refreshTokenId);
+        $this->assertSame('plain-refresh-token', $output->plainRefreshToken);
     }
 
     #[Test]
-    public function returnsAuthenticationErrorWhenCredentialIdIsInvalid(): void
+    public function unauthenticatedWhenCredentialIdIsInvalid(): void
     {
         $state = $this->loginState('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA');
 
@@ -145,14 +143,13 @@ class LoginFinishUseCaseTest extends TestCase
         $this->passkeyAuthenticator->shouldReceive('credentialId')->andReturnNull()->once();
         $this->transaction->shouldReceive('scope')->never();
 
-        $result = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, []));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, []));
     }
 
     #[Test]
-    public function returnsAuthenticationErrorWhenLockedPasskeyIsNotFound(): void
+    public function unauthenticatedWhenLockedPasskeyIsNotFound(): void
     {
         $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $state = $this->loginState($adminUserId);
@@ -166,14 +163,13 @@ class LoginFinishUseCaseTest extends TestCase
         $this->passkeyAuthenticator->shouldReceive('finishAuthentication')->never();
         $this->refreshTokenIssueService->shouldReceive('issue')->never();
 
-        $result = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
     }
 
     #[Test]
-    public function returnsAuthenticationErrorWhenVerificationFails(): void
+    public function unauthenticatedWhenVerificationFails(): void
     {
         $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $state = $this->loginState($adminUserId);
@@ -190,14 +186,13 @@ class LoginFinishUseCaseTest extends TestCase
         $this->passkeyRepository->shouldReceive('updateCounter')->never();
         $this->refreshTokenIssueService->shouldReceive('issue')->never();
 
-        $result = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
     }
 
     #[Test]
-    public function returnsAuthenticationErrorWhenCounterUpdateFails(): void
+    public function unauthenticatedWhenCounterUpdateFails(): void
     {
         $adminUserId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
         $state = $this->loginState($adminUserId);
@@ -213,7 +208,7 @@ class LoginFinishUseCaseTest extends TestCase
             ->andReturn(new PasskeyAuthenticationResult('credential-id', 456))
             ->once();
         $this->refreshTokenIssueService->shouldReceive('issue')
-            ->andReturn(new Ok(['token' => $refreshToken, 'plainToken' => 'plain-refresh-token']))
+            ->andReturn(['token' => $refreshToken, 'plainToken' => 'plain-refresh-token'])
             ->once();
         $this->clock->shouldReceive('now')
             ->andReturn(new DateTimeImmutable('2026-01-02 03:04:05'))
@@ -224,10 +219,9 @@ class LoginFinishUseCaseTest extends TestCase
         $this->refreshTokenRepository->shouldReceive('save')->never();
         $this->recorder->shouldReceive('record')->never();
 
-        $result = $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $this->getInstance()->handle(new LoginFinishInputData($state->authCeremonyId, ['id' => 'credential-id']));
     }
 
     private function getInstance(): LoginFinishUseCase

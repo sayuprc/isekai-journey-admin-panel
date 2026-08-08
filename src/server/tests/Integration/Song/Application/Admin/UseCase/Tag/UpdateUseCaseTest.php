@@ -10,6 +10,7 @@ use Song\Application\Admin\UseCase\Tag\Update\UpdateUseCase;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditTargetType;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Concerns\AssertsAuditLog;
 use Tests\Support\DatabaseTestCase;
 use Tests\Support\Domain\EntityFactory;
@@ -30,8 +31,6 @@ class UpdateUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'テストタグA', 2));
 
-        $this->assertTrue($result->isOk());
-
         $tags = $this->app->make(SongTagRepositoryInterface::class)->all();
         $this->assertCount(1, $tags);
         $this->assertSame('テストタグA', array_first($tags)->name->value);
@@ -47,9 +46,9 @@ class UpdateUseCaseTest extends DatabaseTestCase
     {
         $uuid = $this->generateUuid();
 
-        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'テストタグA', 2));
+        $this->expectException(ResourceNotFoundException::class);
 
-        $this->assertTrue($result->isErr());
+        $result = $this->getInstance()->handle(new UpdateInputData($uuid, 'テストタグA', 2));
     }
 
     private function getInstance(): UpdateUseCase

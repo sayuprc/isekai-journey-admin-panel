@@ -13,11 +13,17 @@ export async function getStaticPaths() {
 
 const { releaseGroup } = Astro.props;
 
-const pageDescription = releaseGroup.description || `ヰ世界情緒のリリース「${releaseGroup.title}」の情報`;
-const ogImageUrl = representativeJacketArtUrl(releaseGroup);
+const pageDescription = releaseGroup.description || `ヰ世界情緒が参加するリリース「${releaseGroup.title}」の情報`;
+const jacketArtUrl = representativeJacketArtUrl(releaseGroup);
+const ogImage = jacketArtUrl === null ? null : { url: jacketArtUrl, alt: `${releaseGroup.title}のジャケット` };
 ---
 
-<Layout pageTitle={releaseGroup.title} pageDescription={pageDescription} ogImageUrl={ogImageUrl}>
+<Layout
+  pageTitle={releaseGroup.title}
+  pageDescription={pageDescription}
+  ogImage={ogImage}
+  breadcrumbs={[{ label: 'リリース', href: '/releases' }, { label: releaseGroup.title, href: null }]}
+>
   <section class="shell page-section detail-page">
     <ReleaseDetailContent releaseGroup={releaseGroup} />
   </section>

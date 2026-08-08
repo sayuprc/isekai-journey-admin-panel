@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth\Application\Admin\UseCase\RegisterStart;
 
+use AdminUser\Domain\Models\AdminUserName;
 use AdminUser\Domain\Models\Email;
 use AdminUser\Domain\Models\Permissions;
 use AdminUser\Domain\Models\RegistrationToken\ConsumptionStatus;
@@ -27,11 +28,8 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\UseCase\Error\BusinessLogicError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -75,12 +73,15 @@ class RegisterStartUseCaseTest extends TestCase
         $this->consumeService->shouldReceive('verify')
             ->withArgs(static fn (string $plainToken, Email $email): bool => $plainToken === 'plain-token'
                 && $email->value === 'invitee@example.com')
-            ->andReturn(new Ok($token))
+            ->andReturn($token)
             ->once();
 
         $this->integrityService->shouldReceive('prepareForCreate')
-            ->with('名前', 'invitee@example.com', Role::General->value, [])
-            ->andReturn(new Ok($adminUser))
+            ->withArgs(static fn (AdminUserName $name, Email $email, Role $role, Permissions $permissions): bool => $name->value === '名前'
+                && $email->value === 'invitee@example.com'
+                && $role === Role::General
+                && $permissions->toArray() === [])
+            ->andReturn($adminUser)
             ->once();
 
         $this->uuidGenerator->shouldReceive('generate')
@@ -107,36 +108,34 @@ class RegisterStartUseCaseTest extends TestCase
                 && $state->optionsJson === '{"challenge":"challenge"}')
             ->once();
 
-        $result = $this->getInstance()->handle(new RegisterStartInputData('plain-token', 'invitee@example.com', '名前'));
+        $output = $this->getInstance()->handle(new RegisterStartInputData('plain-token', 'invitee@example.com', '名前'));
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($authCeremonyId, $result->unwrap()->authCeremonyId);
-        $this->assertSame(['challenge' => 'challenge'], $result->unwrap()->publicKey);
+        $this->assertSame($authCeremonyId, $output->authCeremonyId);
+        $this->assertSame(['challenge' => 'challenge'], $output->publicKey);
     }
 
     #[Test]
     public function doesNotStoreStateWhenTokenInvalid(): void
     {
         $this->consumeService->shouldReceive('verify')
-            ->andReturn(new Err(new BusinessRuleViolationError('token_not_found')))
+            ->andReturnNull()
             ->once();
         $this->ceremonyStore->shouldReceive('put')->never();
 
-        $result = $this->getInstance()->handle(new RegisterStartInputData('plain-token', 'invitee@example.com', '名前'));
+        $this->expectException(BusinessRuleViolationException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(BusinessLogicError::class, $result->unwrapErr());
+        $this->getInstance()->handle(new RegisterStartInputData('plain-token', 'invitee@example.com', '名前'));
     }
 
     private function buildToken(string $email): RegistrationToken
     {
         return new RegistrationToken(
-            RegistrationTokenId::reconstruct('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
-            HashedTokenValue::reconstruct('hashed'),
-            Email::reconstruct($email),
+            new RegistrationTokenId('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'),
+            new HashedTokenValue('hashed'),
+            new Email($email),
             Role::General,
             Permissions::reconstruct([]),
-            ExpiredAt::reconstruct(new DateTimeImmutable('+7 days')),
+            new ExpiredAt(new DateTimeImmutable('+7 days')),
             ConsumptionStatus::Unused,
         );
     }

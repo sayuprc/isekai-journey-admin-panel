@@ -106,7 +106,7 @@ class GenerateRecoveryCodesTest extends DatabaseTestCase
     {
         $user = $this->createAdminUser($this->generateUuid(), 'root@example.com', Role::Privilege);
 
-        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)->unwrap()['token'];
+        $refreshToken = $this->app->make(RefreshTokenIssueService::class)->issue($user->adminUserId->value)['token'];
 
         $this->app->make(AdminUserRepository::class)->register($user);
         $this->app->make(RefreshTokenRepository::class)->save($refreshToken);

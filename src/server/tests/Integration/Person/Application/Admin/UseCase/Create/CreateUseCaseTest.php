@@ -25,8 +25,6 @@ class CreateUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(new CreateInputData('テスト人物'));
 
-        $this->assertTrue($result->isOk());
-
         $persons = DB::table('persons')->get();
         $this->assertCount(1, $persons);
         $this->assertSame('テスト人物', $persons->first()->name);

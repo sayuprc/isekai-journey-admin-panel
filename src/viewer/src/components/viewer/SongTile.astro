@@ -1,6 +1,7 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
 import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
+import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../shared/image';
 
 interface Props {
   songId: string;
@@ -10,17 +11,27 @@ interface Props {
   media?: SongMedia[];
   releaseGroups?: SongReleaseGroup[];
   aspectRatio?: string;
+  /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
+  loading?: 'lazy' | 'eager';
 }
 
-const { mediaCount, index, media = [], releaseGroups = [], aspectRatio = '16 / 9' } = Astro.props;
+const { mediaCount, index, media = [], releaseGroups = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
 
 // プラットフォームとサムネイルは状態として保持せず url から導出する。
 // メディアがあれば最初にサムネイルを導出できたものを採用する。
 const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
 
 // メディアから導出できなければ収録リリースの最初の代表ジャケットで代替する
+const jacketArtUrl = releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
+
 const thumbnailUrl = mediaThumbnailUrl
-  ?? releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
+  ?? (jacketArtUrl === null ? null : assetImageUrl(jacketArtUrl, 640));
+
+const thumbnailSrcset = mediaThumbnailUrl !== null
+  ? youtubeThumbnailSrcset(mediaThumbnailUrl)
+  : jacketArtUrl !== null
+    ? assetImageSrcset(jacketArtUrl, JACKET_WIDTHS)
+    : undefined;
 
 const sequence = String(index + 1).padStart(2, '0');
 ---
@@ -32,9 +43,11 @@ const sequence = String(index + 1).padStart(2, '0');
           <img
             class="song-tile-image"
             src={thumbnailUrl}
-            srcset={mediaThumbnailUrl === null ? undefined : youtubeThumbnailSrcset(mediaThumbnailUrl)}
-            sizes="(max-width: 640px) 50vw, 240px"
-            loading="lazy"
+            srcset={thumbnailSrcset}
+            sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1100px) calc((100vw - 124px) / 2), calc((min(1480px, 100vw) - 180px) / 4)"
+            loading={loading}
+            fetchpriority={loading === 'eager' ? 'high' : undefined}
+            decoding="async"
             alt=""
           />
         )

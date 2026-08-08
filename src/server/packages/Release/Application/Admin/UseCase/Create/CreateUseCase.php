@@ -5,24 +5,13 @@ declare(strict_types=1);
 namespace Release\Application\Admin\UseCase\Create;
 
 use AdminUser\Domain\Models\Permission;
-use LogicException;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Release\Domain\Services\ReleaseIntegrityService;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class CreateUseCase
 {
@@ -35,22 +24,12 @@ readonly class CreateUseCase
     ) {
     }
 
-    /**
-     * @return Result<CreateOutputData, UseCaseError>
-     */
-    public function handle(CreateInputData $inputData): Result
+    public function handle(CreateInputData $inputData): CreateOutputData
     {
-        return $this->authorizer->require(Permission::WriteRelease)
-            ->andThen(fn () => $this->createRelease($inputData));
-    }
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-    /**
-     * @return Result<CreateOutputData, UseCaseError>
-     */
-    private function createRelease(CreateInputData $inputData): Result
-    {
-        return $this->transaction->scope(function () use ($inputData): Result {
-            $result = $this->service->prepareForCreate(
+        return $this->transaction->scope(function () use ($inputData): CreateOutputData {
+            $release = $this->service->prepareForCreate(
                 $inputData->releaseGroupId,
                 $inputData->name,
                 $inputData->releasedOn,
@@ -62,11 +41,7 @@ readonly class CreateUseCase
                 $inputData->media,
             );
 
-            if ($result->isErr()) {
-                return new Err($this->handleError($result->unwrapErr()));
-            }
-
-            $release = $this->repository->save($result->unwrap());
+            $release = $this->repository->save($release);
 
             $this->recorder->record(
                 AuditAction::Create,
@@ -75,17 +50,7 @@ readonly class CreateUseCase
                 $release->toArray(),
             );
 
-            return new Ok(new CreateOutputData($release));
+            return new CreateOutputData($release);
         });
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
     }
 }

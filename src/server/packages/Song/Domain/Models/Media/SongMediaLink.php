@@ -18,8 +18,8 @@ readonly class SongMediaLink
     public static function reconstruct(string $mediaId, int $orderNo): self
     {
         return new self(
-            MediaId::reconstruct($mediaId),
-            OrderNo::reconstruct($orderNo),
+            new MediaId($mediaId),
+            new OrderNo($orderNo),
         );
     }
 

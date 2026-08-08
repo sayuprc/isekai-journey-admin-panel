@@ -5,26 +5,15 @@ declare(strict_types=1);
 namespace Person\Application\Admin\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
-use LogicException;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonIntegrityService;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class UpdateUseCase
 {
@@ -37,55 +26,29 @@ readonly class UpdateUseCase
     ) {
     }
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    public function handle(UpdateInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        return $this->authorizer->require(Permission::WritePerson)
-            ->andThen(fn () => $this->updatePerson($inputData));
-    }
+        $this->authorizer->authorize(Permission::WritePerson);
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    private function updatePerson(UpdateInputData $inputData): Result
-    {
-        return PersonId::create($inputData->personId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(fn (PersonId $personId): Result => $this->transaction->scope(function () use ($inputData, $personId): Result {
-                if (is_null($this->repository->find($personId))) {
-                    return new Err(new NotFoundError('Person', $personId->value));
-                }
+        $personId = new PersonId($inputData->personId);
 
-                $result = $this->service->prepareForUpdate($inputData->personId, $inputData->name, $inputData->orderNo);
+        return $this->transaction->scope(function () use ($inputData, $personId): UpdateOutputData {
+            if (is_null($this->repository->find($personId))) {
+                throw new ResourceNotFoundException('Person', $personId->value);
+            }
 
-                if ($result->isErr()) {
-                    return new Err($this->handleError($result->unwrapErr()));
-                }
+            $person = $this->service->prepareForUpdate($inputData->personId, $inputData->name, $inputData->orderNo);
 
-                $person = $result->unwrap();
+            $this->repository->save($person);
 
-                $this->repository->save($person);
+            $this->recorder->record(
+                AuditAction::Update,
+                AuditTargetType::Person,
+                $person->personId,
+                $person->toArray(),
+            );
 
-                $this->recorder->record(
-                    AuditAction::Update,
-                    AuditTargetType::Person,
-                    $person->personId,
-                    $person->toArray(),
-                );
-
-                return new Ok(new UpdateOutputData($person));
-            }));
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+            return new UpdateOutputData($person);
+        });
     }
 }

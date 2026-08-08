@@ -165,6 +165,50 @@ class ListSongTest extends DatabaseTestCase
             ->assertExactJson([
                 'songs' => [
                     [
+                        'songId' => $secondSongId,
+                        'title' => '海月のうた',
+                        'type' => [
+                            'name' => 'カバー曲',
+                            'value' => 2,
+                        ],
+                        'description' => '2 曲目',
+                        'lyricists' => [],
+                        'composers' => [],
+                        'arrangers' => [],
+                        'counts' => [
+                            'releaseCount' => 0,
+                            'mediaCount' => 1,
+                        ],
+                        'media' => [
+                            [
+                                'mediaId' => $visibleMediaId,
+                                'title' => '公開 MV',
+                                'type' => [
+                                    'name' => 'MV',
+                                    'value' => 1,
+                                ],
+                                'url' => 'https://example.com/public',
+                                'publishedAt' => '2024-03-01T12:00:00+09:00',
+                            ],
+                        ],
+                        'releaseGroups' => [],
+                    ],
+                ],
+                'nextCursor' => base64_encode((string)json_encode([
+                    'orderNo' => 2,
+                    'songId' => $secondSongId,
+                ], JSON_THROW_ON_ERROR)),
+            ]);
+
+        $cursor = $response->json('nextCursor');
+
+        $this->assertIsString($cursor);
+
+        $this->get(route(ViewerSongRouteMap::List, ['limit' => 1, 'cursor' => $cursor]))
+            ->assertStatus(200)
+            ->assertExactJson([
+                'songs' => [
+                    [
                         'songId' => $visibleSongId,
                         'title' => 'テスト楽曲',
                         'type' => [
@@ -213,50 +257,6 @@ class ListSongTest extends DatabaseTestCase
                                 'jacketArtUrl' => null,
                             ],
                         ],
-                    ],
-                ],
-                'nextCursor' => base64_encode((string)json_encode([
-                    'orderNo' => 1,
-                    'songId' => $visibleSongId,
-                ], JSON_THROW_ON_ERROR)),
-            ]);
-
-        $cursor = $response->json('nextCursor');
-
-        $this->assertIsString($cursor);
-
-        $this->get(route(ViewerSongRouteMap::List, ['limit' => 1, 'cursor' => $cursor]))
-            ->assertStatus(200)
-            ->assertExactJson([
-                'songs' => [
-                    [
-                        'songId' => $secondSongId,
-                        'title' => '海月のうた',
-                        'type' => [
-                            'name' => 'カバー曲',
-                            'value' => 2,
-                        ],
-                        'description' => '2 曲目',
-                        'lyricists' => [],
-                        'composers' => [],
-                        'arrangers' => [],
-                        'counts' => [
-                            'releaseCount' => 0,
-                            'mediaCount' => 1,
-                        ],
-                        'media' => [
-                            [
-                                'mediaId' => $visibleMediaId,
-                                'title' => '公開 MV',
-                                'type' => [
-                                    'name' => 'MV',
-                                    'value' => 1,
-                                ],
-                                'url' => 'https://example.com/public',
-                                'publishedAt' => '2024-03-01T12:00:00+09:00',
-                            ],
-                        ],
-                        'releaseGroups' => [],
                     ],
                 ],
             ]);

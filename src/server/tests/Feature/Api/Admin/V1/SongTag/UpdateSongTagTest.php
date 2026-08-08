@@ -77,6 +77,7 @@ class UpdateSongTagTest extends DatabaseTestCase
                 'orderNo' => 3,
             ])->assertStatus(400)
             ->assertExactJson([
+                'code' => 'business_rule_violation',
                 'message' => 'すでに使われている名前です "テストタグA"',
             ]);
     }
@@ -107,13 +108,13 @@ class UpdateSongTagTest extends DatabaseTestCase
             ])->assertStatus(422)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
-                    ->has(
-                        'errors',
-                        1,
-                        static fn (AssertableJson $json) => $json
-                            ->where('field', 'name')
-                            ->whereType('message', 'string'),
-                    ),
+                    ->where('code', 'validation_failed')
+                    ->whereType('message', 'string')
+                    ->has('details', 2)
+                    ->where('details.0.field', 'name')
+                    ->whereType('details.0.message', 'string')
+                    ->where('details.1.field', 'orderNo')
+                    ->whereType('details.1.message', 'string'),
             );
     }
 }

@@ -39,7 +39,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($releaseId));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('releases')->get()->all());
 
         $this->assertAuditLogCount(1);
@@ -81,7 +80,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new DeleteInputData($releaseId));
 
-        $this->assertTrue($result->isOk());
         $this->assertCount(0, DB::table('releases')->get()->all());
         $this->assertCount(0, DB::table('release_media')->get()->all());
         $this->assertCount(0, DB::table('release_tracks')->get()->all());
@@ -94,7 +92,6 @@ class DeleteUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(new DeleteInputData($this->generateUuid()));
 
-        $this->assertTrue($result->isOk());
         $this->assertAuditLogCount(0);
     }
 

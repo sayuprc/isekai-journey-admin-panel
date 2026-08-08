@@ -181,8 +181,11 @@ readonly class MediaRepository implements MediaRepositoryInterface
         $query = $this->queryFactory->select()->from(self::TABLE);
 
         if ($criteria->title->isPresent()) {
-            $keyword = SqlHelper::escapeLike($criteria->title->get());
-            $query = $query->where('title', 'LIKE', '%' . $keyword . '%');
+            $query = $query->where(
+                'title',
+                'LIKE',
+                '%' . SqlHelper::escapeLike($criteria->title->get()) . '%',
+            );
         }
 
         if ($criteria->type->isPresent()) {

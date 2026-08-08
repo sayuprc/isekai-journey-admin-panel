@@ -30,10 +30,10 @@ readonly class AdminUser
         array $permissions,
     ): self {
         return new self(
-            AdminUserId::reconstruct($adminUserId),
-            AdminUserName::reconstruct($name),
-            Email::reconstruct($email),
-            CreatedAt::reconstruct($createdAt),
+            new AdminUserId($adminUserId),
+            new AdminUserName($name),
+            new Email($email),
+            new CreatedAt($createdAt),
             Role::from($role),
             Permissions::reconstruct($permissions),
         );

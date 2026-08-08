@@ -6,7 +6,7 @@ mago = "1.30.0"
 mkcert = "1.4.4"
 node = "24.17.0"
 pinact = "4.1.0"
-pnpm = "11.17.0"
+pnpm = "11.20.0"
 
 [vars]
 mise_version = "2026.7.13"
@@ -386,16 +386,6 @@ run = [
   "bun run eslint:check",
   "bun run stylelint:check",
 ]
-
-[tasks."admin:tcm"]
-description = "tcm を実行する"
-dir = "src"
-run = "bun --filter admin tcm"
-
-[tasks."admin:tcm:watch"]
-description = "tcm を --watch オプション付きで実行する"
-dir = "src"
-run = "bun --filter admin tcm:watch"
 
 [tasks."admin:prism"]
 description = "Prism のモックサーバーを起動する"

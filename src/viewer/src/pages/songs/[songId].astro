@@ -12,11 +12,20 @@ export async function getStaticPaths() {
 
 const { song } = Astro.props;
 
-const pageDescription = song.description || `ヰ世界情緒の楽曲「${song.title}」の情報`;
-const ogImageUrl = song.releaseGroups.find(releaseGroup => releaseGroup.jacketArtUrl !== null)?.jacketArtUrl ?? null;
+const pageDescription = song.description || `ヰ世界情緒が歌う楽曲「${song.title}」の情報`;
+// 楽曲そのものに画像はないので、収録先リリースの代表ジャケットを借りる
+const jacketReleaseGroup = song.releaseGroups.find(releaseGroup => releaseGroup.jacketArtUrl !== null) ?? null;
+const ogImage = jacketReleaseGroup?.jacketArtUrl
+  ? { url: jacketReleaseGroup.jacketArtUrl, alt: `${jacketReleaseGroup.title}のジャケット` }
+  : null;
 ---
 
-<Layout pageTitle={song.title} pageDescription={pageDescription} ogImageUrl={ogImageUrl}>
+<Layout
+  pageTitle={song.title}
+  pageDescription={pageDescription}
+  ogImage={ogImage}
+  breadcrumbs={[{ label: '楽曲', href: '/songs' }, { label: song.title, href: null }]}
+>
   <section class="shell page-section detail-page">
     <SongDetailContent song={song} />
   </section>

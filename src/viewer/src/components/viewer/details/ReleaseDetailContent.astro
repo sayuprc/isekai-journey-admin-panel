@@ -10,7 +10,7 @@ const { releaseGroup } = Astro.props;
 const isSingleReleaseGroup = releaseGroup.releases.length === 1;
 ---
 
-<div class="detail-page-content release-detail-content">
+<div class="detail-page-content release-detail-content" data-share-title={releaseGroup.title}>
   <div class="label-mono">{releaseGroup.firstReleasedOn} · {releaseGroup.type.name}</div>
   <h1 class="detail-title">{releaseGroup.title}</h1>
   {releaseGroup.description && <p class="detail-description" style="margin-top: 16px;">{releaseGroup.description}</p>}
@@ -25,7 +25,8 @@ const isSingleReleaseGroup = releaseGroup.releases.length === 1;
                 <span class="label-mono">{release.formats.map(format => format.name).join('・')}</span>
               </div>
               <div class="release-version-body">
-                <ReleaseVersionBody release={release} releaseGroupTitle={releaseGroup.title} />
+                {/* 単一リリースのジャケットは常に開いた状態でファーストビューに入るため eager にする */}
+                <ReleaseVersionBody release={release} releaseGroupTitle={releaseGroup.title} loading="eager" />
               </div>
             </section>
           )

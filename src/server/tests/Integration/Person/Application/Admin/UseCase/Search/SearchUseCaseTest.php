@@ -26,9 +26,8 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(name: 'テスト人物'));
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals([$person], $result->unwrap()->persons);
-        $this->assertSame(1, $result->unwrap()->maxPage);
+        $this->assertEquals([$person], $result->persons);
+        $this->assertSame(1, $result->maxPage);
     }
 
     #[Test]
@@ -40,8 +39,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(sort: Sort::Name, order: Order::Desc));
 
-        $this->assertTrue($result->isOk());
-        $this->assertEquals([$person2, $person1], $result->unwrap()->persons);
+        $this->assertEquals([$person2, $person1], $result->persons);
     }
 
     private function getInstance(): SearchUseCase

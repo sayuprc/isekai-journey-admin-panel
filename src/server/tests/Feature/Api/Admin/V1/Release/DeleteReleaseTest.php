@@ -40,7 +40,7 @@ class DeleteReleaseTest extends DatabaseTestCase
             ->delete(route(ReleaseRouteMap::Delete, $releaseId))
             ->assertStatus(204);
 
-        $this->assertNull($repository->find(ReleaseId::create($releaseId)->unwrap()));
+        $this->assertNull($repository->find(new ReleaseId($releaseId)));
     }
 
     #[Test]
@@ -78,7 +78,7 @@ class DeleteReleaseTest extends DatabaseTestCase
             ->delete(route(ReleaseRouteMap::Delete, $releaseId))
             ->assertStatus(204);
 
-        $this->assertNull($repository->find(ReleaseId::create($releaseId)->unwrap()));
+        $this->assertNull($repository->find(new ReleaseId($releaseId)));
         $this->assertDatabaseCount('release_media', 0);
         $this->assertDatabaseCount('release_tracks', 0);
     }

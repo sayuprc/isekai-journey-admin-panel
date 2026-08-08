@@ -5,26 +5,15 @@ declare(strict_types=1);
 namespace Release\Application\Admin\UseCase\Update;
 
 use AdminUser\Domain\Models\Permission;
-use LogicException;
 use Release\Domain\Models\ReleaseId;
 use Release\Domain\Models\ReleaseRepositoryInterface;
 use Release\Domain\Services\ReleaseIntegrityService;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\NotFoundError;
-use Support\UseCase\Error\UseCaseError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 
 readonly class UpdateUseCase
 {
@@ -37,67 +26,41 @@ readonly class UpdateUseCase
     ) {
     }
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    public function handle(UpdateInputData $inputData): Result
+    public function handle(UpdateInputData $inputData): UpdateOutputData
     {
-        return $this->authorizer->require(Permission::WriteRelease)
-            ->andThen(fn () => $this->updateRelease($inputData));
-    }
+        $this->authorizer->authorize(Permission::WriteRelease);
 
-    /**
-     * @return Result<UpdateOutputData, UseCaseError>
-     */
-    private function updateRelease(UpdateInputData $inputData): Result
-    {
-        return ReleaseId::create($inputData->releaseId)
-            ->mapErr(static fn (EntityRuleViolationError $e): UseCaseError => new InvalidInputError([$e->field => [$e->message]]))
-            ->andThen(function (ReleaseId $releaseId) use ($inputData): Result {
-                return $this->transaction->scope(function () use ($inputData, $releaseId): Result {
-                    if (is_null($found = $this->repository->find($releaseId))) {
-                        return new Err(new NotFoundError('Release', $releaseId->value));
-                    }
+        $releaseId = new ReleaseId($inputData->releaseId);
 
-                    // リリースの所属先グループは更新では変更しない。
-                    $result = $this->service->prepareForUpdate(
-                        $inputData->releaseId,
-                        $found->releaseGroupId->value,
-                        $inputData->name,
-                        $inputData->releasedOn,
-                        $inputData->description,
-                        $inputData->jacketArtUrl,
-                        $inputData->isDisplay,
-                        $inputData->orderNo,
-                        $inputData->formatValues,
-                        $inputData->media,
-                    );
+        return $this->transaction->scope(function () use ($inputData, $releaseId): UpdateOutputData {
+            if (is_null($found = $this->repository->find($releaseId))) {
+                throw new ResourceNotFoundException('Release', $releaseId->value);
+            }
 
-                    if ($result->isErr()) {
-                        return new Err($this->handleError($result->unwrapErr()));
-                    }
+            // リリースの所属先グループは更新では変更しない。
+            $release = $this->service->prepareForUpdate(
+                $inputData->releaseId,
+                $found->releaseGroupId->value,
+                $inputData->name,
+                $inputData->releasedOn,
+                $inputData->description,
+                $inputData->jacketArtUrl,
+                $inputData->isDisplay,
+                $inputData->orderNo,
+                $inputData->formatValues,
+                $inputData->media,
+            );
 
-                    $release = $this->repository->save($result->unwrap());
+            $release = $this->repository->save($release);
 
-                    $this->recorder->record(
-                        AuditAction::Update,
-                        AuditTargetType::Release,
-                        $release->releaseId,
-                        $release->toArray(),
-                    );
+            $this->recorder->record(
+                AuditAction::Update,
+                AuditTargetType::Release,
+                $release->releaseId,
+                $release->toArray(),
+            );
 
-                    return new Ok(new UpdateOutputData($release));
-                });
-            });
-    }
-
-    private function handleError(DomainError $error): UseCaseError
-    {
-        return match (true) {
-            $error instanceof DomainValidationError => new InvalidInputError($error->errors),
-            $error instanceof EntityRuleViolationError => new InvalidInputError([$error->field => [$error->message]]),
-            $error instanceof BusinessRuleViolationError => new BusinessLogicError($error->message),
-            default => throw new LogicException('予期しないドメインエラーが発生しました: ' . $error::class),
-        };
+            return new UpdateOutputData($release);
+        });
     }
 }

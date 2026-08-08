@@ -1,0 +1,33 @@
+name: Release QA
+
+# main, stg 向け PR ではパスに関係なくすべての QA を実行する
+on:
+  pull_request:
+    branches:
+      - main
+      - stg
+  push:
+    branches:
+      - main
+      - stg
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  server:
+    name: Server QA
+    uses: ./.github/workflows/server-qa.yaml
+
+  viewer:
+    name: Viewer QA
+    uses: ./.github/workflows/viewer-qa.yaml
+
+  admin:
+    name: Admin QA
+    uses: ./.github/workflows/admin-qa.yaml
+
+  contracts:
+    name: Contracts QA
+    uses: ./.github/workflows/contracts-qa.yaml

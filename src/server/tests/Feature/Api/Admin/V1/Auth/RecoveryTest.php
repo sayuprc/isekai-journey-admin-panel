@@ -82,7 +82,7 @@ class RecoveryTest extends DatabaseTestCase
 
         // コードは消費済みになる
         $this->assertCount(0, $this->app->make(RecoveryCodeRepositoryInterface::class)
-            ->findUnusedByAdminUserIdForUpdate(AdminUserId::reconstruct($adminUserId)));
+            ->findUnusedByAdminUserIdForUpdate(new AdminUserId($adminUserId)));
         $this->assertSame(ConsumptionStatus::Consumed->value, (int)DB::table('admin_user_recovery_codes')->first()?->status);
 
         $log = $this->findAuditLog(AuditAction::RecoveryCodeUse, AuditTargetType::AdminUser, $adminUserId);
@@ -115,7 +115,7 @@ class RecoveryTest extends DatabaseTestCase
             (int)DB::table('admin_user_recovery_codes')->where('admin_user_recovery_code_id', $this->toBin($codeAId))->first()?->status,
         );
         $unusedCodes = $this->app->make(RecoveryCodeRepositoryInterface::class)
-            ->findUnusedByAdminUserIdForUpdate(AdminUserId::reconstruct($adminUserId));
+            ->findUnusedByAdminUserIdForUpdate(new AdminUserId($adminUserId));
         $this->assertCount(1, $unusedCodes);
         $this->assertNotSame($codeAId, $unusedCodes[0]->recoveryCodeId->value);
 
@@ -133,7 +133,7 @@ class RecoveryTest extends DatabaseTestCase
 
         // 2 回目失敗後もコード B は消費されていない
         $this->assertCount(1, $this->app->make(RecoveryCodeRepositoryInterface::class)
-            ->findUnusedByAdminUserIdForUpdate(AdminUserId::reconstruct($adminUserId)));
+            ->findUnusedByAdminUserIdForUpdate(new AdminUserId($adminUserId)));
     }
 
     #[Test]
@@ -284,9 +284,9 @@ class RecoveryTest extends DatabaseTestCase
 
         $this->app->make(RecoveryCodeRepositoryInterface::class)->saveMany([
             new RecoveryCode(
-                RecoveryCodeId::reconstruct($recoveryCodeId),
-                AdminUserId::reconstruct($adminUserId),
-                HashedCodeValue::reconstruct($hashedCode),
+                new RecoveryCodeId($recoveryCodeId),
+                new AdminUserId($adminUserId),
+                new HashedCodeValue($hashedCode),
                 ConsumptionStatus::Unused,
                 null,
             ),

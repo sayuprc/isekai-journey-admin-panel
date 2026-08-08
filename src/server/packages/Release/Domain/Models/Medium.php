@@ -21,8 +21,8 @@ readonly class Medium
     public static function reconstruct(int $position, ?string $name, array $tracks): self
     {
         return new self(
-            OrderNo::reconstruct($position),
-            is_null($name) ? null : MediumName::reconstruct($name),
+            new OrderNo($position),
+            is_null($name) ? null : new MediumName($name),
             Tracks::reconstruct($tracks),
         );
     }

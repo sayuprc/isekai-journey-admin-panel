@@ -13,11 +13,12 @@ export async function getStaticPaths() {
 
 const { media } = Astro.props;
 
-const pageDescription = `ヰ世界情緒のメディア「${media.title}」の情報`;
-const ogImageUrl = youtubeThumbnailFromUrl(media.url);
+const pageDescription = `ヰ世界情緒が出演するメディア「${media.title}」の情報`;
+const thumbnailUrl = youtubeThumbnailFromUrl(media.url);
+const ogImage = thumbnailUrl === null ? null : { url: thumbnailUrl, alt: `${media.title}のサムネイル` };
 ---
 
-<Layout pageTitle={media.title} pageDescription={pageDescription} ogImageUrl={ogImageUrl}>
+<Layout pageTitle={media.title} pageDescription={pageDescription} ogImage={ogImage}>
   <section class="shell page-section detail-page">
     <MediaDetailContent media={media} />
   </section>

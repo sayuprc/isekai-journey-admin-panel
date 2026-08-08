@@ -2,9 +2,32 @@ name: Contracts QA
 
 on:
   pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
   push:
     branches:
       - dev
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
 
 jobs:
   format:
@@ -14,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.ref }}
 
@@ -43,7 +66,7 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.ref }}
 

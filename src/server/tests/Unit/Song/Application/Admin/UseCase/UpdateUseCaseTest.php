@@ -9,8 +9,6 @@ use Mockery;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
-use ResultType\Err;
-use ResultType\Ok;
 use Song\Application\Admin\Assemble\AssembledPerson;
 use Song\Application\Admin\Assemble\AssembledSong;
 use Song\Application\Admin\Assemble\SongAssembler;
@@ -23,9 +21,9 @@ use Song\Domain\Models\SongRepositoryInterface;
 use Song\Domain\Models\SongType;
 use Song\Domain\Services\SongIntegrityService;
 use Support\Contracts\TransactionInterface;
-use Support\Domain\Error\DomainValidationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
-use Support\UseCase\Error\NotFoundError;
+use Support\UseCase\Exceptions\ResourceNotFoundException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -85,7 +83,7 @@ class UpdateUseCaseTest extends TestCase
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
             ->andReturn(
-                new Ok($song = $this->createSong(
+                $song = $this->createSong(
                     $songId,
                     $title,
                     $description,
@@ -95,7 +93,7 @@ class UpdateUseCaseTest extends TestCase
                     $orderNo,
                     [],
                     $persons,
-                )),
+                ),
             )
             ->once();
 
@@ -138,8 +136,6 @@ class UpdateUseCaseTest extends TestCase
                 $persons,
             ),
         );
-
-        $this->assertTrue($result->isOk());
     }
 
     #[Test]
@@ -170,8 +166,10 @@ class UpdateUseCaseTest extends TestCase
 
         $this->service->shouldReceive('prepareForUpdate')
             ->with($songId, $title, $description, $lyricsLink, $typeValue, $isDisplay, $orderNo, [], $persons, [])
-            ->andReturn(new Err(new DomainValidationError([])))
+            ->andThrow(new BusinessRuleViolationException('検証エラー'))
             ->once();
+
+        $this->expectException(BusinessRuleViolationException::class);
 
         $result = $this->getInstance()->handle(
             new UpdateInputData(
@@ -186,8 +184,6 @@ class UpdateUseCaseTest extends TestCase
                 $persons,
             ),
         );
-
-        $this->assertTrue($result->isErr());
     }
 
     #[Test]
@@ -208,6 +204,8 @@ class UpdateUseCaseTest extends TestCase
         $this->service->shouldNotReceive('prepareForUpdate');
         $this->repository->shouldNotReceive('save');
 
+        $this->expectException(ResourceNotFoundException::class);
+
         $result = $this->getInstance()->handle(
             new UpdateInputData(
                 $songId,
@@ -221,9 +219,6 @@ class UpdateUseCaseTest extends TestCase
                 [],
             ),
         );
-
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(NotFoundError::class, $result->unwrapErr());
     }
 
     /**

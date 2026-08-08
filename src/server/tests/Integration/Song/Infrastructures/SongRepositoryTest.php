@@ -37,7 +37,7 @@ class SongRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findNotFound(): void
     {
-        $found = $this->getInstance()->find(SongId::reconstruct($this->generateUuid()));
+        $found = $this->getInstance()->find(new SongId($this->generateUuid()));
 
         $this->assertNull($found);
     }
@@ -100,7 +100,7 @@ class SongRepositoryTest extends DatabaseTestCase
     #[Test]
     public function isPersonNotUsed(): void
     {
-        $this->assertFalse($this->getInstance()->isPersonUsed(PersonId::reconstruct($this->generateUuid())));
+        $this->assertFalse($this->getInstance()->isPersonUsed(new PersonId($this->generateUuid())));
     }
 
     #[Test]

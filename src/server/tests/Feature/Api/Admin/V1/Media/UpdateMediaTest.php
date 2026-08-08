@@ -127,13 +127,15 @@ class UpdateMediaTest extends DatabaseTestCase
             ])->assertStatus(422)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
-                    ->has(
-                        'errors',
-                        1,
-                        static fn (AssertableJson $json) => $json
-                            ->where('field', 'title')
-                            ->whereType('message', 'string'),
-                    ),
+                    ->where('code', 'validation_failed')
+                    ->whereType('message', 'string')
+                    ->has('details', 3)
+                    ->where('details.0.field', 'title')
+                    ->whereType('details.0.message', 'string')
+                    ->where('details.1.field', 'url')
+                    ->whereType('details.1.message', 'string')
+                    ->where('details.2.field', 'typeValue')
+                    ->whereType('details.2.message', 'string'),
             );
     }
 
@@ -170,16 +172,11 @@ class UpdateMediaTest extends DatabaseTestCase
                 'publishedAt' => '2024-04-02T10:20:30+09:00',
                 'typeValue' => MediaType::Mv->value,
                 'isDisplay' => true,
-            ])->assertStatus(422)
+            ])->assertStatus(400)
             ->assertJson(
                 static fn (AssertableJson $json) => $json
-                    ->has(
-                        'errors',
-                        1,
-                        static fn (AssertableJson $json) => $json
-                            ->where('field', 'url')
-                            ->where('message', '同じURLのメディアが既に存在します'),
-                    ),
+                    ->where('code', 'business_rule_violation')
+                    ->where('message', '同じURLのメディアが既に存在します'),
             );
     }
 }

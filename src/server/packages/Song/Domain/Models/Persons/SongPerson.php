@@ -19,9 +19,9 @@ readonly class SongPerson
     public static function reconstruct(string $personId, int $role, int $orderNo): self
     {
         return new self(
-            PersonId::reconstruct($personId),
+            new PersonId($personId),
             SongPersonRole::from($role),
-            OrderNo::reconstruct($orderNo),
+            new OrderNo($orderNo),
         );
     }
 

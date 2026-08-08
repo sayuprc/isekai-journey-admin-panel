@@ -47,12 +47,11 @@ private function getInstance(): CreateUseCase
 戻り値の検証に加え、リポジトリの状態を確認します。
 
 ```php
-// 結果の確認
-$this->assertTrue($result->isOk());
+// 結果の確認 (OutputData、または expectException() で例外)
+$this->assertSame('テスト楽曲', $result->song->title->value);
 
 // 永続化されたデータの確認
-$songs = $this->app->make(SongRepository::class)->all();
-$this->assertCount(1, $songs);
+$this->assertDatabaseHas('songs', ['title' => 'テスト楽曲']);
 ```
 
 ## 注意点

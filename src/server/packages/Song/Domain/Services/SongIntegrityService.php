@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace Song\Domain\Services;
 
 use Media\Domain\Models\MediaRepositoryInterface;
-use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Song\Domain\Models\Description;
 use Song\Domain\Models\LyricsLink;
 use Song\Domain\Models\Media\SongMediaLinks;
@@ -22,10 +18,7 @@ use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Song\Domain\Models\Tags\SongTagReferences;
 use Song\Domain\Models\Title;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
-use Support\Domain\Error\BusinessRuleViolationError;
-use Support\Domain\Error\DomainError;
-use Support\Domain\Error\DomainValidationError;
-use Support\Domain\Error\EntityRuleViolationError;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
@@ -49,7 +42,7 @@ class SongIntegrityService
      * @param list<person>    $persons
      * @param list<songMedia> $media
      *
-     * @return Result<Song, DomainError>
+     * @throws BusinessRuleViolationException
      */
     public function prepareForCreate(
         string $title,
@@ -60,34 +53,10 @@ class SongIntegrityService
         array $tags,
         array $persons,
         array $media,
-    ): Result {
-        $personsResult = SongPersons::fromArray($persons);
-        $tagsResult = SongTagReferences::fromArray($tags);
-        $mediaResult = SongMediaLinks::fromArray($media);
+    ): Song {
+        [$persons, $tags, $media] = $this->buildRelations($persons, $tags, $media);
 
-        if ($personsResult->isErr() || $tagsResult->isErr() || $mediaResult->isErr()) {
-            return new Err($this->mergeValidationErrors([
-                $personsResult->unwrapErrOr(null),
-                $tagsResult->unwrapErrOr(null),
-                $mediaResult->unwrapErrOr(null),
-            ]));
-        }
-
-        $persons = $personsResult->unwrap();
-        $tags = $tagsResult->unwrap();
-        $media = $mediaResult->unwrap();
-
-        if (! $this->existsPersons($persons)) {
-            return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
-        }
-
-        if (! $this->existsSongTags($tags)) {
-            return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
-        }
-
-        if (! $this->existsMedia($media)) {
-            return new Err(new BusinessRuleViolationError('指定されたメディアの一部が存在しません。'));
-        }
+        $this->assertRelationsExist($persons, $tags, $media);
 
         return $this->build(
             $this->generator->generate(),
@@ -109,7 +78,7 @@ class SongIntegrityService
      * @param list<person>    $persons
      * @param list<songMedia> $media
      *
-     * @return Result<Song, DomainError>
+     * @throws BusinessRuleViolationException
      */
     public function prepareForUpdate(
         string $songId,
@@ -122,34 +91,10 @@ class SongIntegrityService
         array $tags,
         array $persons,
         array $media,
-    ): Result {
-        $personsResult = SongPersons::fromArray($persons);
-        $tagsResult = SongTagReferences::fromArray($tags);
-        $mediaResult = SongMediaLinks::fromArray($media);
+    ): Song {
+        [$persons, $tags, $media] = $this->buildRelations($persons, $tags, $media);
 
-        if ($personsResult->isErr() || $tagsResult->isErr() || $mediaResult->isErr()) {
-            return new Err($this->mergeValidationErrors([
-                $personsResult->unwrapErrOr(null),
-                $tagsResult->unwrapErrOr(null),
-                $mediaResult->unwrapErrOr(null),
-            ]));
-        }
-
-        $persons = $personsResult->unwrap();
-        $tags = $tagsResult->unwrap();
-        $media = $mediaResult->unwrap();
-
-        if (! $this->existsPersons($persons)) {
-            return new Err(new BusinessRuleViolationError('指定された人物の一部が存在しません。'));
-        }
-
-        if (! $this->existsSongTags($tags)) {
-            return new Err(new BusinessRuleViolationError('指定された楽曲タグの一部が存在しません。'));
-        }
-
-        if (! $this->existsMedia($media)) {
-            return new Err(new BusinessRuleViolationError('指定されたメディアの一部が存在しません。'));
-        }
+        $this->assertRelationsExist($persons, $tags, $media);
 
         return $this->build(
             $songId,
@@ -166,8 +111,32 @@ class SongIntegrityService
     }
 
     /**
-     * @return Result<Song, DomainError>
+     * @param list<person>    $persons
+     * @param list<songTag>   $tags
+     * @param list<songMedia> $media
+     *
+     * @return array{0: SongPersons, 1: SongTagReferences, 2: SongMediaLinks}
      */
+    private function buildRelations(array $persons, array $tags, array $media): array
+    {
+        return [SongPersons::fromArray($persons), SongTagReferences::fromArray($tags), SongMediaLinks::fromArray($media)];
+    }
+
+    private function assertRelationsExist(SongPersons $persons, SongTagReferences $tags, SongMediaLinks $media): void
+    {
+        if (! $this->existsPersons($persons)) {
+            throw new BusinessRuleViolationException('指定された人物の一部が存在しません。');
+        }
+
+        if (! $this->existsSongTags($tags)) {
+            throw new BusinessRuleViolationException('指定された楽曲タグの一部が存在しません。');
+        }
+
+        if (! $this->existsMedia($media)) {
+            throw new BusinessRuleViolationException('指定されたメディアの一部が存在しません。');
+        }
+    }
+
     private function build(
         string $songId,
         string $title,
@@ -179,68 +148,26 @@ class SongIntegrityService
         SongPersons $persons,
         SongTagReferences $tags,
         SongMediaLinks $media,
-    ): Result {
-        $normalizedLyricsLink = $this->normalizeOptionalString($lyricsLink);
-        $lyricsLinkResult = is_null($normalizedLyricsLink)
-            ? new Ok(null)
-            : LyricsLink::create($normalizedLyricsLink);
-
-        return Result::collect7(
-            SongId::create($songId),
-            Title::create($title),
-            Description::create($description),
-            $lyricsLinkResult,
-            $this->toSongType($type),
-            new Ok($isDisplay),
-            OrderNo::create($orderNo),
-        )
-            ->mapErr(static function (array $errors): DomainValidationError {
-                $messages = [];
-                foreach ($errors as $error) {
-                    if ($error instanceof EntityRuleViolationError) {
-                        $messages[$error->field] ??= [];
-                        $messages[$error->field][] = $error->message;
-                    }
-                }
-
-                return new DomainValidationError($messages);
-            })
-            ->map(static fn (array $values): Song => new Song(...[...$values, $tags, $persons, $media]));
+    ): Song {
+        return new Song(
+            new SongId($songId),
+            new Title($title),
+            new Description($description),
+            $this->toLyricsLink($lyricsLink),
+            SongType::fromValue($type),
+            $isDisplay,
+            new OrderNo($orderNo),
+            $tags,
+            $persons,
+            $media,
+        );
     }
 
-    /**
-     * @return Result<SongType, DomainError>
-     */
-    private function toSongType(int $type): Result
+    private function toLyricsLink(?string $value): ?LyricsLink
     {
-        $result = SongType::tryFrom($type);
+        $normalized = $this->normalizeOptionalString($value);
 
-        if (is_null($result)) {
-            return new Err(new EntityRuleViolationError(SongType::class, "不正な楽曲種別です: {$type}"));
-        }
-
-        return new Ok($result);
-    }
-
-    /**
-     * @param array<int, DomainValidationError|null> $errors
-     */
-    private function mergeValidationErrors(array $errors): DomainValidationError
-    {
-        $messages = [];
-
-        foreach ($errors as $error) {
-            if (! $error instanceof DomainValidationError) {
-                continue;
-            }
-
-            foreach ($error->errors as $field => $fieldMessages) {
-                $messages[$field] ??= [];
-                $messages[$field] = [...$messages[$field], ...$fieldMessages];
-            }
-        }
-
-        return new DomainValidationError($messages);
+        return is_null($normalized) ? null : new LyricsLink($normalized);
     }
 
     private function existsPersons(SongPersons $persons): bool

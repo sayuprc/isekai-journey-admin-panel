@@ -16,10 +16,7 @@ class ImmutableDateTimeValueObjectTest extends TestCase
     #[DataProvider('provideProperlyStoresValue')]
     public function properlyStoresValue(DateTimeImmutable $value): void
     {
-        $result = ImmutableDateTime::create($value);
-
-        $this->assertTrue($result->isOk());
-        $this->assertSame($value->format('Y-m-d H:i:s'), $result->unwrap()->value->format('Y-m-d H:i:s'));
+        $this->assertSame($value->format('Y-m-d H:i:s'), new ImmutableDateTime($value)->value->format('Y-m-d H:i:s'));
     }
 
     public static function provideProperlyStoresValue(): array
@@ -42,23 +39,23 @@ class ImmutableDateTimeValueObjectTest extends TestCase
 
         return [
             [
-                ImmutableDateTime::reconstruct($now),
-                ImmutableDateTime::reconstruct($now),
+                new ImmutableDateTime($now),
+                new ImmutableDateTime($now),
                 true,
             ],
             [
-                ImmutableDateTime::reconstruct($now),
-                ImmutableDateTime::reconstruct($now->modify('+1 seconds')),
+                new ImmutableDateTime($now),
+                new ImmutableDateTime($now->modify('+1 seconds')),
                 false,
             ],
             [
-                ImmutableDateTime::reconstruct($now),
-                OtherImmutableDateTime::reconstruct($now),
+                new ImmutableDateTime($now),
+                new OtherImmutableDateTime($now),
                 false,
             ],
             [
-                ImmutableDateTime::reconstruct($now),
-                OtherImmutableDateTime::reconstruct($now->modify('+1 seconds')),
+                new ImmutableDateTime($now),
+                new OtherImmutableDateTime($now->modify('+1 seconds')),
                 false,
             ],
         ];

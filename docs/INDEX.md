@@ -23,6 +23,7 @@
 - `product-specs/INDEX.md`: 機能や施策の仕様メモ
 - `references/INDEX.md`: 外部資料や参考実装の要点
 - `exec-plans/README.md`: 実行計画の運用方法
+- `operations/release.md`: 閲覧サイトの版数と公開手順
 - `tech-debt-tracker.md`: 継続的に追う技術的負債
 
 ## Placement Guide
@@ -33,6 +34,7 @@
 - 外部記事、他 repo、仕様書の要約: `docs/references/`
 - 複数ステップにまたがる実行計画: `docs/exec-plans/active/`
 - 完了した実行計画の履歴: `docs/exec-plans/completed/`
+- 繰り返し実行する運用手順: `docs/operations/`
 - 繰り返し手当てが必要な負債: `docs/tech-debt-tracker.md`
 
 ## Update Rule

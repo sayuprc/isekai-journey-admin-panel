@@ -7,17 +7,12 @@ namespace Media\Application\Admin\UseCase\Delete;
 use AdminUser\Domain\Models\Permission;
 use Media\Domain\Models\MediaId;
 use Media\Domain\Models\MediaRepositoryInterface;
-use ResultType\Err;
-use ResultType\Ok;
-use ResultType\Result;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\UseCase\AuditLog\AuditAction;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\AuditTargetType;
 use Support\UseCase\Authorizer\UseCaseAuthorizer;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
-use Support\UseCase\Error\UseCaseError;
 
 readonly class DeleteUseCase
 {
@@ -29,43 +24,31 @@ readonly class DeleteUseCase
     ) {
     }
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    public function handle(DeleteInputData $inputData): Result
+    public function handle(DeleteInputData $inputData): void
     {
-        return $this->authorizer->require(Permission::WriteMedia)
-            ->andThen(fn () => $this->deleteMedia($inputData));
-    }
+        $this->authorizer->authorize(Permission::WriteMedia);
 
-    /**
-     * @return Result<null, UseCaseError>
-     */
-    private function deleteMedia(DeleteInputData $inputData): Result
-    {
-        return MediaId::create($inputData->mediaId)
-            ->mapErr(static fn (): UseCaseError => new InvalidInputError(['mediaId' => ['IDが不正です']]))
-            ->andThen(fn (MediaId $mediaId): Result => $this->transaction->scope(function () use ($mediaId): Result {
-                $media = $this->repository->find($mediaId);
+        $mediaId = new MediaId($inputData->mediaId);
 
-                if (is_null($media)) {
-                    return new Ok(null);
-                }
+        $this->transaction->scope(function () use ($mediaId): void {
+            $media = $this->repository->find($mediaId);
 
-                if ($this->repository->isUsed($mediaId)) {
-                    return new Err(new BusinessLogicError('このメディアは楽曲に使用されているため削除できません'));
-                }
+            if (is_null($media)) {
+                return;
+            }
 
-                $this->repository->delete($mediaId);
+            if ($this->repository->isUsed($mediaId)) {
+                throw new BusinessRuleViolationException('このメディアは楽曲に使用されているため削除できません');
+            }
 
-                $this->recorder->record(
-                    AuditAction::Delete,
-                    AuditTargetType::Media,
-                    $media->mediaId,
-                    $media->toArray(),
-                );
+            $this->repository->delete($mediaId);
 
-                return new Ok(null);
-            }));
+            $this->recorder->record(
+                AuditAction::Delete,
+                AuditTargetType::Media,
+                $media->mediaId,
+                $media->toArray(),
+            );
+        });
     }
 }

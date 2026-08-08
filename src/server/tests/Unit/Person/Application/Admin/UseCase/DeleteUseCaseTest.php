@@ -15,9 +15,9 @@ use Person\Domain\Models\PersonRepositoryInterface;
 use Person\Domain\Services\PersonUsageCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -67,8 +67,6 @@ class DeleteUseCaseTest extends TestCase
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
-
-        $this->assertTrue($result->isOk());
     }
 
     #[Test]
@@ -86,12 +84,9 @@ class DeleteUseCaseTest extends TestCase
 
         $this->repository->shouldNotReceive('delete');
 
-        $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->expectException(BusinessRuleViolationException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessLogicError::class, $error);
-        $this->assertSame('この人物は楽曲に使用されているため削除できません', $error->message);
+        $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 
     #[Test]
@@ -100,10 +95,9 @@ class DeleteUseCaseTest extends TestCase
         $this->usageChecker->shouldNotReceive('isUsed');
         $this->repository->shouldNotReceive('delete');
 
-        $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
+        $this->expectException(InvalidDomainException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
+        $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
     }
 
     private function getInstance(): DeleteUseCase

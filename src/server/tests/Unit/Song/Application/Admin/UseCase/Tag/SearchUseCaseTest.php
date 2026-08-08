@@ -16,8 +16,8 @@ use Song\Application\Admin\UseCase\Tag\Search\SearchInputData;
 use Song\Application\Admin\UseCase\Tag\Search\SearchUseCase;
 use Song\Domain\Criteria\Tag\SongTagSearchCriteria;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -52,9 +52,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->tags);
         $this->assertSame(1, $output->maxPage);
         $this->assertSame('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', $output->tags[0]->songTagId->value);
@@ -77,9 +75,7 @@ class SearchUseCaseTest extends TestCase
 
         $result = $this->getInstance()->handle(new SearchInputData(name: 'テスト'));
 
-        $this->assertTrue($result->isOk());
-
-        $output = $result->unwrap();
+        $output = $result;
         $this->assertCount(1, $output->tags);
         $this->assertSame('テストタグA', $output->tags[0]->name->value);
     }
@@ -92,10 +88,9 @@ class SearchUseCaseTest extends TestCase
 
         $context = $this->app->make(AuthContext::class);
 
-        $result = new SearchUseCase($this->authorizer($context), $this->repository)->handle(new SearchInputData());
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $result = new SearchUseCase($this->authorizer($context), $this->repository)->handle(new SearchInputData());
     }
 
     #[Test]
@@ -115,10 +110,9 @@ class SearchUseCaseTest extends TestCase
             [],
         ));
 
-        $result = new SearchUseCase($this->authorizer($context), $this->repository)->handle(new SearchInputData());
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = new SearchUseCase($this->authorizer($context), $this->repository)->handle(new SearchInputData());
     }
 
     private function getInstance(): SearchUseCase

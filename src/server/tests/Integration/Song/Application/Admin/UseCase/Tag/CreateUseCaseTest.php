@@ -25,8 +25,6 @@ class CreateUseCaseTest extends DatabaseTestCase
     {
         $result = $this->getInstance()->handle(new CreateInputData('テストタグA'));
 
-        $this->assertTrue($result->isOk());
-
         $tags = DB::table('song_tags')->orderBy('order_no')->get();
         $this->assertCount(1, $tags);
         $this->assertSame('テストタグA', $tags->first()->name);
@@ -46,8 +44,6 @@ class CreateUseCaseTest extends DatabaseTestCase
         );
 
         $result = $this->getInstance()->handle(new CreateInputData('テストタグA'));
-
-        $this->assertTrue($result->isOk());
 
         $tags = DB::table('song_tags')->orderBy('order_no')->get();
         $this->assertCount(2, $tags);

@@ -18,11 +18,11 @@ use Song\Application\Admin\UseCase\Tag\Delete\DeleteUseCase;
 use Song\Domain\Models\Tag\SongTagId;
 use Song\Domain\Models\Tag\SongTagRepositoryInterface;
 use Support\Contracts\TransactionInterface;
+use Support\Domain\Exceptions\BusinessRuleViolationException;
+use Support\Domain\Exceptions\InvalidDomainException;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
-use Support\UseCase\Error\AuthenticationError;
-use Support\UseCase\Error\AuthorizationError;
-use Support\UseCase\Error\BusinessLogicError;
-use Support\UseCase\Error\InvalidInputError;
+use Support\UseCase\Exceptions\PermissionDeniedException;
+use Support\UseCase\Exceptions\UnauthenticatedException;
 use Tests\Support\Domain\EntityFactory;
 use Tests\TestCase;
 
@@ -69,8 +69,6 @@ class DeleteUseCaseTest extends TestCase
             ->once();
 
         $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
-
-        $this->assertTrue($result->isOk());
     }
 
     #[Test]
@@ -88,12 +86,9 @@ class DeleteUseCaseTest extends TestCase
 
         $this->repository->shouldNotReceive('delete');
 
-        $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->expectException(BusinessRuleViolationException::class);
 
-        $this->assertTrue($result->isErr());
-        $error = $result->unwrapErr();
-        $this->assertInstanceOf(BusinessLogicError::class, $error);
-        $this->assertSame('この楽曲タグは楽曲に使用されているため削除できません', $error->message);
+        $result = $this->getInstance()->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 
     #[Test]
@@ -104,10 +99,9 @@ class DeleteUseCaseTest extends TestCase
 
         $context = $this->app->make(AuthContext::class);
 
-        $result = $this->getInstance($context)->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->expectException(UnauthenticatedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthenticationError::class, $result->unwrapErr());
+        $result = $this->getInstance($context)->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 
     #[Test]
@@ -126,10 +120,9 @@ class DeleteUseCaseTest extends TestCase
             [],
         ));
 
-        $result = $this->getInstance($context)->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
+        $this->expectException(PermissionDeniedException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(AuthorizationError::class, $result->unwrapErr());
+        $result = $this->getInstance($context)->handle(new DeleteInputData('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'));
     }
 
     #[Test]
@@ -138,10 +131,9 @@ class DeleteUseCaseTest extends TestCase
         $this->repository->shouldNotReceive('isUsed');
         $this->repository->shouldNotReceive('delete');
 
-        $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
+        $this->expectException(InvalidDomainException::class);
 
-        $this->assertTrue($result->isErr());
-        $this->assertInstanceOf(InvalidInputError::class, $result->unwrapErr());
+        $result = $this->getInstance()->handle(new DeleteInputData('invalid-id'));
     }
 
     private function getInstance(?AuthContext $context = null): DeleteUseCase

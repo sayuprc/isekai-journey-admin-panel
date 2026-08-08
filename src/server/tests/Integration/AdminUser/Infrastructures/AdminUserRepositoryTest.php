@@ -57,7 +57,7 @@ class AdminUserRepositoryTest extends DatabaseTestCase
     #[Test]
     public function findNotFound(): void
     {
-        $found = $this->getInstance()->find(AdminUserId::reconstruct($this->generateUuid()));
+        $found = $this->getInstance()->find(new AdminUserId($this->generateUuid()));
 
         $this->assertNull($found);
     }
@@ -101,7 +101,7 @@ class AdminUserRepositoryTest extends DatabaseTestCase
 
         $this->startCapturingQueries();
 
-        $found = $this->getInstance()->findByEmailForUpdate(Email::reconstruct('user@example.com'));
+        $found = $this->getInstance()->findByEmailForUpdate(new Email('user@example.com'));
 
         $selectQueries = array_values(array_filter(
             $this->capturedQueries(),

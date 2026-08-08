@@ -26,9 +26,9 @@ readonly class RecoveryCode
         ?DateTimeImmutable $usedAt,
     ): self {
         return new self(
-            RecoveryCodeId::reconstruct($recoveryCodeId),
-            AdminUserId::reconstruct($adminUserId),
-            HashedCodeValue::reconstruct($code),
+            new RecoveryCodeId($recoveryCodeId),
+            new AdminUserId($adminUserId),
+            new HashedCodeValue($code),
             ConsumptionStatus::from($status),
             $usedAt,
         );

@@ -45,8 +45,7 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-        $releaseGroups = $result->unwrap()->releaseGroups;
+        $releaseGroups = $result->releaseGroups;
         $this->assertCount(3, $releaseGroups);
         $this->assertSame($releaseGroupId2, $releaseGroups[0]->releaseGroupId);
         $this->assertSame('2026-02-01', $releaseGroups[0]->firstReleasedOn);
@@ -54,7 +53,7 @@ class SearchUseCaseTest extends DatabaseTestCase
         $this->assertSame('2026-01-01', $releaseGroups[1]->firstReleasedOn);
         $this->assertSame($releaseGroupId3, $releaseGroups[2]->releaseGroupId);
         $this->assertNull($releaseGroups[2]->firstReleasedOn);
-        $this->assertSame(1, $result->unwrap()->maxPage);
+        $this->assertSame(1, $result->maxPage);
     }
 
     #[Test]
@@ -76,9 +75,8 @@ class SearchUseCaseTest extends DatabaseTestCase
             isDisplay: true,
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertCount(1, $result->unwrap()->releaseGroups);
-        $this->assertSame($releaseGroupId1, $result->unwrap()->releaseGroups[0]->releaseGroupId);
+        $this->assertCount(1, $result->releaseGroups);
+        $this->assertSame($releaseGroupId1, $result->releaseGroups[0]->releaseGroupId);
     }
 
     #[Test]
@@ -102,9 +100,8 @@ class SearchUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new SearchInputData());
 
-        $this->assertTrue($result->isOk());
-        $this->assertSame($releaseGroupId2, $result->unwrap()->releaseGroups[0]->releaseGroupId);
-        $this->assertSame($releaseGroupId1, $result->unwrap()->releaseGroups[1]->releaseGroupId);
+        $this->assertSame($releaseGroupId2, $result->releaseGroups[0]->releaseGroupId);
+        $this->assertSame($releaseGroupId1, $result->releaseGroups[1]->releaseGroupId);
     }
 
     #[Test]
@@ -121,9 +118,8 @@ class SearchUseCaseTest extends DatabaseTestCase
             perPage: PerPage::TwentyFive,
         ));
 
-        $this->assertTrue($result->isOk());
-        $this->assertCount(5, $result->unwrap()->releaseGroups);
-        $this->assertSame(2, $result->unwrap()->maxPage);
+        $this->assertCount(5, $result->releaseGroups);
+        $this->assertSame(2, $result->maxPage);
     }
 
     private function getInstance(): SearchUseCase
