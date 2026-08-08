@@ -980,6 +980,13 @@ image-slot:hover {
   color: var(--accent-2);
 }
 
+.footer-version {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--fg-muted);
+  letter-spacing: 0.06em;
+}
+
 /* ─── Detail Panel ─── */
 
 /* ドロワー表示中は背面ページをスクロールさせない */
@@ -2549,6 +2556,19 @@ body.drawer-lock {
   color: var(--fg);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* Markdown から起こす文書は、書いた通りの箇条書きとして出す
+   reset.css が ul / ol のマーカーを落としているのでここで戻す */
+
+.shell.page-section .markdown-doc ul {
+  list-style-type: disc;
+}
+
+.shell.page-section .markdown-doc ol {
+  padding-left: 1.4em;
+  margin: 0 0 18px;
+  list-style-type: decimal;
 }
 
 /* エラーページ (404) */

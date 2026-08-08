@@ -1,4 +1,7 @@
 ---
+// 公開サイトの版数は viewer の package.json が Source of Truth
+// 閲覧者に見える変更があったときだけ上げる。採番と手順は docs/operations/release.md
+import { version } from '../../../package.json';
 import { navLinks } from '../../shared/nav';
 ---
 
@@ -44,8 +47,10 @@ import { navLinks } from '../../shared/nav';
         <ul>
           <li><a href="/site-policy">サイトポリシー</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
+          <li><a href="/changelog">更新履歴</a></li>
         </ul>
       </nav>
     </div>
+    <div class="footer-version">v{version}</div>
   </div>
 </footer>
