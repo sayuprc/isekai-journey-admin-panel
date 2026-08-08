@@ -13,6 +13,7 @@ RUN echo 'rootCA.pem' >> /etc/ca-certificates.conf \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && install-php-extensions \
+    apcu \
     intl \
     pdo \
     pdo_mysql \

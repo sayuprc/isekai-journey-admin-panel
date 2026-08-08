@@ -6,13 +6,15 @@ namespace App\Http\Middleware;
 
 use App\Http\OpenApi\BodyErrorCollector;
 use App\Http\Responses\ApiError;
+use App\OpenApi\SchemaProvider;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidSecurity;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use League\OpenAPIValidation\PSR7\ResponseValidator;
+use League\OpenAPIValidation\PSR7\RoutedServerRequestValidator;
 use League\OpenAPIValidation\Schema\Exception\FormatMismatch;
 use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -25,12 +27,19 @@ abstract class OpenApiValidator
 {
     private readonly PsrHttpFactory $psrHttpFactory;
 
+    private readonly RoutedServerRequestValidator $requestValidator;
+
+    private readonly ResponseValidator $responseValidator;
+
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly ValidatorBuilder $builder,
+        SchemaProvider $schemaProvider,
         Psr17Factory $psr17Factory,
     ) {
-        $this->builder->fromYamlFile($this->getPath());
+        $schema = $schemaProvider->provide($this->getPath());
+
+        $this->requestValidator = new RoutedServerRequestValidator($schema);
+        $this->responseValidator = new ResponseValidator($schema);
 
         $this->psrHttpFactory = new PsrHttpFactory(
             $psr17Factory,
@@ -51,7 +60,7 @@ abstract class OpenApiValidator
         $operationAddress = $this->resolveOperationAddress($request);
 
         try {
-            $this->builder->getRoutedRequestValidator()->validate($operationAddress, $psrRequest);
+            $this->requestValidator->validate($operationAddress, $psrRequest);
         } catch (InvalidSecurity) {
             [$payload, $status] = ApiError::unauthenticated();
 
@@ -65,7 +74,7 @@ abstract class OpenApiValidator
         $psrResponse = $this->psrHttpFactory->createResponse($response);
 
         try {
-            $this->builder->getResponseValidator()->validate($operationAddress, $psrResponse);
+            $this->responseValidator->validate($operationAddress, $psrResponse);
         } catch (ValidationFailed $e) {
             $this->logger->error('レスポンスバリデーションエラー', [
                 'content' => $response->getContent(),
