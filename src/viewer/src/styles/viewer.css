@@ -1977,19 +1977,7 @@ body.drawer-lock {
 }
 
 .song-credit-label {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
   margin: 0 0 8px;
-}
-
-.song-credit-en {
-  font-size: 10px;
-  color: color-mix(in oklab, var(--accent) 80%, var(--fg-muted));
-  letter-spacing: 0.12em;
-}
-
-.song-credit-jp {
   font-family: "Shippori Mincho", serif;
   font-size: 13px;
   font-weight: 500;
