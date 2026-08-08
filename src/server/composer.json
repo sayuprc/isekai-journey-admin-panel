@@ -1,5 +1,6 @@
 {
   "name": "sayuprc/isekai-observatory-api",
+  "version": "1.0.0",
   "type": "project",
   "description": "API for Isekaijoucho.",
   "keywords": [
