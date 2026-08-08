@@ -6,7 +6,7 @@ mago = "1.30.0"
 mkcert = "1.4.4"
 node = "24.17.0"
 pinact = "4.1.0"
-pnpm = "11.17.0"
+pnpm = "11.20.0"
 
 [vars]
 mise_version = "2026.7.13"
