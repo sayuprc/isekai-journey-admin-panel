@@ -20,8 +20,9 @@
 - Cloud Build trigger に staging 用の substitution value を設定する
 - `_CLOUDFLARE_API_TOKEN_SECRET_ID` が指す Secret Manager secret を作成する
 - Cloud Build service account に Artifact Registry、Cloud Run、Service Account User、Secret Manager の必要権限を付与する
-- API / Admin service と DB migrate / Admin invite job の runtime env / secret は `ci.yaml` で定義しないため初回デプロイ前に別経路で設定する
+- API / Admin service と DB migrate / Admin invite / media youtube import job の runtime env / secret は `ci.yaml` で定義しないため初回デプロイ前に別経路で設定する
 - DB migrate job には `DB_USERNAME` / `DB_PASSWORD` / `DB_HOST` / `DB_PORT` / `DB_DATABASE` を設定する
+- media youtube import job (`stg-media-youtube-import`) には DB 接続 env と `YOUTUBE_API_KEY` を設定する
 - `_ADMIN_PROXY_SHARED_SECRET_ID` が指す Secret Manager secret に version を追加する
 - Admin service は同じ secret を参照し、Cloud Build が admin-proxy Worker へ同期する
 
