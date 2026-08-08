@@ -1,32 +1,22 @@
 <?php
 
 declare(strict_types=1);
-use Auth\Application\Admin\UseCase\Refresh\RefreshInputData;
-use Auth\Domain\Services\Token\AccessToken\AccessTokenPayload;
-use Media\Application\Admin\UseCase\Create\CreateInputData;
-use Person\Application\Admin\UseCase\Update\UpdateInputData;
-use Support\UseCase\AuditLog\Search\SearchInputData;
 
 return [
     'cache_path' => base_path('bootstrap/cache/valinor'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Warmup signatures
-    |--------------------------------------------------------------------------
-    |
-    | MapperInterface::map() に渡される型。warmupCacheFor() は再帰的に
-    | プロパティ型もキャッシュする。
-    |
-    */
+    /**
+     * MapperInterface::map() に渡される型
+     * warmupCacheFor() は再帰的にプロパティ型もキャッシュする
+     */
     'warmup' => [
-        RefreshInputData::class,
-        AccessTokenPayload::class,
-        CreateInputData::class,
+        \Auth\Application\Admin\UseCase\Refresh\RefreshInputData::class,
+        \Auth\Domain\Services\Token\AccessToken\AccessTokenPayload::class,
+        \Media\Application\Admin\UseCase\Create\CreateInputData::class,
         \Media\Application\Admin\UseCase\Search\SearchInputData::class,
         \Person\Application\Admin\UseCase\Create\CreateInputData::class,
         \Person\Application\Admin\UseCase\Search\SearchInputData::class,
-        UpdateInputData::class,
+        \Person\Application\Admin\UseCase\Update\UpdateInputData::class,
         \Release\Application\Admin\UseCase\Create\CreateInputData::class,
         \Release\Application\Admin\UseCase\Group\Create\CreateInputData::class,
         \Release\Application\Admin\UseCase\Group\Search\SearchInputData::class,
@@ -38,6 +28,6 @@ return [
         \Song\Application\Admin\UseCase\Tag\Search\SearchInputData::class,
         \Song\Application\Admin\UseCase\Tag\Update\UpdateInputData::class,
         \Song\Application\Admin\UseCase\Update\UpdateInputData::class,
-        SearchInputData::class,
+        \Support\UseCase\AuditLog\Search\SearchInputData::class,
     ],
 ];

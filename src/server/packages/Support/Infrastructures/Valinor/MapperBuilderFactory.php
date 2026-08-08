@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Support\Infrastructures\Valinor;
 
 use CuyZ\Valinor\Cache\FileSystemCache;
-use CuyZ\Valinor\Cache\FileWatchingCache;
 use CuyZ\Valinor\MapperBuilder;
 use Support\App\Environment;
 
@@ -20,13 +19,7 @@ final class MapperBuilderFactory
             return $builder;
         }
 
-        $cache = new FileSystemCache(config()->string('valinor.cache_path'));
-
-        if (Environment::getEnv() === Environment::Development) {
-            $cache = new FileWatchingCache($cache);
-        }
-
-        return $builder->withCache($cache);
+        return $builder->withCache(new FileSystemCache(config()->string('valinor.cache_path')));
     }
 
     public function isCacheEnabled(): bool
