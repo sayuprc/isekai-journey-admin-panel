@@ -215,6 +215,26 @@ steps:
       - ${_JOB_SERVICE_ACCOUNT}
       - --quiet
 
+  - id: deploy-media-youtube-import
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-cli-image
+    args:
+      - run
+      - jobs
+      - deploy
+      - stg-media-youtube-import
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_CLI_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_JOB_SERVICE_ACCOUNT}
+      - --command
+      - php,artisan,media:youtube:import
+      - --quiet
+
   - id: deploy-api
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
