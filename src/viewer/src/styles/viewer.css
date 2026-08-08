@@ -1764,15 +1764,6 @@ body.drawer-lock {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.song-meta-inline {
-  display: inline-flex;
-  gap: 10px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 9px;
-  color: var(--fg-muted);
-  letter-spacing: 0.08em;
-}
-
 .media-list-thumb {
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -2161,8 +2152,7 @@ body.drawer-lock {
   object-fit: cover;
 }
 
-.song-tile-top,
-.song-tile-bottom {
+.song-tile-top {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -2181,8 +2171,11 @@ body.drawer-lock {
 }
 
 .song-tile-icon {
+  position: absolute;
+  inset: 0;
   display: flex;
-  align-self: center;
+  align-items: center;
+  justify-content: center;
   color: color-mix(in oklab, var(--fg) 30%, transparent);
 }
 

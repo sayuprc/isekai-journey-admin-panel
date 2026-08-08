@@ -49,7 +49,6 @@ const siteStats = await siteStatsRepository.get();
             <SongTile
               songId={latestSong.songId}
               title={latestSong.title}
-              mediaCount={latestSong.counts.mediaCount}
               index={0}
               media={latestSong.media}
               releaseGroups={latestSong.releaseGroups}

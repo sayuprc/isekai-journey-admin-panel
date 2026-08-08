@@ -51,7 +51,6 @@ const songs = await songContentRepository.all();
               <SongTile
                 songId={song.songId}
                 title={song.title}
-                mediaCount={song.counts.mediaCount}
                 index={index}
                 media={song.media}
                 releaseGroups={song.releaseGroups}
@@ -60,9 +59,6 @@ const songs = await songContentRepository.all();
               <div class="song-grid-body">
                 <div class="song-grid-meta">
                   <span class="pill" data-song-type={song.type.value}>{song.type.name}</span>
-                  <div class="song-meta-inline">
-                    <span>{song.counts.mediaCount} media</span>
-                  </div>
                 </div>
                 <div class="song-grid-title">{song.title}</div>
               </div>
