@@ -1,0 +1,10 @@
+{
+  "composer": false,
+  "includes": [
+    "app",
+    "packages"
+  ],
+  "report": {
+    "html": "./reports/metrics"
+  }
+}

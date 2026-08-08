@@ -1,0 +1,35 @@
+---
+import EnvironmentBadge from '../components/EnvironmentBadge.astro';
+import '../styles/app.css';
+
+interface Props {
+  pageTitle: string;
+}
+
+const { pageTitle } = Astro.props;
+
+const siteTitle = '管理画面';
+
+const generateTitle = (title: string): string => {
+  return title ? `${title} | ${siteTitle}` : siteTitle;
+};
+
+const title = generateTitle(pageTitle);
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <EnvironmentBadge />
+    <main class="flex min-h-screen items-center justify-center">
+      <slot />
+    </main>
+  </body>
+</html>

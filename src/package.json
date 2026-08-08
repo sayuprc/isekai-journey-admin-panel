@@ -1,0 +1,13 @@
+{
+  "name": "isekai-observatory",
+  "type": "module",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "admin",
+      "admin-proxy",
+      "contracts",
+      "viewer"
+    ]
+  }
+}

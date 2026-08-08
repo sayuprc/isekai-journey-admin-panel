@@ -1,0 +1,103 @@
+---
+import JacketArt from '../components/viewer/JacketArt.astro';
+import SectionHead from '../components/viewer/SectionHead.astro';
+import SongTile from '../components/viewer/SongTile.astro';
+import TrackChip from '../components/viewer/TrackChip.astro';
+import { releaseGroupContentRepository } from '../features/releases/content';
+import { representativeJacketArtUrl } from '../features/releases/types';
+import { siteStatsRepository } from '../features/site-stats/api';
+import { songContentRepository } from '../features/songs/content';
+import Layout from '../layouts/Layout.astro';
+
+const latestReleaseGroup = await releaseGroupContentRepository.latest();
+const latestSong = await songContentRepository.latest();
+
+const siteStats = await siteStatsRepository.get();
+---
+
+<Layout pageTitle="">
+  <section class="hero-data">
+    <div class="shell">
+      <h1 class="hero-mark hero-mark-data">ヰ世界観測所</h1>
+      <div class="hero-tagline">ヰ世界情緒の非公式ファンサイト</div>
+      <div class="hero-ledger">
+        <div class="hero-ledger-row">
+          <span class="hero-ledger-label">観測開始</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">2019.12.09</span>
+        </div>
+        <a class="hero-ledger-row hero-ledger-link" href="/songs">
+          <span class="hero-ledger-label">楽曲</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">{siteStats.songCount}</span>
+        </a>
+        <a class="hero-ledger-row hero-ledger-link" href="/releases">
+          <span class="hero-ledger-label">リリース</span>
+          <span class="hero-ledger-leader"></span>
+          <span class="hero-ledger-value">{siteStats.releaseCount}</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {
+    latestSong && (
+      <section class="shell">
+        <SectionHead title="最新楽曲" />
+        <div class="feature-grid-link">
+          <a href={`/songs/${latestSong.songId}`} class="feature-art-link" aria-label={latestSong.title}>
+            <SongTile
+              songId={latestSong.songId}
+              title={latestSong.title}
+              index={0}
+              media={latestSong.media}
+              releaseGroups={latestSong.releaseGroups}
+              aspectRatio="1 / 1"
+              loading="eager"
+            />
+          </a>
+          <div class="feature-body">
+            <div class="eyebrow">{latestSong.type.name}</div>
+            <h3 class="feature-title">
+              <a href={`/songs/${latestSong.songId}`}>{latestSong.title}</a>
+            </h3>
+            {latestSong.description && <p class="feature-summary">{latestSong.description}</p>}
+            <a class="btn feature-more" href={`/songs/${latestSong.songId}`}>楽曲詳細 →</a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    latestReleaseGroup && (
+      <section class="shell">
+        <SectionHead title="最新リリース" />
+        <div class="feature-grid-link">
+          <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
+            <JacketArt
+              imageUrl={representativeJacketArtUrl(latestReleaseGroup)}
+              label={latestReleaseGroup.title}
+              sizes="(max-width: 1100px) calc(100vw - 40px), 320px"
+            />
+          </a>
+          <div class="feature-body">
+            <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
+            <h3 class="feature-title">
+              <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
+            </h3>
+            <p class="feature-summary">収録曲</p>
+            <div class="rel-list feature-track-list">
+              {
+                (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 8).map(track => (
+                  <TrackChip track={track} />
+                ))
+              }
+            </div>
+            <a class="btn feature-more" href={`/releases/${latestReleaseGroup.releaseGroupId}`}>リリース詳細 →</a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Layout>

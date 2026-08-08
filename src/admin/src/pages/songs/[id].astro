@@ -1,0 +1,17 @@
+---
+import { DetailView } from '../../components/song/EditableForm';
+import Layout from '../../layouts/Layout.astro';
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  // TODO ちゃんとしたハンドリングをする
+  throw new Error('URL が不正');
+}
+---
+
+<Layout pageTitle="楽曲詳細">
+  <div>
+    <DetailView songId={id} client:only="solid-js" />
+  </div>
+</Layout>

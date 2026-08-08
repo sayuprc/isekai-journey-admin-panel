@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+}
+
+const { title, level = 2 } = Astro.props;
+const HeadingTag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+---
+
+<div class="section-head">
+  <div class="section-head-left">
+    <div>
+      <HeadingTag class="section-title">{title}</HeadingTag>
+    </div>
+  </div>
+  <div>
+    <slot name="right" />
+  </div>
+</div>

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${API_URL:?}"
+: "${SITE_URL:?}"
+: "${CLOUDFLARE_WORKER_NAME:?}"
+: "${CLOUDFLARE_ACCOUNT_ID:?}"
+: "${CLOUDFLARE_API_TOKEN:?}"
+
+pnpm --filter viewer build
+
+DEPLOY_MESSAGE="production viewer deploy $(date --iso-8601=seconds)"
+
+pnpm --filter viewer run deploy \
+  --name "${CLOUDFLARE_WORKER_NAME}" \
+  --compatibility-date "$(date '+%Y-%m-%d')" \
+  --message "${DEPLOY_MESSAGE}"

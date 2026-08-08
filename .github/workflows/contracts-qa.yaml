@@ -1,0 +1,95 @@
+name: Contracts QA
+
+on:
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/contracts-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
+
+jobs:
+  format:
+    name: Format Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/contracts/node_modules
+          key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Check format
+        run: mise run contract:format:check
+
+  diff:
+    name: Generated Code Diff Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/contracts/node_modules
+          key: contracts-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Check generate code has diff
+        run: |
+          mise run contract:compile:all
+          if [ -n "$(git status --porcelain | grep generated)" ]; then
+            echo "自動生成コードに差分があります"
+            git status
+            exit 1
+          fi

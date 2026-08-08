@@ -1,0 +1,53 @@
+---
+import type { Release } from '../../../features/releases/types';
+import JacketArt from '../JacketArt.astro';
+import TrackChip from '../TrackChip.astro';
+
+interface Props {
+  release: Release;
+  releaseGroupTitle: string;
+  /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
+  loading?: 'lazy' | 'eager';
+}
+
+const { release, releaseGroupTitle, loading = 'lazy' } = Astro.props;
+---
+
+<div class={release.jacketArtUrl ? 'release-version-content has-jacket' : 'release-version-content'}>
+  {
+    release.jacketArtUrl && (
+      <div class="release-version-art">
+        <JacketArt imageUrl={release.jacketArtUrl} label={`${releaseGroupTitle} ${release.name}`} aspectRatio="auto" sizes="160px" loading={loading} />
+      </div>
+    )
+  }
+  <div class="release-version-track-list">
+    {release.description && <p class="detail-description release-version-description">{release.description}</p>}
+    {
+      release.media.map(medium => (
+        <div class="release-medium">
+          {
+            release.media.length > 1 && (
+              <div class="label-mono release-medium-heading">
+                DISC {medium.position}{medium.name !== null ? ` · ${medium.name}` : ''}
+              </div>
+            )
+          }
+          {
+            medium.tracks.length > 0
+              ? (
+                  <div class="rel-list">
+                    {medium.tracks.map(track => (
+                      <TrackChip track={track} />
+                    ))}
+                  </div>
+                )
+              : (
+                  <p class="detail-description">収録曲情報はありません。</p>
+                )
+          }
+        </div>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,10 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import { RecoveryCodesPanel } from '../../components/recovery-code/RecoveryCodesPanel';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout pageTitle="リカバリーコード">
+  <FlashMessage client:only="solid-js" />
+  <RecoveryCodesPanel client:only="solid-js" />
+</Layout>

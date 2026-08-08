@@ -1,0 +1,35 @@
+# Lefthook pre-commit hooks
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    api-ecs:
+      root: "src/server/"
+      glob: "{app,bootstrap,config,database,packages,routes,tests,tools}/**/*.php"
+      run: mise run api:ecs -- {staged_files}
+
+    api-phpstan:
+      root: "src/server/"
+      glob: "{app,bootstrap,packages}/**/*.php"
+      run: mise run api:phpstan -- {staged_files}
+
+    admin-lint:
+      root: "src/admin/"
+      glob: "src/**/*.{ts,tsx,js,jsx,mjs,astro}"
+      run: mise run admin:lint
+
+    admin-style:
+      root: "src/admin/"
+      glob: "src/**/*.{css,astro}"
+      run: mise run admin:style -- {staged_files}
+
+    contracts-format:
+      root: "src/"
+      glob: "contracts/src/**/*.tsp"
+      run: mise run contract:format:check
+
+    contracts-test:
+      root: "src/"
+      glob: "contracts/scripts/**/*.ts"
+      run: mise run contract:test

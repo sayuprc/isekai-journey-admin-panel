@@ -1,0 +1,25 @@
+---
+// Markdown ページ用のレイアウト
+// Markdown が渡せるのは frontmatter だけなので、ここで Layout の props へ橋渡しする
+import SectionHead from '../components/viewer/SectionHead.astro';
+import Layout from './Layout.astro';
+
+interface Props {
+  frontmatter: {
+    pageTitle: string;
+    pageDescription?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout pageTitle={frontmatter.pageTitle} pageDescription={frontmatter.pageDescription}>
+  <section class="shell page-section">
+    <SectionHead title={frontmatter.pageTitle} level={1} />
+
+    <div class="policy-doc markdown-doc">
+      <slot />
+    </div>
+  </section>
+</Layout>

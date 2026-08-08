@@ -1,0 +1,299 @@
+name: Server QA
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/server/**"
+      - "src/contracts/**"
+      - "infra/**"
+      - "compose.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/server-qa.yaml"
+      - ".github/actions/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "src/server/**"
+      - "src/contracts/**"
+      - "infra/**"
+      - "compose.yaml"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/server-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
+
+env:
+  MISE_ENV: ci
+  SERVER_DOCKER_PATH: /tmp/cache/docker/server
+  OPENAPI_GENERATOR_CLI_DOCKER_PATH: /tmp/cache/docker/openapi-generator-cli
+  MYSQL_DOCKER_PATH: /tmp/cache/docker/mysql
+  VENDOR_PATH: ./src/server/vendor
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  setup:
+    name: Setup server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache server docker image
+        id: cache-server-docker-image
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.SERVER_DOCKER_PATH }}
+          key: docker-server-${{ hashFiles('./infra/local/docker/php/Dockerfile') }}
+
+      - name: Build server image
+        if: steps.cache-server-docker-image.outputs.cache-hit != 'true'
+        run: |
+          mise run build:php
+          mkdir -p "${SERVER_DOCKER_PATH}"
+
+      - name: Cache openapi-generator-cli docker image
+        id: cache-openapi-generator-cli-docker-image
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.OPENAPI_GENERATOR_CLI_DOCKER_PATH }}
+          key: docker-openapi-generator-cli-${{ hashFiles('./infra/local/docker/openapi-generator/Dockerfile') }}
+
+      - name: Build openapi-generator-cli image
+        if: steps.cache-openapi-generator-cli-docker-image.outputs.cache-hit != 'true'
+        run: |
+          mise run build:openapi-generator
+          mkdir -p "${OPENAPI_GENERATOR_CLI_DOCKER_PATH}"
+
+      - name: Cache mysql docker image
+        id: cache-mysql-docker-image
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.MYSQL_DOCKER_PATH }}
+          key: docker-mysql-${{ hashFiles('./infra/local/docker/mysql/Dockerfile', './infra/local/docker/mysql/my.cnf', './infra/local/docker/mysql/init/*') }}
+
+      - name: Build mysql image
+        if: steps.cache-mysql-docker-image.outputs.cache-hit != 'true'
+        run: |
+          mise run build:mysql
+          mkdir -p "${MYSQL_DOCKER_PATH}"
+
+      - name: Copy .env
+        run: cp src/server/.env.example src/server/.env
+
+      - name: Run Container
+        run: mise run up
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: composer-${{ hashFiles('./src/server/composer.*') }}
+
+      - name: Composer install
+        run: mise run api:composer:install
+
+      - name: Dump autoload
+        run: mise run api:composer:dump
+
+      - name: Check generate code has diff
+        run: |
+          mise run api:generate
+
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "自動生成コードに差分があります"
+            git status
+            exit 1
+          fi
+
+  arkitect:
+    needs: setup
+    name: Arkitect
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Container
+        run: mise run up
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: composer-${{ hashFiles('./src/server/composer.*') }}
+
+      - name: Check Layer
+        run: mise run api:arkitect
+
+  ecs:
+    needs: setup
+    name: EasyCodingStandard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Container
+        run: mise run up
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: composer-${{ hashFiles('./src/server/composer.*') }}
+
+      - name: Run ecs
+        run: mise run api:ecs
+
+  phpstan:
+    needs: setup
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Container
+        run: mise run up
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: composer-${{ hashFiles('./src/server/composer.*') }}
+
+      - name: Run PHPStan
+        run: mise run api:phpstan
+
+  phpunit:
+    needs: setup
+    name: PHPUnit (${{ matrix.suite }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: unit
+            db: false
+          - suite: integration
+            db: true
+          - suite: feature
+            db: true
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Container
+        if: ${{ !matrix.db }}
+        run: mise run up
+
+      - name: Run Container with DB
+        if: ${{ matrix.db }}
+        run: mise run up:test
+
+      - name: Wait for MySQL
+        if: ${{ matrix.db }}
+        run: |
+          for i in $(seq 1 30); do
+            if docker compose exec -T mysql mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; then
+              echo "MySQL is ready"
+              exit 0
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+          echo "MySQL did not become ready in time"
+          exit 1
+
+      - name: Cache composer
+        id: cache-composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VENDOR_PATH }}
+          key: composer-${{ hashFiles('./src/server/composer.*') }}
+
+      - name: Setup env
+        run: mise run setup:env
+
+      - name: Run migration
+        if: ${{ matrix.db }}
+        run: mise run migrate:local --auto-approve
+
+      - name: Run PHPUnit
+        run: mise run api:test:${{ matrix.suite }}

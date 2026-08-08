@@ -1,0 +1,534 @@
+lockfile_version: '1'
+generated_at: '2026-08-01T13:40:17.105819+00:00'
+apm_version: 0.26.0
+dependencies: []
+deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/frontend-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/general-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+- kind: project-relative
+  target: agents
+  value: .agents/skills/code-reviewer/references/php-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+- kind: project-relative
+  target: agents
+  value: .agents/skills/exec-plan
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/exec-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-feature-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-integration-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/php-unit-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+- kind: project-relative
+  target: agents
+  value: .agents/skills/pr-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/pr-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+- kind: project-relative
+  target: claude
+  value: .claude/agents/docs-curator.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+- kind: project-relative
+  target: claude
+  value: .claude/rules/01-backend.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
+- kind: project-relative
+  target: claude
+  value: .claude/rules/02-admin.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
+- kind: project-relative
+  target: claude
+  value: .claude/rules/03-contracts.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
+- kind: project-relative
+  target: claude
+  value: .claude/rules/04-docs.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+- kind: project-relative
+  target: claude
+  value: .claude/rules/05-viewer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7130f3803bc15a881451465c4459ff2945a0d12c35da439df22c3670b1d0cbbc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/frontend-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/general-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-reviewer/references/php-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/exec-plan
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/exec-plan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-feature-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-integration-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/php-unit-test-creator/references/patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pr-creator
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/pr-creator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+- kind: project-relative
+  target: codex
+  value: .codex/agents/docs-curator.toml
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
+- kind: project-relative
+  target: cursor
+  value: .cursor/agents/docs-curator.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/01-backend.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/02-admin.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/03-contracts.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/04-docs.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/05-viewer.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e1a729666aca66e54b7d50fd81e5d3787a740e2caf6bf537946c2b85f50104ea
+local_deployed_files:
+- .agents/skills/code-reviewer
+- .agents/skills/code-reviewer/SKILL.md
+- .agents/skills/code-reviewer/references/frontend-review.md
+- .agents/skills/code-reviewer/references/general-review.md
+- .agents/skills/code-reviewer/references/php-review.md
+- .agents/skills/exec-plan
+- .agents/skills/exec-plan/SKILL.md
+- .agents/skills/php-feature-test-creator
+- .agents/skills/php-feature-test-creator/SKILL.md
+- .agents/skills/php-feature-test-creator/references/patterns.md
+- .agents/skills/php-integration-test-creator
+- .agents/skills/php-integration-test-creator/SKILL.md
+- .agents/skills/php-integration-test-creator/references/patterns.md
+- .agents/skills/php-unit-test-creator
+- .agents/skills/php-unit-test-creator/SKILL.md
+- .agents/skills/php-unit-test-creator/references/patterns.md
+- .agents/skills/pr-creator
+- .agents/skills/pr-creator/SKILL.md
+- .claude/agents/docs-curator.md
+- .claude/rules/01-backend.md
+- .claude/rules/02-admin.md
+- .claude/rules/03-contracts.md
+- .claude/rules/04-docs.md
+- .claude/rules/05-viewer.md
+- .claude/skills/code-reviewer
+- .claude/skills/code-reviewer/SKILL.md
+- .claude/skills/code-reviewer/references/frontend-review.md
+- .claude/skills/code-reviewer/references/general-review.md
+- .claude/skills/code-reviewer/references/php-review.md
+- .claude/skills/exec-plan
+- .claude/skills/exec-plan/SKILL.md
+- .claude/skills/php-feature-test-creator
+- .claude/skills/php-feature-test-creator/SKILL.md
+- .claude/skills/php-feature-test-creator/references/patterns.md
+- .claude/skills/php-integration-test-creator
+- .claude/skills/php-integration-test-creator/SKILL.md
+- .claude/skills/php-integration-test-creator/references/patterns.md
+- .claude/skills/php-unit-test-creator
+- .claude/skills/php-unit-test-creator/SKILL.md
+- .claude/skills/php-unit-test-creator/references/patterns.md
+- .claude/skills/pr-creator
+- .claude/skills/pr-creator/SKILL.md
+- .codex/agents/docs-curator.toml
+- .cursor/agents/docs-curator.md
+- .cursor/rules/01-backend.mdc
+- .cursor/rules/02-admin.mdc
+- .cursor/rules/03-contracts.mdc
+- .cursor/rules/04-docs.mdc
+- .cursor/rules/05-viewer.mdc
+local_deployed_file_hashes:
+  .agents/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+  .agents/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+  .agents/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+  .agents/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+  .agents/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+  .agents/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+  .agents/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+  .agents/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .agents/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .agents/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+  .agents/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+  .agents/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  .claude/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+  .claude/rules/01-backend.md: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
+  .claude/rules/02-admin.md: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
+  .claude/rules/03-contracts.md: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
+  .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+  .claude/rules/05-viewer.md: sha256:7130f3803bc15a881451465c4459ff2945a0d12c35da439df22c3670b1d0cbbc
+  .claude/skills/code-reviewer/SKILL.md: sha256:4e222bc4a5b458140424b4fe41805fdebfadd159825046c1bba3f533ea84871e
+  .claude/skills/code-reviewer/references/frontend-review.md: sha256:5775c9a78a6b275ea09bb0620278396488df8f83009c37a02c7e2bf04a12ac5f
+  .claude/skills/code-reviewer/references/general-review.md: sha256:f44111aec0d77f63763d421b822e8960c233df8bc916bc99b039b6921ac669bf
+  .claude/skills/code-reviewer/references/php-review.md: sha256:16943c3cbce817f7296a5917a2357be6f45ac051fdff81b1b0eeaad14fd13ca7
+  .claude/skills/exec-plan/SKILL.md: sha256:6934eea892aeba8bd7e91640d0f648772aa2e381e4b1020e3ce26d7b7d558166
+  .claude/skills/php-feature-test-creator/SKILL.md: sha256:cebbdc0cfb9135213c6764c7ea653ad08361303f7041a5b259533b4f4f8e9a35
+  .claude/skills/php-feature-test-creator/references/patterns.md: sha256:2aff2e69ba19dfe9ad824dec56966bba4d29f52ccba2c9696af80aaf2a6ddbbc
+  .claude/skills/php-integration-test-creator/SKILL.md: sha256:c405f3ea559e604848fdaa89eeb395e8c7a09bc7e81b2127cb90f67ee0d4b03d
+  .claude/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
+  .claude/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
+  .claude/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
+  .claude/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
+  .cursor/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
+  .cursor/rules/01-backend.mdc: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
+  .cursor/rules/02-admin.mdc: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
+  .cursor/rules/03-contracts.mdc: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
+  .cursor/rules/04-docs.mdc: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+  .cursor/rules/05-viewer.mdc: sha256:e1a729666aca66e54b7d50fd81e5d3787a740e2caf6bf537946c2b85f50104ea

@@ -1,0 +1,10 @@
+---
+import { FlashMessage } from '../../../components/Flash';
+import { CreateView } from '../../../components/song/CreateForm';
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout pageTitle="楽曲作成">
+  <FlashMessage client:only="solid-js" />
+  <CreateView client:only="solid-js" />
+</Layout>

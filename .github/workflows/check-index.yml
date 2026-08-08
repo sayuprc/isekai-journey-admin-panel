@@ -1,0 +1,53 @@
+name: Check ADR Index
+
+on:
+  schedule:
+    # 毎日 JST 9:00
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-index:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    defaults:
+      run:
+        working-directory: docs/adr
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Regenerate INDEX.md
+        run: mise run adr:index
+
+      - name: Create PR if INDEX.md is outdated
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --exit-code INDEX.md; then
+            echo "INDEX.md は最新です。"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B auto/update-adr-index
+          git add INDEX.md
+          git commit -m "docs: update INDEX.md"
+          git push -f origin auto/update-adr-index
+
+          if gh pr list --head auto/update-adr-index --json number --jq '.[0].number' | grep -q .; then
+            echo "PR は既に存在します。"
+          else
+            gh pr create \
+              --title "docs: INDEX.md を更新する" \
+              --body "ADR が追加・更新されましたが INDEX.md が更新されていないため、自動生成しました。\`mise run adr:index\` の実行結果です。"
+          fi
