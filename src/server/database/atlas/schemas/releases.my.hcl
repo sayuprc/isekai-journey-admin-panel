@@ -30,7 +30,6 @@ table "releases" {
   column "color" {
     null    = false
     type    = varchar(7)
-    default = "#989899"
     comment = "代表色"
   }
   column "is_display" {

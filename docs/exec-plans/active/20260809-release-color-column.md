@@ -67,15 +67,20 @@ viewer は型が通り画面が壊れない最小限の対応に留め、見た�
 Atlas はこの変更を rename ではなく DROP + ADD として計画する。
 `jacket_art_url` はカラムごと落ちるため、事前に固定値へ UPDATE しても引き継がれない。
 
-そのため本番へのデプロイは、マイグレーションを 1 回流すだけでよい。
+デプロイのマイグレーションは次の 1 文になる。
 
 ```sql
 ALTER TABLE `releases`
   DROP COLUMN `jacket_art_url`,
-  ADD COLUMN `color` varchar(7) NOT NULL DEFAULT "#989899" COMMENT "代表色" AFTER `description`;
+  ADD COLUMN `color` varchar(7) NOT NULL COMMENT "代表色" AFTER `description`;
 ```
 
-既存 88 行は DEFAULT で `#989899` に揃う。事前の手動 UPDATE は不要。
+DEFAULT を持たせないため、既存行の `color` は空文字になる（strict mode でも ALTER 自体は通る）。
+マイグレーション直後に手動で埋める。
+
+```sql
+UPDATE `releases` SET `color` = '#989899' WHERE `color` = '';
+```
 
 ## Decision Log
 
@@ -89,10 +94,11 @@ ALTER TABLE `releases`
 - 2026-08-09: カラムは追加せず `jacket_art_url` を `color` へ置き換える。
   併存期間を作らないぶん作業が単純になり、その間に viewer の見た目が壊れることは許容する
 - 2026-08-09: 本番は「手動で固定値へ UPDATE → デプロイのマイグレーションで rename」を想定していたが、
-  Atlas が rename を検出せず DROP + ADD を計画するため取りやめた。
-  `color` に DEFAULT `#989899` を持たせてマイグレーション 1 回で完結させる
-- 2026-08-09: `color` の DEFAULT は暫定で残す。色は契約側で必須にするため DB の DEFAULT は保険でしかないが、
-  実データ投入後に外すかどうかは別途判断する
+  Atlas が rename を検出せず DROP + ADD を計画するため取りやめた
+- 2026-08-09: `color` に DEFAULT は持たせない。既存行は空文字になるので、マイグレーション直後に手動で UPDATE する
+- 2026-08-09: 差分が大きくなりすぎたため、この計画をさらに細かい PR に割る。
+  契約 + スキーマ / サーバー / admin / viewer の 4 本に分け、順に PR を出す。
+  途中の PR で CI が落ちるのは許容する
 - 2026-08-09: 移行時の色は固定値 `#989899` を入れる。実データは後日入れ直す。
   ローカルの MinIO には 88 件中 87 件のジャケットが残っているが、抽出は今回のスコープに含めない
 - 2026-08-09: 色は NOT NULL にする。事前にデータを入れる前提のため、未設定状態を表現する必要がない
