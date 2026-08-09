@@ -107,6 +107,8 @@ UPDATE `releases` SET `color` = '#989899' WHERE `color` = '';
 - 2026-08-09: 色は NOT NULL にする。事前にデータを入れる前提のため、未設定状態を表現する必要がない
 - 2026-08-09: 将来の抽出機能は「アップロード → 抽出 → 候補から選択（デフォルト Vibrant）→ 画像は破棄」を理想形とし、
   Node + node-vibrant で実装する。今回は admin の hex 手入力のみ
+- 2026-08-09: 上記の抽出方針を改め、ブラウザ内（`node-vibrant/browser`）で抽出する。
+  画像を BFF/Laravel に送らず、選んだ hex だけを既存 create/update で保存する。詳細は `20260809-admin-extract-release-color.md`
 - 2026-08-09: 作業は `feature/remove-jacket-art` 配下に 5 本の PR で分け、すべて揃ってから 1 回で `dev` に落とす
 
 ## Validation

@@ -5,6 +5,7 @@ import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
+import { ColorField } from './ColorField';
 import { FormatCheckboxes } from './FormatCheckboxes';
 import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
 import type { MediumForm } from './MediaEditor';
@@ -239,30 +240,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
                 </Show>
               </div>
 
-              <div class="md:col-span-2">
-                <label class="label">代表色</label>
-                <div class="flex items-center gap-3">
-                  <input
-                    type="color"
-                    class="h-10 w-16 rounded-box border border-base-300"
-                    value={color()}
-                    onInput={e => setColor(e.currentTarget.value)}
-                    aria-label="代表色をカラーピッカーで選ぶ"
-                  />
-                  <input
-                    type="text"
-                    class="input w-40 font-mono"
-                    value={color()}
-                    onInput={e => setColor(e.currentTarget.value)}
-                    placeholder="#989899"
-                    required
-                    classList={{ 'input-error': !!getFieldError('color') }}
-                  />
-                </div>
-                <Show when={getFieldError('color')}>
-                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-                </Show>
-              </div>
+              <ColorField value={color()} onChange={setColor} fieldError={getFieldError('color')} />
 
               <div class="md:col-span-2">
                 <FormatCheckboxes
