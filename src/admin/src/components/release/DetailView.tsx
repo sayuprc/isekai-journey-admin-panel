@@ -1,6 +1,6 @@
 import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
 import type { ReleaseFormatValue, ReleaseGetResponse } from '../../generated';
-import { client, uploadReleaseJacketArt } from '../../utils/client';
+import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
@@ -106,7 +106,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
   const [name, setName] = createSignal(props.data.release.name);
   const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data.release.releasedOn));
   const [description, setDescription] = createSignal(props.data.release.description);
-  const [jacketArtUrl, setJacketArtUrl] = createSignal(props.data.release.jacketArtUrl ?? '');
+  const [color, setColor] = createSignal(props.data.release.color);
   const [isDisplay, setIsDisplay] = createSignal(props.data.release.isDisplay);
   const [orderNo, setOrderNo] = createSignal(props.data.release.orderNo);
   const [formatValues, setFormatValues] = createSignal<ReleaseFormatValue[]>([...props.data.release.formatValues]);
@@ -115,26 +115,6 @@ const ReleaseForm = (props: ReleaseFormProps) => {
   const { formError, setFormError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting: isUpdating, withSubmitting: withUpdating } = createSubmitting();
   const { isSubmitting: isDeleting, withSubmitting: withDeleting } = createSubmitting();
-  const { isSubmitting: isUploadingJacketArt, withSubmitting: withUploadingJacketArt } = createSubmitting();
-
-  const handleJacketArtUpload = withUploadingJacketArt(async (e: Event) => {
-    const file = (e.currentTarget as HTMLInputElement).files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    clearErrors();
-
-    const { data, error, status } = await uploadReleaseJacketArt(file);
-
-    if (data) {
-      setJacketArtUrl(data.jacketArtUrl);
-      return;
-    }
-
-    handleError(status, error);
-  });
 
   const handleSubmit = withUpdating(async (e: Event) => {
     e.preventDefault();
@@ -151,7 +131,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
       name: name(),
       releasedOn: releasedOn(),
       description: description(),
-      jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
+      color: color(),
       isDisplay: isDisplay(),
       orderNo: orderNo(),
       formatValues: formatValues(),
@@ -260,27 +240,27 @@ const ReleaseForm = (props: ReleaseFormProps) => {
               </div>
 
               <div class="md:col-span-2">
-                <label class="label">ジャケットアート</label>
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  class="file-input w-full"
-                  onChange={handleJacketArtUpload}
-                  disabled={isUploadingJacketArt()}
-                  classList={{ 'file-input-error': !!(getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')) }}
-                />
-                <Show when={getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')}>
-                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-                </Show>
-                <Show when={isUploadingJacketArt()}>
-                  <p class="mt-1 text-xs text-base-content/60">アップロード中...</p>
-                </Show>
-                <Show when={jacketArtUrl().trim() !== ''}>
-                  <img
-                    src={jacketArtUrl().trim()}
-                    alt="ジャケットアートのプレビュー"
-                    class="mt-3 size-32 rounded-box border border-base-300 object-cover"
+                <label class="label">代表色</label>
+                <div class="flex items-center gap-3">
+                  <input
+                    type="color"
+                    class="h-10 w-16 rounded-box border border-base-300"
+                    value={color()}
+                    onInput={e => setColor(e.currentTarget.value)}
+                    aria-label="代表色をカラーピッカーで選ぶ"
                   />
+                  <input
+                    type="text"
+                    class="input w-40 font-mono"
+                    value={color()}
+                    onInput={e => setColor(e.currentTarget.value)}
+                    placeholder="#989899"
+                    required
+                    classList={{ 'input-error': !!getFieldError('color') }}
+                  />
+                </div>
+                <Show when={getFieldError('color')}>
+                  {message => <p class="mt-1 text-xs text-error">{message()}</p>}
                 </Show>
               </div>
 
@@ -326,7 +306,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             </div>
 
             <div class="mt-6 flex justify-end">
-              <button class="btn btn-primary" disabled={isUpdating() || isDeleting() || isUploadingJacketArt()}>
+              <button class="btn btn-primary" disabled={isUpdating() || isDeleting()}>
                 {isUpdating() ? '更新中...' : '更新'}
               </button>
             </div>
@@ -342,7 +322,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             <button
               onClick={handleDelete}
               class="btn btn-outline btn-error btn-sm"
-              disabled={isDeleting() || isUpdating() || isUploadingJacketArt()}
+              disabled={isDeleting() || isUpdating()}
             >
               {isDeleting() ? '削除中...' : 'このリリースを削除する'}
             </button>
