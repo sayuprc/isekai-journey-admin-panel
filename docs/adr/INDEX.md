@@ -18,4 +18,4 @@
 | ADR-0012 | accepted | CHECK 制約を使わない | [api, admin] |
 | ADR-0013 | accepted | 業務エラーの表現を Result から例外へ移行する | [api, admin, client] |
 | ADR-0014 | accepted | 入力形式検証を契約境界へ集約する | [api, admin] |
-| ADR-0015 | proposed | 権利者の画像素材を保存・配信しない | [api, admin, client] |
+| ADR-0015 | accepted | 権利者の画像素材を保存・配信しない | [api, admin, client] |
