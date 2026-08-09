@@ -10,6 +10,10 @@ const SWATCH_LABELS: Record<SwatchName, string> = {
   LightMuted: 'LightMuted',
 };
 
+/** 代表色の質感プレビュー用ノイズ（soft-light） */
+const NOISE_SVG
+  = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.55\'/%3E%3C/svg%3E")';
+
 interface ColorFieldProps {
   value: string;
   onChange: (color: string) => void;
@@ -21,6 +25,8 @@ export const ColorField = (props: ColorFieldProps) => {
   const [candidates, setCandidates] = createSignal<ColorCandidate[]>([]);
   const [extracting, setExtracting] = createSignal(false);
   const [extractError, setExtractError] = createSignal<string | null>(null);
+
+  const currentHex = () => normalizeHex(props.value) ?? '#989899';
 
   const setNormalizedColor = (raw: string) => {
     const normalized = normalizeHex(raw);
@@ -59,7 +65,7 @@ export const ColorField = (props: ColorFieldProps) => {
           <input
             type="color"
             class="h-10 w-16 rounded-box border border-base-300"
-            value={normalizeHex(props.value) ?? '#989899'}
+            value={currentHex()}
             onInput={e => setNormalizedColor(e.currentTarget.value)}
             aria-label="代表色をカラーピッカーで選ぶ"
           />
@@ -72,11 +78,21 @@ export const ColorField = (props: ColorFieldProps) => {
             required
             classList={{ 'input-error': !!props.fieldError }}
           />
+          <div
+            class="h-10 w-24 rounded-box border border-base-300"
+            style={{
+              'background-color': currentHex(),
+              'background-image': NOISE_SVG,
+              'background-blend-mode': 'soft-light',
+            }}
+            title="viewer と同じノイズ表現"
+            aria-label="代表色のノイズプレビュー"
+          />
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="label py-0 text-xs text-base-content/70">
-            画像から候補を抽出
+            画像から候補を抽出（端末内のみ。彩度×面積で並べ、初期選択も同じ基準）
           </label>
           <input
             type="file"
