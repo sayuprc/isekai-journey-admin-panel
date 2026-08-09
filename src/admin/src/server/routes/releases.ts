@@ -3,14 +3,11 @@ import {
   releaseServiceCreateRelease,
   releaseServiceDeleteRelease,
   releaseServiceGetRelease,
-  releaseServiceUploadJacketArt,
   releaseServiceUpdateRelease,
 } from '../../generated';
 import { withAuthRetry } from '../client';
 import { resolveApiResponse } from '../errors';
 import { authGuard } from '../middleware';
-
-const NullableStringSchema = t.Union([t.String(), t.Null()]);
 
 const formatValuesSchema = t.Array(t.Numeric(), { minItems: 1 });
 
@@ -30,38 +27,6 @@ const mediaSchema = t.Array(
 
 export const releases = new Elysia({ prefix: '/releases' })
   .use(authGuard)
-  .post('/jacket-art', async ({ request, set, authSession }) => {
-    const formData = await request.formData();
-    const file = formData.get('jacketArt');
-
-    if (!(file instanceof File)) {
-      set.status = 422;
-      return {
-        code: 'validation_failed',
-        message: '入力内容に誤りがあります',
-        details: [{ field: 'jacketArt', message: '画像ファイルは必須です' }],
-      };
-    }
-
-    const content = await file.arrayBuffer();
-
-    return withAuthRetry(authSession, async (client) => {
-      const result = await releaseServiceUploadJacketArt({
-        client,
-        body: content,
-        bodySerializer: null,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!result.response) {
-        throw new Error('リリースジャケットアートアップロードAPIのレスポンスを取得できませんでした');
-      }
-
-      return resolveApiResponse({ ...result, response: result.response });
-    });
-  })
   .post(
     '/',
     async ({ body, authSession }) => {
@@ -75,7 +40,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
-        jacketArtUrl: NullableStringSchema,
+        color: t.String(),
         isDisplay: t.Boolean(),
         orderNo: t.Number(),
         formatValues: formatValuesSchema,
@@ -117,7 +82,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         name: t.String(),
         releasedOn: t.String(),
         description: t.String(),
-        jacketArtUrl: NullableStringSchema,
+        color: t.String(),
         isDisplay: t.Boolean(),
         orderNo: t.Number(),
         formatValues: formatValuesSchema,

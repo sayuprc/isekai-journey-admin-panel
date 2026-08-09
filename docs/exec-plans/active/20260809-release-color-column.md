@@ -55,12 +55,13 @@ viewer は型が通り画面が壊れない最小限の対応に留め、見た�
       `color` scalar（`^#[0-9a-f]{6}$`）を必須項目として追加する。
       アップロード API（`uploadJacketArt`）と `ReleaseJacketArtUploadResponse` も削除した
 - [x] `mise run contract:re-compile` と `api:generate` / `viewer:generate` / `admin:generate` を実行する
-- [ ] `src/server/packages/Release` に `ReleaseColor` 値オブジェクトを追加し、`Release`・Factory・Repository・HTTP 各層を差し替える
-- [ ] `src/admin` のアップロード経路（`server/routes/releases.ts`、`utils/client.ts`、関連テスト）を削除し、
+- [x] `src/server/packages/Release` に `Color` 値オブジェクトを追加し、`Release`・Factory・Repository・HTTP 各層を差し替える
+      （`JacketArtUrl` をリネームして流用した）
+- [x] `src/admin` のアップロード経路（`server/routes/releases.ts`、`utils/client.ts`、関連テスト）を削除し、
       リリース編集フォームを hex 入力に置き換える
 - [ ] `src/viewer` から `JacketArt` の呼び出しと `representativeJacketArtUrl` を落とし、
       OGP を既定画像に変える。`SongTile` は既存のアイコンフォールバックに任せる
-- [ ] Feature テストで `color` の往復（保存 → 取得）を検証する
+- [x] テストで `color` の往復（保存 → 取得）を検証する（既存の Feature / Integration テストを色に更新）
 
 ## Release
 
@@ -97,8 +98,10 @@ UPDATE `releases` SET `color` = '#989899' WHERE `color` = '';
   Atlas が rename を検出せず DROP + ADD を計画するため取りやめた
 - 2026-08-09: `color` に DEFAULT は持たせない。既存行は空文字になるので、マイグレーション直後に手動で UPDATE する
 - 2026-08-09: 差分が大きくなりすぎたため、この計画をさらに細かい PR に割る。
-  契約 + スキーマ / サーバー / admin / viewer の 4 本に分け、順に PR を出す。
+  契約 + スキーマ (#988) / サーバー (#989) / admin / viewer の 4 本に分け、順に PR を出す。
   途中の PR で CI が落ちるのは許容する
+- 2026-08-09: admin の色入力はカラーピッカーと hex テキストの 2 つを同じ値に束ねる。
+  ピッカーだけだと既存の hex を貼れず、テキストだけだと色が見えないため
 - 2026-08-09: 移行時の色は固定値 `#989899` を入れる。実データは後日入れ直す。
   ローカルの MinIO には 88 件中 87 件のジャケットが残っているが、抽出は今回のスコープに含めない
 - 2026-08-09: 色は NOT NULL にする。事前にデータを入れる前提のため、未設定状態を表現する必要がない
