@@ -1,18 +1,19 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
-import type { SongMedia } from '../../features/songs/types';
+import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
 
 interface Props {
   songId: string;
   title: string;
   index: number;
   media?: SongMedia[];
+  releaseGroups?: SongReleaseGroup[];
   aspectRatio?: string;
   /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
   loading?: 'lazy' | 'eager';
 }
 
-const { index, media = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
+const { index, media = [], releaseGroups = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
 
 // プラットフォームとサムネイルは状態として保持せず url から導出する。
 // メディアがあれば最初にサムネイルを導出できたものを採用する。
@@ -20,10 +21,23 @@ const thumbnailUrl = media.reduce<string | null>((found, entry) => found ?? yout
 
 const thumbnailSrcset = thumbnailUrl === null ? undefined : youtubeThumbnailSrcset(thumbnailUrl);
 
+// メディアから導出できなければ収録リリースの最初の代表色で代替する
+const fallbackColor = thumbnailUrl === null
+  ? releaseGroups.reduce<string | null>((found, entry) => found ?? entry.color, null)
+  : null;
+
 const sequence = String(index + 1).padStart(2, '0');
+const tileStyle = [
+  `--song-tile-aspect:${aspectRatio}`,
+  fallbackColor === null ? null : `--song-tile-color:${fallbackColor}`,
+].filter(Boolean).join(';');
 ---
 
-<div class="song-tile" style={`--song-tile-aspect:${aspectRatio};`} aria-hidden="true">
+<div
+  class:list={['song-tile', { 'has-color-fallback': fallbackColor !== null }]}
+  style={tileStyle}
+  aria-hidden="true"
+>
   {
     thumbnailUrl
       ? (

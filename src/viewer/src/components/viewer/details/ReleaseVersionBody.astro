@@ -9,7 +9,7 @@ interface Props {
 const { release } = Astro.props;
 ---
 
-<div class="release-version-content">
+<div class="release-version-content" style={`--c:${release.color};`}>
   <div class="release-version-track-list">
     {release.description && <p class="detail-description release-version-description">{release.description}</p>}
     {
