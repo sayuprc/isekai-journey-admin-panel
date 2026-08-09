@@ -1523,23 +1523,34 @@ body.drawer-lock {
   display: block;
 }
 
-/* ジャケット(正方形)の縦幅にタイトル〜ボタンを揃え、収まらない収録曲はフェードで示す */
-
 .feature-body {
   display: flex;
   flex-direction: column;
+}
+
+/* 最新楽曲: サムネ縦幅に本文を揃える。最新リリースは収録曲が少ないとき短くなるのを許容 */
+
+.feature-grid-link:has(.feature-art-link) .feature-body {
   height: var(--feature-art-size);
 }
 
+/* 収録曲リストはジャケット枠の位置に置き、最新楽曲カード高さでフェード切り */
+
 .feature-track-list {
   display: grid;
-  flex: 1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px 16px;
   align-content: start;
-  min-height: 0;
+  max-height: var(--feature-art-size);
+  padding-left: 16px;
   overflow: hidden;
+  border-left: 3px solid var(--c);
   mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
+}
+
+.feature-track-list .rel-chip[data-unlinked] {
+  color: var(--fg-faint);
+  opacity: 1;
 }
 
 .feature-more {
@@ -2371,15 +2382,14 @@ body.drawer-lock {
     grid-auto-rows: 164px;
   }
 
-  /* 1 カラム時はジャケット縦幅に固定せず、リスト自身の高さで切る */
+  /* 1 カラム時はサムネ縦幅に固定せず、リストは上限だけ残す */
 
-  .feature-body {
+  .feature-grid-link:has(.feature-art-link) .feature-body {
     height: auto;
   }
 
   .feature-track-list {
     grid-template-columns: 1fr;
-    max-height: 320px;
   }
 
   .detail-panel {
