@@ -4,7 +4,7 @@
 
 ## Status
 
-planned
+in-progress
 
 ## Background
 
@@ -20,8 +20,9 @@ planned
 ## Scope
 
 - `src/viewer/src/components/viewer/JacketArt.astro`
-- `src/viewer/src/shared/image.ts` の `JACKET_WIDTHS` とジャケット向けの記述
+- `src/viewer/src/shared/image.ts`（ジャケット専用になったためファイルごと削除）
 - `src/viewer/src/styles/viewer.css` の `.jacket-art` 系
+- サーバーの `JacketArtStorage` 系（アップロード API 削除後の死コード）
 - ストレージの `release-jacket-art/` 配下
 
 ## Non-Scope
@@ -29,21 +30,23 @@ planned
 - 色の抽出機能（将来別途）
 - YouTube サムネイル（`media/[mediaId].astro` の OGP は変更しない）
 - DB カラム（1 本目で置き換え済み）
+- ADR / exec-plan 文書内の歴史的な `jacket` 表記
 
 ## Acceptance Criteria
 
-- リポジトリ全体を `jacket` で検索して、生成コードを含め 1 件もヒットしない
-- ストレージの `release-jacket-art/` が空になっている
-- viewer / admin / server の静的検査とテストが通る
+- `src/` を `jacket` で検索して 1 件もヒットしない（生成コード・vendor 除く）
+- ローカル MinIO の `release-jacket-art/` が空になっている
+- viewer / server の静的検査が通る
 - viewer の全ページが表示でき、画像は YouTube サムネイルだけになっている
 
 ## Steps
 
-- [ ] `JacketArt.astro` を削除する
-- [ ] `shared/image.ts` から `JACKET_WIDTHS` を削除し、残る利用者（YouTube サムネイル）に合わせて記述を整理する
-- [ ] `viewer.css` から `.jacket-art` 系のスタイルを削除する
-- [ ] ストレージの `release-jacket-art/` 配下を削除する
-- [ ] リポジトリ全体を `jacket` で検索し、残りが無いことを確認する
+- [x] `JacketArt.astro` を削除する
+- [x] `shared/image.ts` を削除し、Layout の assets preconnect も外す（利用者はジャケットだけだった）
+- [x] `viewer.css` から `.jacket-art` 系のスタイルを削除する
+- [x] サーバーの `JacketArtStorageInterface` / `R2JacketArtStorage*` と Provider 配線を削除する
+- [x] ローカル MinIO の `release-jacket-art/` 配下を削除する
+- [x] `src/` を `jacket` で検索し、残りが無いことを確認する
 
 ## Decision Log
 
@@ -51,7 +54,12 @@ planned
 
 - 2026-08-09: 不可逆な削除（ストレージ）はこの 1 本に隔離し、5 本の最後に置く
 - 2026-08-09: ストレージの退避は行わない。本番のファイルは削除済みで、ローカルの MinIO に残っている 87 件は今回使わない
+- 2026-08-09: `image.ts` はジャケット以外の利用者が無くなったためファイルごと削除する。YouTube サムネイルは `features/media/labels` 側で完結している
+- 2026-08-09: アップロード API 削除で死んだ `JacketArtStorage` 系もこの掃除に含める。Acceptance の「jacket が残らない」をコード側で満たすため
 
 ## Validation
 
--
+- `mise run viewer:check` / `mise run api:phpstan` 通過
+- `bun --filter viewer build` 通過
+- ローカル MinIO `release-jacket-art/` を 107 → 0 件にした
+- `rg -i jacket src`（generated / vendor 除く）でヒットなし
