@@ -26,8 +26,8 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
+use Release\Domain\Models\Color;
 use Release\Domain\Models\Description as ReleaseDescription;
-use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media as ReleaseMedia;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
@@ -244,7 +244,7 @@ trait EntityFactory
         bool $isDisplay,
         ?ImmutableDate $releasedOn = null,
         string $description = 'テスト用リリース',
-        ?string $jacketArtUrl = null,
+        string $color = '#989899',
         ?array $formats = null,
         array $media = [],
         int $orderNo = 1,
@@ -255,7 +255,7 @@ trait EntityFactory
             new ReleaseName($name),
             new ReleasedOn($releasedOn ?? new ImmutableDate('2024-01-01')),
             new ReleaseDescription($description),
-            is_null($jacketArtUrl) ? null : new JacketArtUrl($jacketArtUrl),
+            new Color($color),
             $isDisplay,
             new OrderNo($orderNo),
             ReleaseFormats::reconstruct($formats ?? [ReleaseFormat::Cd->value]),

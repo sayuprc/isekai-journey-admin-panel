@@ -62,7 +62,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => 'string',
         'type' => '\OpenAPI\Viewer\Client\Model\ReleaseGroupType',
         'first_released_on' => '\DateTime',
-        'jacket_art_url' => 'string'
+        'color' => 'string'
     ];
 
     /**
@@ -77,7 +77,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => null,
         'type' => null,
         'first_released_on' => 'date',
-        'jacket_art_url' => null
+        'color' => null
     ];
 
     /**
@@ -90,7 +90,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => false,
         'type' => false,
         'first_released_on' => false,
-        'jacket_art_url' => true
+        'color' => false
     ];
 
     /**
@@ -183,7 +183,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => 'title',
         'type' => 'type',
         'first_released_on' => 'firstReleasedOn',
-        'jacket_art_url' => 'jacketArtUrl'
+        'color' => 'color'
     ];
 
     /**
@@ -196,7 +196,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => 'setTitle',
         'type' => 'setType',
         'first_released_on' => 'setFirstReleasedOn',
-        'jacket_art_url' => 'setJacketArtUrl'
+        'color' => 'setColor'
     ];
 
     /**
@@ -209,7 +209,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         'title' => 'getTitle',
         'type' => 'getType',
         'first_released_on' => 'getFirstReleasedOn',
-        'jacket_art_url' => 'getJacketArtUrl'
+        'color' => 'getColor'
     ];
 
     /**
@@ -273,7 +273,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('first_released_on', $data ?? [], null);
-        $this->setIfExists('jacket_art_url', $data ?? [], null);
+        $this->setIfExists('color', $data ?? [], null);
     }
 
     /**
@@ -319,9 +319,13 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
         if ($this->container['first_released_on'] === null) {
             $invalidProperties[] = "'first_released_on' can't be null";
         }
-        if ($this->container['jacket_art_url'] === null) {
-            $invalidProperties[] = "'jacket_art_url' can't be null";
+        if ($this->container['color'] === null) {
+            $invalidProperties[] = "'color' can't be null";
         }
+        if (!preg_match("/^#[0-9a-f]{6}$/", $this->container['color'])) {
+            $invalidProperties[] = "invalid value for 'color', must be conform to the pattern /^#[0-9a-f]{6}$/.";
+        }
+
         return $invalidProperties;
     }
 
@@ -451,35 +455,33 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
     }
 
     /**
-     * Gets jacket_art_url
+     * Gets color
      *
      * @return string
      */
-    public function getJacketArtUrl()
+    public function getColor()
     {
-        return $this->container['jacket_art_url'];
+        return $this->container['color'];
     }
 
     /**
-     * Sets jacket_art_url
+     * Sets color
      *
-     * @param string $jacket_art_url ジャケットアートURL
+     * @param string $color 代表色（公開リリースを発売日順に見て最初のもの）
      *
      * @return self
      */
-    public function setJacketArtUrl($jacket_art_url)
+    public function setColor($color)
     {
-        if (is_null($jacket_art_url)) {
-            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('jacket_art_url', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
+        if (is_null($color)) {
+            throw new \InvalidArgumentException('non-nullable color cannot be null');
         }
-        $this->container['jacket_art_url'] = $jacket_art_url;
+
+        if ((!preg_match("/^#[0-9a-f]{6}$/", ObjectSerializer::toString($color)))) {
+            throw new \InvalidArgumentException("invalid value for \$color when calling SongReleaseGroupSummary., must conform to the pattern /^#[0-9a-f]{6}$/.");
+        }
+
+        $this->container['color'] = $color;
 
         return $this;
     }

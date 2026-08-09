@@ -9,7 +9,6 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "aws/aws-sdk-php": "^3.0",
     "cuyz/valinor": "^2.3",
     "emonkak/orm": "^5.0",
     "firebase/php-jwt": "^7.0",

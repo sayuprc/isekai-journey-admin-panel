@@ -1540,68 +1540,6 @@ paths:
               $ref: '#/components/schemas/ReleaseCreateRequest'
       security:
         - BearerAuth: []
-  /releases/jacket-art:
-    post:
-      operationId: ReleaseService_uploadJacketArt
-      description: リリースジャケットアートアップロードAPI
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReleaseJacketArtUploadResponse'
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Access is unauthorized.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Access is forbidden.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '422':
-          description: Client error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Server error
-      tags:
-        - Release
-      requestBody:
-        required: true
-        content:
-          image/jpeg:
-            schema:
-              contentMediaType: image/jpeg
-          image/png:
-            schema:
-              contentMediaType: image/png
-          image/webp:
-            schema:
-              contentMediaType: image/webp
-      security:
-        - BearerAuth: []
   /releases/{releaseId}:
     get:
       operationId: ReleaseService_getRelease
@@ -3102,7 +3040,7 @@ components:
         - name
         - releasedOn
         - description
-        - jacketArtUrl
+        - color
         - isDisplay
         - orderNo
         - formatValues
@@ -3118,10 +3056,8 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
+        color:
+          $ref: '#/components/schemas/color'
         isDisplay:
           type: boolean
         orderNo:
@@ -3143,7 +3079,7 @@ components:
         - name
         - releasedOn
         - description
-        - jacketArtUrl
+        - color
         - isDisplay
         - orderNo
         - formatValues
@@ -3157,10 +3093,8 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
+        color:
+          $ref: '#/components/schemas/color'
         isDisplay:
           type: boolean
         orderNo:
@@ -3275,7 +3209,7 @@ components:
         - releaseId
         - name
         - releasedOn
-        - jacketArtUrl
+        - color
         - isDisplay
         - orderNo
         - formatValues
@@ -3286,10 +3220,8 @@ components:
           $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
+        color:
+          $ref: '#/components/schemas/color'
         isDisplay:
           type: boolean
         orderNo:
@@ -3375,13 +3307,6 @@ components:
       properties:
         releaseGroup:
           $ref: '#/components/schemas/ReleaseGroup'
-    ReleaseJacketArtUploadResponse:
-      type: object
-      required:
-        - jacketArtUrl
-      properties:
-        jacketArtUrl:
-          $ref: '#/components/schemas/jacketArtUrl'
     ReleaseReferencedSong:
       type: object
       required:
@@ -3407,7 +3332,7 @@ components:
         - name
         - releasedOn
         - description
-        - jacketArtUrl
+        - color
         - isDisplay
         - orderNo
         - formatValues
@@ -3419,10 +3344,8 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
+        color:
+          $ref: '#/components/schemas/color'
         isDisplay:
           type: boolean
         orderNo:
@@ -3945,6 +3868,10 @@ components:
       type: string
       format: uuid
       description: 認証セッションID
+    color:
+      type: string
+      pattern: ^#[0-9a-f]{6}$
+      description: 代表色
     createdAt:
       type: string
       format: date-time
@@ -3956,9 +3883,6 @@ components:
       type: string
       format: email
       description: メールアドレス
-    jacketArtUrl:
-      type: string
-      description: ジャケットアートURL
     lyricsLink:
       type: string
       format: uri

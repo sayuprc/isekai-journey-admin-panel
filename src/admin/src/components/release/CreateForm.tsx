@@ -1,10 +1,11 @@
 import { Match, Show, Switch, createResource, createSignal } from 'solid-js';
 import type { ReleaseFormatValue } from '../../generated';
-import { client, uploadReleaseJacketArt } from '../../utils/client';
+import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
 import { setFlash } from '../Flash';
 import { FormError } from '../FormError';
+import { ColorField } from './ColorField';
 import { FormatCheckboxes } from './FormatCheckboxes';
 import { MediaEditor, toMediaPayload, toMediumForms } from './MediaEditor';
 import type { MediumForm } from './MediaEditor';
@@ -19,7 +20,7 @@ interface InitialValues {
   name: string;
   releasedOn: string;
   description: string;
-  jacketArtUrl: string;
+  color: string;
   isDisplay: boolean;
   orderNo: number;
   formatValues: ReleaseFormatValue[];
@@ -30,7 +31,7 @@ const EMPTY_INITIAL_VALUES: InitialValues = {
   name: '',
   releasedOn: '',
   description: '',
-  jacketArtUrl: '',
+  color: '#989899',
   isDisplay: true,
   orderNo: 1,
   formatValues: [1],
@@ -104,7 +105,7 @@ export const CreateForm = () => {
         name: data.release.name,
         releasedOn: normalizeDateValue(data.release.releasedOn),
         description: data.release.description,
-        jacketArtUrl: data.release.jacketArtUrl ?? '',
+        color: data.release.color,
         isDisplay: data.release.isDisplay,
         orderNo: data.release.orderNo,
         formatValues: [...data.release.formatValues],
@@ -166,7 +167,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
   const [name, setName] = createSignal(props.initialValues.name);
   const [releasedOn, setReleasedOn] = createSignal(props.initialValues.releasedOn);
   const [description, setDescription] = createSignal(props.initialValues.description);
-  const [jacketArtUrl, setJacketArtUrl] = createSignal(props.initialValues.jacketArtUrl);
+  const [color, setColor] = createSignal(props.initialValues.color);
   const [isDisplay, setIsDisplay] = createSignal(props.initialValues.isDisplay);
   const [orderNo, setOrderNo] = createSignal(props.initialValues.orderNo);
   const [formatValues, setFormatValues] = createSignal<ReleaseFormatValue[]>(props.initialValues.formatValues);
@@ -174,28 +175,8 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
 
   const { formError, getFieldError, clearErrors, handleError } = createFormErrors();
   const { isSubmitting, withSubmitting } = createSubmitting();
-  const { isSubmitting: isUploadingJacketArt, withSubmitting: withUploadingJacketArt } = createSubmitting();
 
   const groupUrl = `/release-groups/${props.releaseGroupId}`;
-
-  const handleJacketArtUpload = withUploadingJacketArt(async (e: Event) => {
-    const file = (e.currentTarget as HTMLInputElement).files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    clearErrors();
-
-    const { data, error, status } = await uploadReleaseJacketArt(file);
-
-    if (data) {
-      setJacketArtUrl(data.jacketArtUrl);
-      return;
-    }
-
-    handleError(status, error);
-  });
 
   const handleSubmit = withSubmitting(async (e: Event) => {
     e.preventDefault();
@@ -206,7 +187,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
       name: name(),
       releasedOn: releasedOn(),
       description: description(),
-      jacketArtUrl: jacketArtUrl().trim() === '' ? null : jacketArtUrl().trim(),
+      color: color(),
       isDisplay: isDisplay(),
       orderNo: orderNo(),
       formatValues: formatValues(),
@@ -276,30 +257,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
               </Show>
             </div>
 
-            <div class="md:col-span-2">
-              <label class="label">ジャケットアート</label>
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                class="file-input w-full"
-                onChange={handleJacketArtUpload}
-                disabled={isUploadingJacketArt()}
-                classList={{ 'file-input-error': !!(getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')) }}
-              />
-              <Show when={getFieldError('jacketArt') ?? getFieldError('jacketArtUrl')}>
-                {message => <p class="mt-1 text-xs text-error">{message()}</p>}
-              </Show>
-              <Show when={isUploadingJacketArt()}>
-                <p class="mt-1 text-xs text-base-content/60">アップロード中...</p>
-              </Show>
-              <Show when={jacketArtUrl().trim() !== ''}>
-                <img
-                  src={jacketArtUrl().trim()}
-                  alt="ジャケットアートのプレビュー"
-                  class="mt-3 size-32 rounded-box border border-base-300 object-cover"
-                />
-              </Show>
-            </div>
+            <ColorField value={color()} onChange={setColor} fieldError={getFieldError('color')} />
 
             <div class="md:col-span-2">
               <FormatCheckboxes
@@ -347,7 +305,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
         <MediaEditor media={media()} onChange={setMedia} fieldError={getFieldError('media')} />
 
         <div class="flex justify-end">
-          <button class="btn btn-primary" disabled={isSubmitting() || isUploadingJacketArt()}>
+          <button class="btn btn-primary" disabled={isSubmitting()}>
             {isSubmitting() ? '作成中...' : '作成'}
           </button>
         </div>

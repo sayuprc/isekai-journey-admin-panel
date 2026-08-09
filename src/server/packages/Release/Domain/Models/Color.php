@@ -6,6 +6,6 @@ namespace Release\Domain\Models;
 
 use Support\Domain\ValueObjects\String\StringValueObject;
 
-readonly class JacketArtUrl extends StringValueObject
+readonly class Color extends StringValueObject
 {
 }

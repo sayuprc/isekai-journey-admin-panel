@@ -60,13 +60,12 @@ class ListPresenter
     {
         $type = ReleaseGroupType::from($releaseGroup->typeValue);
 
-        return new OpenApiSongReleaseGroupSummary([
-            'jacket_art_url' => $releaseGroup->jacketArtUrl,
-        ])
+        return new OpenApiSongReleaseGroupSummary()
             ->setReleaseGroupId($releaseGroup->releaseGroupId)
             ->setTitle($releaseGroup->title)
             ->setType(new OpenApiReleaseGroupType()->setName($type->getName())->setValue(ReleaseGroupTypeValue::from($type->value)))
-            ->setFirstReleasedOn(new DateTime($releaseGroup->firstReleasedOn));
+            ->setFirstReleasedOn(new DateTime($releaseGroup->firstReleasedOn))
+            ->setColor($releaseGroup->color);
     }
 
     private function toOpenApiSongMediaSummary(SongMediaSummary $media): OpenApiSongMediaSummary

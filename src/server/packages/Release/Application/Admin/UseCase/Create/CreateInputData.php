@@ -18,7 +18,7 @@ readonly class CreateInputData
         public string $name,
         public string $releasedOn,
         public string $description,
-        public ?string $jacketArtUrl,
+        public string $color,
         public bool $isDisplay,
         public int $orderNo,
         public array $formatValues,
