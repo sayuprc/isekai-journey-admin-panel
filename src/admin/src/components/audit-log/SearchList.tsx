@@ -10,8 +10,8 @@ type PerPage = (typeof PER_PAGE_OPTIONS)[number];
 type Action = AuditAction;
 type TargetType = AuditTargetType;
 
-// 生成された型 (AuditAction / AuditTargetType) を網羅する const タプル。
-// 型注釈で完全性を担保し、生成型に値が増減したらコンパイルエラーで気付ける形にする。
+// 生成された型 (AuditAction / AuditTargetType) を網羅する const タプル
+// 型注釈で完全性を担保し、生成型に値が増減したらコンパイルエラーで気付ける形にする
 const ACTION_OPTIONS = [
   'create',
   'update',

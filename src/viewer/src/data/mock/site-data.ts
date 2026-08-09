@@ -1,6 +1,6 @@
 // ヰ世界情緒 ファンサイト - データモデル
 // 各エンティティをID付き正規化データとして保持し、IDで関係を結ぶ
-// すべて架空のダミーデータ（後で差し替え可能）
+// すべて架空のダミーデータ(後で差し替え可能)
 
 export type SongCategory = 'オリジナル' | 'カバー';
 
@@ -56,8 +56,8 @@ export type MediaType = VideoMediaType | PostMediaType;
 
 export type MediaPlatform = 'x' | 'ig' | 'yt' | 'blog';
 
-// 映像と投稿が同じ配列に同居しているため flat な型で定義する。
-// 種別は `type` で判別し、種別に応じて使用するフィールドが異なる。
+// 映像と投稿が同じ配列に同居しているため flat な型で定義する
+// 種別は `type` で判別し、種別に応じて使用するフィールドが異なる
 export type MediaEntry = {
   id: string;
   type: MediaType;

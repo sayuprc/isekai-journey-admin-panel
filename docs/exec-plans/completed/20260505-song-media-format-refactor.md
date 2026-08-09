@@ -8,15 +8,15 @@ completed
 
 ## Background
 
-現状の `Media` 実装では、`song_media_links.song_media_type` が `MV` / `音源動画` / `配信アーカイブ` / `ショート動画` のような表示分類を保持している。この構造だと、同じ `media_id` を複数楽曲へ紐づけたときに楽曲ごとに異なる種別を持ててしまい、コンテンツ自体の意味が揺れる。
+現状の `Media` 実装では、`song_media_links.song_media_type` が `MV` / `音源動画` / `配信アーカイブ` / `ショート動画` のような表示分類を保持している。この構造だと、同じ `media_id` を複数楽曲へ紐づけたときに楽曲ごとに異なる種別を持ててしまい、コンテンツ自体の意味が揺れる
 
-一方で、複数楽曲が同じ `Media` を参照しつつ、楽曲ごとに表示順だけは変えたい要件がある。また将来的に `Event` など他集約からも `Media` を参照したい。
+一方で、複数楽曲が同じ `Media` を参照しつつ、楽曲ごとに表示順だけは変えたい要件がある。また将来的に `Event` など他集約からも `Media` を参照したい
 
-このため、`Media` 自体に `format` を持たせ、`song_media_links` は楽曲との関連と表示順だけを持つ構造へ寄せる。
+このため、`Media` 自体に `format` を持たせ、`song_media_links` は楽曲との関連と表示順だけを持つ構造へ寄せる
 
 ## Goal
 
-`Media` の意味分類を `media.format` に集約し、`Song` 側では `Media` の並び順だけを管理する構造へ整理する。これにより、同一 `Media` を複数楽曲で共有しつつ、分類は共通化し、表示順は楽曲ごとに変更できる状態にする。
+`Media` の意味分類を `media.format` に集約し、`Song` 側では `Media` の並び順だけを管理する構造へ整理する。これにより、同一 `Media` を複数楽曲で共有しつつ、分類は共通化し、表示順は楽曲ごとに変更できる状態にする
 
 ## Scope
 
@@ -53,22 +53,22 @@ completed
 ## Steps
 
 1. `Media.format` を契約へ追加する
-   `src/contracts/src/admin/media/domain.tsp` に `MediaFormatValue` と `MediaFormat` もしくは `format` 用 enum を追加し、`Media` に `format` を持たせる。あわせて Song 返却で使う `SongLinkedMedia` も `Media` の `format` を返す形へ揃える。
+   `src/contracts/src/admin/media/domain.tsp` に `MediaFormatValue` と `MediaFormat` もしくは `format` 用 enum を追加し、`Media` に `format` を持たせる。あわせて Song 返却で使う `SongLinkedMedia` も `Media` の `format` を返す形へ揃える
 
 2. `Song` 契約から楽曲文脈種別を除去する
-   `src/contracts/src/admin/songs/domain.tsp` から `SongMediaType` を削除し、`RequestSongMediaLink` を `mediaId` と `orderNo` のみにする。`SongLinkedMedia` からも `songMediaType` を外す。
+   `src/contracts/src/admin/songs/domain.tsp` から `SongMediaType` を削除し、`RequestSongMediaLink` を `mediaId` と `orderNo` のみにする。`SongLinkedMedia` からも `songMediaType` を外す
 
 3. DB スキーマと server ドメインを `format + order_no` 構造へ寄せる
-   `src/server/database/atlas/schemas/media.my.hcl` に `format` を追加し、`song-media-links.my.hcl` から `song_media_type` を削除する。`Media` ドメインモデル / repository / presenter を `format` 対応にし、`SongMediaLink` / `SongMediaLinks` は `media_id` と `order_no` だけを扱うよう整理する。
+   `src/server/database/atlas/schemas/media.my.hcl` に `format` を追加し、`song-media-links.my.hcl` から `song_media_type` を削除する。`Media` ドメインモデル / repository / presenter を `format` 対応にし、`SongMediaLink` / `SongMediaLinks` は `media_id` と `order_no` だけを扱うよう整理する
 
 4. `Song` の create / get / update / assembler / repository を簡素化する
-   `SongIntegrityService`、`CreateInputData`、`UpdateInputData`、`SongRepository`、`SongAssembler`、`Song` presenter を更新し、楽曲側では Media の存在確認と順序管理だけを行う。返却時の表示分類は `Media.format` から組み立てる。
+   `SongIntegrityService`、`CreateInputData`、`UpdateInputData`、`SongRepository`、`SongAssembler`、`Song` presenter を更新し、楽曲側では Media の存在確認と順序管理だけを行う。返却時の表示分類は `Media.format` から組み立てる
 
 5. admin BFF と Song フォームを `Media.format` 基準へ更新する
-   `src/admin/src/server/routes/media.ts` の新規作成受け口へ `format` を追加する。`songs.ts` は `songMediaType` を送らない形へ更新する。`MediaSection.tsx` から楽曲文脈種別の選択 UI を削除し、新規 Media 作成フォームへ `format` 選択を追加する。
+   `src/admin/src/server/routes/media.ts` の新規作成受け口へ `format` を追加する。`songs.ts` は `songMediaType` を送らない形へ更新する。`MediaSection.tsx` から楽曲文脈種別の選択 UI を削除し、新規 Media 作成フォームへ `format` 選択を追加する
 
 6. 既存データ移行方針を定めて migration / 生成物 / テストを更新する
-   既存の `song_media_links.song_media_type` を `media.format` へ移す方針を決める。原則は、同一 `media_id` に複数の `song_media_type` が存在しない前提で移行し、衝突があれば手動確認とする。生成物更新後、Song / Media の feature test と admin の lint / typecheck を通す。
+   既存の `song_media_links.song_media_type` を `media.format` へ移す方針を決める。原則は、同一 `media_id` に複数の `song_media_type` が存在しない前提で移行し、衝突があれば手動確認とする。生成物更新後、Song / Media の feature test と admin の lint / typecheck を通す
 
 ## Decision Log
 

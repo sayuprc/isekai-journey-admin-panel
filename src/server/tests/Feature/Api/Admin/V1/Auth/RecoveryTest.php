@@ -96,7 +96,7 @@ class RecoveryTest extends DatabaseTestCase
     public function consumedCodeCannotBeReusedForSecondRecovery(): void
     {
         // 2 個以上のコードを発行し、コード A で復元成功 → 同じコード A での 2 回目は失敗し、
-        // かつ未使用コード (A 以外) が過剰に消費されていないことを検証する。
+        // かつ未使用コード (A 以外) が過剰に消費されていないことを検証する
         $this->bindPasskeyAuthenticator();
         $adminUserId = $this->storeAdminUserWithPasskey('example@example.com');
         $codeAId = $this->storeRecoveryCode($adminUserId, 'A3KP-9QXR');

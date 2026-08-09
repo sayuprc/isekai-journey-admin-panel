@@ -61,7 +61,7 @@ export const SearchList = () => {
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
-  // 検索フォームの一時入力値（Submit前）
+  // 検索フォームの一時入力値(Submit前)
   const [inputTitle, setInputTitle] = createSignal(initial.title);
   const [inputType, setInputType] = createSignal(initial.type);
   const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);

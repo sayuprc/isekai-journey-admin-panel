@@ -61,7 +61,7 @@ class ReleaseIntegrityServiceTest extends TestCase
             ->andReturn($this->createReleaseGroup(self::RELEASE_GROUP_ID, '観測された春', ReleaseGroupType::Album))
             ->once();
 
-        // 参照トラックの 1 曲だけ存在確認される（タイトルのみトラックはスキップ）。
+        // 参照トラックの 1 曲だけ存在確認される(タイトルのみトラックはスキップ)
         $this->songRepository->shouldReceive('find')
             ->withArgs(static fn (SongId $arg): bool => $arg->value === self::SONG_ID)
             ->andReturn($this->createSong(self::SONG_ID, 'テスト楽曲', '説明', SongType::Original, true, 10))

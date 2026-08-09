@@ -2,17 +2,17 @@
 
 ## 目的
 
-`src/admin` と `src/viewer` の UI 実装を、短く作れて、あとから直しやすい形で維持するための方針です。
+`src/admin` と `src/viewer` の UI 実装を、短く作れて、あとから直しやすい形で維持するための方針です
 
 ## 基本方針
 
-- ページ責務は Astro に保ち、対話的な UI は SolidJS に分ける。
-- セマンティックな HTML と分かりやすい見出し構造を優先する。
-- 360px 幅とデスクトップ幅の両方で破綻しないことを前提にする。
-- 非同期処理やフォームには loading / error / empty state を用意する。
-- 既存スタックで解けるなら依存を増やしすぎない。
-- パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。
-- 各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する。
+- ページ責務は Astro に保ち、対話的な UI は SolidJS に分ける
+- セマンティックな HTML と分かりやすい見出し構造を優先する
+- 360px 幅とデスクトップ幅の両方で破綻しないことを前提にする
+- 非同期処理やフォームには loading / error / empty state を用意する
+- 既存スタックで解けるなら依存を増やしすぎない
+- パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする
+- 各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する
 
 ## 境界の参照先
 

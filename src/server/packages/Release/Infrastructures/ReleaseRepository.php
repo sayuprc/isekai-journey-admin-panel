@@ -77,7 +77,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         $data = $release->toArray();
         $now = now()->toDateTimeString();
 
-        // 提供形態・媒体・収録曲は洗い替えする（収録曲は FK CASCADE で媒体と一緒に消える）。
+        // 提供形態・媒体・収録曲は洗い替えする(収録曲は FK CASCADE で媒体と一緒に消える)
         $this->queryFactory->delete()
             ->from(self::FORMAT_TABLE)
             ->where('release_id', '=', $binReleaseId)

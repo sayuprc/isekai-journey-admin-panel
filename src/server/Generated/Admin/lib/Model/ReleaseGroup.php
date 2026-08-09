@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * ReleaseGroup Class Doc Comment
  *
  * @category Class
- * @description リリースグループ（作品）
+ * @description リリースグループ(作品)
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

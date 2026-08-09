@@ -312,7 +312,7 @@ _.file = "src/server/.env.testing"
 
 [tasks."migrate:dry-run"]
 quiet = true
-description = "適用されるスキーマの差分を確認する（適用はしない）"
+description = "適用されるスキーマの差分を確認する(適用はしない)"
 dir = "src/server/database/atlas"
 run = 'atlas schema apply --env local --var "schema_name=${DB_DATABASE}" --dry-run'
 

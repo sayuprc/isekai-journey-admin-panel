@@ -38,7 +38,7 @@ export const SearchList = () => {
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
-  // 検索フォームの一時入力値（Submit前）
+  // 検索フォームの一時入力値(Submit前)
   const [inputName, setInputName] = createSignal(initial.name);
   const [inputSort, setInputSort] = createSignal<Sort>(initial.sort);
   const [inputOrder, setInputOrder] = createSignal<Order>(initial.order);

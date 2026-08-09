@@ -19,7 +19,7 @@ table "persons" {
       expr = "lower(`name`)"
       type = VIRTUAL
     }
-    comment = "人物名（小文字）"
+    comment = "人物名(小文字)"
   }
   column "order_no" {
     null     = false

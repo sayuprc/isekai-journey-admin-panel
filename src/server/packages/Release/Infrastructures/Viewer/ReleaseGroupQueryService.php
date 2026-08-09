@@ -205,7 +205,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
                     'release_tracks.song_id',
                     'songs.is_display',
                 ])
-                // 上書き名 (release_tracks.title) を優先し、なければ楽曲名で表示する。
+                // 上書き名 (release_tracks.title) を優先し、なければ楽曲名で表示する
                 ->select(new Sql('COALESCE(release_tracks.title, songs.title)'), 'title')
                 ->from('release_tracks')
                 ->outerJoin('songs', 'songs.song_id = release_tracks.song_id')
@@ -219,7 +219,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
         foreach ($trackRows as $row) {
             $binSongId = Row::nullableString($row, 'song_id');
 
-            // タイトルのみトラックは songs が結合されないため isDisplay: false（リンクなし表示）とする。
+            // タイトルのみトラックは songs が結合されないため isDisplay: false(リンクなし表示)とする
             $tracksByMedium[Row::string($row, 'release_id')][Row::int($row, 'position')][] = new ReleaseTrackItem(
                 Row::int($row, 'track_no'),
                 is_null($binSongId) ? null : $this->converter->toUuid($binSongId),

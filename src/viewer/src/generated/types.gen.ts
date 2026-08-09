@@ -113,7 +113,7 @@ export type ReleaseGroupType = {
 export type ReleaseGroupTypeValue = 1 | 2 | 3 | 99;
 
 /**
- * リリース（版）
+ * リリース(版)
  */
 export type ReleaseListItem = {
     releaseId: ReleaseId;
@@ -167,7 +167,7 @@ export type SongListItem = {
     arrangers: Array<string>;
     media: Array<SongMediaSummary>;
     /**
-     * 収録先の公開リリースグループ（最古発売日の降順）
+     * 収録先の公開リリースグループ(最古発売日の降順)
      */
     releaseGroups: Array<SongReleaseGroupSummary>;
 };
@@ -208,7 +208,7 @@ export type SongReleaseGroupSummary = {
     type: ReleaseGroupType;
     firstReleasedOn: ReleasedOn;
     /**
-     * 代表色（公開リリースを発売日順に見て最初のもの）
+     * 代表色(公開リリースを発売日順に見て最初のもの)
      */
     color: Color;
 };

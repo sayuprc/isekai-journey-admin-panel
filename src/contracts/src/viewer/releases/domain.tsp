@@ -69,7 +69,7 @@ model ReleaseMediumItem {
   tracks: ReleaseTrackItem[];
 }
 
-@doc("リリース（版）")
+@doc("リリース(版)")
 model ReleaseListItem {
   releaseId: releaseId;
   name: releaseName;

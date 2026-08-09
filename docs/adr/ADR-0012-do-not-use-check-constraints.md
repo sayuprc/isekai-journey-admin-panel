@@ -9,8 +9,8 @@ applies_to: [api, admin]
 
 ## Context
 
-dev 環境の TiDB ([ADR-0002](ADR-0002-use-tidb-in-production-and-mysql-in-development.md)) で実際に問題が起きた。
-CHECK 制約付きのテーブル作成はエラーにならないが、TiDB は CHECK を黙って無視するため制約が付かない。
+dev 環境の TiDB ([ADR-0002](ADR-0002-use-tidb-in-production-and-mysql-in-development.md)) で実際に問題が起きた
+CHECK 制約付きのテーブル作成はエラーにならないが、TiDB は CHECK を黙って無視するため制約が付かない
 その結果、次の migration 実行時に Atlas が CHECK の欠落を差分として検出し、適用が壊れた
 
 ローカルの MySQL では CHECK が機能してしまうため、この不一致は開発環境では検出できない
@@ -24,7 +24,7 @@ CHECK 制約付きのテーブル作成はエラーにならないが、TiDB は
 
 ## Decision
 
-スキーマ定義 (`src/server/database/atlas/schemas/`) で CHECK 制約を使わない。
+スキーマ定義 (`src/server/database/atlas/schemas/`) で CHECK 制約を使わない
 行内の不変条件はドメイン層 (Entity / ValueObject / Domain Service) で保証する
 
 既存の唯一の CHECK (`release_tracks_song_id_title_at_least_one`) は削除した

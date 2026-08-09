@@ -14,7 +14,7 @@ ADOP アーキテクチャ ([ADR-0006](ADR-0006-use-adop-architecture-for-server
 Domain → UseCase → Presenter と戻り値で伝搬させていた
 
 実際に運用すると、層をまたぐたびに `mapErr` / `andThen` による詰め替えが必要で、
-Result の伝搬は server の 131 ファイルに波及していた。
+Result の伝搬は server の 131 ファイルに波及していた
 煩雑さの割に得られる利益は薄く、次の問題も抱えていた
 
 - ValueObject はコンストラクタで既に `InvalidDomainException` を throw しており、
@@ -26,10 +26,10 @@ Result の伝搬は server の 131 ファイルに波及していた。
 
 期待される業務エラーも例外で表現し、Result 型を server の全層から撤去する
 
-- 例外 → HTTP 変換は Laravel の例外ハンドラに集約する。
+- 例外 → HTTP 変換は Laravel の例外ハンドラに集約する
   例外クラス → {code, status} の対応表は app 層に 1 枚だけ持ち、packages は HTTP も code も知らない
 - ドメイン層の例外もハンドラが直接レンダリングし、UseCase 境界での詰め替えはしない
-- エラーレスポンスは全ステータスで `{code, message, details?}` の統一エンベロープに再設計する。
+- エラーレスポンスは全ステータスで `{code, message, details?}` の統一エンベロープに再設計する
   code はカテゴリ単位の enum (`unauthenticated` / `permission_denied` / `not_found` /
   `validation_failed` / `business_rule_violation` / `internal_error`) で例外クラスと 1:1 とする
 - HTTP ステータスの割当 (401/403/404/422/400) は現状維持とする

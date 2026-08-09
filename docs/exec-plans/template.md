@@ -1,6 +1,6 @@
 # Execution Plan Template
 
-1 タスク 1 ファイル。`active/YYYYMMDD-<slug>.md` に置き、完了後に `completed/` へ移す。
+1 タスク 1 ファイル。`active/YYYYMMDD-<slug>.md` に置き、完了後に `completed/` へ移す
 
 ## Title
 
@@ -12,19 +12,19 @@ planned | in-progress | blocked | completed
 
 ## Background
 
-なぜこの作業が必要か。現状の問題点や背景。
+なぜこの作業が必要か。現状の問題点や背景
 
 ## Goal
 
-この作業で何を達成するか。1〜3 文で明確に。
+この作業で何を達成するか。1〜3 文で明確に
 
 ## Scope
 
-- 対象範囲（変更するファイル、機能、モジュール）
+- 対象範囲(変更するファイル、機能、モジュール)
 
 ## Non-Scope
 
-- 対象外にすること（誤解を防ぐために明示）
+- 対象外にすること(誤解を防ぐために明示)
 
 ## Acceptance Criteria
 
@@ -32,7 +32,7 @@ planned | in-progress | blocked | completed
 
 ## Steps
 
-完了したら `[x]` に変える。
+完了したら `[x]` に変える
 
 - [ ]
 - [ ]

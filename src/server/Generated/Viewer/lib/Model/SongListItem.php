@@ -647,7 +647,7 @@ class SongListItem implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets release_groups
      *
-     * @param \OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary[] $release_groups 収録先の公開リリースグループ（最古発売日の降順）
+     * @param \OpenAPI\Viewer\Client\Model\SongReleaseGroupSummary[] $release_groups 収録先の公開リリースグループ(最古発売日の降順)
      *
      * @return self
      */

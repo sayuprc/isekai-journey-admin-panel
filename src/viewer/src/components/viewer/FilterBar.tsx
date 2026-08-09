@@ -6,9 +6,9 @@ type Props = {
   filters: FilterOption[];
   // 対象 entry を絞る CSS セレクタ
   entrySelector: string;
-  // entry の dataset から、フィルター値と一致するか判定するキー（複数指定可、いずれかに一致すれば match）
+  // entry の dataset から、フィルター値と一致するか判定するキー(複数指定可、いずれかに一致すれば match)
   categoryAttrs: string[];
-  // 検索対象テキストを保持する dataset キー（未指定なら検索 UI を出さない）
+  // 検索対象テキストを保持する dataset キー(未指定なら検索 UI を出さない)
   searchAttr?: string;
   searchPlaceholder?: string;
   defaultFilter?: string;

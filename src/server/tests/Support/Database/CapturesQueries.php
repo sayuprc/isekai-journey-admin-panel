@@ -10,10 +10,10 @@ use Emonkak\Database\PDOInterface;
 use Illuminate\Support\Facades\DB;
 
 /**
- * 以降にコンテナから解決される Repository が emonkak で発行する SQL を捕捉できるようにする。
+ * 以降にコンテナから解決される Repository が emonkak で発行する SQL を捕捉できるようにする
  *
  * Laravel の Connection と同一の PDO を共有するため、DatabaseTransactions による
- * ロールバックも従来どおり機能する。
+ * ロールバックも従来どおり機能する
  */
 trait CapturesQueries
 {

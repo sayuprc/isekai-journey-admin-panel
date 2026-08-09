@@ -1,8 +1,8 @@
 # Subproject Boundaries
 
-継続的に参照するサブプロジェクトごとの責務境界をまとめる文書です。
+継続的に参照するサブプロジェクトごとの責務境界をまとめる文書です
 
-この文書のパスは、特記がなければリポジトリルート基準で書きます。
+この文書のパスは、特記がなければリポジトリルート基準で書きます
 
 ## Contracts
 
@@ -20,7 +20,7 @@
 - `src/server/tests/`: Unit / Integration / Feature テスト
 - `src/server/Generated/`: OpenAPI 由来の生成コード
 
-業務ロジックは ADR-0006 の ADOP を前提にし、`Domain`、`Application`、`Infrastructures`、`DebugInfrastructures` の境界を守ります。
+業務ロジックは ADR-0006 の ADOP を前提にし、`Domain`、`Application`、`Infrastructures`、`DebugInfrastructures` の境界を守ります
 
 ## Admin
 
@@ -32,7 +32,7 @@
 - `src/admin/src/schemas/`: 入出力スキーマ
 - `src/admin/src/generated/`: OpenAPI 由来の生成クライアント
 
-UI 実装方針の詳細は `FRONTEND.md` を参照します。
+UI 実装方針の詳細は `FRONTEND.md` を参照します
 
 ## Viewer
 
@@ -43,4 +43,4 @@ UI 実装方針の詳細は `FRONTEND.md` を参照します。
 - `src/viewer/src/schemas/`: フロントエンド側のスキーマ
 - `src/viewer/src/styles/`: スタイル
 
-UI 実装方針の詳細は `FRONTEND.md` を参照します。
+UI 実装方針の詳細は `FRONTEND.md` を参照します

@@ -10,7 +10,7 @@ applies_to: [api, admin]
 ## Context
 
 ADR-0013 で業務エラーを例外へ移行した際、422 の全 field 集約は
-`Support\Domain\Validation` の `Field` / `Fields` が担う設計とした。
+`Support\Domain\Validation` の `Field` / `Fields` が担う設計とした
 運用の結果、次の歪みが確認された
 
 - 例外は fail-fast (最初の失敗で短絡) だが、フォーム検証は fail-slow
@@ -30,13 +30,13 @@ ADR-0013 で業務エラーを例外へ移行した際、422 の全 field 集約
 422 の生成を `OpenApiValidator` middleware に一元化する
 
 - request body は opis/json-schema による収集検証を併用し、全違反を
-  JSON pointer 由来の field パス (例: `media/0/tracks/1/trackNo`) で一括報告する。
+  JSON pointer 由来の field パス (例: `media/0/tracks/1/trackNo`) で一括報告する
   ルーティング / セキュリティ / レスポンス検証は League validator を続投する
 - 検証エラーメッセージは keyword → 日本語の変換表を app 層 (middleware) に持つ
-- ドメインの `InvalidDomainException` は「表明違反 = 500 = バグ」に純化する。
+- ドメインの `InvalidDomainException` は「表明違反 = 500 = バグ」に純化する
   `new` による ValueObject 構築は常に「この値は正しいはず」の宣言であり、
   破れたら契約とドメインの不整合として大きな音で表面化させる
-- `Field` / `Fields` / `DomainValidationException` は廃止する。
+- `Field` / `Fields` / `DomainValidationException` は廃止する
   UseCase / IntegrityService は ValueObject を直接 `new` するだけになる
 - 契約 (JSON Schema) で表現できない配列内ルール (トラック順序の重複等) は
   `BusinessRuleViolationException` で表現する
@@ -44,7 +44,7 @@ ADR-0013 で業務エラーを例外へ移行した際、422 の全 field 集約
   集約 UX を持たない
 
 本 ADR は ADR-0013 の Decision のうち「入力形式の検証は Application 層の組立て役が担い、
-ValueObject を検証の単一情報源としたまま全 field のエラーを集約する」の部分を置き換える。
+ValueObject を検証の単一情報源としたまま全 field のエラーを集約する」の部分を置き換える
 例外方針そのもの (Result 撤去、例外 → HTTP 変換の一元化、統一エンベロープ) は維持する
 
 ## Consequences

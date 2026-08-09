@@ -2,13 +2,13 @@
 
 ## Background
 
-Viewer は SSG でページを生成しているが、楽曲詳細ページとメディア詳細ページの `getStaticPaths` で一覧 API から取得した各 ID ごとに詳細 API を並列実行している。現在の詳細レスポンスは一覧レスポンスに関連データを足した程度の差分であり、ビルド時に `/v1/songs/{songId}` と `/v1/media/{mediaId}` を多数叩く構造がサーバー負荷になっている。
+Viewer は SSG でページを生成しているが、楽曲詳細ページとメディア詳細ページの `getStaticPaths` で一覧 API から取得した各 ID ごとに詳細 API を並列実行している。現在の詳細レスポンスは一覧レスポンスに関連データを足した程度の差分であり、ビルド時に `/v1/songs/{songId}` と `/v1/media/{mediaId}` を多数叩く構造がサーバー負荷になっている
 
-`src/contracts/src/viewer/songs/*` と `src/contracts/src/viewer/media/*` には一覧 API と詳細 API が別々に定義され、サーバー側も `List` / `Get` の controller、presenter、use case、query DTO が分かれている。Viewer 側では `src/viewer/src/features/songs/api.ts` と `src/viewer/src/features/media/api.ts` に `all()` と `get()` があり、詳細ページ・fragment ページが `all()` の結果から `get()` を呼んでいる。
+`src/contracts/src/viewer/songs/*` と `src/contracts/src/viewer/media/*` には一覧 API と詳細 API が別々に定義され、サーバー側も `List` / `Get` の controller、presenter、use case、query DTO が分かれている。Viewer 側では `src/viewer/src/features/songs/api.ts` と `src/viewer/src/features/media/api.ts` に `all()` と `get()` があり、詳細ページ・fragment ページが `all()` の結果から `get()` を呼んでいる
 
 ## Goal
 
-Viewer の楽曲一覧 API とメディア一覧 API に、現在の詳細ページ表示に必要な詳細データを含める。SSG は一覧取得だけで通常詳細ページと fragment 詳細ページを生成できるようにし、Viewer 向け詳細 API は contract、server route、generated client、viewer 呼び出しから削除する。
+Viewer の楽曲一覧 API とメディア一覧 API に、現在の詳細ページ表示に必要な詳細データを含める。SSG は一覧取得だけで通常詳細ページと fragment 詳細ページを生成できるようにし、Viewer 向け詳細 API は contract、server route、generated client、viewer 呼び出しから削除する
 
 ## Scope
 

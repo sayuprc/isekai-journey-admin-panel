@@ -32,7 +32,7 @@ class SearchReleaseGroupTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId3, 'リリース未登録の作品', ReleaseGroupType::Ep, true),
         );
         $this->storeReleases(
-            // 古い作品: 配信が先行、CD が後発。最古 2026-01-01 がグループの代表日になる。
+            // 古い作品: 配信が先行、CD が後発。最古 2026-01-01 がグループの代表日になる
             $this->createRelease($this->generateUuid(), $releaseGroupId1, '配信', true, new ImmutableDate('2026-01-01'), media: [
                 ['position' => 1, 'name' => null, 'tracks' => []],
             ]),

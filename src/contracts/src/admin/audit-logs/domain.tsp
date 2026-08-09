@@ -45,6 +45,6 @@ model AuditLogSummary {
 model AuditLog {
   ...AuditLogSummary;
 
-  @doc("対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする。")
+  @doc("対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする")
   snapshot: Record<unknown>;
 }
