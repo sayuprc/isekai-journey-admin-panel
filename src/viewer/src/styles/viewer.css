@@ -1666,7 +1666,7 @@ body.drawer-lock {
   transition: background 0.2s ease;
 }
 
-/* ジャケットの代わりに置く色 縦棒と見本の 2 箇所で出す */
+/* ジャケットの代わりに左ボーダーで代表色を示す */
 
 .release-row::before {
   position: absolute;
@@ -1683,15 +1683,6 @@ body.drawer-lock {
 
 .release-row:hover {
   background: color-mix(in srgb, var(--release-color) 12%, transparent);
-}
-
-.release-row-chip {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  background: var(--release-color);
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 7%);
 }
 
 .release-row-title {
@@ -2477,11 +2468,6 @@ body.drawer-lock {
 
   .release-row {
     padding-left: 16px;
-  }
-
-  .release-row-chip {
-    width: 22px;
-    height: 22px;
   }
 
   /* リンクはボトムナビへ移動するためヘッダーからは消す */
