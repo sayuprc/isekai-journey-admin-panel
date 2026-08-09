@@ -4,7 +4,7 @@
 
 ## Status
 
-in-progress
+completed
 
 ## Background
 
@@ -33,7 +33,7 @@ in-progress
 
 ## Acceptance Criteria
 
-- 管理画面のリリース作成・詳細で画像を選ぶと、候補色が表示され Vibrant が初期選択になる
+- 管理画面のリリース作成・詳細で画像を選ぶと、候補色が表示され、彩度×面積スコア最大が初期選択になる
 - 候補・カラーピッカー・hex テキストのいずれでも同じ `color` 値を更新できる
 - 抽出に失敗しても手入力で保存を続行できる
 - ネットワーク上に画像バイナリが送られない（保存リクエストの body は hex のみ）
@@ -66,3 +66,4 @@ in-progress
 - `bun run lint:check`（admin）: OK
 - `bunx tsc --noEmit`（admin）: 新規ファイルにエラーなし（既存の傘下ブランチ由来エラーは残存）
 - `bun run build`（admin）: OK
+- #1001 として `feature/remove-jacket-art` にマージ済み

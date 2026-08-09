@@ -4,7 +4,7 @@
 
 ## Status
 
-planned
+completed
 
 ## Background
 
@@ -66,4 +66,5 @@ planned
 
 ## Validation
 
--
+- #993 としてマージ済み
+- `mise run viewer:check` / build 通過

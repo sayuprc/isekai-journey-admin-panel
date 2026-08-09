@@ -4,7 +4,7 @@
 
 ## Status
 
-in-progress
+completed
 
 ## Background
 
@@ -113,4 +113,5 @@ UPDATE `releases` SET `color` = '#989899' WHERE `color` = '';
 
 ## Validation
 
--
+- PR 群 (#988〜#1001) として `feature/remove-jacket-art` にマージ済み
+- スキーマ・コントラクト・admin/viewer/server の置換を確認済み
