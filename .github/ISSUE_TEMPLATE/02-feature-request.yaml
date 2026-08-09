@@ -1,0 +1,18 @@
+name: 新機能の提案
+description: 新たな機能を提案する場合
+
+labels:
+  - "feature-request"
+
+projects:
+  - "sayuprc/18"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: 新機能の概要
+    validations:
+      required: true

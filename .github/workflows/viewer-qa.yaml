@@ -1,0 +1,159 @@
+name: Viewer QA
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/viewer/**"
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/viewer-qa.yaml"
+      - ".github/actions/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "src/viewer/**"
+      - "src/contracts/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/viewer-qa.yaml"
+      - ".github/actions/**"
+  workflow_call:
+
+env:
+  MISE_ENV: ci
+
+jobs:
+  diff:
+    name: Generated Code Diff Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Check generate code has diff
+        run: mise run viewer:generate
+
+  format:
+    name: Format
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Run Format Check
+        run: mise run viewer:format:check
+
+  lint:
+    name: ESLint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Run ESLint
+        run: mise run viewer:lint
+
+  style:
+    name: Stylelint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/viewer/node_modules
+          key: viewer-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Run Stylelint
+        run: mise run viewer:style
+
+      # - name: Run Build
+      #   run: bun run build
