@@ -50,13 +50,12 @@ class ListPresenter
 
     private function toOpenApiReleaseListItem(ReleaseListItem $release): OpenApiReleaseListItem
     {
-        return new OpenApiReleaseListItem([
-            'color' => $release->color,
-        ])
+        return new OpenApiReleaseListItem()
             ->setReleaseId($release->releaseId)
             ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setDescription($release->description)
+            ->setColor($release->color)
             ->setOrderNo($release->orderNo)
             ->setFormats(array_map($this->toOpenApiReleaseFormat(...), $release->formats))
             ->setMedia(array_map($this->toOpenApiReleaseMediumItem(...), $release->media));
