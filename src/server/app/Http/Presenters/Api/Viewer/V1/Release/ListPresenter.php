@@ -51,7 +51,7 @@ class ListPresenter
     private function toOpenApiReleaseListItem(ReleaseListItem $release): OpenApiReleaseListItem
     {
         return new OpenApiReleaseListItem([
-            'jacket_art_url' => $release->jacketArtUrl,
+            'color' => $release->color,
         ])
             ->setReleaseId($release->releaseId)
             ->setName($release->name)

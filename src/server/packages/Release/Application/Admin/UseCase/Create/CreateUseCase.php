@@ -34,7 +34,7 @@ readonly class CreateUseCase
                 $inputData->name,
                 $inputData->releasedOn,
                 $inputData->description,
-                $inputData->jacketArtUrl,
+                $inputData->color,
                 $inputData->isDisplay,
                 $inputData->orderNo,
                 $inputData->formatValues,

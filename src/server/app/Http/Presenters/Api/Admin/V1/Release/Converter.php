@@ -20,7 +20,7 @@ class Converter
     public function toOpenApiRelease(Release $release): OpenApiRelease
     {
         return new OpenApiRelease([
-            'jacket_art_url' => $release->jacketArtUrl?->value,
+            'color' => $release->color->value,
         ])
             ->setReleaseId($release->releaseId->value)
             ->setReleaseGroupId($release->releaseGroupId->value)
