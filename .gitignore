@@ -1,0 +1,7 @@
+mise.*.toml
+!mise.ci.toml
+
+.worktree/
+
+# APM dependencies
+apm_modules/

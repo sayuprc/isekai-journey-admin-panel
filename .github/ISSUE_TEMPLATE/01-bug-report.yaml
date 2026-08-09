@@ -1,0 +1,24 @@
+name: バグレポート
+description: 意図しない挙動が発生した場合
+
+labels:
+  - "bug"
+
+projects:
+  - "sayuprc/18"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: バグの内容
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 再現手順
+    validations:
+      required: true

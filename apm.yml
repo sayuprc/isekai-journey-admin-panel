@@ -1,0 +1,11 @@
+name: isekai-observatory
+version: 1.0.0
+description: Shared agent instructions
+author: sayuprc
+target:
+  - claude
+  - codex
+  - cursor
+dependencies:
+  apm: []
+  mcp: []

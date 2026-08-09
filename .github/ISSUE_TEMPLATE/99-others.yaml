@@ -1,0 +1,15 @@
+name: その他
+description: 上記に当てはまらない場合
+
+projects:
+  - "sayuprc/18"
+
+assignees:
+  - "sayuprc"
+
+body:
+  - type: textarea
+    attributes:
+      label: 内容
+    validations:
+      required: true

@@ -1,0 +1,80 @@
+[env]
+SERVER_IMAGE = "ghcr.io/sayuprc/isekai-observatory-api:{{vars.server_tag}}"
+OPENAPI_IMAGE = "ghcr.io/sayuprc/openapi-generator:{{vars.openapi_tag}}"
+MYSQL_IMAGE = "ghcr.io/sayuprc/isekai-observatory-mysql:{{vars.mysql_tag}}"
+
+[tasks."build:php"]
+description = "CI 向けに PHP イメージをビルドして GHCR にプッシュする"
+run = '''
+touch ./infra/local/docker/php/certs/rootCA.pem
+docker build -t $SERVER_IMAGE ./infra/local/docker/php \
+  --build-arg TAG={{vars.server_tag}} \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  --build-arg USERNAME=$(id -u -n) \
+  --build-arg GROUPNAME=$(id -g -n)
+docker push $SERVER_IMAGE
+'''
+
+[tasks."build:openapi-generator"]
+description = "CI 向けに OpenAPI Generator イメージをビルドして GHCR にプッシュする"
+run = '''
+docker build -t $OPENAPI_IMAGE ./infra/local/docker/openapi-generator \
+  --build-arg TAG={{vars.openapi_tag}} \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  --build-arg USERNAME=$(id -u -n) \
+  --build-arg GROUPNAME=$(id -g -n)
+docker push $OPENAPI_IMAGE
+'''
+
+[tasks."build:mysql"]
+description = "CI 向けに MySQL イメージをビルドして GHCR にプッシュする"
+run = '''
+docker build -t $MYSQL_IMAGE ./infra/local/docker/mysql \
+  --build-arg TAG={{vars.mysql_tag}}
+docker push $MYSQL_IMAGE
+'''
+
+[tasks.up]
+description = "CI 環境でコンテナを起動する"
+run = "docker compose up -d php"
+
+[tasks."up:test"]
+description = "CI 環境でテスト用コンテナを起動する"
+run = "docker compose up -d php mysql"
+
+[tasks."api:composer:install"]
+description = "CI 環境で composer install を実行する"
+run = "docker compose exec -T php composer install -n --prefer-dist"
+
+[tasks."setup:env"]
+description = "CI 環境の環境変数をセットアップする"
+run = '''
+cp src/server/.env.example src/server/.env
+docker compose exec -T php php artisan key:generate
+'''
+
+[tasks.migrate]
+description = "CI 環境でスキーマをデータベースに適用する"
+dir = "src/server/database/atlas"
+run = 'atlas schema apply --env local --var "schema_name=${DB_DATABASE}" --auto-approve'
+
+[tasks.migrate.env]
+_.file = "src/server/.env"
+
+[tasks."admin:generate"]
+description = "CI 環境でクライアントコード生成を行い、差分をチェックする"
+dir = "src"
+run = '''
+bun --filter admin generate:api
+if [ -n "$(git status --porcelain)" ]; then
+  echo "自動生成コードに差分があります"
+  git status
+  exit 1
+fi
+'''
+
+[tasks."pnpm:install"]
+dir = "src"
+run = "pnpm i --frozen-lockfile"

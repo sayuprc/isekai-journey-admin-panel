@@ -1,0 +1,15 @@
+name: Setup mise
+description: Install mise using vars.mise_version from mise.toml
+
+runs:
+  using: composite
+  steps:
+    - name: Read mise version
+      id: mise-version
+      shell: bash
+      run: echo "version=$(./tools/read-mise-value.sh mise_version)" >> "$GITHUB_OUTPUT"
+
+    - name: Setup mise
+      uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+      with:
+        version: ${{ steps.mise-version.outputs.version }}

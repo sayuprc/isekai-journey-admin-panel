@@ -1,0 +1,72 @@
+# root
+
+.agents/
+.apm/
+.claude/
+.codex/
+.git/
+.github/
+.vs/
+
+docs/
+infra/local/
+tools/
+
+src/biome.json
+
+AGENTS.md
+ARCHITECTURE.md
+CLAUDE.md
+FRONTEND.md
+PLANS.md
+apm.lock.yaml
+apm.yml
+compose.yaml
+lefthook.yml
+mise.ci.toml
+mise.local.toml
+
+# common
+
+**/.vscode/
+
+**/.editorconfig
+**/.env.*
+**/.gitignore
+**/README.md
+
+# contracts
+
+src/contracts/
+!src/contracts/generated/oas/
+!src/contracts/package.json
+
+# admin
+
+src/admin/.stylelintignore
+src/admin/biome.json
+src/admin/env.d.ts
+src/admin/openapi-ts.config.ts
+src/admin/stylelint.config.mjs
+
+# viewer
+
+src/viewer/.stylelintignore
+src/viewer/biome.json
+src/viewer/env.d.ts
+src/viewer/openapi-ts.config.ts
+src/viewer/stylelint.config.mjs
+
+# server
+
+src/server/tests/
+src/server/tools/
+
+src/server/.gitattributes
+src/server/baseline.php
+src/server/ecs.php
+src/server/infection.json5
+src/server/phparkitect.php
+src/server/phpmetrics.json
+src/server/phpstan.neon
+src/server/phpunit.xml

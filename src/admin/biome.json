@@ -1,0 +1,24 @@
+{
+  "extends": ["../biome.json"],
+  "root": false,
+  "files": { "includes": ["**", "!src/generated"] },
+  "linter": {
+    "enabled": false
+  },
+  "assist": {
+    "enabled": false
+  },
+  "javascript": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": false
+    },
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}

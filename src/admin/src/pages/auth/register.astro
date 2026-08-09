@@ -1,0 +1,12 @@
+---
+import { RegisterForm } from '../../components/auth/RegisterForm';
+import SimpleLayout from '../../layouts/SimpleLayout.astro';
+
+const token = Astro.url.searchParams.get('token') ?? '';
+---
+
+<SimpleLayout pageTitle="登録">
+  <div class="flex min-h-[70vh] items-center justify-center">
+    <RegisterForm initialToken={token} client:load />
+  </div>
+</SimpleLayout>
