@@ -1,36 +1,24 @@
 ---
 import { youtubeThumbnailFromUrl, youtubeThumbnailSrcset } from '../../features/media/labels';
-import type { SongMedia, SongReleaseGroup } from '../../features/songs/types';
-import { JACKET_WIDTHS, assetImageSrcset, assetImageUrl } from '../../shared/image';
+import type { SongMedia } from '../../features/songs/types';
 
 interface Props {
   songId: string;
   title: string;
   index: number;
   media?: SongMedia[];
-  releaseGroups?: SongReleaseGroup[];
   aspectRatio?: string;
   /** ファーストビューに入る画像だけ eager にする。遅延したままだと LCP が伸びる */
   loading?: 'lazy' | 'eager';
 }
 
-const { index, media = [], releaseGroups = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
+const { index, media = [], aspectRatio = '16 / 9', loading = 'lazy' } = Astro.props;
 
 // プラットフォームとサムネイルは状態として保持せず url から導出する。
 // メディアがあれば最初にサムネイルを導出できたものを採用する。
-const mediaThumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
+const thumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
 
-// メディアから導出できなければ収録リリースの最初の代表ジャケットで代替する
-const jacketArtUrl = releaseGroups.reduce<string | null>((found, entry) => found ?? entry.jacketArtUrl, null);
-
-const thumbnailUrl = mediaThumbnailUrl
-  ?? (jacketArtUrl === null ? null : assetImageUrl(jacketArtUrl, 640));
-
-const thumbnailSrcset = mediaThumbnailUrl !== null
-  ? youtubeThumbnailSrcset(mediaThumbnailUrl)
-  : jacketArtUrl !== null
-    ? assetImageSrcset(jacketArtUrl, JACKET_WIDTHS)
-    : undefined;
+const thumbnailSrcset = thumbnailUrl === null ? undefined : youtubeThumbnailSrcset(thumbnailUrl);
 
 const sequence = String(index + 1).padStart(2, '0');
 ---
