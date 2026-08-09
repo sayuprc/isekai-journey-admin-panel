@@ -2089,12 +2089,6 @@ body.drawer-lock {
   white-space: nowrap;
 }
 
-.jacket-art,
-.mv-thumb {
-  position: relative;
-  overflow: hidden;
-}
-
 .media-detail-thumbnail-link {
   position: relative;
   display: block;
@@ -2188,47 +2182,6 @@ body.drawer-lock {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 7%);
 }
 
-.jacket-art {
-  aspect-ratio: var(--tile-aspect, 1 / 1);
-  background:
-    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--tile-color) 66%, transparent), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, color-mix(in oklab, var(--tile-color) 40%, transparent), transparent 60%),
-    linear-gradient(135deg, var(--tile-color), color-mix(in oklab, var(--tile-color) 60%, transparent));
-}
-
-.jacket-art::before,
-.mv-thumb::before {
-  position: absolute;
-  inset: 0;
-  content: "";
-}
-
-.jacket-art::before {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 8px);
-}
-
-.jacket-art-label {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-
-.jacket-art-mark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 60%;
-  height: 60%;
-  opacity: 0.25;
-  transform: translate(-50%, -50%);
-}
-
 /* サムネイルが無い楽曲は収録リリースの代表色を地に敷く */
 
 .song-tile {
@@ -2287,7 +2240,9 @@ body.drawer-lock {
 }
 
 .mv-thumb {
+  position: relative;
   aspect-ratio: 16 / 9;
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
@@ -2299,6 +2254,9 @@ body.drawer-lock {
 }
 
 .mv-thumb::before {
+  position: absolute;
+  inset: 0;
+  content: "";
   background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px);
 }
 
