@@ -291,7 +291,7 @@ export type ReleaseGroupTitle = string;
 export type ReleaseId = string;
 
 /**
- * リリース版名
+ * リリース版名。任意項目で、無しは空文字
  */
 export type ReleaseName = string;
 

@@ -283,6 +283,52 @@ class CreateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canCreateWithEmptyName(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $this->withAuth()
+            ->postJson(route(ReleaseRouteMap::Create), [
+                'releaseGroupId' => $releaseGroupId,
+                'name' => '',
+                'releasedOn' => '2026-05-09',
+                'description' => '',
+                'color' => '#989899',
+                'isDisplay' => true,
+                'orderNo' => 1,
+                'formatValues' => [ReleaseFormat::Digital->value],
+                'media' => [],
+            ])->assertStatus(200)
+            ->assertJson(
+                static fn (AssertableJson $json) => $json
+                    ->has(
+                        'release',
+                        static fn (AssertableJson $json) => $json
+                            ->whereType('releaseId', 'string')
+                            ->where('releaseGroupId', $releaseGroupId)
+                            ->where('name', '')
+                            ->where('releasedOn', '2026-05-09')
+                            ->where('description', '')
+                            ->where('color', '#989899')
+                            ->where('isDisplay', true)
+                            ->where('orderNo', 1)
+                            ->where('formatValues', [ReleaseFormat::Digital->value])
+                            ->where('media', []),
+                    ),
+            );
+
+        $this->assertDatabaseHas('releases', [
+            'name' => '',
+            'is_display' => true,
+            'order_no' => 1,
+        ]);
+    }
+
+    #[Test]
     public function createFailsWhenFormatValuesIsEmpty(): void
     {
         $releaseGroupId = $this->generateUuid();

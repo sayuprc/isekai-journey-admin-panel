@@ -17,8 +17,7 @@ scalar releaseGroupTitle extends string;
 @doc("リリースID")
 scalar releaseId extends uuid;
 
-@doc("リリース版名")
-@minLength(1)
+@doc("リリース版名。任意項目で、無しは空文字")
 scalar releaseName extends string;
 
 @doc("発売日")

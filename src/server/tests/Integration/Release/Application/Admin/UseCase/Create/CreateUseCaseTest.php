@@ -74,6 +74,36 @@ class CreateUseCaseTest extends DatabaseTestCase
     }
 
     #[Test]
+    public function canCreateWithEmptyName(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $result = $this->getInstance()->handle(new CreateInputData(
+            releaseGroupId: $releaseGroupId,
+            name: '',
+            releasedOn: '2026-05-09',
+            description: '',
+            color: '#4a5a78',
+            isDisplay: true,
+            orderNo: 1,
+            formatValues: [ReleaseFormat::Digital->value],
+            media: [],
+        ));
+
+        $this->assertSame('', $result->release->name->value);
+        $this->assertDatabaseHas('releases', [
+            'name' => '',
+            'color' => '#4a5a78',
+            'is_display' => true,
+            'order_no' => 1,
+        ]);
+    }
+
+    #[Test]
     public function canCreateWithTitleOnlyTrack(): void
     {
         $songId = $this->generateUuid();

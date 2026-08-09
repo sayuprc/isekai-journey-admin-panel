@@ -184,7 +184,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
 
     const { data, error, status } = await client.api.releases.post({
       releaseGroupId: props.releaseGroupId,
-      name: name(),
+      name: name().trim(),
       releasedOn: releasedOn(),
       description: description(),
       color: color(),
@@ -214,13 +214,12 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
           <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
           <div class="grid gap-5 md:grid-cols-2">
             <div>
-              <label class="label">版名</label>
+              <label class="label">版名(任意)</label>
               <input
                 type="text"
                 class="input w-full"
                 value={name()}
                 onInput={e => setName(e.currentTarget.value)}
-                required
                 placeholder="通常盤 / 初回限定盤 / 配信 など"
                 classList={{ 'input-error': !!getFieldError('name') }}
               />
