@@ -4,7 +4,7 @@
 
 ## Status
 
-planned
+in-progress
 
 ## Background
 
@@ -41,12 +41,12 @@ planned
 
 ## Steps
 
-- [ ] `ReleaseVersionBody.astro` に版ごとの色帯を入れ、`has-jacket` の分岐とスタイルを削除する
-- [ ] `SongTile.astro` のアイコンフォールバックに収録リリースの色を敷く。
+- [x] `ReleaseVersionBody.astro` に版ごとの色帯を入れ、`has-jacket` の分岐とスタイルを削除する
+- [x] `SongTile.astro` のアイコンフォールバックに収録リリースの色を敷く。
       色の採り方は従来のジャケットと同じく `releaseGroups` の先頭から最初に見つかったものを使う
-- [ ] `SongDetailContent.astro` の収録リリースに色見本を入れる
-- [ ] `viewer.css` の `.jacket-art` 依存スタイルのうち、この 2 箇所に紐づくものを整理する
-- [ ] メディア未登録の 60 曲が一覧でどう見えるか確認する
+- [x] `SongDetailContent.astro` の収録リリースに色見本を入れる
+- [x] `viewer.css` の `.jacket-art` 依存スタイルのうち、この 2 箇所に紐づくものを整理する
+- [x] メディア未登録の楽曲が一覧でどう見えるか確認する
 
 ## Decision Log
 
@@ -55,7 +55,10 @@ planned
 - 2026-08-09: メディア未登録の楽曲は収録リリースの色を地に敷く。無地のアイコンを 60 枚出すのは避けたく、YouTube サムネイル 311 枚を捨てるのは廃止の理由と釣り合わないため
 - 2026-08-09: 楽曲タイルの色は `releaseGroups` の先頭から最初に見つかったものを採る。既存の導出規則をそのまま流用でき、新しい並べ替えを足さずに済む
 - 2026-08-09: リリース詳細の版セクションには版ごとの色帯を出す。効くのは版が複数ある 4 グループだけだが、色を版に持つ判断と整合する
+- 2026-08-09: 収録リリースが無いカバー曲などは色を敷けないので、従来のアイコンフォールバックのまま残す
 
 ## Validation
 
--
+- `mise run viewer:check` 通過
+- `bun --filter viewer build` 通過。楽曲一覧 371 曲のうち YouTube サムネ 309・色フォールバック 23・収録リリース無しのアイコン 39。
+  `has-jacket` / `release-version-art` は出力から消えている
