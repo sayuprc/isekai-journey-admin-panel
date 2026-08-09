@@ -1570,6 +1570,49 @@ body.drawer-lock {
   color: var(--fg-muted);
 }
 
+/* ホームの最新楽曲と最新リリースを横並びにして、空いていた右半分を使い切る */
+
+.home-feature-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 600px), 1fr));
+  gap: 64px;
+}
+
+/* 2 カラムに割れない幅ではカードを中央に置き、右側だけが空く状態を作らない
+   見出しの罫線もカードと同じ幅で終わらせる */
+
+.home-feature .section-head,
+.home-feature .feature-grid-link,
+.home-feature .feature-release {
+  max-width: 660px;
+  margin-inline: auto;
+}
+
+.home-feature .feature-grid-link {
+  --feature-art-size: 240px;
+
+  gap: 28px;
+}
+
+/* 本文が狭くなるので、見出しと収録曲リストをその幅に収まる形に落とす */
+
+.home-feature .feature-title {
+  font-size: 30px;
+}
+
+.home-feature .feature-track-list {
+  grid-template-columns: 1fr;
+}
+
+/* 説明文はジャケットの縦幅までを見せて残りをフェードで切る */
+
+.home-feature .feature-summary-fill {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+}
+
 /* ---------- リリース一覧 (年ごとの台帳) ---------- */
 
 .release-year {
@@ -2334,7 +2377,6 @@ body.drawer-lock {
 @media (width <= 1280px) {
 
   .profile-grid,
-  .feature-grid-link,
   .media-featured-grid {
     grid-template-columns: 1fr;
   }
@@ -2351,17 +2393,6 @@ body.drawer-lock {
   .media-mosaic {
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: 164px;
-  }
-
-  /* 1 カラム時はサムネ縦幅に固定せず、リストは上限だけ残す */
-
-  .feature-grid-link:has(.feature-art-link) .feature-body {
-    height: auto;
-  }
-
-  .feature-track-list {
-    grid-template-columns: 1fr;
-    max-height: 320px;
   }
 
   .detail-panel {
@@ -2514,6 +2545,21 @@ body.drawer-lock {
   .media-list-row > :last-child,
   .media-list-row .label-mono {
     display: none;
+  }
+
+  /* 横並びだと本文が狭くなりすぎるので縦積みにし、サムネ縦幅への本文固定を外す */
+
+  .feature-grid-link {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-grid-link:has(.feature-art-link) .feature-body {
+    height: auto;
+  }
+
+  .feature-track-list {
+    grid-template-columns: 1fr;
+    max-height: 320px;
   }
 
   .detail-panel {
