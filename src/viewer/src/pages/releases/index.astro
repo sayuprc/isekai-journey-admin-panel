@@ -79,7 +79,6 @@ const years = [...new Set(releaseGroups.map(releaseGroup => releaseGroup.firstRe
                         class="release-row"
                         style={`--release-color:${representativeColor(releaseGroup)};`}
                       >
-                        <span class="release-row-chip" aria-hidden="true" />
                         <span class="release-row-title">{releaseGroup.title}</span>
                         <span class="release-row-type">{releaseGroup.type.name}</span>
                         <span class="label-mono release-row-date">{releaseGroup.firstReleasedOn.slice(5).replace('-', '.')}</span>
