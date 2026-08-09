@@ -13,9 +13,9 @@ export function isLinkableTrack(track: ReleaseTrack): track is ReleaseTrack & { 
   return track.songId !== null && track.isDisplay;
 }
 
-/** 代表ジャケット: 公開リリースを発売日順に見て最初に設定されているもの。 */
-export function representativeJacketArtUrl(releaseGroup: ReleaseGroup): string | null {
-  return releaseGroup.releases.find(release => release.jacketArtUrl !== null)?.jacketArtUrl ?? null;
+/** 代表色: 公開リリースを発売日順に見て最初のもの。 */
+export function representativeColor(releaseGroup: ReleaseGroup): string {
+  return releaseGroup.releases[0].color;
 }
 
 /** グループ全体の提供形態（傘下リリースの和集合、値順）。 */

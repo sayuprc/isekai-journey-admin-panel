@@ -1,10 +1,8 @@
 ---
-import JacketArt from '../components/viewer/JacketArt.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
 import SongTile from '../components/viewer/SongTile.astro';
 import TrackChip from '../components/viewer/TrackChip.astro';
 import { releaseGroupContentRepository } from '../features/releases/content';
-import { representativeJacketArtUrl } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
 import { songContentRepository } from '../features/songs/content';
 import Layout from '../layouts/Layout.astro';
@@ -51,7 +49,6 @@ const siteStats = await siteStatsRepository.get();
               title={latestSong.title}
               index={0}
               media={latestSong.media}
-              releaseGroups={latestSong.releaseGroups}
               aspectRatio="1 / 1"
               loading="eager"
             />
@@ -74,13 +71,6 @@ const siteStats = await siteStatsRepository.get();
       <section class="shell">
         <SectionHead title="最新リリース" />
         <div class="feature-grid-link">
-          <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
-            <JacketArt
-              imageUrl={representativeJacketArtUrl(latestReleaseGroup)}
-              label={latestReleaseGroup.title}
-              sizes="(max-width: 1100px) calc(100vw - 40px), 320px"
-            />
-          </a>
           <div class="feature-body">
             <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
             <h3 class="feature-title">
