@@ -42,10 +42,9 @@ class Converter
 
     public function toOpenApiReferencedRelease(ReleaseGroupReferencedRelease $release): OpenApiReleaseGroupReferencedRelease
     {
-        return new OpenApiReleaseGroupReferencedRelease([
-            'name' => $release->name,
-        ])
+        return new OpenApiReleaseGroupReferencedRelease()
             ->setReleaseId($release->releaseId)
+            ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setColor($release->color)
             ->setIsDisplay($release->isDisplay)

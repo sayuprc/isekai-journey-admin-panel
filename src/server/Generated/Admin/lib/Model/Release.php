@@ -98,7 +98,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     protected static array $openAPINullables = [
         'release_id' => false,
         'release_group_id' => false,
-        'name' => true,
+        'name' => false,
         'released_on' => false,
         'description' => false,
         'color' => false,
@@ -347,10 +347,6 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['name'] === null) {
             $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
-        }
-
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
         }
@@ -466,27 +462,15 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name リリース版名。任意項目で、無しは null
+     * @param string $name リリース版名。任意項目で、無しは空文字
      *
      * @return self
      */
     public function setName($name)
     {
         if (is_null($name)) {
-            array_push($this->openAPINullablesSetToNull, 'name');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('name', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-
-        if (!is_null($name) && (mb_strlen($name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $name when calling Release., must be bigger than or equal to 1.');
-        }
-
         $this->container['name'] = $name;
 
         return $this;

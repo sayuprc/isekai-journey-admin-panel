@@ -57,7 +57,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertSame('初回限定盤', $result->release->name?->value);
+        $this->assertSame('初回限定盤', $result->release->name->value);
         $this->assertSame($releaseGroupId, $result->release->releaseGroupId->value);
         $this->assertSame(10, $result->release->orderNo->value);
         $this->assertCount(2, $result->release->media->toGeneric());
@@ -74,7 +74,7 @@ class CreateUseCaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function canCreateWithoutName(): void
+    public function canCreateWithEmptyName(): void
     {
         $releaseGroupId = $this->generateUuid();
 
@@ -84,7 +84,7 @@ class CreateUseCaseTest extends DatabaseTestCase
 
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,
-            name: null,
+            name: '',
             releasedOn: '2026-05-09',
             description: '',
             color: '#4a5a78',
@@ -94,9 +94,9 @@ class CreateUseCaseTest extends DatabaseTestCase
             media: [],
         ));
 
-        $this->assertNull($result->release->name);
+        $this->assertSame('', $result->release->name->value);
         $this->assertDatabaseHas('releases', [
-            'name' => null,
+            'name' => '',
             'color' => '#4a5a78',
             'is_display' => true,
             'order_no' => 1,

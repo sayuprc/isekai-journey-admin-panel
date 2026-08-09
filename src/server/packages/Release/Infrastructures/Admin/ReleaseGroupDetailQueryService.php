@@ -56,7 +56,7 @@ readonly class ReleaseGroupDetailQueryService implements ReleaseGroupDetailQuery
         return array_map(
             fn (array $row): ReleaseGroupReferencedRelease => new ReleaseGroupReferencedRelease(
                 $this->converter->toUuid(Row::string($row, 'release_id')),
-                Row::nullableString($row, 'name'),
+                Row::string($row, 'name'),
                 Row::string($row, 'released_on'),
                 Row::string($row, 'color'),
                 Row::bool($row, 'is_display'),

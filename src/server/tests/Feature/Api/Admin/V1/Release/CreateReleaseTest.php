@@ -283,7 +283,7 @@ class CreateReleaseTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function canCreateWithoutName(): void
+    public function canCreateWithEmptyName(): void
     {
         $releaseGroupId = $this->generateUuid();
 
@@ -294,7 +294,7 @@ class CreateReleaseTest extends DatabaseTestCase
         $this->withAuth()
             ->postJson(route(ReleaseRouteMap::Create), [
                 'releaseGroupId' => $releaseGroupId,
-                'name' => null,
+                'name' => '',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
                 'color' => '#989899',
@@ -310,7 +310,7 @@ class CreateReleaseTest extends DatabaseTestCase
                         static fn (AssertableJson $json) => $json
                             ->whereType('releaseId', 'string')
                             ->where('releaseGroupId', $releaseGroupId)
-                            ->where('name', null)
+                            ->where('name', '')
                             ->where('releasedOn', '2026-05-09')
                             ->where('description', '')
                             ->where('color', '#989899')
@@ -322,7 +322,7 @@ class CreateReleaseTest extends DatabaseTestCase
             );
 
         $this->assertDatabaseHas('releases', [
-            'name' => null,
+            'name' => '',
             'is_display' => true,
             'order_no' => 1,
         ]);

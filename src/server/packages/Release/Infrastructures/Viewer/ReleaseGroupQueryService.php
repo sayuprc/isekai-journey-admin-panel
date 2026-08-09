@@ -136,7 +136,7 @@ readonly class ReleaseGroupQueryService implements ReleaseGroupQueryServiceInter
 
             $grouped[Row::string($row, 'release_group_id')][] = new ReleaseListItem(
                 $this->converter->toUuid($binReleaseId),
-                Row::nullableString($row, 'name'),
+                Row::string($row, 'name'),
                 Row::string($row, 'released_on'),
                 Row::string($row, 'description'),
                 Row::string($row, 'color'),

@@ -50,10 +50,9 @@ class ListPresenter
 
     private function toOpenApiReleaseListItem(ReleaseListItem $release): OpenApiReleaseListItem
     {
-        return new OpenApiReleaseListItem([
-            'name' => $release->name,
-        ])
+        return new OpenApiReleaseListItem()
             ->setReleaseId($release->releaseId)
+            ->setName($release->name)
             ->setReleasedOn(new DateTime($release->releasedOn))
             ->setDescription($release->description)
             ->setColor($release->color)

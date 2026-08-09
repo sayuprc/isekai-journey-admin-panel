@@ -104,7 +104,7 @@ export const DetailView = (props: DetailViewProps) => {
 const ReleaseForm = (props: ReleaseFormProps) => {
   const groupUrl = `/release-groups/${props.data.release.releaseGroupId}`;
 
-  const [name, setName] = createSignal(props.data.release.name ?? '');
+  const [name, setName] = createSignal(props.data.release.name);
   const [releasedOn, setReleasedOn] = createSignal(normalizeDateValue(props.data.release.releasedOn));
   const [description, setDescription] = createSignal(props.data.release.description);
   const [color, setColor] = createSignal(props.data.release.color);
@@ -129,7 +129,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
     }
 
     const { data, error, status } = await client.api.releases({ releaseId }).put({
-      name: name().trim() === '' ? null : name().trim(),
+      name: name().trim(),
       releasedOn: releasedOn(),
       description: description(),
       color: color(),
@@ -199,7 +199,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
             <div class="grid gap-5 md:grid-cols-2">
               <div>
-                <label class="label">版名（任意）</label>
+                <label class="label">版名(任意)</label>
                 <input
                   type="text"
                   class="input w-full"

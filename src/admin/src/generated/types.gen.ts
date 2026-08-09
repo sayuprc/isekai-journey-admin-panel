@@ -315,7 +315,7 @@ export type RegisterStartResponse = {
 export type Release = {
     releaseId: ReleaseId;
     releaseGroupId: ReleaseGroupId;
-    name: ReleaseName | null;
+    name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
     color: Color;
@@ -327,7 +327,7 @@ export type Release = {
 
 export type ReleaseCreateRequest = {
     releaseGroupId: ReleaseGroupId;
-    name: ReleaseName | null;
+    name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
     color: Color;
@@ -389,7 +389,7 @@ export type ReleaseGroupGetResponse = {
  */
 export type ReleaseGroupReferencedRelease = {
     releaseId: ReleaseId;
-    name: ReleaseName | null;
+    name: ReleaseName;
     releasedOn: ReleasedOn;
     color: Color;
     isDisplay: boolean;
@@ -443,7 +443,7 @@ export type ReleaseReferencedSong = {
 };
 
 export type ReleaseUpdateRequest = {
-    name: ReleaseName | null;
+    name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
     color: Color;
@@ -805,7 +805,7 @@ export type ReleaseGroupTitle = string;
 export type ReleaseId = string;
 
 /**
- * リリース版名。任意項目で、無しは null
+ * リリース版名。任意項目で、無しは空文字
  */
 export type ReleaseName = string;
 

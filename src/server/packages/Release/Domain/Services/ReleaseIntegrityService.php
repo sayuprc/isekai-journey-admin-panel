@@ -39,7 +39,7 @@ class ReleaseIntegrityService
      */
     public function prepareForCreate(
         string $releaseGroupId,
-        ?string $name,
+        string $name,
         string $releasedOn,
         string $description,
         string $color,
@@ -60,7 +60,7 @@ class ReleaseIntegrityService
     public function prepareForUpdate(
         string $releaseId,
         string $releaseGroupId,
-        ?string $name,
+        string $name,
         string $releasedOn,
         string $description,
         string $color,
@@ -79,7 +79,7 @@ class ReleaseIntegrityService
     private function prepare(
         string $releaseId,
         string $releaseGroupId,
-        ?string $name,
+        string $name,
         string $releasedOn,
         string $description,
         string $color,
@@ -108,7 +108,7 @@ class ReleaseIntegrityService
     private function build(
         string $releaseId,
         string $releaseGroupId,
-        ?string $name,
+        string $name,
         string $releasedOn,
         string $description,
         string $color,
@@ -120,7 +120,7 @@ class ReleaseIntegrityService
         return new Release(
             new ReleaseId($releaseId),
             new ReleaseGroupId($releaseGroupId),
-            is_null($name) ? null : new ReleaseName($name),
+            new ReleaseName($name),
             $this->toReleasedOn($releasedOn),
             new Description($description),
             new Color($color),

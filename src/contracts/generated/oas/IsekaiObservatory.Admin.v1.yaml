@@ -3051,9 +3051,7 @@ components:
         releaseGroupId:
           $ref: '#/components/schemas/releaseGroupId'
         name:
-          anyOf:
-            - $ref: '#/components/schemas/releaseName'
-            - type: 'null'
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
@@ -3090,9 +3088,7 @@ components:
         releaseGroupId:
           $ref: '#/components/schemas/releaseGroupId'
         name:
-          anyOf:
-            - $ref: '#/components/schemas/releaseName'
-            - type: 'null'
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
@@ -3221,9 +3217,7 @@ components:
         releaseId:
           $ref: '#/components/schemas/releaseId'
         name:
-          anyOf:
-            - $ref: '#/components/schemas/releaseName'
-            - type: 'null'
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         color:
@@ -3345,9 +3339,7 @@ components:
         - media
       properties:
         name:
-          anyOf:
-            - $ref: '#/components/schemas/releaseName'
-            - type: 'null'
+          $ref: '#/components/schemas/releaseName'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
@@ -3979,8 +3971,7 @@ components:
       description: リリースID
     releaseName:
       type: string
-      minLength: 1
-      description: リリース版名。任意項目で、無しは null
+      description: リリース版名。任意項目で、無しは空文字
     releasedOn:
       type: string
       format: date

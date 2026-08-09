@@ -102,7 +102,7 @@ export const CreateForm = () => {
     return {
       status: 'ok',
       initialValues: {
-        name: data.release.name ?? '',
+        name: data.release.name,
         releasedOn: normalizeDateValue(data.release.releasedOn),
         description: data.release.description,
         color: data.release.color,
@@ -184,7 +184,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
 
     const { data, error, status } = await client.api.releases.post({
       releaseGroupId: props.releaseGroupId,
-      name: name().trim() === '' ? null : name().trim(),
+      name: name().trim(),
       releasedOn: releasedOn(),
       description: description(),
       color: color(),
@@ -214,7 +214,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
           <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
           <div class="grid gap-5 md:grid-cols-2">
             <div>
-              <label class="label">版名（任意）</label>
+              <label class="label">版名(任意)</label>
               <input
                 type="text"
                 class="input w-full"

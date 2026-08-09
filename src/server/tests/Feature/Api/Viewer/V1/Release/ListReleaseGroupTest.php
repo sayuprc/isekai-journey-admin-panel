@@ -263,7 +263,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
     }
 
     #[Test]
-    public function returnsNullNameWhenReleaseHasNoName(): void
+    public function returnsEmptyNameWhenReleaseHasNoName(): void
     {
         $releaseGroupId = $this->generateUuid();
         $releaseId = $this->generateUuid();
@@ -272,13 +272,13 @@ class ListReleaseGroupTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '版名なし作品', ReleaseGroupType::Album, true),
         );
         $this->storeReleases(
-            $this->createRelease($releaseId, $releaseGroupId, null, true, new ImmutableDate('2026-01-01')),
+            $this->createRelease($releaseId, $releaseGroupId, '', true, new ImmutableDate('2026-01-01')),
         );
 
         $this->get(route(ViewerReleaseGroupRouteMap::List))
             ->assertStatus(200)
             ->assertJsonPath('releaseGroups.0.releases.0.releaseId', $releaseId)
-            ->assertJsonPath('releaseGroups.0.releases.0.name', null);
+            ->assertJsonPath('releaseGroups.0.releases.0.name', '');
     }
 
     #[Test]

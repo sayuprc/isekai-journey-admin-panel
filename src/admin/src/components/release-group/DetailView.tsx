@@ -322,11 +322,11 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                             class="size-12 rounded-box border border-base-300"
                             style={{ 'background-color': release.color }}
                             title={release.color}
-                            aria-label={`${release.name ?? '版名なし'} の代表色 ${release.color}`}
+                            aria-label={`${release.name !== '' ? release.name : '版名なし'} の代表色 ${release.color}`}
                           />
                         </td>
                         <td class="min-w-40 font-medium">
-                          <Show when={release.name} fallback={<span class="text-base-content/60">—</span>}>
+                          <Show when={release.name !== ''} fallback={<span class="text-base-content/60">—</span>}>
                             {release.name}
                           </Show>
                         </td>
