@@ -369,7 +369,7 @@ components:
                   name: 初回限定盤
                   releasedOn: '2026-05-01'
                   description: ''
-                  jacketArtUrl: https://example.com/jacket.png
+                  color: '#4a5a78'
                   orderNo: 1
                   formats:
                     - name: CD
@@ -412,7 +412,7 @@ components:
         - name
         - releasedOn
         - description
-        - jacketArtUrl
+        - color
         - orderNo
         - formats
         - media
@@ -425,10 +425,8 @@ components:
           $ref: '#/components/schemas/releasedOn'
         description:
           type: string
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
+        color:
+          $ref: '#/components/schemas/color'
         orderNo:
           $ref: '#/components/schemas/orderNo'
         formats:
@@ -570,7 +568,7 @@ components:
                 name: アルバム
                 value: 2
               firstReleasedOn: '2026-05-01'
-              jacketArtUrl: https://example.com/jacket.png
+              color: '#4a5a78'
     SongListResponse:
       type: object
       required:
@@ -616,7 +614,7 @@ components:
                     name: アルバム
                     value: 2
                   firstReleasedOn: '2026-05-01'
-                  jacketArtUrl: https://example.com/jacket.png
+                  color: '#4a5a78'
           nextCursor: eyJvcmRlck5vIjoxLCJzb25nSWQiOiIzY2Q0MmMwOS1mZjNjLTRjZDItOTEzZi1hMjc5YzRlYTg5YjQifQ==
     SongMediaSummary:
       type: object
@@ -666,7 +664,7 @@ components:
         - title
         - type
         - firstReleasedOn
-        - jacketArtUrl
+        - color
       properties:
         releaseGroupId:
           $ref: '#/components/schemas/releaseGroupId'
@@ -676,11 +674,10 @@ components:
           $ref: '#/components/schemas/ReleaseGroupType'
         firstReleasedOn:
           $ref: '#/components/schemas/releasedOn'
-        jacketArtUrl:
-          anyOf:
-            - $ref: '#/components/schemas/jacketArtUrl'
-            - type: 'null'
-          description: 代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）
+        color:
+          allOf:
+            - $ref: '#/components/schemas/color'
+          description: 代表色（公開リリースを発売日順に見て最初のもの）
       description: 楽曲が収録されている公開リリースグループの概要
     SongType:
       type: object
@@ -706,15 +703,16 @@ components:
       type: string
       enum:
         - v1
+    color:
+      type: string
+      pattern: ^#[0-9a-f]{6}$
+      description: 代表色
     cursor:
       type: string
       description: 次ページを記すキー
     description:
       type: string
       description: 楽曲の説明
-    jacketArtUrl:
-      type: string
-      description: ジャケットアートURL
     limit:
       type: integer
       format: int32

@@ -25,14 +25,13 @@ scalar releaseName extends string;
 @format("date")
 scalar releasedOn extends string;
 
-@doc("ジャケットアートURL")
-scalar jacketArtUrl extends string;
+@doc("代表色")
+@pattern("^#[0-9a-f]{6}$")
+scalar color extends string;
 
 @doc("トラックの表示名。参照トラックでは楽曲名の上書き、タイトルのみトラックでは必須のタイトル")
 @minLength(1)
 scalar trackTitle extends string;
-
-alias JacketArtContentType = "image/jpeg" | "image/png" | "image/webp";
 
 @doc("リリースグループ種別")
 enum ReleaseGroupTypeValue {
@@ -81,7 +80,7 @@ model ReleaseGroupReferencedRelease {
   releaseId: releaseId;
   name: releaseName;
   releasedOn: releasedOn;
-  jacketArtUrl: jacketArtUrl | null;
+  color: color;
   isDisplay: boolean;
   orderNo: orderNo;
   formatValues: ReleaseFormatValue[];
@@ -108,7 +107,7 @@ model Release {
   name: releaseName;
   releasedOn: releasedOn;
   description: string;
-  jacketArtUrl: jacketArtUrl | null;
+  color: color;
   isDisplay: boolean;
   orderNo: orderNo;
 
