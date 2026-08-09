@@ -164,7 +164,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  content_hash: sha256:9a46063b8530ee4eb3e069702ef3b52490c1be9dd9179de803c2c85749fe07c4
 - kind: project-relative
   target: claude
   value: .claude/agents/docs-curator.md
@@ -380,7 +380,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  content_hash: sha256:9a46063b8530ee4eb3e069702ef3b52490c1be9dd9179de803c2c85749fe07c4
 - kind: project-relative
   target: codex
   value: .codex/agents/docs-curator.toml
@@ -506,7 +506,7 @@ local_deployed_file_hashes:
   .agents/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
   .agents/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .agents/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
-  .agents/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  .agents/skills/pr-creator/SKILL.md: sha256:9a46063b8530ee4eb3e069702ef3b52490c1be9dd9179de803c2c85749fe07c4
   .claude/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
   .claude/rules/01-backend.md: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
   .claude/rules/02-admin.md: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
@@ -524,7 +524,7 @@ local_deployed_file_hashes:
   .claude/skills/php-integration-test-creator/references/patterns.md: sha256:e25c4e226fcdd899d6c8ebf0ff5c863c58c37a8f86689528d485feb7c171dac8
   .claude/skills/php-unit-test-creator/SKILL.md: sha256:7f5fbddaf3f1e03c84a2def6f41e77b7a3e358a234db4e890e9f26985e3071e0
   .claude/skills/php-unit-test-creator/references/patterns.md: sha256:0cef99251faac7f46edd3edbfaf61b52679be7297ebb91f53122a1f35bed8342
-  .claude/skills/pr-creator/SKILL.md: sha256:ef868fe80851ef5352ea00461247a596cfa035c4d17d743f1beebe4ee052e313
+  .claude/skills/pr-creator/SKILL.md: sha256:9a46063b8530ee4eb3e069702ef3b52490c1be9dd9179de803c2c85749fe07c4
   .codex/agents/docs-curator.toml: sha256:70146d1484d2cef370d59638cf4657c479c1788d9c0ed84637bbf0da79bf7f46
   .cursor/agents/docs-curator.md: sha256:68a5947765c0e375c95ef0550c799522cf59f6272836c6fd3d8f5ec70f97e1e6
   .cursor/rules/01-backend.mdc: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
