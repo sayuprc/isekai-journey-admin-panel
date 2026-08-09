@@ -120,7 +120,7 @@ export type ReleaseListItem = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
     orderNo: OrderNo;
     formats: Array<ReleaseFormat>;
     media: Array<ReleaseMediumItem>;
@@ -208,9 +208,9 @@ export type SongReleaseGroupSummary = {
     type: ReleaseGroupType;
     firstReleasedOn: ReleasedOn;
     /**
-     * 代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）
+     * 代表色（公開リリースを発売日順に見て最初のもの）
      */
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
 };
 
 export type SongType = {
@@ -226,6 +226,11 @@ export type SongTypeValue = 1 | 2;
 export type Version = 'v1';
 
 /**
+ * 代表色
+ */
+export type Color = string;
+
+/**
  * 次ページを記すキー
  */
 export type Cursor = string;
@@ -234,11 +239,6 @@ export type Cursor = string;
  * 楽曲の説明
  */
 export type Description = string;
-
-/**
- * ジャケットアートURL
- */
-export type JacketArtUrl = string;
 
 /**
  * 1 度に取得する件数

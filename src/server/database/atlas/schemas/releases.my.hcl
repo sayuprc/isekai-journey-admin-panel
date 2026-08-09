@@ -27,10 +27,11 @@ table "releases" {
     type    = text
     comment = "説明"
   }
-  column "jacket_art_url" {
-    null    = true
-    type    = text
-    comment = "ジャケットアートURL"
+  column "color" {
+    null    = false
+    type    = varchar(7)
+    default = "#989899"
+    comment = "代表色"
   }
   column "is_display" {
     null    = false

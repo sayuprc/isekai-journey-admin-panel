@@ -4,7 +4,7 @@
 
 ## Status
 
-planned
+in-progress
 
 ## Background
 
@@ -49,12 +49,12 @@ viewer は型が通り画面が壊れない最小限の対応に留め、見た�
 
 ## Steps
 
-- [ ] `releases.my.hcl` の `jacket_art_url` を `color`（`varchar(7)`, NOT NULL, コメント `代表色`）へ書き換える
-- [ ] `mise run migrate:dry-run` で Atlas が rename と DROP + ADD のどちらを出すか確認する。
-      DROP + ADD になる場合は `color` に一時的な DEFAULT `#989899` を持たせ、適用後に DEFAULT を外す
-- [ ] `src/contracts` の viewer / admin から `jacketArtUrl` scalar とモデル・リクエスト定義を削除し、
-      `color` scalar（`^#[0-9a-f]{6}$`）を必須項目として追加する
-- [ ] `mise run contract:re-compile` と `api:generate` / `viewer:generate` / `admin:generate` を実行する
+- [x] `releases.my.hcl` の `jacket_art_url` を `color`（`varchar(7)`, NOT NULL, コメント `代表色`）へ書き換える
+- [x] `mise run migrate:dry-run` で Atlas の出力を確認する。DROP + ADD だったため `color` に DEFAULT `#989899` を持たせた
+- [x] `src/contracts` の viewer / admin から `jacketArtUrl` scalar とモデル・リクエスト定義を削除し、
+      `color` scalar（`^#[0-9a-f]{6}$`）を必須項目として追加する。
+      アップロード API（`uploadJacketArt`）と `ReleaseJacketArtUploadResponse` も削除した
+- [x] `mise run contract:re-compile` と `api:generate` / `viewer:generate` / `admin:generate` を実行する
 - [ ] `src/server/packages/Release` に `ReleaseColor` 値オブジェクトを追加し、`Release`・Factory・Repository・HTTP 各層を差し替える
 - [ ] `src/admin` のアップロード経路（`server/routes/releases.ts`、`utils/client.ts`、関連テスト）を削除し、
       リリース編集フォームを hex 入力に置き換える
@@ -64,10 +64,18 @@ viewer は型が通り画面が壊れない最小限の対応に留め、見た�
 
 ## Release
 
-本番へのデプロイは次の順で行う。
+Atlas はこの変更を rename ではなく DROP + ADD として計画する。
+`jacket_art_url` はカラムごと落ちるため、事前に固定値へ UPDATE しても引き継がれない。
 
-1. 手動で `UPDATE releases SET jacket_art_url = '#989899'` を実行する
-2. デプロイのマイグレーションでカラム名を `color` へ書き換える
+そのため本番へのデプロイは、マイグレーションを 1 回流すだけでよい。
+
+```sql
+ALTER TABLE `releases`
+  DROP COLUMN `jacket_art_url`,
+  ADD COLUMN `color` varchar(7) NOT NULL DEFAULT "#989899" COMMENT "代表色" AFTER `description`;
+```
+
+既存 88 行は DEFAULT で `#989899` に揃う。事前の手動 UPDATE は不要。
 
 ## Decision Log
 
@@ -80,7 +88,11 @@ viewer は型が通り画面が壊れない最小限の対応に留め、見た�
   抽出元が版のジャケットであるため。版が複数あるグループは 85 件中 4 件
 - 2026-08-09: カラムは追加せず `jacket_art_url` を `color` へ置き換える。
   併存期間を作らないぶん作業が単純になり、その間に viewer の見た目が壊れることは許容する
-- 2026-08-09: 本番は「手動で固定値へ UPDATE → デプロイのマイグレーションで rename」の順で反映する
+- 2026-08-09: 本番は「手動で固定値へ UPDATE → デプロイのマイグレーションで rename」を想定していたが、
+  Atlas が rename を検出せず DROP + ADD を計画するため取りやめた。
+  `color` に DEFAULT `#989899` を持たせてマイグレーション 1 回で完結させる
+- 2026-08-09: `color` の DEFAULT は暫定で残す。色は契約側で必須にするため DB の DEFAULT は保険でしかないが、
+  実データ投入後に外すかどうかは別途判断する
 - 2026-08-09: 移行時の色は固定値 `#989899` を入れる。実データは後日入れ直す。
   ローカルの MinIO には 88 件中 87 件のジャケットが残っているが、抽出は今回のスコープに含めない
 - 2026-08-09: 色は NOT NULL にする。事前にデータを入れる前提のため、未設定状態を表現する必要がない
