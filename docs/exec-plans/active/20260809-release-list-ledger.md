@@ -41,12 +41,14 @@ planned
 
 ## Steps
 
-- [ ] `src/viewer/src/features/releases/types.ts` に `representativeColor()` を追加する。`representativeJacketArtUrl` と同じく、公開リリースを発売日順に見て最初のものを採る
-- [ ] `index.astro` を年グルーピングに書き換える。`firstReleasedOn` の年で束ね、年内は API の返却順（新しい順）を維持する
-- [ ] 行のマークアップを 色の縦棒 / 色見本 / タイトル / 種別 / 日付 に置き換え、`data-release-entry` などフィルタ用の属性は現行のまま残す
-- [ ] `FilterBar` と `EntryStatus` の配線を維持したうえで、`EntryStatus` が年セクションの畳み込みも行えるようにする
-- [ ] `viewer.css` の `.release-grid` / `.release-card` 系を削除し、台帳のスタイルを追加する。タイトルは 2 行までの折り返しにする
+- [x] `src/viewer/src/features/releases/types.ts` に `representativeColor()` を追加する（`20260809-release-color-column.md` の viewer 剥がしで実施済み）
+- [x] `index.astro` を年グルーピングに書き換える。`firstReleasedOn` の年で束ね、年内は API の返却順（新しい順）を維持する
+- [x] 行のマークアップを 色の縦棒 / 色見本 / タイトル / 種別 / 日付 に置き換え、`data-release-entry` などフィルタ用の属性は現行のまま残す
+- [x] `FilterBar` と `EntryStatus` の配線を維持する。年セクションの畳み込みは CSS の `:has()`、
+      年ごとの件数は新設した `EntryGroupStatus` が担う
+- [x] `viewer.css` の `.release-grid` / `.release-card` 系を削除し、台帳のスタイルを追加する。タイトルは 2 行までの折り返しにする
 - [ ] 6 パレットすべてで色見本のコントラストを目視確認し、必要なら表示時に明度を丸める処理を入れる
+      （現状は全 84 件が固定値 `#989899` なので確認できない。実データ投入後に持ち越す）
 
 ## Decision Log
 
@@ -57,6 +59,10 @@ planned
 - 2026-08-09: タイトルは PC でも 2 行まで折り返す。切れる行が全体の 2 割あり例外ではないため
 - 2026-08-09: 同名・同日のリリースグループ（`再会` のシングルと EP など）への追加対応はしない。種別列で区別できる
 - 2026-08-09: 検索中も年グルーピングを維持し、0 件の年は畳む。検索の有無でレイアウトの軸が変わると結果の並び順が読めなくなるため
+- 2026-08-09: 年セクションの畳み込みは CSS の `:has()` で持つ。`FilterBar` が非表示の entry に付ける
+  `data-viewer-filter-match="false"` を否定形で見るので、属性が付いていない初期状態でも表示が維持され、JS なしで成立する
+- 2026-08-09: 年ごとの件数だけは CSS で出せないため `EntryGroupStatus` を新設する。
+  `EntryStatus` と同じく `viewer:filter-change` を購読し、件数の書き換えだけを担う
 
 ## Validation
 
