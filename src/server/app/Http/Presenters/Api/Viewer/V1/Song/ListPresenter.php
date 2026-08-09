@@ -61,7 +61,7 @@ class ListPresenter
         $type = ReleaseGroupType::from($releaseGroup->typeValue);
 
         return new OpenApiSongReleaseGroupSummary([
-            'jacket_art_url' => $releaseGroup->jacketArtUrl,
+            'color' => $releaseGroup->color,
         ])
             ->setReleaseGroupId($releaseGroup->releaseGroupId)
             ->setTitle($releaseGroup->title)

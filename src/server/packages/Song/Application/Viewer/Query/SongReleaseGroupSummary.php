@@ -11,7 +11,7 @@ readonly class SongReleaseGroupSummary
         public string $title,
         public int $typeValue,
         public string $firstReleasedOn,
-        public ?string $jacketArtUrl,
+        public string $color,
     ) {
     }
 }

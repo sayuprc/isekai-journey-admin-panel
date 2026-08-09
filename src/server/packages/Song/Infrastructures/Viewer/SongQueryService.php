@@ -190,10 +190,10 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $linkRows,
         )));
 
-        // グループごとの最古公開リリースから代表発売日とジャケットを引く。
+        // グループごとの最古公開リリースから代表発売日と代表色を引く。
         $releaseRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
-                ->withSelect(['release_group_id', 'released_on', 'jacket_art_url'])
+                ->withSelect(['release_group_id', 'released_on', 'color'])
                 ->from('releases')
                 ->where('release_group_id', 'IN', $binGroupIds)
                 ->where('is_display', '=', true)
@@ -202,16 +202,10 @@ readonly class SongQueryService implements SongQueryServiceInterface
         );
 
         $firstReleaseByGroup = [];
-        $jacketByGroup = [];
 
         foreach ($releaseRows as $row) {
             $binGroupId = Row::string($row, 'release_group_id');
             $firstReleaseByGroup[$binGroupId] ??= $row;
-
-            // 代表ジャケットは発売日順で最初に設定されているものを使う。
-            if (! isset($jacketByGroup[$binGroupId]) && ! is_null(Row::nullableString($row, 'jacket_art_url'))) {
-                $jacketByGroup[$binGroupId] = Row::string($row, 'jacket_art_url');
-            }
         }
 
         $grouped = [];
@@ -238,7 +232,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
                 Row::string($row, 'title'),
                 Row::int($row, 'type'),
                 Row::string($firstRelease, 'released_on'),
-                $jacketByGroup[$binGroupId] ?? null,
+                Row::string($firstRelease, 'color'),
             );
         }
 

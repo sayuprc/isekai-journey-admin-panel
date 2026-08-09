@@ -254,7 +254,7 @@ class ListSongTest extends DatabaseTestCase
                                     'value' => 1,
                                 ],
                                 'firstReleasedOn' => '2024-01-01',
-                                'jacketArtUrl' => null,
+                                'color' => '#989899',
                             ],
                         ],
                     ],
