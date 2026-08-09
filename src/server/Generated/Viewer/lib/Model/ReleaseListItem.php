@@ -93,7 +93,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static array $openAPINullables = [
         'release_id' => false,
-        'name' => false,
+        'name' => true,
         'released_on' => false,
         'description' => false,
         'color' => false,
@@ -415,17 +415,24 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name リリース版名
+     * @param string $name リリース版名。任意項目で、無しは null
      *
      * @return self
      */
     public function setName($name)
     {
         if (is_null($name)) {
-            throw new \InvalidArgumentException('non-nullable name cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
 
-        if ((mb_strlen($name) < 1)) {
+        if (!is_null($name) && (mb_strlen($name) < 1)) {
             throw new \InvalidArgumentException('invalid length for $name when calling ReleaseListItem., must be bigger than or equal to 1.');
         }
 

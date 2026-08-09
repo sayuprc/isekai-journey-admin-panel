@@ -244,7 +244,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
         return Release::reconstruct(
             $this->converter->toUuid(Row::string($releaseRow, 'release_id')),
             $this->converter->toUuid(Row::string($releaseRow, 'release_group_id')),
-            Row::string($releaseRow, 'name'),
+            Row::nullableString($releaseRow, 'name'),
             ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($releaseRow, 'released_on'))),
             Row::string($releaseRow, 'description'),
             Row::string($releaseRow, 'color'),

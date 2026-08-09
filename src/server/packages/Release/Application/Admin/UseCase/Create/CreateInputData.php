@@ -15,7 +15,7 @@ readonly class CreateInputData
      */
     public function __construct(
         public string $releaseGroupId,
-        public string $name,
+        public ?string $name,
         public string $releasedOn,
         public string $description,
         public string $color,

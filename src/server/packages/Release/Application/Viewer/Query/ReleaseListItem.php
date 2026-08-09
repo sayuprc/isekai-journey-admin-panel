@@ -14,7 +14,7 @@ readonly class ReleaseListItem
      */
     public function __construct(
         public string $releaseId,
-        public string $name,
+        public ?string $name,
         public string $releasedOn,
         public string $description,
         public string $color,

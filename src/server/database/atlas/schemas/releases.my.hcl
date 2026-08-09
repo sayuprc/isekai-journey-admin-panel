@@ -13,7 +13,7 @@ table "releases" {
     comment = "リリースグループID"
   }
   column "name" {
-    null    = false
+    null    = true
     type    = varchar(255)
     comment = "版名"
   }

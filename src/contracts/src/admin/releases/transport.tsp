@@ -40,7 +40,7 @@ model ReleaseGroupSearchResponse {
 
 model ReleaseCreateRequest {
   releaseGroupId: releaseGroupId;
-  name: releaseName;
+  name: releaseName | null;
   releasedOn: releasedOn;
   description: string;
   color: color;
@@ -58,7 +58,7 @@ model ReleaseCreateResponse {
 }
 
 model ReleaseUpdateRequest {
-  name: releaseName;
+  name: releaseName | null;
   releasedOn: releasedOn;
   description: string;
   color: color;

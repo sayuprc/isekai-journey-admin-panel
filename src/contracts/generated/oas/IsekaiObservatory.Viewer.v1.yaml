@@ -420,7 +420,9 @@ components:
         releaseId:
           $ref: '#/components/schemas/releaseId'
         name:
-          $ref: '#/components/schemas/releaseName'
+          anyOf:
+            - $ref: '#/components/schemas/releaseName'
+            - type: 'null'
         releasedOn:
           $ref: '#/components/schemas/releasedOn'
         description:
@@ -759,7 +761,7 @@ components:
     releaseName:
       type: string
       minLength: 1
-      description: リリース版名
+      description: リリース版名。任意項目で、無しは null
     releasedOn:
       type: string
       format: date

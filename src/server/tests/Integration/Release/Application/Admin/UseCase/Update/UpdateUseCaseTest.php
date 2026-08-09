@@ -74,7 +74,7 @@ class UpdateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertSame('新版名', $result->release->name->value);
+        $this->assertSame('新版名', $result->release->name?->value);
         // 所属先グループは更新で変わらない。
         $this->assertSame($releaseGroupId, $result->release->releaseGroupId->value);
         $this->assertSame(20, $result->release->orderNo->value);

@@ -240,7 +240,7 @@ trait EntityFactory
     protected function createRelease(
         string $releaseId,
         string $releaseGroupId,
-        string $name,
+        ?string $name,
         bool $isDisplay,
         ?ImmutableDate $releasedOn = null,
         string $description = 'テスト用リリース',
@@ -252,7 +252,7 @@ trait EntityFactory
         return new Release(
             new ReleaseId($releaseId),
             new ReleaseGroupId($releaseGroupId),
-            new ReleaseName($name),
+            is_null($name) ? null : new ReleaseName($name),
             new ReleasedOn($releasedOn ?? new ImmutableDate('2024-01-01')),
             new ReleaseDescription($description),
             new Color($color),

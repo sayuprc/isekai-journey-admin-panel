@@ -37,7 +37,7 @@ export const releases = new Elysia({ prefix: '/releases' })
     {
       body: t.Object({
         releaseGroupId: t.String(),
-        name: t.String(),
+        name: t.Union([t.String(), t.Null()]),
         releasedOn: t.String(),
         description: t.String(),
         color: t.String(),
@@ -79,7 +79,7 @@ export const releases = new Elysia({ prefix: '/releases' })
         releaseId: t.String(),
       }),
       body: t.Object({
-        name: t.String(),
+        name: t.Union([t.String(), t.Null()]),
         releasedOn: t.String(),
         description: t.String(),
         color: t.String(),

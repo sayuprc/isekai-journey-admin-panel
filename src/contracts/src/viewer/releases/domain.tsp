@@ -14,7 +14,7 @@ scalar releaseGroupTitle extends string;
 @doc("リリースID")
 scalar releaseId extends uuid;
 
-@doc("リリース版名")
+@doc("リリース版名。任意項目で、無しは null")
 @minLength(1)
 scalar releaseName extends string;
 
@@ -73,7 +73,7 @@ model ReleaseMediumItem {
 @doc("リリース（版）")
 model ReleaseListItem {
   releaseId: releaseId;
-  name: releaseName;
+  name: releaseName | null;
   releasedOn: releasedOn;
   description: string;
   color: color;

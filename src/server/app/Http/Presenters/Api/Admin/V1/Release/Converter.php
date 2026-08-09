@@ -19,10 +19,11 @@ class Converter
 {
     public function toOpenApiRelease(Release $release): OpenApiRelease
     {
-        return new OpenApiRelease()
+        return new OpenApiRelease([
+            'name' => $release->name?->value,
+        ])
             ->setReleaseId($release->releaseId->value)
             ->setReleaseGroupId($release->releaseGroupId->value)
-            ->setName($release->name->value)
             ->setReleasedOn($release->releasedOn->value->toMutable())
             ->setDescription($release->description->value)
             ->setColor($release->color->value)

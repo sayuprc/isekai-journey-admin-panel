@@ -91,7 +91,7 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'name' => false,
+        'name' => true,
         'released_on' => false,
         'description' => false,
         'color' => false,
@@ -391,17 +391,24 @@ class ReleaseUpdateRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     /**
      * Sets name
      *
-     * @param string $name リリース版名
+     * @param string $name リリース版名。任意項目で、無しは null
      *
      * @return self
      */
     public function setName($name)
     {
         if (is_null($name)) {
-            throw new \InvalidArgumentException('non-nullable name cannot be null');
+            array_push($this->openAPINullablesSetToNull, 'name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
         }
 
-        if ((mb_strlen($name) < 1)) {
+        if (!is_null($name) && (mb_strlen($name) < 1)) {
             throw new \InvalidArgumentException('invalid length for $name when calling ReleaseUpdateRequest., must be bigger than or equal to 1.');
         }
 

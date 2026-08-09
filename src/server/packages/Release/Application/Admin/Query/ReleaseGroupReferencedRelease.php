@@ -11,7 +11,7 @@ readonly class ReleaseGroupReferencedRelease
      */
     public function __construct(
         public string $releaseId,
-        public string $name,
+        public ?string $name,
         public string $releasedOn,
         public string $color,
         public bool $isDisplay,

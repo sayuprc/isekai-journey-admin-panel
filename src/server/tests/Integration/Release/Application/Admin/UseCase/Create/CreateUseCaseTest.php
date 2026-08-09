@@ -57,7 +57,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             ],
         ));
 
-        $this->assertSame('初回限定盤', $result->release->name->value);
+        $this->assertSame('初回限定盤', $result->release->name?->value);
         $this->assertSame($releaseGroupId, $result->release->releaseGroupId->value);
         $this->assertSame(10, $result->release->orderNo->value);
         $this->assertCount(2, $result->release->media->toGeneric());
@@ -71,6 +71,36 @@ class CreateUseCaseTest extends DatabaseTestCase
         ]);
         $this->assertDatabaseCount('release_media', 2);
         $this->assertDatabaseCount('release_tracks', 1);
+    }
+
+    #[Test]
+    public function canCreateWithoutName(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
+        );
+
+        $result = $this->getInstance()->handle(new CreateInputData(
+            releaseGroupId: $releaseGroupId,
+            name: null,
+            releasedOn: '2026-05-09',
+            description: '',
+            color: '#4a5a78',
+            isDisplay: true,
+            orderNo: 1,
+            formatValues: [ReleaseFormat::Digital->value],
+            media: [],
+        ));
+
+        $this->assertNull($result->release->name);
+        $this->assertDatabaseHas('releases', [
+            'name' => null,
+            'color' => '#4a5a78',
+            'is_display' => true,
+            'order_no' => 1,
+        ]);
     }
 
     #[Test]

@@ -117,7 +117,7 @@ export type ReleaseGroupTypeValue = 1 | 2 | 3 | 99;
  */
 export type ReleaseListItem = {
     releaseId: ReleaseId;
-    name: ReleaseName;
+    name: ReleaseName | null;
     releasedOn: ReleasedOn;
     description: string;
     color: Color;
@@ -291,7 +291,7 @@ export type ReleaseGroupTitle = string;
 export type ReleaseId = string;
 
 /**
- * リリース版名
+ * リリース版名。任意項目で、無しは null
  */
 export type ReleaseName = string;
 
