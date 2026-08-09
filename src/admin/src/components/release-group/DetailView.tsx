@@ -304,7 +304,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>ジャケット</th>
+                    <th>代表色</th>
                     <th>版名</th>
                     <th>発売日</th>
                     <th>表示順</th>
@@ -318,22 +318,12 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                     {release => (
                       <tr>
                         <td>
-                          <Show
-                            when={release.jacketArtUrl}
-                            fallback={(
-                              <div class="flex size-12 items-center justify-center rounded-box border border-base-300 bg-base-200 text-xs text-base-content/40">
-                                なし
-                              </div>
-                            )}
-                          >
-                            {url => (
-                              <img
-                                src={url()}
-                                alt={`${release.name} のジャケットアート`}
-                                class="size-12 rounded-box border border-base-300 object-cover"
-                              />
-                            )}
-                          </Show>
+                          <div
+                            class="size-12 rounded-box border border-base-300"
+                            style={{ 'background-color': release.color }}
+                            title={release.color}
+                            aria-label={`${release.name} の代表色 ${release.color}`}
+                          />
                         </td>
                         <td class="min-w-40 font-medium">{release.name}</td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateValue(release.releasedOn)}</td>

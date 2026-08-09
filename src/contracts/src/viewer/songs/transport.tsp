@@ -35,7 +35,7 @@ namespace IsekaiObservatory.Viewer;
           title: "テストアルバム",
           type: #{ name: "アルバム", value: ReleaseGroupTypeValue.Album },
           firstReleasedOn: "2026-05-01",
-          jacketArtUrl: "https://example.com/jacket.png",
+          color: "#4a5a78",
         }
       ],
     }

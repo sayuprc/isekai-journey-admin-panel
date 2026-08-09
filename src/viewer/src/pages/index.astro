@@ -1,16 +1,16 @@
 ---
-import JacketArt from '../components/viewer/JacketArt.astro';
 import SectionHead from '../components/viewer/SectionHead.astro';
 import SongTile from '../components/viewer/SongTile.astro';
 import TrackChip from '../components/viewer/TrackChip.astro';
 import { releaseGroupContentRepository } from '../features/releases/content';
-import { representativeJacketArtUrl } from '../features/releases/types';
+import { representativeColor } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
 import { songContentRepository } from '../features/songs/content';
 import Layout from '../layouts/Layout.astro';
 
 const latestReleaseGroup = await releaseGroupContentRepository.latest();
 const latestSong = await songContentRepository.latest();
+const latestReleaseTracks = latestReleaseGroup?.releases[0]?.media.flatMap(medium => medium.tracks) ?? [];
 
 const siteStats = await siteStatsRepository.get();
 ---
@@ -73,29 +73,19 @@ const siteStats = await siteStatsRepository.get();
     latestReleaseGroup && (
       <section class="shell">
         <SectionHead title="最新リリース" />
-        <div class="feature-grid-link">
-          <a href={`/releases/${latestReleaseGroup.releaseGroupId}`} class="feature-art-link">
-            <JacketArt
-              imageUrl={representativeJacketArtUrl(latestReleaseGroup)}
-              label={latestReleaseGroup.title}
-              sizes="(max-width: 1100px) calc(100vw - 40px), 320px"
-            />
-          </a>
-          <div class="feature-body">
-            <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
-            <h3 class="feature-title">
-              <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
-            </h3>
-            <p class="feature-summary">収録曲</p>
-            <div class="rel-list feature-track-list">
-              {
-                (latestReleaseGroup.releases[0]?.media.flatMap(medium => medium.tracks) ?? []).slice(0, 8).map(track => (
-                  <TrackChip track={track} />
-                ))
-              }
-            </div>
-            <a class="btn feature-more" href={`/releases/${latestReleaseGroup.releaseGroupId}`}>リリース詳細 →</a>
+        <div
+          class="feature-release"
+          style={`--c:${representativeColor(latestReleaseGroup)};`}
+        >
+          <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
+          <h3 class="feature-title">
+            <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
+          </h3>
+          {latestReleaseGroup.description && <p class="feature-summary">{latestReleaseGroup.description}</p>}
+          <div class="rel-list feature-track-list" aria-label="収録曲">
+            {latestReleaseTracks.map(track => <TrackChip track={track} />)}
           </div>
+          <a class="btn feature-more" href={`/releases/${latestReleaseGroup.releaseGroupId}`}>リリース詳細 →</a>
         </div>
       </section>
     )

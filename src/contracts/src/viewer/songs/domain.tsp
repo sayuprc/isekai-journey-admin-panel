@@ -41,7 +41,7 @@ model SongRelationCounts {
       title: "テストアルバム",
       type: #{ name: "アルバム", value: ReleaseGroupTypeValue.Album },
       firstReleasedOn: "2026-05-01",
-      jacketArtUrl: "https://example.com/jacket.png",
+      color: "#4a5a78",
     }
   ],
 })
@@ -67,8 +67,8 @@ model SongReleaseGroupSummary {
   type: ReleaseGroupType;
   firstReleasedOn: releasedOn;
 
-  @doc("代表ジャケット（公開リリースを発売日順に見て最初に設定されているもの）")
-  jacketArtUrl: jacketArtUrl | null;
+  @doc("代表色（公開リリースを発売日順に見て最初のもの）")
+  color: color;
 }
 
 @example(#{

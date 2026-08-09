@@ -40,7 +40,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '初回限定盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => 'https://example.com/jacket.png',
+                'color' => '#4a5a78',
                 'isDisplay' => true,
                 'orderNo' => 10,
                 'formatValues' => [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value],
@@ -69,7 +69,7 @@ class CreateReleaseTest extends DatabaseTestCase
                             ->where('name', '初回限定盤')
                             ->where('releasedOn', '2026-05-09')
                             ->where('description', '')
-                            ->where('jacketArtUrl', 'https://example.com/jacket.png')
+                            ->where('color', '#4a5a78')
                             ->where('isDisplay', true)
                             ->where('orderNo', 10)
                             ->where('formatValues', [ReleaseFormat::Cd->value, ReleaseFormat::Dvd->value])
@@ -107,7 +107,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '初回限定盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 10,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -163,7 +163,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => 'ライブ盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 10,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -214,7 +214,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '初回限定盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 10,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -261,7 +261,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '初回限定盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 10,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -297,7 +297,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '通常盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [],
@@ -314,7 +314,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '通常盤',
                 'releasedOn' => '2026-05-09',
                 'description' => '',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Digital->value],
@@ -332,7 +332,7 @@ class CreateReleaseTest extends DatabaseTestCase
                 'name' => '通常盤',
                 'releasedOn' => 'invalid-date',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Digital->value],

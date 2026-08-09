@@ -318,7 +318,7 @@ export type Release = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
     isDisplay: boolean;
     orderNo: OrderNo;
     formatValues: Array<ReleaseFormatValue>;
@@ -330,7 +330,7 @@ export type ReleaseCreateRequest = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
     isDisplay: boolean;
     orderNo: OrderNo;
     formatValues: Array<ReleaseFormatValue>;
@@ -391,7 +391,7 @@ export type ReleaseGroupReferencedRelease = {
     releaseId: ReleaseId;
     name: ReleaseName;
     releasedOn: ReleasedOn;
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
     isDisplay: boolean;
     orderNo: OrderNo;
     formatValues: Array<ReleaseFormatValue>;
@@ -432,10 +432,6 @@ export type ReleaseGroupUpdateResponse = {
     releaseGroup: ReleaseGroup;
 };
 
-export type ReleaseJacketArtUploadResponse = {
-    jacketArtUrl: JacketArtUrl;
-};
-
 /**
  * リリース収録曲の read model。参照トラックの title は楽曲の正式名(上書き名は反映しない)、タイトルのみトラックは songId: null でトラックタイトルが載る
  */
@@ -450,7 +446,7 @@ export type ReleaseUpdateRequest = {
     name: ReleaseName;
     releasedOn: ReleasedOn;
     description: string;
-    jacketArtUrl: JacketArtUrl | null;
+    color: Color;
     isDisplay: boolean;
     orderNo: OrderNo;
     formatValues: Array<ReleaseFormatValue>;
@@ -684,6 +680,11 @@ export type AuditLogId = string;
 export type AuthCeremonyId = string;
 
 /**
+ * 代表色
+ */
+export type Color = string;
+
+/**
  * 作成日時
  */
 export type CreatedAt = string;
@@ -697,11 +698,6 @@ export type Description = string;
  * メールアドレス
  */
 export type Email = string;
-
-/**
- * ジャケットアートURL
- */
-export type JacketArtUrl = string;
 
 /**
  * 歌詞リンク
@@ -2192,55 +2188,6 @@ export type ReleaseServiceCreateReleaseResponses = {
 };
 
 export type ReleaseServiceCreateReleaseResponse = ReleaseServiceCreateReleaseResponses[keyof ReleaseServiceCreateReleaseResponses];
-
-export type ReleaseServiceUploadJacketArtData = {
-    body: unknown;
-    path?: never;
-    query?: never;
-    url: '/releases/jacket-art';
-};
-
-export type ReleaseServiceUploadJacketArtErrors = {
-    /**
-     * The server could not understand the request due to invalid syntax.
-     */
-    400: ErrorResponse;
-    /**
-     * Access is unauthorized.
-     */
-    401: ErrorResponse;
-    /**
-     * Access is forbidden.
-     */
-    403: ErrorResponse;
-    /**
-     * Client error
-     */
-    422: ErrorResponse;
-    /**
-     * Server error
-     */
-    500: ErrorResponse;
-    /**
-     * Service unavailable.
-     */
-    503: unknown;
-    /**
-     * Server error
-     */
-    504: unknown;
-};
-
-export type ReleaseServiceUploadJacketArtError = ReleaseServiceUploadJacketArtErrors[keyof ReleaseServiceUploadJacketArtErrors];
-
-export type ReleaseServiceUploadJacketArtResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: ReleaseJacketArtUploadResponse;
-};
-
-export type ReleaseServiceUploadJacketArtResponse = ReleaseServiceUploadJacketArtResponses[keyof ReleaseServiceUploadJacketArtResponses];
 
 export type ReleaseServiceDeleteReleaseData = {
     body?: never;

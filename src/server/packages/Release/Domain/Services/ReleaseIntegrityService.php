@@ -6,8 +6,8 @@ namespace Release\Domain\Services;
 
 use DateMalformedStringException;
 use DateType\ImmutableDate;
+use Release\Domain\Models\Color;
 use Release\Domain\Models\Description;
-use Release\Domain\Models\JacketArtUrl;
 use Release\Domain\Models\Media;
 use Release\Domain\Models\Release;
 use Release\Domain\Models\ReleasedOn;
@@ -42,13 +42,13 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
-        ?string $jacketArtUrl,
+        string $color,
         bool $isDisplay,
         int $orderNo,
         array $formatValues,
         array $media,
     ): Release {
-        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
+        return $this->prepare($this->generator->generate(), $releaseGroupId, $name, $releasedOn, $description, $color, $isDisplay, $orderNo, $formatValues, $media);
     }
 
     /**
@@ -63,13 +63,13 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
-        ?string $jacketArtUrl,
+        string $color,
         bool $isDisplay,
         int $orderNo,
         array $formatValues,
         array $media,
     ): Release {
-        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
+        return $this->prepare($releaseId, $releaseGroupId, $name, $releasedOn, $description, $color, $isDisplay, $orderNo, $formatValues, $media);
     }
 
     /**
@@ -82,13 +82,13 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
-        ?string $jacketArtUrl,
+        string $color,
         bool $isDisplay,
         int $orderNo,
         array $formatValues,
         array $media,
     ): Release {
-        $release = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $jacketArtUrl, $isDisplay, $orderNo, $formatValues, $media);
+        $release = $this->build($releaseId, $releaseGroupId, $name, $releasedOn, $description, $color, $isDisplay, $orderNo, $formatValues, $media);
 
         if (is_null($this->releaseGroupRepository->find($release->releaseGroupId))) {
             throw new BusinessRuleViolationException('指定されたリリースグループが存在しません。');
@@ -111,21 +111,19 @@ class ReleaseIntegrityService
         string $name,
         string $releasedOn,
         string $description,
-        ?string $jacketArtUrl,
+        string $color,
         bool $isDisplay,
         int $orderNo,
         array $formatValues,
         array $media,
     ): Release {
-        $normalizedJacketArtUrl = $this->normalizeOptionalString($jacketArtUrl);
-
         return new Release(
             new ReleaseId($releaseId),
             new ReleaseGroupId($releaseGroupId),
             new ReleaseName($name),
             $this->toReleasedOn($releasedOn),
             new Description($description),
-            is_null($normalizedJacketArtUrl) ? null : new JacketArtUrl($normalizedJacketArtUrl),
+            new Color($color),
             $isDisplay,
             new OrderNo($orderNo),
             ReleaseFormats::fromArray($formatValues),
@@ -149,17 +147,6 @@ class ReleaseIntegrityService
         }
 
         return true;
-    }
-
-    private function normalizeOptionalString(?string $value): ?string
-    {
-        if (is_null($value)) {
-            return null;
-        }
-
-        $trimmed = trim($value);
-
-        return $trimmed === '' ? null : $trimmed;
     }
 
     /**

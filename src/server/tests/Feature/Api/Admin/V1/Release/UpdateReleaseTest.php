@@ -66,7 +66,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '更新後の説明',
-                'jacketArtUrl' => 'https://example.com/jacket-new.png',
+                'color' => '#2e62a0',
                 'isDisplay' => false,
                 'orderNo' => 20,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -91,7 +91,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                             ->where('name', '新版名')
                             ->where('releasedOn', '2026-05-09')
                             ->where('description', '更新後の説明')
-                            ->where('jacketArtUrl', 'https://example.com/jacket-new.png')
+                            ->where('color', '#2e62a0')
                             ->where('isDisplay', false)
                             ->where('orderNo', 20)
                             ->where('formatValues', [ReleaseFormat::Cd->value])
@@ -149,7 +149,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -218,7 +218,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -268,7 +268,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [],
@@ -284,7 +284,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -300,7 +300,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -326,7 +326,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],
@@ -356,7 +356,7 @@ class UpdateReleaseTest extends DatabaseTestCase
                 'name' => '新版名',
                 'releasedOn' => '2026-05-09',
                 'description' => '説明',
-                'jacketArtUrl' => null,
+                'color' => '#989899',
                 'isDisplay' => true,
                 'orderNo' => 1,
                 'formatValues' => [ReleaseFormat::Cd->value],

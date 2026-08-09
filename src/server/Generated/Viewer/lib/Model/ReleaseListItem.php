@@ -62,7 +62,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => 'string',
         'released_on' => '\DateTime',
         'description' => 'string',
-        'jacket_art_url' => 'string',
+        'color' => 'string',
         'order_no' => 'int',
         'formats' => '\OpenAPI\Viewer\Client\Model\ReleaseFormat[]',
         'media' => '\OpenAPI\Viewer\Client\Model\ReleaseMediumItem[]'
@@ -80,7 +80,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => null,
         'released_on' => 'date',
         'description' => null,
-        'jacket_art_url' => null,
+        'color' => null,
         'order_no' => 'int32',
         'formats' => null,
         'media' => null
@@ -96,7 +96,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => false,
         'released_on' => false,
         'description' => false,
-        'jacket_art_url' => true,
+        'color' => false,
         'order_no' => false,
         'formats' => false,
         'media' => false
@@ -192,7 +192,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => 'name',
         'released_on' => 'releasedOn',
         'description' => 'description',
-        'jacket_art_url' => 'jacketArtUrl',
+        'color' => 'color',
         'order_no' => 'orderNo',
         'formats' => 'formats',
         'media' => 'media'
@@ -208,7 +208,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => 'setName',
         'released_on' => 'setReleasedOn',
         'description' => 'setDescription',
-        'jacket_art_url' => 'setJacketArtUrl',
+        'color' => 'setColor',
         'order_no' => 'setOrderNo',
         'formats' => 'setFormats',
         'media' => 'setMedia'
@@ -224,7 +224,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         'name' => 'getName',
         'released_on' => 'getReleasedOn',
         'description' => 'getDescription',
-        'jacket_art_url' => 'getJacketArtUrl',
+        'color' => 'getColor',
         'order_no' => 'getOrderNo',
         'formats' => 'getFormats',
         'media' => 'getMedia'
@@ -291,7 +291,7 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('name', $data ?? [], null);
         $this->setIfExists('released_on', $data ?? [], null);
         $this->setIfExists('description', $data ?? [], null);
-        $this->setIfExists('jacket_art_url', $data ?? [], null);
+        $this->setIfExists('color', $data ?? [], null);
         $this->setIfExists('order_no', $data ?? [], null);
         $this->setIfExists('formats', $data ?? [], null);
         $this->setIfExists('media', $data ?? [], null);
@@ -340,9 +340,13 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['description'] === null) {
             $invalidProperties[] = "'description' can't be null";
         }
-        if ($this->container['jacket_art_url'] === null) {
-            $invalidProperties[] = "'jacket_art_url' can't be null";
+        if ($this->container['color'] === null) {
+            $invalidProperties[] = "'color' can't be null";
         }
+        if (!preg_match("/^#[0-9a-f]{6}$/", $this->container['color'])) {
+            $invalidProperties[] = "invalid value for 'color', must be conform to the pattern /^#[0-9a-f]{6}$/.";
+        }
+
         if ($this->container['order_no'] === null) {
             $invalidProperties[] = "'order_no' can't be null";
         }
@@ -485,35 +489,33 @@ class ReleaseListItem implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Gets jacket_art_url
+     * Gets color
      *
      * @return string
      */
-    public function getJacketArtUrl()
+    public function getColor()
     {
-        return $this->container['jacket_art_url'];
+        return $this->container['color'];
     }
 
     /**
-     * Sets jacket_art_url
+     * Sets color
      *
-     * @param string $jacket_art_url ジャケットアートURL
+     * @param string $color 代表色
      *
      * @return self
      */
-    public function setJacketArtUrl($jacket_art_url)
+    public function setColor($color)
     {
-        if (is_null($jacket_art_url)) {
-            array_push($this->openAPINullablesSetToNull, 'jacket_art_url');
-        } else {
-            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
-            $index = array_search('jacket_art_url', $nullablesSetToNull);
-            if ($index !== FALSE) {
-                unset($nullablesSetToNull[$index]);
-                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
-            }
+        if (is_null($color)) {
+            throw new \InvalidArgumentException('non-nullable color cannot be null');
         }
-        $this->container['jacket_art_url'] = $jacket_art_url;
+
+        if ((!preg_match("/^#[0-9a-f]{6}$/", ObjectSerializer::toString($color)))) {
+            throw new \InvalidArgumentException("invalid value for \$color when calling ReleaseListItem., must conform to the pattern /^#[0-9a-f]{6}$/.");
+        }
+
+        $this->container['color'] = $color;
 
         return $this;
     }

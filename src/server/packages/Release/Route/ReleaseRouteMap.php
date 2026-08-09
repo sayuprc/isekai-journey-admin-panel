@@ -8,8 +8,6 @@ enum ReleaseRouteMap: string
 {
     case Create = 'release.create';
 
-    case UploadJacketArt = 'release.upload-jacket-art';
-
     case Get = 'release.get';
 
     case Update = 'release.update';

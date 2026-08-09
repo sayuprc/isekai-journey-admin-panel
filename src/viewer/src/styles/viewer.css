@@ -1202,16 +1202,8 @@ body.drawer-lock {
 .release-version-content {
   display: grid;
   gap: 18px;
-}
-
-.release-version-content.has-jacket {
-  grid-template-columns: minmax(96px, 140px) minmax(0, 1fr);
-  align-items: start;
-}
-
-.release-version-art {
-  width: 100%;
-  max-width: 140px;
+  padding-left: 16px;
+  border-left: 3px solid var(--c);
 }
 
 .release-version-track-list {
@@ -1523,23 +1515,41 @@ body.drawer-lock {
   display: block;
 }
 
-/* ジャケット(正方形)の縦幅にタイトル〜ボタンを揃え、収まらない収録曲はフェードで示す */
-
 .feature-body {
   display: flex;
   flex-direction: column;
+}
+
+/* 最新リリース: 大きな色面は置かず、左ボーダーで代表色を示す */
+
+.feature-release {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  padding-left: 16px;
+  border-left: 3px solid var(--c);
+}
+
+/* 最新楽曲: サムネ縦幅に本文を揃え、収まらない分はフェード */
+
+.feature-grid-link:has(.feature-art-link) .feature-body {
   height: var(--feature-art-size);
 }
 
 .feature-track-list {
   display: grid;
-  flex: 1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px 16px;
   align-content: start;
   min-height: 0;
+  max-height: 280px;
   overflow: hidden;
   mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
+}
+
+.feature-track-list .rel-chip[data-unlinked] {
+  color: var(--fg-faint);
+  opacity: 1;
 }
 
 .feature-more {
@@ -1560,9 +1570,116 @@ body.drawer-lock {
   color: var(--fg-muted);
 }
 
+/* ---------- リリース一覧 (年ごとの台帳) ---------- */
+
+.release-year {
+  margin-top: 56px;
+}
+
+/* 絞り込みで 1 件も残らなかった年は畳む
+   FilterBar は非表示の entry に data-viewer-filter-match="false" を付けるので、
+   1 件も付いていない初期状態でも表示が維持される */
+
+.release-year:not(:has([data-release-entry]:not([data-viewer-filter-match="false"]))) {
+  display: none;
+}
+
+.release-year-head {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.release-year-num {
+  font-family: Spectral, serif;
+  font-size: clamp(34px, 6vw, 52px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.release-year-count {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.release-year-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.release-row {
+  position: relative;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 12px 14px 20px;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background 0.2s ease;
+}
+
+/* ジャケットの代わりに置く色 縦棒と見本の 2 箇所で出す */
+
+.release-row::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  content: "";
+  background: var(--release-color);
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.release-row:hover::before {
+  width: 7px;
+}
+
+.release-row:hover {
+  background: color-mix(in srgb, var(--release-color) 12%, transparent);
+}
+
+.release-row-chip {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background: var(--release-color);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 7%);
+}
+
+.release-row-title {
+  /* ライブ映像作品はタイトルが長い 1 行省略だと読めないので 2 行まで折り返す */
+  display: -webkit-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  font-family: "Noto Serif JP", "Shippori Mincho", serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  -webkit-box-orient: vertical;
+}
+
+.release-row-type {
+  flex: none;
+  width: 5.5em;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.release-row-date {
+  flex: none;
+  width: 4.5em;
+  text-align: right;
+}
+
 .media-card-grid,
-.song-grid,
-.release-grid {
+.song-grid {
   display: grid;
   gap: 28px;
 }
@@ -1576,31 +1693,24 @@ body.drawer-lock {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.release-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px;
-}
-
 .media-card,
-.song-grid-card,
-.release-card {
+.song-grid-card {
   display: block;
 }
 
 /* 一覧は 300 件超を一度に描くので、画面外のカードはレイアウトと描画を省く
    高さは auto で実測値を再利用させ、初回だけ概算値を使う */
 
-.song-grid-card,
-.release-card {
+.song-grid-card {
   /* auto 付きを解釈しないブラウザ向けに固定値を先に置く。未指定だと画面外カードが高さ 0 に潰れる */
   contain-intrinsic-size: 260px;
   contain-intrinsic-size: auto 260px;
   content-visibility: auto;
+  transition: transform 0.18s ease;
 }
 
 .media-card-body,
-.song-grid-body,
-.release-card-body {
+.song-grid-body {
   padding: 16px 4px 0;
 }
 
@@ -1618,28 +1728,16 @@ body.drawer-lock {
   font-size: 17px;
 }
 
-.song-grid-card {
-  transition: transform 0.18s ease;
-}
-
 .song-grid-card:hover {
   transform: translateY(-2px);
 }
 
-.song-grid-meta,
-.release-card-meta {
+.song-grid-meta {
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
-}
-
-.release-card-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
 }
 
 .media-card-tags {
@@ -1999,12 +2097,6 @@ body.drawer-lock {
   white-space: nowrap;
 }
 
-.jacket-art,
-.mv-thumb {
-  position: relative;
-  overflow: hidden;
-}
-
 .media-detail-thumbnail-link {
   position: relative;
   display: block;
@@ -2087,49 +2179,18 @@ body.drawer-lock {
   letter-spacing: 0.08em;
 }
 
-.jacket-art {
-  aspect-ratio: var(--tile-aspect, 1 / 1);
-  background:
-    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--tile-color) 66%, transparent), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, color-mix(in oklab, var(--tile-color) 40%, transparent), transparent 60%),
-    linear-gradient(135deg, var(--tile-color), color-mix(in oklab, var(--tile-color) 60%, transparent));
+/* 楽曲詳細の収録リリース一覧。画像の代わりに色見本を置く */
+
+.rel-swatch {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background: var(--c);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 7%);
 }
 
-.jacket-art::before,
-.mv-thumb::before {
-  position: absolute;
-  inset: 0;
-  content: "";
-}
-
-.jacket-art::before {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 8px);
-}
-
-.jacket-art-label {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-
-.jacket-art-mark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 60%;
-  height: 60%;
-  opacity: 0.25;
-  transform: translate(-50%, -50%);
-}
-
-/* サムネイルが無い楽曲のプレースホルダー。実写サムネと並んでも浮かないよう、
-   テーマ連動の中間色にアイコンを主役として据える。 */
+/* サムネイルが無い楽曲は収録リリースの代表色を地に敷く */
 
 .song-tile {
   position: relative;
@@ -2142,6 +2203,13 @@ body.drawer-lock {
   overflow: hidden;
   background: var(--bg-elev-2);
   border: 1px solid var(--line);
+}
+
+.song-tile.has-color-fallback {
+  background:
+    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--song-tile-color) 66%, transparent), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, color-mix(in oklab, var(--song-tile-color) 40%, transparent), transparent 60%),
+    linear-gradient(135deg, var(--song-tile-color), color-mix(in oklab, var(--song-tile-color) 55%, var(--bg-elev-2)));
 }
 
 .song-tile-image {
@@ -2180,7 +2248,9 @@ body.drawer-lock {
 }
 
 .mv-thumb {
+  position: relative;
   aspect-ratio: 16 / 9;
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 25% 40%, color-mix(in oklab, var(--tile-color) 80%, transparent), transparent 55%),
     radial-gradient(ellipse at 75% 60%, color-mix(in oklab, var(--tile-color) 50%, transparent), transparent 60%),
@@ -2192,6 +2262,9 @@ body.drawer-lock {
 }
 
 .mv-thumb::before {
+  position: absolute;
+  inset: 0;
+  content: "";
   background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px);
 }
 
@@ -2227,10 +2300,6 @@ body.drawer-lock {
   width: 18px;
   height: 18px;
   fill: white;
-}
-
-.detail-panel .song-detail-content .jacket-art {
-  max-width: 280px;
 }
 
 .detail-panel .song-detail-content .detail-title {
@@ -2274,7 +2343,6 @@ body.drawer-lock {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .release-grid,
   .media-card-grid,
   .recent-posts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2285,9 +2353,9 @@ body.drawer-lock {
     grid-auto-rows: 164px;
   }
 
-  /* 1 カラム時はジャケット縦幅に固定せず、リスト自身の高さで切る */
+  /* 1 カラム時はサムネ縦幅に固定せず、リストは上限だけ残す */
 
-  .feature-body {
+  .feature-grid-link:has(.feature-art-link) .feature-body {
     height: auto;
   }
 
@@ -2319,7 +2387,6 @@ body.drawer-lock {
   }
 
   .song-grid,
-  .release-grid,
   .media-card-grid,
   .recent-posts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2369,6 +2436,23 @@ body.drawer-lock {
 }
 
 @media (width <= 720px) {
+  /* 台帳の行は狭い幅だと種別と日付が入らないので落とす
+     種別は絞り込みで代替でき、年は見出しに出ている */
+
+  .release-row-type,
+  .release-row-date {
+    display: none;
+  }
+
+  .release-row {
+    padding-left: 16px;
+  }
+
+  .release-row-chip {
+    width: 22px;
+    height: 22px;
+  }
+
   /* リンクはボトムナビへ移動するためヘッダーからは消す */
 
   .nav-links {
@@ -2409,7 +2493,6 @@ body.drawer-lock {
   }
 
   .song-grid,
-  .release-grid,
   .media-card-grid,
   .recent-posts-grid,
   .song-credit-grid {
@@ -2431,14 +2514,6 @@ body.drawer-lock {
   .media-list-row > :last-child,
   .media-list-row .label-mono {
     display: none;
-  }
-
-  .release-version-content.has-jacket {
-    grid-template-columns: 1fr;
-  }
-
-  .release-version-art {
-    width: min(160px, 100%);
   }
 
   .detail-panel {

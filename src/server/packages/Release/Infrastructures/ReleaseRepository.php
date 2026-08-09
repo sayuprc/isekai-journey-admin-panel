@@ -26,7 +26,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
     private const string TRACK_TABLE = 'release_tracks';
 
     /** @var list<string> */
-    private const array COLUMNS = ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url', 'is_display', 'order_no'];
+    private const array COLUMNS = ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'color', 'is_display', 'order_no'];
 
     public function __construct(
         private QueryFactory $queryFactory,
@@ -89,14 +89,14 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             ->execute($this->queryFactory->pdo());
 
         $this->queryFactory->insert()
-            ->into(self::TABLE, ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'jacket_art_url', 'is_display', 'order_no', 'created_at', 'updated_at'])
+            ->into(self::TABLE, ['release_id', 'release_group_id', 'name', 'released_on', 'description', 'color', 'is_display', 'order_no', 'created_at', 'updated_at'])
             ->values([
                 $binReleaseId,
                 $this->converter->toBin($data['release_group_id']),
                 $data['name'],
                 $data['released_on'],
                 $data['description'],
-                $data['jacket_art_url'],
+                $data['color'],
                 $data['is_display'],
                 $data['order_no'],
                 $now,
@@ -109,7 +109,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
                 . '`name` = VALUES(`name`), '
                 . '`released_on` = VALUES(`released_on`), '
                 . '`description` = VALUES(`description`), '
-                . '`jacket_art_url` = VALUES(`jacket_art_url`), '
+                . '`color` = VALUES(`color`), '
                 . '`is_display` = VALUES(`is_display`), '
                 . '`order_no` = VALUES(`order_no`), '
                 . '`updated_at` = VALUES(`updated_at`)',
@@ -247,7 +247,7 @@ readonly class ReleaseRepository implements ReleaseRepositoryInterface
             Row::string($releaseRow, 'name'),
             ImmutableDate::createFromInterface(new DateTimeImmutable(Row::string($releaseRow, 'released_on'))),
             Row::string($releaseRow, 'description'),
-            Row::nullableString($releaseRow, 'jacket_art_url'),
+            Row::string($releaseRow, 'color'),
             Row::bool($releaseRow, 'is_display'),
             Row::int($releaseRow, 'order_no'),
             $formats,
