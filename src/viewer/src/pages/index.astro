@@ -77,15 +77,22 @@ const siteStats = await siteStatsRepository.get();
           class="feature-grid-link"
           style={`--c:${representativeColor(latestReleaseGroup)};`}
         >
-          <div class="rel-list feature-track-list" aria-label="収録曲">
-            {latestReleaseTracks.map(track => <TrackChip track={track} />)}
-          </div>
+          <a
+            href={`/releases/${latestReleaseGroup.releaseGroupId}`}
+            class="feature-color-link"
+            aria-label={latestReleaseGroup.title}
+          >
+            <div class="feature-color" aria-hidden="true" />
+          </a>
           <div class="feature-body">
             <div class="eyebrow">{latestReleaseGroup.type.name} — {latestReleaseGroup.firstReleasedOn}</div>
             <h3 class="feature-title">
               <a href={`/releases/${latestReleaseGroup.releaseGroupId}`}>{latestReleaseGroup.title}</a>
             </h3>
             {latestReleaseGroup.description && <p class="feature-summary">{latestReleaseGroup.description}</p>}
+            <div class="rel-list feature-track-list" aria-label="収録曲">
+              {latestReleaseTracks.map(track => <TrackChip track={track} />)}
+            </div>
             <a class="btn feature-more" href={`/releases/${latestReleaseGroup.releaseGroupId}`}>リリース詳細 →</a>
           </div>
         </div>
