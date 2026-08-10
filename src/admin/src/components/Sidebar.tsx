@@ -170,13 +170,13 @@ const isActivePath = (currentPath: string, href: string): boolean => {
 
 export const Sidebar = (props: Props) => {
   return (
-    <aside class="bg-base-200 sticky top-0 flex h-screen w-56 shrink-0 flex-col overflow-y-auto border-r border-base-300">
+    <aside class="bg-base-200 flex min-h-full w-56 flex-col border-r border-base-300">
       <div class="border-b border-base-300 px-4 py-5">
         <a href="/" class="text-lg font-bold">
           ヰ世界観測所
         </a>
       </div>
-      <nav class="flex-1 px-2 py-4">
+      <nav class="flex-1 overflow-y-auto px-2 py-4">
         {navSections.map(section => (
           <div class="mb-3">
             <h2 class="px-3 py-1 text-xs font-semibold tracking-wider text-base-content/60">{section.title}</h2>

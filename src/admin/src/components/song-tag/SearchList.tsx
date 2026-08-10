@@ -1,6 +1,7 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
+import { Pagination } from '../Pagination';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -204,7 +205,7 @@ export const SearchList = () => {
         </a>
       </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-        <table class="table table-zebra">
+        <table class="table table-sm table-zebra md:table-md">
           <thead>
             <tr>
               <th>楽曲タグ名</th>
@@ -248,20 +249,7 @@ export const SearchList = () => {
         </table>
       </div>
       <Show when={!data.loading && !fetchError() && (data()?.maxPage ?? 0) > 1}>
-        <div class="mt-4 flex justify-center">
-          <div class="join">
-            <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {p => (
-                <button
-                  class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
-                  onClick={() => handlePageChange(p)}
-                >
-                  {p}
-                </button>
-              )}
-            </For>
-          </div>
-        </div>
+        <Pagination page={page()} maxPage={data()!.maxPage} onChange={handlePageChange} />
       </Show>
     </>
   );

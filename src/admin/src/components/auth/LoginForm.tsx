@@ -144,7 +144,7 @@ export const LoginForm = (props: LoginFormProps) => {
   return (
     <form onsubmit={handleSubmit}>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-xs border p-4">
         <label class="label">メールアドレス</label>
         <input
           ref={el => emailInput = el}

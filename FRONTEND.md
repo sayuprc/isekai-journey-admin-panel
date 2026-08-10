@@ -9,6 +9,7 @@
 - ページ責務は Astro に保ち、対話的な UI は SolidJS に分ける
 - セマンティックな HTML と分かりやすい見出し構造を優先する
 - 360px 幅とデスクトップ幅の両方で破綻しないことを前提にする
+- 管理画面 (`src/admin`) は `lg` 未満で DaisyUI drawer によるサイドバー開閉、`lg` 以上で常時表示とする
 - 非同期処理やフォームには loading / error / empty state を用意する
 - 既存スタックで解けるなら依存を増やしすぎない
 - パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする
