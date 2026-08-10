@@ -4,7 +4,9 @@ import SimpleLayout from '../../layouts/SimpleLayout.astro';
 ---
 
 <SimpleLayout pageTitle="リカバリー">
-  <div class="flex min-h-[70vh] items-center justify-center">
-    <RecoveryForm client:load />
+  <div class="flex min-h-[70vh] w-full items-center justify-center px-4">
+    <div class="w-full max-w-xs sm:max-w-md">
+      <RecoveryForm client:load />
+    </div>
   </div>
 </SimpleLayout>

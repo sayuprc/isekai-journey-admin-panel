@@ -66,7 +66,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
   return (
     <form onsubmit={handleSubmit}>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
         <label class="label">登録トークン</label>
         <input
           type="text"

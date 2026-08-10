@@ -7,8 +7,10 @@ const returnTo = resolveAuthReturnTo(Astro.url.searchParams.get('return_to'));
 ---
 
 <SimpleLayout pageTitle="ログイン">
-  <div class="flex min-h-[70vh] flex-col items-center justify-center gap-4">
-    <LoginForm returnTo={returnTo} client:load />
+  <div class="flex min-h-[70vh] w-full flex-col items-center justify-center gap-4 px-4">
+    <div class="w-full max-w-xs sm:max-w-md">
+      <LoginForm returnTo={returnTo} client:load />
+    </div>
     <a class="link text-sm" href="/auth/recovery">パスキーを紛失した場合はこちら</a>
   </div>
 </SimpleLayout>
