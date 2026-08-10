@@ -7,13 +7,13 @@ completed
 ## Background
 
 期待される業務エラーを `sayuprc/result-type` の Result で表現し Domain → UseCase → Presenter と伝搬させてきたが、
-層をまたぐたびの詰め替え (mapErr / andThen) が server の 131 ファイルに波及し、煩雑さの割に利益が薄い。
-VO はコンストラクタで既に throw しており Result 版 `create()` と二重 API になっている。
+層をまたぐたびの詰め替え (mapErr / andThen) が server の 131 ファイルに波及し、煩雑さの割に利益が薄い
+VO はコンストラクタで既に throw しており Result 版 `create()` と二重 API になっている
 設計判断は [ADR-0013](../../adr/ADR-0013-use-exceptions-instead-of-result-for-error-handling.md) に記録済み
 
 ## Goal
 
-Result を server 全層から撤去し例外ベースへ移行する。
+Result を server 全層から撤去し例外ベースへ移行する
 エラーレスポンスは全ステータスで `{code, message, details?}` の統一エンベロープに刷新する
 
 ## Scope

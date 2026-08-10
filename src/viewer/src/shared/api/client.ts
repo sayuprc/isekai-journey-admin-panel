@@ -5,8 +5,8 @@ import { getGoogleIdToken } from './google-id-token.js';
 const baseUrl = import.meta.env.API_URL + '/v1';
 
 /**
- * 非公開 API (allow_unauthenticated = false) の IAM 認証を通すための fetch。
- * admin と合わせて X-Serverless-Authorization ヘッダで Google ID token を送る。
+ * 非公開 API (allow_unauthenticated = false) の IAM 認証を通すための fetch
+ * admin と合わせて X-Serverless-Authorization ヘッダで Google ID token を送る
  */
 const fetchWithServerlessAuth: typeof fetch = async (input, init) => {
   const idToken = await getGoogleIdToken(import.meta.env.API_URL);

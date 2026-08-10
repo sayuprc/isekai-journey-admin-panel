@@ -81,9 +81,9 @@ class InviteCommandTest extends DatabaseTestCase
         $rows = DB::table('admin_user_registration_tokens')->get()->all();
         $this->assertCount(1, $rows);
 
-        // ハッシュ済みで保存されているため、ハッシュとは平文を直接比較できない。
+        // ハッシュ済みで保存されているため、ハッシュとは平文を直接比較できない
         // 平文は標準出力に出るが artisan の API では拾いにくいため、
-        // ここではトークン行が 1 件・ハッシュとして妥当な値であることを担保する。
+        // ここではトークン行が 1 件・ハッシュとして妥当な値であることを担保する
         $row = array_first($rows);
         $this->assertNotSame('', $row->token);
         $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $row->token);

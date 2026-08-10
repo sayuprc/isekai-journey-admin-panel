@@ -158,7 +158,7 @@ class CreateUseCaseTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
 
-        // 楽曲への紐づきを維持したまま表示名だけを上書きするケース。
+        // 楽曲への紐づきを維持したまま表示名だけを上書きするケース
         $result = $this->getInstance()->handle(new CreateInputData(
             releaseGroupId: $releaseGroupId,
             name: '初回限定盤',

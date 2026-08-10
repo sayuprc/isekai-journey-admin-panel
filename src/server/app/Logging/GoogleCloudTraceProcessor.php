@@ -10,17 +10,17 @@ use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 
 /**
- * Cloud Run の `X-Cloud-Trace-Context` を Cloud Logging のトレースフィールドへ変換する。
+ * Cloud Run の `X-Cloud-Trace-Context` を Cloud Logging のトレースフィールドへ変換する
  *
- * 付与するフィールド（{@see GoogleCloudLoggingFormatter} がトップレベルへ引き上げる）:
+ * 付与するフィールド({@see GoogleCloudLoggingFormatter} がトップレベルへ引き上げる):
  * - logging.googleapis.com/trace         : projects/<project>/traces/<traceId>
  * - logging.googleapis.com/trace_sampled : サンプリング対象か
  *
  * spanId は header 上は uint64 の 10 進数で、Cloud Logging が要求する 16 桁 hex への
  * 変換が bcmath/gmp 無しでは安全に行えないため付与しない。ログのリクエスト単位の
- * グルーピングには trace のみで足りる。
+ * グルーピングには trace のみで足りる
  *
- * チャンネルは worker モードで使い回されるため、ヘッダはログ出力時に遅延解決する。
+ * チャンネルは worker モードで使い回されるため、ヘッダはログ出力時に遅延解決する
  */
 final class GoogleCloudTraceProcessor implements ProcessorInterface
 {
@@ -44,7 +44,7 @@ final class GoogleCloudTraceProcessor implements ProcessorInterface
     }
 
     /**
-     * `X-Cloud-Trace-Context` (`TRACE_ID/SPAN_ID;o=OPTIONS`) を解析する。
+     * `X-Cloud-Trace-Context` (`TRACE_ID/SPAN_ID;o=OPTIONS`) を解析する
      *
      * @return array<string, string|bool>
      */

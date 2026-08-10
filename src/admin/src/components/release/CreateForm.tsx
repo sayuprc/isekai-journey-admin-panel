@@ -15,7 +15,7 @@ interface CreateParams {
   sourceReleaseId: string;
 }
 
-/** フォームの初期値。コピー元があればその内容、なければ空。 */
+/** フォームの初期値。コピー元があればその内容、なければ空 */
 interface InitialValues {
   name: string;
   releasedOn: string;

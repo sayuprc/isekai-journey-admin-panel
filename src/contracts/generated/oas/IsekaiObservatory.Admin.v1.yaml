@@ -2484,7 +2484,7 @@ components:
         snapshot:
           type: object
           unevaluatedProperties: {}
-          description: 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする。
+          description: 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする
       description: 監査ログ詳細
     AuditLogGetResponse:
       type: object
@@ -3071,7 +3071,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Medium'
-      description: リリース（実際に世に出た版・盤）
+      description: リリース(実際に世に出た版・盤)
     ReleaseCreateRequest:
       type: object
       required:
@@ -3164,7 +3164,7 @@ components:
           type: boolean
         orderNo:
           $ref: '#/components/schemas/orderNo'
-      description: リリースグループ（作品）
+      description: リリースグループ(作品)
     ReleaseGroupCreateRequest:
       type: object
       required:
@@ -3271,7 +3271,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/releasedOn'
             - type: 'null'
-      description: リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）
+      description: リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日(リリース未登録なら null)
     ReleaseGroupTypeValue:
       type: integer
       format: int32

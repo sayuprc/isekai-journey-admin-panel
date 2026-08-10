@@ -4,8 +4,8 @@ import { client } from '../../utils/client';
 import { createSortable, reorderItems } from '../sortable';
 
 /**
- * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須。
- * songId ありのトラックは title が空なら楽曲名で表示、入力があれば上書き名になる。
+ * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須
+ * songId ありのトラックは title が空なら楽曲名で表示、入力があれば上書き名になる
  */
 export type TrackForm = {
   songId: string | null;
@@ -342,7 +342,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                       </table>
                     </div>
                     <p class="mt-2 text-xs text-base-content/60">
-                      トラック名が空の場合は楽曲名で表示されます（管理対象外楽曲では必須です）。
+                      トラック名が空の場合は楽曲名で表示されます(管理対象外楽曲では必須です)。
                     </p>
                   </Show>
                 </div>
@@ -374,7 +374,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                         媒体
                         {' '}
                         {index + 1}
-                        {medium().name.trim() !== '' ? `（${medium().name.trim()}）` : ''}
+                        {medium().name.trim() !== '' ? `(${medium().name.trim()})` : ''}
                       </option>
                     )}
                   </Index>
@@ -467,7 +467,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
               </button>
             </div>
             <p class="mt-1 text-xs text-base-content/60">
-              管理していない楽曲をタイトルだけで収録曲に追加します（楽曲詳細へのリンクは付きません）。
+              管理していない楽曲をタイトルだけで収録曲に追加します(楽曲詳細へのリンクは付きません)。
             </p>
           </div>
         </Show>

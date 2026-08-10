@@ -16,9 +16,9 @@ class QueryFactoryTest extends DatabaseTestCase
     {
         $factory = $this->app->make(QueryFactory::class);
 
-        // emonkak が Laravel の Connection と同一の PDO を共有していることを保証する。
+        // emonkak が Laravel の Connection と同一の PDO を共有していることを保証する
         // これが崩れると DB::transaction / DatabaseTransactions が emonkak のクエリを
-        // 包めなくなる（接続が分断される）。
+        // 包めなくなる(接続が分断される)
         $this->assertSame(DB::connection()->getPdo(), $factory->pdo()->getPdo());
     }
 

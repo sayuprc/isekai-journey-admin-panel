@@ -101,14 +101,14 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
             // Cloud Run の stderr を Cloud Logging が構造化ログとして解釈できるよう、
-            // 既定で severity / message / time を JSON 出力する。env で上書き可能。
+            // 既定で severity / message / time を JSON 出力する。env で上書き可能
             'formatter' => env('LOG_STDERR_FORMATTER', GoogleCloudLoggingFormatter::class),
             'with' => [
                 'stream' => 'php://stderr',
             ],
             'processors' => [
                 PsrLogMessageProcessor::class,
-                // Cloud Run のリクエスト単位でログをグルーピングするためトレース情報を付与する。
+                // Cloud Run のリクエスト単位でログをグルーピングするためトレース情報を付与する
                 [
                     'processor' => GoogleCloudTraceProcessor::class,
                     'with' => ['projectId' => env('GOOGLE_CLOUD_PROJECT', '')],

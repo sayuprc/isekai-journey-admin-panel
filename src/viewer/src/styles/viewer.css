@@ -733,7 +733,7 @@ textarea:focus-visible,
   border-radius: 999px;
 }
 
-/* 楽曲種別バッジ: オリジナルはアクセント、カバーは中間色で一目で区別する。 */
+/* 楽曲種別バッジ: オリジナルはアクセント、カバーは中間色で一目で区別する */
 
 .pill[data-song-type="1"] {
   color: var(--accent-strong);
@@ -2184,7 +2184,7 @@ body.drawer-lock {
   letter-spacing: 0.1em;
 }
 
-/* チップ内のメディアサムネイル（楽曲ドロワーの関連メディア一覧） */
+/* チップ内のメディアサムネイル(楽曲ドロワーの関連メディア一覧) */
 
 .rel-thumb {
   display: block;
@@ -2603,7 +2603,7 @@ body.drawer-lock {
   }
 }
 
-/* ポリシー文書（サイトポリシー / プライバシーポリシー） */
+/* ポリシー文書(サイトポリシー / プライバシーポリシー) */
 
 .policy-doc {
   max-width: 920px;

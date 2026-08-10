@@ -467,7 +467,7 @@ class SongReleaseGroupSummary implements ModelInterface, ArrayAccess, \JsonSeria
     /**
      * Sets color
      *
-     * @param string $color 代表色（公開リリースを発売日順に見て最初のもの）
+     * @param string $color 代表色(公開リリースを発売日順に見て最初のもの)
      *
      * @return self
      */

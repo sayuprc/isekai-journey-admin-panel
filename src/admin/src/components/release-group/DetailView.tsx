@@ -290,7 +290,7 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
         </form>
 
         <fieldset class="rounded-box border border-base-300 bg-base-200 p-6">
-          <legend class="px-2 text-sm font-semibold text-base-content/70">リリース（版）</legend>
+          <legend class="px-2 text-sm font-semibold text-base-content/70">リリース(版)</legend>
           <div class="mb-4 flex justify-end">
             <a href={`/releases/create?releaseGroupId=${releaseGroupId}`} class="btn btn-primary btn-sm">
               リリースを追加

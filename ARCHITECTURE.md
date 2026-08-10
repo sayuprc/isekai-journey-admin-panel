@@ -2,9 +2,9 @@
 
 ## Overview
 
-`isekai-observatory` は、API サーバー、API コントラクト、管理画面、閲覧サイトを 1 つのモノレポで管理します。
+`isekai-observatory` は、API サーバー、API コントラクト、管理画面、閲覧サイトを 1 つのモノレポで管理します
 
-このリポジトリでは、API 契約は `src/contracts` の TypeSpec を起点にし、生成物を各実装へ配布します。コード変更時は「どの層が Source of Truth か」を先に見極めることが重要です。この文書は上位マップにとどめ、ローカル実行構成や各サブプロジェクトの中身は下位文書へ分けます。
+このリポジトリでは、API 契約は `src/contracts` の TypeSpec を起点にし、生成物を各実装へ配布します。コード変更時は「どの層が Source of Truth か」を先に見極めることが重要です。この文書は上位マップにとどめ、ローカル実行構成や各サブプロジェクトの中身は下位文書へ分けます
 
 ## Top-Level Map
 
@@ -18,7 +18,7 @@
 - `src/contracts/`: TypeSpec による API 契約
 - `src/admin/`: Astro / SolidJS / Elysia による管理画面
 - `src/viewer/`: Astro / SolidJS による閲覧サイト
-- `mise.toml`: 開発ツール・タスク定義、および CI / インフラ向け版ピンのカタログ（`[tools]` / `[vars]`）
+- `mise.toml`: 開発ツール・タスク定義、および CI / インフラ向け版ピンのカタログ(`[tools]` / `[vars]`)
 - `compose.yaml`: ローカルで使う proxy / php / mysql / redis の定義
 
 ## Source-Of-Truth Flow
@@ -31,11 +31,11 @@
   - `src/viewer/src/generated/`
 4. サーバー実装とフロントエンドは生成済みの契約を前提に振る舞いを実装する
 
-契約を変える変更は、生成物ではなく `src/contracts` を最初に編集する。
+契約を変える変更は、生成物ではなく `src/contracts` を最初に編集する
 
 ## Change Routing
 
-変更後の確認は、まず表の最右列にある最も近い検証を起点にします。
+変更後の確認は、まず表の最右列にある最も近い検証を起点にします
 
 | 変更したいもの | 最初に触る場所 | 続けて触る場所 | 代表的な確認 |
 |---|---|---|---|

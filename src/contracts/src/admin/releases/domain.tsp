@@ -53,7 +53,7 @@ enum ReleaseFormatValue {
 @minLength(1)
 scalar mediumName extends string;
 
-@doc("リリースグループ（作品）")
+@doc("リリースグループ(作品)")
 model ReleaseGroup {
   releaseGroupId: releaseGroupId;
   title: releaseGroupTitle;
@@ -63,7 +63,7 @@ model ReleaseGroup {
   orderNo: orderNo;
 }
 
-@doc("リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）")
+@doc("リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日(リリース未登録なら null)")
 model ReleaseGroupSummary {
   releaseGroupId: releaseGroupId;
   title: releaseGroupTitle;
@@ -99,7 +99,7 @@ model Medium {
   tracks: Track[];
 }
 
-@doc("リリース（実際に世に出た版・盤）")
+@doc("リリース(実際に世に出た版・盤)")
 model Release {
   releaseId: releaseId;
   releaseGroupId: releaseGroupId;

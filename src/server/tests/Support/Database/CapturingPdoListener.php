@@ -9,10 +9,10 @@ use Emonkak\Database\PDOListenerInterface;
 use Override;
 
 /**
- * emonkak が実行した SQL を捕捉するテスト用リスナ。
+ * emonkak が実行した SQL を捕捉するテスト用リスナ
  *
  * emonkak は Laravel の Connection を経由せず PDO を直接叩くため、
- * DB::getQueryLog() では SQL を観測できない。FOR UPDATE などの発行を検証したいテストで使う。
+ * DB::getQueryLog() では SQL を観測できない。FOR UPDATE などの発行を検証したいテストで使う
  */
 final class CapturingPdoListener implements PDOListenerInterface
 {

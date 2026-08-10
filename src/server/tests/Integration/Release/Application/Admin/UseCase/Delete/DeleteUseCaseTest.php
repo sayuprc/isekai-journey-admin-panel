@@ -83,7 +83,7 @@ class DeleteUseCaseTest extends DatabaseTestCase
         $this->assertCount(0, DB::table('releases')->get()->all());
         $this->assertCount(0, DB::table('release_media')->get()->all());
         $this->assertCount(0, DB::table('release_tracks')->get()->all());
-        // グループ自体は残る。
+        // グループ自体は残る
         $this->assertCount(1, DB::table('release_groups')->get()->all());
     }
 

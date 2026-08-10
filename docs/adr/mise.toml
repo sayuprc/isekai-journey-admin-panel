@@ -3,7 +3,7 @@ description = "新規 ADR を作成する"
 depends_post = ["adr:index"]
 usage = '''
 arg "<title>" help="ADR のタイトル"
-arg "[applies_to]" help="適用対象（カンマ区切り例: api,batch）"
+arg "[applies_to]" help="適用対象(カンマ区切り例: api,batch)"
 '''
 run = """
 #!/usr/bin/env bash
@@ -100,7 +100,7 @@ INDEX="INDEX.md"
 {
   echo "# ADR Index"
   echo ""
-  echo "<!-- このファイルは adr:index タスクにより自動生成されます。直接編集しないでください。 -->"
+  echo "<!-- このファイルは adr:index タスクにより自動生成されます。直接編集しないでください -->"
   echo ""
   echo "| ID | Status | Title | Applies To |"
   echo "|----|--------|-------|------------|"

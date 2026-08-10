@@ -8,11 +8,11 @@ use Monolog\Formatter\GoogleCloudLoggingFormatter as BaseFormatter;
 use Monolog\LogRecord;
 
 /**
- * Cloud Logging 互換の JSON を出力するフォーマッタ。
+ * Cloud Logging 互換の JSON を出力するフォーマッタ
  *
  * Monolog 標準の {@see BaseFormatter} に加えて、`extra` に積まれた
- * `logging.googleapis.com/*`（trace など）の特殊フィールドをトップレベルへ引き上げる。
- * Cloud Logging はこれらをトップレベルでのみ解釈するため。
+ * `logging.googleapis.com/*`(trace など)の特殊フィールドをトップレベルへ引き上げる
+ * Cloud Logging はこれらをトップレベルでのみ解釈するため
  */
 final class GoogleCloudLoggingFormatter extends BaseFormatter
 {

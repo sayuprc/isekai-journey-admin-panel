@@ -3,7 +3,7 @@ import pino from 'pino';
 
 /**
  * Cloud Run の stdout を Cloud Logging が構造化ログとして解釈できるよう、
- * severity / message / time / trace を JSON で出力する pino ロガー。
+ * severity / message / time / trace を JSON で出力する pino ロガー
  *
  * @see https://cloud.google.com/logging/docs/structured-logging
  */
@@ -11,8 +11,8 @@ import pino from 'pino';
 const GCP_TRACE_FIELD = 'logging.googleapis.com/trace';
 const GCP_TRACE_SAMPLED_FIELD = 'logging.googleapis.com/trace_sampled';
 
-// pino のレベル名を Cloud Logging の severity enum に対応付ける。
-// 単純な大文字化では warn / fatal が Cloud Logging の語彙(WARNING / CRITICAL)と一致しない。
+// pino のレベル名を Cloud Logging の severity enum に対応付ける
+// 単純な大文字化では warn / fatal が Cloud Logging の語彙(WARNING / CRITICAL)と一致しない
 const PINO_LEVEL_TO_SEVERITY: Record<string, string> = {
   trace: 'DEBUG',
   debug: 'DEBUG',
@@ -24,13 +24,13 @@ const PINO_LEVEL_TO_SEVERITY: Record<string, string> = {
 
 const projectId = process.env.GOOGLE_CLOUD_PROJECT ?? '';
 
-// テスト時はログ出力をノイズにしないため抑止する。
+// テスト時はログ出力をノイズにしないため抑止する
 const defaultLevel = process.env.NODE_ENV === 'test' ? 'silent' : 'info';
 
 export const logger = pino({
   level: process.env.LOG_LEVEL ?? defaultLevel,
   messageKey: 'message',
-  // Cloud Logging は pid / hostname を必要としないため落とす。
+  // Cloud Logging は pid / hostname を必要としないため落とす
   base: undefined,
   formatters: {
     level: label => ({ severity: PINO_LEVEL_TO_SEVERITY[label] ?? 'DEFAULT' }),
@@ -40,10 +40,10 @@ export const logger = pino({
 
 /**
  * `X-Cloud-Trace-Context` (`TRACE_ID/SPAN_ID;o=OPTIONS`) を Cloud Logging の
- * トレースフィールドへ変換する。projectId 未設定・ヘッダー不在では何も付与しない。
+ * トレースフィールドへ変換する。projectId 未設定・ヘッダー不在では何も付与しない
  *
  * spanId は header 上 uint64 の 10 進数で、Cloud Logging が要求する 16 桁 hex への
- * 変換が安全に行えないため付与しない。リクエスト単位のグルーピングには trace で足りる。
+ * 変換が安全に行えないため付与しない。リクエスト単位のグルーピングには trace で足りる
  */
 const resolveTraceFields = (headers: Headers): Record<string, string | boolean> | null => {
   if (projectId === '') {
@@ -76,8 +76,8 @@ const resolveTraceFields = (headers: Headers): Record<string, string | boolean> 
 };
 
 /**
- * リクエストのトレース情報を束ねた子ロガーを返す。
- * 同一リクエスト内のログが Cloud Logging 上で同じトレースにグルーピングされる。
+ * リクエストのトレース情報を束ねた子ロガーを返す
+ * 同一リクエスト内のログが Cloud Logging 上で同じトレースにグルーピングされる
  */
 export const createRequestLogger = (headers: Headers): pino.Logger => {
   const trace = resolveTraceFields(headers);

@@ -36,7 +36,7 @@ export const RecoveryCodesPanel = () => {
     anchor.href = url;
     anchor.download = 'recovery-codes.txt';
     anchor.click();
-    // click() 直後に revoke するとダウンロード開始前に URL が無効化され得るため、非同期で解放する。
+    // click() 直後に revoke するとダウンロード開始前に URL が無効化され得るため、非同期で解放する
     setTimeout(() => URL.revokeObjectURL(url), 0);
   };
 

@@ -10,7 +10,7 @@ interface Props {
 const { media } = Astro.props;
 const songs = media.songs;
 
-// プラットフォームとサムネイルは状態として保持せず url から導出する。
+// プラットフォームとサムネイルは状態として保持せず url から導出する
 const platformName = mediaPlatformLabel(media.url);
 const thumbnailUrl = youtubeThumbnailFromUrl(media.url);
 

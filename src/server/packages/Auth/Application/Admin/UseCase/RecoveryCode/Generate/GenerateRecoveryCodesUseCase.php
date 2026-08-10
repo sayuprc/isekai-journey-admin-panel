@@ -41,7 +41,7 @@ readonly class GenerateRecoveryCodesUseCase
 
         return $this->transaction->scope(function () use ($adminUserId): GenerateRecoveryCodesOutputData {
             // 同一ユーザーの同時発行を直列化する。所有者行を FOR UPDATE でロックし、
-            // delete -> insert を他リクエストと交錯させない (両方のコードが残る・デッドロックを防ぐ)。
+            // delete -> insert を他リクエストと交錯させない (両方のコードが残る・デッドロックを防ぐ)
             $this->adminUserRepository->findByIdForUpdate($adminUserId);
 
             ['codes' => $codes, 'plainCodes' => $plainCodes] = $this->issueService->issue($adminUserId);

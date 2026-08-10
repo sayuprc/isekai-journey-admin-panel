@@ -103,7 +103,7 @@ class SearchUseCaseTest extends DatabaseTestCase
         $resultByTarget = $this->getInstance()->handle(new SearchInputData(targetId: $targetId));
         $this->assertCount(2, $resultByTarget->auditLogs);
 
-        // 部分一致でヒット（'検索' を含むのは '検索テストユーザーB' のみ）
+        // 部分一致でヒット('検索' を含むのは '検索テストユーザーB' のみ)
         $resultByActor = $this->getInstance()->handle(new SearchInputData(adminUserName: '検索'));
         $this->assertCount(1, $resultByActor->auditLogs);
         $this->assertSame($targetId, $resultByActor->auditLogs[0]->targetId);
@@ -113,7 +113,7 @@ class SearchUseCaseTest extends DatabaseTestCase
         $resultExact = $this->getInstance()->handle(new SearchInputData(adminUserName: '監査テストユーザーA'));
         $this->assertCount(2, $resultExact->auditLogs);
 
-        // 中間一致でもヒットする（'テストユーザーA' は '監査テストユーザーA' に含まれる）
+        // 中間一致でもヒットする('テストユーザーA' は '監査テストユーザーA' に含まれる)
         $resultSuffix = $this->getInstance()->handle(new SearchInputData(adminUserName: 'テストユーザーA'));
         $this->assertCount(2, $resultSuffix->auditLogs);
 

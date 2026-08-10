@@ -1,6 +1,6 @@
 # ヰ世界観測所
 
-ヰ世界情緒の情報を管理するためのモノレポです。
+ヰ世界情緒の情報を管理するためのモノレポです
 
 ## 構成
 
@@ -22,9 +22,9 @@
 2. `mise run setup`
 3. 必要な追加タスクは `mise tasks` で確認する
 
-`git worktree` を使うローカル開発運用は `docs/design-docs/local-runtime-topology.md` を参照する。
+`git worktree` を使うローカル開発運用は `docs/design-docs/local-runtime-topology.md` を参照する
 
-TypeScript 関連: パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する。
+TypeScript 関連: パッケージ管理は `src/` の pnpm workspace で行い、依存関係は `mise run pnpm:install` でインストールする。各 package script は Bun 実行環境で `cd src && bun --filter <package> <script>` として実行する
 
 ## ドキュメント
 

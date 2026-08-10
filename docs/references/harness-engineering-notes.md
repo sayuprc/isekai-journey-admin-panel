@@ -1,6 +1,6 @@
 # Harness Engineering Notes
 
-OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約したメモです。
+OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約したメモです
 
 ## このリポジトリに持ち込む要点
 

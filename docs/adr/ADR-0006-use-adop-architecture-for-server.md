@@ -9,18 +9,18 @@ applies_to: [api, admin]
 
 ## Context
 
-長期的に保守しやすいコードにするため、アーキテクチャのガイドラインが必要だった。
+長期的に保守しやすいコードにするため、アーキテクチャのガイドラインが必要だった
 
-クリーンアーキテクチャや Hexagonal Architecture は原則が抽象的で、「どこにコードを置くか」の解釈が人によってばらつく問題がある。
+クリーンアーキテクチャや Hexagonal Architecture は原則が抽象的で、「どこにコードを置くか」の解釈が人によってばらつく問題がある
 
-ADOP (Application Domain Others Pattern) は Hexagonal Architecture を実践するための具体的なガイドラインを提供するアーキテクチャで、ルールが2つだけとシンプルである。
-Application・Domain を厳密に設計し、その他はすべて Others として扱うことで、開発コストと品質のバランスを取れると判断した。
+ADOP (Application Domain Others Pattern) は Hexagonal Architecture を実践するための具体的なガイドラインを提供するアーキテクチャで、ルールが2つだけとシンプルである
+Application・Domain を厳密に設計し、その他はすべて Others として扱うことで、開発コストと品質のバランスを取れると判断した
 
 参考: https://nrslib.com/adop
 
 ## Decision
 
-サーバーに ADOP アーキテクチャを採用する。
+サーバーに ADOP アーキテクチャを採用する
 
 ## Consequences
 
@@ -28,7 +28,7 @@ Application・Domain を厳密に設計し、その他はすべて Others とし
 
 - 「このコードはどの層に置くか」の迷いが減る
 - Application・Domain にビジネスロジックが集中するため品質を保ちやすい
-- フレームワーク（Laravel）への依存を Application・Domain から切り離せる
+- フレームワーク(Laravel)への依存を Application・Domain から切り離せる
 - ルールが少ないため、厳密なクリーンアーキテクチャより習得しやすい
 
 ### Negative

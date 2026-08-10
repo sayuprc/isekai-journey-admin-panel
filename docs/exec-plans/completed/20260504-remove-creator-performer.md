@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-`Person` 基盤、song relation、admin 導線が揃った後も `Creator` / `Performer` を残すと、重複メンテナンスと誤運用の入口が残る。削除は破壊的変更なので最後の cleanup PR として独立させる。
+`Person` 基盤、song relation、admin 導線が揃った後も `Creator` / `Performer` を残すと、重複メンテナンスと誤運用の入口が残る。削除は破壊的変更なので最後の cleanup PR として独立させる
 
 ## Goal
 
-`feature/remove-creator-performer` で `Creator` / `Performer` の API、DB、UI、tests を削除し、参照先をすべて `Person` へ寄せ切る。
+`feature/remove-creator-performer` で `Creator` / `Performer` の API、DB、UI、tests を削除し、参照先をすべて `Person` へ寄せ切る
 
 ## Scope
 
@@ -44,16 +44,16 @@ completed
 
 ## Steps
 
-1. `src/contracts/src/admin/creators` / `performers` を削除し、main から参照を外す。
-2. `src/server/packages/Creator` / `Performer`、関連 model / controller / presenter / provider / route を削除する。
-3. `src/admin/src/server/routes/{creators,performers}.ts`、`src/admin/src/pages/{creators,performers}`、`src/admin/src/components/{creator,performer}` を削除する。
-4. 参照切れを `Person` 基盤へ置換し、不要テストを削除する。
-5. 主要な `Person` / `Song` テストと admin 型検査で回帰確認する。
+1. `src/contracts/src/admin/creators` / `performers` を削除し、main から参照を外す
+2. `src/server/packages/Creator` / `Performer`、関連 model / controller / presenter / provider / route を削除する
+3. `src/admin/src/server/routes/{creators,performers}.ts`、`src/admin/src/pages/{creators,performers}`、`src/admin/src/components/{creator,performer}` を削除する
+4. 参照切れを `Person` 基盤へ置換し、不要テストを削除する
+5. 主要な `Person` / `Song` テストと admin 型検査で回帰確認する
 
 ## Decision Log
 
-- 2026-05-04: 削除 PR は cleanup に徹し、ここでは新機能追加を混ぜない。レビューの焦点を「消してよいか」に限定するため。
-- 2026-05-04: admin 生成物は `src/admin/src/generated` を明示的に再生成して更新した。`admin:generate` 実行後の生成先状態に差異があったため。
+- 2026-05-04: 削除 PR は cleanup に徹し、ここでは新機能追加を混ぜない。レビューの焦点を「消してよいか」に限定するため
+- 2026-05-04: admin 生成物は `src/admin/src/generated` を明示的に再生成して更新した。`admin:generate` 実行後の生成先状態に差異があったため
 
 ## Validation
 

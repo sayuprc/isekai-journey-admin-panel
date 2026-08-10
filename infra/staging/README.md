@@ -35,4 +35,4 @@
 - Viewer deploy job は `API_URL` / `SITE_URL` / Cloudflare Worker 名 / account ID / API token secret を受け取り、Cloudflare Workers へ deploy する
 - staging はクロール不要のため `SITE_NOINDEX=true` を渡し、robots.txt と meta robots を noindex にする
 - 環境バッジ表示のため `APP_ENV=staging` を Admin は Dockerfile の `ENV`、Viewer deploy job は runtime env で渡す
-- Cloud Build 上で使う tool / base image の版は `mise.toml`（`[tools]` / `[vars]`）を Source of Truth とし、`tools/read-mise-value.sh` 経由で参照する
+- Cloud Build 上で使う tool / base image の版は `mise.toml`(`[tools]` / `[vars]`)を Source of Truth とし、`tools/read-mise-value.sh` 経由で参照する

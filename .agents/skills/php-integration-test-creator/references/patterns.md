@@ -1,17 +1,17 @@
 # PHP インテグレーションテストパターン
 
-このプロジェクトでは、実際のデータベースを使用したインテグレーションテストを実施しています。
+このプロジェクトでは、実際のデータベースを使用したインテグレーションテストを実施しています
 
 ## 一般的な構造
 
-- **場所**: `src/server/tests/Integration/` に配置されます。ディレクトリ構造は対象クラスと一致させます。
-- **基底クラス**: `Tests\Support\DatabaseTestCase` を継承します。
-- **トレイト**: `Tests\Support\Domain\EntityFactory` と `Tests\Support\Domain\EntityStore` を使用します。
-- **テストケース**: Unit テストがある場合、ハッピーパスのみを記述してください。
+- **場所**: `src/server/tests/Integration/` に配置されます。ディレクトリ構造は対象クラスと一致させます
+- **基底クラス**: `Tests\Support\DatabaseTestCase` を継承します
+- **トレイト**: `Tests\Support\Domain\EntityFactory` と `Tests\Support\Domain\EntityStore` を使用します
+- **テストケース**: Unit テストがある場合、ハッピーパスのみを記述してください
 
 ## データ準備 (シード)
 
-テスト実行前に必要なデータを `EntityFactory` で生成し、`EntityStore` または実際のリポジトリで保存します。
+テスト実行前に必要なデータを `EntityFactory` で生成し、`EntityStore` または実際のリポジトリで保存します
 
 ```php
 use Tests\Support\Domain\EntityFactory;
@@ -33,7 +33,7 @@ class MyTest extends DatabaseTestCase
 
 ## インスタンス化
 
-モックではなく、Laravel のサービスコンテナから実体を解決します。
+モックではなく、Laravel のサービスコンテナから実体を解決します
 
 ```php
 private function getInstance(): CreateUseCase
@@ -44,7 +44,7 @@ private function getInstance(): CreateUseCase
 
 ## 検証 (アサーション)
 
-戻り値の検証に加え、リポジトリの状態を確認します。
+戻り値の検証に加え、リポジトリの状態を確認します
 
 ```php
 // 結果の確認 (OutputData、または expectException() で例外)
@@ -56,4 +56,4 @@ $this->assertDatabaseHas('songs', ['title' => 'テスト楽曲']);
 
 ## 注意点
 
-- `DatabaseTestCase` が `DatabaseTransactions` トレイトを持ち、各テスト後にロールバックします。
+- `DatabaseTestCase` が `DatabaseTransactions` トレイトを持ち、各テスト後にロールバックします

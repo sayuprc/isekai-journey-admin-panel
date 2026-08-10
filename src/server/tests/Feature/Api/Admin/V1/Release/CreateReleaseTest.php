@@ -156,7 +156,7 @@ class CreateReleaseTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
 
-        // ライブ盤のアンコールなど、同じ楽曲が同一媒体に複数回収録されるケース。
+        // ライブ盤のアンコールなど、同じ楽曲が同一媒体に複数回収録されるケース
         $this->withAuth()
             ->postJson(route(ReleaseRouteMap::Create), [
                 'releaseGroupId' => $releaseGroupId,
@@ -207,7 +207,7 @@ class CreateReleaseTest extends DatabaseTestCase
             $this->createReleaseGroup($releaseGroupId, '観測された春', ReleaseGroupType::Album, true),
         );
 
-        // 楽曲への紐づきを維持したまま、トラックとしての表示名だけを上書きするケース。
+        // 楽曲への紐づきを維持したまま、トラックとしての表示名だけを上書きするケース
         $this->withAuth()
             ->postJson(route(ReleaseRouteMap::Create), [
                 'releaseGroupId' => $releaseGroupId,

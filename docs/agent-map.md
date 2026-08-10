@@ -1,6 +1,6 @@
 # Agent Map
 
-エージェント向けの共通入口です。まずこの文書を見てください。
+エージェント向けの共通入口です。まずこの文書を見てください
 
 ## まず見る文書
 
@@ -25,4 +25,4 @@
 - 背景メモ: `docs/references/harness-engineering-notes.md`
 - Agent 指示の置き場所: `docs/references/agent-instruction-placement.md`
 
-共通ルールをこの文書に増やしすぎず、詳細は下位文書へ分けます。
+共通ルールをこの文書に増やしすぎず、詳細は下位文書へ分けます

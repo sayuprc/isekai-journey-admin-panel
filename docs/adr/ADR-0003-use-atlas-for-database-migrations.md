@@ -9,14 +9,14 @@ applies_to: [api, admin]
 
 ## Context
 
-Laravel は将来的に置き換える前提でいるため、できるだけ Laravel に依存しないシステムを構築したかった。
-Laravel 標準の Eloquent マイグレーションは Laravel と密結合しているため採用しなかった。
+Laravel は将来的に置き換える前提でいるため、できるだけ Laravel に依存しないシステムを構築したかった
+Laravel 標準の Eloquent マイグレーションは Laravel と密結合しているため採用しなかった
 
-Atlas は HCL による宣言的なスキーマ定義が魅力的で、フレームワーク非依存で使えるため採用した。
+Atlas は HCL による宣言的なスキーマ定義が魅力的で、フレームワーク非依存で使えるため採用した
 
 ## Decision
 
-マイグレーションツールに Atlas を採用する。
+マイグレーションツールに Atlas を採用する
 
 ## Consequences
 

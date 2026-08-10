@@ -72,7 +72,7 @@ FIX: mise run up を実行してコンテナを起動してください。"
 ${diag}"
     fi
 
-    # mago lint（ホスト上で高速実行）
+    # mago lint(ホスト上で高速実行)
     mago_diag="$(mago lint "$file" 2>&1 | head -30)" || true
 
     if [ -n "$mago_diag" ] && echo "$mago_diag" | grep -qiE 'warning|error|help'; then

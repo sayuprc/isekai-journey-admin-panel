@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * ReleaseGroupSummary Class Doc Comment
  *
  * @category Class
- * @description リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）
+ * @description リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日(リリース未登録なら null)
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech

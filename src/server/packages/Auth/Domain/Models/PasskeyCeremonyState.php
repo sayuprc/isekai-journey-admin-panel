@@ -16,8 +16,8 @@ readonly class PasskeyCeremonyState
         public ?string $name,
         public string $adminUserId,
         public string $optionsJson,
-        // Recovery ceremony で start 時に検証成功したコードの id を束縛する。
-        // Recovery 以外の ceremony では null。
+        // Recovery ceremony で start 時に検証成功したコードの id を束縛する
+        // Recovery 以外の ceremony では null
         public ?string $recoveryCodeId = null,
     ) {
         new AuthCeremonyId($this->authCeremonyId);

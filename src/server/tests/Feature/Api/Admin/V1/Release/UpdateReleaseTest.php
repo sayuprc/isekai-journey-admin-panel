@@ -212,7 +212,7 @@ class UpdateReleaseTest extends DatabaseTestCase
             ),
         );
 
-        // 既存の参照トラックに表示名の上書きを設定するケース。
+        // 既存の参照トラックに表示名の上書きを設定するケース
         $this->withAuth()
             ->putJson(route(ReleaseRouteMap::Update, $releaseId), [
                 'name' => '新版名',
