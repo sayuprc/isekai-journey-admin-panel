@@ -2,6 +2,7 @@
 import SectionHead from '../components/viewer/SectionHead.astro';
 import SongTile from '../components/viewer/SongTile.astro';
 import TrackChip from '../components/viewer/TrackChip.astro';
+import { YOUTUBE_THUMBNAIL_ORIGIN, youtubeThumbnailFromUrl } from '../features/media/labels';
 import { releaseGroupContentRepository } from '../features/releases/content';
 import { representativeColor } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
@@ -13,9 +14,12 @@ const latestSong = await songContentRepository.latest();
 const latestReleaseTracks = latestReleaseGroup?.releases[0]?.media.flatMap(medium => medium.tracks) ?? [];
 
 const siteStats = await siteStatsRepository.get();
+const preconnect = latestSong?.media.some(entry => youtubeThumbnailFromUrl(entry.url) !== null)
+  ? [YOUTUBE_THUMBNAIL_ORIGIN]
+  : [];
 ---
 
-<Layout pageTitle="">
+<Layout pageTitle="" preconnect={preconnect}>
   <section class="hero-data">
     <div class="shell">
       <h1 class="hero-mark hero-mark-data">ヰ世界観測所</h1>

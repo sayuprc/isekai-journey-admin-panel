@@ -19,6 +19,8 @@ interface Props {
   breadcrumbs?: readonly BreadcrumbItem[];
   /** エラーページのように、実体のある URL として索引させたくないページで立てる */
   noindex?: boolean;
+  /** LCP 寄与があるサードパーティ origin だけ渡す。img 用なので crossorigin は付けない */
+  preconnect?: readonly string[];
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   ogImage = null,
   breadcrumbs = [],
   noindex: pageNoindex = false,
+  preconnect = [],
 } = Astro.props;
 
 const generateTitle = (title: string) => {
@@ -50,6 +53,7 @@ const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホ
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {preconnect.map(origin => <link rel="preconnect" href={origin} />)}
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={pageDescription} />

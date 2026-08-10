@@ -96,11 +96,14 @@ export function youtubeVideoId(url: string): string | null {
   return null;
 }
 
+/** YouTube サムネイル画像の origin。preconnect 用 */
+export const YOUTUBE_THUMBNAIL_ORIGIN = 'https://i.ytimg.com';
+
 // YouTube 動画 url ならサムネイル URL(sddefault.jpg)を導出する。動画でなければ null
 export function youtubeThumbnailFromUrl(url: string): string | null {
   const id = youtubeVideoId(url);
 
-  return id === null ? null : `https://i.ytimg.com/vi/${id}/sddefault.jpg`;
+  return id === null ? null : `${YOUTUBE_THUMBNAIL_ORIGIN}/vi/${id}/sddefault.jpg`;
 }
 
 // 保存済みサムネイル URL(末尾 sddefault.jpg)のファイル名のみを差し替えて
