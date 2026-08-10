@@ -3,6 +3,7 @@ import type { MediaTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { normalizeDateTimeDisplayValue } from '../../utils/date';
 import { ListState } from '../ListState';
+import { Pagination } from '../Pagination';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -239,7 +240,7 @@ export const SearchList = () => {
       </div>
 
       <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
-        <table class="table table-zebra">
+        <table class="table table-sm table-zebra md:table-md">
           <thead>
             <tr>
               <th>タイトル</th>
@@ -307,20 +308,7 @@ export const SearchList = () => {
       </div>
 
       <Show when={!data.loading && !fetchError() && (data()?.maxPage ?? 0) > 1}>
-        <div class="mt-4 flex justify-center">
-          <div class="join">
-            <For each={Array.from({ length: data()!.maxPage }, (_, index) => index + 1)}>
-              {p => (
-                <button
-                  class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
-                  onClick={() => handlePageChange(p)}
-                >
-                  {p}
-                </button>
-              )}
-            </For>
-          </div>
-        </div>
+        <Pagination page={page()} maxPage={data()!.maxPage} onChange={handlePageChange} />
       </Show>
     </>
   );
