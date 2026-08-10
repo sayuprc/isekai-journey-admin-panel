@@ -60,11 +60,11 @@ export const RecoveryForm = () => {
   return (
     <form onsubmit={handleSubmit}>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <label class="label">メールアドレス</label>
         <input
           type="email"
-          class="input w-full"
+          class="input"
           name="email"
           required
           classList={{ 'input-error': !!getFieldError('email') }}
@@ -74,7 +74,7 @@ export const RecoveryForm = () => {
         <label class="label">リカバリーコード</label>
         <input
           type="text"
-          class="input w-full"
+          class="input"
           name="recoveryCode"
           required
           classList={{ 'input-error': !!getFieldError('recoveryCode') }}
@@ -84,16 +84,10 @@ export const RecoveryForm = () => {
         </Show>
 
         <label class="label">新しいパスキー名</label>
-        <input
-          type="text"
-          class="input w-full"
-          name="name"
-          required
-          classList={{ 'input-error': !!getFieldError('name') }}
-        />
+        <input type="text" class="input" name="name" required classList={{ 'input-error': !!getFieldError('name') }} />
         <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-        <button class="btn btn-primary mt-4 w-full" disabled={isSubmitting()}>
+        <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? 'リカバリー中...' : 'リカバリー'}
         </button>
       </fieldset>

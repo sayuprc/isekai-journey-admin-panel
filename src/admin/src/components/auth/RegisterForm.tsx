@@ -66,11 +66,11 @@ export const RegisterForm = (props: RegisterFormProps) => {
   return (
     <form onsubmit={handleSubmit}>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <label class="label">登録トークン</label>
         <input
           type="text"
-          class="input w-full"
+          class="input"
           name="token"
           value={props.initialToken ?? ''}
           required
@@ -81,7 +81,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         <label class="label">メールアドレス</label>
         <input
           type="email"
-          class="input w-full"
+          class="input"
           name="email"
           required
           classList={{ 'input-error': !!getFieldError('email') }}
@@ -89,16 +89,10 @@ export const RegisterForm = (props: RegisterFormProps) => {
         <Show when={getFieldError('email')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
         <label class="label">名前</label>
-        <input
-          type="text"
-          class="input w-full"
-          name="name"
-          required
-          classList={{ 'input-error': !!getFieldError('name') }}
-        />
+        <input type="text" class="input" name="name" required classList={{ 'input-error': !!getFieldError('name') }} />
         <Show when={getFieldError('name')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-        <button class="btn btn-primary mt-4 w-full" disabled={isSubmitting()}>
+        <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? '登録中...' : '登録'}
         </button>
       </fieldset>

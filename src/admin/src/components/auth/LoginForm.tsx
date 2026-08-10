@@ -144,12 +144,12 @@ export const LoginForm = (props: LoginFormProps) => {
   return (
     <form onsubmit={handleSubmit}>
       <FormError message={formError()} onClose={clearErrors} />
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <label class="label">メールアドレス</label>
         <input
           ref={el => emailInput = el}
           type="email"
-          class="input w-full"
+          class="input"
           name="email"
           autocomplete="username webauthn"
           required
@@ -158,7 +158,7 @@ export const LoginForm = (props: LoginFormProps) => {
         />
         <Show when={getFieldError('email')}>{message => <p class="mt-1 text-xs text-error">{message()}</p>}</Show>
 
-        <button class="btn btn-primary mt-4 w-full" disabled={isSubmitting()}>
+        <button class="btn btn-primary mt-4" disabled={isSubmitting()}>
           {isSubmitting() ? 'ログイン中...' : 'ログイン'}
         </button>
       </fieldset>
