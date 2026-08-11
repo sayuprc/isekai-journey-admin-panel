@@ -31,3 +31,7 @@ jobs:
   contracts:
     name: Contracts QA
     uses: ./.github/workflows/contracts-qa.yaml
+
+  discord-notifier:
+    name: Discord Notifier QA
+    uses: ./.github/workflows/discord-notifier-qa.yaml

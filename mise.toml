@@ -10,6 +10,8 @@ pnpm = "11.20.0"
 
 [vars]
 mise_version = "2026.7.13"
+# moonc の version 文字列 (moon version --all の moonc 行)。install script / Docker build-arg で共有する
+moonbit_version = "0.10.6+80dc50f24"
 server_tag = "8.5.7"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
@@ -458,4 +460,24 @@ run = [
   "bun run biome:format:check",
   "bun run eslint:check",
   "bun run stylelint:check",
+]
+
+# -- Discord Notifier --
+
+[tasks."discord-notifier:test"]
+description = "discord-notifier の moon test を実行する"
+dir = "src/discord-notifier"
+run = "moon test"
+
+[tasks."discord-notifier:build"]
+description = "discord-notifier を native release ビルドする"
+dir = "src/discord-notifier"
+run = "moon build --target native --release"
+
+[tasks."discord-notifier:check"]
+description = "discord-notifier の check / test を実行する"
+dir = "src/discord-notifier"
+run = [
+  "moon check",
+  "moon test",
 ]
