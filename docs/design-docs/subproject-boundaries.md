@@ -44,3 +44,10 @@ UI 実装方針の詳細は `FRONTEND.md` を参照します
 - `src/viewer/src/styles/`: スタイル
 
 UI 実装方針の詳細は `FRONTEND.md` を参照します
+
+## Discord Notifier
+
+- `src/discord-notifier/`: MoonBit 製の Discord 通知配達サービス
+- Pub/Sub push を受け、`action` を環境変数の routing で channel に引き当てて Discord Webhook へ投稿する
+- 業務処理は持たない。振り分けは環境変数で行う
+- 発信元は Discord を直接呼ばず、Pub/Sub に正規化済み JSON を publish する

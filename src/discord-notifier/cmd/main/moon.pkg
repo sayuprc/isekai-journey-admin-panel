@@ -1,0 +1,6 @@
+import {
+  "isekai-observatory/discord-notifier" @lib,
+  "moonbitlang/async",
+}
+
+pkgtype(kind: "executable")

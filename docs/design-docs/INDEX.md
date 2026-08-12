@@ -4,4 +4,4 @@
 
 - `core-beliefs.md`: このリポジトリで優先する開発原則
 - `local-runtime-topology.md`: ローカル開発時のサービス構成、worktree 分離、並列実装の運用
-- `subproject-boundaries.md`: `contracts` / `server` / `admin` / `viewer` の責務境界
+- `subproject-boundaries.md`: `contracts` / `server` / `admin` / `viewer` / `discord-notifier` の責務境界
