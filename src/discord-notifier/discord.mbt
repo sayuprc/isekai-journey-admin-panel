@@ -46,9 +46,22 @@ fn apply_status_colors(embeds : Json, status : String) -> Json {
 }
 
 ///|
-/// embeds の color 未指定に status 既定色を付けて Discord payload にする
+/// content / embeds を Discord webhook payload にする
+/// embeds の color 未指定には status 既定色を付ける
 pub fn build_discord_payload(notification : Notification) -> Json {
-  { "embeds": apply_status_colors(notification.embeds, notification.status) }
+  match (notification.content, notification.embeds) {
+    (Some(content), Some(embeds)) =>
+      {
+        "content": content,
+        "embeds": apply_status_colors(embeds, notification.status),
+      }
+    (Some(content), None) => { "content": content }
+    (None, Some(embeds)) =>
+      { "embeds": apply_status_colors(embeds, notification.status) }
+    (None, None) =>
+      // parse で content / embeds のどちらかを必須にしている
+      { "content": "" }
+  }
 }
 
 ///|

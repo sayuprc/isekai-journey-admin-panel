@@ -50,7 +50,8 @@ pub fn Config::resolve_webhook_url(Self, String) -> String?
 pub struct Notification {
   action : String
   status : String
-  embeds : Json
+  content : String?
+  embeds : Json?
 } derive(Eq, @debug.Debug)
 
 pub(all) enum Outcome {

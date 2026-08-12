@@ -14,8 +14,58 @@ test "parse app notification raw" {
   guard notification is Some(n) else { fail("expected notification") }
   assert_eq(n.action, "media.youtube_import")
   assert_eq(n.status, "failed")
-  guard n.embeds is Array(items) else { fail("expected embeds") }
+  assert_eq(n.content, None)
+  guard n.embeds is Some(embeds) else { fail("expected embeds") }
+  guard embeds is Array(items) else { fail("expected array") }
   assert_eq(items.length(), 1)
+}
+
+///|
+test "parse app notification with content" {
+  let body = "{\"action\":\"media.youtube_import\",\"status\":\"failed\",\"content\":\"取り込み失敗\",\"embeds\":[{\"title\":\"boom\"}]}"
+  let notification = parse_request_body(
+    body,
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  assert_eq(n.content, Some("取り込み失敗"))
+  guard n.embeds is Some(_) else { fail("expected embeds") }
+}
+
+///|
+test "parse app notification content only" {
+  let body = "{\"action\":\"media.youtube_import\",\"status\":\"failed\",\"content\":\"取り込み失敗\"}"
+  let notification = parse_request_body(
+    body,
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  assert_eq(n.content, Some("取り込み失敗"))
+  assert_eq(n.embeds, None)
+}
+
+///|
+test "parse app notification ignores empty content when embeds present" {
+  let body = "{\"action\":\"media.youtube_import\",\"status\":\"failed\",\"content\":\"\",\"embeds\":[{\"title\":\"boom\"}]}"
+  let notification = parse_request_body(
+    body,
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  assert_eq(n.content, None)
+  guard n.embeds is Some(_) else { fail("expected embeds") }
+}
+
+///|
+test "parse app notification ignores empty embeds when content present" {
+  let body = "{\"action\":\"media.youtube_import\",\"status\":\"failed\",\"content\":\"取り込み失敗\",\"embeds\":[]}"
+  let notification = parse_request_body(
+    body,
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  assert_eq(n.content, Some("取り込み失敗"))
+  assert_eq(n.embeds, None)
 }
 
 ///|
@@ -44,10 +94,22 @@ test "parse app notification requires action" {
 }
 
 ///|
-test "parse app notification rejects empty embeds" {
+test "parse app notification requires content or embeds" {
   let err = @test.expect_error(() => {
     parse_request_body(
-      "{\"action\":\"admin.invite\",\"status\":\"succeeded\",\"embeds\":[]}",
+      "{\"action\":\"admin.invite\",\"status\":\"succeeded\"}",
+      cloud_build_trigger_name="dev-isekai-ci",
+    )
+    |> ignore
+  })
+  guard err is InvalidPayload(_) else { fail("expected InvalidPayload") }
+}
+
+///|
+test "parse app notification rejects empty content and empty embeds" {
+  let err = @test.expect_error(() => {
+    parse_request_body(
+      "{\"action\":\"admin.invite\",\"status\":\"succeeded\",\"content\":\"\",\"embeds\":[]}",
       cloud_build_trigger_name="dev-isekai-ci",
     )
     |> ignore
@@ -65,7 +127,9 @@ test "parse cloud build working" {
   guard notification is Some(n) else { fail("expected notification") }
   assert_eq(n.action, "cloud_build")
   assert_eq(n.status, "started")
-  guard n.embeds
+  assert_eq(n.content, None)
+  guard n.embeds is Some(embeds) else { fail("expected embeds") }
+  guard embeds
     is [
       {
         "title": String(title),
@@ -90,7 +154,8 @@ test "parse cloud build without log url" {
   )
   guard notification is Some(n) else { fail("expected notification") }
   assert_eq(n.status, "succeeded")
-  guard n.embeds is Array(items) else { fail("expected embeds") }
+  guard n.embeds is Some(embeds) else { fail("expected embeds") }
+  guard embeds is Array(items) else { fail("expected array") }
   assert_eq(items.length(), 1)
   guard items[0] is Object(map) else { fail("expected object") }
   guard map.get("title") is Some(String(title)) else { fail("expected title") }
@@ -153,21 +218,23 @@ test "dedupe started builds" {
 
 ///|
 test "discord payload fills status color when missing" {
+  let embeds : Json = [
+    {
+      "title": "取り込みでエラーが発生しました",
+      "fields": [
+        {
+          "name": "executed_at",
+          "value": "2026-01-01T00:00:00Z",
+          "inline": true,
+        },
+      ],
+    },
+  ]
   let payload = build_discord_payload({
     action: "media.youtube_import",
     status: "failed",
-    embeds: [
-      {
-        "title": "取り込みでエラーが発生しました",
-        "fields": [
-          {
-            "name": "executed_at",
-            "value": "2026-01-01T00:00:00Z",
-            "inline": true,
-          },
-        ],
-      },
-    ],
+    content: None,
+    embeds: Some(embeds),
   })
   guard payload
     is {
@@ -187,14 +254,60 @@ test "discord payload fills status color when missing" {
   assert_eq(color.to_int(), 0xED4245)
   guard fields is Array(items) else { fail("expected fields") }
   assert_eq(items.length(), 1)
+  assert_eq(
+    match payload {
+      { "content": _, .. } => true
+      _ => false
+    },
+    false,
+  )
+}
+
+///|
+test "discord payload includes content when present" {
+  let embeds : Json = [{ "title": "boom" }]
+  let payload = build_discord_payload({
+    action: "media.youtube_import",
+    status: "failed",
+    content: Some("取り込み失敗"),
+    embeds: Some(embeds),
+  })
+  guard payload is { "content": String(content), "embeds": Array(items), .. } else {
+    fail("expected content and embeds")
+  }
+  assert_eq(content, "取り込み失敗")
+  assert_eq(items.length(), 1)
+}
+
+///|
+test "discord payload content only" {
+  let payload = build_discord_payload({
+    action: "media.youtube_import",
+    status: "failed",
+    content: Some("取り込み失敗"),
+    embeds: None,
+  })
+  guard payload is { "content": String(content), .. } else {
+    fail("expected content")
+  }
+  assert_eq(content, "取り込み失敗")
+  assert_eq(
+    match payload {
+      { "embeds": _, .. } => true
+      _ => false
+    },
+    false,
+  )
 }
 
 ///|
 test "discord payload keeps explicit embed color" {
+  let embeds : Json = [{ "title": "custom", "color": 1 }]
   let payload = build_discord_payload({
     action: "media.youtube_import",
     status: "failed",
-    embeds: [{ "title": "custom", "color": 1 }],
+    content: None,
+    embeds: Some(embeds),
   })
   guard payload is { "embeds": [{ "color": Number(color, ..), .. }], .. } else {
     fail("expected embed")
@@ -204,20 +317,24 @@ test "discord payload keeps explicit embed color" {
 
 ///|
 test "discord payload colors by status" {
+  let ok_embeds : Json = [{ "title": "ok" }]
   let succeeded = build_discord_payload({
     action: "cloud_build",
     status: "succeeded",
-    embeds: [{ "title": "ok" }],
+    content: None,
+    embeds: Some(ok_embeds),
   })
   guard succeeded is { "embeds": [{ "color": Number(color, ..), .. }], .. } else {
     fail("expected embed")
   }
   assert_eq(color.to_int(), 0x57F287)
 
+  let working_embeds : Json = [{ "title": "working" }]
   let started = build_discord_payload({
     action: "cloud_build",
     status: "started",
-    embeds: [{ "title": "working" }],
+    content: None,
+    embeds: Some(working_embeds),
   })
   guard started
     is { "embeds": [{ "color": Number(started_color, ..), .. }], .. } else {

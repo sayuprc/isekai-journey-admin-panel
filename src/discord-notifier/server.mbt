@@ -27,7 +27,12 @@ pub async fn serve(app : App) -> Unit {
             err => {
               // 一時失敗として Pub/Sub に再送させる (恒久失敗の Ack と区別する)
               println("retry: failed to read body: \{err}")
-              respond(conn, 500, "Internal Server Error", body="failed to read body")
+              respond(
+                conn,
+                500,
+                "Internal Server Error",
+                body="failed to read body",
+              )
               return
             }
           }
