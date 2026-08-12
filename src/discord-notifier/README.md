@@ -5,7 +5,7 @@ Pub/Sub push を受け取り、Discord Webhook へ配達する Cloud Run 向け�
 ## 責務
 
 - `{env}-discord-notify` / `cloud-builds` からの Pub/Sub push を受ける
-- アプリ通知 JSON (`action` / `status` / `embeds`) を配達する
+- アプリ通知 JSON (`action` / `status` / `content?` / `embeds?`) を配達する
 - Cloud Build JSON を同じ契約に正規化して配達する
 - `action` を env の routing で channel に引き当て、`DISCORD_WEBHOOK_<CHANNEL>` へ投稿する
 
@@ -15,6 +15,7 @@ Pub/Sub push を受け取り、Discord Webhook へ配達する Cloud Run 向け�
 {
   "action": "media.youtube_import",
   "status": "failed",
+  "content": "YouTube 取り込みでエラーが発生しました",
   "embeds": [
     {
       "title": "YouTube 取り込みでエラーが発生しました",
@@ -29,7 +30,9 @@ Pub/Sub push を受け取り、Discord Webhook へ配達する Cloud Run 向け�
 
 - `action`: 処理単位の識別子。Notifier が channel を決める
 - `status`: `started` / `succeeded` / `failed` / `alert` など。embed に `color` が無いときの既定色
-- `embeds`: Discord embed 配列 (必須・空不可)。見た目はここに寄せる
+- `content`: Discord webhook の本文 (任意)。空文字や未指定なら payload に載せない
+- `embeds`: Discord embed 配列 (任意)。空配列や未指定なら payload に載せない
+- `content` と非空の `embeds` のどちらか一方は必須
 
 ## 色
 
@@ -72,7 +75,7 @@ moon run cmd/main --target native
 ```bash
 curl -sS -X POST "http://127.0.0.1:8080/" \
   -H 'Content-Type: application/json' \
-  -d '{"action":"media.youtube_import","status":"failed","embeds":[{"title":"test error","fields":[{"name":"executed_at","value":"2026-01-01T00:00:00Z","inline":true}]}]}'
+  -d '{"action":"media.youtube_import","status":"failed","content":"test error","embeds":[{"title":"test error","fields":[{"name":"executed_at","value":"2026-01-01T00:00:00Z","inline":true}]}]}'
 ```
 
 ## 環境変数

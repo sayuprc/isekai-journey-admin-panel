@@ -3,7 +3,11 @@
 pub struct Notification {
   action : String
   status : String
-  embeds : Json
+  /// Discord webhook の content (無い/空なら payload に載せない)
+  content : String?
+  /// Discord embed 配列 (無い/空なら payload に載せない)
+  /// content と embeds のどちらか一方は必須
+  embeds : Json?
 } derive(Eq, Debug)
 
 ///|

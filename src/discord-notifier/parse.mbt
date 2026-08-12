@@ -36,18 +36,50 @@ fn parse_payload_json(
   cloud_build_trigger_name~ : String,
 ) -> Notification? raise ParseError {
   match payload {
-    { "action": String(action), "status": String(status), "embeds": embeds, .. } => {
-      guard has_embeds(embeds) else {
-        raise InvalidPayload("embeds must be a non-empty array")
+    { "action": String(action), "status": String(status), .. } => {
+      let content = extract_content(payload)
+      let embeds = extract_embeds(payload)
+      guard content is Some(_) || embeds is Some(_) else {
+        raise InvalidPayload("content or non-empty embeds is required")
       }
-      Some({ action, status, embeds })
+      Some({ action, status, content, embeds })
     }
     { "id": String(_), "status": String(status), .. } =>
       parse_cloud_build(payload, status, cloud_build_trigger_name~)
     _ =>
       raise InvalidPayload(
-        "expected app notification with action/status/embeds or Cloud Build JSON",
+        "expected app notification with action/status or Cloud Build JSON",
       )
+  }
+}
+
+///|
+fn extract_content(payload : Json) -> String? {
+  match payload {
+    { "content": String(content), .. } =>
+      if content == "" {
+        None
+      } else {
+        Some(content)
+      }
+    _ => None
+  }
+}
+
+///|
+fn extract_embeds(payload : Json) -> Json? raise ParseError {
+  match payload {
+    { "embeds": embeds, .. } => {
+      guard embeds is Array(_) else {
+        raise InvalidPayload("embeds must be an array")
+      }
+      if has_embeds(embeds) {
+        Some(embeds)
+      } else {
+        None
+      }
+    }
+    _ => None
   }
 }
 
@@ -86,7 +118,12 @@ fn parse_cloud_build(
   } else {
     { "title": title, "url": log_url, "fields": fields }
   }
-  Some({ action: "cloud_build", status: notify_status, embeds: [embed] })
+  Some({
+    action: "cloud_build",
+    status: notify_status,
+    content: None,
+    embeds: Some([embed]),
+  })
 }
 
 ///|
