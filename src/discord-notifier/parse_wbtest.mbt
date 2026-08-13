@@ -193,19 +193,110 @@ test "parse cloud build failed statuses" {
 }
 
 ///|
+test "parse cloud run job log entry via pubsub" {
+  let inner = "{\"resource\":{\"type\":\"cloud_run_job\",\"labels\":{\"job_name\":\"prod-media-youtube-import\",\"location\":\"asia-northeast1\"}},\"labels\":{\"run.googleapis.com/execution_name\":\"prod-media-youtube-import-xxxxx\"},\"protoPayload\":{\"status\":{\"message\":\"Execution prod-media-youtube-import-xxxxx has failed to complete.\"}}}"
+  let notification = parse_request_body(
+    encode_pubsub(inner),
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  assert_eq(n.action, "cloud_run_job")
+  assert_eq(n.status, "failed")
+  assert_eq(n.content, None)
+  guard n.embeds is Some(embeds) else { fail("expected embeds") }
+  guard embeds is [{ "title": String(title), "fields": Array(fields), .. }] else {
+    fail("expected embed")
+  }
+  assert_eq(title, "Cloud Run Job failed: prod-media-youtube-import")
+  assert_eq(fields.length(), 4)
+  guard fields[0] is { "name": String("job"), "value": String(job), .. } else {
+    fail("expected job field")
+  }
+  assert_eq(job, "prod-media-youtube-import")
+  guard fields[1]
+    is { "name": String("execution"), "value": String(execution), .. } else {
+    fail("expected execution field")
+  }
+  assert_eq(execution, "prod-media-youtube-import-xxxxx")
+  guard fields[2]
+    is { "name": String("location"), "value": String(location), .. } else {
+    fail("expected location field")
+  }
+  assert_eq(location, "asia-northeast1")
+  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+    fail("expected message field")
+  }
+  assert_eq(
+    message, "Execution prod-media-youtube-import-xxxxx has failed to complete.",
+  )
+}
+
+///|
+test "parse cloud run job prefers textPayload when proto message missing" {
+  let inner = "{\"resource\":{\"type\":\"cloud_run_job\",\"labels\":{\"job_name\":\"dev-job\",\"location\":\"asia-northeast1\"}},\"labels\":{\"run.googleapis.com/execution_name\":\"dev-job-1\"},\"textPayload\":\"task failed\"}"
+  let notification = parse_request_body(
+    encode_pubsub(inner),
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  guard n.embeds is Some([{ "fields": Array(fields), .. }]) else {
+    fail("expected embeds")
+  }
+  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+    fail("expected message")
+  }
+  assert_eq(message, "task failed")
+}
+
+///|
+test "parse cloud run job truncates long message" {
+  let long = String::make(1200, 'a')
+  let inner = "{\"resource\":{\"type\":\"cloud_run_job\",\"labels\":{\"job_name\":\"dev-job\",\"location\":\"asia-northeast1\"}},\"labels\":{\"run.googleapis.com/execution_name\":\"dev-job-1\"},\"textPayload\":\"\{long}\"}"
+  let notification = parse_request_body(
+    encode_pubsub(inner),
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  guard notification is Some(n) else { fail("expected notification") }
+  guard n.embeds is Some([{ "fields": Array(fields), .. }]) else {
+    fail("expected embeds")
+  }
+  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+    fail("expected message")
+  }
+  assert_eq(message.length(), 1003)
+  assert_true(message.has_suffix("..."))
+}
+
+///|
+test "parse ignores non cloud_run_job log entry" {
+  let inner = "{\"resource\":{\"type\":\"cloud_run_revision\",\"labels\":{\"service_name\":\"api\"}},\"textPayload\":\"hello\"}"
+  let notification = parse_request_body(
+    encode_pubsub(inner),
+    cloud_build_trigger_name="dev-isekai-ci",
+  )
+  assert_eq(notification, None)
+}
+
+///|
 test "resolve channel from action routing" {
   let config : Config = {
     default_channel: "app",
-    action_routing: { "cloud_build": "build", "ops.alert": "ops" },
+    action_routing: {
+      "cloud_build": "build",
+      "cloud_run_job": "job_fail",
+      "ops.alert": "ops",
+    },
     cloud_build_trigger_name: "dev-isekai-ci",
     port: 8080,
   }
   assert_eq(config.resolve_channel("cloud_build"), "build")
+  assert_eq(config.resolve_channel("cloud_run_job"), "job_fail")
   assert_eq(config.resolve_channel("ops.alert"), "ops")
   assert_eq(config.resolve_channel("media.youtube_import"), "app")
   assert_eq(config.resolve_channel(""), "app")
   assert_eq(webhook_env_name("build"), "DISCORD_WEBHOOK_BUILD")
   assert_eq(webhook_env_name("app"), "DISCORD_WEBHOOK_APP")
+  assert_eq(webhook_env_name("job_fail"), "DISCORD_WEBHOOK_JOB_FAIL")
 }
 
 ///|

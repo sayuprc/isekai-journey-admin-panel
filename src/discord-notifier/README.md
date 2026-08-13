@@ -4,9 +4,10 @@ Pub/Sub push を受け取り、Discord Webhook へ配達する Cloud Run 向け�
 
 ## 責務
 
-- `{env}-discord-notify` / `cloud-builds` からの Pub/Sub push を受ける
+- `{env}-discord-notify` / `cloud-builds` / `{env}-cloud-run-job-failures` からの Pub/Sub push を受ける
 - アプリ通知 JSON (`action` / `status` / `content?` / `embeds?`) を配達する
 - Cloud Build JSON を同じ契約に正規化して配達する
+- Cloud Run Job 失敗の LogEntry を `action=cloud_run_job` / `status=failed` に正規化して配達する
 - `action` を env の routing で channel に引き当て、`DISCORD_WEBHOOK_<CHANNEL>` へ投稿する
 
 ## 契約
@@ -63,10 +64,11 @@ moon build --target native --release
 ```bash
 export PORT=8080
 export DISCORD_DEFAULT_CHANNEL=app
-export DISCORD_ACTION_ROUTING='{"cloud_build":"build"}'
+export DISCORD_ACTION_ROUTING='{"cloud_build":"build","cloud_run_job":"job_fail"}'
 export CLOUD_BUILD_TRIGGER_NAME=dev-isekai-ci
 export DISCORD_WEBHOOK_APP='https://example.com/webhooks/...'
 export DISCORD_WEBHOOK_BUILD='https://example.com/webhooks/...'
+export DISCORD_WEBHOOK_JOB_FAIL='https://example.com/webhooks/...'
 moon run cmd/main --target native
 ```
 

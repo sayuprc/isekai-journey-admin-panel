@@ -46,9 +46,15 @@ fn parse_payload_json(
     }
     { "id": String(_), "status": String(status), .. } =>
       parse_cloud_build(payload, status, cloud_build_trigger_name~)
+    { "resource": { "type": String(resource_type), .. }, .. } =>
+      if resource_type == "cloud_run_job" {
+        Some(parse_cloud_run_job(payload))
+      } else {
+        None
+      }
     _ =>
       raise InvalidPayload(
-        "expected app notification with action/status or Cloud Build JSON",
+        "expected app notification with action/status, Cloud Build JSON, or cloud_run_job LogEntry",
       )
   }
 }
@@ -131,6 +137,75 @@ fn extract_trigger_name(payload : Json) -> String {
   match payload {
     { "substitutions": { "TRIGGER_NAME": String(name), .. }, .. } => name
     _ => ""
+  }
+}
+
+///|
+/// Cloud Logging LogEntry (resource.type=cloud_run_job) を正規化する
+/// Sink 側で失敗のみ流す前提なので status は常に failed
+fn parse_cloud_run_job(payload : Json) -> Notification {
+  let job = match payload {
+    { "resource": { "labels": labels, .. }, .. } =>
+      json_string_field(labels, "job_name")
+    _ => "unknown"
+  }
+  let location = match payload {
+    { "resource": { "labels": labels, .. }, .. } =>
+      json_string_field(labels, "location")
+    _ => "unknown"
+  }
+  let execution = match payload {
+    { "labels": labels, .. } =>
+      json_string_field(labels, "run.googleapis.com/execution_name")
+    _ => "unknown"
+  }
+  let message = truncate_text(extract_log_message(payload), 1000)
+  let job_label = if job == "" { "unknown" } else { job }
+  let execution_label = if execution == "" { "unknown" } else { execution }
+  let location_label = if location == "" { "unknown" } else { location }
+  let message_label = if message == "" { "(no message)" } else { message }
+  let embed : Json = {
+    "title": "Cloud Run Job failed: \{job_label}",
+    "fields": [
+      { "name": "job", "value": job_label, "inline": true },
+      { "name": "execution", "value": execution_label, "inline": true },
+      { "name": "location", "value": location_label, "inline": true },
+      { "name": "message", "value": message_label, "inline": false },
+    ],
+  }
+  {
+    action: "cloud_run_job",
+    status: "failed",
+    content: None,
+    embeds: Some([embed]),
+  }
+}
+
+///|
+fn extract_log_message(payload : Json) -> String {
+  match payload {
+    { "protoPayload": { "status": { "message": String(message), .. }, .. }, .. } =>
+      message
+    { "textPayload": String(message), .. } => message
+    _ => ""
+  }
+}
+
+///|
+fn json_string_field(obj : Json, key : String) -> String {
+  guard obj is Object(map) else { return "" }
+  match map.get(key) {
+    Some(String(value)) => value
+    _ => ""
+  }
+}
+
+///|
+fn truncate_text(text : String, max_len : Int) -> String {
+  if text.length() <= max_len {
+    text
+  } else {
+    "\{text[:max_len]}..."
   }
 }
 
