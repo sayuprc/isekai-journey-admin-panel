@@ -159,6 +159,7 @@ steps:
         set -euo pipefail
 
         NODE_VERSION=$$(./tools/read-mise-value.sh node)
+        MOONBIT_VERSION=$$(./tools/read-mise-value.sh moonbit_version)
 
         docker build \
           -f infra/production/docker/viewer/Dockerfile \
@@ -166,6 +167,7 @@ steps:
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --build-arg "NODE_VERSION=$${NODE_VERSION}" \
+          --build-arg "MOONBIT_VERSION=$${MOONBIT_VERSION}" \
           .
 
   - id: build-admin-proxy-image

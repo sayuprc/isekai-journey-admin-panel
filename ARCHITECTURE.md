@@ -19,6 +19,7 @@
 - `src/admin/`: Astro / SolidJS / Elysia による管理画面
 - `src/viewer/`: Astro / SolidJS による閲覧サイト
 - `src/discord-notifier/`: MoonBit 製 Discord 通知配達サービス (Cloud Run)
+- `src/notify-publish/`: MoonBit 製の通知 JSON → Pub/Sub publish CLI
 - `mise.toml`: 開発ツール・タスク定義、および CI / インフラ向け版ピンのカタログ(`[tools]` / `[vars]`)
 - `compose.yaml`: ローカルで使う proxy / php / mysql / redis の定義
 
@@ -45,6 +46,7 @@
 | 管理画面の UI / BFF | `src/admin` | 必要なら `src/contracts` | `cd src && bun --filter admin lint:check`, `style:check`, `build` |
 | 閲覧サイトの UI | `src/viewer` | 必要なら `src/contracts` | `cd src && bun --filter viewer lint:check`, `style:check`, `build` |
 | Discord 通知配達 | `src/discord-notifier` | 各 env の `docker/discord-notifier`、Cloud Build | `mise run discord-notifier:check` |
+| 通知 Pub/Sub publish | `src/notify-publish` | 各 env の `docker/viewer` (viewer-deploy から利用) | `mise run notify-publish:check` |
 | 開発環境 | `mise.toml`, `compose.yaml`, `infra/local/docker/` | 関連 docs | 起動確認と影響範囲の明記 |
 | 環境別インフラ | `infra/development/`, `infra/staging/`, `infra/production/` | 関連 docs | Cloud Build 設定、Dockerfile、build context の確認 |
 
