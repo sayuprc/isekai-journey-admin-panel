@@ -4,7 +4,7 @@ MoonBit 製の Discord 通知配達サービス
 
 ## 構成
 
-- `parse.mbt`: Pub/Sub envelope / アプリ通知 / Cloud Build 正規化
+- `parse.mbt`: Pub/Sub envelope / アプリ通知 / Cloud Build / Cloud Run Job 失敗 LogEntry の正規化
 - `config.mbt`: env からの action -> channel 振り分け
 - `dedup.mbt`: cloud_build started のプロセスローカル重複抑止
 - `discord.mbt`: embeds に status 既定色を付けて Webhook POST
