@@ -2,7 +2,8 @@
 
 ## 位置づけ
 
-実行計画は第一級の成果物です。小さい作業でも、複雑さがあるなら短い計画を書いてから進めます
+実行計画は第一級の成果物です
+小さい作業でも、複雑さがあるなら短い計画を書いてから進めます
 
 ## いつ計画を書くか
 
@@ -11,28 +12,8 @@
 - スタック選定や構造変更を含む変更
 - 複数回の確認やレビューが必要そうな変更
 
-## 置き場所
+## 置き場所と詳細ルール
 
 - 進行中: `docs/exec-plans/active/`
 - 完了後: `docs/exec-plans/completed/`
-
-## 計画に必ず入れるもの
-
-- `Status`
-- `Background`
-- `Goal`
-- `Scope`
-- `Non-Scope`
-- `Acceptance Criteria`
-- `Steps`
-- `Decision Log`
-- `Validation`
-
-## 運用ルール
-
-- 長文にしない。実行に必要な情報だけを書く
-- 作業中に前提が変わったら更新する
-- 完了したら `completed/` に移す
-- 実装結果と食い違う計画は放置しない
-
-テンプレートは `docs/exec-plans/template.md` を使います
+- 必須項目、テンプレート、運用の詳細: `docs/exec-plans/README.md`

@@ -2,7 +2,7 @@
 id: ADR-0007
 status: accepted
 superseded_by: null
-applies_to: [admin, client]
+applies_to: [admin, viewer]
 ---
 
 # BFF の実装に Astro と Elysia.js を採用する

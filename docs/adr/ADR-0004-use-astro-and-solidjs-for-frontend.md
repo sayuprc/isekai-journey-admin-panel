@@ -2,7 +2,7 @@
 id: ADR-0004
 status: accepted
 superseded_by: null
-applies_to: [admin, client]
+applies_to: [admin, viewer]
 ---
 
 # フロントエンドに Astro と SolidJS を採用する

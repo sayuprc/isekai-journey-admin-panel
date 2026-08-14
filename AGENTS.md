@@ -8,4 +8,4 @@
 - `README.md`: セットアップと主要コマンド
 - `ARCHITECTURE.md`: Source of Truth と変更ルート
 
-共通ルールをこのファイルへ複写せず、必要な内容は `docs/agent-map.md` か下位文書に集約する
+共通ルールをこのファイルへ複写せず、必要な内容は `docs/agent-map.md` か下位文書に集約します
