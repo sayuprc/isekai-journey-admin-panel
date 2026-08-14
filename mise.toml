@@ -490,11 +490,12 @@ dir = "src/discord-notifier"
 run = "moon build --target native --release"
 
 [tasks."discord-notifier:check"]
-description = "discord-notifier の check / test を実行する"
+description = "discord-notifier の check / test / native build を実行する"
 dir = "src/discord-notifier"
 run = [
   "moon check",
   "moon test",
+  "moon build --target native --release",
 ]
 
 # -- Notify Publish --
@@ -510,9 +511,37 @@ dir = "src/notify-publish"
 run = "moon build --target native --release"
 
 [tasks."notify-publish:check"]
-description = "notify-publish の check / test を実行する"
+description = "notify-publish の check / test / native build を実行する"
 dir = "src/notify-publish"
 run = [
   "moon check",
   "moon test",
+  "moon build --target native --release",
 ]
+
+# -- Admin Proxy --
+
+[tasks."admin-proxy:format"]
+description = "admin-proxy の formatter を実行し、フォーマットを自動修正する"
+dir = "src/admin-proxy"
+run = "bun run format"
+
+[tasks."admin-proxy:format:check"]
+description = "admin-proxy の formatter をチェックする"
+dir = "src/admin-proxy"
+run = "bun run format:check"
+
+[tasks."admin-proxy:lint"]
+description = "admin-proxy の linter を実行する"
+dir = "src/admin-proxy"
+run = "bun run lint:check"
+
+[tasks."admin-proxy:typecheck"]
+description = "admin-proxy の TypeScript をチェックする"
+dir = "src/admin-proxy"
+run = "bun run typecheck"
+
+[tasks."admin-proxy:check"]
+description = "admin-proxy の format / lint / typecheck を実行する"
+depends = ["admin-proxy:format:check", "admin-proxy:lint", "admin-proxy:typecheck"]
+

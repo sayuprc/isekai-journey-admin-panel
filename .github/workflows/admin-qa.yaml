@@ -18,7 +18,7 @@ on:
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/admin-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   push:
     branches:
       - dev
@@ -32,7 +32,7 @@ on:
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/admin-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   workflow_call:
 
 env:
