@@ -7,6 +7,7 @@ return [
 
     'pubsub' => [
         'notification' => [
+            'enabled' => env('NOTIFICATION_ENABLED', false),
             'topic' => env('NOTIFICATION_TOPIC'),
         ],
     ],

@@ -8,7 +8,6 @@ use CuyZ\Valinor\MapperBuilder;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Override;
-use Support\App\Environment;
 use Support\Contracts\ClockInterface;
 use Support\Contracts\MapperInterface;
 use Support\Contracts\TransactionInterface;
@@ -55,9 +54,9 @@ class SupportServiceProvider extends ServiceProvider
         );
         $this->app->singleton(
             NotificationDriverInterface::class,
-            static fn (Application $app) => in_array(Environment::getEnv(), [Environment::Local, Environment::Testing], true)
-                ? $app->make(NopNotificationPubSubDriver::class)
-                : $app->make(NotificationPubSubDriver::class),
+            static fn (Application $app) => config()->boolean('gc.pubsub.notification.enabled')
+                ? $app->make(NotificationPubSubDriver::class)
+                : $app->make(NopNotificationPubSubDriver::class),
         );
     }
 }
