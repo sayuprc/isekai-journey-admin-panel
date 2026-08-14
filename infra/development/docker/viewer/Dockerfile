@@ -44,7 +44,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=notify-publish-builder /workspace/notify-publish/_build/native/release/build/cmd/main/main.exe \
+COPY --from=notify-publish-builder /workspace/notify-publish/_build/native/release/build/isekai-observatory/notify-publish/cmd/main/main.exe \
   /usr/local/bin/notify-publish
 COPY infra/development/docker/viewer/viewer-deploy /usr/local/bin/viewer-deploy
 COPY mise.toml ./

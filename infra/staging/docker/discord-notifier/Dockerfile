@@ -43,7 +43,7 @@ RUN apt-get update \
   && useradd --system --gid app --home-dir /home/app --create-home \
     --shell /usr/sbin/nologin app
 
-COPY --from=builder /workspace/discord-notifier/_build/native/release/build/cmd/main/main.exe /usr/local/bin/discord-notifier
+COPY --from=builder /workspace/discord-notifier/_build/native/release/build/isekai-observatory/discord-notifier/cmd/main/main.exe /usr/local/bin/discord-notifier
 
 USER app
 
