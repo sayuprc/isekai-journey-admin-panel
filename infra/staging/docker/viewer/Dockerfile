@@ -1,3 +1,4 @@
+ARG NODE_VERSION
 FROM debian:bookworm-slim AS notify-publish-builder
 
 ARG MOONBIT_VERSION
@@ -25,7 +26,6 @@ COPY src/notify-publish/cmd ./cmd
 RUN moon update \
   && moon build --target native --release
 
-ARG NODE_VERSION
 FROM node:${NODE_VERSION}-slim
 
 ENV TZ=Asia/Tokyo
