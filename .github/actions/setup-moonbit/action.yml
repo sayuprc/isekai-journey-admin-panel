@@ -1,0 +1,24 @@
+name: Setup MoonBit
+description: Install MoonBit toolchain using vars.moonbit_version from mise.toml
+
+runs:
+  using: composite
+  steps:
+    - name: Read moonbit version
+      id: moonbit-version
+      shell: bash
+      run: echo "version=$(./tools/read-mise-value.sh moonbit_version)" >> "$GITHUB_OUTPUT"
+
+    - name: Install MoonBit
+      shell: bash
+      run: |
+        curl -fsSL https://cli.moonbitlang.com/install/unix.sh \
+          | bash -s -- "${{ steps.moonbit-version.outputs.version }}"
+        echo "${HOME}/.moon/bin" >> "$GITHUB_PATH"
+        ${HOME}/.moon/bin/moon update
+
+    - name: Install native build dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends build-essential

@@ -16,13 +16,13 @@ import { songs } from './routes/songs';
 export const app = new Elysia({ prefix: '/api', normalize: 'typebox' })
   .onError(({ error, set, request, code }) => {
     if (error instanceof ApiError) {
-      // 上流 API の想定内エラーはそのまま透過する(リクエストログ側で結果を記録する)。
+      // 上流 API の想定内エラーはそのまま透過する(リクエストログ側で結果を記録する)
       set.status = error.status;
       return error.body;
     }
 
     // NOT_FOUND / VALIDATION 等の想定内クライアントエラーはリクエストログに任せ、
-    // 想定外のサーバーエラー(5xx 相当)のみ握りつぶさず error として記録する。
+    // 想定外のサーバーエラー(5xx 相当)のみ握りつぶさず error として記録する
     if (code === 'UNKNOWN' || code === 'INTERNAL_SERVER_ERROR') {
       createRequestLogger(request.headers).error({ code, err: error }, 'unhandled api error');
     }

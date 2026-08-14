@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-削除は後続の song relation 実装と依存関係を持ちやすいため、最後に単独 PR で入れる。現時点では `Person` 単体削除だけを実装し、利用中チェックの拡張は song relation 追加後に調整する。
+削除は後続の song relation 実装と依存関係を持ちやすいため、最後に単独 PR で入れる。現時点では `Person` 単体削除だけを実装し、利用中チェックの拡張は song relation 追加後に調整する
 
 ## Goal
 
-`feature/person-delete` で `Person` の delete API を実装する。
+`feature/person-delete` で `Person` の delete API を実装する
 
 ## Scope
 
@@ -36,14 +36,14 @@ completed
 
 ## Steps
 
-1. delete use case を追加した。
-2. controller / presenter / route を追加した。
-3. 楽曲で使用中の `Person` を削除しようとしたときのガードを追加した。
-3. feature / integration テストで delete を確認した。
+1. delete use case を追加した
+2. controller / presenter / route を追加した
+3. 楽曲で使用中の `Person` を削除しようとしたときのガードを追加した
+3. feature / integration テストで delete を確認した
 
 ## Decision Log
 
-- 2026-05-04: delete の利用中チェックは song relation 実装前に複雑化させず、必要最小限で入れる。
+- 2026-05-04: delete の利用中チェックは song relation 実装前に複雑化させず、必要最小限で入れる
 
 ## Validation
 

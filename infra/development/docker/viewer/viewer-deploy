@@ -6,6 +6,8 @@ set -euo pipefail
 : "${CLOUDFLARE_WORKER_NAME:?}"
 : "${CLOUDFLARE_ACCOUNT_ID:?}"
 : "${CLOUDFLARE_API_TOKEN:?}"
+: "${GOOGLE_CLOUD_PROJECT:?}"
+: "${NOTIFICATION_TOPIC:?}"
 
 pnpm --filter viewer build
 
@@ -13,5 +15,9 @@ DEPLOY_MESSAGE="dev viewer deploy $(date --iso-8601=seconds)"
 
 pnpm --filter viewer run deploy \
   --name "${CLOUDFLARE_WORKER_NAME}" \
-  --compatibility-date "$(date '+%Y-%m-%d')" \
+  --compatibility-date "$(date -u '+%Y-%m-%d')" \
   --message "${DEPLOY_MESSAGE}"
+
+notify-publish <<EOF
+{"action":"viewer.deploy","status":"succeeded","embeds":[{"title":"Viewer deploy succeeded","fields":[{"name":"site_url","value":"${SITE_URL}","inline":true},{"name":"env","value":"development","inline":true}]}]}
+EOF

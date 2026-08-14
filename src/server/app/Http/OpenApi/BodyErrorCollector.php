@@ -59,7 +59,7 @@ final class BodyErrorCollector
         try {
             $result = $this->validator()->validate($body, $pointer);
         } catch (InvalidArgumentException|RuntimeException|SchemaException) {
-            // 対象 operation に JSON body スキーマがない (GET / multipart 等)。
+            // 対象 operation に JSON body スキーマがない (GET / multipart 等)
             // opis は pointer 未解決を素の RuntimeException で報告するため合わせて握る
             return [];
         }

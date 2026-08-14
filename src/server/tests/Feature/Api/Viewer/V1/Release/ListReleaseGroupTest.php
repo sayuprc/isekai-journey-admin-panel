@@ -86,9 +86,9 @@ class ListReleaseGroupTest extends DatabaseTestCase
                     ],
                 ],
             ),
-            // 非公開リリースはグループが公開でも一覧に出ない。
+            // 非公開リリースはグループが公開でも一覧に出ない
             $this->createRelease($hiddenReleaseId, $releaseGroupId, '非公開盤', false, new ImmutableDate('2026-04-01')),
-            // 非公開グループ・公開リリース無しグループは一覧に出ない。
+            // 非公開グループ・公開リリース無しグループは一覧に出ない
             $this->createRelease($this->generateUuid(), $hiddenGroupId, '通常盤', true),
             $this->createRelease($this->generateUuid(), $emptyGroupId, '非公開盤', false),
         );
@@ -137,14 +137,14 @@ class ListReleaseGroupTest extends DatabaseTestCase
                                                 'title' => '非公開楽曲',
                                                 'isDisplay' => false,
                                             ],
-                                            // タイトルのみトラックは songId: null / isDisplay: false で返る。
+                                            // タイトルのみトラックは songId: null / isDisplay: false で返る
                                             [
                                                 'trackNo' => 3,
                                                 'songId' => null,
                                                 'title' => '管理対象外の楽曲',
                                                 'isDisplay' => false,
                                             ],
-                                            // 上書き名を持つ参照トラックは楽曲名ではなく上書き名で返る。
+                                            // 上書き名を持つ参照トラックは楽曲名ではなく上書き名で返る
                                             [
                                                 'trackNo' => 4,
                                                 'songId' => $visibleSongId,
@@ -219,7 +219,7 @@ class ListReleaseGroupTest extends DatabaseTestCase
                 true,
                 new ImmutableDate('2026-05-01'),
                 media: [
-                    // アンコールなど、同じ楽曲が同一媒体に複数回収録されるケース。
+                    // アンコールなど、同じ楽曲が同一媒体に複数回収録されるケース
                     [
                         'position' => 1,
                         'name' => null,
@@ -260,6 +260,25 @@ class ListReleaseGroupTest extends DatabaseTestCase
             ->assertStatus(200)
             ->assertJsonPath('releaseGroups.0.releases.0.releaseId', $releaseId1)
             ->assertJsonPath('releaseGroups.0.releases.1.releaseId', $releaseId2);
+    }
+
+    #[Test]
+    public function returnsEmptyNameWhenReleaseHasNoName(): void
+    {
+        $releaseGroupId = $this->generateUuid();
+        $releaseId = $this->generateUuid();
+
+        $this->storeReleaseGroups(
+            $this->createReleaseGroup($releaseGroupId, '版名なし作品', ReleaseGroupType::Album, true),
+        );
+        $this->storeReleases(
+            $this->createRelease($releaseId, $releaseGroupId, '', true, new ImmutableDate('2026-01-01')),
+        );
+
+        $this->get(route(ViewerReleaseGroupRouteMap::List))
+            ->assertStatus(200)
+            ->assertJsonPath('releaseGroups.0.releases.0.releaseId', $releaseId)
+            ->assertJsonPath('releaseGroups.0.releases.0.name', '');
     }
 
     #[Test]

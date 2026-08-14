@@ -1,0 +1,52 @@
+name: Notify Contract QA
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/notify-contract/**"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/notify-contract-qa.yaml"
+      - ".github/actions/setup-mise/**"
+      - ".github/actions/setup-moonbit/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "src/notify-contract/**"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/notify-contract-qa.yaml"
+      - ".github/actions/setup-mise/**"
+      - ".github/actions/setup-moonbit/**"
+  workflow_call:
+
+env:
+  MISE_ENV: ci
+
+jobs:
+  check:
+    name: Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Setup MoonBit
+        uses: ./.github/actions/setup-moonbit
+
+      - name: Run check / test
+        run: mise run notify-contract:check

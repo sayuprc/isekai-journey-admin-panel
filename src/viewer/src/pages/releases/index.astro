@@ -13,7 +13,10 @@ const releaseGroups = await releaseGroupContentRepository.all();
 const years = [...new Set(releaseGroups.map(releaseGroup => releaseGroup.firstReleasedOn.slice(0, 4)))];
 ---
 
-<Layout pageTitle="リリース" pageDescription="ヰ世界情緒のリリース一覧">
+<Layout
+  pageTitle="リリース"
+  pageDescription="ヰ世界情緒のリリース一覧。アルバム・シングルなどを記録しています"
+>
   <section class="shell page-section">
     <SectionHead title="リリース" level={1} />
 

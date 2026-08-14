@@ -2,6 +2,7 @@ import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js
 import type { SongSearchTypeValue, SongTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
+import { Pagination } from '../Pagination';
 
 const SONG_TYPE_BADGE_CLASS: Record<SongTypeValue, string> = {
   1: 'badge-warning',
@@ -61,7 +62,7 @@ export const SearchList = () => {
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
-  // 検索フォームの一時入力値（Submit前）
+  // 検索フォームの一時入力値(Submit前)
   const [inputTitle, setInputTitle] = createSignal(initial.title);
   const [inputType, setInputType] = createSignal(initial.type);
   const [inputIsDisplay, setInputIsDisplay] = createSignal(initial.isDisplay);
@@ -316,52 +317,50 @@ export const SearchList = () => {
         </a>
       </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-        <table class="table table-zebra">
+        <table class="table table-sm table-zebra md:table-md">
           <thead>
             <tr>
               <th>楽曲名</th>
               <th>楽曲種別</th>
               <th>表示設定</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={4} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={4} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.songs.length === 0}>
-                <ListState state="empty" colSpan={5} />
+                <ListState state="empty" colSpan={4} />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().songs}>
                     {song => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{song.title}</td>
                         <td>
+                          <a
+                            href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="link link-hover font-medium"
+                          >
+                            {song.title}
+                          </a>
+                        </td>
+                        <td class="whitespace-nowrap">
                           <span class={`badge badge-sm badge-soft ${SONG_TYPE_BADGE_CLASS[song.type.value]}`}>
                             {song.type.name}
                           </span>
                         </td>
-                        <td>
+                        <td class="whitespace-nowrap">
                           <span class={`badge badge-sm ${song.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
                             {song.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>
                         <td>{song.orderNo}</td>
-                        <td>
-                          <a
-                            href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
-                          >
-                            編集
-                          </a>
-                        </td>
                       </tr>
                     )}
                   </For>
@@ -372,20 +371,7 @@ export const SearchList = () => {
         </table>
       </div>
       <Show when={!data.loading && !fetchError() && (data()?.maxPage ?? 0) > 1}>
-        <div class="mt-4 flex justify-center">
-          <div class="join">
-            <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {p => (
-                <button
-                  class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
-                  onClick={() => handlePageChange(p)}
-                >
-                  {p}
-                </button>
-              )}
-            </For>
-          </div>
-        </div>
+        <Pagination page={page()} maxPage={data()!.maxPage} onChange={handlePageChange} />
       </Show>
     </>
   );

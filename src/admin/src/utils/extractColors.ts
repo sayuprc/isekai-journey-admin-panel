@@ -14,11 +14,11 @@ export type SwatchName = (typeof SWATCH_ORDER)[number];
 export interface ColorCandidate {
   name: SwatchName;
   hex: string;
-  /** Vibrant の population（画像内での面積の近似） */
+  /** Vibrant の population(画像内での面積の近似) */
   population: number;
   /** 0–1 の彩度 */
   saturation: number;
-  /** 彩度×面積のスコア（大きいほど優先） */
+  /** 彩度×面積のスコア(大きいほど優先) */
   score: number;
 }
 
@@ -39,7 +39,7 @@ export const normalizeHex = (value: string): string | null => {
 };
 
 const scoreCandidate = (population: number, saturation: number): number => {
-  // 彩度を強めに効かせ、面積は対数で伸ばす（極端な背景色だけが勝つのを抑える）
+  // 彩度を強めに効かせ、面積は対数で伸ばす(極端な背景色だけが勝つのを抑える)
   const chroma = Math.max(saturation, 0.01) ** 1.35;
   const area = Math.log10(population + 10);
 
@@ -47,9 +47,9 @@ const scoreCandidate = (population: number, saturation: number): number => {
 };
 
 /**
- * ローカル画像から Vibrant パレットを取る。
- * 画像は object URL 経由でブラウザ内だけ読み、呼び出し側が破棄する前提。
- * デフォルトは彩度高め×面積大きめのスコア最大。
+ * ローカル画像から Vibrant パレットを取る
+ * 画像は object URL 経由でブラウザ内だけ読み、呼び出し側が破棄する前提
+ * デフォルトは彩度高め×面積大きめのスコア最大
  */
 export const extractColorsFromImage = async (file: Blob): Promise<ExtractedColors> => {
   const objectUrl = URL.createObjectURL(file);
@@ -94,7 +94,7 @@ export const extractColorsFromImage = async (file: Blob): Promise<ExtractedColor
       throw new Error('No color candidates extracted');
     }
 
-    // UI もスコア順（彩度×面積）で並べる
+    // UI もスコア順(彩度×面積)で並べる
     const ordered = [...candidates].toSorted((a, b) => b.score - a.score);
 
     return { candidates: ordered, defaultHex: best.hex };

@@ -129,7 +129,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
     }
 
     const { data, error, status } = await client.api.releases({ releaseId }).put({
-      name: name(),
+      name: name().trim(),
       releasedOn: releasedOn(),
       description: description(),
       color: color(),
@@ -199,7 +199,7 @@ const ReleaseForm = (props: ReleaseFormProps) => {
             <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
             <div class="grid gap-5 md:grid-cols-2">
               <div>
-                <label class="label">版名</label>
+                <label class="label">版名(任意)</label>
                 <input
                   type="text"
                   class="input w-full"

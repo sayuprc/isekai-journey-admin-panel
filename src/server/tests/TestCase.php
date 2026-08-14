@@ -48,8 +48,8 @@ abstract class TestCase extends BaseTestCase
         );
 
         // 監査ログ機構が admin_users への外部キーを要求するため、
-        // DB を使うテスト（DatabaseTransactions を使うテスト）の場合のみ、
-        // 認証済みユーザーを実 DB にも登録する。
+        // DB を使うテスト(DatabaseTransactions を使うテスト)の場合のみ、
+        // 認証済みユーザーを実 DB にも登録する
         if (in_array(DatabaseTransactions::class, class_uses_recursive(static::class), true)) {
             $repository = $this->app->make(AdminUserRepositoryInterface::class);
 

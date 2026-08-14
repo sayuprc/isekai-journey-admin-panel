@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-現在の楽曲と人物の関係は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルと 3 種の配列契約で分かれている。`Person` 基盤の上でこれを 1 テーブルと `role` Enum へ畳むことで、今後の役割追加と実装保守を単純化する。
+現在の楽曲と人物の関係は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルと 3 種の配列契約で分かれている。`Person` 基盤の上でこれを 1 テーブルと `role` Enum へ畳むことで、今後の役割追加と実装保守を単純化する
 
 ## Goal
 
-`feature/person-song-relations` で楽曲と人物の紐づきを `song-persons` に統合し、songs 契約・server 実装・テストを新モデルへ切り替える。
+`feature/person-song-relations` で楽曲と人物の紐づきを `song-persons` に統合し、songs 契約・server 実装・テストを新モデルへ切り替える
 
 ## Scope
 
@@ -42,16 +42,16 @@ completed
 
 ## Steps
 
-1. `src/contracts/src/admin/songs/{domain,transport}.tsp` を `personId + role + orderNo` の単一配列へ変更する。
-2. `src/server/database/atlas/schemas/song-persons.my.hcl` を追加し、既存 3 テーブル schema を削除する。
-3. `src/server/packages/Song/Domain/Models/*`、`SongIntegrityService.php`、`Application/*`、`Infrastructures/*` を新しい relation モデルへ差し替える。
-4. `src/server/packages/Support/Infrastructures/Mapper.php` を新契約に追従させる。
-5. songs テストを更新し、複数 role の登録・取得を検証する。
+1. `src/contracts/src/admin/songs/{domain,transport}.tsp` を `personId + role + orderNo` の単一配列へ変更する
+2. `src/server/database/atlas/schemas/song-persons.my.hcl` を追加し、既存 3 テーブル schema を削除する
+3. `src/server/packages/Song/Domain/Models/*`、`SongIntegrityService.php`、`Application/*`、`Infrastructures/*` を新しい relation モデルへ差し替える
+4. `src/server/packages/Support/Infrastructures/Mapper.php` を新契約に追従させる
+5. songs テストを更新し、複数 role の登録・取得を検証する
 
 ## Decision Log
 
-- 2026-05-04: role は song 専用 Enum としてまず導入し、人物一般の role 体系へは広げない。変更面積を song ドメイン内に閉じるため。
-- 2026-05-04: admin の楽曲編集 UI は role ごとに入力欄を分けつつ、保存契約は `personId + role + orderNo` の単一配列に統一する。運用導線と API モデルを分離して保つため。
+- 2026-05-04: role は song 専用 Enum としてまず導入し、人物一般の role 体系へは広げない。変更面積を song ドメイン内に閉じるため
+- 2026-05-04: admin の楽曲編集 UI は role ごとに入力欄を分けつつ、保存契約は `personId + role + orderNo` の単一配列に統一する。運用導線と API モデルを分離して保つため
 
 ## Validation
 

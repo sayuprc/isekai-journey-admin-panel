@@ -19,7 +19,7 @@ table "song_tags" {
       expr = "lower(`name`)"
       type = VIRTUAL
     }
-    comment = "楽曲タグ名（小文字）"
+    comment = "楽曲タグ名(小文字)"
   }
   column "order_no" {
     null     = false

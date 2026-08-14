@@ -11,10 +11,11 @@ on:
       - "src/package.json"
       - "src/pnpm-lock.yaml"
       - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/contracts-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   push:
     branches:
       - dev
@@ -23,10 +24,11 @@ on:
       - "src/package.json"
       - "src/pnpm-lock.yaml"
       - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/contracts-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   workflow_call:
 
 jobs:

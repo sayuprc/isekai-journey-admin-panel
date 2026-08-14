@@ -17,7 +17,7 @@ applyTo: "src/viewer/**"
 - `src/viewer/src/pages/`: Astro のページとルーティング
 - `src/viewer/src/layouts/`: ページレイアウト
 - `src/viewer/src/components/`: 共通の UI コンポーネント
-- `src/viewer/src/features/`: 機能単位の UI（`songs` / `releases` / `media` / `site-stats` など）
+- `src/viewer/src/features/`: 機能単位の UI(`songs` / `releases` / `media` / `site-stats` など)
 - `src/viewer/src/shared/`: 機能横断で使う部品
 - `src/viewer/src/styles/`: CSS と CSS Modules
 - `src/viewer/src/generated/`: OpenAPI から生成された API クライアント

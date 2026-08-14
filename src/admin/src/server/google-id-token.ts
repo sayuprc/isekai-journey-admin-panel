@@ -1,8 +1,8 @@
 const METADATA_IDENTITY_URL = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity';
 
 /**
- * 期限の 5 分前から新しい token を取り直す。
- * metadata server の token 期限は約 1 時間。
+ * 期限の 5 分前から新しい token を取り直す
+ * metadata server の token 期限は約 1 時間
  */
 const REFRESH_MARGIN_MS = 5 * 60 * 1000;
 
@@ -16,7 +16,7 @@ type CachedToken = {
 const cache = new Map<string, CachedToken>();
 
 /**
- * K_SERVICE (service) / CLOUD_RUN_JOB (job) は Cloud Run が設定する予約環境変数。
+ * K_SERVICE (service) / CLOUD_RUN_JOB (job) は Cloud Run が設定する予約環境変数
  * ローカル開発では未設定なので無効化される
  */
 const isRunningOnCloudRun = (): boolean =>
@@ -44,8 +44,8 @@ export const decodeJwtExpMs = (token: string): number | null => {
 
 /**
  * 非公開 API (allow_unauthenticated = false) を呼ぶための Google ID token を
- * Cloud Run の metadata server から取得する。audience ごとに期限までキャッシュする。
- * Cloud Run 外 (ローカル開発など) では null を返し、呼び出し側は付与をスキップする。
+ * Cloud Run の metadata server から取得する。audience ごとに期限までキャッシュする
+ * Cloud Run 外 (ローカル開発など) では null を返し、呼び出し側は付与をスキップする
  */
 export const getGoogleIdToken = async (audience: string): Promise<string | null> => {
   if (!isRunningOnCloudRun()) {

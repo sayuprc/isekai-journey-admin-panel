@@ -437,7 +437,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReleaseMediumItem'
-      description: リリース（版）
+      description: リリース(版)
     ReleaseMediumItem:
       type: object
       required:
@@ -536,7 +536,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SongReleaseGroupSummary'
-          description: 収録先の公開リリースグループ（最古発売日の降順）
+          description: 収録先の公開リリースグループ(最古発売日の降順)
       examples:
         - songId: 3cd42c09-ff3c-4cd2-913f-a279c4ea89b4
           title: テスト楽曲
@@ -677,7 +677,7 @@ components:
         color:
           allOf:
             - $ref: '#/components/schemas/color'
-          description: 代表色（公開リリースを発売日順に見て最初のもの）
+          description: 代表色(公開リリースを発売日順に見て最初のもの)
       description: 楽曲が収録されている公開リリースグループの概要
     SongType:
       type: object
@@ -758,8 +758,7 @@ components:
       description: リリースID
     releaseName:
       type: string
-      minLength: 1
-      description: リリース版名
+      description: リリース版名。任意項目で、無しは空文字
     releasedOn:
       type: string
       format: date

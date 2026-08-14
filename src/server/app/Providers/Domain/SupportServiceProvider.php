@@ -21,6 +21,10 @@ use Support\Infrastructures\Query\AuditLog\AuditLogQueryService;
 use Support\Infrastructures\Uuid\UuidConverter;
 use Support\Infrastructures\Uuid\UuidGenerator;
 use Support\Infrastructures\Valinor\MapperBuilderFactory;
+use Support\Notification\Contracts\NotificationDriverInterface;
+use Support\Notification\DebugInfrastructures\NopNotificationPubSubDriver;
+use Support\Notification\Infrastructures\NotificationConfig;
+use Support\Notification\Infrastructures\NotificationPubSubDriver;
 use Support\UseCase\AuditLog\AuditLogRecorderInterface;
 use Support\UseCase\AuditLog\Query\AuditLogQueryServiceInterface;
 
@@ -40,5 +44,19 @@ class SupportServiceProvider extends ServiceProvider
         $this->app->bind(ClockInterface::class, Clock::class);
         $this->app->bind(AuditLogRecorderInterface::class, AuditLogRecorder::class);
         $this->app->bind(AuditLogQueryServiceInterface::class, AuditLogQueryService::class);
+
+        $this->app->singleton(
+            NotificationConfig::class,
+            static fn () => new NotificationConfig(
+                config()->string('gc.google_cloud_project'),
+                config()->string('gc.pubsub.notification.topic'),
+            ),
+        );
+        $this->app->singleton(
+            NotificationDriverInterface::class,
+            static fn (Application $app) => config()->boolean('gc.pubsub.notification.enabled')
+                ? $app->make(NotificationPubSubDriver::class)
+                : $app->make(NopNotificationPubSubDriver::class),
+        );
     }
 }

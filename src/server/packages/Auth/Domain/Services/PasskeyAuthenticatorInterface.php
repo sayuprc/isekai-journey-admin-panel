@@ -26,7 +26,7 @@ interface PasskeyAuthenticatorInterface
     /**
      * ユーザー列挙を防ぐため allowCredentials は空配列で返し資格情報を列挙しない
      * (discoverable credential を利用)。入力メールの実在有無に依らず同一形状の
-     * オプションを返す。
+     * オプションを返す
      */
     public function startAuthentication(): PasskeyStartResult;
 

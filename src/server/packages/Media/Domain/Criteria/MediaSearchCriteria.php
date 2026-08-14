@@ -27,8 +27,8 @@ readonly class MediaSearchCriteria
         public int $page = 1,
         public PerPage $perPage = PerPage::TwentyFive,
     ) {
-        // 保存側の MediaTitle と対称に、検索語も NFC へ揃える。
-        // これにより「検索タイトルは常に NFC」を不変条件として保証する。
+        // 保存側の MediaTitle と対称に、検索語も NFC へ揃える
+        // これにより「検索タイトルは常に NFC」を不変条件として保証する
         $this->title = $title->isPresent()
             ? new Some(TextNormalizer::toNfc($title->get()))
             : $title;

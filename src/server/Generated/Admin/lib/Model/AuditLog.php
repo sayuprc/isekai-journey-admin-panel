@@ -565,7 +565,7 @@ class AuditLog implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets snapshot
      *
-     * @param object $snapshot 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする。
+     * @param object $snapshot 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする
      *
      * @return self
      */

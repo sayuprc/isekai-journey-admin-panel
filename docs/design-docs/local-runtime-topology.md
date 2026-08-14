@@ -1,6 +1,6 @@
 # Local Runtime Topology
 
-ローカル開発時の実行構成をまとめる文書です。
+ローカル開発時の実行構成をまとめる文書です
 
 ## Services
 
@@ -72,7 +72,7 @@
 4. 基盤変更 worktree がある場合は、それを他 worktree へ先に流し込んで起動条件を揃える
 5. 最終統合前に各 worktree で局所検証を通し、ベースブランチ上で代表検証を再実行する
 
-依存関係が逆転する場合は、理由と取り込み順を実行計画の Decision Log に残す。
+依存関係が逆転する場合は、理由と取り込み順を実行計画の Decision Log に残す
 
 ## Minimum Validation
 
@@ -94,7 +94,7 @@
 - worktree C: `src/admin` または `src/viewer` の UI 実装
 - worktree D: `mise.toml` / `compose.yaml` / `infra/local/docker/` のような基盤変更
 
-この分け方では、A の変更を B/C が再取り込みし、D の変更を全 worktree が早めに取り込む。
+この分け方では、A の変更を B/C が再取り込みし、D の変更を全 worktree が早めに取り込む
 
 ## Operation Rules
 
@@ -108,4 +108,4 @@
 - `infra/local/docker/`
 - `mise.toml`
 
-起動構成や URL を変えるときは、近接する入口文書も同じ変更で更新します。
+起動構成や URL を変えるときは、近接する入口文書も同じ変更で更新します

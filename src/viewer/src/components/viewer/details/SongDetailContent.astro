@@ -69,7 +69,7 @@ const formatPublishedAt = (value: string): string =>
         <DetailSectionHead title="関連メディア" count={media.length} />
         <div class="rel-list">
           {media.map((entry) => {
-            // プラットフォームとサムネイルは状態として保持せず url から導出する。
+            // プラットフォームとサムネイルは状態として保持せず url から導出する
             const thumbnailUrl = youtubeThumbnailFromUrl(entry.url);
             const platformName = mediaPlatformLabel(entry.url);
 

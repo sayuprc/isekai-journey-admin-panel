@@ -27,8 +27,8 @@ export function mediaTypeLabel(type: string): string {
   );
 }
 
-// プラットフォームは状態として保持せず url から導出する（viewer の表示責務）。
-// バッジ種別は PostCard.astro の platformMeta キーに対応する。
+// プラットフォームは状態として保持せず url から導出する(viewer の表示責務)
+// バッジ種別は PostCard.astro の platformMeta キーに対応する
 export type MediaPlatformKey = 'x' | 'ig' | 'yt' | 'blog';
 
 function hostOf(url: string): string | null {
@@ -39,7 +39,7 @@ function hostOf(url: string): string | null {
   }
 }
 
-// url の host からプラットフォームを判定する。未知ホストは blog(その他)に倒す。
+// url の host からプラットフォームを判定する。未知ホストは blog(その他)に倒す
 function mediaPlatformFromUrl(url: string): MediaPlatformKey {
   const host = hostOf(url);
 
@@ -59,7 +59,7 @@ function mediaPlatformFromUrl(url: string): MediaPlatformKey {
   return 'blog';
 }
 
-// 表示用のプラットフォーム名。
+// 表示用のプラットフォーム名
 export function mediaPlatformLabel(url: string): string {
   return {
     x: 'X',
@@ -69,7 +69,7 @@ export function mediaPlatformLabel(url: string): string {
   }[mediaPlatformFromUrl(url)];
 }
 
-// url から YouTube の動画 ID を抽出する。動画でなければ null。
+// url から YouTube の動画 ID を抽出する。動画でなければ null
 export function youtubeVideoId(url: string): string | null {
   let parsed: URL;
   try {
@@ -96,15 +96,18 @@ export function youtubeVideoId(url: string): string | null {
   return null;
 }
 
-// YouTube 動画 url ならサムネイル URL(sddefault.jpg)を導出する。動画でなければ null。
+/** YouTube サムネイル画像の origin。preconnect 用 */
+export const YOUTUBE_THUMBNAIL_ORIGIN = 'https://i.ytimg.com';
+
+// YouTube 動画 url ならサムネイル URL(sddefault.jpg)を導出する。動画でなければ null
 export function youtubeThumbnailFromUrl(url: string): string | null {
   const id = youtubeVideoId(url);
 
-  return id === null ? null : `https://i.ytimg.com/vi/${id}/sddefault.jpg`;
+  return id === null ? null : `${YOUTUBE_THUMBNAIL_ORIGIN}/vi/${id}/sddefault.jpg`;
 }
 
 // 保存済みサムネイル URL(末尾 sddefault.jpg)のファイル名のみを差し替えて
-// 解像度バリエーションを srcset として生成する。maxres は欠落しがちなので使わない。
+// 解像度バリエーションを srcset として生成する。maxres は欠落しがちなので使わない
 export function youtubeThumbnailSrcset(thumbnailUrl: string): string {
   const variants: Array<{ file: string; width: number }> = [
     { file: 'mqdefault.jpg', width: 320 },

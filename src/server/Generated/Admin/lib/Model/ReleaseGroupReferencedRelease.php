@@ -323,10 +323,6 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         if ($this->container['name'] === null) {
             $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
-        }
-
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
         }
@@ -405,7 +401,7 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
     /**
      * Sets name
      *
-     * @param string $name リリース版名
+     * @param string $name リリース版名。任意項目で、無しは空文字
      *
      * @return self
      */
@@ -414,11 +410,6 @@ class ReleaseGroupReferencedRelease implements ModelInterface, ArrayAccess, \Jso
         if (is_null($name)) {
             throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-
-        if ((mb_strlen($name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $name when calling ReleaseGroupReferencedRelease., must be bigger than or equal to 1.');
-        }
-
         $this->container['name'] = $name;
 
         return $this;

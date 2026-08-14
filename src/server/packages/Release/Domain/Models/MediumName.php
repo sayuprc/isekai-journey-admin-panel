@@ -8,7 +8,7 @@ use Override;
 use Support\Domain\ValueObjects\String\TextValueObject;
 
 /**
- * 媒体の Disc 表示用ラベル（CD1 / Blu-ray など）。任意項目で、無しは null で表現する。
+ * 媒体の Disc 表示用ラベル(CD1 / Blu-ray など)。任意項目で、無しは null で表現する
  */
 readonly class MediumName extends TextValueObject
 {

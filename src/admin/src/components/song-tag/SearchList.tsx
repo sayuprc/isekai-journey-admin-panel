@@ -1,6 +1,7 @@
 import { Show, createResource, createSignal, For, Match, Switch } from 'solid-js';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
+import { Pagination } from '../Pagination';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -38,7 +39,7 @@ export const SearchList = () => {
   const [page, setPage] = createSignal(initial.page);
   const [perPage, setPerPage] = createSignal<PerPage>(initial.perPage);
 
-  // 検索フォームの一時入力値（Submit前）
+  // 検索フォームの一時入力値(Submit前)
   const [inputName, setInputName] = createSignal(initial.name);
   const [inputSort, setInputSort] = createSignal<Sort>(initial.sort);
   const [inputOrder, setInputOrder] = createSignal<Order>(initial.order);
@@ -204,40 +205,38 @@ export const SearchList = () => {
         </a>
       </div>
       <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-        <table class="table table-zebra">
+        <table class="table table-sm table-zebra md:table-md">
           <thead>
             <tr>
               <th>楽曲タグ名</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={3} />
+                <ListState state="loading" colSpan={2} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={2} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.tags.length === 0}>
-                <ListState state="empty" colSpan={3} message="条件に一致する楽曲タグはありません。" />
+                <ListState state="empty" colSpan={2} message="条件に一致する楽曲タグはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().tags}>
                     {tag => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{tag.name}</td>
-                        <td>{tag.orderNo}</td>
                         <td>
                           <a
                             href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
+                            class="link link-hover font-medium"
                           >
-                            編集
+                            {tag.name}
                           </a>
                         </td>
+                        <td>{tag.orderNo}</td>
                       </tr>
                     )}
                   </For>
@@ -248,20 +247,7 @@ export const SearchList = () => {
         </table>
       </div>
       <Show when={!data.loading && !fetchError() && (data()?.maxPage ?? 0) > 1}>
-        <div class="mt-4 flex justify-center">
-          <div class="join">
-            <For each={Array.from({ length: data()!.maxPage }, (_, i) => i + 1)}>
-              {p => (
-                <button
-                  class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
-                  onClick={() => handlePageChange(p)}
-                >
-                  {p}
-                </button>
-              )}
-            </For>
-          </div>
-        </div>
+        <Pagination page={page()} maxPage={data()!.maxPage} onChange={handlePageChange} />
       </Show>
     </>
   );

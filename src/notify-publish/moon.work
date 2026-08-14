@@ -1,0 +1,4 @@
+members = [
+  ".",
+  "../notify-contract",
+]

@@ -38,7 +38,7 @@ const requestLogger: MiddlewareHandler = async (
 
     return response;
   } catch (error) {
-    // ページレンダリング等で middleware まで漏れた例外を構造化して記録し、再送出する。
+    // ページレンダリング等で middleware まで漏れた例外を構造化して記録し、再送出する
     log.error(
       { method, path: pathname, durationMs: Math.round(performance.now() - startedAt), err: error },
       'unhandled request error',

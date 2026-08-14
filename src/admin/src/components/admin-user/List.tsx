@@ -17,7 +17,7 @@ export const AdminUserList = () => {
 
   return (
     <div class="rounded-box border border-base-300 bg-base-100 overflow-x-auto">
-      <table class="table table-zebra">
+      <table class="table table-sm table-zebra md:table-md">
         <thead>
           <tr>
             <th>名前</th>

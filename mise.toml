@@ -10,6 +10,8 @@ pnpm = "11.20.0"
 
 [vars]
 mise_version = "2026.7.13"
+# moonc の version 文字列 (moon version --all の moonc 行)。install script / Docker build-arg で共有する
+moonbit_version = "0.10.6+80dc50f24"
 server_tag = "8.5.7"
 proxy_tag = "1.27"
 openapi_tag = "7.21.0"
@@ -312,7 +314,7 @@ _.file = "src/server/.env.testing"
 
 [tasks."migrate:dry-run"]
 quiet = true
-description = "適用されるスキーマの差分を確認する（適用はしない）"
+description = "適用されるスキーマの差分を確認する(適用はしない)"
 dir = "src/server/database/atlas"
 run = 'atlas schema apply --env local --var "schema_name=${DB_DATABASE}" --dry-run'
 
@@ -459,3 +461,87 @@ run = [
   "bun run eslint:check",
   "bun run stylelint:check",
 ]
+
+# -- Notify Contract --
+
+[tasks."notify-contract:test"]
+description = "notify-contract の moon test を実行する"
+dir = "src/notify-contract"
+run = "moon test"
+
+[tasks."notify-contract:check"]
+description = "notify-contract の check / test を実行する"
+dir = "src/notify-contract"
+run = [
+  "moon check",
+  "moon test",
+]
+
+# -- Discord Notifier --
+
+[tasks."discord-notifier:test"]
+description = "discord-notifier の moon test を実行する"
+dir = "src/discord-notifier"
+run = "moon test"
+
+[tasks."discord-notifier:build"]
+description = "discord-notifier を native release ビルドする"
+dir = "src/discord-notifier"
+run = "moon build --target native --release"
+
+[tasks."discord-notifier:check"]
+description = "discord-notifier の check / test / native build を実行する"
+dir = "src/discord-notifier"
+run = [
+  "moon check",
+  "moon test",
+  "moon build --target native --release",
+]
+
+# -- Notify Publish --
+
+[tasks."notify-publish:test"]
+description = "notify-publish の moon test を実行する"
+dir = "src/notify-publish"
+run = "moon test"
+
+[tasks."notify-publish:build"]
+description = "notify-publish を native release ビルドする"
+dir = "src/notify-publish"
+run = "moon build --target native --release"
+
+[tasks."notify-publish:check"]
+description = "notify-publish の check / test / native build を実行する"
+dir = "src/notify-publish"
+run = [
+  "moon check",
+  "moon test",
+  "moon build --target native --release",
+]
+
+# -- Admin Proxy --
+
+[tasks."admin-proxy:format"]
+description = "admin-proxy の formatter を実行し、フォーマットを自動修正する"
+dir = "src/admin-proxy"
+run = "bun run format"
+
+[tasks."admin-proxy:format:check"]
+description = "admin-proxy の formatter をチェックする"
+dir = "src/admin-proxy"
+run = "bun run format:check"
+
+[tasks."admin-proxy:lint"]
+description = "admin-proxy の linter を実行する"
+dir = "src/admin-proxy"
+run = "bun run lint:check"
+
+[tasks."admin-proxy:typecheck"]
+description = "admin-proxy の TypeScript をチェックする"
+dir = "src/admin-proxy"
+run = "bun run typecheck"
+
+[tasks."admin-proxy:check"]
+description = "admin-proxy の format / lint / typecheck を実行する"
+depends = ["admin-proxy:format:check", "admin-proxy:lint", "admin-proxy:typecheck"]
+

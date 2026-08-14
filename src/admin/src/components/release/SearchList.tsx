@@ -2,6 +2,7 @@ import { For, Match, Show, Switch, createResource, createSignal } from 'solid-js
 import type { ReleaseDistributionTypeValue, ReleaseTypeValue } from '../../generated';
 import { client } from '../../utils/client';
 import { ListState } from '../ListState';
+import { Pagination } from '../Pagination';
 
 const PER_PAGE_OPTIONS = [25, 50, 100] as const;
 type PerPage = (typeof PER_PAGE_OPTIONS)[number];
@@ -301,7 +302,7 @@ export const SearchList = () => {
       </div>
 
       <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
-        <table class="table table-zebra">
+        <table class="table table-sm table-zebra md:table-md">
           <thead>
             <tr>
               <th>タイトル</th>
@@ -309,26 +310,29 @@ export const SearchList = () => {
               <th>流通形態</th>
               <th>発売日</th>
               <th>表示設定</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={6} />
+                <ListState state="loading" colSpan={5} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releases.length === 0}>
-                <ListState state="empty" colSpan={6} message="条件に一致するリリースはありません。" />
+                <ListState state="empty" colSpan={5} message="条件に一致するリリースはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().releases}>
                     {release => (
-                      <tr>
-                        <td class="min-w-56 font-medium">{release.title}</td>
+                      <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
+                        <td class="min-w-56">
+                          <a href={buildDetailHref(release.releaseId)} class="link link-hover font-medium">
+                            {release.title}
+                          </a>
+                        </td>
                         <td>
                           {RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label
                             ?? '不明'}
@@ -346,11 +350,6 @@ export const SearchList = () => {
                             {release.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>
-                        <td>
-                          <a href={buildDetailHref(release.releaseId)} class="btn btn-ghost btn-xs">
-                            編集
-                          </a>
-                        </td>
                       </tr>
                     )}
                   </For>
@@ -362,20 +361,7 @@ export const SearchList = () => {
       </div>
 
       <Show when={!data.loading && !fetchError() && (data()?.maxPage ?? 0) > 1}>
-        <div class="mt-4 flex justify-center">
-          <div class="join">
-            <For each={Array.from({ length: data()!.maxPage }, (_, index) => index + 1)}>
-              {p => (
-                <button
-                  class={`join-item btn btn-sm${p === page() ? ' btn-active' : ''}`}
-                  onClick={() => handlePageChange(p)}
-                >
-                  {p}
-                </button>
-              )}
-            </For>
-          </div>
-        </div>
+        <Pagination page={page()} maxPage={data()!.maxPage} onChange={handlePageChange} />
       </Show>
     </>
   );

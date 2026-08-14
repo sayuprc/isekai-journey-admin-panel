@@ -2,13 +2,13 @@
 
 ## Background
 
-Viewer のトップページ `src/viewer/src/pages/index.astro` は、現在 `src/viewer/src/data/mock/site-data.ts` の `SITE_DATA.songs.length` を直接参照して楽曲数を表示している。Viewer 側では `src/contracts/src/viewer/main.tsp` から songs / media の TypeSpec contract を生成し、`src/server/routes/viewer.php` の `/v1/songs` `/v1/media` と `src/viewer/src/generated/` の client を使う構造が既にあるため、トップページの件数も mock ではなく Viewer API 経由で取得できる境界を追加する必要がある。
+Viewer のトップページ `src/viewer/src/pages/index.astro` は、現在 `src/viewer/src/data/mock/site-data.ts` の `SITE_DATA.songs.length` を直接参照して楽曲数を表示している。Viewer 側では `src/contracts/src/viewer/main.tsp` から songs / media の TypeSpec contract を生成し、`src/server/routes/viewer.php` の `/v1/songs` `/v1/media` と `src/viewer/src/generated/` の client を使う構造が既にあるため、トップページの件数も mock ではなく Viewer API 経由で取得できる境界を追加する必要がある
 
-将来的にはトップページでメディア数やリリース数も同じ用途で表示する想定があるため、楽曲数だけを表す API 名や response 名にすると拡張時に不自然になる。
+将来的にはトップページでメディア数やリリース数も同じ用途で表示する想定があるため、楽曲数だけを表す API 名や response 名にすると拡張時に不自然になる
 
 ## Goal
 
-Viewer トップページに表示する件数集計を取得する API を追加し、初回は公開対象の楽曲数を返せるようにする。API contract / server / viewer の各層で、将来 `mediaCount` や `releaseCount` を同じ集計レスポンスへ追加できる命名と shape にする。
+Viewer トップページに表示する件数集計を取得する API を追加し、初回は公開対象の楽曲数を返せるようにする。API contract / server / viewer の各層で、将来 `mediaCount` や `releaseCount` を同じ集計レスポンスへ追加できる命名と shape にする
 
 ## Scope
 

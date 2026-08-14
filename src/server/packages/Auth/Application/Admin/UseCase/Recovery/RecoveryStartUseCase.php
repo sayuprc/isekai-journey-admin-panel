@@ -35,8 +35,8 @@ readonly class RecoveryStartUseCase
         // ユーザー列挙を防ぐため、メールの実在やコードの正否に依らず常に同一形状の
         // 登録 ceremony を返す。実在ユーザーかつコード検証成功時のみ本物の adminUserId と
         // 検証済みコードの id を束縛し、それ以外はダミーの adminUserId かつ recoveryCodeId
-        // は null とすることで finish 時に必ず失敗させる。
-        // コードの消費は ceremony 完走時 (RecoveryFinish) に確定するためここでは検証のみ行う。
+        // は null とすることで finish 時に必ず失敗させる
+        // コードの消費は ceremony 完走時 (RecoveryFinish) に確定するためここでは検証のみ行う
         $adminUserId = $this->uuidGenerator->generate();
         $recoveryCodeId = null;
 

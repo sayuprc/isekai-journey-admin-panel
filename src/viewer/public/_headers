@@ -1,0 +1,9 @@
+# HTML などハッシュなしは毎回再検証する
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Astro のフィンガープリント付き成果物は長期キャッシュする
+# /* の Cache-Control を外してから上書きする (複数ルールは値が連結される)
+/_astro/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable

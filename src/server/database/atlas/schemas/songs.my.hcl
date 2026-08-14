@@ -19,7 +19,7 @@ table "songs" {
       expr = "lower(`title`)"
       type = VIRTUAL
     }
-    comment = "楽曲名（小文字）"
+    comment = "楽曲名(小文字)"
   }
   column "description" {
     null    = false

@@ -144,7 +144,7 @@ readonly class PasskeyAuthenticator implements PasskeyAuthenticatorInterface
         $this->host();
 
         // ユーザー列挙を防ぐため allowCredentials は空にする。登録時に residentKey を
-        // 必須にしているため、discoverable credential でログインが成立する。
+        // 必須にしているため、discoverable credential でログインが成立する
         $options = PublicKeyCredentialRequestOptions::create(
             random_bytes(32),
             $this->config->rpId,
