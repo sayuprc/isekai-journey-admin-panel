@@ -14,6 +14,8 @@
 - サーバー側の業務ロジック: `src/server`
 - 管理画面 UI / BFF: `src/admin`
 - 閲覧サイト UI: `src/viewer`
+- Discord 通知配達: `src/discord-notifier`
+- 通知 Pub/Sub publish: `src/notify-publish`
 - それ以外の変更ルート: `ARCHITECTURE.md`
 
 ## 文書の置き場所

@@ -47,6 +47,14 @@ steps:
       - -c
       - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:latest || exit 0
 
+  - id: pull-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest || exit 0
+
   - id: build-api-image
     name: gcr.io/cloud-builders/docker
     waitFor:
@@ -99,6 +107,26 @@ steps:
           --build-arg "MISE_VERSION=$${MISE_VERSION}" \
           .
 
+  - id: build-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor:
+      - pull-discord-notifier-image
+    args:
+      - -c
+      - |
+        set -euo pipefail
+
+        MOONBIT_VERSION=$$(./tools/read-mise-value.sh moonbit_version)
+
+        docker build \
+          -f infra/production/docker/discord-notifier/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest \
+          --build-arg "MOONBIT_VERSION=$${MOONBIT_VERSION}" \
+          .
+
   - id: build-admin-image
     name: gcr.io/cloud-builders/docker
     entrypoint: bash
@@ -131,6 +159,7 @@ steps:
         set -euo pipefail
 
         NODE_VERSION=$$(./tools/read-mise-value.sh node)
+        MOONBIT_VERSION=$$(./tools/read-mise-value.sh moonbit_version)
 
         docker build \
           -f infra/production/docker/viewer/Dockerfile \
@@ -138,6 +167,7 @@ steps:
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --build-arg "NODE_VERSION=$${NODE_VERSION}" \
+          --build-arg "MOONBIT_VERSION=$${MOONBIT_VERSION}" \
           .
 
   - id: build-admin-proxy-image
@@ -214,6 +244,15 @@ steps:
       - --all-tags
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}
 
+  - id: push-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-discord-notifier-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}
+
   # TODO マイグレーションを別で行う
   - id: deploy-db-migrate-job
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
@@ -289,6 +328,23 @@ steps:
       - ${_API_SERVICE_ACCOUNT}
       - --ingress
       - ${_API_INGRESS}
+      - --quiet
+
+  - id: deploy-discord-notifier
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-discord-notifier-image
+    args:
+      - run
+      - deploy
+      - prod-isekai-discord-notifier
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_NOTIFY_SERVICE_ACCOUNT}
       - --quiet
 
   - id: deploy-admin

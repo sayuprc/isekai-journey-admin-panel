@@ -13,6 +13,7 @@
     "emonkak/orm": "^5.0",
     "firebase/php-jwt": "^7.0",
     "google/apiclient": "^2.19",
+    "google/cloud-pubsub": "^2.20",
     "guzzlehttp/guzzle": "^7.13",
     "laravel/framework": "^12.0",
     "laravel/sanctum": "^4.0",
