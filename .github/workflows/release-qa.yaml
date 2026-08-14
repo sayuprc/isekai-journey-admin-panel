@@ -35,3 +35,7 @@ jobs:
   discord-notifier:
     name: Discord Notifier QA
     uses: ./.github/workflows/discord-notifier-qa.yaml
+
+  notify-publish:
+    name: Notify Publish QA
+    uses: ./.github/workflows/notify-publish-qa.yaml

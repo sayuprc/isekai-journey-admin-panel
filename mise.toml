@@ -481,3 +481,23 @@ run = [
   "moon check",
   "moon test",
 ]
+
+# -- Notify Publish --
+
+[tasks."notify-publish:test"]
+description = "notify-publish の moon test を実行する"
+dir = "src/notify-publish"
+run = "moon test"
+
+[tasks."notify-publish:build"]
+description = "notify-publish を native release ビルドする"
+dir = "src/notify-publish"
+run = "moon build --target native --release"
+
+[tasks."notify-publish:check"]
+description = "notify-publish の check / test を実行する"
+dir = "src/notify-publish"
+run = [
+  "moon check",
+  "moon test",
+]
