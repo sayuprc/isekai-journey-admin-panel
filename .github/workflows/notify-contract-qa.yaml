@@ -1,4 +1,4 @@
-name: Notify Publish QA
+name: Notify Contract QA
 
 on:
   schedule:
@@ -9,22 +9,20 @@ on:
       - main
       - stg
     paths:
-      - "src/notify-publish/**"
       - "src/notify-contract/**"
       - "mise.toml"
       - "mise.ci.toml"
-      - ".github/workflows/notify-publish-qa.yaml"
+      - ".github/workflows/notify-contract-qa.yaml"
       - ".github/actions/setup-mise/**"
       - ".github/actions/setup-moonbit/**"
   push:
     branches:
       - dev
     paths:
-      - "src/notify-publish/**"
       - "src/notify-contract/**"
       - "mise.toml"
       - "mise.ci.toml"
-      - ".github/workflows/notify-publish-qa.yaml"
+      - ".github/workflows/notify-contract-qa.yaml"
       - ".github/actions/setup-mise/**"
       - ".github/actions/setup-moonbit/**"
   workflow_call:
@@ -51,4 +49,4 @@ jobs:
         uses: ./.github/actions/setup-moonbit
 
       - name: Run check / test
-        run: mise run notify-publish:check
+        run: mise run notify-contract:check

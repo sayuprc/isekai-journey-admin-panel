@@ -10,6 +10,7 @@ on:
       - stg
     paths:
       - "src/discord-notifier/**"
+      - "src/notify-contract/**"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/discord-notifier-qa.yaml"
@@ -20,6 +21,7 @@ on:
       - dev
     paths:
       - "src/discord-notifier/**"
+      - "src/notify-contract/**"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/discord-notifier-qa.yaml"
