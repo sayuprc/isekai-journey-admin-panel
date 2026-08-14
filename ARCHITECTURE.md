@@ -12,7 +12,7 @@
 - `infra/development/`: 開発環境向け Cloud Build 定義とアプリケーション用 Dockerfile
 - `infra/staging/`: ステージング向け Cloud Build 定義とアプリケーション用 Dockerfile
 - `infra/production/`: 本番向け Cloud Build 定義とアプリケーション用 Dockerfile
-- `docs/`: ADR、設計原則、実行計画、技術的負債の記録
+- `docs/`: ADR、設計原則、仕様、参照メモ、実行計画、運用手順、技術的負債の記録
 - `src/`: `admin` / `viewer` / `contracts` を束ねる pnpm workspace のルート
 - `src/server/`: PHP 8.5 / Laravel API サーバー
 - `src/contracts/`: TypeSpec による API 契約
@@ -47,16 +47,25 @@
 | 閲覧サイトの UI | `src/viewer` | 必要なら `src/contracts` | `cd src && bun --filter viewer lint:check`, `style:check`, `build` |
 | Discord 通知配達 | `src/discord-notifier` | 各 env の `docker/discord-notifier`、Cloud Build | `mise run discord-notifier:check` |
 | 通知 Pub/Sub publish | `src/notify-publish` | 各 env の `docker/viewer` (viewer-deploy から利用) | `mise run notify-publish:check` |
-| 開発環境 | `mise.toml`, `compose.yaml`, `infra/local/docker/` | 関連 docs | 起動確認と影響範囲の明記 |
-| 環境別インフラ | `infra/development/`, `infra/staging/`, `infra/production/` | 関連 docs | Cloud Build 設定、Dockerfile、build context の確認 |
+| 開発環境 | `mise.toml`, `compose.yaml`, `infra/local/` | `docs/design-docs/local-runtime-topology.md` | 起動確認と影響範囲の明記 |
+| 環境別インフラ | `infra/development/`, `infra/staging/`, `infra/production/` | `infra/README.md` | Cloud Build 設定、Dockerfile、build context の確認 |
 
 ## Detail Documents
 
-- `README.md`
-- `FRONTEND.md`
-- `PLANS.md`
-- `docs/INDEX.md`
-- `docs/adr/INDEX.md`
-- `docs/design-docs/core-beliefs.md`
-- `docs/design-docs/local-runtime-topology.md`
-- `docs/design-docs/subproject-boundaries.md`
+| 文書 | 内容 |
+|---|---|
+| `README.md` | セットアップと主要コマンド |
+| `FRONTEND.md` | 管理画面と閲覧サイトの UI 方針 |
+| `PLANS.md` | 実行計画を書くタイミング |
+| `docs/agent-map.md` | エージェント向けの共通地図 |
+| `docs/INDEX.md` | 文書の置き場所と一覧 |
+| `docs/adr/INDEX.md` | 採用済み ADR |
+| `docs/design-docs/INDEX.md` | 継続的な設計原則 |
+| `docs/design-docs/core-beliefs.md` | 開発原則 |
+| `docs/design-docs/local-runtime-topology.md` | ローカル実行構成と worktree 運用 |
+| `docs/design-docs/subproject-boundaries.md` | サブプロジェクトの責務境界 |
+| `docs/product-specs/INDEX.md` | 機能・施策の仕様 |
+| `docs/references/INDEX.md` | 外部資料の要約 |
+| `docs/operations/INDEX.md` | 運用手順 |
+| `infra/README.md` | ローカルと環境別インフラ |
+| `docs/tech-debt-tracker.md` | 技術的負債 |

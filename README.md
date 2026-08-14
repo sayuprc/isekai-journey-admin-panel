@@ -5,8 +5,9 @@
 ## 構成
 
 - アプリケーション本体: `src/`
-- ローカル開発環境: `compose.yaml`, `infra/local/docker/`, `mise.toml`
+- ローカル開発環境: `compose.yaml`, `infra/local/`, `mise.toml`
 - 環境別インフラ定義: `infra/development/`, `infra/staging/`, `infra/production/`
+- インフラ入口: `infra/README.md`
 - 詳細: `ARCHITECTURE.md`
 
 ## セットアップ
@@ -28,6 +29,6 @@ TypeScript 関連: パッケージ管理は `src/` の pnpm workspace で行い�
 
 ## ドキュメント
 
-- `docs/agent-map.md`
-- `ARCHITECTURE.md`
-- `docs/INDEX.md`
+- `docs/agent-map.md`: エージェント向けの共通地図
+- `ARCHITECTURE.md`: Source of Truth と変更ルート
+- `docs/INDEX.md`: 文書の置き場所と一覧

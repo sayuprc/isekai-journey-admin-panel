@@ -2,7 +2,7 @@
 id: ADR-0010
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # パッケージ管理に pnpm を採用する

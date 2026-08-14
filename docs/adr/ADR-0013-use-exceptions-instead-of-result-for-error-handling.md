@@ -2,7 +2,7 @@
 id: ADR-0013
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # 業務エラーの表現を Result から例外へ移行する

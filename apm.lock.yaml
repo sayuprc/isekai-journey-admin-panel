@@ -209,7 +209,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+  content_hash: sha256:3637e401653a615eb016db4b6a37f667c9374dd8d81bb49b74132789a945eec5
 - kind: project-relative
   target: claude
   value: .claude/rules/05-viewer.md
@@ -219,6 +219,24 @@ deployments:
   - .
   active_owner: .
   content_hash: sha256:1ec0abe19479527fdd8493545fd243fde3a7934c964360679eff480e235a26d3
+- kind: project-relative
+  target: claude
+  value: .claude/rules/06-discord-notifier.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:92f4ae6b615833414119d8a4c8094cd3946d3309ba7099a51f3b3e61b49b67a3
+- kind: project-relative
+  target: claude
+  value: .claude/rules/07-notify-publish.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c639204237f831eece0bdd88f2e8b045bea374f2bf3360c313ea834c4265569e
 - kind: project-relative
   target: claude
   value: .claude/skills/code-reviewer
@@ -434,7 +452,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+  content_hash: sha256:a1d3fbcf7a2e739085a9d57324805943d43d408a97139d948b4cf9f9da6b6e46
 - kind: project-relative
   target: cursor
   value: .cursor/rules/05-viewer.mdc
@@ -444,6 +462,24 @@ deployments:
   - .
   active_owner: .
   content_hash: sha256:2d8aec3a7980c4de8b3af15cd2be4fa559300187763d0e47e77e907c4b06c89d
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/06-discord-notifier.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:26b1f7cdb3414b5ffe5e88bbdd825a68074e4d38610e4b2ff4d1a95b865ab5f4
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/07-notify-publish.mdc
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c32e98014f92850b750b593a88bd5a3c8d86ed943be5d269ee071409b7b814f7
 local_deployed_files:
 - .agents/skills/code-reviewer
 - .agents/skills/code-reviewer/SKILL.md
@@ -469,6 +505,8 @@ local_deployed_files:
 - .claude/rules/03-contracts.md
 - .claude/rules/04-docs.md
 - .claude/rules/05-viewer.md
+- .claude/rules/06-discord-notifier.md
+- .claude/rules/07-notify-publish.md
 - .claude/skills/code-reviewer
 - .claude/skills/code-reviewer/SKILL.md
 - .claude/skills/code-reviewer/references/frontend-review.md
@@ -494,6 +532,8 @@ local_deployed_files:
 - .cursor/rules/03-contracts.mdc
 - .cursor/rules/04-docs.mdc
 - .cursor/rules/05-viewer.mdc
+- .cursor/rules/06-discord-notifier.mdc
+- .cursor/rules/07-notify-publish.mdc
 local_deployed_file_hashes:
   .agents/skills/code-reviewer/SKILL.md: sha256:b19afbae283269a0314ddce5c3391eb616647e95ee2b6a4f763e44d0da8753e6
   .agents/skills/code-reviewer/references/frontend-review.md: sha256:46deba2b55c943a2c54b34d924d0e16a1a045023f5d19af65ab0e5631104e842
@@ -511,8 +551,10 @@ local_deployed_file_hashes:
   .claude/rules/01-backend.md: sha256:24abb1e4f2e40173b30e831e3975ec967b95de332aec9632d69104ba09b33507
   .claude/rules/02-admin.md: sha256:c7c577c58d98302f63b9981591c2058f17279923fdd1e534f6b75cb792d0afb0
   .claude/rules/03-contracts.md: sha256:8133e663aa2c8f31cfb8ae8defa6b08c3150a71a58f3bc61549f674dd5544b22
-  .claude/rules/04-docs.md: sha256:5197d40ef8f6f8792bef0f3345bd86b7d5a99c4bff67759e6aff796baa8453e1
+  .claude/rules/04-docs.md: sha256:3637e401653a615eb016db4b6a37f667c9374dd8d81bb49b74132789a945eec5
   .claude/rules/05-viewer.md: sha256:1ec0abe19479527fdd8493545fd243fde3a7934c964360679eff480e235a26d3
+  .claude/rules/06-discord-notifier.md: sha256:92f4ae6b615833414119d8a4c8094cd3946d3309ba7099a51f3b3e61b49b67a3
+  .claude/rules/07-notify-publish.md: sha256:c639204237f831eece0bdd88f2e8b045bea374f2bf3360c313ea834c4265569e
   .claude/skills/code-reviewer/SKILL.md: sha256:b19afbae283269a0314ddce5c3391eb616647e95ee2b6a4f763e44d0da8753e6
   .claude/skills/code-reviewer/references/frontend-review.md: sha256:46deba2b55c943a2c54b34d924d0e16a1a045023f5d19af65ab0e5631104e842
   .claude/skills/code-reviewer/references/general-review.md: sha256:e8db3b568ebf21b354df817317a536c0f733a355850da6c4b7d0d467717a71a1
@@ -530,5 +572,7 @@ local_deployed_file_hashes:
   .cursor/rules/01-backend.mdc: sha256:f0a9c098e1d308b2f827c56ade6fd1242d26233a3e785f4106d4673a3f36d5fd
   .cursor/rules/02-admin.mdc: sha256:d1a0de1df21389eb206b8f9390f5f5ca3f746e6248a6a2b60da41ce9fa3b8f14
   .cursor/rules/03-contracts.mdc: sha256:885b6230351f768c40a503f9a4927bc1bb955d75d3943961b0a2ad4c0a7d4e87
-  .cursor/rules/04-docs.mdc: sha256:1ded52ff15e6796141e6489a26a7ed132256f6bb0fa05abf77dee63ca095f43a
+  .cursor/rules/04-docs.mdc: sha256:a1d3fbcf7a2e739085a9d57324805943d43d408a97139d948b4cf9f9da6b6e46
   .cursor/rules/05-viewer.mdc: sha256:2d8aec3a7980c4de8b3af15cd2be4fa559300187763d0e47e77e907c4b06c89d
+  .cursor/rules/06-discord-notifier.mdc: sha256:26b1f7cdb3414b5ffe5e88bbdd825a68074e4d38610e4b2ff4d1a95b865ab5f4
+  .cursor/rules/07-notify-publish.mdc: sha256:c32e98014f92850b750b593a88bd5a3c8d86ed943be5d269ee071409b7b814f7

@@ -2,7 +2,7 @@
 id: ADR-0015
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # 権利者の画像素材を保存・配信しない

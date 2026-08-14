@@ -2,7 +2,7 @@
 id: ADR-0009
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # 開発環境に Docker を採用する

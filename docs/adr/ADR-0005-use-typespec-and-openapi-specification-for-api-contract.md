@@ -2,7 +2,7 @@
 id: ADR-0005
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # API コントラクトの定義に TypeSpec と OpenAPI Specification を採用する

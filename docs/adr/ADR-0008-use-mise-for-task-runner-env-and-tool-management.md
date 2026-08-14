@@ -2,7 +2,7 @@
 id: ADR-0008
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # タスクランナー・環境変数・ツール管理に mise を採用する
