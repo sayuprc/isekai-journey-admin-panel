@@ -10,7 +10,11 @@ import Layout from '../../layouts/Layout.astro';
 const songs = await songContentRepository.all();
 ---
 
-<Layout pageTitle="楽曲" pageDescription="ヰ世界情緒の楽曲一覧" preconnect={[YOUTUBE_THUMBNAIL_ORIGIN]}>
+<Layout
+  pageTitle="楽曲"
+  pageDescription="ヰ世界情緒の楽曲一覧。オリジナル曲とカバー曲を記録しています"
+  preconnect={[YOUTUBE_THUMBNAIL_ORIGIN]}
+>
   <section class="shell page-section">
     <SectionHead title="楽曲" level={1} />
 

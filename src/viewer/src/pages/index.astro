@@ -8,6 +8,7 @@ import { representativeColor } from '../features/releases/types';
 import { siteStatsRepository } from '../features/site-stats/api';
 import { songContentRepository } from '../features/songs/content';
 import Layout from '../layouts/Layout.astro';
+import { SITE_DESCRIPTION } from '../shared/site';
 
 const latestReleaseGroup = await releaseGroupContentRepository.latest();
 const latestSong = await songContentRepository.latest();
@@ -19,11 +20,11 @@ const preconnect = latestSong?.media.some(entry => youtubeThumbnailFromUrl(entry
   : [];
 ---
 
-<Layout pageTitle="" preconnect={preconnect}>
+<Layout pageTitle="" pageDescription={SITE_DESCRIPTION} preconnect={preconnect}>
   <section class="hero-data">
     <div class="shell">
       <h1 class="hero-mark hero-mark-data">ヰ世界観測所</h1>
-      <div class="hero-tagline">ヰ世界情緒の非公式ファンサイト</div>
+      <p class="hero-tagline">{SITE_DESCRIPTION}</p>
       <div class="hero-ledger">
         <div class="hero-ledger-row">
           <span class="hero-ledger-label">観測開始</span>
