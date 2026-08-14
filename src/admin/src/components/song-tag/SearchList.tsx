@@ -210,35 +210,33 @@ export const SearchList = () => {
             <tr>
               <th>楽曲タグ名</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={3} />
+                <ListState state="loading" colSpan={2} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={2} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.tags.length === 0}>
-                <ListState state="empty" colSpan={3} message="条件に一致する楽曲タグはありません。" />
+                <ListState state="empty" colSpan={2} message="条件に一致する楽曲タグはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().tags}>
                     {tag => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{tag.name}</td>
-                        <td>{tag.orderNo}</td>
                         <td>
                           <a
                             href={`/song-tags/${tag.songTagId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
+                            class="link link-hover font-medium"
                           >
-                            編集
+                            {tag.name}
                           </a>
                         </td>
+                        <td>{tag.orderNo}</td>
                       </tr>
                     )}
                   </For>

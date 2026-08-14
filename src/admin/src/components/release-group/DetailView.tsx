@@ -1,5 +1,10 @@
 import { For, Match, Show, Switch, createResource, createSignal } from 'solid-js';
-import type { ReleaseFormatValue, ReleaseGroupGetResponse, ReleaseGroupTypeValue } from '../../generated';
+import type {
+  ReleaseFormatValue,
+  ReleaseGroupGetResponse,
+  ReleaseGroupReferencedRelease,
+  ReleaseGroupTypeValue,
+} from '../../generated';
 import { client } from '../../utils/client';
 import { createFormErrors } from '../../utils/form-error';
 import { createSubmitting } from '../../utils/use-submitting';
@@ -20,6 +25,45 @@ const RELEASE_FORMAT_LABELS: Record<ReleaseFormatValue, string> = {
   4: 'Blu-ray',
   99: 'その他',
 };
+
+/** 版名は空になりうるため、リンクのラベルとして意味を持つ代替文言を出す */
+const ReleaseNameLink = (props: { release: ReleaseGroupReferencedRelease }) => (
+  <a href={`/releases/${props.release.releaseId}`} class="link link-hover font-medium">
+    <Show when={props.release.name !== ''} fallback={<span class="text-base-content/60">版名なし</span>}>
+      {props.release.name}
+    </Show>
+  </a>
+);
+
+const ReleaseFormatBadges = (props: { release: ReleaseGroupReferencedRelease }) => (
+  <div class="flex flex-wrap gap-1">
+    <Show
+      when={props.release.formatValues.length > 0}
+      fallback={<span class="text-sm text-base-content/60">—</span>}
+    >
+      <For each={props.release.formatValues}>
+        {formatValue => (
+          <span class="badge badge-outline badge-sm">{RELEASE_FORMAT_LABELS[formatValue] ?? '不明'}</span>
+        )}
+      </For>
+    </Show>
+  </div>
+);
+
+const ReleaseDisplayBadge = (props: { release: ReleaseGroupReferencedRelease }) => (
+  <span class={`badge badge-sm ${props.release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
+    {props.release.isDisplay ? '表示する' : '表示しない'}
+  </span>
+);
+
+const CopyReleaseLink = (props: { releaseGroupId: string; releaseId: string }) => (
+  <a
+    href={`/releases/create?releaseGroupId=${props.releaseGroupId}&sourceReleaseId=${props.releaseId}`}
+    class="btn btn-ghost btn-xs whitespace-nowrap"
+  >
+    コピーして追加
+  </a>
+);
 
 interface DetailViewProps {
   releaseGroupId: string;
@@ -300,11 +344,33 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
             when={props.data.releases.length > 0}
             fallback={<p class="text-sm text-base-content/60">リリースはまだ登録されていません。</p>}
           >
-            <div class="overflow-x-auto rounded-box border border-base-300 bg-base-100">
+            <ul class="flex flex-col gap-2 md:hidden">
+              <For each={props.data.releases}>
+                {release => (
+                  <li
+                    class="rounded-box border-y border-r border-l-4 border-base-300 bg-base-100 p-3"
+                    style={{ 'border-left-color': release.color }}
+                  >
+                    <ReleaseNameLink release={release} />
+                    <div class="mt-1 flex flex-wrap gap-x-3 text-sm text-base-content/60">
+                      <span>{normalizeDateValue(release.releasedOn)}</span>
+                      <span>表示順 {release.orderNo}</span>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                      <ReleaseFormatBadges release={release} />
+                      <ReleaseDisplayBadge release={release} />
+                    </div>
+                    <div class="mt-2 flex justify-end">
+                      <CopyReleaseLink releaseGroupId={releaseGroupId} releaseId={release.releaseId} />
+                    </div>
+                  </li>
+                )}
+              </For>
+            </ul>
+            <div class="hidden overflow-x-auto rounded-box border border-base-300 bg-base-100 md:block">
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>代表色</th>
                     <th>版名</th>
                     <th>発売日</th>
                     <th>表示順</th>
@@ -317,55 +383,24 @@ const ReleaseGroupForm = (props: ReleaseGroupFormProps) => {
                   <For each={props.data.releases}>
                     {release => (
                       <tr>
-                        <td>
-                          <div
-                            class="size-12 rounded-box border border-base-300"
-                            style={{ 'background-color': release.color }}
-                            title={release.color}
-                            aria-label={`${release.name !== '' ? release.name : '版名なし'} の代表色 ${release.color}`}
-                          />
-                        </td>
-                        <td class="min-w-40 font-medium">
-                          <Show when={release.name !== ''} fallback={<span class="text-base-content/60">—</span>}>
-                            {release.name}
-                          </Show>
+                        <td
+                          class="min-w-40 border-l-4 font-medium"
+                          style={{ 'border-left-color': release.color }}
+                          title={`代表色 ${release.color}`}
+                        >
+                          <ReleaseNameLink release={release} />
                         </td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateValue(release.releasedOn)}</td>
                         <td class="text-sm">{release.orderNo}</td>
                         <td>
-                          <div class="flex flex-wrap gap-1">
-                            <Show
-                              when={release.formatValues.length > 0}
-                              fallback={<span class="text-sm text-base-content/60">—</span>}
-                            >
-                              <For each={release.formatValues}>
-                                {formatValue => (
-                                  <span class="badge badge-outline badge-sm">
-                                    {RELEASE_FORMAT_LABELS[formatValue] ?? '不明'}
-                                  </span>
-                                )}
-                              </For>
-                            </Show>
-                          </div>
+                          <ReleaseFormatBadges release={release} />
                         </td>
-                        <td>
-                          <span
-                            class={`badge badge-sm ${release.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}
-                          >
-                            {release.isDisplay ? '表示する' : '表示しない'}
-                          </span>
+                        <td class="whitespace-nowrap">
+                          <ReleaseDisplayBadge release={release} />
                         </td>
                         <td class="text-right">
-                          <div class="flex justify-end gap-2">
-                            <a href={`/releases/${release.releaseId}`} class="btn btn-ghost btn-xs">
-                              編集
-                            </a>
-                            <a
-                              href={`/releases/create?releaseGroupId=${releaseGroupId}&sourceReleaseId=${release.releaseId}`}
-                              class="btn btn-ghost btn-xs"
-                            >
-                              コピーして追加
-                            </a>
+                          <div class="flex justify-end">
+                            <CopyReleaseLink releaseGroupId={releaseGroupId} releaseId={release.releaseId} />
                           </div>
                         </td>
                       </tr>
