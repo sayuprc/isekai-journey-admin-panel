@@ -27,6 +27,15 @@ const DEFAULT_PARAMS = {
   perPage: 25 as PerPage,
 };
 
+/** 一覧では URL 全体は幅に見合わないため、投稿先が分かるホスト名だけを出す(解析できない値は素のまま表示する) */
+const toHostLabel = (url: string): string => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+};
+
 const getInitialParams = () => {
   const params = new URLSearchParams(window.location.search);
   const perPageRaw = Number(params.get('per_page'));
@@ -247,20 +256,19 @@ export const SearchList = () => {
               <th>公開日</th>
               <th>種別</th>
               <th>表示設定</th>
-              <th>URL</th>
-              <th>操作</th>
+              <th>リンク</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={6} />
+                <ListState state="loading" colSpan={5} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.media.length === 0}>
-                <ListState state="empty" colSpan={6} message="条件に一致するメディアはありません。" />
+                <ListState state="empty" colSpan={5} message="条件に一致するメディアはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
@@ -268,33 +276,31 @@ export const SearchList = () => {
                     {media => (
                       <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
                         <td class="min-w-44 max-w-56">
-                          <p class="truncate">{media.title}</p>
+                          <a
+                            href={`/media/${media.mediaId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="link link-hover block truncate font-medium"
+                          >
+                            {media.title}
+                          </a>
                         </td>
                         <td class="whitespace-nowrap text-sm">{normalizeDateTimeDisplayValue(media.publishedAt)}</td>
-                        <td>{media.type.name}</td>
-                        <td>
+                        <td class="whitespace-nowrap">{media.type.name}</td>
+                        <td class="whitespace-nowrap">
                           <span
                             class={`badge badge-sm ${media.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}
                           >
                             {media.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>
-                        <td class="max-w-xl">
+                        <td class="max-w-40">
                           <a
                             href={media.url}
                             target="_blank"
                             rel="noreferrer"
-                            class="link link-hover break-all text-sm"
+                            title={media.url}
+                            class="link link-hover block truncate whitespace-nowrap text-sm"
                           >
-                            {media.url}
-                          </a>
-                        </td>
-                        <td>
-                          <a
-                            href={`/media/${media.mediaId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
-                          >
-                            編集
+                            {toHostLabel(media.url)}
                           </a>
                         </td>
                       </tr>

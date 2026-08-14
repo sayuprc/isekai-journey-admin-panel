@@ -324,45 +324,43 @@ export const SearchList = () => {
               <th>楽曲種別</th>
               <th>表示設定</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={4} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={4} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.songs.length === 0}>
-                <ListState state="empty" colSpan={5} />
+                <ListState state="empty" colSpan={4} />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().songs}>
                     {song => (
                       <tr class="hover:bg-primary/30 focus-within:bg-primary/30 transition-colors">
-                        <td>{song.title}</td>
                         <td>
+                          <a
+                            href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`}
+                            class="link link-hover font-medium"
+                          >
+                            {song.title}
+                          </a>
+                        </td>
+                        <td class="whitespace-nowrap">
                           <span class={`badge badge-sm badge-soft ${SONG_TYPE_BADGE_CLASS[song.type.value]}`}>
                             {song.type.name}
                           </span>
                         </td>
-                        <td>
+                        <td class="whitespace-nowrap">
                           <span class={`badge badge-sm ${song.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'}`}>
                             {song.isDisplay ? '表示する' : '表示しない'}
                           </span>
                         </td>
                         <td>{song.orderNo}</td>
-                        <td>
-                          <a
-                            href={`/songs/${song.songId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
-                          >
-                            編集
-                          </a>
-                        </td>
                       </tr>
                     )}
                   </For>

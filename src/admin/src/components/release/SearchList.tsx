@@ -310,26 +310,29 @@ export const SearchList = () => {
               <th>流通形態</th>
               <th>発売日</th>
               <th>表示設定</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={6} />
+                <ListState state="loading" colSpan={5} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={6} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releases.length === 0}>
-                <ListState state="empty" colSpan={6} message="条件に一致するリリースはありません。" />
+                <ListState state="empty" colSpan={5} message="条件に一致するリリースはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().releases}>
                     {release => (
-                      <tr>
-                        <td class="min-w-56 font-medium">{release.title}</td>
+                      <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
+                        <td class="min-w-56">
+                          <a href={buildDetailHref(release.releaseId)} class="link link-hover font-medium">
+                            {release.title}
+                          </a>
+                        </td>
                         <td>
                           {RELEASE_TYPE_OPTIONS.find(option => option.value === String(release.typeValue))?.label
                             ?? '不明'}
@@ -346,11 +349,6 @@ export const SearchList = () => {
                           >
                             {release.isDisplay ? '表示する' : '表示しない'}
                           </span>
-                        </td>
-                        <td>
-                          <a href={buildDetailHref(release.releaseId)} class="btn btn-ghost btn-xs">
-                            編集
-                          </a>
                         </td>
                       </tr>
                     )}

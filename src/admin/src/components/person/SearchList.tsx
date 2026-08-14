@@ -212,35 +212,33 @@ export const SearchList = () => {
             <tr>
               <th>人物名</th>
               <th>表示順</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={3} />
+                <ListState state="loading" colSpan={2} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={3} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={2} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.persons.length === 0}>
-                <ListState state="empty" colSpan={3} />
+                <ListState state="empty" colSpan={2} />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().persons}>
                     {person => (
                       <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
-                        <td>{person.name}</td>
-                        <td>{person.orderNo}</td>
                         <td>
                           <a
                             href={`/persons/${person.personId}?back=${encodeURIComponent(window.location.search)}`}
-                            class="btn btn-ghost btn-xs"
+                            class="link link-hover font-medium"
                           >
-                            編集
+                            {person.name}
                           </a>
                         </td>
+                        <td>{person.orderNo}</td>
                       </tr>
                     )}
                   </For>

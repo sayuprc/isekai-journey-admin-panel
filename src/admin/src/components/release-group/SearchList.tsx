@@ -268,27 +268,30 @@ export const SearchList = () => {
               <th>種別</th>
               <th>初リリース日</th>
               <th>表示設定</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <Switch>
               <Match when={data.loading}>
-                <ListState state="loading" colSpan={5} />
+                <ListState state="loading" colSpan={4} />
               </Match>
               <Match when={fetchError()}>
-                {message => <ListState state="error" colSpan={5} message={message()} onRetry={() => refetch()} />}
+                {message => <ListState state="error" colSpan={4} message={message()} onRetry={() => refetch()} />}
               </Match>
               <Match when={data() && data()!.releaseGroups.length === 0}>
-                <ListState state="empty" colSpan={5} message="条件に一致するリリースグループはありません。" />
+                <ListState state="empty" colSpan={4} message="条件に一致するリリースグループはありません。" />
               </Match>
               <Match when={data()}>
                 {result => (
                   <For each={result().releaseGroups}>
                     {releaseGroup => (
-                      <tr>
-                        <td class="min-w-56 font-medium">{releaseGroup.title}</td>
-                        <td>
+                      <tr class="transition-colors hover:bg-primary/30 focus-within:bg-primary/30">
+                        <td class="min-w-56">
+                          <a href={buildDetailHref(releaseGroup.releaseGroupId)} class="link link-hover font-medium">
+                            {releaseGroup.title}
+                          </a>
+                        </td>
+                        <td class="whitespace-nowrap">
                           {RELEASE_GROUP_TYPE_OPTIONS.find(
                             option => option.value === String(releaseGroup.typeValue),
                           )?.label ?? '不明'}
@@ -298,7 +301,7 @@ export const SearchList = () => {
                             ? normalizeDateDisplayValue(releaseGroup.firstReleasedOn)
                             : '—'}
                         </td>
-                        <td>
+                        <td class="whitespace-nowrap">
                           <span
                             class={`badge badge-sm ${
                               releaseGroup.isDisplay ? 'badge-success badge-soft' : 'badge-ghost'
@@ -306,11 +309,6 @@ export const SearchList = () => {
                           >
                             {releaseGroup.isDisplay ? '表示する' : '表示しない'}
                           </span>
-                        </td>
-                        <td>
-                          <a href={buildDetailHref(releaseGroup.releaseGroupId)} class="btn btn-ghost btn-xs">
-                            編集
-                          </a>
                         </td>
                       </tr>
                     )}
