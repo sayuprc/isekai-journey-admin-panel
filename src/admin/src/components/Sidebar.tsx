@@ -136,7 +136,7 @@ const navSections: NavSection[] = [
     title: '楽曲',
     items: [
       { href: '/songs', label: '楽曲', icon: MusicNoteIcon },
-      { href: '/release-groups', label: 'リリース', icon: DiscIcon },
+      { href: '/release-groups', label: 'リリースグループ', icon: DiscIcon },
       { href: '/media', label: 'メディア', icon: PlayIcon },
       { href: '/song-types', label: '楽曲種別', icon: TagIcon },
       { href: '/song-tags', label: '楽曲タグ', icon: SwatchIcon },

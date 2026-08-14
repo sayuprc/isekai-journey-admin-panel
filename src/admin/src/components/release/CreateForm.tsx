@@ -126,7 +126,7 @@ export const CreateForm = () => {
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">リリースグループが指定されていません。グループ詳細から追加してください。</p>
           <a href="/release-groups" class="btn btn-outline btn-sm">
-            リリース一覧へ
+            リリースグループ一覧へ
           </a>
         </div>
       )}
