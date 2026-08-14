@@ -8,7 +8,7 @@ Claude Code の記事「Steering Claude Code: CLAUDE.md files, skills, hooks, ru
 ## 採用する方針
 
 - `AGENTS.md` と `CLAUDE.md` は短い入口に保つ。常時必要な地図だけを書き、詳細は `docs/agent-map.md` と下位文書へ逃がす
-- パスに閉じる規約は path-scoped rules / instructions に置く。例: `src/server/**`, `src/admin/**`, `src/contracts/**`, `src/viewer/**`, `src/discord-notifier/**`, `src/notify-publish/**`
+- パスに閉じる規約は path-scoped rules / instructions に置く。例: `src/server/**`, `src/admin/**`, `src/contracts/**`, `src/viewer/**`, `src/notify-contract/**`, `src/discord-notifier/**`, `src/notify-publish/**`
 - 手順として再利用する作業は skill に置く。例: PR 作成、コードレビュー、PHP テスト作成、exec plan の作成と運用
 - main session を汚す調査や文書整理は subagent に寄せる。例: `docs-curator`
 - 確実に実行したい処理は hook に置く。例: 編集後の近接 lint、保護対象 config の編集ブロック、contracts 変更後の stop verify

@@ -19,7 +19,10 @@ test "validate rejects missing content and embeds" {
       "{\"action\":\"viewer.deploy\",\"status\":\"succeeded\"}",
     )
   })
-  guard err is InvalidPayload("content or non-empty embeds is required") else {
+  guard err
+    is @notify_contract.InvalidPayload(
+      "content or non-empty embeds is required"
+    ) else {
     fail("expected InvalidPayload")
   }
 }
@@ -31,7 +34,10 @@ test "validate rejects empty embeds" {
       "{\"action\":\"viewer.deploy\",\"status\":\"succeeded\",\"embeds\":[]}",
     )
   })
-  guard err is InvalidPayload("content or non-empty embeds is required") else {
+  guard err
+    is @notify_contract.InvalidPayload(
+      "content or non-empty embeds is required"
+    ) else {
     fail("expected InvalidPayload")
   }
 }
@@ -39,7 +45,9 @@ test "validate rejects empty embeds" {
 ///|
 test "validate rejects invalid json" {
   let err = @test.expect_error(() => validate_notification_json("{"))
-  guard err is InvalidJson(_) else { fail("expected InvalidJson") }
+  guard err is @notify_contract.InvalidJson(_) else {
+    fail("expected InvalidJson")
+  }
 }
 
 ///|

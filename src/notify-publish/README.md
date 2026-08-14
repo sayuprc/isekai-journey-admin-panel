@@ -6,28 +6,13 @@ Discord 配達はしない。発信側から `{env}-discord-notify` へ載せる
 
 ## 責務
 
-- stdin のアプリ通知 JSON (`action` / `status` / `content?` / `embeds?`) を検証する
+- stdin のアプリ通知 JSON を `notify-contract` で検証する
 - GCE metadata から default SA の access token を取る
 - `NOTIFICATION_TOPIC` へ `topics:publish` する
 
 ## 契約
 
-`discord-notifier` と同じアプリ通知 JSON
-
-```json
-{
-  "action": "viewer.deploy",
-  "status": "succeeded",
-  "embeds": [
-    {
-      "title": "Viewer deploy succeeded",
-      "fields": [
-        { "name": "site_url", "value": "https://example.com", "inline": true }
-      ]
-    }
-  ]
-}
-```
+アプリ通知 JSON の形は `src/notify-contract/README.md` を Source of Truth とする
 
 ## 使い方
 
@@ -47,6 +32,8 @@ cd src/notify-publish
 moon test
 moon build --target native --release
 ```
+
+`moon.work` で `../notify-contract` を members に含めている
 
 ## 環境変数
 

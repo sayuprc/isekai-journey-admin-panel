@@ -2,20 +2,19 @@
 package "isekai-observatory/discord-notifier"
 
 import {
+  "isekai-observatory/notify-contract",
   "moonbitlang/core/debug",
   "moonbitlang/core/hashset",
 }
 
 // Values
-pub fn build_discord_payload(Notification) -> Json
+pub fn build_discord_payload(@notify-contract.Notification) -> Json
 
 pub fn cloud_build_id(String) -> String?
 
-pub fn has_embeds(Json) -> Bool
+pub fn parse_request_body(String, cloud_build_trigger_name~ : String) -> @notify-contract.Notification? raise ParseError
 
-pub fn parse_request_body(String, cloud_build_trigger_name~ : String) -> Notification? raise ParseError
-
-pub async fn post_discord_webhook(String, Notification) -> Unit
+pub async fn post_discord_webhook(String, @notify-contract.Notification) -> Unit
 
 pub async fn serve(App) -> Unit
 
@@ -46,13 +45,6 @@ pub(all) struct Config {
 pub fn Config::from_env() -> Self raise
 pub fn Config::resolve_channel(Self, String) -> String
 pub fn Config::resolve_webhook_url(Self, String) -> String?
-
-pub struct Notification {
-  action : String
-  status : String
-  content : String?
-  embeds : Json?
-} derive(Eq, @debug.Debug)
 
 pub(all) enum Outcome {
   Ack

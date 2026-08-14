@@ -21,7 +21,8 @@ paths:
 ## 実装規約
 
 - 業務処理は持たない。振り分けは環境変数で行う
-- 契約、起動、環境変数の詳細は `src/discord-notifier/README.md` を Source of Truth とする
+- アプリ通知 JSON の契約は `src/notify-contract/README.md` を Source of Truth とする
+- 起動・環境変数・Cloud Build 正規化の詳細は `src/discord-notifier/README.md` を参照する
 
 ## 検証
 

@@ -10,14 +10,6 @@ fn embed_color_for_status(status : String) -> Int {
 }
 
 ///|
-pub fn has_embeds(embeds : Json) -> Bool {
-  match embeds {
-    Array(items) => items.length() > 0
-    _ => false
-  }
-}
-
-///|
 /// embed に color が無ければ status 由来の色を付ける
 fn ensure_embed_color(embed : Json, color : Int) -> Json {
   guard embed is Object(map) else { return embed }

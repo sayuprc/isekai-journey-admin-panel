@@ -1,4 +1,5 @@
 import {
+  "isekai-observatory/notify-contract" @notify_contract,
   "moonbitlang/async/http",
   "moonbitlang/async/io",
   "moonbitlang/async/stdio",

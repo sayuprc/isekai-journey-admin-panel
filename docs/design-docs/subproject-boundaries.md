@@ -45,15 +45,23 @@ UI 実装方針の詳細は `FRONTEND.md` を参照します
 
 UI 実装方針の詳細は `FRONTEND.md` を参照します
 
+## Notify Contract
+
+- `src/notify-contract/`: アプリ通知 JSON の共有契約 (MoonBit)
+- `Notification` 型と parse / validate を提供する
+- `notify-publish` と `discord-notifier` が `moon.work` 経由で依存する
+- Discord 配達や Pub/Sub publish は持たない
+
 ## Discord Notifier
 
 - `src/discord-notifier/`: MoonBit 製の Discord 通知配達サービス
 - Pub/Sub push を受け、`action` を環境変数の routing で channel に引き当てて Discord Webhook へ投稿する
 - 業務処理は持たない。振り分けは環境変数で行う
+- アプリ通知 JSON の検証は `notify-contract` に委譲する
 - 発信元は Discord を直接呼ばず、Pub/Sub に正規化済み JSON を publish する
 
 ## Notify Publish
 
 - `src/notify-publish/`: MoonBit 製の通知 JSON → Pub/Sub publish CLI
-- stdin のアプリ通知契約を検証し、`NOTIFICATION_TOPIC` へ publish する
+- stdin のアプリ通知契約を `notify-contract` で検証し、`NOTIFICATION_TOPIC` へ publish する
 - Discord 配達や channel 振り分けは持たない。bash Job などから使う発信側ツール

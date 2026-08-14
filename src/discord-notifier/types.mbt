@@ -1,16 +1,4 @@
 ///|
-/// Discord へ送る正規化済み通知
-pub struct Notification {
-  action : String
-  status : String
-  /// Discord webhook の content (無い/空なら payload に載せない)
-  content : String?
-  /// Discord embed 配列 (無い/空なら payload に載せない)
-  /// content と embeds のどちらか一方は必須
-  embeds : Json?
-} derive(Eq, Debug)
-
-///|
 /// 1 メッセージ処理の結果
 pub(all) enum Outcome {
   /// Pub/Sub に ack してよい (配達成功 / 意図的スキップ / 恒久失敗)
@@ -34,3 +22,14 @@ pub fn ParseError::to_string(self : ParseError) -> String {
     InvalidPayload(msg) => "invalid payload: \{msg}"
   }
 }
+
+///|
+fn to_parse_error(err : @notify_contract.NotificationError) -> ParseError {
+  match err {
+    @notify_contract.InvalidJson(msg) => InvalidJson(msg)
+    @notify_contract.InvalidPayload(msg) => InvalidPayload(msg)
+  }
+}
+
+///|
+type Notification = @notify_contract.Notification

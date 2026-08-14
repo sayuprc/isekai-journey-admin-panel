@@ -12,7 +12,7 @@ paths:
 
 ## 構成
 
-- `payload.mbt`: アプリ通知 JSON の検証と Pub/Sub PublishRequest body 生成
+- `payload.mbt`: `notify-contract` による検証と Pub/Sub PublishRequest body 生成
 - `config.mbt`: env から project / topic / metadata host を読む
 - `pubsub.mbt`: metadata token 取得と Pub/Sub publish
 - `publish.mbt`: stdin → 検証 → publish の一連処理
@@ -20,7 +20,8 @@ paths:
 ## 実装規約
 
 - Discord 配達や channel 振り分けは持たない。発信側の publish CLI に責務を閉じる
-- 契約、使い方、環境変数の詳細は `src/notify-publish/README.md` を Source of Truth とする
+- アプリ通知 JSON の契約は `src/notify-contract/README.md` を Source of Truth とする
+- 使い方・環境変数は `src/notify-publish/README.md` を参照する
 
 ## 検証
 
