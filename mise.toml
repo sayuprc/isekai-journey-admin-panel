@@ -462,6 +462,21 @@ run = [
   "bun run stylelint:check",
 ]
 
+# -- Notify Contract --
+
+[tasks."notify-contract:test"]
+description = "notify-contract の moon test を実行する"
+dir = "src/notify-contract"
+run = "moon test"
+
+[tasks."notify-contract:check"]
+description = "notify-contract の check / test を実行する"
+dir = "src/notify-contract"
+run = [
+  "moon check",
+  "moon test",
+]
+
 # -- Discord Notifier --
 
 [tasks."discord-notifier:test"]

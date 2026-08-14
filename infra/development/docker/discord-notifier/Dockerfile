@@ -16,11 +16,15 @@ ENV PATH="/root/.moon/bin:${PATH}"
 RUN curl -fsSL https://cli.moonbitlang.com/install/unix.sh \
   | bash -s -- "${MOONBIT_VERSION}"
 
-WORKDIR /src
+WORKDIR /workspace
 
-COPY src/discord-notifier/moon.mod src/discord-notifier/moon.pkg ./
-COPY src/discord-notifier/*.mbt ./
-COPY src/discord-notifier/cmd ./cmd
+COPY src/notify-contract/moon.mod src/notify-contract/moon.pkg /workspace/notify-contract/
+COPY src/notify-contract/*.mbt /workspace/notify-contract/
+COPY src/discord-notifier/moon.mod src/discord-notifier/moon.pkg src/discord-notifier/moon.work /workspace/discord-notifier/
+COPY src/discord-notifier/*.mbt /workspace/discord-notifier/
+COPY src/discord-notifier/cmd /workspace/discord-notifier/cmd
+
+WORKDIR /workspace/discord-notifier
 
 RUN moon update \
   && moon build --target native --release
@@ -39,7 +43,7 @@ RUN apt-get update \
   && useradd --system --gid app --home-dir /home/app --create-home \
     --shell /usr/sbin/nologin app
 
-COPY --from=builder /src/_build/native/release/build/cmd/main/main.exe /usr/local/bin/discord-notifier
+COPY --from=builder /workspace/discord-notifier/_build/native/release/build/cmd/main/main.exe /usr/local/bin/discord-notifier
 
 USER app
 

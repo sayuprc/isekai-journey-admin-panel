@@ -20,7 +20,7 @@
 
 | 文書 | 内容 |
 |---|---|
-| `design-docs/subproject-boundaries.md` | `contracts` / `server` / `admin` / `viewer` / `discord-notifier` / `notify-publish` の責務境界 |
+| `design-docs/subproject-boundaries.md` | `contracts` / `server` / `admin` / `viewer` / `notify-contract` / `discord-notifier` / `notify-publish` の責務境界 |
 | `design-docs/local-runtime-topology.md` | ローカル開発時のサービス構成、worktree 分離、並列実装の運用 |
 
 ## Working Records

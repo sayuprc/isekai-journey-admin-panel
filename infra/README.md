@@ -92,5 +92,6 @@ Cloud Build 上で使う tool / base image の版は `mise.toml`(`[tools]` / `[v
 |---|---|
 | `docs/design-docs/local-runtime-topology.md` | ローカル実行構成 |
 | `docs/operations/release.md` | 閲覧サイトの版数運用 |
+| `src/notify-contract/README.md` | アプリ通知 JSON 契約 |
 | `src/discord-notifier/README.md` | Discord Notifier |
 | `src/notify-publish/README.md` | notify-publish |

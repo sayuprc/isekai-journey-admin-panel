@@ -22,6 +22,7 @@
 | 閲覧サイト UI | `src/viewer` |
 | Discord 通知配達 | `src/discord-notifier` |
 | 通知 Pub/Sub publish | `src/notify-publish` |
+| アプリ通知 JSON 契約 | `src/notify-contract` |
 | ローカル / 環境別インフラ | `infra/README.md` |
 | それ以外 | `ARCHITECTURE.md` |
 

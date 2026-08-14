@@ -12,28 +12,9 @@ Pub/Sub push を受け取り、Discord Webhook へ配達する Cloud Run 向け�
 
 ## 契約
 
-```json
-{
-  "action": "media.youtube_import",
-  "status": "failed",
-  "content": "YouTube 取り込みでエラーが発生しました",
-  "embeds": [
-    {
-      "title": "YouTube 取り込みでエラーが発生しました",
-      "fields": [
-        { "name": "executed_at", "value": "2026-08-11T22:00:00+09:00", "inline": true },
-        { "name": "channel_id", "value": "UCxxxx", "inline": true }
-      ]
-    }
-  ]
-}
-```
+アプリ通知 JSON の形は `src/notify-contract/README.md` を Source of Truth とする
 
-- `action`: 処理単位の識別子。Notifier が channel を決める
-- `status`: `started` / `succeeded` / `failed` / `alert` など。embed に `color` が無いときの既定色
-- `content`: Discord webhook の本文 (任意)。空文字や未指定なら payload に載せない
-- `embeds`: Discord embed 配列 (任意)。空配列や未指定なら payload に載せない
-- `content` と非空の `embeds` のどちらか一方は必須
+`discord-notifier` はそれに加え、Cloud Build JSON と Cloud Run Job 失敗 LogEntry を同じ `Notification` へ正規化する
 
 ## 色
 
@@ -58,6 +39,8 @@ cd src/discord-notifier
 moon test
 moon build --target native --release
 ```
+
+`moon.work` で `../notify-contract` を members に含めている
 
 起動例:
 

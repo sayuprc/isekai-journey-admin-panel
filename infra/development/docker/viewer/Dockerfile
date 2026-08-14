@@ -17,11 +17,15 @@ ENV PATH="/root/.moon/bin:${PATH}"
 RUN curl -fsSL https://cli.moonbitlang.com/install/unix.sh \
   | bash -s -- "${MOONBIT_VERSION}"
 
-WORKDIR /src
+WORKDIR /workspace
 
-COPY src/notify-publish/moon.mod src/notify-publish/moon.pkg ./
-COPY src/notify-publish/*.mbt ./
-COPY src/notify-publish/cmd ./cmd
+COPY src/notify-contract/moon.mod src/notify-contract/moon.pkg /workspace/notify-contract/
+COPY src/notify-contract/*.mbt /workspace/notify-contract/
+COPY src/notify-publish/moon.mod src/notify-publish/moon.pkg src/notify-publish/moon.work /workspace/notify-publish/
+COPY src/notify-publish/*.mbt /workspace/notify-publish/
+COPY src/notify-publish/cmd /workspace/notify-publish/cmd
+
+WORKDIR /workspace/notify-publish
 
 RUN moon update \
   && moon build --target native --release
@@ -40,7 +44,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=notify-publish-builder /src/_build/native/release/build/cmd/main/main.exe \
+COPY --from=notify-publish-builder /workspace/notify-publish/_build/native/release/build/cmd/main/main.exe \
   /usr/local/bin/notify-publish
 COPY infra/development/docker/viewer/viewer-deploy /usr/local/bin/viewer-deploy
 COPY mise.toml ./
