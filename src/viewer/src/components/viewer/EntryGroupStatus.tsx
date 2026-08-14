@@ -3,7 +3,7 @@ import { onCleanup, onMount } from 'solid-js';
 type Props = {
   // 絞り込み対象の entry を指す CSS セレクタ FilterBar に渡すものと揃える
   entrySelector: string;
-  // entry を束ねるグループ（年など）を指す CSS セレクタ
+  // entry を束ねるグループ(年など)を指す CSS セレクタ
   groupSelector: string;
   // グループ内で件数を表示する要素を指す CSS セレクタ
   countSelector: string;

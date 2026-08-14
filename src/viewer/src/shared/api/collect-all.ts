@@ -6,8 +6,8 @@ export type PaginatedPage<T> = {
 };
 
 /**
- * カーソル付き一覧 API を全件取得する。
- * `pick` は成功レスポンスから items と nextCursor を取り出す。
+ * カーソル付き一覧 API を全件取得する
+ * `pick` は成功レスポンスから items と nextCursor を取り出す
  */
 export async function collectAll<T, R>(
   fetchPage: (cursor: string | undefined, limit: number) => Promise<R>,

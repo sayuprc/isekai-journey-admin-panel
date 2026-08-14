@@ -1,6 +1,6 @@
 # Harness Engineering Notes
 
-OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約したメモです。
+OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約したメモです
 
 ## このリポジトリに持ち込む要点
 
@@ -23,9 +23,15 @@ OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約し�
 - まだ困っていない段階で文書の置き場をさらに増やすこと
 - ドキュメントだけで解決できる問題に、先回りして専用ツールを増やすこと
 
+## 既にあるもの
+
+- `docs/product-specs/` の feature 用仕様 (現状は少数)
+- `docs/exec-plans/completed/` の完了計画履歴
+- `docs/operations/` の運用手順
+
 ## 次に追加しやすいもの
 
-- 実際の feature 用 `docs/product-specs/` 文書
-- 具体的な変更を追う `docs/exec-plans/active/` の計画
+- 追加の feature 用 `docs/product-specs/` 文書
+- 進行中作業向けの `docs/exec-plans/active/` 計画
 - 管理画面や閲覧サイトの個別 UI ガイド
 - ドメイン別の design doc

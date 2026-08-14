@@ -15,7 +15,7 @@ interface CreateParams {
   sourceReleaseId: string;
 }
 
-/** フォームの初期値。コピー元があればその内容、なければ空。 */
+/** フォームの初期値。コピー元があればその内容、なければ空 */
 interface InitialValues {
   name: string;
   releasedOn: string;
@@ -126,7 +126,7 @@ export const CreateForm = () => {
         <div class="flex flex-col items-start gap-3">
           <p class="text-error">リリースグループが指定されていません。グループ詳細から追加してください。</p>
           <a href="/release-groups" class="btn btn-outline btn-sm">
-            リリース一覧へ
+            リリースグループ一覧へ
           </a>
         </div>
       )}
@@ -184,7 +184,7 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
 
     const { data, error, status } = await client.api.releases.post({
       releaseGroupId: props.releaseGroupId,
-      name: name(),
+      name: name().trim(),
       releasedOn: releasedOn(),
       description: description(),
       color: color(),
@@ -214,13 +214,12 @@ const ReleaseCreateForm = (props: ReleaseCreateFormProps) => {
           <legend class="px-2 text-sm font-semibold text-base-content/70">基本情報</legend>
           <div class="grid gap-5 md:grid-cols-2">
             <div>
-              <label class="label">版名</label>
+              <label class="label">版名(任意)</label>
               <input
                 type="text"
                 class="input w-full"
                 value={name()}
                 onInput={e => setName(e.currentTarget.value)}
-                required
                 placeholder="通常盤 / 初回限定盤 / 配信 など"
                 classList={{ 'input-error': !!getFieldError('name') }}
               />

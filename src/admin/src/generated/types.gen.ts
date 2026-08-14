@@ -34,7 +34,7 @@ export type AuditLog = {
     targetId: Uuid;
     createdAt: string;
     /**
-     * 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする。
+     * 対象の変更後スナップショット。target_type ごとに構造が異なるため任意の JSON とする
      */
     snapshot: {
         [key: string]: unknown;
@@ -310,7 +310,7 @@ export type RegisterStartResponse = {
 };
 
 /**
- * リリース（実際に世に出た版・盤）
+ * リリース(実際に世に出た版・盤)
  */
 export type Release = {
     releaseId: ReleaseId;
@@ -356,7 +356,7 @@ export type ReleaseGetResponse = {
 };
 
 /**
- * リリースグループ（作品）
+ * リリースグループ(作品)
  */
 export type ReleaseGroup = {
     releaseGroupId: ReleaseGroupId;
@@ -403,7 +403,7 @@ export type ReleaseGroupSearchResponse = {
 };
 
 /**
- * リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日（リリース未登録なら null）
+ * リリースグループ一覧の 1 行分。firstReleasedOn は傘下リリースの最古発売日(リリース未登録なら null)
  */
 export type ReleaseGroupSummary = {
     releaseGroupId: ReleaseGroupId;
@@ -805,7 +805,7 @@ export type ReleaseGroupTitle = string;
 export type ReleaseId = string;
 
 /**
- * リリース版名
+ * リリース版名。任意項目で、無しは空文字
  */
 export type ReleaseName = string;
 

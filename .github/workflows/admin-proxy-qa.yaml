@@ -1,0 +1,67 @@
+name: Admin Proxy QA
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "src/admin-proxy/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/admin-proxy-qa.yaml"
+      - ".github/actions/setup-mise/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "src/admin-proxy/**"
+      - "src/package.json"
+      - "src/pnpm-lock.yaml"
+      - "src/pnpm-workspace.yaml"
+      - "src/biome.json"
+      - "mise.toml"
+      - "mise.ci.toml"
+      - ".github/workflows/admin-proxy-qa.yaml"
+      - ".github/actions/setup-mise/**"
+  workflow_call:
+
+env:
+  MISE_ENV: ci
+
+jobs:
+  check:
+    name: Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup mise
+        uses: ./.github/actions/setup-mise
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            src/node_modules
+            src/admin-proxy/node_modules
+          key: admin-proxy-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install packages
+        run: mise run pnpm:install
+
+      - name: Run check
+        run: mise run admin-proxy:check

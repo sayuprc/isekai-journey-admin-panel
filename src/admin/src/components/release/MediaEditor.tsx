@@ -4,8 +4,8 @@ import { client } from '../../utils/client';
 import { createSortable, reorderItems } from '../sortable';
 
 /**
- * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須。
- * songId ありのトラックは title が空なら楽曲名で表示、入力があれば上書き名になる。
+ * songId が null のトラックは管理対象外楽曲(タイトルのみトラック)で title が必須
+ * songId ありのトラックは title が空なら楽曲名で表示、入力があれば上書き名になる
  */
 export type TrackForm = {
   songId: string | null;
@@ -45,6 +45,55 @@ export const toMediaPayload = (media: MediumForm[]) =>
       trackNo: trackIndex + 1,
     })),
   }));
+
+const TrackSongLabel = (props: { track: TrackForm }) => (
+  <Show when={props.track.songId !== null} fallback={<span class="badge badge-ghost badge-sm">対象外</span>}>
+    {props.track.songTitle}
+  </Show>
+);
+
+interface TrackActionsProps {
+  label: string;
+  songId: string | null;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onRemove: () => void;
+}
+
+const TrackActions = (props: TrackActionsProps) => (
+  <div class="flex flex-wrap justify-end gap-2">
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      aria-label={`${props.label}を上へ移動`}
+      disabled={!props.canMoveUp}
+      onClick={props.onMoveUp}
+    >
+      ↑
+    </button>
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      aria-label={`${props.label}を下へ移動`}
+      disabled={!props.canMoveDown}
+      onClick={props.onMoveDown}
+    >
+      ↓
+    </button>
+    <Show when={props.songId}>
+      {songId => (
+        <a href={`/songs/${songId()}`} class="btn btn-ghost btn-xs">
+          楽曲を見る
+        </a>
+      )}
+    </Show>
+    <button type="button" class="btn btn-outline btn-error btn-xs" onClick={props.onRemove}>
+      削除
+    </button>
+  </div>
+);
 
 interface MediaEditorProps {
   media: MediumForm[];
@@ -194,7 +243,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                 }}
               >
                 <div class="flex flex-wrap items-end justify-between gap-4">
-                  <div class="flex items-end gap-4">
+                  <div class="flex flex-wrap items-end gap-4">
                     <button
                       {...mediaSortable.dragHandleProps('release-media', mediumIndex, `媒体${mediumIndex + 1}`)}
                       class="btn btn-ghost btn-sm mb-1 cursor-grab active:cursor-grabbing"
@@ -247,7 +296,52 @@ export const MediaEditor = (props: MediaEditorProps) => {
                     when={medium().tracks.length > 0}
                     fallback={<p class="text-sm text-base-content/60">収録楽曲はまだ登録されていません。</p>}
                   >
-                    <div class="overflow-x-auto rounded-box border border-base-300">
+                    {/* For はオブジェクト同一性でキーするため、入力のたびに行が再生成されて IME が中断される。Index で DOM を保つ */}
+                    <ul class="rounded-box border border-base-300 md:hidden">
+                      <Index each={medium().tracks}>
+                        {(track, trackIndex) => (
+                          <li
+                            {...trackSortable.dropTargetProps(mediumIndex, trackIndex)}
+                            class="border-b border-base-300 p-3 last:border-b-0"
+                            classList={{
+                              'opacity-50': trackSortable.isDragging(mediumIndex, trackIndex),
+                              'bg-primary/5': trackSortable.isDropTarget(mediumIndex, trackIndex),
+                            }}
+                          >
+                            <div class="flex items-center gap-2">
+                              <button
+                                {...trackSortable.dragHandleProps(mediumIndex, trackIndex, `曲順${trackIndex + 1}`)}
+                              >
+                                ⠿
+                              </button>
+                              <span class="text-sm">{trackIndex + 1}</span>
+                              <span class="min-w-0 flex-1 truncate text-sm">
+                                <TrackSongLabel track={track()} />
+                              </span>
+                            </div>
+                            <input
+                              type="text"
+                              class="input input-bordered input-sm mt-2 w-full"
+                              value={track().title}
+                              onInput={e => setTrackTitle(mediumIndex, trackIndex, e.currentTarget.value)}
+                              placeholder={track().songId !== null ? track().songTitle ?? '' : 'トラック名を入力'}
+                            />
+                            <div class="mt-2">
+                              <TrackActions
+                                label={`曲順${trackIndex + 1}`}
+                                songId={track().songId}
+                                canMoveUp={trackIndex > 0}
+                                canMoveDown={trackIndex < medium().tracks.length - 1}
+                                onMoveUp={() => reorderTracks(mediumIndex, trackIndex, trackIndex - 1)}
+                                onMoveDown={() => reorderTracks(mediumIndex, trackIndex, trackIndex + 1)}
+                                onRemove={() => removeTrack(mediumIndex, trackIndex)}
+                              />
+                            </div>
+                          </li>
+                        )}
+                      </Index>
+                    </ul>
+                    <div class="hidden overflow-x-auto rounded-box border border-base-300 md:block">
                       <table class="table table-sm">
                         <thead>
                           <tr>
@@ -258,7 +352,6 @@ export const MediaEditor = (props: MediaEditorProps) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {/* For はオブジェクト同一性でキーするため、入力のたびに行が再生成されて IME が中断される。Index で DOM を保つ */}
                           <Index each={medium().tracks}>
                             {(track, trackIndex) => (
                               <tr
@@ -283,12 +376,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                   </div>
                                 </td>
                                 <td>
-                                  <Show
-                                    when={track().songId !== null}
-                                    fallback={<span class="badge badge-ghost badge-sm">対象外</span>}
-                                  >
-                                    {track().songTitle}
-                                  </Show>
+                                  <TrackSongLabel track={track()} />
                                 </td>
                                 <td>
                                   <input
@@ -300,40 +388,15 @@ export const MediaEditor = (props: MediaEditorProps) => {
                                   />
                                 </td>
                                 <td>
-                                  <div class="flex justify-end gap-2">
-                                    <button
-                                      type="button"
-                                      class="btn btn-ghost btn-xs"
-                                      aria-label={`曲順${trackIndex + 1}を上へ移動`}
-                                      disabled={trackIndex === 0}
-                                      onClick={() => reorderTracks(mediumIndex, trackIndex, trackIndex - 1)}
-                                    >
-                                      ↑
-                                    </button>
-                                    <button
-                                      type="button"
-                                      class="btn btn-ghost btn-xs"
-                                      aria-label={`曲順${trackIndex + 1}を下へ移動`}
-                                      disabled={trackIndex === medium().tracks.length - 1}
-                                      onClick={() => reorderTracks(mediumIndex, trackIndex, trackIndex + 1)}
-                                    >
-                                      ↓
-                                    </button>
-                                    <Show when={track().songId}>
-                                      {songId => (
-                                        <a href={`/songs/${songId()}`} class="btn btn-ghost btn-xs">
-                                          楽曲を見る
-                                        </a>
-                                      )}
-                                    </Show>
-                                    <button
-                                      type="button"
-                                      class="btn btn-outline btn-error btn-xs"
-                                      onClick={() => removeTrack(mediumIndex, trackIndex)}
-                                    >
-                                      削除
-                                    </button>
-                                  </div>
+                                  <TrackActions
+                                    label={`曲順${trackIndex + 1}`}
+                                    songId={track().songId}
+                                    canMoveUp={trackIndex > 0}
+                                    canMoveDown={trackIndex < medium().tracks.length - 1}
+                                    onMoveUp={() => reorderTracks(mediumIndex, trackIndex, trackIndex - 1)}
+                                    onMoveDown={() => reorderTracks(mediumIndex, trackIndex, trackIndex + 1)}
+                                    onRemove={() => removeTrack(mediumIndex, trackIndex)}
+                                  />
                                 </td>
                               </tr>
                             )}
@@ -342,7 +405,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                       </table>
                     </div>
                     <p class="mt-2 text-xs text-base-content/60">
-                      トラック名が空の場合は楽曲名で表示されます（管理対象外楽曲では必須です）。
+                      トラック名が空の場合は楽曲名で表示されます(管理対象外楽曲では必須です)。
                     </p>
                   </Show>
                 </div>
@@ -374,7 +437,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
                         媒体
                         {' '}
                         {index + 1}
-                        {medium().name.trim() !== '' ? `（${medium().name.trim()}）` : ''}
+                        {medium().name.trim() !== '' ? `(${medium().name.trim()})` : ''}
                       </option>
                     )}
                   </Index>
@@ -398,7 +461,33 @@ export const MediaEditor = (props: MediaEditorProps) => {
             <Show when={searchError()}>{message => <p class="mt-3 text-sm text-error">{message()}</p>}</Show>
 
             <Show when={hasSearched()}>
-              <div class="mt-4 overflow-x-auto rounded-box border border-base-300 bg-base-100">
+              <ul class="mt-4 rounded-box border border-base-300 bg-base-100 md:hidden">
+                <Show
+                  when={searchResults().length > 0}
+                  fallback={(
+                    <li class="p-3 text-center text-sm text-base-content/60">条件に一致する楽曲はありません。</li>
+                  )}
+                >
+                  <For each={searchResults()}>
+                    {song => (
+                      <li class="flex items-center justify-between gap-3 border-b border-base-300 p-3 last:border-b-0">
+                        <div class="min-w-0">
+                          <p class="truncate text-sm font-medium">{song.title}</p>
+                          <p class="mt-1 text-xs text-base-content/60">
+                            {song.type.name}
+                            {' · '}
+                            {song.isDisplay ? '表示する' : '表示しない'}
+                          </p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-xs shrink-0" onClick={() => addTrack(song)}>
+                          追加
+                        </button>
+                      </li>
+                    )}
+                  </For>
+                </Show>
+              </ul>
+              <div class="mt-4 hidden overflow-x-auto rounded-box border border-base-300 bg-base-100 md:block">
                 <table class="table table-sm">
                   <thead>
                     <tr>
@@ -467,7 +556,7 @@ export const MediaEditor = (props: MediaEditorProps) => {
               </button>
             </div>
             <p class="mt-1 text-xs text-base-content/60">
-              管理していない楽曲をタイトルだけで収録曲に追加します（楽曲詳細へのリンクは付きません）。
+              管理していない楽曲をタイトルだけで収録曲に追加します(楽曲詳細へのリンクは付きません)。
             </p>
           </div>
         </Show>

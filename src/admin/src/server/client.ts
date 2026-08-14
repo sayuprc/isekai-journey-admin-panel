@@ -9,9 +9,9 @@ import type { AuthSession, Credential } from './types';
 const apiUrl = API_URL + '/admin/v1';
 
 /**
- * 非公開 API (allow_unauthenticated = false) の IAM 認証を通すための fetch。
+ * 非公開 API (allow_unauthenticated = false) の IAM 認証を通すための fetch
  * Authorization はアプリの JWT が使うため、Google ID token は
- * Cloud Run が予約している X-Serverless-Authorization ヘッダで送る。
+ * Cloud Run が予約している X-Serverless-Authorization ヘッダで送る
  */
 const fetchWithServerlessAuth: typeof fetch = async (input, init) => {
   const idToken = await getGoogleIdToken(API_URL);

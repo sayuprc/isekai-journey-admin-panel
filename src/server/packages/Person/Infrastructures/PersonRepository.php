@@ -132,7 +132,7 @@ readonly class PersonRepository implements PersonRepositoryInterface
         $now = now()->toDateTimeString();
 
         // emonkak のビルダは upsert を直接表現できないため、INSERT に
-        // ON DUPLICATE KEY UPDATE を付与する。VALUES(col) で挿入値を再利用し追加バインドを避ける。
+        // ON DUPLICATE KEY UPDATE を付与する。VALUES(col) で挿入値を再利用し追加バインドを避ける
         $this->queryFactory->insert()
             ->into(self::TABLE, ['person_id', 'name', 'order_no', 'created_at', 'updated_at'])
             ->values([

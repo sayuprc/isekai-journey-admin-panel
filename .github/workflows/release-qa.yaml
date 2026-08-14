@@ -31,3 +31,23 @@ jobs:
   contracts:
     name: Contracts QA
     uses: ./.github/workflows/contracts-qa.yaml
+
+  discord-notifier:
+    name: Discord Notifier QA
+    uses: ./.github/workflows/discord-notifier-qa.yaml
+
+  notify-publish:
+    name: Notify Publish QA
+    uses: ./.github/workflows/notify-publish-qa.yaml
+
+  notify-contract:
+    name: Notify Contract QA
+    uses: ./.github/workflows/notify-contract-qa.yaml
+
+  admin-proxy:
+    name: Admin Proxy QA
+    uses: ./.github/workflows/admin-proxy-qa.yaml
+
+  infra-docker:
+    name: Infra Docker QA
+    uses: ./.github/workflows/infra-docker-qa.yaml

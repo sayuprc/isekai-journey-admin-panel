@@ -2,26 +2,26 @@
 id: ADR-0010
 status: accepted
 superseded_by: null
-applies_to: [api, admin, client]
+applies_to: [api, admin, viewer]
 ---
 
 # パッケージ管理に pnpm を採用する
 
 ## Context
 
-プロジェクトの TypeScript 領域は `src/` 配下に admin、viewer、contracts の workspace を持つ。
-これらの依存関係はワークスペース横断で解決され、lockfile によって再現性を担保する必要がある。
+プロジェクトの TypeScript 領域は `src/` 配下に admin、viewer、contracts の workspace を持つ
+これらの依存関係はワークスペース横断で解決され、lockfile によって再現性を担保する必要がある
 
-もともと Bun は Elysia を使うために採用しており、ランタイムやテスト、dev コマンドの実行環境としては高速で扱いやすい。
-一方で、Bun の lockfile を前提にした依存管理では Dependabot の通知が期待通りに届かない問題があった。
-依存更新の検知はセキュリティと保守性に関わるため、パッケージ管理では Dependabot が安定して扱える形式を優先する必要がある。
+もともと Bun は Elysia を使うために採用しており、ランタイムやテスト、dev コマンドの実行環境としては高速で扱いやすい
+一方で、Bun の lockfile を前提にした依存管理では Dependabot の通知が期待通りに届かない問題があった
+依存更新の検知はセキュリティと保守性に関わるため、パッケージ管理では Dependabot が安定して扱える形式を優先する必要がある
 
-pnpm は Bun より実行速度で劣るが、workspace、lockfile、catalog による依存バージョン管理が明示的で、Dependabot との相性もよい。
-このため、Bun は実行環境、pnpm はパッケージ管理という役割分担にする。
+pnpm は Bun より実行速度で劣るが、workspace、lockfile、catalog による依存バージョン管理が明示的で、Dependabot との相性もよい
+このため、Bun は実行環境、pnpm はパッケージ管理という役割分担にする
 
 ## Decision
 
-TypeScript 領域のパッケージ管理には pnpm を採用する。
+TypeScript 領域のパッケージ管理には pnpm を採用する
 
 - 依存関係のインストールは `pnpm install` を使う
 - lockfile は `src/pnpm-lock.yaml` を正とする
@@ -29,9 +29,9 @@ TypeScript 領域のパッケージ管理には pnpm を採用する。
 - workspace 共通の依存バージョンは pnpm catalog で管理する
 - Bun の lockfile は作成・更新しない
 
-Bun はパッケージ管理には使わない。
-ただし、Bun 固有 API、Bun ランタイム、`bun:test`、dev コマンドなどの実行用途では Bun を継続して使用する。
-それらを廃止または移行する場合は、別の判断として扱う。
+Bun はパッケージ管理には使わない
+ただし、Bun 固有 API、Bun ランタイム、`bun:test`、dev コマンドなどの実行用途では Bun を継続して使用する
+それらを廃止または移行する場合は、別の判断として扱う
 
 ## Consequences
 

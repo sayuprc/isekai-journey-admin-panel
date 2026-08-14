@@ -135,7 +135,7 @@ class ReleaseIntegrityService
     {
         foreach ($media as $medium) {
             foreach ($medium->tracks as $track) {
-                // タイトルのみトラックは Song 集約を参照しない。
+                // タイトルのみトラックは Song 集約を参照しない
                 if (is_null($track->songId)) {
                     continue;
                 }

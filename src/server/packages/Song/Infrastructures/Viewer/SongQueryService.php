@@ -153,7 +153,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
     }
 
     /**
-     * 楽曲 → 公開リリースグループの逆引き。公開リリース経由のもののみ。
+     * 楽曲 → 公開リリースグループの逆引き。公開リリース経由のもののみ
      *
      * @param list<string> $binSongIds
      *
@@ -190,7 +190,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $linkRows,
         )));
 
-        // グループごとの最古公開リリースから代表発売日と代表色を引く。
+        // グループごとの最古公開リリースから代表発売日と代表色を引く
         $releaseRows = $this->queryFactory->fetchAll(
             $this->queryFactory->select()
                 ->withSelect(['release_group_id', 'released_on', 'color'])
@@ -215,7 +215,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             $binSongId = Row::string($row, 'song_id');
             $binGroupId = Row::string($row, 'release_group_id');
 
-            // 同一グループ内の複数リリースに収録されていても 1 件にまとめる。
+            // 同一グループ内の複数リリースに収録されていても 1 件にまとめる
             if (isset($seen[$binSongId][$binGroupId])) {
                 continue;
             }
@@ -236,7 +236,7 @@ readonly class SongQueryService implements SongQueryServiceInterface
             );
         }
 
-        // 最古発売日の降順で並べる。
+        // 最古発売日の降順で並べる
         foreach ($grouped as &$summaries) {
             usort(
                 $summaries,

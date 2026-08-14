@@ -16,11 +16,11 @@ const resolveClientIp = (request: Request): string => {
 };
 
 /**
- * クライアント実 IP 単位の固定ウィンドウレート制限。
+ * クライアント実 IP 単位の固定ウィンドウレート制限
  *
- * 上限を超えた場合は 429 を投げる。複数インスタンス構成でもカウンタを共有する。
+ * 上限を超えた場合は 429 を投げる。複数インスタンス構成でもカウンタを共有する
  * 初回リクエストで必ず TTL 付きでキーを作成するため、INCR と EXPIRE の間で
- * プロセスが落ちてカウンタが永続化する事故を防ぐ。
+ * プロセスが落ちてカウンタが永続化する事故を防ぐ
  */
 export const enforceAuthRateLimit = async (request: Request, scope: string, config: RateLimitConfig): Promise<void> => {
   const key = createRateLimitKey(scope, resolveClientIp(request));

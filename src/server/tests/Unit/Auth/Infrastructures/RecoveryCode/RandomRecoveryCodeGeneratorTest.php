@@ -26,7 +26,7 @@ class RandomRecoveryCodeGeneratorTest extends TestCase
     #[Test]
     public function generatesCodeInExpectedFormat(): void
     {
-        // 紛らわしい 0/O/1/I/L を除外した文字集合のみ、4-4 のハイフン区切り。
+        // 紛らわしい 0/O/1/I/L を除外した文字集合のみ、4-4 のハイフン区切り
         for ($i = 0; $i < 100; $i++) {
             $this->assertMatchesRegularExpression('/\A[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}\z/', $this->generator->generate());
         }
@@ -37,7 +37,7 @@ class RandomRecoveryCodeGeneratorTest extends TestCase
     {
         $generator = new RandomRecoveryCodeGenerator(new Randomizer(new Mt19937(1)));
 
-        // 同じシードの決定的エンジンなら、生成結果は再現する。
+        // 同じシードの決定的エンジンなら、生成結果は再現する
         $this->assertSame(
             new RandomRecoveryCodeGenerator(new Randomizer(new Mt19937(1)))->generate(),
             $generator->generate(),

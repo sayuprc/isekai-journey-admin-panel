@@ -78,7 +78,7 @@ export const ColorField = (props: ColorFieldProps) => {
 
         <div class="flex flex-col gap-2">
           <label class="label py-0 text-xs text-base-content/70">
-            画像から候補を抽出（端末内のみ。彩度×面積で並べ、初期選択も同じ基準）
+            画像から候補を抽出(端末内のみ。彩度×面積で並べ、初期選択も同じ基準)
           </label>
           <input
             type="file"

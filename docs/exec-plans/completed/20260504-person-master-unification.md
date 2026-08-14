@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-現在は `Creator` と `Performer` が別マスタで、同一人物でも `creators` と `performers` に重複登録が必要です。実装も `src/contracts/src/admin/creators` / `performers`、`src/server/packages/Creator` / `Performer`、`src/admin/src/pages/creators` / `performers` に二重化されています。さらに楽曲側は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルで人物との紐づきを分散管理しており、人物統合後も役割ごとに構造が割れたままです。`docs/product-specs/20260503-song-media-admin-phase1/models.md` では長期的な `Person` 統合を前提としており、現状では同一人物の再利用と役割管理の両方が不自然です。
+現在は `Creator` と `Performer` が別マスタで、同一人物でも `creators` と `performers` に重複登録が必要です。実装も `src/contracts/src/admin/creators` / `performers`、`src/server/packages/Creator` / `Performer`、`src/admin/src/pages/creators` / `performers` に二重化されています。さらに楽曲側は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルで人物との紐づきを分散管理しており、人物統合後も役割ごとに構造が割れたままです。`docs/product-specs/20260503-song-media-admin-phase1/models.md` では長期的な `Person` 統合を前提としており、現状では同一人物の再利用と役割管理の両方が不自然です
 
 ## Goal
 
-`Creator` / `Performer` を廃止して `Person` マスタへ統合し、同一人物を 1 件で管理できる状態にする。あわせて楽曲と人物の紐づきは 1 テーブルへ統合し、作詞・作曲・編曲は `role` Enum で表現する。
+`Creator` / `Performer` を廃止して `Person` マスタへ統合し、同一人物を 1 件で管理できる状態にする。あわせて楽曲と人物の紐づきは 1 テーブルへ統合し、作詞・作曲・編曲は `role` Enum で表現する
 
 ## Scope
 
@@ -38,7 +38,7 @@ completed
 ## Split Plans
 
 - `feature/person` を土台ブランチとして保持し、`feature/person-foundation`: [20260504-person-foundation.md](/tmp/person/docs/exec-plans/completed/20260504-person-foundation.md)
-  契約、DB、pure domain 定義、生成物のみを扱う。runtime 実装は含めない。
+  契約、DB、pure domain 定義、生成物のみを扱う。runtime 実装は含めない
 - `feature/person-create`: [20260504-person-create.md](/tmp/person/docs/exec-plans/completed/20260504-person-create.md)
 - `feature/person-read`: [20260504-person-read.md](/tmp/person/docs/exec-plans/completed/20260504-person-read.md)
 - `feature/person-update`: [20260504-person-update.md](/tmp/person/docs/exec-plans/completed/20260504-person-update.md)
@@ -49,25 +49,25 @@ completed
 
 ## Steps
 
-1. `src/contracts/src/admin/persons/{main,domain,service,transport}.tsp` を追加して `src/contracts/src/admin/main.tsp` に取り込み、`src/contracts/src/admin/creators` / `performers` を削除する。あわせて `src/contracts/src/admin/songs/{domain,transport}.tsp` を `lyricists` / `composers` / `arrangers` から、`role` Enum を持つ `songPersons` もしくは同等の単一配列構造へ変更する。
-2. `src/server/database/atlas/schemas/persons.my.hcl` と `src/server/database/atlas/schemas/song-persons.my.hcl` を追加し、`src/server/database/atlas/schemas/{creators,performers,song-lyricists,song-composers,song-arrangers}.my.hcl` を削除する。`song-persons` は `song_id`, `person_id`, `role`, `order_no` を持つ構造にし、人物主データと楽曲紐づきをそれぞれ 1 系統へ統合する。
-3. `src/server/app/Models/Person/Person.php` と `src/server/packages/Person/*` を新設し、CRUD / search / list の use case・repository・route map を実装する。`src/server/routes/admin.php` と `src/server/app/Providers/Domain/PersonServiceProvider.php` を追加して、`/admin/v1/persons` を唯一の人物 API 入口にする。
-4. `src/server/packages/Creator`, `src/server/packages/Performer`, `src/server/app/Models/Creator`, `src/server/app/Models/Performer`, `src/server/app/Http/Controllers/Api/{Creator,Performer}`, `src/server/app/Http/Presenters/Api/{Creator,Performer}`、関連 provider / route / test を削除し、参照している箇所を `Person` へ置き換える。
-5. `src/server/packages/Song/Domain/Models/*`、`src/server/packages/Song/Domain/Services/SongIntegrityService.php`、`src/server/packages/Song/Application/*`、`src/server/packages/Song/Infrastructures/*`、`src/server/packages/Support/Infrastructures/Mapper.php` を更新し、楽曲の人物紐づきを `creatorId` 系の 3 集合から `personId + role + orderNo` の単一コレクションへ差し替える。
-6. 契約変更後に `src/server/Generated` と `src/admin/src/generated` を再生成し、server / admin の実装を新しい `persons` と `songs` 契約へ揃える。以降の実装は再生成後の型を正として進める。
-7. `src/admin/src/server/routes/persons.ts` を追加して `src/admin/src/server/index.ts` に登録し、`src/admin/src/server/routes/{creators,performers}.ts` を削除する。`src/admin/src/server/routes/songs.ts` は `Person` 一覧と新しい楽曲人物配列を扱うよう更新する。
-8. `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}`、`src/admin/src/components/person/*`、`src/admin/src/components/Sidebar.tsx` を追加・更新し、`src/admin/src/pages/creators`, `src/admin/src/pages/performers`, `src/admin/src/components/{creator,performer}/*` を削除する。`src/admin/src/components/song/{CreateForm,EditableForm}.tsx` は作詞・作曲・編曲を `role` で編集する共通 UI に置き換える。
-9. `src/server/tests/Feature/Api/{Creator,Performer}`、`src/server/tests/Integration/{Creator,Performer}`、`src/server/tests/Unit/{Creator,Performer}` を削除し、`src/server/tests/Feature/Api/{Person,Song}`、`src/server/tests/Integration/{Person,Song}`、`src/server/tests/Unit/{Person,Song}` を追加・更新する。`Person` 単独 CRUD と、1 人物に複数 role を持たせた楽曲登録・更新・取得が通ることを自動化する。
+1. `src/contracts/src/admin/persons/{main,domain,service,transport}.tsp` を追加して `src/contracts/src/admin/main.tsp` に取り込み、`src/contracts/src/admin/creators` / `performers` を削除する。あわせて `src/contracts/src/admin/songs/{domain,transport}.tsp` を `lyricists` / `composers` / `arrangers` から、`role` Enum を持つ `songPersons` もしくは同等の単一配列構造へ変更する
+2. `src/server/database/atlas/schemas/persons.my.hcl` と `src/server/database/atlas/schemas/song-persons.my.hcl` を追加し、`src/server/database/atlas/schemas/{creators,performers,song-lyricists,song-composers,song-arrangers}.my.hcl` を削除する。`song-persons` は `song_id`, `person_id`, `role`, `order_no` を持つ構造にし、人物主データと楽曲紐づきをそれぞれ 1 系統へ統合する
+3. `src/server/app/Models/Person/Person.php` と `src/server/packages/Person/*` を新設し、CRUD / search / list の use case・repository・route map を実装する。`src/server/routes/admin.php` と `src/server/app/Providers/Domain/PersonServiceProvider.php` を追加して、`/admin/v1/persons` を唯一の人物 API 入口にする
+4. `src/server/packages/Creator`, `src/server/packages/Performer`, `src/server/app/Models/Creator`, `src/server/app/Models/Performer`, `src/server/app/Http/Controllers/Api/{Creator,Performer}`, `src/server/app/Http/Presenters/Api/{Creator,Performer}`、関連 provider / route / test を削除し、参照している箇所を `Person` へ置き換える
+5. `src/server/packages/Song/Domain/Models/*`、`src/server/packages/Song/Domain/Services/SongIntegrityService.php`、`src/server/packages/Song/Application/*`、`src/server/packages/Song/Infrastructures/*`、`src/server/packages/Support/Infrastructures/Mapper.php` を更新し、楽曲の人物紐づきを `creatorId` 系の 3 集合から `personId + role + orderNo` の単一コレクションへ差し替える
+6. 契約変更後に `src/server/Generated` と `src/admin/src/generated` を再生成し、server / admin の実装を新しい `persons` と `songs` 契約へ揃える。以降の実装は再生成後の型を正として進める
+7. `src/admin/src/server/routes/persons.ts` を追加して `src/admin/src/server/index.ts` に登録し、`src/admin/src/server/routes/{creators,performers}.ts` を削除する。`src/admin/src/server/routes/songs.ts` は `Person` 一覧と新しい楽曲人物配列を扱うよう更新する
+8. `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}`、`src/admin/src/components/person/*`、`src/admin/src/components/Sidebar.tsx` を追加・更新し、`src/admin/src/pages/creators`, `src/admin/src/pages/performers`, `src/admin/src/components/{creator,performer}/*` を削除する。`src/admin/src/components/song/{CreateForm,EditableForm}.tsx` は作詞・作曲・編曲を `role` で編集する共通 UI に置き換える
+9. `src/server/tests/Feature/Api/{Creator,Performer}`、`src/server/tests/Integration/{Creator,Performer}`、`src/server/tests/Unit/{Creator,Performer}` を削除し、`src/server/tests/Feature/Api/{Person,Song}`、`src/server/tests/Integration/{Person,Song}`、`src/server/tests/Unit/{Person,Song}` を追加・更新する。`Person` 単独 CRUD と、1 人物に複数 role を持たせた楽曲登録・更新・取得が通ることを自動化する
 
 ## Decision Log
 
-- 2026-05-04: `Creator` / `Performer` は互換レイヤを残さず削除する。人物概念を `Person` に一本化しないと、重複登録の根本原因が残るため。
-- 2026-05-04: 楽曲と人物の関係は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルではなく、`role` Enum を持つ 1 テーブルへ統合する。役割追加時のスキーマ増殖を防ぎ、人物参照モデルも単純化できるため。
-- 2026-05-04: 楽曲 API の公開契約も `creatorId` 系の分割配列を維持せず、`personId` と `role` を持つ単一構造へ更新する。今回の変更は破壊的だが、データモデルと API の不整合を残さないことを優先する。
-- 2026-05-04: admin 導線は `/persons` を唯一の人物管理画面にし、`/creators` / `/performers` 画面は残さない。削除方針と UI 導線を揃え、重複メンテナンスをなくすため。
-- 2026-05-04: レビュー容易性を優先し、この計画は umbrella plan として保持し、実装は `feature/person` を土台にした 4 本の PR に分割する。
-- 2026-05-04: 最初の `feature/person-foundation` は runtime 実装を含めず、後続 PR が依存する静的定義だけに絞る。CRUD ごとの責務分離を明確にするため。
-- 2026-05-04: `Person` 削除は最終的に楽曲での使用中ガードまで含めて完了とする。API 利用者に DB 例外を漏らさないため。
+- 2026-05-04: `Creator` / `Performer` は互換レイヤを残さず削除する。人物概念を `Person` に一本化しないと、重複登録の根本原因が残るため
+- 2026-05-04: 楽曲と人物の関係は `song_lyricists` / `song_composers` / `song_arrangers` の 3 テーブルではなく、`role` Enum を持つ 1 テーブルへ統合する。役割追加時のスキーマ増殖を防ぎ、人物参照モデルも単純化できるため
+- 2026-05-04: 楽曲 API の公開契約も `creatorId` 系の分割配列を維持せず、`personId` と `role` を持つ単一構造へ更新する。今回の変更は破壊的だが、データモデルと API の不整合を残さないことを優先する
+- 2026-05-04: admin 導線は `/persons` を唯一の人物管理画面にし、`/creators` / `/performers` 画面は残さない。削除方針と UI 導線を揃え、重複メンテナンスをなくすため
+- 2026-05-04: レビュー容易性を優先し、この計画は umbrella plan として保持し、実装は `feature/person` を土台にした 4 本の PR に分割する
+- 2026-05-04: 最初の `feature/person-foundation` は runtime 実装を含めず、後続 PR が依存する静的定義だけに絞る。CRUD ごとの責務分離を明確にするため
+- 2026-05-04: `Person` 削除は最終的に楽曲での使用中ガードまで含めて完了とする。API 利用者に DB 例外を漏らさないため
 
 ## Validation
 

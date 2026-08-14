@@ -80,14 +80,14 @@ readonly class RecoveryFinishUseCase
         string $name,
     ): RecoveryFinishOutputData {
         // start で検証成功した場合のみ state に本物の adminUserId と検証済みコードの id が
-        // 束縛される。ダミー id のときは実在ユーザーが存在しないため find は null となり失敗する。
+        // 束縛される。ダミー id のときは実在ユーザーが存在しないため find は null となり失敗する
         $adminUser = $this->adminUserRepository->find(new AdminUserId($state->adminUserId));
 
         if (is_null($adminUser) || is_null($state->recoveryCodeId)) {
             throw new UnauthenticatedException();
         }
 
-        // start で検証・束縛した当該コードのみを消費する。既に使用済み/存在しない場合は失敗。
+        // start で検証・束縛した当該コードのみを消費する。既に使用済み/存在しない場合は失敗
         $recoveryCode = $this->recoveryCodeRepository->findUnusedByIdForUpdate(
             new RecoveryCodeId($state->recoveryCodeId),
             $adminUser->adminUserId,

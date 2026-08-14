@@ -11,24 +11,24 @@ on:
     paths:
       - "src/server/**"
       - "src/contracts/**"
-      - "infra/**"
+      - "infra/local/**"
       - "compose.yaml"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/server-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   push:
     branches:
       - dev
     paths:
       - "src/server/**"
       - "src/contracts/**"
-      - "infra/**"
+      - "infra/local/**"
       - "compose.yaml"
       - "mise.toml"
       - "mise.ci.toml"
       - ".github/workflows/server-qa.yaml"
-      - ".github/actions/**"
+      - ".github/actions/setup-mise/**"
   workflow_call:
 
 env:

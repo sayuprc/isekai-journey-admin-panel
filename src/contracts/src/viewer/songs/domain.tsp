@@ -56,7 +56,7 @@ model SongListItem {
   arrangers: string[];
   media: SongMediaSummary[];
 
-  @doc("収録先の公開リリースグループ（最古発売日の降順）")
+  @doc("収録先の公開リリースグループ(最古発売日の降順)")
   releaseGroups: SongReleaseGroupSummary[];
 }
 
@@ -67,7 +67,7 @@ model SongReleaseGroupSummary {
   type: ReleaseGroupType;
   firstReleasedOn: releasedOn;
 
-  @doc("代表色（公開リリースを発売日順に見て最初のもの）")
+  @doc("代表色(公開リリースを発売日順に見て最初のもの)")
   color: color;
 }
 

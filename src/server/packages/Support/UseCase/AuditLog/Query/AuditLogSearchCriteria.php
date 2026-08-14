@@ -35,7 +35,7 @@ readonly class AuditLogSearchCriteria
         public int $page = 1,
         public PerPage $perPage = PerPage::Fifty,
     ) {
-        // 保存側の AdminUserName と対称に、検索語も NFC へ揃える。
+        // 保存側の AdminUserName と対称に、検索語も NFC へ揃える
         $this->adminUserName = $adminUserName->isPresent()
             ? new Some(TextNormalizer::toNfc($adminUserName->get()))
             : $adminUserName;

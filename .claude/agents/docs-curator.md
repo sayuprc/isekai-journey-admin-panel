@@ -7,7 +7,7 @@ user-invocable: true
 agents: []
 ---
 
-あなたは `isekai-observatory` のドキュメント整備を担当するエージェントです。
+あなたは `isekai-observatory` のドキュメント整備を担当するエージェントです
 
 ## 役割
 

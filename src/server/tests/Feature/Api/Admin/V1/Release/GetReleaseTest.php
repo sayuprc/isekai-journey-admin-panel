@@ -69,7 +69,7 @@ class GetReleaseTest extends DatabaseTestCase
                     'color' => '#4a5a78',
                     'isDisplay' => true,
                     'orderNo' => 10,
-                    // 提供形態は値順で返る (配信=1, CD=2)。
+                    // 提供形態は値順で返る (配信=1, CD=2)
                     'formatValues' => [ReleaseFormat::Digital->value, ReleaseFormat::Cd->value],
                     'media' => [
                         [
@@ -86,7 +86,7 @@ class GetReleaseTest extends DatabaseTestCase
                                     'title' => '管理対象外の楽曲',
                                     'trackNo' => 2,
                                 ],
-                                // 上書き名を持つ参照トラックは title に上書き名の生値が載る。
+                                // 上書き名を持つ参照トラックは title に上書き名の生値が載る
                                 [
                                     'songId' => $songId,
                                     'title' => 'テスト楽曲1 -instrumental-',
@@ -104,14 +104,14 @@ class GetReleaseTest extends DatabaseTestCase
                         'songId' => $songId,
                         'title' => 'テスト楽曲1',
                     ],
-                    // タイトルのみトラックも収録曲 read model に songId: null で載る。
+                    // タイトルのみトラックも収録曲 read model に songId: null で載る
                     [
                         'mediumPosition' => 1,
                         'trackNo' => 2,
                         'songId' => null,
                         'title' => '管理対象外の楽曲',
                     ],
-                    // 上書き名を持つ参照トラックでも read model は楽曲の正式名を返す。
+                    // 上書き名を持つ参照トラックでも read model は楽曲の正式名を返す
                     [
                         'mediumPosition' => 1,
                         'trackNo' => 3,

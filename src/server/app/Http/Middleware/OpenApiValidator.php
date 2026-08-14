@@ -105,7 +105,7 @@ abstract class OpenApiValidator
         ServerRequestInterface $psrRequest,
         OperationAddress $operationAddress,
     ): JsonResponse {
-        // 契約スキーマに対する body の全違反を一括報告する (ADR-0014)。
+        // 契約スキーマに対する body の全違反を一括報告する (ADR-0014)
         // body 以外 (query / path 等) の違反は従来どおり先頭 1 件の報告に落ちる
         $details = new BodyErrorCollector($this->getPath())->collect($operationAddress, (string)$psrRequest->getBody());
 

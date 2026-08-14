@@ -35,7 +35,7 @@ use \OpenAPI\Admin\Client\ObjectSerializer;
  * Release Class Doc Comment
  *
  * @category Class
- * @description リリース（実際に世に出た版・盤）
+ * @description リリース(実際に世に出た版・盤)
  * @package  OpenAPI\Admin\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -347,10 +347,6 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         if ($this->container['name'] === null) {
             $invalidProperties[] = "'name' can't be null";
         }
-        if ((mb_strlen($this->container['name']) < 1)) {
-            $invalidProperties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
-        }
-
         if ($this->container['released_on'] === null) {
             $invalidProperties[] = "'released_on' can't be null";
         }
@@ -466,7 +462,7 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name リリース版名
+     * @param string $name リリース版名。任意項目で、無しは空文字
      *
      * @return self
      */
@@ -475,11 +471,6 @@ class Release implements ModelInterface, ArrayAccess, \JsonSerializable
         if (is_null($name)) {
             throw new \InvalidArgumentException('non-nullable name cannot be null');
         }
-
-        if ((mb_strlen($name) < 1)) {
-            throw new \InvalidArgumentException('invalid length for $name when calling Release., must be bigger than or equal to 1.');
-        }
-
         $this->container['name'] = $name;
 
         return $this;

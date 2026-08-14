@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-`Person` 基盤と song relation が server 側で揃っても、admin が追従しないと運用導線ができない。UI 変更は契約・server 変更と切り分けたほうがレビューしやすいため、専用 PR に分離する。
+`Person` 基盤と song relation が server 側で揃っても、admin が追従しないと運用導線ができない。UI 変更は契約・server 変更と切り分けたほうがレビューしやすいため、専用 PR に分離する
 
 ## Goal
 
-`feature/person-admin` で `/persons` 管理画面と、song 編集 UI の `role` ベース編集導線を追加する。
+`feature/person-admin` で `/persons` 管理画面と、song 編集 UI の `role` ベース編集導線を追加する
 
 ## Scope
 
@@ -39,15 +39,15 @@ completed
 
 ## Steps
 
-1. ✅ `src/admin/src/server/routes/persons.ts` を追加し、server index へ登録した。
-2. ✅ `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}` と `src/admin/src/components/person/*` を追加した。
-3. ✅ `src/admin/src/server/routes/songs.ts` と `src/admin/src/components/song/{CreateForm,EditableForm}.tsx` を新しい songs 契約へ合わせて更新した。
-4. ✅ `src/admin/src/components/Sidebar.tsx` を更新し、`/persons` 導線を追加した。
-5. ✅ 生成物追従と型検査を行った。
+1. ✅ `src/admin/src/server/routes/persons.ts` を追加し、server index へ登録した
+2. ✅ `src/admin/src/pages/persons/{index.astro,create/index.astro,[id].astro}` と `src/admin/src/components/person/*` を追加した
+3. ✅ `src/admin/src/server/routes/songs.ts` と `src/admin/src/components/song/{CreateForm,EditableForm}.tsx` を新しい songs 契約へ合わせて更新した
+4. ✅ `src/admin/src/components/Sidebar.tsx` を更新し、`/persons` 導線を追加した
+5. ✅ 生成物追従と型検査を行った
 
 ## Decision Log
 
-- 2026-05-04: admin では人物選択 UI を song role ごとに別コンポーネントへ分割せず、共通の `Person` 選択 + role 指定 UI に寄せる。role 追加時の UI 重複を避けるため。
+- 2026-05-04: admin では人物選択 UI を song role ごとに別コンポーネントへ分割せず、共通の `Person` 選択 + role 指定 UI に寄せる。role 追加時の UI 重複を避けるため
 
 ## Validation
 

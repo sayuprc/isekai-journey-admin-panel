@@ -8,15 +8,15 @@ completed
 
 ## Background
 
-`docs/exec-plans/completed/20260509-release-list.md` と `docs/exec-plans/completed/20260509-release-next-feature.md` により、`Release` は `search API + index 画面` と `create API + create 画面` まで実装済みになった。一方で `src/admin/src/pages/releases` には `create/index.astro` と `index.astro` しかなく、保存済み `Release` を確認するための `[id]` 詳細画面が存在しない。`src/admin/src/server/routes/releases.ts` と `src/server/routes/admin.php` にも詳細取得ルートはまだなく、一覧から次に遷移する read 導線が欠けている。
+`docs/exec-plans/completed/20260509-release-list.md` と `docs/exec-plans/completed/20260509-release-next-feature.md` により、`Release` は `search API + index 画面` と `create API + create 画面` まで実装済みになった。一方で `src/admin/src/pages/releases` には `create/index.astro` と `index.astro` しかなく、保存済み `Release` を確認するための `[id]` 詳細画面が存在しない。`src/admin/src/server/routes/releases.ts` と `src/server/routes/admin.php` にも詳細取得ルートはまだなく、一覧から次に遷移する read 導線が欠けている
 
-`docs/product-specs/20260503-song-media-admin-phase1/models.md` では、Phase 1 の `Release` は「一覧 / 作成 / 詳細」の責務で整理されており、詳細画面では `Release` の基本情報に加えて収録楽曲一覧を確認できることが求められている。現状は作成直後に一覧へ戻るだけで、保存した内容や将来の収録曲編集結果を確認する受け皿がない。
+`docs/product-specs/20260503-song-media-admin-phase1/models.md` では、Phase 1 の `Release` は「一覧 / 作成 / 詳細」の責務で整理されており、詳細画面では `Release` の基本情報に加えて収録楽曲一覧を確認できることが求められている。現状は作成直後に一覧へ戻るだけで、保存した内容や将来の収録曲編集結果を確認する受け皿がない
 
-また、`Person` と `Media` はどちらも `GET /{id}` と `[id].astro` を持っており、admin の既存パターンとして「一覧 / 作成 / 詳細」が揃っている。`Release` でも次は同じパターンで詳細取得 API と詳細画面を追加するのが自然であり、その次の更新や収録曲編集の土台にもなる。加えて、現行の `Release` contract / domain の `trackEntries` は `songId` と `trackNo` のみで、詳細画面で求められる「収録楽曲一覧」の表示には楽曲タイトルや遷移先を補う read model が別途必要になる。
+また、`Person` と `Media` はどちらも `GET /{id}` と `[id].astro` を持っており、admin の既存パターンとして「一覧 / 作成 / 詳細」が揃っている。`Release` でも次は同じパターンで詳細取得 API と詳細画面を追加するのが自然であり、その次の更新や収録曲編集の土台にもなる。加えて、現行の `Release` contract / domain の `trackEntries` は `songId` と `trackNo` のみで、詳細画面で求められる「収録楽曲一覧」の表示には楽曲タイトルや遷移先を補う read model が別途必要になる
 
 ## Goal
 
-管理画面で保存済み `Release` を確認できる最小機能として、`Release` 詳細取得 API、admin BFF、詳細画面を追加する。これにより作成済みデータの確認導線を整え、後続の更新・収録曲編集が依存できる read 導線を成立させる。
+管理画面で保存済み `Release` を確認できる最小機能として、`Release` 詳細取得 API、admin BFF、詳細画面を追加する。これにより作成済みデータの確認導線を整え、後続の更新・収録曲編集が依存できる read 導線を成立させる
 
 ## Scope
 
@@ -49,23 +49,23 @@ completed
 
 ## Steps
 
-1. ✅ `src/contracts/src/admin/releases/domain.tsp` と `transport.tsp` を更新し、詳細画面用の収録楽曲表示 model と `ReleaseGetResponse` を追加する。`trackEntries` の生データとは別に、`songId`、`title`、`trackNo` を持つ表示専用 model を定義し、`service.tsp` に `GET /releases/{releaseId}` を追加する。
-2. ✅ contract 変更に合わせて `mise run contract:compile:admin`、`mise run api:generate`、`mise run admin:generate` で生成物を更新し、server / admin の generated code に `Release` 詳細取得 API が反映される状態を先に作る。
-3. ✅ `src/server/packages/Release/Application/Admin/UseCase/Get` を追加し、`GetInputData`、`GetOutputData`、`GetUseCase` を実装する。`Person` / `Song` の get use case パターンに合わせ、`releaseId` のバリデーション、`ReadRelease` 権限、404 返却の責務をここに閉じる。
-4. ✅ `src/server/packages/Release/Application/Admin/Query` と `src/server/packages/Release/Infrastructures` に、`Release` 本体と収録楽曲の表示用 read model を組み立てる処理を追加する。`TrackEntry` だけでは曲名を出せないため、`songs` を参照して `songId`、`title`、`trackNo` を曲順順で返す read model を別に用意する。
-5. ✅ `src/server/app/Http/Controllers/Api/Admin/V1/Release/GetReleaseController.php`、`src/server/app/Http/Presenters/Api/Admin/V1/Release/GetPresenter.php`、必要な converter 拡張、`src/server/packages/Release/Route/ReleaseRouteMap.php`、`src/server/routes/admin.php` を更新し、`GET /admin/v1/releases/{releaseId}` を配線する。
-6. ✅ `src/admin/src/server/routes/releases.ts` に `GET /:releaseId` を追加し、生成済み client の `releaseServiceGetRelease` 相当を呼び出せるようにする。既存詳細 BFF と同じ `withAuthRetry` と `resolveApiResponse` の形に揃える。
-7. ✅ `src/admin/src/pages/releases/[id].astro` と `src/admin/src/components/release/DetailView.tsx` を追加し、基本情報と収録楽曲一覧を表示する read-only 画面を実装する。`status !== 200` のときは既存詳細画面と同様にエラー表示へ流し、空の収録楽曲には空状態を出す。
-8. ✅ `src/admin/src/components/release/SearchList.tsx` に詳細画面への導線を追加する。タイトル列や行導線から `/releases/{id}` へ遷移できるようにし、新規作成導線との責務衝突を避ける。
-9. ✅ server と admin の最小検証を追加・実行する。少なくとも `Release` 詳細取得の integration / feature test、`mise run contract:format:check`、`mise run api:phpstan ...`、`mise run admin:lint ...` を通し、invalid id / 404 / 空の収録楽曲 / 正常系の表示を確認する。
+1. ✅ `src/contracts/src/admin/releases/domain.tsp` と `transport.tsp` を更新し、詳細画面用の収録楽曲表示 model と `ReleaseGetResponse` を追加する。`trackEntries` の生データとは別に、`songId`、`title`、`trackNo` を持つ表示専用 model を定義し、`service.tsp` に `GET /releases/{releaseId}` を追加する
+2. ✅ contract 変更に合わせて `mise run contract:compile:admin`、`mise run api:generate`、`mise run admin:generate` で生成物を更新し、server / admin の generated code に `Release` 詳細取得 API が反映される状態を先に作る
+3. ✅ `src/server/packages/Release/Application/Admin/UseCase/Get` を追加し、`GetInputData`、`GetOutputData`、`GetUseCase` を実装する。`Person` / `Song` の get use case パターンに合わせ、`releaseId` のバリデーション、`ReadRelease` 権限、404 返却の責務をここに閉じる
+4. ✅ `src/server/packages/Release/Application/Admin/Query` と `src/server/packages/Release/Infrastructures` に、`Release` 本体と収録楽曲の表示用 read model を組み立てる処理を追加する。`TrackEntry` だけでは曲名を出せないため、`songs` を参照して `songId`、`title`、`trackNo` を曲順順で返す read model を別に用意する
+5. ✅ `src/server/app/Http/Controllers/Api/Admin/V1/Release/GetReleaseController.php`、`src/server/app/Http/Presenters/Api/Admin/V1/Release/GetPresenter.php`、必要な converter 拡張、`src/server/packages/Release/Route/ReleaseRouteMap.php`、`src/server/routes/admin.php` を更新し、`GET /admin/v1/releases/{releaseId}` を配線する
+6. ✅ `src/admin/src/server/routes/releases.ts` に `GET /:releaseId` を追加し、生成済み client の `releaseServiceGetRelease` 相当を呼び出せるようにする。既存詳細 BFF と同じ `withAuthRetry` と `resolveApiResponse` の形に揃える
+7. ✅ `src/admin/src/pages/releases/[id].astro` と `src/admin/src/components/release/DetailView.tsx` を追加し、基本情報と収録楽曲一覧を表示する read-only 画面を実装する。`status !== 200` のときは既存詳細画面と同様にエラー表示へ流し、空の収録楽曲には空状態を出す
+8. ✅ `src/admin/src/components/release/SearchList.tsx` に詳細画面への導線を追加する。タイトル列や行導線から `/releases/{id}` へ遷移できるようにし、新規作成導線との責務衝突を避ける
+9. ✅ server と admin の最小検証を追加・実行する。少なくとも `Release` 詳細取得の integration / feature test、`mise run contract:format:check`、`mise run api:phpstan ...`、`mise run admin:lint ...` を通し、invalid id / 404 / 空の収録楽曲 / 正常系の表示を確認する
 
 ## Decision Log
 
-- 2026-05-09: `Release` の次の 1 単位は update ではなく get/detail にする。create 後の確認導線がないまま更新へ進むと、保存結果を人が確認できず既存 admin の画面構成とも揃わないため。
-- 2026-05-09: 詳細 API は domain の `trackEntries` をそのまま返すだけでなく、曲名付きの表示専用 read model を追加する。仕様上の「収録楽曲一覧」を成立させるには `songId` と `trackNo` だけでは不足するため。
-- 2026-05-09: 今回の詳細画面は read-only に留め、編集や収録曲追加導線は出さない。`1 API + 1 画面` の粒度を維持しつつ、次の update / track entry 編集タスクと責務を分離するため。
-- 2026-05-09: 一覧から詳細への導線は今回追加するが、作成画面の保存後遷移は変更しない。既存の create 完了 UX を広げず、詳細画面の責務を「確認」に限定するため。
-- 2026-05-09: `releaseId` の不正形式は `GetUseCase` 単体では 422 に変換できるが、Feature 経由では OpenAPI validator の経路で 404 になる。HTTP レイヤーの実挙動に合わせ、Feature test では 404 を期待し、use case の 422 は Integration Test で担保する。
+- 2026-05-09: `Release` の次の 1 単位は update ではなく get/detail にする。create 後の確認導線がないまま更新へ進むと、保存結果を人が確認できず既存 admin の画面構成とも揃わないため
+- 2026-05-09: 詳細 API は domain の `trackEntries` をそのまま返すだけでなく、曲名付きの表示専用 read model を追加する。仕様上の「収録楽曲一覧」を成立させるには `songId` と `trackNo` だけでは不足するため
+- 2026-05-09: 今回の詳細画面は read-only に留め、編集や収録曲追加導線は出さない。`1 API + 1 画面` の粒度を維持しつつ、次の update / track entry 編集タスクと責務を分離するため
+- 2026-05-09: 一覧から詳細への導線は今回追加するが、作成画面の保存後遷移は変更しない。既存の create 完了 UX を広げず、詳細画面の責務を「確認」に限定するため
+- 2026-05-09: `releaseId` の不正形式は `GetUseCase` 単体では 422 に変換できるが、Feature 経由では OpenAPI validator の経路で 404 になる。HTTP レイヤーの実挙動に合わせ、Feature test では 404 を期待し、use case の 422 は Integration Test で担保する
 
 ## Validation
 

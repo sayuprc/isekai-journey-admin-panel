@@ -25,7 +25,7 @@ readonly class PersonSearchCriteria
         public int $page = 1,
         public PerPage $perPage = PerPage::Fifty,
     ) {
-        // 保存側の PersonName と対称に、検索語も NFC へ揃える。
+        // 保存側の PersonName と対称に、検索語も NFC へ揃える
         $this->name = $name->isPresent()
             ? new Some(TextNormalizer::toNfc($name->get()))
             : $name;

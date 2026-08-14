@@ -17,6 +17,7 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Media\Domain\Models\YouTubeChannel\YouTubeChannelRepositoryInterface;
 use Support\Contracts\TransactionInterface;
 use Support\Contracts\Uuid\UuidGeneratorInterface;
+use Throwable;
 
 readonly class ImportYouTubeUseCase
 {
@@ -27,6 +28,7 @@ readonly class ImportYouTubeUseCase
         private YouTubeVideoQueryServiceInterface $videoQueryService,
         private YouTubeShortVideoQueryServiceInterface $shortVideoQueryService,
         private MediaRepositoryInterface $mediaRepository,
+        private ImportYouTubeNotifier $notifier,
     ) {
     }
 
@@ -34,8 +36,16 @@ readonly class ImportYouTubeUseCase
     {
         $results = [];
 
-        foreach ($this->channelRepository->findAll() as $channel) {
-            $results[] = $this->importChannel($channel);
+        try {
+            foreach ($this->channelRepository->findAll() as $channel) {
+                $results[] = $this->importChannel($channel);
+            }
+
+            $this->notifier->succeeded($results);
+        } catch (Throwable $e) {
+            $this->notifier->failed($e);
+
+            throw $e;
         }
 
         return new ImportYouTubeOutputData($results);

@@ -1,0 +1,120 @@
+name: Infra Docker QA
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  pull_request:
+    # main, stg 向け PR は release-qa 経由で必ず全実行する
+    branches-ignore:
+      - main
+      - stg
+    paths:
+      - "infra/development/**"
+      - "infra/staging/**"
+      - "infra/production/**"
+      - "tools/read-mise-value.sh"
+      - ".github/workflows/infra-docker-qa.yaml"
+  push:
+    branches:
+      - dev
+    paths:
+      - "infra/development/**"
+      - "infra/staging/**"
+      - "infra/production/**"
+      - "tools/read-mise-value.sh"
+      - ".github/workflows/infra-docker-qa.yaml"
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-build:
+    name: ${{ matrix.env }} / ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env:
+          - development
+          - staging
+          - production
+        image:
+          - api
+          - cli
+          - db-migrate
+          - discord-notifier
+          - admin
+          - viewer
+          - admin-proxy
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Build image
+        env:
+          ENV_NAME: ${{ matrix.env }}
+          IMAGE: ${{ matrix.image }}
+        run: |
+          set -euo pipefail
+
+          dockerfile="infra/${ENV_NAME}/docker/${IMAGE}/Dockerfile"
+          tag="infra-qa-${ENV_NAME}-${IMAGE}:local"
+
+          case "${IMAGE}" in
+            api|cli)
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                .
+              ;;
+            db-migrate)
+              MISE_VERSION="$(./tools/read-mise-value.sh mise_version)"
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                --build-arg "MISE_VERSION=${MISE_VERSION}" \
+                .
+              ;;
+            discord-notifier)
+              MOONBIT_VERSION="$(./tools/read-mise-value.sh moonbit_version)"
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                --build-arg "MOONBIT_VERSION=${MOONBIT_VERSION}" \
+                .
+              ;;
+            admin)
+              BUN_VERSION="$(./tools/read-mise-value.sh bun)"
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                --build-arg "BUN_VERSION=${BUN_VERSION}" \
+                --build-arg "PUBLIC_APP_URL=https://example.invalid" \
+                .
+              ;;
+            viewer)
+              NODE_VERSION="$(./tools/read-mise-value.sh node)"
+              MOONBIT_VERSION="$(./tools/read-mise-value.sh moonbit_version)"
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                --build-arg "NODE_VERSION=${NODE_VERSION}" \
+                --build-arg "MOONBIT_VERSION=${MOONBIT_VERSION}" \
+                .
+              ;;
+            admin-proxy)
+              NODE_VERSION="$(./tools/read-mise-value.sh node)"
+              docker build \
+                -f "${dockerfile}" \
+                -t "${tag}" \
+                --build-arg "NODE_VERSION=${NODE_VERSION}" \
+                .
+              ;;
+            *)
+              echo "unknown image: ${IMAGE}" >&2
+              exit 1
+              ;;
+          esac

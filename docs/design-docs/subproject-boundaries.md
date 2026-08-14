@@ -1,8 +1,8 @@
 # Subproject Boundaries
 
-継続的に参照するサブプロジェクトごとの責務境界をまとめる文書です。
+継続的に参照するサブプロジェクトごとの責務境界をまとめる文書です
 
-この文書のパスは、特記がなければリポジトリルート基準で書きます。
+この文書のパスは、特記がなければリポジトリルート基準で書きます
 
 ## Contracts
 
@@ -20,7 +20,7 @@
 - `src/server/tests/`: Unit / Integration / Feature テスト
 - `src/server/Generated/`: OpenAPI 由来の生成コード
 
-業務ロジックは ADR-0006 の ADOP を前提にし、`Domain`、`Application`、`Infrastructures`、`DebugInfrastructures` の境界を守ります。
+業務ロジックは ADR-0006 の ADOP を前提にし、`Domain`、`Application`、`Infrastructures`、`DebugInfrastructures` の境界を守ります
 
 ## Admin
 
@@ -32,7 +32,7 @@
 - `src/admin/src/schemas/`: 入出力スキーマ
 - `src/admin/src/generated/`: OpenAPI 由来の生成クライアント
 
-UI 実装方針の詳細は `FRONTEND.md` を参照します。
+UI 実装方針の詳細は `FRONTEND.md` を参照します
 
 ## Viewer
 
@@ -43,4 +43,25 @@ UI 実装方針の詳細は `FRONTEND.md` を参照します。
 - `src/viewer/src/schemas/`: フロントエンド側のスキーマ
 - `src/viewer/src/styles/`: スタイル
 
-UI 実装方針の詳細は `FRONTEND.md` を参照します。
+UI 実装方針の詳細は `FRONTEND.md` を参照します
+
+## Notify Contract
+
+- `src/notify-contract/`: アプリ通知 JSON の共有契約 (MoonBit)
+- `Notification` 型と parse / validate を提供する
+- `notify-publish` と `discord-notifier` が `moon.work` 経由で依存する
+- Discord 配達や Pub/Sub publish は持たない
+
+## Discord Notifier
+
+- `src/discord-notifier/`: MoonBit 製の Discord 通知配達サービス
+- Pub/Sub push を受け、`action` を環境変数の routing で channel に引き当てて Discord Webhook へ投稿する
+- 業務処理は持たない。振り分けは環境変数で行う
+- アプリ通知 JSON の検証は `notify-contract` に委譲する
+- 発信元は Discord を直接呼ばず、Pub/Sub に正規化済み JSON を publish する
+
+## Notify Publish
+
+- `src/notify-publish/`: MoonBit 製の通知 JSON → Pub/Sub publish CLI
+- stdin のアプリ通知契約を `notify-contract` で検証し、`NOTIFICATION_TOPIC` へ publish する
+- Discord 配達や channel 振り分けは持たない。bash Job などから使う発信側ツール

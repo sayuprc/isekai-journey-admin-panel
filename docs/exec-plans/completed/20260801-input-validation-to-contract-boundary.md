@@ -25,7 +25,7 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 
 ## Goal
 
-入力形式検証の単一情報源を TypeSpec 契約とし、422 の生成を OpenApiValidator に一元化する。
+入力形式検証の単一情報源を TypeSpec 契約とし、422 の生成を OpenApiValidator に一元化する
 ドメインの `InvalidDomainException` は「表明違反 = 500 = バグ」に純化し、
 `Field` / `Fields` / `DomainValidationException` を全廃する
 
@@ -73,10 +73,10 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 - [x] 4. OpenApiValidator に body の収集検証を実装する: League が invalid と判定した
       リクエストに対して body をスキーマへ全件照合し、違反があれば keyword → 日本語
       メッセージ変換の上 `ApiError::validationFailed` で返す。既存 TODO を解消
-      (App\Http\OpenApi\BodyErrorCollector / BodyErrorFormatter / SchemaErrorMessages。
+      (App\Http\OpenApi\BodyErrorCollector / BodyErrorFormatter / SchemaErrorMessages
       正常系はコスト増ゼロ、通過判定は League のまま)
 - [x] 5. server の Field / Fields 全 16 箇所を直接 `new` に置換し、
-      Support\Domain\Validation と DomainValidationException、Renderer の 422 arm を削除。
+      Support\Domain\Validation と DomainValidationException、Renderer の 422 arm を削除
       Tracks / Media の順序重複チェックは BusinessRuleViolationException へ移す
 - [x] 6. CLI 4 コマンド (IssueRegistrationToken / YouTubeChannel 3 種) の Field を除去し、
       InvalidDomainException がコマンドエラー表示 + 非ゼロ exit になることを確認
@@ -104,9 +104,9 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
 - 2026-08-01: 配列内の順序重複 (trackNo / position) は JSON Schema で表現できないため
   BusinessRuleViolationException (400) へ移す。422 → 400 に変わる点は admin 側の
   ハンドリングと合わせて確認する
-- 2026-08-01: 収集型 validator は opis/json-schema ^2.6 に確定 (プロトタイプで成立を確認)。
+- 2026-08-01: 収集型 validator は opis/json-schema ^2.6 に確定 (プロトタイプで成立を確認)
   既知の制限として、同一スキーマの required 違反は同階層 properties の検証を短絡させる
-  (欠落 field があるとその報告のみになる)。現行の常に 1 件より改善のため許容する。
+  (欠落 field があるとその報告のみになる)。現行の常に 1 件より改善のため許容する
   anyOf (nullable) の違反は複数メッセージになるため formatter 側で平滑化する
 
 ## Validation
@@ -119,7 +119,7 @@ VO 固有の形式ルールは実質 TrackTitle / MediumName の非空 (API 経�
   catch を素通りし 422 が 500 化) を catch 拡張 + 設定バグの LogicException 分離で修正、
   再現ケースで解消を確認。警告 1 件 (チェックリストの旧記述残りと 3 箇所同期漏れ) を同期修正
 - admin (2026-08-01): admin:check (biome / eslint / stylelint) 通過
-- Step 1 プロトタイプ (2026-08-01): opis/json-schema ^2.6 で成立を確認。
+- Step 1 プロトタイプ (2026-08-01): opis/json-schema ^2.6 で成立を確認
   OpenAPI 3.1 yaml を registerRaw + pointer fragment $ref で無変換解決、
   setMaxErrors + ErrorFormatter でネスト含む全違反を JSON pointer キーで収集、
   format (date / uuid) はデフォルト検証。parse 262ms / validate 35ms

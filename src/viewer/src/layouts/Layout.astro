@@ -19,6 +19,8 @@ interface Props {
   breadcrumbs?: readonly BreadcrumbItem[];
   /** エラーページのように、実体のある URL として索引させたくないページで立てる */
   noindex?: boolean;
+  /** LCP 寄与があるサードパーティ origin だけ渡す。img 用なので crossorigin は付けない */
+  preconnect?: readonly string[];
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   ogImage = null,
   breadcrumbs = [],
   noindex: pageNoindex = false,
+  preconnect = [],
 } = Astro.props;
 
 const generateTitle = (title: string) => {
@@ -34,10 +37,11 @@ const generateTitle = (title: string) => {
 };
 
 const title = generateTitle(pageTitle);
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const siteOrigin = Astro.site?.href ?? Astro.url.origin;
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin);
 // ページ固有の画像がないページはサイトアイコンで代替し、カードの大きさは固有画像の有無で切り替える
 const cardImage = ogImage ?? DEFAULT_OG_IMAGE;
-const cardImageUrl = new URL(cardImage.url, Astro.site).href;
+const cardImageUrl = new URL(cardImage.url, siteOrigin).href;
 const twitterCard = ogImage === null ? 'summary' : 'summary_large_image';
 const noindex = pageNoindex || import.meta.env.SITE_NOINDEX === 'true';
 
@@ -50,6 +54,7 @@ const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホ
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {preconnect.map(origin => <link rel="preconnect" href={origin} />)}
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={pageDescription} />
@@ -62,6 +67,9 @@ const trail: readonly BreadcrumbItem[] = breadcrumbs.length > 0 ? [{ label: 'ホ
     <meta property="og:image" content={cardImageUrl} />
     <meta property="og:image:alt" content={cardImage.alt} />
     <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={cardImageUrl} />
     <title>{title}</title>
     {/* FOUC 防止のため描画前に palette を適用する。保存値は既知のテーマのみ許可し、廃止テーマ等の不正値は既定に修復する */}
     <script

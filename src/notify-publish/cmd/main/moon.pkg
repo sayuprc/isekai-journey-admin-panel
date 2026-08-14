@@ -1,0 +1,6 @@
+import {
+  "isekai-observatory/notify-publish" @lib,
+  "moonbitlang/async",
+}
+
+pkgtype(kind: "executable")

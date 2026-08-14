@@ -9,10 +9,10 @@ use Support\Domain\Exceptions\BusinessRuleViolationException;
 use Support\Domain\ValueObjects\OrderNo;
 
 /**
- * 収録曲。songId と title の少なくとも一方を持つ。
+ * 収録曲。songId と title の少なくとも一方を持つ
  *
- * - 参照トラック: songId あり（Song 集約を参照する）。title があれば表示名を上書きする
- * - タイトルのみトラック: songId なし / title あり（管理対象外楽曲。表示専用）
+ * - 参照トラック: songId あり(Song 集約を参照する)。title があれば表示名を上書きする
+ * - タイトルのみトラック: songId なし / title あり(管理対象外楽曲。表示専用)
  */
 readonly class Track
 {

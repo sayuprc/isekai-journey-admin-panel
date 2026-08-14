@@ -8,11 +8,11 @@ completed
 
 ## Background
 
-`Person` を登録・参照できても更新できなければ運用上の修正ができない。update は create の integrity service と repository を再利用するため、単独 PR に切り出しやすい。
+`Person` を登録・参照できても更新できなければ運用上の修正ができない。update は create の integrity service と repository を再利用するため、単独 PR に切り出しやすい
 
 ## Goal
 
-`feature/person-update` で `Person` の update API を実装する。
+`feature/person-update` で `Person` の update API を実装する
 
 ## Scope
 
@@ -36,13 +36,13 @@ completed
 
 ## Steps
 
-1. update use case と input / output を追加した。
-2. controller / presenter / provider / route を更新した。
-3. feature / integration テストで update を確認した。
+1. update use case と input / output を追加した
+2. controller / presenter / provider / route を更新した
+3. feature / integration テストで update を確認した
 
 ## Decision Log
 
-- 2026-05-04: update は create と同じ integrity service を再利用し、重複ロジックを増やさない。
+- 2026-05-04: update は create と同じ integrity service を再利用し、重複ロジックを増やさない
 
 ## Validation
 

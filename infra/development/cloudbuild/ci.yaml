@@ -39,6 +39,22 @@ steps:
       - -c
       - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest || exit 0
 
+  - id: pull-admin-proxy-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:latest || exit 0
+
+  - id: pull-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor: ["-"]
+    args:
+      - -c
+      - docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest || exit 0
+
   - id: build-api-image
     name: gcr.io/cloud-builders/docker
     waitFor:
@@ -91,6 +107,26 @@ steps:
           --build-arg "MISE_VERSION=$${MISE_VERSION}" \
           .
 
+  - id: build-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor:
+      - pull-discord-notifier-image
+    args:
+      - -c
+      - |
+        set -euo pipefail
+
+        MOONBIT_VERSION=$$(./tools/read-mise-value.sh moonbit_version)
+
+        docker build \
+          -f infra/development/docker/discord-notifier/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:latest \
+          --build-arg "MOONBIT_VERSION=$${MOONBIT_VERSION}" \
+          .
+
   - id: build-admin-image
     name: gcr.io/cloud-builders/docker
     entrypoint: bash
@@ -123,12 +159,34 @@ steps:
         set -euo pipefail
 
         NODE_VERSION=$$(./tools/read-mise-value.sh node)
+        MOONBIT_VERSION=$$(./tools/read-mise-value.sh moonbit_version)
 
         docker build \
           -f infra/development/docker/viewer/Dockerfile \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:$COMMIT_SHA \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
           --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}:latest \
+          --build-arg "NODE_VERSION=$${NODE_VERSION}" \
+          --build-arg "MOONBIT_VERSION=$${MOONBIT_VERSION}" \
+          .
+
+  - id: build-admin-proxy-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    waitFor:
+      - pull-admin-proxy-image
+    args:
+      - -c
+      - |
+        set -euo pipefail
+
+        NODE_VERSION=$$(./tools/read-mise-value.sh node)
+
+        docker build \
+          -f infra/development/docker/admin-proxy/Dockerfile \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:$COMMIT_SHA \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:latest \
+          --cache-from ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:latest \
           --build-arg "NODE_VERSION=$${NODE_VERSION}" \
           .
 
@@ -176,6 +234,24 @@ steps:
       - push
       - --all-tags
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_VIEWER_IMAGE}
+
+  - id: push-admin-proxy-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-admin-proxy-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}
+
+  - id: push-discord-notifier-image
+    name: gcr.io/cloud-builders/docker
+    waitFor:
+      - build-discord-notifier-image
+    args:
+      - push
+      - --all-tags
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}
 
   # TODO マイグレーションを別で行う
   - id: deploy-db-migrate-job
@@ -254,6 +330,23 @@ steps:
       - ${_API_INGRESS}
       - --quiet
 
+  - id: deploy-discord-notifier
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-discord-notifier-image
+    args:
+      - run
+      - deploy
+      - dev-isekai-discord-notifier
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_DISCORD_NOTIFIER_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_NOTIFY_SERVICE_ACCOUNT}
+      - --quiet
+
   - id: deploy-admin
     name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
@@ -290,36 +383,27 @@ steps:
       - ${_REGION}
       - --service-account
       - ${_JOB_SERVICE_ACCOUNT}
-      - --set-env-vars
-      # dev はクロール不要のため SITE_NOINDEX で robots.txt と meta robots を noindex にする
-      - API_URL=${_API_URL},SITE_URL=${_SITE_URL},SITE_NOINDEX=true,APP_ENV=development,CLOUDFLARE_WORKER_NAME=${_CLOUDFLARE_WORKER_NAME},CLOUDFLARE_ACCOUNT_ID=${_CLOUDFLARE_ACCOUNT_ID}
-      - --set-secrets
-      - CLOUDFLARE_API_TOKEN=${_CLOUDFLARE_API_TOKEN_SECRET_ID}:latest
       # - --wait
       - --quiet
 
-  # admin-proxy Worker はイメージ不要のため Cloud Build から直接 wrangler でデプロイする
   - id: deploy-admin-proxy
-    name: node:24-slim
-    entrypoint: bash
-    waitFor: ["-"]
-    env:
-      - CLOUDFLARE_ACCOUNT_ID=${_CLOUDFLARE_ACCOUNT_ID}
-      - ADMIN_PROXY_WORKER_NAME=${_ADMIN_PROXY_WORKER_NAME}
-      - ADMIN_PROXY_ORIGIN_URL=${_ADMIN_PROXY_ORIGIN_URL}
-    secretEnv:
-      - CLOUDFLARE_API_TOKEN
-      - PROXY_SHARED_SECRET
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    waitFor:
+      - push-admin-proxy-image
     args:
-      - -c
-      - bash infra/development/cloudbuild/admin-proxy-deploy "$$(date --iso-8601=seconds)"
-
-availableSecrets:
-  secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/${_CLOUDFLARE_API_TOKEN_SECRET_ID}/versions/latest
-      env: CLOUDFLARE_API_TOKEN
-    - versionName: projects/$PROJECT_ID/secrets/${_ADMIN_PROXY_SHARED_SECRET_ID}/versions/latest
-      env: PROXY_SHARED_SECRET
+      - run
+      - jobs
+      - deploy
+      - dev-admin-proxy-deploy
+      - --image
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPOSITORY}/${_ADMIN_PROXY_IMAGE}:$COMMIT_SHA
+      - --region
+      - ${_REGION}
+      - --service-account
+      - ${_JOB_SERVICE_ACCOUNT}
+      - --wait
+      - --quiet
 
 options:
   logging: CLOUD_LOGGING_ONLY

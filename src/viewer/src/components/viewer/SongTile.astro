@@ -25,8 +25,8 @@ const {
   loading = 'lazy',
 } = Astro.props;
 
-// プラットフォームとサムネイルは状態として保持せず url から導出する。
-// メディアがあれば最初にサムネイルを導出できたものを採用する。
+// プラットフォームとサムネイルは状態として保持せず url から導出する
+// メディアがあれば最初にサムネイルを導出できたものを採用する
 const thumbnailUrl = media.reduce<string | null>((found, entry) => found ?? youtubeThumbnailFromUrl(entry.url), null);
 
 const thumbnailSrcset = thumbnailUrl === null ? undefined : youtubeThumbnailSrcset(thumbnailUrl);
