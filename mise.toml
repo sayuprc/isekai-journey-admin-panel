@@ -29,7 +29,7 @@ SERVER_IMAGE = "isekai-observatory-api:{{vars.server_tag}}"
 PROXY_IMAGE = "isekai-observatory-proxy:{{vars.proxy_tag}}"
 OPENAPI_IMAGE = "openapi-generator:{{vars.openapi_tag}}"
 MYSQL_IMAGE = "isekai-observatory-mysql:{{vars.mysql_tag}}"
-NODE_EXTRA_CA_CERTS = "../../infra/local/docker/php/certs/rootCA.pem"
+NODE_EXTRA_CA_CERTS = "{{config_root}}/infra/local/docker/php/certs/rootCA.pem"
 ADMIN_OAS_FILE = "IsekaiObservatory.Admin.v1.yaml"
 VIEWER_OAS_FILE = "IsekaiObservatory.Viewer.v1.yaml"
 
@@ -544,4 +544,3 @@ run = "bun run typecheck"
 [tasks."admin-proxy:check"]
 description = "admin-proxy の format / lint / typecheck を実行する"
 depends = ["admin-proxy:format:check", "admin-proxy:lint", "admin-proxy:typecheck"]
-
