@@ -48,6 +48,8 @@
       "Media\\": "packages/Media/",
       "Release\\": "packages/Release/",
       "Person\\": "packages/Person/",
+      "Place\\": "packages/Place/",
+      "Event\\": "packages/Event/",
       "AdminUser\\": "packages/AdminUser/",
       "Auth\\": "packages/Auth/",
       "Tools\\": "tools/",
