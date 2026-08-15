@@ -24,7 +24,7 @@
 - アプリ設定は `src/server/.env`, `src/server/.env.testing`, `src/admin/.env`, `src/viewer/.env` に書き戻す
 - `src/server/.env` の `DB_PORT` は Docker network 向けの `3306` を維持し、host 側 task 用の `ATLAS_DB_PORT` を worktree ごとの MySQL 公開ポートへ更新する
 - `src/server/.env.testing` はテスト用 DB 接続など不変値のみを持ち、worktree 差分は `ATLAS_DB_PORT` だけを更新する
-- PHPUnit で変化しうるアプリ設定は `Tests\TestCase` の既定値、または各テストの `config()->set` で都度設定する
+- PHPUnit で変化しうるアプリ設定 (鍵や `APP_URL` など) はソースに固定せず、各テストの `config()->set` で都度設定する
 - `phpunit.xml` にはドライバー切替などプロセス全体で固定する値を置く
 - TLS 証明書 (`infra/local/docker/nginx/certs`, `infra/local/docker/php/certs/rootCA.pem`) は共有キャッシュ経由で worktree 間に複製する
 - proxy は同一 worktree の `php` サービスと、その worktree に割り当てられた Admin / Viewer dev server へ接続し、Astro dev server の WebSocket も forward する

@@ -45,6 +45,7 @@ class RecoveryTest extends DatabaseTestCase
         config()->set([
             'auth.jwt.alg' => 'HS256',
             'auth.jwt.key' => str_repeat('k', 256),
+            'auth.recovery_code.pepper' => bin2hex(random_bytes(16)),
         ]);
     }
 

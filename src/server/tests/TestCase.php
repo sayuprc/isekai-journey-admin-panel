@@ -20,25 +20,13 @@ use Support\UseCase\Authorizer\UseCaseAuthorizer;
 
 abstract class TestCase extends BaseTestCase
 {
-    /**
-     * .env.testing には置かないテスト用の既定値
-     * シナリオ依存の値 (JWT 鍵など) は各テストで config()->set する
-     *
-     * @var array<string, string>
-     */
-    private const array TESTING_ENV_DEFAULTS = [
-        'APP_KEY' => 'base64:AUMNxw7cx4uYZgywdQxCzOiVA9gmSwMJohPE21aWGDM=',
-        'APP_URL' => 'https://api.example.test',
-        'APP_TIMEZONE' => 'Asia/Tokyo',
-        'AUTH_RECOVERY_CODE_PEPPER' => 'testing-recovery-code-pepper',
-    ];
-
     private ?AuthContext $privilegedAuthContext = null;
 
     #[Override]
     public function createApplication(): Application
     {
-        $this->ensureTestingEnvironment();
+        // .env.testing には鍵を置かない。未設定時のみ起動用に都度生成する
+        $this->ensureAppKey();
 
         return parent::createApplication();
     }
@@ -93,19 +81,17 @@ abstract class TestCase extends BaseTestCase
         return new UseCaseAuthorizer(new UseCaseAuthorizationContext($context ?? $this->privilegedContext()));
     }
 
-    private function ensureTestingEnvironment(): void
+    private function ensureAppKey(): void
     {
-        foreach (self::TESTING_ENV_DEFAULTS as $key => $value) {
-            $current = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+        $current = $_ENV['APP_KEY'] ?? $_SERVER['APP_KEY'] ?? getenv('APP_KEY');
 
-            // phpunit.xml などで既に実値が入っている場合は尊重する
-            if (is_string($current) && $current !== '') {
-                continue;
-            }
-
-            putenv("{$key}={$value}");
-            $_ENV[$key] = $value;
-            $_SERVER[$key] = $value;
+        if (is_string($current) && $current !== '') {
+            return;
         }
+
+        $key = 'base64:' . base64_encode(random_bytes(32));
+        putenv('APP_KEY=' . $key);
+        $_ENV['APP_KEY'] = $key;
+        $_SERVER['APP_KEY'] = $key;
     }
 }
