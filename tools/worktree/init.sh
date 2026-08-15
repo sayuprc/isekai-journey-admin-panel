@@ -375,10 +375,7 @@ set_env_value "${repo_root}/src/server/.env" "DB_PORT" "3306"
 set_env_value "${repo_root}/src/server/.env" "ATLAS_DB_PORT" "$WORKTREE_MYSQL_PORT"
 
 ensure_env_file "${repo_root}/src/server/.env.testing" "${repo_root}/src/server/.env.testing.example"
-set_env_value "${repo_root}/src/server/.env.testing" "APP_URL" "$WORKTREE_API_BASE_URL"
-set_env_value "${repo_root}/src/server/.env.testing" "ASSET_URL" "$WORKTREE_API_BASE_URL"
-set_env_value "${repo_root}/src/server/.env.testing" "API_URL" "local.api.isekaijoucho.fan:${WORKTREE_PROXY_HTTPS_PORT}"
-set_env_value "${repo_root}/src/server/.env.testing" "DB_PORT" "3306"
+# .env.testing は不変な DB 接続が本体。worktree 差分は host 向け ATLAS_DB_PORT のみ書き戻す
 set_env_value "${repo_root}/src/server/.env.testing" "ATLAS_DB_PORT" "$WORKTREE_MYSQL_PORT"
 
 if [[ "${1:-}" == "--status" ]]; then

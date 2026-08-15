@@ -6,6 +6,13 @@
 2. Integration
 3. Feature
 
+## 環境変数
+
+- `src/server/.env.testing` にはテスト時に必要かつ不変な値 (主にテスト用 DB 接続) だけを置く
+- 変化しうる値は `Tests\TestCase` の既定、または各テストで `config()->set` する
+- JWT 鍵や Passkey RP などシナリオ依存の設定は、対象テスト側で都度設定する
+- `phpunit.xml` にはドライバー切替などプロセス全体で固定する値を置く
+
 ## Unit
 
 ### テスト対象
