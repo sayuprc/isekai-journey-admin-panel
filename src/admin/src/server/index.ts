@@ -6,6 +6,7 @@ import { auditLogs } from './routes/audit-logs';
 import { auth } from './routes/auth';
 import { media } from './routes/media';
 import { persons } from './routes/persons';
+import { places } from './routes/places';
 import { recoveryCodes } from './routes/recovery-codes';
 import { releaseGroups } from './routes/release-groups';
 import { releases } from './routes/releases';
@@ -32,6 +33,7 @@ export const app = new Elysia({ prefix: '/api', normalize: 'typebox' })
   .use(auditLogs)
   .use(media)
   .use(persons)
+  .use(places)
   .use(recoveryCodes)
   .use(releaseGroups)
   .use(releases)

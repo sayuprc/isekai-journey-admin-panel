@@ -1,0 +1,10 @@
+---
+import { FlashMessage } from '../../components/Flash';
+import { SearchList } from '../../components/place/SearchList';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout pageTitle="場所一覧">
+  <FlashMessage client:only="solid-js" />
+  <SearchList client:only="solid-js" />
+</Layout>

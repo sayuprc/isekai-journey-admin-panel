@@ -66,7 +66,7 @@ export type AuditLogSummary = {
 /**
  * 監査ログの対象種別
  */
-export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Release' | 'ReleaseGroup' | 'Song' | 'SongTag';
+export type AuditTargetType = 'AdminUser' | 'Media' | 'Person' | 'Place' | 'Release' | 'ReleaseGroup' | 'Song' | 'SongTag';
 
 /**
  * エラー分類を表す機械可読なコード
@@ -202,7 +202,7 @@ export type Permission = {
 /**
  * 権限の値
  */
-export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release' | 'write_release';
+export type PermissionValue = 'read_admin_user' | 'write_admin_user' | 'read_person' | 'write_person' | 'read_place' | 'write_place' | 'read_song' | 'write_song' | 'read_media' | 'write_media' | 'read_release' | 'write_release';
 
 export type Person = {
     personId: PersonId;
@@ -243,6 +243,58 @@ export type PersonUpdateRequest = {
 
 export type PersonUpdateResponse = {
     person: Person;
+};
+
+export type Place = {
+    placeId: PlaceId;
+    name: PlaceName;
+    kind: PlaceKind;
+};
+
+export type PlaceCreateRequest = {
+    name: PlaceName;
+    kindValue: PlaceKindValue;
+};
+
+export type PlaceCreateResponse = {
+    place: Place;
+};
+
+export type PlaceGetResponse = {
+    place: Place;
+};
+
+export type PlaceKind = {
+    name: PlaceKindName;
+    value: PlaceKindValue;
+};
+
+/**
+ * 場所区分の値
+ */
+export type PlaceKindValue = 1 | 2;
+
+export type PlaceListResponse = {
+    places: Array<Place>;
+};
+
+export type PlaceSearchResponse = {
+    places: Array<Place>;
+    maxPage: number;
+};
+
+/**
+ * 場所検索のソート条件
+ */
+export type PlaceSearchSortBy = 'name';
+
+export type PlaceUpdateRequest = {
+    name: PlaceName;
+    kindValue: PlaceKindValue;
+};
+
+export type PlaceUpdateResponse = {
+    place: Place;
 };
 
 export type RecoveryFinishRequest = {
@@ -768,6 +820,21 @@ export type PersonId = string;
  * 人物名
  */
 export type PersonName = string;
+
+/**
+ * 場所ID
+ */
+export type PlaceId = string;
+
+/**
+ * 場所区分名
+ */
+export type PlaceKindName = string;
+
+/**
+ * 場所名
+ */
+export type PlaceName = string;
 
 /**
  * リカバリーコード(平文)
@@ -1849,6 +1916,301 @@ export type PersonServiceUpdatePersonResponses = {
 };
 
 export type PersonServiceUpdatePersonResponse = PersonServiceUpdatePersonResponses[keyof PersonServiceUpdatePersonResponses];
+
+export type PlaceServiceListPlacesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/places';
+};
+
+export type PlaceServiceListPlacesErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceListPlacesError = PlaceServiceListPlacesErrors[keyof PlaceServiceListPlacesErrors];
+
+export type PlaceServiceListPlacesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PlaceListResponse;
+};
+
+export type PlaceServiceListPlacesResponse = PlaceServiceListPlacesResponses[keyof PlaceServiceListPlacesResponses];
+
+export type PlaceServiceCreatePlaceData = {
+    body: PlaceCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/places';
+};
+
+export type PlaceServiceCreatePlaceErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceCreatePlaceError = PlaceServiceCreatePlaceErrors[keyof PlaceServiceCreatePlaceErrors];
+
+export type PlaceServiceCreatePlaceResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PlaceCreateResponse;
+};
+
+export type PlaceServiceCreatePlaceResponse = PlaceServiceCreatePlaceResponses[keyof PlaceServiceCreatePlaceResponses];
+
+export type PlaceServiceSearchPlacesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        name?: string;
+        kindValue?: PlaceKindValue;
+        sort?: PlaceSearchSortBy;
+        order?: SortOrder;
+        page?: Page;
+        per_page?: PerPage;
+    };
+    url: '/places/search';
+};
+
+export type PlaceServiceSearchPlacesErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceSearchPlacesError = PlaceServiceSearchPlacesErrors[keyof PlaceServiceSearchPlacesErrors];
+
+export type PlaceServiceSearchPlacesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PlaceSearchResponse;
+};
+
+export type PlaceServiceSearchPlacesResponse = PlaceServiceSearchPlacesResponses[keyof PlaceServiceSearchPlacesResponses];
+
+export type PlaceServiceDeletePlaceData = {
+    body?: never;
+    path: {
+        placeId: Uuid;
+    };
+    query?: never;
+    url: '/places/{placeId}';
+};
+
+export type PlaceServiceDeletePlaceErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceDeletePlaceError = PlaceServiceDeletePlaceErrors[keyof PlaceServiceDeletePlaceErrors];
+
+export type PlaceServiceDeletePlaceResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type PlaceServiceDeletePlaceResponse = PlaceServiceDeletePlaceResponses[keyof PlaceServiceDeletePlaceResponses];
+
+export type PlaceServiceGetPlaceData = {
+    body?: never;
+    path: {
+        placeId: Uuid;
+    };
+    query?: never;
+    url: '/places/{placeId}';
+};
+
+export type PlaceServiceGetPlaceErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceGetPlaceError = PlaceServiceGetPlaceErrors[keyof PlaceServiceGetPlaceErrors];
+
+export type PlaceServiceGetPlaceResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PlaceGetResponse;
+};
+
+export type PlaceServiceGetPlaceResponse = PlaceServiceGetPlaceResponses[keyof PlaceServiceGetPlaceResponses];
+
+export type PlaceServiceUpdatePlaceData = {
+    body: PlaceUpdateRequest;
+    path: {
+        placeId: Uuid;
+    };
+    query?: never;
+    url: '/places/{placeId}';
+};
+
+export type PlaceServiceUpdatePlaceErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Access is unauthorized.
+     */
+    401: ErrorResponse;
+    /**
+     * Access is forbidden.
+     */
+    403: ErrorResponse;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Client error
+     */
+    422: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+    /**
+     * Service unavailable.
+     */
+    503: unknown;
+    /**
+     * Server error
+     */
+    504: unknown;
+};
+
+export type PlaceServiceUpdatePlaceError = PlaceServiceUpdatePlaceErrors[keyof PlaceServiceUpdatePlaceErrors];
+
+export type PlaceServiceUpdatePlaceResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: PlaceUpdateResponse;
+};
+
+export type PlaceServiceUpdatePlaceResponse = PlaceServiceUpdatePlaceResponses[keyof PlaceServiceUpdatePlaceResponses];
 
 export type RecoveryCodeServiceGenerateData = {
     body?: never;

@@ -58,6 +58,8 @@ enum PermissionValue {
   WriteAdminUser: "write_admin_user",
   ReadPerson: "read_person",
   WritePerson: "write_person",
+  ReadPlace: "read_place",
+  WritePlace: "write_place",
   ReadSong: "read_song",
   WriteSong: "write_song",
   ReadMedia: "read_media",

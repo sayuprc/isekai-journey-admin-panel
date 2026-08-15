@@ -59,9 +59,9 @@ admin で `Place` マスタと `Event` (複数 Place・複数 URL 可、Place �
 
 - [x] 1. `event-foundation`: `places` / `events` / `event_places` / `event_urls` の Atlas スキーマを追加し `atlas.hcl` に登録する。カラムは仕様メモの最小構成に閉じる (`events`: title, type, started_at, ended_at, description, is_display, timestamps。`places`: name, kind, timestamps。`event_places`: event_id, place_id。`event_urls`: event_id, url, order_no, label (任意))
 - [x] 2. `event-foundation`: `packages/Place` / `packages/Event` の Domain Models と `composer.json` の PSR-4 を追加する。Application / HTTP / contracts / admin は触らない (Eloquent は ADR-0011 により対象外)
-- [ ] 3. `place-admin`: admin contracts に Place CRUD / search を追加し、生成物を更新する。`PermissionValue` / `AuditTargetType` に Place を足す
-- [ ] 4. `place-admin`: Place の server UseCase / Repository / HTTP / テストを実装する
-- [ ] 5. `place-admin`: admin BFF と場所一覧・作成・詳細/編集画面、ナビを追加する
+- [x] 3. `place-admin`: admin contracts に Place CRUD / search を追加し、生成物を更新する。`PermissionValue` / `AuditTargetType` に Place を足す
+- [x] 4. `place-admin`: Place の server UseCase / Repository / HTTP / テストを実装する
+- [x] 5. `place-admin`: admin BFF と場所一覧・作成・詳細/編集画面、ナビを追加する
 - [ ] 6. `event-admin`: admin contracts に Event CRUD / search を追加し、生成物を更新する。request に places・urls を含め、`PermissionValue` / `AuditTargetType` に Event を足す
 - [ ] 7. `event-admin`: Event の server UseCase / Repository / HTTP / テストを実装する。Place 0 件と URL 複数、期間・種別の保存をカバーする
 - [ ] 8. `event-admin`: admin BFF と出来事一覧・作成・詳細/編集画面、ナビを追加する。見出しは「出来事」、Place の `physical` / `online` は会場 / 配信先として出し分けてよい
@@ -85,6 +85,7 @@ admin で `Place` マスタと `Event` (複数 Place・複数 URL 可、Place �
 - 2026-08-15: foundation では Eloquent を追加しない。ADR-0011 により永続化は後続の Repository (emonkak) で行う
 - 2026-08-15: `places.name` は unique とする。マスタとしての再利用を優先するため
 - 2026-08-15: `Event` 集約は `EventPlaceLinks` と `EventUrls` を保持する。永続化テーブルは `event_places` / `event_urls`
+- 2026-08-15: 実装は `feature/event-first-slice` に積み上げ、レビュー PR は feature 向けに分割する。`dev` にはスライスが動く単位になってからまとめて入れる
 
 ## Validation
 
