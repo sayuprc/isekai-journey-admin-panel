@@ -27,8 +27,8 @@ readonly class Event
     }
 
     /**
-     * @param list<array{placeId: string}>           $places
-     * @param list<array{url: string, orderNo: int}> $urls
+     * @param list<array{placeId: string}>                            $places
+     * @param list<array{url: string, orderNo: int, label?: ?string}> $urls
      */
     public static function reconstruct(
         string $eventId,
@@ -55,7 +55,7 @@ readonly class Event
     }
 
     /**
-     * @return array{event_id: string, title: string, type: value-of<EventType>, started_at: string, ended_at: string, description: string, is_display: bool, places: list<array{place_id: string}>, urls: list<array{url: string, order_no: int}>}
+     * @return array{event_id: string, title: string, type: value-of<EventType>, started_at: string, ended_at: string, description: string, is_display: bool, places: list<array{place_id: string}>, urls: list<array{url: string, order_no: int, label: ?string}>}
      */
     public function toArray(): array
     {

@@ -6,7 +6,6 @@ namespace Event\Domain\Models;
 
 use Support\Collection\ImmutableCollection;
 use Support\Domain\Exceptions\BusinessRuleViolationException;
-use Support\Domain\ValueObjects\OrderNo;
 
 /**
  * @extends ImmutableCollection<int, EventUrl>
@@ -14,7 +13,7 @@ use Support\Domain\ValueObjects\OrderNo;
 readonly class EventUrls extends ImmutableCollection
 {
     /**
-     * @param list<array{url: string, orderNo: int}> $items
+     * @param list<array{url: string, orderNo: int, label?: ?string}> $items
      *
      * @throws BusinessRuleViolationException
      */
@@ -24,7 +23,11 @@ readonly class EventUrls extends ImmutableCollection
         $seenOrder = [];
 
         foreach ($items as $item) {
-            $url = new EventUrl(new EventUrlValue($item['url']), new OrderNo($item['orderNo']));
+            $url = EventUrl::reconstruct(
+                $item['url'],
+                $item['orderNo'],
+                $item['label'] ?? null,
+            );
 
             if (isset($seenOrder[$url->orderNo->value])) {
                 throw new BusinessRuleViolationException('URL の表示順が重複しています。');
@@ -38,7 +41,7 @@ readonly class EventUrls extends ImmutableCollection
     }
 
     /**
-     * @param list<array{url: string, orderNo: int}> $items
+     * @param list<array{url: string, orderNo: int, label?: ?string}> $items
      */
     public static function reconstruct(array $items): self
     {
@@ -46,13 +49,14 @@ readonly class EventUrls extends ImmutableCollection
             static fn (array $item): EventUrl => EventUrl::reconstruct(
                 $item['url'],
                 $item['orderNo'],
+                $item['label'] ?? null,
             ),
             $items,
         ));
     }
 
     /**
-     * @return list<array{url: string, order_no: int}>
+     * @return list<array{url: string, order_no: int, label: ?string}>
      */
     public function toArray(): array
     {

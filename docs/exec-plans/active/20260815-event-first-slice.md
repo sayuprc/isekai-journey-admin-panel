@@ -57,7 +57,7 @@ admin で `Place` マスタと `Event` (複数 Place・複数 URL 可、Place �
 
 ## Steps
 
-- [x] 1. `event-foundation`: `places` / `events` / `event_places` / `event_urls` の Atlas スキーマを追加し `atlas.hcl` に登録する。カラムは仕様メモの最小構成に閉じる (`events`: title, type, started_at, ended_at, description, is_display, timestamps。`places`: name, kind, timestamps。`event_places`: event_id, place_id。`event_urls`: event_id, url, order_no)
+- [x] 1. `event-foundation`: `places` / `events` / `event_places` / `event_urls` の Atlas スキーマを追加し `atlas.hcl` に登録する。カラムは仕様メモの最小構成に閉じる (`events`: title, type, started_at, ended_at, description, is_display, timestamps。`places`: name, kind, timestamps。`event_places`: event_id, place_id。`event_urls`: event_id, url, order_no, label (任意))
 - [x] 2. `event-foundation`: `packages/Place` / `packages/Event` の Domain Models と `composer.json` の PSR-4 を追加する。Application / HTTP / contracts / admin は触らない (Eloquent は ADR-0011 により対象外)
 - [ ] 3. `place-admin`: admin contracts に Place CRUD / search を追加し、生成物を更新する。`PermissionValue` / `AuditTargetType` に Place を足す
 - [ ] 4. `place-admin`: Place の server UseCase / Repository / HTTP / テストを実装する
@@ -77,6 +77,7 @@ admin で `Place` マスタと `Event` (複数 Place・複数 URL 可、Place �
 - 2026-08-15: 日時は from-to。日付のみは 00:00 埋め。瞬間は start == end
 - 2026-08-15: Event は places を複数持てる。Place なしも許容する
 - 2026-08-15: URL は Event の任意・複数。Place には持たない
+- 2026-08-16: Event URL の `label` (表示名) は任意。未設定時は URL そのものを見せてよい
 - 2026-08-15: コード名は `Event` / `Place`、日本語正式語は出来事 / 場所
 - 2026-08-15: `music_release` と `Release` の紐づけは作らない
 - 2026-08-15: 実装は foundation → Place admin → Event admin に分割する。Place を先に運用可能にし、Event 作成時の関連付けを単純にするため

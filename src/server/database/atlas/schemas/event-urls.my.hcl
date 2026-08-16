@@ -13,6 +13,11 @@ table "event_urls" {
     unsigned = true
     comment  = "表示順"
   }
+  column "label" {
+    null    = true
+    type    = varchar(255)
+    comment = "表示名"
+  }
   // URL は日本語ドメインやパスをそのまま保持できるよう text のままにする
   column "url" {
     null    = false

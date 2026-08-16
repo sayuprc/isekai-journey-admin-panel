@@ -97,6 +97,7 @@ Place の最小属性案:
 
 URL は Place には持たない
 物理会場に URL が付く違和感を避けるため、具体 URL は `Event` 側の任意属性として複数持てる
+各 URL には任意の表示名 (`label`) を付けられる。未設定時は URL そのものを見せてよい
 `online` な Place は「YouTube」などの名前を表し、配信 URL そのものは Event に載せる
 
 ## First Slice Scope
@@ -110,7 +111,7 @@ URL は Place には持たない
   - `started_at` / `ended_at`
   - 説明
   - 表示有無
-  - URL (任意・複数可)
+  - URL (任意・複数可。各 URL に表示名 `label` を任意で付けられる)
 - `Place` マスタ (最小)
 - `Event` と `Place` の複数関連
 
@@ -143,5 +144,6 @@ URL は Place には持たない
 - 2026-08-15: Place の別名検討は保留する
 - 2026-08-15: 第1スライスの配信面は admin のみとする。viewer は後回し
 - 2026-08-15: URL は Place ではなく Event の任意属性とする。複数可
+- 2026-08-16: Event URL には任意の表示名 (`label`) を持てる。生 URL の羅列を避けるため
 - 2026-08-15: `music_release` と `Release` の紐づけは第1スライスでは作らない
 - 2026-08-15: Place なしの Event を許容する
