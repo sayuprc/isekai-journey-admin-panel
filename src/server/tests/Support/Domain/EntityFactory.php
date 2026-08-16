@@ -26,6 +26,10 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 use Person\Domain\Models\Person;
 use Person\Domain\Models\PersonId;
 use Person\Domain\Models\PersonName;
+use Place\Domain\Models\Place;
+use Place\Domain\Models\PlaceId;
+use Place\Domain\Models\PlaceKind;
+use Place\Domain\Models\PlaceName;
 use Release\Domain\Models\Color;
 use Release\Domain\Models\Description as ReleaseDescription;
 use Release\Domain\Models\Media as ReleaseMedia;
@@ -62,6 +66,15 @@ trait EntityFactory
             new PersonId($personId),
             new PersonName($name),
             new OrderNo($orderNo),
+        );
+    }
+
+    protected function createPlace(string $placeId, string $name, PlaceKind $kind): Place
+    {
+        return new Place(
+            new PlaceId($placeId),
+            new PlaceName($name),
+            $kind,
         );
     }
 

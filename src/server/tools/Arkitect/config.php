@@ -7,6 +7,7 @@ use Tools\Arkitect\ComponentMaps\AuthComponent;
 use Tools\Arkitect\ComponentMaps\LibraryComponent;
 use Tools\Arkitect\ComponentMaps\MediaComponent;
 use Tools\Arkitect\ComponentMaps\PersonComponent;
+use Tools\Arkitect\ComponentMaps\PlaceComponent;
 use Tools\Arkitect\ComponentMaps\SongComponent;
 use Tools\Arkitect\ComponentMaps\SupportComponent;
 use Tools\Arkitect\Define;
@@ -73,6 +74,24 @@ return [
     ]),
     new Define(PersonComponent::UseCase, [
         PersonComponent::Domain,
+        AdminUserComponent::Domain,
+        AuthComponent::Domain,
+        SupportComponent::Contracts,
+        SupportComponent::Domain,
+        SupportComponent::Optional,
+        SupportComponent::UseCase,
+        LibraryComponent::ResultType,
+    ]),
+
+    new Define(PlaceComponent::Domain, [
+        PlaceComponent::Domain,
+        SupportComponent::Domain,
+        SupportComponent::Contracts,
+        SupportComponent::Optional,
+        LibraryComponent::ResultType,
+    ]),
+    new Define(PlaceComponent::UseCase, [
+        PlaceComponent::Domain,
         AdminUserComponent::Domain,
         AuthComponent::Domain,
         SupportComponent::Contracts,

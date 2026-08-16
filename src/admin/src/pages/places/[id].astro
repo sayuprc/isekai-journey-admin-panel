@@ -1,0 +1,16 @@
+---
+import { DetailView } from '../../components/place/EditableForm';
+import Layout from '../../layouts/Layout.astro';
+
+const { id } = Astro.params;
+
+if (typeof id !== 'string') {
+  throw new Error('URL が不正');
+}
+---
+
+<Layout pageTitle="場所詳細">
+  <div>
+    <DetailView placeId={id} client:only="solid-js" />
+  </div>
+</Layout>

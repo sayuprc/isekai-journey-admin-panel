@@ -51,6 +51,10 @@ enum PermissionValue: string
 
     case WRITE_PERSON = 'write_person';
 
+    case READ_PLACE = 'read_place';
+
+    case WRITE_PLACE = 'write_place';
+
     case READ_SONG = 'read_song';
 
     case WRITE_SONG = 'write_song';

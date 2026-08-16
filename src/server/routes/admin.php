@@ -25,6 +25,12 @@ use App\Http\Controllers\Api\Admin\V1\Person\GetPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\ListPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\SearchPersonController;
 use App\Http\Controllers\Api\Admin\V1\Person\UpdatePersonController;
+use App\Http\Controllers\Api\Admin\V1\Place\CreatePlaceController;
+use App\Http\Controllers\Api\Admin\V1\Place\DeletePlaceController;
+use App\Http\Controllers\Api\Admin\V1\Place\GetPlaceController;
+use App\Http\Controllers\Api\Admin\V1\Place\ListPlaceController;
+use App\Http\Controllers\Api\Admin\V1\Place\SearchPlaceController;
+use App\Http\Controllers\Api\Admin\V1\Place\UpdatePlaceController;
 use App\Http\Controllers\Api\Admin\V1\Release\CreateReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\DeleteReleaseController;
 use App\Http\Controllers\Api\Admin\V1\Release\GetReleaseController;
@@ -52,6 +58,7 @@ use Auth\Route\AuthRouteMap;
 use Illuminate\Support\Facades\Route;
 use Media\Route\MediaRouteMap;
 use Person\Route\PersonRouteMap;
+use Place\Route\PlaceRouteMap;
 use Release\Route\ReleaseGroupRouteMap;
 use Release\Route\ReleaseRouteMap;
 use Song\Route\SongRouteMap;
@@ -96,6 +103,15 @@ Route::middleware(AdminOpenApiValidator::class)->group(static function () {
                     Route::delete('/{personId}', [DeletePersonController::class, 'handle'])->name(PersonRouteMap::Delete);
                     Route::get('/search', [SearchPersonController::class, 'handle'])->name(PersonRouteMap::Search);
                     Route::get('/{personId}', [GetPersonController::class, 'handle'])->name(PersonRouteMap::Get);
+                });
+
+                Route::prefix('places')->group(static function () {
+                    Route::post('/', [CreatePlaceController::class, 'handle'])->name(PlaceRouteMap::Create);
+                    Route::get('/', [ListPlaceController::class, 'handle'])->name(PlaceRouteMap::List);
+                    Route::put('/{placeId}', [UpdatePlaceController::class, 'handle'])->name(PlaceRouteMap::Update);
+                    Route::delete('/{placeId}', [DeletePlaceController::class, 'handle'])->name(PlaceRouteMap::Delete);
+                    Route::get('/search', [SearchPlaceController::class, 'handle'])->name(PlaceRouteMap::Search);
+                    Route::get('/{placeId}', [GetPlaceController::class, 'handle'])->name(PlaceRouteMap::Get);
                 });
 
                 Route::prefix('media')->group(static function () {

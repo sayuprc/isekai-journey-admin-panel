@@ -14,6 +14,10 @@ enum Permission: string
 
     case WritePerson = 'write_person';
 
+    case ReadPlace = 'read_place';
+
+    case WritePlace = 'write_place';
+
     case ReadSong = 'read_song';
 
     case WriteSong = 'write_song';
@@ -35,6 +39,8 @@ enum Permission: string
             self::WriteAdminUser => '管理ユーザー編集',
             self::ReadPerson => '人物閲覧',
             self::WritePerson => '人物編集',
+            self::ReadPlace => '場所閲覧',
+            self::WritePlace => '場所編集',
             self::ReadSong => '楽曲閲覧',
             self::WriteSong => '楽曲編集',
             self::ReadAuditLog => '監査ログ閲覧',

@@ -8,6 +8,7 @@ import "./audit-logs";
 import "./auth";
 import "./media";
 import "./persons";
+import "./places";
 import "./releases";
 import "./song-tags";
 import "./song-types";

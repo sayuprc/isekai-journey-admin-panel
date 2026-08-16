@@ -9,6 +9,7 @@ tags:
   - name: AuditLog
   - name: Media
   - name: Person
+  - name: Place
   - name: SongTag
   - name: Song
   - name: ReleaseGroup
@@ -1153,6 +1154,348 @@ paths:
           description: Server error
       tags:
         - Person
+      security:
+        - BearerAuth: []
+  /places:
+    get:
+      operationId: PlaceService_listPlaces
+      description: 場所一覧取得API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
+      security:
+        - BearerAuth: []
+    post:
+      operationId: PlaceService_createPlace
+      description: 場所作成API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceCreateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceCreateRequest'
+      security:
+        - BearerAuth: []
+  /places/search:
+    get:
+      operationId: PlaceService_searchPlaces
+      description: 場所検索API
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: kindValue
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PlaceKindValue'
+          explode: false
+        - name: sort
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PlaceSearchSortBy'
+            default: name
+          explode: false
+        - name: order
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+            default: asc
+          explode: false
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/page'
+            default: 1
+          explode: false
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PerPage'
+            default: 50
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceSearchResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
+      security:
+        - BearerAuth: []
+  /places/{placeId}:
+    get:
+      operationId: PlaceService_getPlace
+      description: 場所取得API
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceGetResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
+      security:
+        - BearerAuth: []
+    put:
+      operationId: PlaceService_updatePlace
+      description: 場所更新API
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceUpdateResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceUpdateRequest'
+      security:
+        - BearerAuth: []
+    delete:
+      operationId: PlaceService_deletePlace
+      description: 場所削除API
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Server error
+      tags:
+        - Place
       security:
         - BearerAuth: []
   /recovery-codes:
@@ -2539,6 +2882,7 @@ components:
         - AdminUser
         - Media
         - Person
+        - Place
         - Release
         - ReleaseGroup
         - Song
@@ -2820,6 +3164,8 @@ components:
         - write_admin_user
         - read_person
         - write_person
+        - read_place
+        - write_place
         - read_song
         - write_song
         - read_media
@@ -2910,6 +3256,113 @@ components:
       properties:
         person:
           $ref: '#/components/schemas/Person'
+    Place:
+      type: object
+      required:
+        - placeId
+        - name
+        - kind
+      properties:
+        placeId:
+          $ref: '#/components/schemas/placeId'
+        name:
+          $ref: '#/components/schemas/placeName'
+        kind:
+          $ref: '#/components/schemas/PlaceKind'
+      examples:
+        - placeId: 0cc5f492-22fe-4f38-b702-8b2375bc0254
+          name: Zepp Haneda
+          kind:
+            name: 会場
+            value: 1
+    PlaceCreateRequest:
+      type: object
+      required:
+        - name
+        - kindValue
+      properties:
+        name:
+          $ref: '#/components/schemas/placeName'
+        kindValue:
+          $ref: '#/components/schemas/PlaceKindValue'
+    PlaceCreateResponse:
+      type: object
+      required:
+        - place
+      properties:
+        place:
+          $ref: '#/components/schemas/Place'
+    PlaceGetResponse:
+      type: object
+      required:
+        - place
+      properties:
+        place:
+          $ref: '#/components/schemas/Place'
+    PlaceKind:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/placeKindName'
+        value:
+          $ref: '#/components/schemas/PlaceKindValue'
+      examples:
+        - name: 会場
+          value: 1
+    PlaceKindValue:
+      type: integer
+      format: int32
+      enum:
+        - 1
+        - 2
+      description: 場所区分の値
+    PlaceListResponse:
+      type: object
+      required:
+        - places
+      properties:
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/Place'
+    PlaceSearchResponse:
+      type: object
+      required:
+        - places
+        - maxPage
+      properties:
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/Place'
+        maxPage:
+          type: integer
+          format: int32
+    PlaceSearchSortBy:
+      type: string
+      enum:
+        - name
+      description: 場所検索のソート条件
+    PlaceUpdateRequest:
+      type: object
+      required:
+        - name
+        - kindValue
+      properties:
+        name:
+          $ref: '#/components/schemas/placeName'
+        kindValue:
+          $ref: '#/components/schemas/PlaceKindValue'
+    PlaceUpdateResponse:
+      type: object
+      required:
+        - place
+      properties:
+        place:
+          $ref: '#/components/schemas/Place'
     RecoveryFinishRequest:
       type: object
       required:
@@ -3941,6 +4394,18 @@ components:
       type: string
       minLength: 1
       description: 人物名
+    placeId:
+      type: string
+      format: uuid
+      description: 場所ID
+    placeKindName:
+      type: string
+      minLength: 1
+      description: 場所区分名
+    placeName:
+      type: string
+      minLength: 1
+      description: 場所名
     recoveryCode:
       type: string
       format: password
