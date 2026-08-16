@@ -8,20 +8,27 @@ use Media\Domain\Models\YouTubeChannel\YouTubeChannel;
 
 readonly class ChannelImportResult
 {
+    /**
+     * @param list<ImportedVideo> $importedVideos
+     */
     private function __construct(
         public YouTubeChannel $channel,
         public int $importedCount,
         public bool $channelFound,
+        public array $importedVideos,
     ) {
     }
 
-    public static function imported(YouTubeChannel $channel, int $importedCount): self
+    /**
+     * @param list<ImportedVideo> $importedVideos
+     */
+    public static function imported(YouTubeChannel $channel, array $importedVideos): self
     {
-        return new self($channel, $importedCount, true);
+        return new self($channel, count($importedVideos), true, $importedVideos);
     }
 
     public static function channelNotFound(YouTubeChannel $channel): self
     {
-        return new self($channel, 0, false);
+        return new self($channel, 0, false, []);
     }
 }

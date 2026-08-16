@@ -98,7 +98,13 @@ readonly class ImportYouTubeUseCase
             }
         });
 
-        return ChannelImportResult::imported($channel, count($mediaList));
+        return ChannelImportResult::imported(
+            $channel,
+            array_map(
+                static fn (YouTubeUploadedVideo $video): ImportedVideo => new ImportedVideo($video->title, $video->url),
+                $videosToImport,
+            ),
+        );
     }
 
     private function resolveType(string $title, bool $isShort): MediaType
