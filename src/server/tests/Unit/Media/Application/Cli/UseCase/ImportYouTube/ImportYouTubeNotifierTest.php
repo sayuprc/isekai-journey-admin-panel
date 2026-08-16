@@ -135,7 +135,7 @@ class ImportYouTubeNotifierTest extends TestCase
         for ($i = 0; $i < 80; $i++) {
             $videos[] = new ImportedVideo(
                 str_repeat('あ', 40) . $i,
-                sprintf('https://www.youtube.com/watch?v=%s', str_pad((string) $i, 11, '0', STR_PAD_LEFT)),
+                sprintf('https://www.youtube.com/watch?v=%s', str_pad((string)$i, 11, '0', STR_PAD_LEFT)),
             );
         }
 
