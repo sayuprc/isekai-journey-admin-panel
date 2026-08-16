@@ -207,23 +207,26 @@ test "parse cloud run job log entry via pubsub" {
   guard embeds is [{ "title": String(title), "fields": Array(fields), .. }] else {
     fail("expected embed")
   }
-  assert_eq(title, "Cloud Run Job failed: prod-media-youtube-import")
+  assert_eq(
+    title, "Cloud Run Job が失敗しました: prod-media-youtube-import",
+  )
   assert_eq(fields.length(), 4)
-  guard fields[0] is { "name": String("job"), "value": String(job), .. } else {
+  guard fields[0] is { "name": String("ジョブ"), "value": String(job), .. } else {
     fail("expected job field")
   }
   assert_eq(job, "prod-media-youtube-import")
   guard fields[1]
-    is { "name": String("execution"), "value": String(execution), .. } else {
+    is { "name": String("実行名"), "value": String(execution), .. } else {
     fail("expected execution field")
   }
   assert_eq(execution, "prod-media-youtube-import-xxxxx")
   guard fields[2]
-    is { "name": String("location"), "value": String(location), .. } else {
+    is { "name": String("ロケーション"), "value": String(location), .. } else {
     fail("expected location field")
   }
   assert_eq(location, "asia-northeast1")
-  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+  guard fields[3]
+    is { "name": String("メッセージ"), "value": String(message), .. } else {
     fail("expected message field")
   }
   assert_eq(
@@ -242,7 +245,8 @@ test "parse cloud run job prefers textPayload when proto message missing" {
   guard n.embeds is Some([{ "fields": Array(fields), .. }]) else {
     fail("expected embeds")
   }
-  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+  guard fields[3]
+    is { "name": String("メッセージ"), "value": String(message), .. } else {
     fail("expected message")
   }
   assert_eq(message, "task failed")
@@ -260,7 +264,8 @@ test "parse cloud run job truncates long message" {
   guard n.embeds is Some([{ "fields": Array(fields), .. }]) else {
     fail("expected embeds")
   }
-  guard fields[3] is { "name": String("message"), "value": String(message), .. } else {
+  guard fields[3]
+    is { "name": String("メッセージ"), "value": String(message), .. } else {
     fail("expected message")
   }
   assert_eq(message.length(), 1003)
