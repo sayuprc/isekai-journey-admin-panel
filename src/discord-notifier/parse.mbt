@@ -77,15 +77,15 @@ fn parse_cloud_build(
   }
   let build_id = match payload {
     { "id": String(id), .. } => id
-    _ => "不明"
+    _ => "unknown"
   }
   let log_url = match payload {
     { "logUrl": String(url), .. } => url
     _ => ""
   }
   let fields : Json = [
-    { "name": "ビルド ID", "value": build_id, "inline": true },
-    { "name": "トリガー", "value": trigger_name, "inline": true },
+    { "name": "build_id", "value": build_id, "inline": true },
+    { "name": "trigger", "value": trigger_name, "inline": true },
   ]
   let embed : Json = if log_url == "" {
     { "title": title, "fields": fields }
@@ -115,34 +115,30 @@ fn parse_cloud_run_job(payload : Json) -> Notification {
   let job = match payload {
     { "resource": { "labels": labels, .. }, .. } =>
       json_string_field(labels, "job_name")
-    _ => "不明"
+    _ => "unknown"
   }
   let location = match payload {
     { "resource": { "labels": labels, .. }, .. } =>
       json_string_field(labels, "location")
-    _ => "不明"
+    _ => "unknown"
   }
   let execution = match payload {
     { "labels": labels, .. } =>
       json_string_field(labels, "run.googleapis.com/execution_name")
-    _ => "不明"
+    _ => "unknown"
   }
   let message = truncate_text(extract_log_message(payload), 1000)
-  let job_label = if job == "" { "不明" } else { job }
-  let execution_label = if execution == "" { "不明" } else { execution }
-  let location_label = if location == "" { "不明" } else { location }
-  let message_label = if message == "" {
-    "(メッセージなし)"
-  } else {
-    message
-  }
+  let job_label = if job == "" { "unknown" } else { job }
+  let execution_label = if execution == "" { "unknown" } else { execution }
+  let location_label = if location == "" { "unknown" } else { location }
+  let message_label = if message == "" { "(no message)" } else { message }
   let embed : Json = {
-    "title": "Cloud Run Job が失敗しました: \{job_label}",
+    "title": "Cloud Run Job failed: \{job_label}",
     "fields": [
-      { "name": "ジョブ", "value": job_label, "inline": true },
-      { "name": "実行名", "value": execution_label, "inline": true },
-      { "name": "ロケーション", "value": location_label, "inline": true },
-      { "name": "メッセージ", "value": message_label, "inline": false },
+      { "name": "job", "value": job_label, "inline": true },
+      { "name": "execution", "value": execution_label, "inline": true },
+      { "name": "location", "value": location_label, "inline": true },
+      { "name": "message", "value": message_label, "inline": false },
     ],
   }
   {

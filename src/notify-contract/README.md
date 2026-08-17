@@ -20,7 +20,7 @@
     {
       "title": "Viewer のデプロイが成功しました",
       "fields": [
-        { "name": "サイト URL", "value": "https://example.com", "inline": true }
+        { "name": "site_url", "value": "https://example.com", "inline": true }
       ]
     }
   ]
