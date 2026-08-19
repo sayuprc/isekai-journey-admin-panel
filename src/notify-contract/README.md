@@ -18,7 +18,7 @@
   "content": "ok",
   "embeds": [
     {
-      "title": "Viewer deploy succeeded",
+      "title": "Viewer のデプロイが成功しました",
       "fields": [
         { "name": "site_url", "value": "https://example.com", "inline": true }
       ]
