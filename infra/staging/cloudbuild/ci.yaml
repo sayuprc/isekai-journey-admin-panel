@@ -328,6 +328,8 @@ steps:
       - ${_API_SERVICE_ACCOUNT}
       - --ingress
       - ${_API_INGRESS}
+      - --scaling=auto
+      - --max=1
       - --quiet
 
   - id: deploy-discord-notifier
@@ -364,6 +366,8 @@ steps:
       - ${_ADMIN_SERVICE_ACCOUNT}
       - --ingress
       - ${_ADMIN_INGRESS}
+      - --scaling=auto
+      - --max=1
       - --quiet
 
   # TODO デプロイは別に行う
