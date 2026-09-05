@@ -2,7 +2,6 @@
 
 .agents/
 .apm/
-.claude/
 .codex/
 .git/
 .github/
@@ -16,7 +15,6 @@ src/biome.json
 
 AGENTS.md
 ARCHITECTURE.md
-CLAUDE.md
 FRONTEND.md
 PLANS.md
 apm.lock.yaml

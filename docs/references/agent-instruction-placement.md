@@ -7,7 +7,7 @@ Claude Code の記事「Steering Claude Code: CLAUDE.md files, skills, hooks, ru
 
 ## 採用する方針
 
-- `AGENTS.md` と `CLAUDE.md` は短い入口に保つ。常時必要な地図だけを書き、詳細は `docs/agent-map.md` と下位文書へ逃がす
+- `AGENTS.md` は短い入口に保つ。常時必要な地図だけを書き、詳細は `docs/agent-map.md` と下位文書へ逃がす
 - パスに閉じる規約は path-scoped rules / instructions に置く。例: `src/server/**`, `src/admin/**`, `src/contracts/**`, `src/viewer/**`, `src/notify-contract/**`, `src/discord-notifier/**`, `src/notify-publish/**`
 - 手順として再利用する作業は skill に置く。例: PR 作成、コードレビュー、PHP テスト作成、exec plan の作成と運用
 - main session を汚す調査や文書整理は subagent に寄せる。例: `docs-curator`
@@ -15,14 +15,12 @@ Claude Code の記事「Steering Claude Code: CLAUDE.md files, skills, hooks, ru
 
 ## このリポジトリの配置
 
-- 常時入口: `AGENTS.md`, `CLAUDE.md`, `docs/agent-map.md`
-- Claude path rules: `.claude/rules/*.md`
+- 常時入口: `AGENTS.md`, `docs/agent-map.md`
 - Cursor path rules: `.cursor/rules/*.mdc`
 - APM instructions: `.apm/instructions/*.instructions.md`
-- Claude skills: `.claude/skills/*/SKILL.md`
-- Codex / Cursor skills: `.agents/skills/*/SKILL.md` (Cursor は互換で `.claude/skills/` も読む)
-- Subagents: `.claude/agents/`, `.cursor/agents/`, `.codex/agents/`
-- Deterministic hooks: `tools/hooks/`, `.claude/settings.json`, `.cursor/hooks.json`, `.codex/hooks.json`
+- Codex / Cursor skills: `.agents/skills/*/SKILL.md`
+- Subagents: `.cursor/agents/`, `.codex/agents/`
+- Deterministic hooks: `tools/hooks/`, `.cursor/hooks.json`, `.codex/hooks.json`
 
 ## 判断基準
 
