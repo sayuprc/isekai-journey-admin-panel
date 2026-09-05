@@ -19,7 +19,7 @@ OpenAI の Harness Engineering 記事をこのリポジトリ向けに要約し�
 ## いまはまだやらないこと
 
 - 巨大な `docs/agent-map.md` を育てること
-- `AGENTS.md` や `CLAUDE.md` に共通ルールや tool-specific な詳細ルールまで複写して二重管理すること
+- `AGENTS.md` に共通ルールや tool-specific な詳細ルールまで複写して二重管理すること
 - まだ困っていない段階で文書の置き場をさらに増やすこと
 - ドキュメントだけで解決できる問題に、先回りして専用ツールを増やすこと
 
