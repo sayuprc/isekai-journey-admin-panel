@@ -5,7 +5,6 @@ lefthook = "2.1.9"
 mago = "1.30.0"
 mkcert = "1.4.4"
 node = "24.17.0"
-pinact = "4.1.0"
 pnpm = "11.20.0"
 
 [vars]
