@@ -2,12 +2,23 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "helpers:pinGitHubActionDigests",
-    "group:allNonMajor"
+    "helpers:pinGitHubActionDigests"
   ],
   "timezone": "Asia/Tokyo",
   "schedule": [
     "* 9 * * 1"
   ],
-  "updateNotScheduled": false
+  "updateNotScheduled": false,
+  "packageRules": [
+    {
+      "description": "パッケージマネージャーごとに non-major 更新をまとめる",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "{{manager}} non-major dependencies",
+      "groupSlug": "{{manager}}-non-major",
+      "groupSingleUpdates": true
+    }
+  ]
 }
