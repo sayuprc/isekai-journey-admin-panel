@@ -11,7 +11,7 @@ RUN mise trust \
   && mise install atlas \
   && install -Dm755 "$(mise which atlas)" /out/atlas
 
-FROM alpine:3.22
+FROM alpine:3.24
 
 ENV TZ=Asia/Tokyo
 
