@@ -19,3 +19,11 @@
 | ADR-0013 | accepted | 業務エラーの表現を Result から例外へ移行する | [api, admin, viewer] |
 | ADR-0014 | accepted | 入力形式検証を契約境界へ集約する | [api, admin] |
 | ADR-0015 | accepted | 権利者の画像素材を保存・配信しない | [api, admin, viewer] |
+| ADR-0016 | accepted | 管理認証は passkey のみとする | [api, admin] |
+| ADR-0017 | accepted | passkey 紛失時はリカバリーコードで復旧する | [api, admin] |
+| ADR-0018 | accepted | 管理ユーザー登録は招待トークン経由とする | [api, admin] |
+| ADR-0019 | accepted | Release は MusicBrainz 型の階層と Release.formats を取る | [api, admin, viewer] |
+| ADR-0020 | accepted | Media は 6 フィールドと MediaType 1 軸に閉じる | [api, admin, viewer] |
+| ADR-0021 | accepted | Viewer API は Admin と分離した公開 read model とする | [api, viewer] |
+| ADR-0022 | accepted | 監査ログは Support の明示記録とする | [api, admin] |
+| ADR-0023 | accepted | 人物は Person に一本化し役割は関係の role で表す | [api, admin] |

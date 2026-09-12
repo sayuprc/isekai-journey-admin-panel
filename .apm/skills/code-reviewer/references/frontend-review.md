@@ -1,5 +1,8 @@
 # フロントエンド コードレビューチェックリスト (Astro + SolidJS + TS)
 
+規約の詳細は `FRONTEND.md` と `docs/design-docs/subproject-boundaries.md` を正とする
+ここではレビュー時に見る観点だけを列挙する
+
 ## フレームワーク & コンポーネント
 - [ ] インタラクティブなコンポーネントに **SolidJS** を使用しているか
 - [ ] CSS クラスの指定に `className` ではなく `class` を使用しているか(SolidJS の規約)
