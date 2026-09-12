@@ -20,7 +20,7 @@ return ECSConfig::configure()
     ])
     ->withRootFiles()
     ->withSpacing(Option::INDENTATION_SPACES, PHP_EOL)
-    ->withPhpCsFixerSets(psr2: true, psr12: true)
+    ->withPreparedSets(psr12: true)
     ->withRules([
         \PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\LanguageConstructSpacingSniff::class,
 
@@ -129,6 +129,9 @@ return ECSConfig::configure()
             'trait_import' => 'none',
             'case' => 'one',
         ],
+    ])
+    ->withConfiguredRule(\PhpCsFixer\Fixer\ClassNotation\ClassDefinitionFixer::class, [
+        'space_before_parenthesis' => true,
     ])
     ->withConfiguredRule(\PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer::class, [
         'elements' => [
